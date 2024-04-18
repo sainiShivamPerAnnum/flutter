@@ -49,7 +49,6 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
-import '../../../finance/lendbox/withdrawal/lendbox_flexi.dart';
 import '../gold_components/gold_pro_card.dart';
 import '../gold_components/gold_rate_graph.dart';
 
@@ -881,7 +880,7 @@ class FloBalanceBriefRow extends StatelessWidget {
     );
   }
 
-  double getPercValue(String tier, Portfolio portfolio) {
+  num getPercValue(String tier, Portfolio portfolio) {
     if (percent != null) return percent!;
     switch (tier) {
       case Constants.ASSET_TYPE_FLO_FIXED_6:
@@ -891,11 +890,11 @@ class FloBalanceBriefRow extends StatelessWidget {
       case Constants.ASSET_TYPE_FLO_FELXI:
         return portfolio.flo.flexi.percGains;
       default:
-        return portfolio.flo.percGains;
+        return portfolio.flo.percGain;
     }
   }
 
-  double getCurrentValue(String tier, Portfolio portfolio) {
+  num getCurrentValue(String tier, Portfolio portfolio) {
     switch (tier) {
       case Constants.ASSET_TYPE_FLO_FIXED_6:
         return portfolio.flo.fixed2.balance;
@@ -908,7 +907,7 @@ class FloBalanceBriefRow extends StatelessWidget {
     }
   }
 
-  double getInvestedValue(String tier, Portfolio portfolio) {
+  num getInvestedValue(String tier, Portfolio portfolio) {
     switch (tier) {
       case Constants.ASSET_TYPE_FLO_FIXED_6:
         return portfolio.flo.fixed2.principle;

@@ -167,7 +167,7 @@ class FloPremiumTierCard extends StatelessWidget {
     );
   }
 
-  double getLead() {
+  num getLead() {
     return switch (tier) {
       Constants.ASSET_TYPE_FLO_FIXED_6 => portfolio.flo.fixed2.balance,
       Constants.ASSET_TYPE_FLO_FIXED_3 => portfolio.flo.fixed1.balance,
@@ -176,7 +176,7 @@ class FloPremiumTierCard extends StatelessWidget {
     };
   }
 
-  double getTrail() {
+  num getTrail() {
     return switch (tier) {
       Constants.ASSET_TYPE_FLO_FIXED_6 => portfolio.flo.fixed2.principle,
       Constants.ASSET_TYPE_FLO_FIXED_3 => portfolio.flo.fixed1.principle,

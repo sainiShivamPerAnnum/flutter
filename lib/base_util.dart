@@ -966,9 +966,9 @@ class BaseUtil extends ChangeNotifier {
     return x - x.round() != 0 ? x : x.toInt();
   }
 
-  static double digitPrecision(double x, [int offset = 2, bool round = true]) {
+  static double digitPrecision(num x, [int offset = 2, bool round = true]) {
     final precision = pow(10, offset);
-    double y = x * precision;
+    num y = x * precision;
     int z = round ? y.round() : y.truncate();
     return z / precision;
   }

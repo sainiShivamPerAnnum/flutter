@@ -93,7 +93,7 @@ class FundBreakdownDialog extends StatelessWidget {
                   BreakdownInfoTile(
                     title: "Returns in Fello Flo",
                     value:
-                        "₹ ${BaseUtil.digitPrecision(portfolio.flo.absGains, 2, false).toString()}",
+                        "₹ ${BaseUtil.digitPrecision(portfolio.flo.absGain, 2, false).toString()}",
                   ),
                   BreakdownInfoTile(
                     title: "Returns in Digital Gold",

@@ -71,7 +71,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   // Depends on app config so late would be required in order to lazy evaluation
   // of expression.
   late final _featureEvaluator = locator<FeatureFlagService>();
-  Portfolio _userPortfolio = Portfolio.base();
+  Portfolio _userPortfolio = const Portfolio();
 
   Portfolio get userPortfolio => _userPortfolio;
 
@@ -284,7 +284,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     if (res.isSuccess()) {
       userPortfolio = res.model!;
     } else {
-      userPortfolio = Portfolio.base();
+      userPortfolio = const Portfolio();
     }
   }
 
@@ -498,7 +498,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       // await _apiCacheManager!.clearCacheMemory();
       _logger.d("UserService signout called");
       _userFundWallet = null;
-      _userPortfolio = Portfolio.base();
+      _userPortfolio = const Portfolio();
       _firebaseUser = null;
       _baseUser = null;
       _myUserDpUrl = null;

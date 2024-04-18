@@ -484,7 +484,8 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                                       0.04 *
                                                       3),
                                           child: CardContent(
-                                            key: const ValueKey('goldPortfolioSave'),
+                                            key: const ValueKey(
+                                                'goldPortfolioSave'),
                                             isHorizontalView:
                                                 cardActions.isHorizontalView,
                                             isVerticalView:
@@ -583,7 +584,8 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                                       0.04 *
                                                       2),
                                           child: CardContent(
-                                            key: const ValueKey('floPortfolioSave'),
+                                            key: const ValueKey(
+                                                'floPortfolioSave'),
                                             isHorizontalView:
                                                 cardActions.isHorizontalView,
                                             isVerticalView:
@@ -1410,10 +1412,10 @@ class CardContent extends StatelessWidget {
     }
   }
 
-  double getPercValue(Portfolio? portfolio, String title) {
+  num getPercValue(Portfolio? portfolio, String title) {
     switch (title) {
       case "Fello Flo":
-        return portfolio?.flo.percGains ?? 0.0;
+        return portfolio?.flo.percGain ?? 0.0;
       case "Digital Gold":
         return portfolio?.augmont.percGains ?? 0.0;
       case "Fello Rewards":
