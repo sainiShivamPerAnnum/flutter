@@ -120,7 +120,10 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
                       }
                       _secureScreenshots(lboxTxnService);
 
-                      return _getView(lboxTxnService, model);
+                      return _getView(
+                        lboxTxnService.currentTransactionState,
+                        model,
+                      );
                     },
                   ),
                 ),
@@ -151,12 +154,12 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
   }
 
   Widget _getView(
-    LendboxTransactionService lboxTxnService,
+    TransactionState state,
     LendboxBuyViewModel model,
   ) {
     const type = TransactionType.DEPOSIT;
 
-    switch (lboxTxnService.currentTransactionState) {
+    switch (state) {
       case TransactionState.idle:
         return LendboxBuyInputView(
           amount: widget.amount,

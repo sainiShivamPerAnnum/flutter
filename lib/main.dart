@@ -49,12 +49,12 @@ class MyApp extends HookWidget {
     final backButtonDispatcher =
         useMemoized(() => FelloBackButtonDispatcher(delegate));
 
-    useEffect(() {
+    useMemoized(() {
       AppState.backButtonDispatcher = backButtonDispatcher;
       AppState.delegate = delegate;
       delegate.setNewRoutePath(SplashPageConfig);
       return null;
-    }, []);
+    }, const []);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
