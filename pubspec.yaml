@@ -103,6 +103,7 @@ dependencies:
   freezed_annotation: ^2.4.1
   showcaseview:
     path: packages/showcaseview
+  sliver_tools: ^0.2.12
 
 
 
