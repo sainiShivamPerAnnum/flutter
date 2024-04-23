@@ -1,3 +1,4 @@
+import 'package:felloapp/feature/p2p_home/ui/shared/footer.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -8,29 +9,35 @@ class TransactionSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverOverlapInjector(
-          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        CustomScrollView(
+          slivers: [
+            SliverOverlapInjector(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+            ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins,
+                vertical: SizeConfig.padding16,
+              ),
+              sliver: SliverList.separated(
+                itemBuilder: (context, index) {
+                  return const _TransactionTile();
+                },
+                itemCount: 10,
+                separatorBuilder: (context, index) {
+                  return const Divider(
+                    color: UiConstants.grey2,
+                    height: 1,
+                  );
+                },
+              ),
+            )
+          ],
         ),
-        SliverPadding(
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.pageHorizontalMargins,
-            vertical: SizeConfig.padding16,
-          ),
-          sliver: SliverList.separated(
-            itemBuilder: (context, index) {
-              return const _TransactionTile();
-            },
-            itemCount: 10,
-            separatorBuilder: (context, index) {
-              return const Divider(
-                color: UiConstants.grey2,
-                height: 1,
-              );
-            },
-          ),
-        )
+        const Footer()
       ],
     );
   }
