@@ -3,36 +3,17 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
-class InvestSection extends StatelessWidget {
-  const InvestSection({
+class AssetOptionsWidget extends StatelessWidget {
+  const AssetOptionsWidget({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverOverlapInjector(
-          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-        ),
-        SliverToBoxAdapter(
-          child: SizedBox(
-            height: SizeConfig.padding16,
-          ),
-        ),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins,
-            ),
-            child: _OptionsGrid(
-              runItemCount: 2,
-              itemBuilder: (context, index) => const AssetInformationCard(),
-              itemCount: 3,
-            ),
-          ),
-        )
-      ],
+    return _OptionsGrid(
+      runItemCount: 2,
+      itemBuilder: (context, index) => const AssetInformationCard(),
+      itemCount: 3,
     );
   }
 }

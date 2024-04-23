@@ -6,9 +6,9 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
-import 'invest_section/invest_view.dart';
-import 'my_funds_section/my_funds_section.dart';
-import 'transactions_section/transaction_section.dart';
+import 'invest_section/invest_section_view.dart';
+import 'my_funds_section/my_funds_section_view.dart';
+import 'transactions_section/transaction_section_view.dart';
 
 class P2PHomeView extends StatelessWidget {
   const P2PHomeView({super.key});

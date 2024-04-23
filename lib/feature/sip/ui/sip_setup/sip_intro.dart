@@ -579,7 +579,7 @@ class _SipCalculatorState extends State<SipCalculator>
                           onChangeEnd: (x) =>
                               model.sendEvent(widget.state.options),
                           requiresQuickButtons: false,
-                          changeFunction: (x) =>
+                          onChange: (x) =>
                               model.setAmount(int.tryParse(x) ?? 0),
                           label: locale.sipamount,
                           prefixText: "₹",
@@ -611,8 +611,7 @@ class _SipCalculatorState extends State<SipCalculator>
                           onChangeEnd: (x) =>
                               model.sendEvent(widget.state.options),
                           requiresQuickButtons: false,
-                          changeFunction: (x) =>
-                              model.setTP(int.tryParse(x) ?? 0),
+                          onChange: (x) => model.setTP(int.tryParse(x) ?? 0),
                           label: locale.timePeriod,
                           suffixText: locale.sipYear,
                           inputFormatters: [
@@ -645,8 +644,7 @@ class _SipCalculatorState extends State<SipCalculator>
                               ),
                             ],
                             isPercentage: true,
-                            changeFunction: (x) =>
-                                model.setROI(int.tryParse(x) ?? 0),
+                            onChange: (x) => model.setROI(int.tryParse(x) ?? 0),
                             value: state.calculatorRoi),
                         SizedBox(
                           height: SizeConfig.padding20,
