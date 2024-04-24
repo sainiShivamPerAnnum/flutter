@@ -1108,5 +1108,33 @@
   "@_flo_transaction_details": {},
   "reinvestMessage": "Compounding returns on your investment",
   "disabledReinvestTitle": "Moving to P2P Flexi on maturity",
-  "disabledReinvestSubtitle":"Can withdraw anytime after maturity"
+  "disabledReinvestSubtitle":"Can withdraw anytime after maturity",
+
+
+  "@_p2p_home_page_v2" : {},
+  "ticketsMultiplication" : "{multiplicationFactor}X Tickets",
+  "@ticketsMultiplication" : {
+    "placeholders": {
+      "multiplicationFactor" : {
+        "type":"num"
+      }
+    }
+  },
+  "perAnnum": "Per annum",
+  "extraReturns": "+ {percentage}% Returns",
+  "@extraReturns" : {
+    "placeholders": {
+      "percentage": {
+        "type":"num"
+      }
+    }
+  },
+  "interest" : "{interest}%",
+  "@interest": {
+    "placeholders": {
+      "interest": {
+        "type" : "num"
+      }
+    }
+  }
 }

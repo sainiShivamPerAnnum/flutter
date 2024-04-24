@@ -9775,6 +9775,46 @@ class S {
       args: [],
     );
   }
+
+  /// `{multiplicationFactor}X Tickets`
+  String ticketsMultiplication(num multiplicationFactor) {
+    return Intl.message(
+      '${multiplicationFactor}X Tickets',
+      name: 'ticketsMultiplication',
+      desc: '',
+      args: [multiplicationFactor],
+    );
+  }
+
+  /// `Per annum`
+  String get perAnnum {
+    return Intl.message(
+      'Per annum',
+      name: 'perAnnum',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `+ {percentage}% Returns`
+  String extraReturns(num percentage) {
+    return Intl.message(
+      '+ $percentage% Returns',
+      name: 'extraReturns',
+      desc: '',
+      args: [percentage],
+    );
+  }
+
+  /// `{interest}%`
+  String interest(num interest) {
+    return Intl.message(
+      '$interest%',
+      name: 'interest',
+      desc: '',
+      args: [interest],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -1,30 +1,41 @@
+import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 class AssetOptionsWidget extends StatelessWidget {
+  final List<LendboxAssetConfiguration> assets;
   const AssetOptionsWidget({
     super.key,
+    this.assets = const [],
   });
 
   @override
   Widget build(BuildContext context) {
     return _OptionsGrid(
       runItemCount: 2,
-      itemBuilder: (context, index) => const AssetInformationCard(),
-      itemCount: 3,
+      itemCount: assets.length,
+      itemBuilder: (context, index) => AssetInformationCard(
+        config: assets[index],
+      ),
     );
   }
 }
 
 class AssetInformationCard extends StatelessWidget {
+  final LendboxAssetConfiguration config;
+
   const AssetInformationCard({
+    required this.config,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return Container(
       decoration: BoxDecoration(
         color: UiConstants.grey4,
@@ -61,7 +72,7 @@ class AssetInformationCard extends StatelessWidget {
                   vertical: SizeConfig.padding4,
                 ),
                 child: Text(
-                  '12 Month Plan',
+                  config.assetName,
                   style: TextStyles.sourceSans.body3.copyWith(
                     color: UiConstants.teal3,
                   ),
@@ -73,11 +84,11 @@ class AssetInformationCard extends StatelessWidget {
             height: SizeConfig.padding12,
           ),
           Text(
-            '10%',
+            locale.interest(config.interest),
             style: TextStyles.rajdhaniSB.title2.copyWith(),
           ),
           Text(
-            'Per annum',
+            locale.perAnnum,
             style: TextStyles.rajdhaniSB.body2.copyWith(),
           ),
           SizedBox(
@@ -94,7 +105,7 @@ class AssetInformationCard extends StatelessWidget {
                 width: SizeConfig.padding8,
               ),
               Text(
-                '5X Tickets',
+                locale.ticketsMultiplication(config.tambolaMultiplier),
                 style: TextStyles.sourceSans.body4,
               )
             ],
@@ -103,7 +114,7 @@ class AssetInformationCard extends StatelessWidget {
             height: SizeConfig.padding8,
           ),
           Text(
-            '+ 0.75% Returns',
+            locale.extraReturns(.75),
             style: TextStyles.sourceSans.body4.copyWith(
               color: UiConstants.yellow2,
             ),

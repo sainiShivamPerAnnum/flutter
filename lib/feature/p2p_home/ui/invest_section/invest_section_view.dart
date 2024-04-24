@@ -1,3 +1,4 @@
+import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/ui/elements/video_player/app_video_player.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/ui/shared/asset_comparision_section.dart';
@@ -29,7 +30,9 @@ class InvestSection extends StatelessWidget {
             padding: EdgeInsets.symmetric(
               horizontal: SizeConfig.pageHorizontalMargins,
             ),
-            child: const AssetOptionsWidget(),
+            child: AssetOptionsWidget(
+              assets: AppConfigV2.instance.lendBoxP2P,
+            ),
           ),
         ),
         SliverToBoxAdapter(
