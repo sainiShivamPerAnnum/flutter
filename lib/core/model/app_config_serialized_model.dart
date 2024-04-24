@@ -177,7 +177,10 @@ enum FundType {
   UNI_FLEXI,
   UNI_FIXED_6,
   UNI_FIXED_3,
-  UNI_FIXED_1;
+  UNI_FIXED_1,
+  LB_FX_3,
+  LB_FX_6,
+  LB_FX_12;
 
   bool get isFixed6 => this == FundType.UNI_FIXED_6;
 }
