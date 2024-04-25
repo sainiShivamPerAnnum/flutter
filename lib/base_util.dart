@@ -973,7 +973,7 @@ class BaseUtil extends ChangeNotifier {
     return z / precision;
   }
 
-  static String formatIndianRupees(double value) {
+  static String formatIndianRupees(num value) {
     final formatter = NumberFormat.currency(
       locale: 'en_IN',
       symbol: '₹',

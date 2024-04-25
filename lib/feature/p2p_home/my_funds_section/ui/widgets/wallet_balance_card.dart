@@ -1,3 +1,5 @@
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +10,7 @@ class WalletBalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return Container(
       decoration: BoxDecoration(
         color: UiConstants.grey5,
@@ -29,7 +32,7 @@ class WalletBalanceCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'P2P Wallet',
+                      locale.wallet,
                       style: TextStyles.rajdhaniSB.body1,
                     ),
                     const Icon(
@@ -42,7 +45,7 @@ class WalletBalanceCard extends StatelessWidget {
                   height: SizeConfig.padding8,
                 ),
                 Text(
-                  '8 % Returns on your investment',
+                  locale.walletInterest(8),
                   style: TextStyles.sourceSans.body3.copyWith(
                     color: UiConstants.grey1,
                   ),
@@ -54,13 +57,11 @@ class WalletBalanceCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Current Value:',
-                      style: TextStyles.sourceSans.body3.copyWith(
-                        color: Color(0xffF5F5F8),
-                      ),
+                      locale.walletCurrentValueLabel,
+                      style: TextStyles.sourceSans.body3,
                     ),
                     Text(
-                      '₹10K',
+                      locale.amount(10.toString()),
                       style: TextStyles.sourceSansSB.body1,
                     )
                   ],

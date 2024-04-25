@@ -17,7 +17,7 @@ import 'package:felloapp/core/service/notifier_services/scratch_card_service.dar
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/fello_badges/ui/fello_badges_home.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/balloon_lottie_screen.dart';
-import 'package:felloapp/feature/p2p_home/ui/p2p_home_view.dart';
+import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
@@ -416,7 +416,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
         case Pages.P2PHomeView:
           _addPageData(
-            const P2PHomeView(),
+            const P2PHomePage(),
             P2PHomePageConfig,
           );
           break;

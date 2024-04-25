@@ -9776,6 +9776,56 @@ class S {
     );
   }
 
+  /// `Fello P2P`
+  String get felloP2P {
+    return Intl.message(
+      'Fello P2P',
+      name: 'felloP2P',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My Funds`
+  String get myFundsSection {
+    return Intl.message(
+      'My Funds',
+      name: 'myFundsSection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invest`
+  String get investSection {
+    return Intl.message(
+      'Invest',
+      name: 'investSection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transactions`
+  String get transactionSection {
+    return Intl.message(
+      'Transactions',
+      name: 'transactionSection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How Fello P2P Works?`
+  String get howFelloP2PWorks {
+    return Intl.message(
+      'How Fello P2P Works?',
+      name: 'howFelloP2PWorks',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `{multiplicationFactor}X Tickets`
   String ticketsMultiplication(num multiplicationFactor) {
     return Intl.message(
@@ -9813,6 +9863,106 @@ class S {
       name: 'interest',
       desc: '',
       args: [interest],
+    );
+  }
+
+  /// `P2P Wallet`
+  String get wallet {
+    return Intl.message(
+      'P2P Wallet',
+      name: 'wallet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{interest} % Returns on your investment`
+  String walletInterest(num interest) {
+    return Intl.message(
+      '$interest % Returns on your investment',
+      name: 'walletInterest',
+      desc: '',
+      args: [interest],
+    );
+  }
+
+  /// `Current Value:`
+  String get walletCurrentValueLabel {
+    return Intl.message(
+      'Current Value:',
+      name: 'walletCurrentValueLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `₹{amount}`
+  String amount(String amount) {
+    return Intl.message(
+      '₹$amount',
+      name: 'amount',
+      desc: '',
+      args: [amount],
+    );
+  }
+
+  /// `Return Calculator`
+  String get p2pReturnsCalculatorTitle {
+    return Intl.message(
+      'Return Calculator',
+      name: 'p2pReturnsCalculatorTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Calculate your Returns`
+  String get p2pReturnsCalculatorSubtitle {
+    return Intl.message(
+      'Calculate your Returns',
+      name: 'p2pReturnsCalculatorSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Investment Amount -`
+  String get p2pCalculatorInvestmentAmount {
+    return Intl.message(
+      'Investment Amount -',
+      name: 'p2pCalculatorInvestmentAmount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Time Period -`
+  String get p2pCalculatorInvestmentDuration {
+    return Intl.message(
+      'Time Period -',
+      name: 'p2pCalculatorInvestmentDuration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Year`
+  String get p2pCalculatorInvestmentDurationUnit {
+    return Intl.message(
+      'Year',
+      name: 'p2pCalculatorInvestmentDurationUnit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Money in 5 Years-`
+  String get p2pCalculator5YearsReturns {
+    return Intl.message(
+      'Your Money in 5 Years-',
+      name: 'p2pCalculator5YearsReturns',
+      desc: '',
+      args: [],
     );
   }
 }

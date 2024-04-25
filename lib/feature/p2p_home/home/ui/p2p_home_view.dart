@@ -1,21 +1,49 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/feature/p2p_home/home/bloc/p2p_home_bloc.dart';
+import 'package:felloapp/feature/p2p_home/invest_section/ui/invest_section_view.dart';
+import 'package:felloapp/feature/p2p_home/my_funds_section/ui/my_funds_section_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'invest_section/invest_section_view.dart';
-import 'my_funds_section/my_funds_section_view.dart';
-import 'transactions_section/transaction_section_view.dart';
+import '../../transactions_section/ui/transaction_section_view.dart';
+
+class P2PHomePage extends StatelessWidget {
+  const P2PHomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => TransactionBloc(
+            transactionHistoryRepo: locator(),
+          ),
+        ),
+      ],
+      child: const P2PHomeView(),
+    );
+  }
+}
 
 class P2PHomeView extends StatelessWidget {
   const P2PHomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final List<String> tabs = <String>['My Funds', 'Invest', 'Transactions'];
+    final locale = locator<S>();
+    final List<String> tabs = <String>[
+      locale.myFundsSection,
+      locale.investSection,
+      locale.transactionSection,
+    ];
     return DefaultTabController(
       length: tabs.length,
       child: BaseScaffold(
@@ -27,8 +55,7 @@ class P2PHomeView extends StatelessWidget {
             return <Widget>[
               SliverToBoxAdapter(
                 child: CachedNetworkImage(
-                  imageUrl:
-                      'https://ik.imagekit.io/9xfwtu0xm/p2p_home_v2/lb_info.png',
+                  imageUrl: Assets.p2pHomeBanner,
                 ),
               ),
               SliverOverlapAbsorber(
@@ -60,6 +87,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return AppBar(
       elevation: 0,
       leading: BackButton(
@@ -67,7 +95,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       backgroundColor: UiConstants.kTambolaMidTextColor,
       title: Text(
-        'Fello P2P',
+        locale.felloP2P,
         style: TextStyles.rajdhani.title4.copyWith(
           fontWeight: FontWeight.w600,
         ),

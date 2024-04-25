@@ -48,7 +48,7 @@ class AssetInfoFooter extends StatelessWidget {
                 text: TextSpan(
                   text: "$highlightedText ",
                   style: TextStyles.sourceSansSB.title5.colour(
-                    const Color(0xffA9C6D6).withOpacity(0.7),
+                    UiConstants.grey1.withOpacity(0.7),
                   ),
                   children: [
                     TextSpan(

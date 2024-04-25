@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/feature/sip/shared/sip.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,12 +29,7 @@ class _P2PInvestmentCalculatorState extends State<P2PInvestmentCalculator> {
 
   @override
   Widget build(BuildContext context) {
-    final formatter = NumberFormat.currency(
-      locale: 'en_IN',
-      symbol: '₹',
-      decimalDigits: 0,
-    );
-
+    final locale = locator<S>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -40,13 +37,13 @@ class _P2PInvestmentCalculatorState extends State<P2PInvestmentCalculator> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Return Calculator',
+              locale.p2pReturnsCalculatorTitle,
               style: TextStyles.rajdhaniSB.title5.colour(
                 Colors.white,
               ),
             ),
             Text(
-              'Calculate your Returns',
+              locale.p2pReturnsCalculatorSubtitle,
               style: TextStyles.rajdhaniSB.body3.colour(
                 UiConstants.textGray70,
               ),
@@ -84,7 +81,7 @@ class _P2PInvestmentCalculatorState extends State<P2PInvestmentCalculator> {
                     onChangeEnd: (x) => _amountNotifier.value = x,
                     requiresQuickButtons: false,
                     onChange: (x) => _amountNotifier.value = int.parse(x),
-                    label: 'Investment Amount -',
+                    label: locale.p2pCalculatorInvestmentAmount,
                     prefixText: "₹",
                     inputFormatters: [
                       MaxValueInputFormatter(maxValue: 100000),
@@ -115,8 +112,8 @@ class _P2PInvestmentCalculatorState extends State<P2PInvestmentCalculator> {
                     onChangeEnd: (x) => _durationNotifier.value = x,
                     requiresQuickButtons: false,
                     onChange: (x) => _durationNotifier.value = int.parse(x),
-                    label: 'Time Period -',
-                    suffixText: 'Year',
+                    label: locale.p2pCalculatorInvestmentDuration,
+                    suffixText: locale.p2pCalculatorInvestmentDurationUnit,
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
                       MaxValueInputFormatter(maxValue: 10),
@@ -137,7 +134,7 @@ class _P2PInvestmentCalculatorState extends State<P2PInvestmentCalculator> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Your Money in 5 Years-',
+                    locale.p2pCalculator5YearsReturns,
                     style: TextStyles.sourceSansSB.body2
                         .colour(UiConstants.kTextColor),
                   ),
@@ -148,7 +145,7 @@ class _P2PInvestmentCalculatorState extends State<P2PInvestmentCalculator> {
                     ]),
                     builder: (context, child) {
                       return Text(
-                        formatter.format(
+                        BaseUtil.formatIndianRupees(
                           _amountNotifier.value +
                               BaseUtil.calculateCompoundInterest(
                                 amount: _amountNotifier.value, //principle

@@ -1112,6 +1112,11 @@
 
 
   "@_p2p_home_page_v2" : {},
+  "felloP2P":"Fello P2P",
+  "myFundsSection":"My Funds",
+  "investSection":"Invest",
+  "transactionSection":"Transactions",
+  "howFelloP2PWorks": "How Fello P2P Works?",
   "ticketsMultiplication" : "{multiplicationFactor}X Tickets",
   "@ticketsMultiplication" : {
     "placeholders": {
@@ -1136,5 +1141,32 @@
         "type" : "num"
       }
     }
-  }
+  },
+  "@_my_funds" : {},
+  "wallet":"P2P Wallet",
+  "walletInterest" : "{interest} % Returns on your investment",
+  "@walletInterest" : {
+    "placeholders" : {
+      "interest" : {
+        "type":"num"
+      }
+    }
+  },
+  "walletCurrentValueLabel": "Current Value:",
+  "amount":"₹{amount}",
+  "@amount" : {
+    "placeholders": {
+      "amount":{
+        "type":"String"
+      }
+    }
+  },
+
+  "@_investment_section" : {},
+  "p2pReturnsCalculatorTitle":"Return Calculator",
+  "p2pReturnsCalculatorSubtitle":"Calculate your Returns",
+  "p2pCalculatorInvestmentAmount":"Investment Amount -",
+  "p2pCalculatorInvestmentDuration":"Time Period -",
+  "p2pCalculatorInvestmentDurationUnit":"Year",
+  "p2pCalculator5YearsReturns":"Your Money in 5 Years-"
 }

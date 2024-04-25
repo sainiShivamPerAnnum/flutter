@@ -1,7 +1,7 @@
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
-import '../shared/footer.dart';
+import '../../ui/shared/footer.dart';
 import 'widgets/widgets.dart';
 
 class MyFundSection extends StatelessWidget {

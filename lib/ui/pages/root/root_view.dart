@@ -7,7 +7,7 @@ import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/feature/p2p_home/ui/p2p_home_view.dart';
+import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -118,7 +118,7 @@ class _RootState extends State<Root> {
                 onPressed: () {
                   AppState.delegate!.appState.currentAction = PageAction(
                     page: P2PHomePageConfig,
-                    widget: const P2PHomeView(),
+                    widget: const P2PHomePage(),
                     state: PageState.addWidget,
                   );
                 },
