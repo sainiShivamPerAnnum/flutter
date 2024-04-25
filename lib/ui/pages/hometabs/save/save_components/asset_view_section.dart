@@ -883,42 +883,15 @@ class FloBalanceBriefRow extends StatelessWidget {
 
   num getPercValue(String tier, Portfolio portfolio) {
     if (percent != null) return percent!;
-    switch (tier) {
-      case Constants.ASSET_TYPE_FLO_FIXED_6:
-        return portfolio.flo.fixed2.percGains;
-      case Constants.ASSET_TYPE_FLO_FIXED_3:
-        return portfolio.flo.fixed1.percGains;
-      case Constants.ASSET_TYPE_FLO_FELXI:
-        return portfolio.flo.flexi.percGains;
-      default:
-        return portfolio.flo.percGain;
-    }
+    return portfolio.flo.assetInfo[tier]!.percGains;
   }
 
   num getCurrentValue(String tier, Portfolio portfolio) {
-    switch (tier) {
-      case Constants.ASSET_TYPE_FLO_FIXED_6:
-        return portfolio.flo.fixed2.balance;
-      case Constants.ASSET_TYPE_FLO_FIXED_3:
-        return portfolio.flo.fixed1.balance;
-      case Constants.ASSET_TYPE_FLO_FELXI:
-        return portfolio.flo.flexi.balance;
-      default:
-        return portfolio.flo.balance;
-    }
+    return portfolio.flo.assetInfo[tier]!.balance;
   }
 
   num getInvestedValue(String tier, Portfolio portfolio) {
-    switch (tier) {
-      case Constants.ASSET_TYPE_FLO_FIXED_6:
-        return portfolio.flo.fixed2.principle;
-      case Constants.ASSET_TYPE_FLO_FIXED_3:
-        return portfolio.flo.fixed1.principle;
-      case Constants.ASSET_TYPE_FLO_FELXI:
-        return portfolio.flo.flexi.principle;
-      default:
-        return portfolio.flo.principle;
-    }
+    return portfolio.flo.assetInfo[tier]!.principle;
   }
 }
 
