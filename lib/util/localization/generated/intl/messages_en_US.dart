@@ -248,7 +248,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "btn": MessageLookupByLibrary.simpleMessage("Button"),
         "btnAdd": MessageLookupByLibrary.simpleMessage("Add"),
         "btnAlert": MessageLookupByLibrary.simpleMessage("Alert!"),
-        "btnApplyCoupon": MessageLookupByLibrary.simpleMessage("Apply Coupon"),
+        "btnApplyCoupon": MessageLookupByLibrary.simpleMessage("Apply Coupons"),
         "btnCancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "btnCheckHere": MessageLookupByLibrary.simpleMessage("Check here"),
         "btnComplete": MessageLookupByLibrary.simpleMessage("Complete"),
@@ -427,6 +427,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Please enter an amount grater than "),
         "enterAmountLowerThan": MessageLookupByLibrary.simpleMessage(
             "Please enter an amount lower than "),
+        "enterCoupon": MessageLookupByLibrary.simpleMessage("Enter coupon"),
         "enterHigherQuant": MessageLookupByLibrary.simpleMessage(
             "Please enter a higher quantity"),
         "enterLowQuantity": MessageLookupByLibrary.simpleMessage(

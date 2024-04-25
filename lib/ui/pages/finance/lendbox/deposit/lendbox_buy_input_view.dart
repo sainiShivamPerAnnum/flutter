@@ -25,7 +25,6 @@ import 'package:felloapp/ui/pages/finance/preferred_payment_option.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -205,18 +204,16 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                         );
                       },
                     ),
-                  SizedBox(
-                    height: SizeConfig.padding10,
-                  ),
                   if (widget.model.showCoupons) ...[
                     Divider(
                       color: UiConstants.kModalSheetSecondaryBackgroundColor
                           .withOpacity(0.2),
+                      height: SizeConfig.padding1,
                       indent: SizeConfig.pageHorizontalMargins,
                       endIndent: SizeConfig.pageHorizontalMargins,
                     ),
                     SizedBox(
-                      height: SizeConfig.padding16,
+                      height: SizeConfig.padding24,
                     ),
                     FloCouponWidget(
                       widget.model.couponList,
@@ -234,6 +231,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                     indent: SizeConfig.pageHorizontalMargins,
                     endIndent: SizeConfig.pageHorizontalMargins,
                   ),
+                  SizedBox(height: SizeConfig.padding24),
                   _ReInvestNudge(
                     initialValue: true,
                     onChange: (value) {
@@ -370,11 +368,23 @@ class _ReInvestNudgeState extends State<_ReInvestNudge> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                locale.floAutoInvest,
-                style: TextStyles.sourceSans.body3.copyWith(
-                  color: UiConstants.grey1,
-                ),
+              Row(
+                children: [
+                  Text(
+                    'Reinvest on Maturity',
+                    style: TextStyles.sourceSans.body3.copyWith(
+                      color: UiConstants.grey1,
+                    ),
+                  ),
+                  SizedBox(
+                    width: SizeConfig.padding8,
+                  ),
+                  const Icon(
+                    Icons.info_outline,
+                    size: 14,
+                    color: UiConstants.grey1,
+                  ),
+                ],
               ),
               CustomSwitch(
                 initialValue: true,
@@ -385,11 +395,70 @@ class _ReInvestNudgeState extends State<_ReInvestNudge> {
           SizedBox(
             height: SizeConfig.padding12,
           ),
-          if (!_value)
-            locale.floReInvestMessage.beautify(
-              style: TextStyles.sourceSans.body4,
-              alignment: TextAlign.center,
-            ),
+          if (_value)
+            Text.rich(
+              TextSpan(
+                style: TextStyles.sourceSans.body3.colour(
+                  UiConstants.KGoldProSecondary,
+                ),
+                children: [
+                  TextSpan(text: 'Extra '),
+                  TextSpan(
+                    text: '+ 0.25%',
+                    style: TextStyles.sourceSansSB.body3.colour(
+                      UiConstants.KGoldProSecondary,
+                    ),
+                  ),
+                  TextSpan(text: ' on reinvestment')
+                ],
+              ),
+            )
+          else
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: SizeConfig.padding180,
+                  child: Text.rich(
+                    TextSpan(
+                      style: TextStyles.sourceSans.body4.colour(
+                        UiConstants.grey1,
+                      ),
+                      children: [
+                        TextSpan(text: 'Withdraw-able after maturity from '),
+                        TextSpan(
+                          text: 'P2P Wallet',
+                          style: TextStyles.sourceSansB.body4.colour(
+                            UiConstants.grey1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: SizeConfig.padding132,
+                  child: Text.rich(
+                    TextSpan(
+                      style: TextStyles.sourceSans.body4.colour(
+                        UiConstants.teal3,
+                      ),
+                      children: [
+                        TextSpan(text: 'Switch On for '),
+                        TextSpan(
+                          text: '+0.25%',
+                          style: TextStyles.sourceSansB.body4.colour(
+                            UiConstants.teal3,
+                          ),
+                        ),
+                        TextSpan(text: ' on reinvestment'),
+                      ],
+                    ),
+                    textAlign: TextAlign.end,
+                  ),
+                )
+              ],
+            )
         ],
       ),
     );
@@ -412,7 +481,7 @@ class FloBuyNavBar extends StatelessWidget {
 
   String _getSubString() {
     final date = model.getMaturityTime(model.selectedOption);
-    return 'Maturity on $date';
+    return 'Lock-in till $date';
   }
 
   void _openPaymentSheet({
@@ -559,33 +628,37 @@ class FloBuyNavBar extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  InkWell(
-                    onTap: () {
-                      if (!isAmountIsValid) return;
-                      _showBreakDown();
-                    },
-                    child: Row(
-                      children: [
-                        Text(
-                          'Payment summary',
-                          style: TextStyles.sourceSansSB.body4.copyWith(
-                            height: 1,
-                            color: UiConstants.kFAQsAnswerColor.withOpacity(
-                              !isAmountIsValid ? .5 : 1,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: SizeConfig.padding8,
-                        ),
-                        SvgPicture.asset(
-                          Assets.arrow,
-                          color: UiConstants.kFAQsAnswerColor,
-                          height: 5,
-                        ),
-                      ],
-                    ),
+                  Text(
+                    '3 Month Plan',
+                    style: TextStyles.sourceSansB.body3,
                   ),
+                  // InkWell(
+                  //   onTap: () {
+                  //     if (!isAmountIsValid) return;
+                  //     _showBreakDown();
+                  //   },
+                  //   child: Row(
+                  //     children: [
+                  //       Text(
+                  //         'Payment summary',
+                  //         style: TextStyles.sourceSansSB.body4.copyWith(
+                  //           height: 1,
+                  //           color: UiConstants.kFAQsAnswerColor.withOpacity(
+                  //             !isAmountIsValid ? .5 : 1,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       SizedBox(
+                  //         width: SizeConfig.padding8,
+                  //       ),
+                  //       SvgPicture.asset(
+                  //         Assets.arrow,
+                  //         color: UiConstants.kFAQsAnswerColor,
+                  //         height: 5,
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   if (couponCode != null)
                     Padding(
                       padding: EdgeInsets.only(top: SizeConfig.padding4),

@@ -1,6 +1,7 @@
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/util/assets.dart' as a;
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -8,6 +9,9 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../../../static/app_widget.dart';
+import 'flo_coupon_page.dart';
 
 class FloCouponWidget extends StatelessWidget {
   const FloCouponWidget(
@@ -25,63 +29,134 @@ class FloCouponWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     if (_coupons.isEmpty) return const SizedBox.shrink();
     final locale = S.of(context);
-    return SizedBox(
-      height: SizeConfig.screenHeight! * 0.17,
+    return Container(
+      padding:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.pageHorizontalMargins),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  locale.btnApplyCoupon,
-                  style: TextStyles.sourceSansSB.body1,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                locale.btnApplyCoupon,
+                style: TextStyles.sourceSansSB.body1,
+              ),
+              GestureDetector(
+                onTap: () {
+                  model.buyFieldNode.unfocus();
+                  model.showOfferModal(model);
+                },
+                child: Text(
+                  'View All',
+                  style: TextStyles.sourceSans.body3
+                      .colour(UiConstants.kTabBorderColor),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    model.buyFieldNode.unfocus();
-                    model.showOfferModal(model);
-                  },
-                  child: Text(
-                    'Add Manually',
-                    style: TextStyles.sourceSans.body3
-                        .colour(UiConstants.kTabBorderColor),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-          const SizedBox(
-            height: 18,
+          SizedBox(
+            height: SizeConfig.padding25,
           ),
-          Expanded(
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: _coupons.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: index == 0
-                      ? EdgeInsets.only(left: SizeConfig.pageHorizontalMargins)
-                      : index == _coupons.length - 1
-                          ? EdgeInsets.only(
-                              right: SizeConfig.pageHorizontalMargins,
-                              left: SizeConfig.padding14)
-                          : EdgeInsets.only(left: SizeConfig.padding14),
-                  child: _CouponView(
-                    model: _coupons[index],
-                    lendboxBuyViewModel: model,
-                    onTap: onTap,
-                  ),
-                );
-              },
-            ),
-          )
+          CouponViewV2(
+            model: _coupons[0],
+            lendboxBuyViewModel: model,
+            onTap: onTap,
+          ),
+          // Expanded(
+          //   child: ListView.builder(
+          //     scrollDirection: Axis.horizontal,
+          //     itemCount: _coupons.length,
+          //     itemBuilder: (context, index) {
+          //       return Padding(
+          //         padding: index == 0
+          //             ? EdgeInsets.only(left: SizeConfig.pageHorizontalMargins)
+          //             : index == _coupons.length - 1
+          //                 ? EdgeInsets.only(
+          //                     right: SizeConfig.pageHorizontalMargins,
+          //                     left: SizeConfig.padding14)
+          //                 : EdgeInsets.only(left: SizeConfig.padding14),
+          //         child: _CouponView(
+          //           model: _coupons[index],
+          //           lendboxBuyViewModel: model,
+          //           onTap: onTap,
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // )
         ],
       ),
     );
+  }
+}
+
+class CouponViewV2 extends StatelessWidget {
+  const CouponViewV2({
+    required this.model,
+    required this.lendboxBuyViewModel,
+    required this.onTap,
+  });
+
+  final CouponModel model;
+  final ValueChanged<CouponModel> onTap;
+  final LendboxBuyViewModel lendboxBuyViewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return lendboxBuyViewModel.focusCoupon != null
+        ? IndividualCouponView(
+            appliedCode: lendboxBuyViewModel.appliedCoupon?.code,
+            model: lendboxBuyViewModel.focusCoupon!,
+            desc: lendboxBuyViewModel.focusCoupon!.description!,
+            lendboxBuyViewModel: lendboxBuyViewModel,
+            onTap: (coupon) => lendboxBuyViewModel.applyCoupon(
+              coupon.code,
+              false,
+            ),
+          )
+        : GestureDetector(
+            onTap: () {
+              lendboxBuyViewModel.buyFieldNode.unfocus();
+              lendboxBuyViewModel.showOfferModal(lendboxBuyViewModel);
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.padding8,
+                horizontal: SizeConfig.padding16,
+              ),
+              decoration: BoxDecoration(
+                color: Color(0xff2A343A),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(
+                    SizeConfig.padding10,
+                  ),
+                ),
+              ),
+              child: Row(
+                children: [
+                  AppImage(
+                    Assets.ticketTilted,
+                    width: SizeConfig.iconSize0,
+                    height: SizeConfig.iconSize0,
+                    color: UiConstants.teal2,
+                  ),
+                  SizedBox(
+                    width: SizeConfig.padding8,
+                  ),
+                  Text(
+                    'View all coupons',
+                    style: TextStyles.sourceSansSB.body2,
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.chevron_right,
+                    color: UiConstants.kTextColor,
+                  )
+                ],
+              ),
+            ),
+          );
   }
 }
 

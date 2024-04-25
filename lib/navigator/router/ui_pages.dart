@@ -89,6 +89,7 @@ const String FppCompletedMatchDetailsPath = "fppCompletedMatchDetailsPath";
 const String PowerPlayFTUXPath = '/powerPlayFTUXPath';
 const String PowerPlaySeasonLeaderboardPath = "powerplaySeasonLeaderboardPath";
 const String LendboxBuyViewPath = "/LendboxBuyViewPath";
+const String LendboxCouponViewPath = "/LendboxCouponViewPath";
 const String AssetSelectionViewPath = "/assetSelectionViewPath";
 const String QuizWebViewPath = "/quizWebViewPath";
 const String BalloonLottieScreenPath = "/bolloonLottieScreenPath";
@@ -200,6 +201,7 @@ enum Pages {
   PowerPlayFTUX,
   PowerPlaySeasonLeaderboard,
   LendboxBuyView,
+  LendboxCouponView,
   AssetSelectionView,
   QuizWebView,
   BalloonLottieScreen,
@@ -790,6 +792,11 @@ PageConfiguration LendboxBuyViewConfig = PageConfiguration(
     path: LendboxBuyViewPath,
     uiPage: Pages.LendboxBuyView,
     name: "Lendbox Buy View Screen");
+PageConfiguration LendboxCouponViewConfig = PageConfiguration(
+    key: 'LendboxCouponViewPath',
+    path: LendboxCouponViewPath,
+    uiPage: Pages.LendboxCouponView,
+    name: "Lendbox Coupon Screen");
 
 PageConfiguration AssetSelectionViewConfig = PageConfiguration(
     key: 'AssetSelectionViewPath',

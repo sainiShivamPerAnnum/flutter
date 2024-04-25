@@ -3766,10 +3766,10 @@ class S {
     );
   }
 
-  /// `Apply Coupon`
+  /// `Apply Coupons`
   String get btnApplyCoupon {
     return Intl.message(
-      'Apply Coupon',
+      'Apply Coupons',
       name: 'btnApplyCoupon',
       desc: '',
       args: [],
@@ -5389,6 +5389,16 @@ class S {
     return Intl.message(
       'Please enter a code to continue',
       name: 'txnEnterCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter coupon`
+  String get enterCoupon {
+    return Intl.message(
+      'Enter coupon',
+      name: 'enterCoupon',
       desc: '',
       args: [],
     );

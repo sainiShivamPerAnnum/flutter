@@ -36,7 +36,7 @@ class FlexiTransactionsSection extends StatefulWidget {
   });
 
   final FloPremiumDetailsViewModel model;
-  final FundType fundType;
+  final String fundType;
 
   @override
   State<FlexiTransactionsSection> createState() =>
@@ -81,7 +81,7 @@ class _FlexiTransactionsSectionState extends State<FlexiTransactionsSection> {
               horizontal: SizeConfig.padding24,
             ),
             child: FloBalanceBriefRow(
-              tier: widget.fundType.name,
+              tier: widget.fundType,
               mini: true,
               endAlign: true,
             ),
@@ -373,7 +373,7 @@ class _FloPremiumTransactionsListState
                                     trail: principleValue,
                                     percent: (gain / principleValue) * 100,
                                     leftAlign: true,
-                                    tier: widget.model.config.fundType.name,
+                                    tier: widget.model.config.fundType,
                                   ),
                                 ],
                               ),
@@ -447,8 +447,8 @@ class _FloPremiumTransactionsListState
                                               amount: "${currentValue - gain}",
                                               txnId: widget.model
                                                   .transactionsList[i].docKey!,
-                                              assetType: widget
-                                                  .model.config.fundType.name,
+                                              assetType:
+                                                  widget.model.config.fundType,
                                             ),
                                           ).then(
                                             (value) =>

@@ -946,7 +946,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           state: PageState.addWidget,
           page: FloPremiumDetailsPageConfig,
           widget: const FloPremiumDetailsView(
-            fundType: FundType.UNI_FIXED_3,
+            fundType: 'UNI_FIXED_3',
           ),
         );
         break;
@@ -955,7 +955,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           state: PageState.addWidget,
           page: FloPremiumDetailsPageConfig,
           widget: const FloPremiumDetailsView(
-            fundType: FundType.UNI_FIXED_6,
+            fundType: 'UNI_FIXED_6',
           ),
         );
         break;

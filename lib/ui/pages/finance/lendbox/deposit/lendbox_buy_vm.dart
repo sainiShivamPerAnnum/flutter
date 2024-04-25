@@ -28,7 +28,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/flo_coupon_modal_sheet.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/flo_coupon_page.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
 import 'package:felloapp/ui/pages/finance/preffered_upi_option_mixin.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -226,8 +226,8 @@ class LendboxBuyViewModel extends BaseViewModel
       (element) {
         return modelFlowType == Constants.ASSET_TYPE_FLO_FELXI
             ? (element.isForOldLb == isLendBoxOldUser &&
-                element.fundType.name == modelFlowType)
-            : element.fundType.name == modelFlowType;
+                element.fundType == modelFlowType)
+            : element.fundType == modelFlowType;
       },
     );
 
@@ -248,7 +248,7 @@ class LendboxBuyViewModel extends BaseViewModel
     setState(ViewState.Busy);
     floAssetType = assetTypeFlow;
     config = AppConfigV2.instance.lendBoxP2P.firstWhere(
-      (element) => element.fundType.name == floAssetType,
+      (element) => element.fundType == floAssetType,
     );
     _txnService.floAssetType = floAssetType;
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
@@ -516,7 +516,13 @@ class LendboxBuyViewModel extends BaseViewModel
         couponsRes.model != null &&
         (couponsRes.model?.length ?? 0) >= 1) {
       couponList = couponsRes.model;
-      if (couponList?[0].priority == 1) focusCoupon = couponList?[0];
+      couponList!.sort(
+        (a, b) => b.maxRewardAmount!.compareTo(a.maxRewardAmount!),
+      );
+      // if (couponList?[0].priority == 1) focusCoupon = couponList?[0];
+      // initial coupon pending?
+      focusCoupon = couponList!.firstWhere((element) =>
+          element.minPurchase! <= int.parse(amountController!.text));
       showCoupons = true;
     }
   }
@@ -573,6 +579,8 @@ class LendboxBuyViewModel extends BaseViewModel
     buyAmount = assetOptionsModel?.data.userOptions[index].value.toInt();
     amountController!.text = buyAmount!.toString();
 
+    focusCoupon = couponList!.firstWhereOrNull(
+        (element) => element.minPurchase! <= int.parse(amountController!.text));
     appliedCoupon = null;
 
     analyticsService.track(
@@ -620,24 +628,32 @@ class LendboxBuyViewModel extends BaseViewModel
 
     updateFieldWidth();
 
+    focusCoupon = couponList!.firstWhereOrNull(
+        (element) => element.minPurchase! <= int.parse(amountController!.text));
+
     appliedCoupon = null;
   }
 
   void showOfferModal(LendboxBuyViewModel? model) {
-    BaseUtil.openModalBottomSheet(
-      content: FloCouponModalSheet(model: model),
-      addToScreenStack: true,
-      backgroundColor: UiConstants.kSecondaryBackgroundColor,
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(SizeConfig.roundness12),
-        topRight: Radius.circular(SizeConfig.roundness12),
-      ),
-      boxContraints: BoxConstraints(
-        maxHeight: SizeConfig.screenHeight! * 0.75,
-        minHeight: SizeConfig.screenHeight! * 0.75,
-      ),
-      isBarrierDismissible: false,
-      isScrollControlled: true,
+    // BaseUtil.openModalBottomSheet(
+    //   content: FloCouponModalSheet(model: model),
+    //   addToScreenStack: true,
+    //   backgroundColor: UiConstants.kSecondaryBackgroundColor,
+    //   borderRadius: BorderRadius.only(
+    //     topLeft: Radius.circular(SizeConfig.roundness12),
+    //     topRight: Radius.circular(SizeConfig.roundness12),
+    //   ),
+    //   boxContraints: BoxConstraints(
+    //     maxHeight: SizeConfig.screenHeight! * 0.75,
+    //     minHeight: SizeConfig.screenHeight! * 0.75,
+    //   ),
+    //   isBarrierDismissible: false,
+    //   isScrollControlled: true,
+    // );
+    AppState.delegate!.appState.currentAction = PageAction(
+      page: LendboxCouponViewConfig,
+      state: PageState.addWidget,
+      widget: FloCouponPage(),
     );
   }
 
@@ -746,7 +762,8 @@ class LendboxBuyViewModel extends BaseViewModel
         checkForSpecialCoupon(response.model!);
 
         appliedCoupon = response.model;
-
+        focusCoupon = couponList!.firstWhereOrNull(
+            (element) => element.code! == response.model!.code);
         BaseUtil.showPositiveAlert(
           locale.couponAppliedSucc,
           response.model?.message,

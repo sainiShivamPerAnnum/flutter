@@ -22,13 +22,13 @@ class FloPremiumSection extends StatelessWidget {
     final portfolio = model.userPortfolio;
 
     final assetConfiguration = AppConfigV2.instance.lendBoxP2P.where(
-      (element) => element.fundType != FundType.UNI_FLEXI,
+      (element) => element.fundType != 'UNI_FLEXI',
     );
 
     return Column(
       children: [
         for (final configuration in assetConfiguration)
-          if (!(configuration.fundType != FundType.UNI_FIXED_3 && oldLBUser))
+          if (!(configuration.fundType != 'UNI_FIXED_3' && oldLBUser))
             _FloAssetCard(
               portfolio: portfolio,
               newUser: newUser,
@@ -36,7 +36,7 @@ class FloPremiumSection extends StatelessWidget {
               model: model,
               assetConfig: configuration,
               onTapSave: () => BaseUtil.openFloBuySheet(
-                floAssetType: configuration.fundType.name,
+                floAssetType: configuration.fundType,
               ),
             ),
       ],
@@ -61,11 +61,11 @@ class _FloAssetCard extends StatelessWidget {
   final bool newUser;
   final Portfolio portfolio;
 
-  ({int percentage, String redirection}) _getAssetDetails(FundType fundType) {
+  ({int percentage, String redirection}) _getAssetDetails(String fundType) {
     return switch (fundType) {
-      FundType.UNI_FIXED_6 => (percentage: 12, redirection: 'flo12Details'),
-      FundType.UNI_FIXED_3 => (percentage: 10, redirection: 'flo10Details'),
-      FundType.UNI_FLEXI when oldLBUser => (
+      'UNI_FIXED_6' => (percentage: 12, redirection: 'flo12Details'),
+      'UNI_FIXED_3' => (percentage: 10, redirection: 'flo10Details'),
+      'UNI_FLEXI' when oldLBUser => (
           percentage: 10,
           redirection: 'flo10Details'
         ),
@@ -98,7 +98,7 @@ class _FloAssetCard extends StatelessWidget {
         summary: assetConfig.descText,
         lockIn: assetConfig.maturityPeriodText,
         minInvestment: assetConfig.minAmountText,
-        tier: assetConfig.fundType.name,
+        tier: assetConfig.fundType,
         actionUri: redirection,
         promoText:
             "Get *${assetConfig.tambolaMultiplier}X tickets* on saving in $percentage% Flo till maturity",
