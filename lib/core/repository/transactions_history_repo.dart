@@ -26,6 +26,7 @@ class TransactionHistoryRepository extends BaseRepo {
     String? subtype,
     String? status,
     String? lbFundType,
+    bool? lbActiveFunds,
   }) async {
     List<UserTransaction> events = [];
     try {
@@ -42,7 +43,8 @@ class TransactionHistoryRepository extends BaseRepo {
           "offset": offset.toString(),
         },
         "status": status,
-        if (lbFundType != null) "lbFundType": lbFundType
+        if (lbFundType != null) "lbFundType": lbFundType,
+        if (lbActiveFunds != null) "lbActiveFunds": lbActiveFunds,
       };
       final response = await APIService.instance.getData(
         ApiPath.kSingleTransactions(uid),

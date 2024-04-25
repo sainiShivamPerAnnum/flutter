@@ -314,14 +314,16 @@ class FloPremiumDetailsView extends StatelessWidget {
           'UNI_FIXED_3' => portfolio.flo.fixed2.principle,
           'UNI_FIXED_1' => portfolio.flo.fixed2.principle,
           'UNI_FLEXI' => portfolio.flo.flexi.principle,
-          _ => 0, //todo @Hirdesh2101
+          _ => portfolio
+              .flo.assetInfo[config.fundType]?.balance, //todo @Hirdesh2101
         },
         "total current amount": switch (config.fundType) {
           'UNI_FIXED_6' => portfolio.flo.fixed1.balance,
           'UNI_FIXED_3' => portfolio.flo.fixed2.balance,
           'UNI_FIXED_1' => portfolio.flo.fixed2.balance,
           'UNI_FLEXI' => portfolio.flo.flexi.balance,
-          _ => 0, //todo @Hirdesh2101
+          _ => portfolio
+              .flo.assetInfo[config.fundType]?.balance, //todo @Hirdesh2101
         },
       },
     );

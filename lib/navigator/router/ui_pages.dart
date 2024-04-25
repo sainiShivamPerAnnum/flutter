@@ -115,6 +115,7 @@ const String SipAssetsSelectViewPath = "/sipassets";
 const String SipFormPageViewPath = "/sipform";
 const String SipStatusPage = '/sip/status';
 const String SipMandateViewPath = '/sip/mandateView';
+const String P2PHomeViewPath = '/p2p/homeView';
 
 enum Pages {
   Splash,
@@ -223,7 +224,8 @@ enum Pages {
   SipAssetSelectView,
   SipFormView,
   SipStatusView,
-  SipMandateView
+  SipMandateView,
+  P2PHomeView,
 }
 
 class PageConfiguration {
@@ -902,9 +904,17 @@ PageConfiguration SipPollingPageConfig = PageConfiguration(
   uiPage: Pages.SipStatusView,
   name: 'Sip polling page config',
 );
+
 PageConfiguration SipMandatePageConfig = PageConfiguration(
   key: 'SipMandateViewPath',
   path: SipMandateViewPath,
   uiPage: Pages.SipMandateView,
   name: 'Sip madate page config',
+);
+
+PageConfiguration P2PHomePageConfig = PageConfiguration(
+  key: 'P2PHomeConfigPath',
+  path: P2PHomeViewPath,
+  uiPage: Pages.P2PHomeView,
+  name: 'P2P Home View Path',
 );

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CalculatorField extends StatefulWidget {
-  CalculatorField({
+  const CalculatorField({
     required this.label,
     required this.value,
     required this.requiresQuickButtons,
@@ -12,7 +12,7 @@ class CalculatorField extends StatefulWidget {
     super.key,
     this.prefixText,
     this.suffixText,
-    this.changeFunction,
+    this.onChange,
     this.inputFormatters,
     this.maxValue,
     this.textAlign,
@@ -21,7 +21,7 @@ class CalculatorField extends StatefulWidget {
     this.decrement,
   });
 
-  final Function(String)? changeFunction;
+  final Function(String)? onChange;
   final ValueChanged<int>? onChangeEnd;
   final bool requiresQuickButtons;
   final bool? isPercentage;
@@ -102,7 +102,7 @@ class _CalculatorFieldState extends State<CalculatorField> {
                 style: TextStyles.sourceSansSB.body2
                     .colour(UiConstants.kTextColor),
                 onChanged: (value) {
-                  widget.changeFunction!(value);
+                  widget.onChange!(value);
                 },
                 inputFormatters: widget.inputFormatters,
                 textAlign: widget.textAlign ?? TextAlign.start,
@@ -200,7 +200,7 @@ class _CalculatorFieldState extends State<CalculatorField> {
             max: widget.maxValue!,
             min: widget.minValue!,
             onChanged: (value) {
-              widget.changeFunction!(value.toInt().toString());
+              widget.onChange!(value.toInt().toString());
             },
             onChangeEnd: (v) => widget.onChangeEnd?.call(v.toInt()),
             thumbColor: Colors.white,
