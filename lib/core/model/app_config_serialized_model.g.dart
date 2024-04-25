@@ -98,6 +98,9 @@ const _$FundTypeEnumMap = {
   FundType.UNI_FIXED_6: 'UNI_FIXED_6',
   FundType.UNI_FIXED_3: 'UNI_FIXED_3',
   FundType.UNI_FIXED_1: 'UNI_FIXED_1',
+  FundType.LB_FX_3: 'LB_FX_3',
+  FundType.LB_FX_6: 'LB_FX_6',
+  FundType.LB_FX_12: 'LB_FX_12',
 };
 
 OverrideUrls _$OverrideUrlsFromJson(Map<String, dynamic> json) => OverrideUrls(
