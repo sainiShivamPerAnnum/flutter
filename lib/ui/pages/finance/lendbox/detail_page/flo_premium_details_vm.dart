@@ -28,13 +28,13 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void updateConfig(FundType fundType) {
+  void updateConfig(String fundType) {
     config = AppConfigV2.instance.lendBoxP2P.firstWhere(
       (element) => element.fundType == fundType,
     );
   }
 
-  void init(FundType fundType) {
+  void init(String fundType) {
     config = AppConfigV2.instance.lendBoxP2P.firstWhere(
       (element) => element.fundType == fundType,
     );
@@ -81,7 +81,7 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
     final response = await _txnHistoryRepo.getUserTransactions(
       type: "DEPOSIT",
       subtype: "LENDBOXP2P",
-      lbFundType: config.fundType.name,
+      lbFundType: config.fundType,
     );
 
     if (response.isSuccess()) {

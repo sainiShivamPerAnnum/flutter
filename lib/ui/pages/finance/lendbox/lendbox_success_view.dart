@@ -1,9 +1,8 @@
-import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/transaction_type_enum.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
@@ -13,7 +12,6 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_success_view
 import 'package:felloapp/ui/pages/finance/transaction_faqs.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -26,8 +24,10 @@ import 'package:lottie/lottie.dart';
 class LendboxSuccessView extends StatefulWidget {
   final TransactionType transactionType;
 
-  const LendboxSuccessView({required this.transactionType, Key? key})
-      : super(key: key);
+  const LendboxSuccessView({
+    required this.transactionType,
+    super.key,
+  });
 
   @override
   State<LendboxSuccessView> createState() => _LendboxSuccessViewState();
@@ -36,6 +36,11 @@ class LendboxSuccessView extends StatefulWidget {
 class _LendboxSuccessViewState extends State<LendboxSuccessView> {
   final LendboxTransactionService _txnService =
       locator<LendboxTransactionService>();
+  late final fundType =
+      _txnService.transactionResponseModel?.data?.floDepositDetails?.fundType;
+  late final details = AppConfigV2.instance.lendBoxP2P.firstWhere(
+    (element) => element.fundType == fundType,
+  );
 
   void showGtIfAvailable() {
     if (widget.transactionType == TransactionType.DEPOSIT) {
@@ -51,25 +56,8 @@ class _LendboxSuccessViewState extends State<LendboxSuccessView> {
   }
 
   String getTicketMultiplier() {
-    List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
-
-    if (_txnService
-                .transactionResponseModel?.data?.floDepositDetails?.fundType ==
-            Constants.ASSET_TYPE_FLO_FIXED_6 &&
-        lendboxDetails[0]["tambolaMultiplier"] != null &&
-        lendboxDetails[0]["tambolaMultiplier"].toString().isNotEmpty) {
-      return "(${lendboxDetails[0]["tambolaMultiplier"]}X)";
-    }
-
-    if (_txnService
-                .transactionResponseModel?.data?.floDepositDetails?.fundType ==
-            Constants.ASSET_TYPE_FLO_FIXED_3 &&
-        lendboxDetails[1]["tambolaMultiplier"] != null &&
-        lendboxDetails[1]["tambolaMultiplier"].toString().isNotEmpty) {
-      return "(${lendboxDetails[1]["tambolaMultiplier"]}X)";
-    }
-
-    return "";
+    final multiplier = details.tambolaMultiplier;
+    return "$multiplier X";
   }
 
   String _getButtonLabel(S locale, bool hasSuperFelloInStack) {
@@ -440,13 +428,6 @@ class _LendboxSuccessViewState extends State<LendboxSuccessView> {
   }
 
   String getFundType(String? fundType) {
-    switch (fundType) {
-      case Constants.ASSET_TYPE_FLO_FIXED_6:
-        return "12%";
-      case Constants.ASSET_TYPE_FLO_FIXED_3:
-        return "10%";
-      default:
-        return "NA";
-    }
+    return "${details.interest}%";
   }
 }

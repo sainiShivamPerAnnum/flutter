@@ -226,8 +226,8 @@ class LendboxBuyViewModel extends BaseViewModel
       (element) {
         return modelFlowType == Constants.ASSET_TYPE_FLO_FELXI
             ? (element.isForOldLb == isLendBoxOldUser &&
-                element.fundType.name == modelFlowType)
-            : element.fundType.name == modelFlowType;
+                element.fundType == modelFlowType)
+            : element.fundType == modelFlowType;
       },
     );
 
@@ -248,7 +248,7 @@ class LendboxBuyViewModel extends BaseViewModel
     setState(ViewState.Busy);
     floAssetType = assetTypeFlow;
     config = AppConfigV2.instance.lendBoxP2P.firstWhere(
-      (element) => element.fundType.name == floAssetType,
+      (element) => element.fundType == floAssetType,
     );
     _txnService.floAssetType = floAssetType;
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
@@ -459,20 +459,10 @@ class LendboxBuyViewModel extends BaseViewModel
   }
 
   String getLockin() {
-    if (floAssetType == Constants.ASSET_TYPE_FLO_FELXI && isLendboxOldUser) {
-      return "1 month";
-    }
-
-    if (floAssetType == Constants.ASSET_TYPE_FLO_FELXI && !isLendboxOldUser) {
-      return "1 week";
-    }
-    if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
-      return "3 month";
-    }
-    if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-      return "6 month";
-    }
-    return "";
+    final config = AppConfigV2.instance.lendBoxP2P.firstWhere(
+      (element) => element.fundType == floAssetType,
+    );
+    return '${config.maturityDuration} month';
   }
 
   String getMaturityTitle() {

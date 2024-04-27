@@ -7,7 +7,6 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
@@ -951,20 +950,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         );
         break;
       case "flo10Details":
-        appState.currentAction = PageAction(
-          state: PageState.addWidget,
-          page: FloPremiumDetailsPageConfig,
-          widget: const FloPremiumDetailsView(
-            fundType: FundType.UNI_FIXED_3,
-          ),
-        );
-        break;
       case "flo12Details":
+      case "floFixed":
         appState.currentAction = PageAction(
           state: PageState.addWidget,
           page: FloPremiumDetailsPageConfig,
-          widget: const FloPremiumDetailsView(
-            fundType: FundType.UNI_FIXED_6,
+          widget: FloPremiumDetailsView(
+            fundType: queryParams['type'] ?? 'UNI_FIXED_6',
           ),
         );
         break;
