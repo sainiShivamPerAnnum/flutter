@@ -67,6 +67,8 @@ class AppConfigV2Data {
   @JsonKey(name: "LENDBOXP2P")
   final List<LendboxAssetConfiguration> lendBoxP2P;
 
+  final Map<String, LendboxAssetConfiguration> lendBoxAssetV2;
+
   final List<String> youtubeVideos;
 
   final List<String> ticketsYoutubeVideos;
@@ -120,6 +122,7 @@ class AppConfigV2Data {
     this.enableJourney = false,
     this.canChangePostMaturityPreference = false,
     this.lendBoxP2P = const [],
+    this.lendBoxAssetV2 = const {},
     this.youtubeVideos = const [],
     this.ticketsYoutubeVideos = const [],
     this.ticketsCategories,
