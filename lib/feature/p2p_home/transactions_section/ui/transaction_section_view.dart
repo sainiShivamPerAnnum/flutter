@@ -2,7 +2,10 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/feature/p2p_home/home/bloc/p2p_home_bloc.dart';
 import 'package:felloapp/feature/p2p_home/ui/shared/footer.dart';
 import 'package:felloapp/util/bloc_pagination/bloc_pagination.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
@@ -29,19 +32,36 @@ class _TransactionSectionState extends State<TransactionSection> {
   @override
   Widget build(BuildContext context) {
     final transactionBloc = context.read<TransactionBloc>();
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        CustomScrollView(
-          slivers: [
-            SliverOverlapInjector(
-              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+
+    return BlocBuilder<TransactionBloc,
+        PaginationState<UserTransaction, int, Object>>(
+      bloc: transactionBloc,
+      builder: (context, state) {
+        if (state.status.isFailedToLoadInitial) {
+          ///TODO(@DK070202): Error widget here.
+        }
+
+        if (state.status.isFetchingInitialPage) {
+          return const Center(
+            child: SizedBox.square(
+              dimension: 30,
+              child: CircularProgressIndicator(
+                color: UiConstants.primaryColor,
+              ),
             ),
-            BlocBuilder<TransactionBloc,
-                PaginationState<UserTransaction, int, Object>>(
-              bloc: transactionBloc,
-              builder: (context, state) {
-                return MultiSliver(
+          );
+        }
+
+        return Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            CustomScrollView(
+              slivers: [
+                SliverOverlapInjector(
+                  handle:
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                ),
+                MultiSliver(
                   children: [
                     SliverPadding(
                       padding: EdgeInsets.symmetric(
@@ -50,7 +70,8 @@ class _TransactionSectionState extends State<TransactionSection> {
                       ),
                       sliver: SliverList.separated(
                         itemBuilder: (context, index) {
-                          if (state.entries.length - 1 == index) {
+                          if (state.entries.length - 1 == index &&
+                              !state.status.isFetchingInitialPage) {
                             transactionBloc.fetchNextPage();
                           }
                           return _TransactionTile(state.entries[index]);
@@ -65,13 +86,20 @@ class _TransactionSectionState extends State<TransactionSection> {
                       ),
                     )
                   ],
-                );
-              },
+                ),
+                if (state.status.isFetchingSuccessive)
+                  const SliverToBoxAdapter(
+                    child: CupertinoActivityIndicator(
+                      radius: 15,
+                      color: Colors.white24,
+                    ),
+                  ),
+              ],
             ),
+            const Footer()
           ],
-        ),
-        const Footer()
-      ],
+        );
+      },
     );
   }
 }
@@ -84,6 +112,7 @@ class _TransactionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return Padding(
       padding: EdgeInsets.symmetric(
         vertical: SizeConfig.padding16,
@@ -95,7 +124,7 @@ class _TransactionTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'WITHDRAWL',
+                transaction.type ?? '',
                 style: TextStyles.rajdhani.body2,
               ),
               SizedBox(
@@ -112,7 +141,7 @@ class _TransactionTile extends StatelessWidget {
           Row(
             children: [
               Text(
-                '₹300',
+                locale.amount(transaction.amount.round().toString()),
                 style: TextStyles.sourceSansSB.body2,
               ),
               SizedBox(
