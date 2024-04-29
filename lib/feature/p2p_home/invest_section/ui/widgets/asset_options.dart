@@ -1,12 +1,14 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_serialized_model.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../../base_util.dart';
 
 class AssetOptionsWidget extends StatelessWidget {
   final List<LendboxAssetConfiguration> assets;
@@ -39,9 +41,15 @@ class AssetInformationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final locale = locator<S>();
     return GestureDetector(
-      onTap: () => BaseUtil.openFloBuySheet(
-        floAssetType: config.fundType,
-      ),
+      onTap: () {
+        AppState.delegate!.appState.currentAction = PageAction(
+          state: PageState.addWidget,
+          page: FloPremiumDetailsPageConfig,
+          widget: FloPremiumDetailsView(
+            fundType: config.fundType,
+          ),
+        );
+      },
       child: Container(
         decoration: BoxDecoration(
           color: UiConstants.grey4,

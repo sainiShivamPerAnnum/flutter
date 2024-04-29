@@ -58,10 +58,7 @@ class FloTiers {
   final num principle;
   final num balance;
   final Map<String, Asset> assetInfo;
-
   final Asset flexi;
-  final Asset fixed1;
-  final Asset fixed2;
 
   const FloTiers({
     this.absGain = 0.0,
@@ -69,8 +66,6 @@ class FloTiers {
     this.principle = 0.0,
     this.balance = 0.0,
     this.flexi = const Asset(),
-    this.fixed1 = const Asset(),
-    this.fixed2 = const Asset(),
     this.assetInfo = const {},
   });
 

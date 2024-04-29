@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -16,7 +16,6 @@ import 'package:felloapp/ui/modalsheets/transaction_details_model_sheet.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/rewards_card.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -29,7 +28,6 @@ import 'package:open_filex/open_filex.dart';
 
 import '../../../../base_util.dart';
 import 'transaction_details_vm.dart';
-
 
 class TransactionDetailsPage extends StatefulWidget {
   const TransactionDetailsPage({
@@ -79,21 +77,12 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
 
   String floSubtype() {
     if (widget.txn.subType == "LENDBOXP2P") {
-      switch (widget.txn.lbMap.fundType) {
-        case Constants.ASSET_TYPE_FLO_FIXED_6:
-          return "12% Flo";
-        case Constants.ASSET_TYPE_FLO_FIXED_3:
-          return "10% Flo";
-        case Constants.ASSET_TYPE_FLO_FELXI:
-          return locator<UserService>()
-                  .userSegments
-                  .contains(Constants.US_FLO_OLD)
-              ? "10% Flo"
-              : "8% Flo";
-        default:
-          return "10% Flo";
-      }
+      final response = AppConfigV2.instance.lendBoxP2P.firstWhere(
+        (element) => element.fundType == widget.txn.subType,
+      );
+      return response.assetName;
     }
+
     return "";
   }
 

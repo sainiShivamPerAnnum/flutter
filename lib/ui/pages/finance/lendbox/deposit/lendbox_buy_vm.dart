@@ -459,20 +459,10 @@ class LendboxBuyViewModel extends BaseViewModel
   }
 
   String getLockin() {
-    if (floAssetType == Constants.ASSET_TYPE_FLO_FELXI && isLendboxOldUser) {
-      return "1 month";
-    }
-
-    if (floAssetType == Constants.ASSET_TYPE_FLO_FELXI && !isLendboxOldUser) {
-      return "1 week";
-    }
-    if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
-      return "3 month";
-    }
-    if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-      return "6 month";
-    }
-    return "";
+    final config = AppConfigV2.instance.lendBoxP2P.firstWhere(
+      (element) => element.fundType == floAssetType,
+    );
+    return '${config.maturityDuration} month';
   }
 
   String getMaturityTitle() {

@@ -35,6 +35,11 @@ AppConfigV2Data _$AppConfigV2DataFromJson(Map<String, dynamic> json) =>
                   LendboxAssetConfiguration.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      lendBoxAssetV2: (json['lendBoxAssetV2'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(k,
+                LendboxAssetConfiguration.fromJson(e as Map<String, dynamic>)),
+          ) ??
+          const {},
       youtubeVideos: (json['youtubeVideos'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??

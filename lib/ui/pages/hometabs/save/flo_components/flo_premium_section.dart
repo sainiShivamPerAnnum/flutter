@@ -21,24 +21,21 @@ class FloPremiumSection extends StatelessWidget {
     final newUser = model.userSegments.contains(Constants.NEW_USER);
     final portfolio = model.userPortfolio;
 
-    final assetConfiguration = AppConfigV2.instance.lendBoxP2P.where(
-      (element) => element.fundType != 'UNI_FLEXI',
-    );
+    final assetConfiguration = AppConfigV2.instance.lendBoxP2P;
 
     return Column(
       children: [
         for (final configuration in assetConfiguration)
-          if (!(configuration.fundType != 'UNI_FIXED_3' && oldLBUser))
-            _FloAssetCard(
-              portfolio: portfolio,
-              newUser: newUser,
-              oldLBUser: oldLBUser,
-              model: model,
-              assetConfig: configuration,
-              onTapSave: () => BaseUtil.openFloBuySheet(
-                floAssetType: configuration.fundType,
-              ),
+          _FloAssetCard(
+            portfolio: portfolio,
+            newUser: newUser,
+            oldLBUser: oldLBUser,
+            model: model,
+            assetConfig: configuration,
+            onTapSave: () => BaseUtil.openFloBuySheet(
+              floAssetType: configuration.fundType,
             ),
+          ),
       ],
     );
   }
@@ -61,16 +58,13 @@ class _FloAssetCard extends StatelessWidget {
   final bool newUser;
   final Portfolio portfolio;
 
-  ({int percentage, String redirection}) _getAssetDetails(String fundType) {
-    return switch (fundType) {
-      'UNI_FIXED_6' => (percentage: 12, redirection: 'flo12Details'),
-      'UNI_FIXED_3' => (percentage: 10, redirection: 'flo10Details'),
-      'UNI_FLEXI' when oldLBUser => (
-          percentage: 10,
-          redirection: 'flo10Details'
-        ),
-      _ => (percentage: 8, redirection: 'flo10Details'),
-    };
+  ({num percentage, String redirection}) _getAssetDetails(String fundType) {
+    final config = AppConfigV2.instance.lendBoxP2P
+        .firstWhere((element) => element.fundType == fundType);
+    return (
+      percentage: config.interest,
+      redirection: 'floFixed?type=$fundType'
+    );
   }
 
   @override

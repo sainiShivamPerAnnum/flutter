@@ -5,7 +5,6 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
-import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/model/lendbox_maturity_response.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/lendbox_maturity_service.dart';

@@ -149,12 +149,13 @@ class FloPremiumDetailsView extends StatelessWidget {
                           MediaQuery.of(context).viewPadding.bottom / 2,
                       child: Stack(
                         children: [
-                          if (model.config.fundType == 'UNI_FIXED_6')
-                            SvgPicture.asset(
-                              Assets.btnBg,
-                              fit: BoxFit.cover,
-                              width: SizeConfig.screenWidth! * 1.5,
-                            ),
+                          //TODO @Hirdesh2101
+                          // if (model.config.fundType.isFixed6)
+                          //   SvgPicture.asset(
+                          //     Assets.btnBg,
+                          //     fit: BoxFit.cover,
+                          //     width: SizeConfig.screenWidth! * 1.5,
+                          //   ),
                           Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -227,9 +228,7 @@ class FloPremiumDetailsView extends StatelessWidget {
                                             onPressed: () {
                                               Haptic.vibrate();
                                               model.cleanTransactionsList();
-                                              model.updateConfig(
-                                                'UNI_FIXED_6',
-                                              );
+                                              model.updateConfig('UNI_FIXED_6');
                                               model.getTransactions();
                                             },
                                           ),
@@ -309,22 +308,10 @@ class FloPremiumDetailsView extends StatelessWidget {
         "asset name": "${config.interest}% Flo",
         "new user":
             locator<UserService>().userSegments.contains(Constants.NEW_USER),
-        "total invested amount": switch (config.fundType) {
-          'UNI_FIXED_6' => portfolio.flo.fixed1.principle,
-          'UNI_FIXED_3' => portfolio.flo.fixed2.principle,
-          'UNI_FIXED_1' => portfolio.flo.fixed2.principle,
-          'UNI_FLEXI' => portfolio.flo.flexi.principle,
-          _ => portfolio
-              .flo.assetInfo[config.fundType]?.balance, //todo @Hirdesh2101
-        },
-        "total current amount": switch (config.fundType) {
-          'UNI_FIXED_6' => portfolio.flo.fixed1.balance,
-          'UNI_FIXED_3' => portfolio.flo.fixed2.balance,
-          'UNI_FIXED_1' => portfolio.flo.fixed2.balance,
-          'UNI_FLEXI' => portfolio.flo.flexi.balance,
-          _ => portfolio
-              .flo.assetInfo[config.fundType]?.balance, //todo @Hirdesh2101
-        },
+        "total invested amount":
+            portfolio.flo.assetInfo[config.fundType]?.principle,
+        "total current amount":
+            portfolio.flo.assetInfo[config.fundType]?.balance,
       },
     );
   }

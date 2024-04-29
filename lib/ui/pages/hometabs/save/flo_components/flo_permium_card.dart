@@ -3,7 +3,6 @@ import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -168,31 +167,15 @@ class FloPremiumTierCard extends StatelessWidget {
   }
 
   num getLead() {
-    return switch (tier) {
-      Constants.ASSET_TYPE_FLO_FIXED_6 => portfolio.flo.fixed2.balance,
-      Constants.ASSET_TYPE_FLO_FIXED_3 => portfolio.flo.fixed1.balance,
-      Constants.ASSET_TYPE_FLO_FELXI => portfolio.flo.flexi.balance,
-      _ => 0,
-    };
+    return portfolio.flo.assetInfo[tier]!.balance;
   }
 
   num getTrail() {
-    return switch (tier) {
-      Constants.ASSET_TYPE_FLO_FIXED_6 => portfolio.flo.fixed2.principle,
-      Constants.ASSET_TYPE_FLO_FIXED_3 => portfolio.flo.fixed1.principle,
-      Constants.ASSET_TYPE_FLO_FELXI => portfolio.flo.flexi.principle,
-      _ => 0
-    };
+    return portfolio.flo.assetInfo[tier]!.principle;
   }
 
   bool isUserInvestedInThisTier() {
-    final userPortfolio = portfolio.flo;
-    return switch (tier) {
-      Constants.ASSET_TYPE_FLO_FIXED_6 => userPortfolio.fixed2.balance > 0,
-      Constants.ASSET_TYPE_FLO_FIXED_3 => userPortfolio.fixed1.balance > 0,
-      Constants.ASSET_TYPE_FLO_FELXI => userPortfolio.flexi.balance > 0,
-      _ => false
-    };
+    return portfolio.flo.assetInfo[tier]!.balance > 0;
   }
 }
 

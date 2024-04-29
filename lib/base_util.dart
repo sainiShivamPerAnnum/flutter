@@ -540,6 +540,20 @@ class BaseUtil extends ChangeNotifier {
     return gainedInterest + i2;
   }
 
+  static num calculateMaturityAmount({
+    required num amount,
+    required num interestRate,
+    required int maturityDuration,
+    int terms = 1,
+  }) =>
+      amount +
+      calculateCompoundInterest(
+        amount: amount,
+        interestRate: interestRate,
+        maturityDuration: maturityDuration,
+        terms: terms,
+      );
+
   Future<void> showConfirmExit() async {
     await openModalBottomSheet(
       isBarrierDismissible: false,

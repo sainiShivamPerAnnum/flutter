@@ -41,12 +41,6 @@ FloTiers _$FloTiersFromJson(Map<String, dynamic> json) => FloTiers(
       flexi: json['flexi'] == null
           ? const Asset()
           : Asset.fromJson(json['flexi'] as Map<String, dynamic>?),
-      fixed1: json['fixed1'] == null
-          ? const Asset()
-          : Asset.fromJson(json['fixed1'] as Map<String, dynamic>?),
-      fixed2: json['fixed2'] == null
-          ? const Asset()
-          : Asset.fromJson(json['fixed2'] as Map<String, dynamic>?),
       assetInfo: (json['assetInfo'] as Map<String, dynamic>?)?.map(
             (k, e) => MapEntry(k, Asset.fromJson(e as Map<String, dynamic>?)),
           ) ??

@@ -67,6 +67,8 @@ class AppConfigV2Data {
   @JsonKey(name: "LENDBOXP2P")
   final List<LendboxAssetConfiguration> lendBoxP2P;
 
+  final Map<String, LendboxAssetConfiguration> lendBoxAssetV2;
+
   final List<String> youtubeVideos;
 
   final List<String> ticketsYoutubeVideos;
@@ -120,6 +122,7 @@ class AppConfigV2Data {
     this.enableJourney = false,
     this.canChangePostMaturityPreference = false,
     this.lendBoxP2P = const [],
+    this.lendBoxAssetV2 = const {},
     this.youtubeVideos = const [],
     this.ticketsYoutubeVideos = const [],
     this.ticketsCategories,
@@ -172,15 +175,6 @@ class LendboxAssetConfiguration {
   factory LendboxAssetConfiguration.fromJson(Map<String, dynamic> json) =>
       _$LendboxAssetConfigurationFromJson(json);
 }
-
-// enum FundType {
-//   UNI_FLEXI,
-//   UNI_FIXED_6,
-//   UNI_FIXED_3,
-//   UNI_FIXED_1;
-
-//   bool get isFixed6 => this == FundType.UNI_FIXED_6;
-// }
 
 @_deserializable
 class OverrideUrls {
