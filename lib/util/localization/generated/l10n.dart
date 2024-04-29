@@ -3776,6 +3776,16 @@ class S {
     );
   }
 
+  /// `More Coupons`
+  String get moreCoupons {
+    return Intl.message(
+      'More Coupons',
+      name: 'moreCoupons',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Continue`
   String get btnContinue {
     return Intl.message(
@@ -9971,6 +9981,56 @@ class S {
     return Intl.message(
       'Your Money in 5 Years-',
       name: 'p2pCalculator5YearsReturns',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Switch On for `
+  String get switchOnFor {
+    return Intl.message(
+      'Switch On for ',
+      name: 'switchOnFor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ` on reinvestment`
+  String get onreinvestment {
+    return Intl.message(
+      ' on reinvestment',
+      name: 'onreinvestment',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Withdraw-able after maturity from `
+  String get WithdrawMaturity {
+    return Intl.message(
+      'Withdraw-able after maturity from ',
+      name: 'WithdrawMaturity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Extra `
+  String get extra {
+    return Intl.message(
+      'Extra ',
+      name: 'extra',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reinvest on Maturity`
+  String get ReinvestTitle {
+    return Intl.message(
+      'Reinvest on Maturity',
+      name: 'ReinvestTitle',
       desc: '',
       args: [],
     );

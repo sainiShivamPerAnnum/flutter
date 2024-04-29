@@ -430,49 +430,17 @@ class BaseUtil extends ChangeNotifier {
     AppState.onTap = null;
     AppState.isTxnProcessing = false;
     locator<BackButtonActions>().isTransactionCancelled = false;
-    switch (floAssetType) {
-      case Constants.ASSET_TYPE_FLO_FIXED_6:
-        final bool? islBoxDepositBanned = userService.userBootUp?.data!.banMap
-            ?.investments?.deposit?.lendBoxFd2?.isBanned;
-        final String? lBoxDepositBanNotice = userService
-            .userBootUp?.data!.banMap?.investments?.deposit?.lendBoxFd2?.reason;
-        if (islBoxDepositBanned != null && islBoxDepositBanned) {
-          BaseUtil.showNegativeAlert(
-            lBoxDepositBanNotice ?? locale.assetNotAvailable,
-            locale.tryLater,
-          );
-          isUserBanned = true;
-        }
-        break;
-
-      case Constants.ASSET_TYPE_FLO_FIXED_3:
-        final bool? islBoxDepositBanned = userService.userBootUp?.data!.banMap
-            ?.investments?.deposit?.lendBoxFd1?.isBanned;
-        final String? lBoxDepositBanNotice = userService
-            .userBootUp?.data!.banMap?.investments?.deposit?.lendBoxFd1?.reason;
-        if (islBoxDepositBanned != null && islBoxDepositBanned) {
-          BaseUtil.showNegativeAlert(
-            lBoxDepositBanNotice ?? locale.assetNotAvailable,
-            locale.tryLater,
-          );
-          isUserBanned = true;
-        }
-        break;
-      case Constants.ASSET_TYPE_FLO_FELXI:
-        final bool? islBoxDepositBanned = userService
-            .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
-        final String? lBoxDepositBanNotice = userService
-            .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
-        if (islBoxDepositBanned != null && islBoxDepositBanned) {
-          BaseUtil.showNegativeAlert(
-            lBoxDepositBanNotice ?? locale.assetNotAvailable,
-            locale.tryLater,
-          );
-          isUserBanned = true;
-        }
-        break;
+    final bool? islBoxDepositBanned = userService.userBootUp?.data!.banMap
+        ?.investments?.depositV2?.flo![floAssetType]?.isBanned;
+    final String? lBoxDepositBanNotice = userService.userBootUp?.data!.banMap
+        ?.investments?.depositV2?.flo![floAssetType]?.reason;
+    if (islBoxDepositBanned != null && islBoxDepositBanned) {
+      BaseUtil.showNegativeAlert(
+        lBoxDepositBanNotice ?? locale.assetNotAvailable,
+        locale.tryLater,
+      );
+      isUserBanned = true;
     }
-
     Haptic.vibrate();
 
     if (isUserBanned) return;

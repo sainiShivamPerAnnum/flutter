@@ -375,7 +375,7 @@ class _ReInvestNudgeState extends State<_ReInvestNudge> {
               Row(
                 children: [
                   Text(
-                    'Reinvest on Maturity',
+                    locale.ReinvestTitle,
                     style: TextStyles.sourceSans.body3.copyWith(
                       color: UiConstants.grey1,
                     ),
@@ -406,14 +406,14 @@ class _ReInvestNudgeState extends State<_ReInvestNudge> {
                   UiConstants.KGoldProSecondary,
                 ),
                 children: [
-                  TextSpan(text: 'Extra '),
+                  TextSpan(text: locale.extra),
                   TextSpan(
                     text: '+ 0.25%',
                     style: TextStyles.sourceSansSB.body3.colour(
                       UiConstants.KGoldProSecondary,
                     ),
                   ),
-                  TextSpan(text: ' on reinvestment')
+                  TextSpan(text: locale.onreinvestment)
                 ],
               ),
             )
@@ -429,7 +429,7 @@ class _ReInvestNudgeState extends State<_ReInvestNudge> {
                         UiConstants.grey1,
                       ),
                       children: [
-                        TextSpan(text: 'Withdraw-able after maturity from '),
+                        TextSpan(text: locale.WithdrawMaturity),
                         TextSpan(
                           text: 'P2P Wallet',
                           style: TextStyles.sourceSansB.body4.colour(
@@ -448,14 +448,14 @@ class _ReInvestNudgeState extends State<_ReInvestNudge> {
                         UiConstants.teal3,
                       ),
                       children: [
-                        TextSpan(text: 'Switch On for '),
+                        TextSpan(text: locale.switchOnFor),
                         TextSpan(
                           text: '+0.25%',
                           style: TextStyles.sourceSansB.body4.colour(
                             UiConstants.teal3,
                           ),
                         ),
-                        TextSpan(text: ' on reinvestment'),
+                        TextSpan(text: locale.onreinvestment),
                       ],
                     ),
                     textAlign: TextAlign.end,

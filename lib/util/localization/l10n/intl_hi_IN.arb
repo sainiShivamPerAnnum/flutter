@@ -410,6 +410,7 @@
   "btnNotifyMe": "मुझे सूचित करो",
   "btnCongratulations": "बधाई हो!",
   "btnApplyCoupon": "कूपन लगाइये",
+  "moreCoupons": "अधिक कूपन",
   "btnContinue": "जारी रखना",
   "btnCheckHere": "यहा जांचिये",
   "btnGetStarted": "शुरू हो जाओ",
@@ -1062,5 +1063,10 @@
 "autoInvest": "परिपक्वता पर स्वतः निवेश",
 "maturityOn": "आपके निवेश पर चक्रवृद्धि रिटर्न",
 "movetoflexi": "परिपक्वता पर 8% P2P फ्लेक्सी में स्थानांतरण",
-"withdrawAfterMaturity": "परिपक्वता के बाद कभी भी निकासी संभव"
+"withdrawAfterMaturity": "परिपक्वता के बाद कभी भी निकासी संभव",
+"switchOnFor": "के लिए स्विच ऑन करें",
+  "onreinvestment": "पुनर्निवेश पर",
+  "WithdrawMaturity": "परिपक्वता के बाद निकासी योग्य",
+  "extra": "अतिरिक्त",
+  "ReinvestTitle": "परिपक्वता पर पुनर्निवेश"
 }

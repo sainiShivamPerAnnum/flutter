@@ -23,6 +23,7 @@ class UiConstants {
   static const Color referralIconColor = Color(0xff6052A9);
   static const Color customBorderShadow = Color(0xfffff9f9);
   static const Color customSubtitle = Color(0xffB9B9B9);
+  static const Color customCoupon = Color(0xff2A343A);
 
   // static final Color chipColor = const Color.fromARGB(255, 241, 227, 243);
   static final Color? chipColor = Colors.grey[200];

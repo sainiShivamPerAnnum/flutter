@@ -123,6 +123,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "KyclinkedAccount":
             MessageLookupByLibrary.simpleMessage("Linked Account"),
         "ObGenderLabel": MessageLookupByLibrary.simpleMessage("Gender"),
+        "ReinvestTitle":
+            MessageLookupByLibrary.simpleMessage("Reinvest on Maturity"),
         "SignOutFailedSubTitle": MessageLookupByLibrary.simpleMessage(
             "Couldn\'t signout. Please try again"),
         "SipCalculator": MessageLookupByLibrary.simpleMessage("SIP Calculator"),
@@ -132,6 +134,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "SipTripTitle": MessageLookupByLibrary.simpleMessage("SIP for a trip"),
         "UnableToSharePicture": MessageLookupByLibrary.simpleMessage(
             "Unable to share the picture at the moment"),
+        "WithdrawMaturity": MessageLookupByLibrary.simpleMessage(
+            "Withdraw-able after maturity from "),
         "abBuyDigitalGold":
             MessageLookupByLibrary.simpleMessage("Buy Digital Gold"),
         "abCompleteYourProfile":
@@ -464,6 +468,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Your Existing SIP"),
         "expectedReturns5y":
             MessageLookupByLibrary.simpleMessage("Your Investment in 5Y"),
+        "extra": MessageLookupByLibrary.simpleMessage("Extra "),
         "extraReturns": m5,
         "failed": MessageLookupByLibrary.simpleMessage("Failed"),
         "failedToCreateTxn": MessageLookupByLibrary.simpleMessage(
@@ -745,6 +750,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Missed out on the happy hour offer?"),
         "moreAlerts": MessageLookupByLibrary.simpleMessage(
             "Looking for more alerts, please wait .."),
+        "moreCoupons": MessageLookupByLibrary.simpleMessage("More Coupons"),
         "moreGamesSubTitle": MessageLookupByLibrary.simpleMessage(
             "New games are added regularly. Keep checking out"),
         "moreGamesTitle":
@@ -959,6 +965,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "oneScratchCard":
             MessageLookupByLibrary.simpleMessage("1 Scratch\nCard"),
         "oneWeek": MessageLookupByLibrary.simpleMessage("1 Week"),
+        "onreinvestment":
+            MessageLookupByLibrary.simpleMessage(" on reinvestment"),
         "operationCannotBeCompleted": MessageLookupByLibrary.simpleMessage(
             "Operation cannot be completed at the moment"),
         "orderSummary": MessageLookupByLibrary.simpleMessage("Order Summary"),
@@ -1300,6 +1308,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "successful": MessageLookupByLibrary.simpleMessage("Successful"),
         "successfullySavedText":
             MessageLookupByLibrary.simpleMessage("You have successfully saved"),
+        "switchOnFor": MessageLookupByLibrary.simpleMessage("Switch On for "),
         "tAppleInfo": MessageLookupByLibrary.simpleMessage(
             "Apple is not associated with Fello Tambola"),
         "tBetterLuckText":

@@ -102,6 +102,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "KyclinkedAccount": MessageLookupByLibrary.simpleMessage("लिंक्ड खाता"),
         "ObGenderLabel": MessageLookupByLibrary.simpleMessage("लिंग"),
+        "ReinvestTitle":
+            MessageLookupByLibrary.simpleMessage("परिपक्वता पर पुनर्निवेश"),
         "SignOutFailedSubTitle": MessageLookupByLibrary.simpleMessage(
             "साइनआउट नहीं हो सका। कृपया पुनः प्रयास करें"),
         "SipCalculator": MessageLookupByLibrary.simpleMessage("SIP कैलकुलेटर"),
@@ -113,6 +115,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("एक यात्रा के लिए SIP"),
         "UnableToSharePicture": MessageLookupByLibrary.simpleMessage(
             "इस समय चित्र साझा करने में असमर्थ"),
+        "WithdrawMaturity": MessageLookupByLibrary.simpleMessage(
+            "परिपक्वता के बाद निकासी योग्य"),
         "abBuyDigitalGold":
             MessageLookupByLibrary.simpleMessage("डिजिटल गोल्ड खरीदें"),
         "abCompleteYourProfile":
@@ -437,6 +441,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "existingSip": MessageLookupByLibrary.simpleMessage("आपकी मौजूदा SIP"),
         "expectedReturns5y":
             MessageLookupByLibrary.simpleMessage("आपका निवेश 5वर्ष में"),
+        "extra": MessageLookupByLibrary.simpleMessage("अतिरिक्त"),
         "failed": MessageLookupByLibrary.simpleMessage("असफल"),
         "failedToCreateTxn":
             MessageLookupByLibrary.simpleMessage("लेनदेन बनाने में विफल"),
@@ -706,6 +711,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("हैप्पी आवर ऑफर से चूक गए?"),
         "moreAlerts": MessageLookupByLibrary.simpleMessage(
             "अधिक अलर्ट खोज रहे हैं, कृपया प्रतीक्षा करें.."),
+        "moreCoupons": MessageLookupByLibrary.simpleMessage("अधिक कूपन"),
         "moreGamesSubTitle": MessageLookupByLibrary.simpleMessage(
             "नए गेम नियमित रूप से जोड़े जाते हैं। देखते रहें"),
         "moreGamesTitle":
@@ -923,6 +929,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "oneScratchCard":
             MessageLookupByLibrary.simpleMessage("1 गोल्डन\nटिकट"),
         "oneWeek": MessageLookupByLibrary.simpleMessage("1 सप्ताह"),
+        "onreinvestment": MessageLookupByLibrary.simpleMessage("पुनर्निवेश पर"),
         "operationCannotBeCompleted": MessageLookupByLibrary.simpleMessage(
             "कार्रवाई इस समय पूरी नहीं की जा सकती"),
         "orderSummary": MessageLookupByLibrary.simpleMessage("आदेश सारांश"),
@@ -1245,6 +1252,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "successful": MessageLookupByLibrary.simpleMessage("सफल"),
         "successfullySavedText":
             MessageLookupByLibrary.simpleMessage("आपने सफलतापूर्वक सहेजा है"),
+        "switchOnFor":
+            MessageLookupByLibrary.simpleMessage("के लिए स्विच ऑन करें"),
         "tAppleInfo": MessageLookupByLibrary.simpleMessage(
             "ऐप्पल फेलो तंबोला से जुड़ा नहीं है"),
         "tBetterLuckText": MessageLookupByLibrary.simpleMessage(

@@ -10,6 +10,8 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../base_util.dart';
+
 class AssetOptionsWidget extends StatelessWidget {
   final List<LendboxAssetConfiguration> assets;
   const AssetOptionsWidget({
@@ -42,13 +44,20 @@ class AssetInformationCard extends StatelessWidget {
     final locale = locator<S>();
     return GestureDetector(
       onTap: () {
-        AppState.delegate!.appState.currentAction = PageAction(
-          state: PageState.addWidget,
-          page: FloPremiumDetailsPageConfig,
-          widget: FloPremiumDetailsView(
-            fundType: config.fundType,
-          ),
-        );
+        //     AppState.delegate!.appState.currentAction = PageAction(
+        //   page: LendboxBuyViewConfig,
+        //   state: PageState.addWidget,
+        //   widget: LendboxBuyView(
+        //     amount: parsedAmount ?? amt,
+        //     initialCouponCode: coupon,
+        //     skipMl: isSkipMl ?? false,
+        //     floAssetType: floAssetType,
+        //     entryPoint: entryPoint,
+        //     quickCheckout: quickCheckout,
+        //   ),
+        // );
+
+        BaseUtil.openFloBuySheet(floAssetType: config.fundType);
       },
       child: Container(
         decoration: BoxDecoration(

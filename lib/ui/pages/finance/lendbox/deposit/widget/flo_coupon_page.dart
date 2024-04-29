@@ -7,6 +7,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../../core/model/coupon_card_model.dart';
@@ -23,7 +24,7 @@ class FloCouponPage extends StatelessWidget {
     return ChangeNotifierProvider.value(
       value: model1,
       child: Scaffold(
-        backgroundColor: Color(0xff1B262C),
+        backgroundColor: UiConstants.kAnimationBackGroundColor,
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
@@ -38,7 +39,7 @@ class FloCouponPage extends StatelessWidget {
             ),
           ),
           title: Text(
-            'Apply Coupons',
+            locale.btnApplyCoupon,
             style: TextStyles.rajdhaniSB.title5,
           ),
         ),
@@ -69,7 +70,7 @@ class FloCouponPage extends StatelessWidget {
                         ),
                         onTap: () {
                           if (_formKey.currentState!.validate()) {
-                            model!.applyCoupon(
+                            model.applyCoupon(
                                 couponCodeController.text.trim(), true);
                             AppState.backButtonDispatcher!.didPopRoute();
                           }
@@ -92,7 +93,7 @@ class FloCouponPage extends StatelessWidget {
                     height: SizeConfig.padding24,
                   ),
                   Text(
-                    'More Coupons',
+                    locale.moreCoupons,
                     style: TextStyles.rajdhaniSB.body2,
                   ),
                   Expanded(
@@ -100,19 +101,19 @@ class FloCouponPage extends StatelessWidget {
                       shrinkWrap: true,
                       physics: const BouncingScrollPhysics(),
                       children: List.generate(
-                        model!.couponList!.length,
-                        (i) => model!.couponList![i].code == null ||
-                                model!.couponList![i].description == null
+                        model.couponList!.length,
+                        (i) => model.couponList![i].code == null ||
+                                model.couponList![i].description == null
                             ? const SizedBox.shrink()
                             : Padding(
                                 padding:
                                     EdgeInsets.only(top: SizeConfig.padding16),
                                 child: IndividualCouponView(
-                                  model: model!.couponList![i],
-                                  appliedCode: model!.appliedCoupon?.code,
-                                  desc: model!.couponList![i].description!,
-                                  lendboxBuyViewModel: model!,
-                                  onTap: (coupon) => model!.applyCoupon(
+                                  model: model.couponList![i],
+                                  appliedCode: model.appliedCoupon?.code,
+                                  desc: model.couponList![i].description!,
+                                  lendboxBuyViewModel: model,
+                                  onTap: (coupon) => model.applyCoupon(
                                     coupon.code,
                                     false,
                                   ),
@@ -132,13 +133,14 @@ class FloCouponPage extends StatelessWidget {
 }
 
 class IndividualCouponView extends StatelessWidget {
-  const IndividualCouponView(
-      {required this.appliedCode,
-      required this.model,
-      required this.desc,
-      required this.onTap,
-      required this.lendboxBuyViewModel,
-      super.key});
+  const IndividualCouponView({
+    required this.appliedCode,
+    required this.model,
+    required this.desc,
+    required this.onTap,
+    required this.lendboxBuyViewModel,
+    super.key,
+  });
   final String? appliedCode;
   final CouponModel model;
   final String desc;
@@ -147,6 +149,7 @@ class IndividualCouponView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return GestureDetector(
       onTap: () {
         if (lendboxBuyViewModel.appliedCoupon == null ||
@@ -155,76 +158,102 @@ class IndividualCouponView extends StatelessWidget {
         }
       },
       child: Container(
-          padding: EdgeInsets.symmetric(
-            vertical: SizeConfig.padding10,
-            horizontal: SizeConfig.padding12,
-          ),
-          decoration: BoxDecoration(
-            color: Color(0xff2A343A),
-            borderRadius: BorderRadius.all(
-              Radius.circular(
-                SizeConfig.padding10,
-              ),
-            ),
-            border: Border.all(
-              color: appliedCode != model.code
-                  ? UiConstants.grey2
-                  : UiConstants.teal3,
-              width: 1,
+        padding: EdgeInsets.symmetric(
+          vertical: SizeConfig.padding10,
+          horizontal: SizeConfig.padding12,
+        ),
+        decoration: BoxDecoration(
+          color: UiConstants.customCoupon,
+          borderRadius: BorderRadius.all(
+            Radius.circular(
+              SizeConfig.padding10,
             ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  AppImage(
-                    Assets.ticketTilted,
-                    width: SizeConfig.iconSize0,
-                    height: SizeConfig.iconSize0,
-                    color: UiConstants.kpurpleTicketColor,
-                  ),
-                  SizedBox(width: SizeConfig.padding12),
-                  Text(
-                    model.code!,
-                    style: TextStyles.sourceSansSB.body2,
-                  ),
-                  const Spacer(),
-                  if (appliedCode != model.code)
-                    Row(
-                      children: [
-                        Text(
-                          'Apply',
-                          style: TextStyles.sourceSans.body3.colour(
-                            UiConstants.teal2,
-                          ),
-                        ),
-                        const Icon(
-                          Icons.chevron_right,
-                          color: UiConstants.teal2,
-                        )
-                      ],
-                    )
-                ],
-              ),
-              SizedBox(height: SizeConfig.padding8),
-              Text(
-                desc,
-                style: TextStyles.sourceSans.body4
-                    .colour(UiConstants.kFAQsAnswerColor),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
-                child: CustomPaint(
-                  painter: DashedLinePainter(),
-                  size: const Size(double.infinity, 1),
+          border: appliedCode != model.code
+              ? null
+              : Border.all(
+                  color: UiConstants.teal3,
+                  width: 1,
                 ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                AppImage(
+                  Assets.ticketTilted,
+                  width: SizeConfig.iconSize0,
+                  height: SizeConfig.iconSize0,
+                  color: model.minPurchase! <=
+                          int.parse(
+                            lendboxBuyViewModel.amountController!.text,
+                          )
+                      ? UiConstants.teal2
+                      : UiConstants.textGray70,
+                ),
+                SizedBox(width: SizeConfig.padding12),
+                Text(
+                  model.code!,
+                  style: TextStyles.sourceSansSB.body2,
+                ),
+                const Spacer(),
+                lendboxBuyViewModel.couponApplyInProgress
+                    ? const SpinKitThreeBounce(
+                        color: UiConstants.teal2,
+                        size: 14,
+                      )
+                    : appliedCode != model.code
+                        ? Row(
+                            children: [
+                              Text(
+                                locale.txnApply,
+                                style: TextStyles.sourceSans.body3.colour(
+                                    model.minPurchase! <=
+                                            int.parse(lendboxBuyViewModel
+                                                .amountController!.text)
+                                        ? UiConstants.teal2
+                                        : UiConstants.textGray70),
+                              ),
+                              Icon(Icons.chevron_right,
+                                  color: model.minPurchase! <=
+                                          int.parse(lendboxBuyViewModel
+                                              .amountController!.text)
+                                      ? UiConstants.teal2
+                                      : UiConstants.textGray70)
+                            ],
+                          )
+                        : const SizedBox.shrink()
+              ],
+            ),
+            SizedBox(height: SizeConfig.padding8),
+            Text(
+              desc,
+              style: TextStyles.sourceSans.body4
+                  .colour(UiConstants.kFAQsAnswerColor),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
+              child: CustomPaint(
+                painter: DashedLinePainter(),
+                size: const Size(double.infinity, 1),
               ),
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Text('Get 5X Tickets', style: TextStyles.sourceSansSB.body3)
-              ])
-            ],
-          )),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Get 5X Tickets',
+                    style: TextStyles.sourceSansSB.body3.colour(
+                        model.minPurchase! <=
+                                int.parse(
+                                    lendboxBuyViewModel.amountController!.text)
+                            ? UiConstants.teal2
+                            : UiConstants.textGray70))
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -425,6 +425,7 @@
   "btnNotifyMe": "NOTIFY ME",
   "btnCongratulations": "Congratulations!",
   "btnApplyCoupon": "Apply Coupons",
+  "moreCoupons": "More Coupons",
   "btnContinue": "Continue",
   "btnCheckHere": "Check here",
   "btnGetStarted": "Get Started",
@@ -1169,5 +1170,10 @@
   "p2pCalculatorInvestmentAmount":"Investment Amount -",
   "p2pCalculatorInvestmentDuration":"Time Period -",
   "p2pCalculatorInvestmentDurationUnit":"Year",
-  "p2pCalculator5YearsReturns":"Your Money in 5 Years-"
+  "p2pCalculator5YearsReturns":"Your Money in 5 Years-",
+  "switchOnFor": "Switch On for ",
+  "onreinvestment":" on reinvestment",
+  "WithdrawMaturity": "Withdraw-able after maturity from ",
+  "extra": "Extra ",
+  "ReinvestTitle": "Reinvest on Maturity"
 }
