@@ -5,7 +5,6 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
-import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/model/lendbox_maturity_response.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/lendbox_maturity_service.dart';
@@ -36,7 +35,7 @@ class FlexiTransactionsSection extends StatefulWidget {
   });
 
   final FloPremiumDetailsViewModel model;
-  final FundType fundType;
+  final String fundType;
 
   @override
   State<FlexiTransactionsSection> createState() =>
@@ -81,7 +80,7 @@ class _FlexiTransactionsSectionState extends State<FlexiTransactionsSection> {
               horizontal: SizeConfig.padding24,
             ),
             child: FloBalanceBriefRow(
-              tier: widget.fundType.name,
+              tier: widget.fundType,
               mini: true,
               endAlign: true,
             ),
@@ -373,7 +372,7 @@ class _FloPremiumTransactionsListState
                                     trail: principleValue,
                                     percent: (gain / principleValue) * 100,
                                     leftAlign: true,
-                                    tier: widget.model.config.fundType.name,
+                                    tier: widget.model.config.fundType,
                                   ),
                                 ],
                               ),
@@ -447,8 +446,8 @@ class _FloPremiumTransactionsListState
                                               amount: "${currentValue - gain}",
                                               txnId: widget.model
                                                   .transactionsList[i].docKey!,
-                                              assetType: widget
-                                                  .model.config.fundType.name,
+                                              assetType:
+                                                  widget.model.config.fundType,
                                             ),
                                           ).then(
                                             (value) =>

@@ -421,11 +421,14 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
   int _selectedOption = -1;
   bool _isLoading = false;
   bool isEnable = false;
+  late final LendboxAssetConfiguration assetConfiguration;
 
   @override
   void initState() {
     super.initState();
-
+    assetConfiguration = AppConfigV2.instance.lendBoxP2P.firstWhere(
+      (element) => element.fundType == widget.assetType,
+    );
     maturityAmount = calculateAmountAfterMaturity(widget.amount);
   }
 
@@ -449,21 +452,13 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
   String maturityAmount = "";
 
   String calculateAmountAfterMaturity(String amount) {
-    int interest =
-        widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
-
-    double principal = double.tryParse(amount) ?? 0.0;
-    double rateOfInterest = interest / 100.0;
-    int timeInMonths =
-        widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 2 : 4;
-
-    // 0.12 / 365 * amt * (365 / 2)
-    //0.10 / 365 * amt * (365 / 4)
-
-    double amountAfterMonths =
-        rateOfInterest / 365 * principal * (365 / timeInMonths);
-
-    return (principal + amountAfterMonths).toStringAsFixed(2);
+    final amt = num.parse(amount);
+    return BaseUtil.calculateMaturityAmount(
+      terms: 1,
+      maturityDuration: assetConfiguration.maturityDuration,
+      interestRate: assetConfiguration.interest,
+      amount: amt,
+    ).toInt().toString();
   }
 
   String get subtitle =>

@@ -35,6 +35,11 @@ AppConfigV2Data _$AppConfigV2DataFromJson(Map<String, dynamic> json) =>
                   LendboxAssetConfiguration.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      lendBoxAssetV2: (json['lendBoxAssetV2'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(k,
+                LendboxAssetConfiguration.fromJson(e as Map<String, dynamic>)),
+          ) ??
+          const {},
       youtubeVideos: (json['youtubeVideos'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -80,7 +85,7 @@ AppConfigV2Data _$AppConfigV2DataFromJson(Map<String, dynamic> json) =>
 LendboxAssetConfiguration _$LendboxAssetConfigurationFromJson(
         Map<String, dynamic> json) =>
     LendboxAssetConfiguration(
-      fundType: $enumDecode(_$FundTypeEnumMap, json['fundType']),
+      fundType: json['fundType'] as String,
       maturityPeriodText: json['maturityPeriodText'] as String,
       minAmountText: json['minAmountText'] as String,
       descText: json['descText'] as String,
@@ -92,16 +97,6 @@ LendboxAssetConfiguration _$LendboxAssetConfigurationFromJson(
       highlights: json['highlights'] as String? ?? '',
       description: json['description'] as String? ?? '',
     );
-
-const _$FundTypeEnumMap = {
-  FundType.UNI_FLEXI: 'UNI_FLEXI',
-  FundType.UNI_FIXED_6: 'UNI_FIXED_6',
-  FundType.UNI_FIXED_3: 'UNI_FIXED_3',
-  FundType.UNI_FIXED_1: 'UNI_FIXED_1',
-  FundType.LB_FX_3: 'LB_FX_3',
-  FundType.LB_FX_6: 'LB_FX_6',
-  FundType.LB_FX_12: 'LB_FX_12',
-};
 
 OverrideUrls _$OverrideUrlsFromJson(Map<String, dynamic> json) => OverrideUrls(
       userOps: json['userOps'] as String? ?? '',

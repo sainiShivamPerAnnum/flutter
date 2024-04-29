@@ -33,9 +33,9 @@ class CustomerSupportWidget extends StatelessWidget {
         "new user":
             locator<UserService>().userSegments.contains(Constants.NEW_USER),
         "total invested amount":
-            portfolio.flo.assetInfo[config.fundType.name]?.principle,
+            portfolio.flo.assetInfo[config.fundType]?.principle,
         "total current amount":
-            portfolio.flo.assetInfo[config.fundType.name]?.balance,
+            portfolio.flo.assetInfo[config.fundType]?.balance,
       },
     );
   }

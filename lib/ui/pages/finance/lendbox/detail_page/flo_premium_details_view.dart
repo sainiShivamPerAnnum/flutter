@@ -30,7 +30,7 @@ import 'package:provider/provider.dart';
 import 'widgets/widget.dart';
 
 class FloPremiumDetailsView extends StatelessWidget {
-  final FundType fundType;
+  final String fundType;
 
   const FloPremiumDetailsView({
     required this.fundType,
@@ -149,12 +149,13 @@ class FloPremiumDetailsView extends StatelessWidget {
                           MediaQuery.of(context).viewPadding.bottom / 2,
                       child: Stack(
                         children: [
-                          if (model.config.fundType.isFixed6)
-                            SvgPicture.asset(
-                              Assets.btnBg,
-                              fit: BoxFit.cover,
-                              width: SizeConfig.screenWidth! * 1.5,
-                            ),
+                          //TODO
+                          // if (model.config.fundType.isFixed6)
+                          //   SvgPicture.asset(
+                          //     Assets.btnBg,
+                          //     fit: BoxFit.cover,
+                          //     width: SizeConfig.screenWidth! * 1.5,
+                          //   ),
                           Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -204,7 +205,8 @@ class FloPremiumDetailsView extends StatelessWidget {
                                 width: SizeConfig.screenWidth!,
                                 child: Row(
                                   children: [
-                                    if (!model.config.fundType.isFixed6) ...[
+                                    if (model.config.fundType !=
+                                        'UNI_FIXED_6') ...[
                                       Expanded(
                                         child: SizedBox(
                                           height: SizeConfig.padding44,
@@ -226,9 +228,7 @@ class FloPremiumDetailsView extends StatelessWidget {
                                             onPressed: () {
                                               Haptic.vibrate();
                                               model.cleanTransactionsList();
-                                              model.updateConfig(
-                                                FundType.UNI_FIXED_6,
-                                              );
+                                              model.updateConfig('UNI_FIXED_6');
                                               model.getTransactions();
                                             },
                                           ),
@@ -254,8 +254,7 @@ class FloPremiumDetailsView extends StatelessWidget {
                                         ),
                                         onPressed: () {
                                           BaseUtil.openFloBuySheet(
-                                            floAssetType:
-                                                model.config.fundType.name,
+                                            floAssetType: model.config.fundType,
                                           );
                                           _onTapSave(
                                             model.config,
@@ -360,7 +359,7 @@ class _Header extends StatelessWidget {
                           child: Text(
                             "${model.interest}% Flo",
                             style: TextStyles.rajdhaniB.title0.colour(
-                              model.fundType == FundType.UNI_FIXED_6
+                              model.fundType == 'UNI_FIXED_6'
                                   ? UiConstants.primaryColor
                                   : Colors.white,
                             ),
