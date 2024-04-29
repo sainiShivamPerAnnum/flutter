@@ -1,11 +1,25 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/app_config_serialized_model.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 class TransactionCard extends StatelessWidget {
-  const TransactionCard({super.key});
+  const TransactionCard({
+    required this.transaction,
+    super.key,
+  });
+
+  final UserTransaction transaction;
 
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
+    final assetInformation = AppConfigV2.instance.lendBoxP2P.firstWhere(
+      (e) => e.fundType == transaction.lbMap.fundType,
+    );
     return Container(
       decoration: BoxDecoration(
         color: UiConstants.grey4,
@@ -44,13 +58,13 @@ class TransactionCard extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      '8%',
+                      locale.percentage(assetInformation.interest),
                       style: TextStyles.rajdhaniB.body2.copyWith(
                         color: UiConstants.teal3,
                       ),
                     ),
                     Text(
-                      'per annum',
+                      locale.perAnnumLabel,
                       style: TextStyles.sourceSans.body4.copyWith(
                         color: UiConstants.teal3,
                       ),
@@ -62,7 +76,7 @@ class TransactionCard extends StatelessWidget {
                 width: SizeConfig.padding12,
               ),
               Text(
-                '1 Month Plan',
+                assetInformation.assetName,
                 style: TextStyles.sourceSansSB.body1,
               ),
               const Spacer(),
@@ -75,20 +89,30 @@ class TransactionCard extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding12,
           ),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _InvestmentInfo(
-                title: 'Invested',
-                subtitle: '₹30K',
+                title: locale.invested,
+                subtitle: locale.amount(
+                  BaseUtil.formatCompactRupees(transaction.amount),
+                ),
               ),
               _InvestmentInfo(
-                title: 'Current Value',
-                subtitle: '₹39.7K',
+                title: locale.currentValue,
+                subtitle: locale.amount(
+                  BaseUtil.formatCompactRupees(
+                    transaction.amount + (transaction.lbMap.gainAmount ?? 0),
+                  ),
+                ),
               ),
               _InvestmentInfo(
-                title: 'Lock-in till',
-                subtitle: '12th April 2024',
+                title: locale.lockInTill,
+                subtitle: BaseUtil.formatDateWithOrdinal(
+                  DateTime.fromMicrosecondsSinceEpoch(
+                    transaction.lbMap.maturityAt!.microsecondsSinceEpoch,
+                  ),
+                ),
               ),
             ],
           ),
@@ -101,13 +125,13 @@ class TransactionCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Re-Invest on maturity',
+                locale.reInvestOnMaturity,
                 style: TextStyles.sourceSans.body4.copyWith(
                   color: UiConstants.textGray60,
                 ),
               ),
               Text(
-                '+ 0.25% Returns',
+                locale.extraReturns(.35),
                 style: TextStyles.sourceSans.body4.copyWith(
                   color: UiConstants.yellow2,
                 ),
@@ -122,7 +146,6 @@ class TransactionCard extends StatelessWidget {
 
 class _InvestmentInfo extends StatelessWidget {
   const _InvestmentInfo({
-    super.key,
     required this.title,
     required this.subtitle,
   });

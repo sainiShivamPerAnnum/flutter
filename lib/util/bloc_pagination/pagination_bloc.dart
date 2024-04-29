@@ -280,7 +280,9 @@ class PaginationBloc<Type, Result, PageReference, Error extends Object>
 
   /// Triggers the event to fetch the first page.
   void fetchFirstPage() {
-    if (state.status.hasNoResultForPage || state.status.hasFetchedAllPage) {
+    if (state.entries.isNotEmpty ||
+        state.status.hasNoResultForPage ||
+        state.status.hasFetchedAllPage) {
       return;
     }
 

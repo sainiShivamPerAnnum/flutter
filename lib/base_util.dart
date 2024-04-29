@@ -1052,6 +1052,30 @@ class BaseUtil extends ChangeNotifier {
     return currentWeekNumber != lastWeekNumber;
   }
 
+  static String formatDateWithOrdinal(DateTime date) {
+    String getOrdinalSuffix(int day) {
+      if (day % 10 == 1 && day % 100 != 11) {
+        return 'st';
+      } else if (day % 10 == 2 && day % 100 != 12) {
+        return 'nd';
+      } else if (day % 10 == 3 && day % 100 != 13) {
+        return 'rd';
+      } else {
+        return 'th';
+      }
+    }
+
+    final day = date.day;
+    final month = DateFormat('MMMM').format(date);
+    final year = date.year;
+
+    final ordinalSuffix = getOrdinalSuffix(day);
+
+    final formattedDate = '$day$ordinalSuffix $month $year';
+
+    return formattedDate;
+  }
+
   static int calculateRemainingDays(DateTime endDate) {
     DateTime now = DateTime.now();
     Duration difference = endDate.difference(now);

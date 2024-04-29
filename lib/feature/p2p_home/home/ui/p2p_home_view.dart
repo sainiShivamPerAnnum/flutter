@@ -1,8 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
-import 'package:felloapp/feature/p2p_home/home/bloc/p2p_home_bloc.dart';
 import 'package:felloapp/feature/p2p_home/invest_section/ui/invest_section_view.dart';
+import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/ui/my_funds_section_view.dart';
+import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -24,6 +25,11 @@ class P2PHomePage extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => TransactionBloc(
+            transactionHistoryRepo: locator(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => MyFundsBloc(
             transactionHistoryRepo: locator(),
           ),
         ),
