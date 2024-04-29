@@ -1066,11 +1066,9 @@ class BaseUtil extends ChangeNotifier {
     }
 
     final day = date.day;
+    final ordinalSuffix = getOrdinalSuffix(day);
     final month = DateFormat('MMMM').format(date);
     final year = date.year;
-
-    final ordinalSuffix = getOrdinalSuffix(day);
-
     final formattedDate = '$day$ordinalSuffix $month $year';
 
     return formattedDate;
