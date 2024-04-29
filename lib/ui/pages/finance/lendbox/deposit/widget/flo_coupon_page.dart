@@ -7,122 +7,126 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../../../core/model/coupon_card_model.dart';
 import '../../../../../../util/assets.dart';
-import '../../../../../architecture/base_view.dart';
 
 class FloCouponPage extends StatelessWidget {
-  FloCouponPage({super.key});
+  FloCouponPage({required this.model1, super.key});
+  final LendboxBuyViewModel? model1;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController couponCodeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final locale = locator<S>();
-    return BaseView<LendboxBuyViewModel>(
-      builder: (ctx, model, child) {
-        return Scaffold(
-          backgroundColor: Color(0xff1B262C),
-          appBar: AppBar(
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            leading: Container(
-              margin: EdgeInsets.only(left: SizeConfig.padding16),
-              child: IconButton(
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.white.withOpacity(0.4),
-                ),
-                onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
+    return ChangeNotifierProvider.value(
+      value: model1,
+      child: Scaffold(
+        backgroundColor: Color(0xff1B262C),
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          leading: Container(
+            margin: EdgeInsets.only(left: SizeConfig.padding16),
+            child: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white.withOpacity(0.4),
               ),
-            ),
-            title: Text(
-              'Apply Coupons',
-              style: TextStyles.rajdhaniSB.title5,
+              onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
             ),
           ),
-          body: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: SizeConfig.padding32,
-                ),
-                Form(
-                  key: _formKey,
-                  child: AppTextField(
-                    fillColor: UiConstants.kTambolaMidTextColor,
-                    textEditingController: couponCodeController,
-                    hintText: locale.enterCoupon,
-                    textCapitalization: TextCapitalization.characters,
-                    suffixIcon: InkWell(
-                      child: Text(
-                        locale.txnApply,
-                        style: TextStyles.sourceSans.body3
-                            .colour(UiConstants.teal2),
-                      ),
-                      onTap: () {
-                        if (_formKey.currentState!.validate()) {
-                          model.applyCoupon(
-                              couponCodeController.text.trim(), true);
-                          AppState.backButtonDispatcher!.didPopRoute();
-                        }
-                      },
-                    ),
-                    suffixIconConstraints: const BoxConstraints(
-                      minWidth: 40,
-                    ),
-                    validator: (val) {
-                      if (val!.trim().isEmpty) return locale.txnEnterCode;
-                      if (val.trim().length < 3 || val.trim().length > 20) {
-                        return locale.txnInvalidCouponCode;
-                      }
-                      return null;
-                    },
-                    isEnabled: true,
+          title: Text(
+            'Apply Coupons',
+            style: TextStyles.rajdhaniSB.title5,
+          ),
+        ),
+        body: Consumer<LendboxBuyViewModel>(
+          builder: (context, model, child) {
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: SizeConfig.padding32,
                   ),
-                ),
-                SizedBox(
-                  height: SizeConfig.padding24,
-                ),
-                Text(
-                  'More Coupons',
-                  style: TextStyles.rajdhaniSB.body2,
-                ),
-                Expanded(
-                  child: ListView(
-                    shrinkWrap: true,
-                    physics: const BouncingScrollPhysics(),
-                    children: List.generate(
-                      model.couponList!.length,
-                      (i) => model.couponList![i].code == null ||
-                              model.couponList![i].description == null
-                          ? const SizedBox.shrink()
-                          : Padding(
-                              padding:
-                                  EdgeInsets.only(top: SizeConfig.padding16),
-                              child: IndividualCouponView(
-                                model: model.couponList![i],
-                                appliedCode: model.appliedCoupon?.code,
-                                desc: model.couponList![i].description!,
-                                lendboxBuyViewModel: model,
-                                onTap: (coupon) => model.applyCoupon(
-                                  coupon.code,
-                                  false,
+                  Form(
+                    key: _formKey,
+                    child: AppTextField(
+                      fillColor: UiConstants.kTambolaMidTextColor,
+                      textEditingController: couponCodeController,
+                      hintText: locale.enterCoupon,
+                      textCapitalization: TextCapitalization.characters,
+                      suffixIcon: InkWell(
+                        child: Text(
+                          locale.txnApply,
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.teal2),
+                        ),
+                        onTap: () {
+                          if (_formKey.currentState!.validate()) {
+                            model!.applyCoupon(
+                                couponCodeController.text.trim(), true);
+                            AppState.backButtonDispatcher!.didPopRoute();
+                          }
+                        },
+                      ),
+                      suffixIconConstraints: const BoxConstraints(
+                        minWidth: 40,
+                      ),
+                      validator: (val) {
+                        if (val!.trim().isEmpty) return locale.txnEnterCode;
+                        if (val.trim().length < 3 || val.trim().length > 20) {
+                          return locale.txnInvalidCouponCode;
+                        }
+                        return null;
+                      },
+                      isEnabled: true,
+                    ),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding24,
+                  ),
+                  Text(
+                    'More Coupons',
+                    style: TextStyles.rajdhaniSB.body2,
+                  ),
+                  Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
+                      physics: const BouncingScrollPhysics(),
+                      children: List.generate(
+                        model!.couponList!.length,
+                        (i) => model!.couponList![i].code == null ||
+                                model!.couponList![i].description == null
+                            ? const SizedBox.shrink()
+                            : Padding(
+                                padding:
+                                    EdgeInsets.only(top: SizeConfig.padding16),
+                                child: IndividualCouponView(
+                                  model: model!.couponList![i],
+                                  appliedCode: model!.appliedCoupon?.code,
+                                  desc: model!.couponList![i].description!,
+                                  lendboxBuyViewModel: model!,
+                                  onTap: (coupon) => model!.applyCoupon(
+                                    coupon.code,
+                                    false,
+                                  ),
                                 ),
                               ),
-                            ),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+                ],
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

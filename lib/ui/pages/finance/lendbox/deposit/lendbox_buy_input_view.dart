@@ -51,6 +51,10 @@ class LendboxBuyInputView extends StatefulWidget {
   State<LendboxBuyInputView> createState() => _LendboxBuyInputViewState();
 }
 
+String _getTitle(num interest) {
+  return '$interest% P2P';
+}
+
 class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
   @override
   void initState() {
@@ -125,7 +129,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   LendBoxAppBar(
-                    assetName: widget.model.config.assetName,
+                    assetName: _getTitle(widget.model.config.interest),
                     isEnabled: !widget.model.isBuyInProgress,
                     trackClosingEvent: () {
                       analyticsService.track(
@@ -476,7 +480,7 @@ class FloBuyNavBar extends StatelessWidget {
   final VoidCallback onTap;
 
   String _getTitle(num interest) {
-    return '$interest% Returns p.a.';
+    return '$interest% P2P';
   }
 
   String _getSubString() {
@@ -629,7 +633,7 @@ class FloBuyNavBar extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '3 Month Plan',
+                    model.config.assetName,
                     style: TextStyles.sourceSansB.body3,
                   ),
                   // InkWell(

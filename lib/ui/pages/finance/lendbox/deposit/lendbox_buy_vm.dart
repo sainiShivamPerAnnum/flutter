@@ -516,9 +516,11 @@ class LendboxBuyViewModel extends BaseViewModel
         couponsRes.model != null &&
         (couponsRes.model?.length ?? 0) >= 1) {
       couponList = couponsRes.model;
-      couponList!.sort(
-        (a, b) => b.maxRewardAmount!.compareTo(a.maxRewardAmount!),
-      );
+      if (couponList!.length > 1) {
+        couponList!.sort(
+          (a, b) => b.maxRewardAmount!.compareTo(a.maxRewardAmount!),
+        );
+      }
       // if (couponList?[0].priority == 1) focusCoupon = couponList?[0];
       // initial coupon pending?
       focusCoupon = couponList!.firstWhere((element) =>
@@ -653,7 +655,9 @@ class LendboxBuyViewModel extends BaseViewModel
     AppState.delegate!.appState.currentAction = PageAction(
       page: LendboxCouponViewConfig,
       state: PageState.addWidget,
-      widget: FloCouponPage(),
+      widget: FloCouponPage(
+        model1: model,
+      ),
     );
   }
 
