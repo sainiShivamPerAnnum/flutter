@@ -13,9 +13,7 @@ SubscriptionModel _$SubscriptionModelFromJson(Map<String, dynamic> json) =>
       status: $enumDecodeNullable(_$AutosaveStateEnumMap, json['status'],
               unknownValue: AutosaveState.IDLE) ??
           AutosaveState.IDLE,
-      assetType: $enumDecodeNullable(_$SIPAssetTypesEnumMap, json['assetType'],
-              unknownValue: SIPAssetTypes.UNKNOWN) ??
-          SIPAssetTypes.UNKNOWN,
+      assetType: json['assetType'] as String? ?? 'UNKNOWN',
       amount: json['amount'] as num? ?? 0,
       frequency: json['frequency'] as String? ?? '',
       aUGGOLD99: json['AUGGOLD99'] as num? ?? 0,
@@ -32,13 +30,4 @@ const _$AutosaveStateEnumMap = {
   AutosaveState.PAUSE_FROM_APP_FOREVER: 'PAUSE_FROM_APP_FOREVER',
   AutosaveState.PAUSE_FROM_PSP: 'PAUSE_FROM_PSP',
   AutosaveState.CANCELLED: 'CANCELLED',
-};
-
-const _$SIPAssetTypesEnumMap = {
-  SIPAssetTypes.UNI_FLEXI: 'UNI_FLEXI',
-  SIPAssetTypes.UNI_FIXED_3: 'UNI_FIXED_3',
-  SIPAssetTypes.UNI_FIXED_6: 'UNI_FIXED_6',
-  SIPAssetTypes.AUGGOLD99: 'AUGGOLD99',
-  SIPAssetTypes.BOTH: 'BOTH',
-  SIPAssetTypes.UNKNOWN: 'UNKNOWN',
 };
