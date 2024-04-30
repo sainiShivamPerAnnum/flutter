@@ -9926,6 +9926,46 @@ class S {
     );
   }
 
+  /// `{interest}%`
+  String percentage(num interest) {
+    return Intl.message(
+      '$interest%',
+      name: 'percentage',
+      desc: '',
+      args: [interest],
+    );
+  }
+
+  /// `per annum`
+  String get perAnnumLabel {
+    return Intl.message(
+      'per annum',
+      name: 'perAnnumLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lock-in till`
+  String get lockInTill {
+    return Intl.message(
+      'Lock-in till',
+      name: 'lockInTill',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Re-Invest on maturity`
+  String get reInvestOnMaturity {
+    return Intl.message(
+      'Re-Invest on maturity',
+      name: 'reInvestOnMaturity',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Return Calculator`
   String get p2pReturnsCalculatorTitle {
     return Intl.message(
