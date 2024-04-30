@@ -1161,6 +1161,19 @@
       }
     }
   },
+  "percentage" : "{interest}%", 
+  "@percentage": {
+    "placeholders" :{
+      "interest": {
+        "type":"num"
+      }
+    }
+  },
+  "perAnnumLabel":"per annum",
+  "lockInTill":"Lock-in till",
+  "reInvestOnMaturity":"Re-Invest on maturity",
+  
+
 
   "@_investment_section" : {},
   "p2pReturnsCalculatorTitle":"Return Calculator",

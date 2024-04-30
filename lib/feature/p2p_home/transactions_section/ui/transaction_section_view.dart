@@ -1,5 +1,5 @@
 import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/feature/p2p_home/home/bloc/p2p_home_bloc.dart';
+import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'package:felloapp/feature/p2p_home/ui/shared/footer.dart';
 import 'package:felloapp/util/bloc_pagination/bloc_pagination.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -8,7 +8,6 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 
 class TransactionSection extends StatefulWidget {
   const TransactionSection({
@@ -24,9 +23,7 @@ class _TransactionSectionState extends State<TransactionSection> {
   void initState() {
     super.initState();
     final transactionBloc = context.read<TransactionBloc>();
-    if (transactionBloc.state.entries.isEmpty) {
-      transactionBloc.fetchFirstPage();
-    }
+    transactionBloc.fetchFirstPage();
   }
 
   @override
@@ -61,31 +58,27 @@ class _TransactionSectionState extends State<TransactionSection> {
                   handle:
                       NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 ),
-                MultiSliver(
-                  children: [
-                    SliverPadding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins,
-                        vertical: SizeConfig.padding16,
-                      ),
-                      sliver: SliverList.separated(
-                        itemBuilder: (context, index) {
-                          if (state.entries.length - 1 == index &&
-                              !state.status.isFetchingInitialPage) {
-                            transactionBloc.fetchNextPage();
-                          }
-                          return _TransactionTile(state.entries[index]);
-                        },
-                        itemCount: state.entries.length,
-                        separatorBuilder: (context, index) {
-                          return const Divider(
-                            color: UiConstants.grey2,
-                            height: 1,
-                          );
-                        },
-                      ),
-                    )
-                  ],
+                SliverPadding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins,
+                    vertical: SizeConfig.padding16,
+                  ),
+                  sliver: SliverList.separated(
+                    itemBuilder: (context, index) {
+                      if (state.entries.length - 1 == index &&
+                          !state.status.isFetchingInitialPage) {
+                        transactionBloc.fetchNextPage();
+                      }
+                      return _TransactionTile(state.entries[index]);
+                    },
+                    itemCount: state.entries.length,
+                    separatorBuilder: (context, index) {
+                      return const Divider(
+                        color: UiConstants.grey2,
+                        height: 1,
+                      );
+                    },
+                  ),
                 ),
                 if (state.status.isFetchingSuccessive)
                   const SliverToBoxAdapter(
@@ -94,6 +87,11 @@ class _TransactionSectionState extends State<TransactionSection> {
                       color: Colors.white24,
                     ),
                   ),
+                const SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 120,
+                  ),
+                )
               ],
             ),
             const Footer()
