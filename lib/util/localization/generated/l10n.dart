@@ -9906,10 +9906,10 @@ class S {
     );
   }
 
-  /// `{}%`
+  /// `{interest}%`
   String percentage(num interest) {
     return Intl.message(
-      '{}%',
+      '$interest%',
       name: 'percentage',
       desc: '',
       args: [interest],

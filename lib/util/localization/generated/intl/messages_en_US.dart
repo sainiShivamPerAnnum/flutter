@@ -58,7 +58,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m17(mobileNumber) => "Login as +91-${mobileNumber}";
 
-  static String m18(interest) => "{}%";
+  static String m18(interest) => "${interest}%";
 
   static String m19(percentage) => "with ${percentage}% returns";
 
