@@ -64,10 +64,12 @@ class AppConfigV2Data {
   final bool enableJourney;
 
   final bool canChangePostMaturityPreference;
+
   @JsonKey(name: "LENDBOXP2P")
   final List<LendboxAssetConfiguration> lendBoxP2P;
 
-  final Map<String, LendboxAssetConfiguration> lendBoxAssetV2;
+  @JsonKey(name: "p2p_v2", fromJson: _convertP2PV2)
+  final Map<String, LendboxAssetConfiguration> lbV2;
 
   final List<String> youtubeVideos;
 
@@ -122,7 +124,7 @@ class AppConfigV2Data {
     this.enableJourney = false,
     this.canChangePostMaturityPreference = false,
     this.lendBoxP2P = const [],
-    this.lendBoxAssetV2 = const {},
+    this.lbV2 = const {},
     this.youtubeVideos = const [],
     this.ticketsYoutubeVideos = const [],
     this.ticketsCategories,
@@ -142,6 +144,26 @@ class AppConfigV2Data {
 
   factory AppConfigV2Data.fromJson(Map<String, dynamic> json) =>
       _$AppConfigV2DataFromJson(json);
+
+  static Map<String, LendboxAssetConfiguration> _convertP2PV2(
+    List<dynamic>? input,
+  ) {
+    final raw = input
+            ?.map(
+              (e) =>
+                  LendboxAssetConfiguration.fromJson(e as Map<String, dynamic>),
+            )
+            .toList() ??
+        const [];
+
+    final mapped = <String, LendboxAssetConfiguration>{};
+
+    for (var i = 0; i < raw.length; i++) {
+      mapped.putIfAbsent(raw[i].fundType, () => raw[i]);
+    }
+
+    return mapped;
+  }
 }
 
 @_deserializable
