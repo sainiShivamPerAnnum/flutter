@@ -34,7 +34,7 @@ class InvestSection extends StatelessWidget {
               horizontal: SizeConfig.pageHorizontalMargins,
             ),
             child: AssetOptionsWidget(
-              assets: AppConfigV2.instance.lendBoxP2P,
+              assets: AppConfigV2.instance.lbV2.values.toList(),
             ),
           ),
         ),
