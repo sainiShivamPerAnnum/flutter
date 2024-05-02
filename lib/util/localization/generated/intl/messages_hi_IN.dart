@@ -35,6 +35,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m10(index) => "माइलस्टोन ${index}";
 
+  static String m11(percentage) => "अतिरिक्त ${percentage}% खो रहे हैं";
+
   static String m13(amount) => "अधिकतम राशि - ₹${amount}";
 
   static String m16(amount) => "न्यूनतम राशि - ₹${amount}";
@@ -376,6 +378,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "digitalGoldSubTitle": MessageLookupByLibrary.simpleMessage(
             "99.9% शुद्ध | 24 कैरेट गोल्ड | 100% सुरक्षित"),
         "digitalGoldText": MessageLookupByLibrary.simpleMessage("डिजिटल गोल्ड"),
+        "disabledReinvestTitle": MessageLookupByLibrary.simpleMessage(
+            "परिपक्वता पर P2P वॉलेट में स्थानांतरित हो रहा है"),
         "donePAN": MessageLookupByLibrary.simpleMessage("किया हुआ"),
         "dummyNoAlert": MessageLookupByLibrary.simpleMessage(
             "क्यूए मोड में केवल डमी नंबरों की अनुमति है"),
@@ -418,6 +422,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("कृपया अधिक राशि दर्ज करें"),
         "enterAmountLowerThan": MessageLookupByLibrary.simpleMessage(
             "कृपया इससे कम राशि दर्ज करें"),
+        "enterCoupon": MessageLookupByLibrary.simpleMessage("कूपन दर्ज करें"),
         "enterHigherQuant":
             MessageLookupByLibrary.simpleMessage("कृपया अधिक मात्रा दर्ज करें"),
         "enterLowQuantity":
@@ -480,8 +485,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "flexiIvested": MessageLookupByLibrary.simpleMessage("निवेशित राशि"),
         "flo10PercentReturns":
             MessageLookupByLibrary.simpleMessage("निवेश पर 10% रिटर्न"),
+        "floCurrentReturn": MessageLookupByLibrary.simpleMessage("वर्तमान लाभ"),
         "floEarn10Percent":
             MessageLookupByLibrary.simpleMessage("10% रिटर्न कमाएं"),
+        "floInvested": MessageLookupByLibrary.simpleMessage("निवेशित"),
+        "floPortFolio":
+            MessageLookupByLibrary.simpleMessage("फेलो पी2पी पोर्टफोलियो"),
         "floSip": MessageLookupByLibrary.simpleMessage("फेलो P2P SIP"),
         "forTheRequest": MessageLookupByLibrary.simpleMessage("या अनुरोध।"),
         "formats":
@@ -675,6 +684,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("और अधिक टिकट लोड हो रहे हैं"),
         "loadingTodaysPicks": MessageLookupByLibrary.simpleMessage(
             "कृपया प्रतीक्षा करें, आज के चुनाव लोड हो रहे हैं"),
+        "loosingReturns": m11,
         "loseAutoSave": MessageLookupByLibrary.simpleMessage(
             "आप स्वचालित बचत और कई विशिष्ट पुरस्कारों से वंचित रह जाएंगे⏸️"),
         "madeWith": MessageLookupByLibrary.simpleMessage("मेड विद "),
@@ -718,6 +728,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("और गेम्स एक्सप्लोर करें"),
         "moretxns": MessageLookupByLibrary.simpleMessage(
             "अधिक लेन-देन की तलाश में हैं, कृपया प्रतीक्षा करें ..."),
+        "movesToVault": MessageLookupByLibrary.simpleMessage(
+            "परिपक्वता पर P2P वॉल्ट में स्थानांतरित हो जाता है"),
         "movetoflexi": MessageLookupByLibrary.simpleMessage(
             "परिपक्वता पर 8% P2P फ्लेक्सी में स्थानांतरण"),
         "myReward": MessageLookupByLibrary.simpleMessage("मेरा इनाम"),
@@ -1077,8 +1089,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("ऑटोसेव फिर से शुरू करें"),
         "resumeSipbtn":
             MessageLookupByLibrary.simpleMessage("SIP फिर से शुरू करें"),
-        "retiiredFlexi":
-            MessageLookupByLibrary.simpleMessage("8% P2P फ्लेक्सी"),
+        "retiiredFlexi": MessageLookupByLibrary.simpleMessage("P2P मेहराब"),
         "returnSubText": m30,
         "returnsCalculator": MessageLookupByLibrary.simpleMessage(
             "अपने SIP रिटर्न्स की गणना करें"),
@@ -1336,6 +1347,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "tgetFirstTkt":
             MessageLookupByLibrary.simpleMessage("अपना पहला टिकट प्राप्त करें"),
         "threeClicksAway": MessageLookupByLibrary.simpleMessage("3 क्लिक दूर"),
+        "ticketsEarnedflo": MessageLookupByLibrary.simpleMessage("अर्जित टिकट"),
         "ticketsExceeded":
             MessageLookupByLibrary.simpleMessage("अधिकतम टिकट पार हो गए"),
         "ticketsMatched":

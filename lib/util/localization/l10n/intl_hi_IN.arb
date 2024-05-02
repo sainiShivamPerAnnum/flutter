@@ -1053,7 +1053,7 @@
       }
     }
   },
-  "retiiredFlexi": "8% P2P फ्लेक्सी",
+  "retiiredFlexi": "P2P मेहराब",
 "flexiIvested": "निवेशित राशि",
 "lastLockIn": "अंतिम लॉक-इन तारीख",
 "withdrable": "निकासी योग्य राशि",
@@ -1068,5 +1068,20 @@
   "onreinvestment": "पुनर्निवेश पर",
   "WithdrawMaturity": "परिपक्वता के बाद निकासी योग्य",
   "extra": "अतिरिक्त",
-  "ReinvestTitle": "परिपक्वता पर पुनर्निवेश"
+  "ReinvestTitle": "परिपक्वता पर पुनर्निवेश",
+  "floPortFolio": "फेलो पी2पी पोर्टफोलियो",
+  "floInvested": "निवेशित",
+  "floCurrentReturn": "वर्तमान लाभ",
+  "ticketsEarnedflo": "अर्जित टिकट",
+  "movesToVault": "परिपक्वता पर P2P वॉल्ट में स्थानांतरित हो जाता है",
+  "loosingReturns": "अतिरिक्त {percentage}% खो रहे हैं",
+  "@loosingReturns": {
+    "placeholders": {
+      "percentage": {
+        "type": "num"
+      }
+    }
+  },
+  "disabledReinvestTitle": "परिपक्वता पर P2P वॉलेट में स्थानांतरित हो रहा है",
+  "enterCoupon": "कूपन दर्ज करें"
 }
