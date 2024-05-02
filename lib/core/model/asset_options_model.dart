@@ -60,18 +60,18 @@ class MaturityDetails {
   final String reInvest;
   final String withdraw;
 
-  const MaturityDetails(
-      {required this.notDecided,
-      required this.reInvest,
-      required this.withdraw});
+  const MaturityDetails({
+    required this.notDecided,
+    required this.reInvest,
+    required this.withdraw,
+  });
 
   factory MaturityDetails.fromJson(Map<String, dynamic> json) {
     final formatter = DateFormat('d MMM, yyyy');
     return MaturityDetails(
-      notDecided: formatter.format(DateTime.parse(json["2"])),
+      notDecided: formatter.format(DateTime.parse(json["NA"])),
       reInvest: formatter.format(DateTime.parse(json["1"])),
-      //todo @Hirdesh2101 to confirm from suraj
-      withdraw: formatter.format(DateTime.parse(json["NA"])),
+      withdraw: formatter.format(DateTime.parse(json["0"])),
     );
   }
 }
