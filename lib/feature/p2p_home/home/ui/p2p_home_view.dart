@@ -1,5 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/model/portfolio_model.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/p2p_home/home/widgets/percentage_chip.dart';
 import 'package:felloapp/feature/p2p_home/invest_section/ui/invest_section_view.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/ui/my_funds_section_view.dart';
@@ -14,6 +18,7 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../ui/pages/hometabs/journey/elements/jMilestones.dart';
 import '../../transactions_section/ui/transaction_section_view.dart';
 
 class P2PHomePage extends StatelessWidget {
@@ -45,6 +50,7 @@ class P2PHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = locator<S>();
+    var portfolio = locator<UserService>().userPortfolio.flo;
     final List<String> tabs = <String>[
       locale.myFundsSection,
       locale.investSection,
@@ -52,6 +58,7 @@ class P2PHomeView extends StatelessWidget {
     ];
     return DefaultTabController(
       length: tabs.length,
+      initialIndex: 1,
       child: BaseScaffold(
         appBar: const _AppBar(),
         backgroundColor: UiConstants.bg,
@@ -60,9 +67,11 @@ class P2PHomeView extends StatelessWidget {
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return <Widget>[
               SliverToBoxAdapter(
-                child: CachedNetworkImage(
-                  imageUrl: Assets.p2pHomeBanner,
-                ),
+                child: portfolio.balance > 0
+                    ? _InvestedHeader(portfolio: portfolio)
+                    : CachedNetworkImage(
+                        imageUrl: Assets.p2pHomeBanner,
+                      ),
               ),
               SliverOverlapAbsorber(
                 handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
@@ -137,6 +146,198 @@ class _TabBar extends StatelessWidget {
         isScrollable: false,
         tabs: tabs.map((e) => Tab(text: e)).toList(),
       ),
+    );
+  }
+}
+
+class _InvestedHeader extends StatelessWidget {
+  const _InvestedHeader({required this.portfolio, super.key});
+  final FloTiers portfolio;
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = locator<S>();
+    return Container(
+      decoration: const BoxDecoration(
+          gradient: LinearGradient(
+        colors: [UiConstants.kFloContainerColor, Color(0xff297264)],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+      )),
+      child: Column(
+        children: [
+          SizedBox(
+            height: SizeConfig.padding25,
+          ),
+          Text(
+            locale.floPortFolio,
+            style: TextStyles.rajdhaniSB.body2
+                .colour(UiConstants.kTextColor.withOpacity(0.5)),
+          ),
+          Text(
+              locale.amount(
+                  BaseUtil.formatCompactRupees(portfolio.balance.toDouble())),
+              style:
+                  TextStyles.rajdhaniSB.title1.colour(UiConstants.kTextColor)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // AppText.body1(
+              //   locale.oneDayChange(
+              //     BaseUtil.formatRupeesWithNegativeIndicator(
+              //       portfolio.oneDayChange.toDouble(),
+              //     ),
+              //   ),
+              //   color: AppColors.greyBg,
+              // ),
+              // PercentageChip(value: portfolio.oneDayChange.toDouble()),
+            ],
+          ),
+          SizedBox(
+            height: SizeConfig.padding22,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding24,
+            ),
+            child: _MyInvestedAmount(
+              totalInvestment: portfolio.principle,
+              currentValue: portfolio.absGain,
+              tickets: portfolio.percGain,
+            ),
+          ),
+          SizedBox(
+            height: SizeConfig.padding12,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MyInvestedAmount extends StatelessWidget {
+  const _MyInvestedAmount({
+    required this.totalInvestment,
+    required this.currentValue,
+    required this.tickets,
+    super.key,
+  });
+  final num totalInvestment;
+  final num currentValue;
+  final num? tickets;
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = locator<S>();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(locale.floInvested,
+                style: TextStyles.sourceSans.body3.colour(UiConstants.greyBg)),
+            SizedBox(height: SizeConfig.padding4),
+            Text(
+                locale.amount(
+                    BaseUtil.formatCompactRupees(totalInvestment.toDouble())),
+                style: TextStyles.sourceSansSB.body1
+                    .colour(UiConstants.kTextColor))
+          ],
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(locale.floCurrentReturn,
+                style: TextStyles.sourceSans.body3.colour(UiConstants.greyBg)),
+            SizedBox(height: SizeConfig.padding4),
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                      text: locale.amount(BaseUtil.formatCompactRupees(
+                          currentValue.toDouble())),
+                      style: TextStyles.sourceSansSB.body1
+                          .colour(UiConstants.kTextColor)),
+                  WidgetSpan(
+                    child: PercentageChip(
+                      value: (currentValue / totalInvestment) * 100.toDouble(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  locale.ticketsEarnedflo,
+                  style: TextStyles.sourceSans.body3.colour(UiConstants.greyBg),
+                ),
+                SizedBox(
+                  width: SizeConfig.padding2,
+                ),
+                Tooltip(
+                  margin:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
+                  padding: const EdgeInsets.all(15),
+                  triggerMode: TooltipTriggerMode.tap,
+                  preferBelow: false,
+                  decoration: const ShapeDecoration(
+                    color: Colors.black,
+                    shape: TooltipShapeBorder(
+                      arrowArc: 0.2,
+                      radius: 10,
+                    ),
+                    shadows: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 4.0,
+                        offset: Offset(2, 2),
+                      )
+                    ],
+                  ),
+                  showDuration: const Duration(seconds: 10),
+                  message: 'todo',
+                  child: Icon(
+                    Icons.info_outline,
+                    size: SizeConfig.padding14,
+                    color: UiConstants.greyBg,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: SizeConfig.padding4,
+            ),
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                      text: '$tickets ',
+                      style: TextStyles.sourceSans.body4
+                          .colour(UiConstants.kTextColor)),
+                  WidgetSpan(
+                    child: AppImage(
+                      Assets.singleTambolaTicket,
+                      height: SizeConfig.padding16,
+                    ),
+                  ),
+                  TextSpan(
+                      text: ' every week',
+                      style: TextStyles.sourceSans.body4
+                          .colour(UiConstants.kTextColor)),
+                ],
+              ),
+            ),
+          ],
+        )
+      ],
     );
   }
 }

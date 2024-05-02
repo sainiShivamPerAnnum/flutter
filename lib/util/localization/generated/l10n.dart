@@ -9636,10 +9636,10 @@ class S {
     );
   }
 
-  /// `8% P2P Flexi`
+  /// `P2P Vault`
   String get retiiredFlexi {
     return Intl.message(
-      '8% P2P Flexi',
+      'P2P Vault',
       name: 'retiiredFlexi',
       desc: '',
       args: [],
@@ -9776,10 +9776,10 @@ class S {
     );
   }
 
-  /// `Moving to P2P Flexi on maturity`
+  /// `Moving to P2P Wallet on maturity`
   String get disabledReinvestTitle {
     return Intl.message(
-      'Moving to P2P Flexi on maturity',
+      'Moving to P2P Wallet on maturity',
       name: 'disabledReinvestTitle',
       desc: '',
       args: [],
@@ -9876,6 +9876,16 @@ class S {
     );
   }
 
+  /// `Loosing Extra {percentage}%`
+  String loosingReturns(num percentage) {
+    return Intl.message(
+      'Loosing Extra $percentage%',
+      name: 'loosingReturns',
+      desc: '',
+      args: [percentage],
+    );
+  }
+
   /// `{interest}%`
   String interest(num interest) {
     return Intl.message(
@@ -9961,6 +9971,16 @@ class S {
     return Intl.message(
       'Re-Invest on maturity',
       name: 'reInvestOnMaturity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Moves to P2P Vault on maturity`
+  String get movesToVault {
+    return Intl.message(
+      'Moves to P2P Vault on maturity',
+      name: 'movesToVault',
       desc: '',
       args: [],
     );
@@ -10071,6 +10091,46 @@ class S {
     return Intl.message(
       'Reinvest on Maturity',
       name: 'ReinvestTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fello P2P Portfolio`
+  String get floPortFolio {
+    return Intl.message(
+      'Fello P2P Portfolio',
+      name: 'floPortFolio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invested`
+  String get floInvested {
+    return Intl.message(
+      'Invested',
+      name: 'floInvested',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current Return`
+  String get floCurrentReturn {
+    return Intl.message(
+      'Current Return',
+      name: 'floCurrentReturn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tickets Earned`
+  String get ticketsEarnedflo {
+    return Intl.message(
+      'Tickets Earned',
+      name: 'ticketsEarnedflo',
       desc: '',
       args: [],
     );

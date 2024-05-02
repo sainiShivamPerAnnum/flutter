@@ -114,15 +114,6 @@ class _RootState extends State<Root> {
                   const QABanner(),
                 ],
               ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  AppState.delegate!.appState.currentAction = PageAction(
-                    page: P2PHomePageConfig,
-                    widget: const P2PHomePage(),
-                    state: PageState.addWidget,
-                  );
-                },
-              ),
               // floatingActionButtonLocation:
               //     FloatingActionButtonLocation.miniCenterDocked,
               // floatingActionButton: Selector<CardActionsNotifier, bool>(

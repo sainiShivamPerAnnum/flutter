@@ -99,7 +99,7 @@ class LendboxBuyViewModel extends BaseViewModel
   bool isSpecialCoupon = true;
   bool showCouponAppliedText = false;
   bool _addSpecialCoupon = false;
-  UserDecision _selectedOption = UserDecision.notDecided;
+  UserDecision _selectedOption = UserDecision.withdraw;
   bool isIntentFlow = true;
 
   ///  ---------- getter and setter ------------
@@ -654,7 +654,7 @@ class LendboxBuyViewModel extends BaseViewModel
   String getMaturityTime(UserDecision decision) {
     final maturity = assetOptionsModel!.data.maturityAt!;
     return switch (decision) {
-      UserDecision.notDecided => maturity.notDecided,
+      UserDecision.withdraw => maturity.withdraw,
       UserDecision.reInvest => maturity.reInvest,
       _ => maturity.notDecided,
     };

@@ -116,6 +116,7 @@ const String SipFormPageViewPath = "/sipform";
 const String SipStatusPage = '/sip/status';
 const String SipMandateViewPath = '/sip/mandateView';
 const String P2PHomeViewPath = '/p2p/homeView';
+const String flexiBalanceViewPath = "/flexiBalanceViewPath";
 
 enum Pages {
   Splash,
@@ -226,6 +227,9 @@ enum Pages {
   SipStatusView,
   SipMandateView,
   P2PHomeView,
+
+  //p2pv2
+  FlexiBalaceView
 }
 
 class PageConfiguration {
@@ -917,4 +921,11 @@ PageConfiguration P2PHomePageConfig = PageConfiguration(
   path: P2PHomeViewPath,
   uiPage: Pages.P2PHomeView,
   name: 'P2P Home View Path',
+);
+
+PageConfiguration FlexiBalancePageConfig = PageConfiguration(
+  key: 'flexiBalanceViewPath',
+  path: flexiBalanceViewPath,
+  uiPage: Pages.FlexiBalaceView,
+  name: "Flexi Balance View",
 );

@@ -21,6 +21,7 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/tambola_mini_info_card.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -434,11 +435,9 @@ class SaveViewModel extends BaseViewModel {
           }));
 
       AppState.delegate!.appState.currentAction = PageAction(
+        page: P2PHomePageConfig,
+        widget: const P2PHomePage(),
         state: PageState.addWidget,
-        page: SaveAssetsViewConfig,
-        widget: AssetSectionView(
-          type: investmentType,
-        ),
       );
     }
   }

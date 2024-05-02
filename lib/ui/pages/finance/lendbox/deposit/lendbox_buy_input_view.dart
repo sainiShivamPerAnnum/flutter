@@ -237,11 +237,11 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                   ),
                   SizedBox(height: SizeConfig.padding24),
                   _ReInvestNudge(
-                    initialValue: true,
+                    gains: widget.model.config.reinvestInterestGain,
+                    initialValue: false,
                     onChange: (value) {
-                      widget.model.selectedOption = value
-                          ? UserDecision.reInvest
-                          : UserDecision.moveToFlexi;
+                      widget.model.selectedOption =
+                          value ? UserDecision.reInvest : UserDecision.withdraw;
                     },
                   ),
                 ],
@@ -337,9 +337,11 @@ class _ReInvestNudge extends StatefulWidget {
   const _ReInvestNudge({
     required this.initialValue,
     required this.onChange,
+    required this.gains,
   });
 
   final bool initialValue;
+  final num gains;
   final ValueChanged<bool> onChange;
 
   @override
@@ -347,7 +349,7 @@ class _ReInvestNudge extends StatefulWidget {
 }
 
 class _ReInvestNudgeState extends State<_ReInvestNudge> {
-  bool _value = true;
+  bool _value = false;
 
   @override
   void initState() {
@@ -391,7 +393,7 @@ class _ReInvestNudgeState extends State<_ReInvestNudge> {
                 ],
               ),
               CustomSwitch(
-                initialValue: true,
+                initialValue: widget.initialValue,
                 onChanged: _onChanged,
               )
             ],
@@ -408,7 +410,7 @@ class _ReInvestNudgeState extends State<_ReInvestNudge> {
                 children: [
                   TextSpan(text: locale.extra),
                   TextSpan(
-                    text: '+ 0.25%',
+                    text: '+${widget.gains}%',
                     style: TextStyles.sourceSansSB.body3.colour(
                       UiConstants.KGoldProSecondary,
                     ),
@@ -431,7 +433,7 @@ class _ReInvestNudgeState extends State<_ReInvestNudge> {
                       children: [
                         TextSpan(text: locale.WithdrawMaturity),
                         TextSpan(
-                          text: 'P2P Wallet',
+                          text: locale.wallet,
                           style: TextStyles.sourceSansB.body4.colour(
                             UiConstants.grey1,
                           ),
@@ -450,7 +452,7 @@ class _ReInvestNudgeState extends State<_ReInvestNudge> {
                       children: [
                         TextSpan(text: locale.switchOnFor),
                         TextSpan(
-                          text: '+0.25%',
+                          text: '+${widget.gains}%',
                           style: TextStyles.sourceSansB.body4.colour(
                             UiConstants.teal3,
                           ),
@@ -599,8 +601,10 @@ class FloBuyNavBar extends StatelessWidget {
           Row(
             children: [
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SvgPicture.asset(
                         Assets.floWithoutShadow,
@@ -636,33 +640,6 @@ class FloBuyNavBar extends StatelessWidget {
                     model.config.assetName,
                     style: TextStyles.sourceSansB.body3,
                   ),
-                  // InkWell(
-                  //   onTap: () {
-                  //     if (!isAmountIsValid) return;
-                  //     _showBreakDown();
-                  //   },
-                  //   child: Row(
-                  //     children: [
-                  //       Text(
-                  //         'Payment summary',
-                  //         style: TextStyles.sourceSansSB.body4.copyWith(
-                  //           height: 1,
-                  //           color: UiConstants.kFAQsAnswerColor.withOpacity(
-                  //             !isAmountIsValid ? .5 : 1,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       SizedBox(
-                  //         width: SizeConfig.padding8,
-                  //       ),
-                  //       SvgPicture.asset(
-                  //         Assets.arrow,
-                  //         color: UiConstants.kFAQsAnswerColor,
-                  //         height: 5,
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
                   if (couponCode != null)
                     Padding(
                       padding: EdgeInsets.only(top: SizeConfig.padding4),

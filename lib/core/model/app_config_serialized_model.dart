@@ -157,6 +157,7 @@ class LendboxAssetConfiguration {
   final num interest;
   final int maturityDuration;
   final String assetName;
+  final num reinvestInterestGain;
 
   const LendboxAssetConfiguration({
     required this.fundType,
@@ -164,6 +165,7 @@ class LendboxAssetConfiguration {
     required this.minAmountText,
     required this.descText,
     required this.tambolaMultiplier,
+    required this.reinvestInterestGain,
     this.isForOldLb = false,
     this.interest = 10,
     this.maturityDuration = 3,

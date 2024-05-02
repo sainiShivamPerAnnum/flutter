@@ -44,81 +44,83 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m10(index) => "Milestone ${index}";
 
-  static String m11(amount) => "Upto ₹ ${amount} can be invested at one go";
+  static String m11(percentage) => "Loosing Extra ${percentage}%";
 
-  static String m12(amount) => "Maximum amount - ₹${amount}";
+  static String m12(amount) => "Upto ₹ ${amount} can be invested at one go";
 
-  static String m13(amount) => "Min - ₹${amount}";
+  static String m13(amount) => "Maximum amount - ₹${amount}";
 
-  static String m14(amount) => "Minimum purchase amount is ₹ ${amount} ";
+  static String m14(amount) => "Min - ₹${amount}";
 
-  static String m15(amount) => "Minimum amount - ₹${amount}";
+  static String m15(amount) => "Minimum purchase amount is ₹ ${amount} ";
 
-  static String m16(name) => "Hi ${name}";
+  static String m16(amount) => "Minimum amount - ₹${amount}";
 
-  static String m17(mobileNumber) => "Login as +91-${mobileNumber}";
+  static String m17(name) => "Hi ${name}";
 
-  static String m18(interest) => "${interest}%";
+  static String m18(mobileNumber) => "Login as +91-${mobileNumber}";
 
-  static String m19(percentage) => "with ${percentage}% returns";
+  static String m19(interest) => "${interest}%";
 
-  static String m20(prizeAmount) =>
+  static String m20(percentage) => "with ${percentage}% returns";
+
+  static String m21(prizeAmount) =>
       "I\'ve won ₹\$${prizeAmount} as\nDigital Gold on Fello!";
 
-  static String m21(i) => "Prize \$${i}";
-
-  static String m22(Value) =>
-      "Are you sure you want to redeem ₹${Value} as an Amazon gift voucher?";
+  static String m22(i) => "Prize \$${i}";
 
   static String m23(Value) =>
+      "Are you sure you want to redeem ₹${Value} as an Amazon gift voucher?";
+
+  static String m24(Value) =>
       "Are you sure you want to redeem ₹${Value} as Digital Gold?";
 
-  static String m24(refUnlock) =>
+  static String m25(refUnlock) =>
       "Savings of ₹ ${refUnlock} required to redeem your winnings.";
 
-  static String m25(amount) => "Claim ${amount} referral bonus by saving";
+  static String m26(amount) => "Claim ${amount} referral bonus by saving";
 
-  static String m26(servingSize) => "*Based on ${servingSize} fl. oz serving.";
-
-  static String m27(quantity, formattedNumber) =>
-      "${Intl.plural(quantity, one: 'One serving.', other: '${formattedNumber} servings in your system at one time.')}";
+  static String m27(servingSize) => "*Based on ${servingSize} fl. oz serving.";
 
   static String m28(quantity, formattedNumber) =>
+      "${Intl.plural(quantity, one: 'One serving.', other: '${formattedNumber} servings in your system at one time.')}";
+
+  static String m29(quantity, formattedNumber) =>
       "${Intl.plural(quantity, one: 'One serving per day.', other: '${formattedNumber} servings per day.')}";
 
-  static String m29(type) => "with Fello ${type}";
+  static String m30(type) => "with Fello ${type}";
 
-  static String m30(goldAmount) => "${goldAmount} gm";
+  static String m31(goldAmount) => "${goldAmount} gm";
 
-  static String m31(winningsAmout) => "₹ ${winningsAmout}";
+  static String m32(winningsAmout) => "₹ ${winningsAmout}";
 
-  static String m32(returns) =>
+  static String m33(returns) =>
       "You can earn upto ₹${returns} in 5 years from this SIP";
 
-  static String m33(count) => "Tickets ${count}";
+  static String m34(count) => "Tickets ${count}";
 
-  static String m34(cost) => "SKIP WITH ${cost} TOKENS";
+  static String m35(cost) => "SKIP WITH ${cost} TOKENS";
 
-  static String m35(date) => "Started on ${date}";
+  static String m36(date) => "Started on ${date}";
 
-  static String m36(prize) => "Complete ${prize} to get ";
+  static String m37(prize) => "Complete ${prize} to get ";
 
-  static String m37(ticketGenerateCount) =>
+  static String m38(ticketGenerateCount) =>
       "of your ${ticketGenerateCount} tickets";
 
-  static String m38(multiplicationFactor) => "${multiplicationFactor}X Tickets";
+  static String m39(multiplicationFactor) => "${multiplicationFactor}X Tickets";
 
-  static String m39(username) =>
+  static String m40(username) =>
       "Your username ${username} has been successfully registered!";
 
-  static String m40(interest) => "${interest} % Returns on your investment";
+  static String m41(interest) => "${interest} % Returns on your investment";
 
-  static String m41(ticketType, rewardAmount) =>
+  static String m42(ticketType, rewardAmount) =>
       "Win a ${ticketType} Card worth upto ₹${rewardAmount}";
 
-  static String m42(prize) => "Winnings can be redeemed on reaching ₹${prize}";
+  static String m43(prize) => "Winnings can be redeemed on reaching ₹${prize}";
 
-  static String m43(timePeriod) => "Your Money in ${timePeriod} Years";
+  static String m44(timePeriod) => "Your Money in ${timePeriod} Years";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -400,7 +402,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "disabledReinvestSubtitle": MessageLookupByLibrary.simpleMessage(
             "Can withdraw anytime after maturity"),
         "disabledReinvestTitle": MessageLookupByLibrary.simpleMessage(
-            "Moving to P2P Flexi on maturity"),
+            "Moving to P2P Wallet on maturity"),
         "donePAN": MessageLookupByLibrary.simpleMessage("DONE"),
         "dummyNoAlert": MessageLookupByLibrary.simpleMessage(
             "Only dummy numbers are allowed in QA mode"),
@@ -512,8 +514,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("10% returns on investment"),
         "floAutoInvest":
             MessageLookupByLibrary.simpleMessage("Auto Invest on Maturity"),
+        "floCurrentReturn":
+            MessageLookupByLibrary.simpleMessage("Current Return"),
         "floEarn10Percent":
             MessageLookupByLibrary.simpleMessage("Earn 10% returns"),
+        "floInvested": MessageLookupByLibrary.simpleMessage("Invested"),
+        "floPortFolio":
+            MessageLookupByLibrary.simpleMessage("Fello P2P Portfolio"),
         "floReInvestMessage": MessageLookupByLibrary.simpleMessage(
             "Moving to *P2P Flexi* on maturity\nCan withdraw anytime after maturity"),
         "floSip": MessageLookupByLibrary.simpleMessage("Fello P2P SIP"),
@@ -715,6 +722,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "loadingTodaysPicks": MessageLookupByLibrary.simpleMessage(
             "Please wait, loading today\'s picks"),
         "lockInTill": MessageLookupByLibrary.simpleMessage("Lock-in till"),
+        "loosingReturns": m11,
         "loseAutoSave": MessageLookupByLibrary.simpleMessage(
             "You will lose out on automated savings & many exclusive rewards⏸️"),
         "madeWith": MessageLookupByLibrary.simpleMessage("Made with "),
@@ -728,8 +736,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "max8gms": MessageLookupByLibrary.simpleMessage(
             "A maximum of 8 gms can be sold in one go"),
         "maxAmountIs": MessageLookupByLibrary.simpleMessage("Max amount is "),
-        "maxAmountMessage": m11,
-        "maxSipAmount": m12,
+        "maxAmountMessage": m12,
+        "maxSipAmount": m13,
         "maxSize": MessageLookupByLibrary.simpleMessage("Max size: 5 MB"),
         "maxSizeText": MessageLookupByLibrary.simpleMessage("Max size: 5 MB"),
         "mayBeLater": MessageLookupByLibrary.simpleMessage("Maybe later"),
@@ -741,11 +749,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "min10rs": MessageLookupByLibrary.simpleMessage(
             "A minimum of ₹10 can be sold in one go"),
         "minAmountIs": MessageLookupByLibrary.simpleMessage("Min amount is "),
-        "minAmountLabel": m13,
-        "minAmountMessage": m14,
+        "minAmountLabel": m14,
+        "minAmountMessage": m15,
         "minAmountShouldBe":
             MessageLookupByLibrary.simpleMessage("Minimum amount should be ₹"),
-        "minSipAmount": m15,
+        "minSipAmount": m16,
         "minimumAmount":
             MessageLookupByLibrary.simpleMessage("Minimum sell amount is ₹ 10"),
         "minutes": MessageLookupByLibrary.simpleMessage("minutes"),
@@ -760,6 +768,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Explore More Games"),
         "moretxns": MessageLookupByLibrary.simpleMessage(
             "Looking for more transactions, please wait ..."),
+        "movesToVault": MessageLookupByLibrary.simpleMessage(
+            "Moves to P2P Vault on maturity"),
         "movetoflexi": MessageLookupByLibrary.simpleMessage(
             "\'Moving to 8% P2P Flexi on maturity"),
         "myFundsSection": MessageLookupByLibrary.simpleMessage("My Funds"),
@@ -808,7 +818,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("App Update Required"),
         "obAssetPrefBottomSheet2ButtonText1":
             MessageLookupByLibrary.simpleMessage("SKIP TO HOME"),
-        "obAssetPrefGreeting": m16,
+        "obAssetPrefGreeting": m17,
         "obAssetWelcomeText":
             MessageLookupByLibrary.simpleMessage("Welcome To Fello"),
         "obBankDetails":
@@ -882,7 +892,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "obLoading": MessageLookupByLibrary.simpleMessage("Loading..."),
         "obLoggingInWith":
             MessageLookupByLibrary.simpleMessage("Logging in with"),
-        "obLoginAsText": m17,
+        "obLoginAsText": m18,
         "obLoginHeading": MessageLookupByLibrary.simpleMessage("Login/Sign up"),
         "obMale": MessageLookupByLibrary.simpleMessage("Male"),
         "obMinutes": MessageLookupByLibrary.simpleMessage(" minutes."),
@@ -1015,8 +1025,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "perAnnum": MessageLookupByLibrary.simpleMessage("Per annum"),
         "perAnnumLabel": MessageLookupByLibrary.simpleMessage("per annum"),
         "perGame": MessageLookupByLibrary.simpleMessage("Per Game"),
-        "percentage": m18,
-        "percentageReturns": m19,
+        "percentage": m19,
+        "percentageReturns": m20,
         "permissionUnavailable":
             MessageLookupByLibrary.simpleMessage("Permission Unavailable"),
         "pkPanLabel": MessageLookupByLibrary.simpleMessage("PAN Number"),
@@ -1038,12 +1048,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "One step away from starting your Rewarding Savings journey"),
         "priceClaimTitle1": MessageLookupByLibrary.simpleMessage(
             "You\'ve won an Amazon Gift Voucher\n worth"),
-        "priceClaimTitle2": m20,
+        "priceClaimTitle2": m21,
         "priceClaimTitle3": MessageLookupByLibrary.simpleMessage(
             "You\'ve won Fello Rewards\n worth"),
         "primaryUPI": MessageLookupByLibrary.simpleMessage("Primary UPI"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
-        "prize": m21,
+        "prize": m22,
         "prizeFetchFailed": MessageLookupByLibrary.simpleMessage(
             "This week\'s prizes could not be fetched"),
         "prizeText": MessageLookupByLibrary.simpleMessage("Prize"),
@@ -1075,8 +1085,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "received": MessageLookupByLibrary.simpleMessage("Received"),
         "receivedOn": MessageLookupByLibrary.simpleMessage("Received on "),
         "redeem": MessageLookupByLibrary.simpleMessage("Redeem"),
-        "redeemAmznGiftVchr": m22,
-        "redeemDigitalGold": m23,
+        "redeemAmznGiftVchr": m23,
+        "redeemDigitalGold": m24,
         "redeemed": MessageLookupByLibrary.simpleMessage("Redeemed"),
         "redeemedOn": MessageLookupByLibrary.simpleMessage("Redeemed on "),
         "reedomAmznPay":
@@ -1105,12 +1115,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "refStep3": MessageLookupByLibrary.simpleMessage(
             "Both you and your friend receive ₹ 25 and 200 Fello tokens in your account."),
         "refUnAvailable": MessageLookupByLibrary.simpleMessage("Unavailable"),
-        "refUnlockText": m24,
+        "refUnlockText": m25,
         "refWhatsapp": MessageLookupByLibrary.simpleMessage("WhatsApp"),
         "refer": MessageLookupByLibrary.simpleMessage("Refer"),
         "referFriends":
             MessageLookupByLibrary.simpleMessage("Refer your friends"),
-        "referralNudgeMessage": m25,
+        "referralNudgeMessage": m26,
         "referrals": MessageLookupByLibrary.simpleMessage("referrals"),
         "referralsTitle": MessageLookupByLibrary.simpleMessage("Referrals"),
         "refreshKYC": MessageLookupByLibrary.simpleMessage("Please refresh"),
@@ -1125,9 +1135,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "restart": MessageLookupByLibrary.simpleMessage("Restart"),
         "restartAndTry": MessageLookupByLibrary.simpleMessage(
             "Please restart and try again"),
-        "resultsPageFirstDisclaimer": m26,
-        "resultsPageLethalDosageMessage": m27,
-        "resultsPageSafeDosageMessage": m28,
+        "resultsPageFirstDisclaimer": m27,
+        "resultsPageLethalDosageMessage": m28,
+        "resultsPageSafeDosageMessage": m29,
         "resultsPageSafeDosageTitle":
             MessageLookupByLibrary.simpleMessage("Daily Safe Maximum"),
         "resultsPageSecondDisclaimer": MessageLookupByLibrary.simpleMessage(
@@ -1136,8 +1146,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "resumeAutoSave":
             MessageLookupByLibrary.simpleMessage("Resume Autosave"),
         "resumeSipbtn": MessageLookupByLibrary.simpleMessage("Resume SIP"),
-        "retiiredFlexi": MessageLookupByLibrary.simpleMessage("8% P2P Flexi"),
-        "returnSubText": m29,
+        "retiiredFlexi": MessageLookupByLibrary.simpleMessage("P2P Vault"),
+        "returnSubText": m30,
         "returnsCalculator":
             MessageLookupByLibrary.simpleMessage("Calculate your SIP returns"),
         "reupload": MessageLookupByLibrary.simpleMessage("UPLOAD AGAIN"),
@@ -1162,7 +1172,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "saveBaseline": MessageLookupByLibrary.simpleMessage(
             "You get 1 token for every Rupee saved"),
         "saveGold24k": MessageLookupByLibrary.simpleMessage("24K"),
-        "saveGoldBalanceValue": m30,
+        "saveGoldBalanceValue": m31,
         "saveGoldBalancelabel":
             MessageLookupByLibrary.simpleMessage("Gold Balance:"),
         "saveGoldPure": MessageLookupByLibrary.simpleMessage("99.99% Pure"),
@@ -1173,7 +1183,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "saveViewAll": MessageLookupByLibrary.simpleMessage("View All"),
         "saveWinningsLabel":
             MessageLookupByLibrary.simpleMessage("My Active Winnings"),
-        "saveWinningsValue": m31,
+        "saveWinningsValue": m32,
         "savingsMade": MessageLookupByLibrary.simpleMessage("Savings made"),
         "savingsOnAuto": MessageLookupByLibrary.simpleMessage(
             "Put your savings on autopilot"),
@@ -1270,11 +1280,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Grow money on autopilot"),
         "sipIntroTitle": MessageLookupByLibrary.simpleMessage(
             "Save Weekly / Monthly  automatically & "),
-        "sipReturn": m32,
+        "sipReturn": m33,
         "sipSummary": MessageLookupByLibrary.simpleMessage("Your SIP Summary"),
         "sipText": MessageLookupByLibrary.simpleMessage("SIP"),
         "sipTicket": MessageLookupByLibrary.simpleMessage("Tickets"),
-        "sipTickets": m33,
+        "sipTickets": m34,
         "sipWithAutoSave": MessageLookupByLibrary.simpleMessage(
             "Start an SIP with Fello Autosave"),
         "sipYear": MessageLookupByLibrary.simpleMessage("Years"),
@@ -1286,7 +1296,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Let\'s get to the next milestone"),
         "skipMileStoneSuccessTitle": MessageLookupByLibrary.simpleMessage(
             "Milestone Skipped Successfully"),
-        "skipWithtokenCost": m34,
+        "skipWithtokenCost": m35,
         "sold": MessageLookupByLibrary.simpleMessage("Sold"),
         "someThingWentWrongError": MessageLookupByLibrary.simpleMessage(
             "Something went wrong, please try again."),
@@ -1307,7 +1317,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "startSavingNow":
             MessageLookupByLibrary.simpleMessage("Start saving now"),
         "startSip": MessageLookupByLibrary.simpleMessage("START SIP"),
-        "startedSip": m35,
+        "startedSip": m36,
         "step2Mandate":
             MessageLookupByLibrary.simpleMessage("2. Allow UPI Mandate."),
         "subTitle": MessageLookupByLibrary.simpleMessage("Subtitle"),
@@ -1323,7 +1333,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "tBottomRow": MessageLookupByLibrary.simpleMessage("Bottom Row"),
         "tCheckIfWon": MessageLookupByLibrary.simpleMessage(
             "Find out if your tickets won"),
-        "tCompleteToGet": m36,
+        "tCompleteToGet": m37,
         "tCorners": MessageLookupByLibrary.simpleMessage("Corners"),
         "tDailyPicks": MessageLookupByLibrary.simpleMessage("Daily Picks"),
         "tDrawTime":
@@ -1392,16 +1402,18 @@ class MessageLookup extends MessageLookupByLibrary {
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("Terms of Service"),
         "tgenerated": MessageLookupByLibrary.simpleMessage("Generated"),
-        "tgeneratedCount": m37,
+        "tgeneratedCount": m38,
         "tgetFirstTkt":
             MessageLookupByLibrary.simpleMessage("Get your first ticket"),
         "threeClicksAway":
             MessageLookupByLibrary.simpleMessage("3 CLICKS AWAY"),
+        "ticketsEarnedflo":
+            MessageLookupByLibrary.simpleMessage("Tickets Earned"),
         "ticketsExceeded":
             MessageLookupByLibrary.simpleMessage("Maximum tickets exceeded"),
         "ticketsMatched":
             MessageLookupByLibrary.simpleMessage("Tickets matched"),
-        "ticketsMultiplication": m38,
+        "ticketsMultiplication": m39,
         "ticketsThisWeek":
             MessageLookupByLibrary.simpleMessage("Your tickets won this week"),
         "ticketsWiting": MessageLookupByLibrary.simpleMessage(
@@ -1597,7 +1609,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("username cannot be empty"),
         "userNameSuccess": MessageLookupByLibrary.simpleMessage(
             "Username created successfully"),
-        "userNameSuccessSubtitle": m39,
+        "userNameSuccessSubtitle": m40,
         "userNameVal1": MessageLookupByLibrary.simpleMessage(
             "please enter a username with more than 3 characters."),
         "userNameVal2": MessageLookupByLibrary.simpleMessage(
@@ -1623,7 +1635,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "wallet": MessageLookupByLibrary.simpleMessage("P2P Wallet"),
         "walletCurrentValueLabel":
             MessageLookupByLibrary.simpleMessage("Current Value:"),
-        "walletInterest": m40,
+        "walletInterest": m41,
         "wantToSell": MessageLookupByLibrary.simpleMessage(
             "Are you sure you want to sell?"),
         "weekHighlights":
@@ -1634,7 +1646,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "whyToInvest": MessageLookupByLibrary.simpleMessage("Why to invest?"),
         "win": MessageLookupByLibrary.simpleMessage("Win"),
         "win1Crore": MessageLookupByLibrary.simpleMessage("Win ₹1 Crore!"),
-        "winATicket": m41,
+        "winATicket": m42,
         "winChipsTitle1":
             MessageLookupByLibrary.simpleMessage("Use tokens to play games!"),
         "winChipsTitle2":
@@ -1659,7 +1671,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "winRewardsTitle": MessageLookupByLibrary.simpleMessage("My Rewards"),
         "winipadText": MessageLookupByLibrary.simpleMessage(
             " from every Scratch Card. Highest referrer wins an iPad every month."),
-        "winningsRedeem": m42,
+        "winningsRedeem": m43,
         "withDrawalFailed":
             MessageLookupByLibrary.simpleMessage("Withdrawal Failed"),
         "withDrawalProcessing":
@@ -1682,7 +1694,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "your": MessageLookupByLibrary.simpleMessage("Your"),
         "yourAutoSave":
             MessageLookupByLibrary.simpleMessage("Your Autosave account is "),
-        "yourMoneySip": m43,
+        "yourMoneySip": m44,
         "yourSavings": MessageLookupByLibrary.simpleMessage("Your Savings"),
         "zeroperDay": MessageLookupByLibrary.simpleMessage("0.0/day")
       };

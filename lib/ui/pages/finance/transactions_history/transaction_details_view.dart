@@ -8,6 +8,8 @@ import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
+import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
+import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -32,10 +34,15 @@ import 'transaction_details_vm.dart';
 class TransactionDetailsPage extends StatefulWidget {
   const TransactionDetailsPage({
     required this.txn,
+    this.fundBloc,
+    this.transactionBloc,
     super.key,
   });
 
   final UserTransaction txn;
+
+  final MyFundsBloc? fundBloc;
+  final TransactionBloc? transactionBloc;
 
   @override
   State<TransactionDetailsPage> createState() => _TransactionDetailsPageState();
@@ -78,7 +85,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
   String floSubtype() {
     if (widget.txn.subType == "LENDBOXP2P") {
       final response = AppConfigV2.instance.lendBoxP2P.firstWhere(
-        (element) => element.fundType == widget.txn.subType,
+        (element) => element.fundType == widget.txn.lbMap.fundType,
       );
       return response.assetName;
     }
@@ -102,7 +109,8 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
         widget.txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD ||
             widget.txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD_FD;
     return BaseView<TransactionDetailsVM>(
-      create: () => TransactionDetailsVM(widget.txn),
+      create: () => TransactionDetailsVM(
+          widget.txn, widget.txn.lbMap.maturityPref ?? 'NA'),
       builder: (context, model, child) => Scaffold(
         backgroundColor: const Color(0xff151D22),
         appBar: FAppBar(
@@ -443,12 +451,17 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                         height: 20,
                       ),
                       _ReInvestNudge(
-                        initialValue: true,
-                        onTap: () {
-                          ///TODO:
-                          ///call api @Hirdesh2101
+                        initialValue: model.transactionPrefence == '1',
+                        onChanged: (value) async {
+                          var res = await model.updateMaturityPreference(value);
+                          if (widget.fundBloc != null && res) {
+                            widget.fundBloc!.reset();
+                          }
+                          if (widget.transactionBloc != null && res) {
+                            widget.transactionBloc!.reset();
+                          }
                         },
-                        isLoading: false,
+                        isLoading: model.isProcessingPreference,
                       )
                     ]
                   ],
@@ -540,12 +553,12 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
 class _ReInvestNudge extends StatelessWidget {
   const _ReInvestNudge({
     required this.initialValue,
-    required this.onTap,
+    required this.onChanged,
     this.isLoading = false,
   });
 
   final bool initialValue;
-  final VoidCallback onTap;
+  final ValueChanged<bool> onChanged;
   final bool isLoading;
 
   @override
@@ -562,10 +575,15 @@ class _ReInvestNudge extends StatelessWidget {
                 locale.floAutoInvest,
                 style: TextStyles.sourceSans.body3,
               ),
-              CustomSwitch(
-                initialValue: initialValue,
-                onTap: onTap,
-              )
+              isLoading
+                  ? SpinKitThreeInOut(
+                      color: UiConstants.teal2,
+                      size: SizeConfig.padding20,
+                    )
+                  : CustomSwitch(
+                      initialValue: initialValue,
+                      onChanged: onChanged,
+                    )
             ],
           ),
           SizedBox(

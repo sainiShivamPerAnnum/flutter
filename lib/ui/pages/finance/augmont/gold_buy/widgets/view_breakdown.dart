@@ -823,66 +823,87 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
           SizeConfig.pageHorizontalMargins,
           SizeConfig.padding12,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Payment summary',
-              style: TextStyles.sourceSansSB.body1.colour(
-                Colors.white,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Payment summary',
+                style: TextStyles.sourceSansSB.body1.colour(
+                  Colors.white,
+                ),
               ),
-            ),
-            SizedBox(
-              height: SizeConfig.padding16,
-            ),
-            if (widget.showBreakDown)
-              Column(
-                children: [
-                  LendboxPaymentSummaryHeader(
-                    amount: widget.model.amountController?.text ?? '0',
-                    maturityTerm: widget.model.selectedOption.maturityTerm,
-                    showMaturity: showMaturity,
-                    configuration: widget.model.config,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Saving date",
-                        style: TextStyles.sourceSans.body2,
-                      ),
-                      const Spacer(),
-                      Text(
-                        DateFormat('d MMM yyyy').format(currentDateTime),
-                        style: TextStyles.sourceSansSB.body3.colour(
-                          UiConstants.textGray70,
+              SizedBox(
+                height: SizeConfig.padding16,
+              ),
+              if (widget.showBreakDown)
+                Column(
+                  children: [
+                    LendboxPaymentSummaryHeader(
+                      amount: widget.model.amountController?.text ?? '0',
+                      maturityTerm: widget.model.selectedOption.maturityTerm,
+                      showMaturity: false,
+                      configuration: widget.model.config,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "Savings date",
+                          style: TextStyles.sourceSans.body2,
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding16,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Maturity date",
-                        style: TextStyles.sourceSans.body2,
-                      ),
-                      const Spacer(),
-                      Text(
-                        widget.model
-                            .getMaturityTime(widget.model.selectedOption),
-                        style: TextStyles.sourceSansSB.body2,
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding12,
-                  ),
-                  if ((widget.model.totalTickets ?? 0) > 0 &&
-                      !widget.showPaymentOption) ...[
+                        const Spacer(),
+                        Text(
+                          DateFormat('d MMM yyyy').format(currentDateTime),
+                          style: TextStyles.sourceSansSB.body3.colour(
+                            UiConstants.textGray70,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding16,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "Lock-in till",
+                          style: TextStyles.sourceSans.body2,
+                        ),
+                        const Spacer(),
+                        Text(
+                          widget.model
+                              .getMaturityTime(widget.model.selectedOption),
+                          style: TextStyles.sourceSansSB.body2,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding12,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          widget.model.config.assetName,
+                          style: TextStyles.rajdhaniSB.body3.copyWith(
+                            color: UiConstants.grey1,
+                          ),
+                        ),
+                        SizedBox(
+                          width: SizeConfig.padding4,
+                        ),
+                        Icon(
+                          Icons.info_outlined,
+                          color: UiConstants.grey1,
+                          size: SizeConfig.padding16,
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding16,
+                    ),
                     Divider(
                       color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
                     ),
@@ -948,75 +969,101 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                             )
                           : null,
                     ),
+                    if (widget.model.appliedCoupon != null) ...[
+                      SizedBox(
+                        height: SizeConfig.padding20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            Assets.ticketTilted,
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            '${widget.model.appliedCoupon?.code} coupon applied',
+                            style: TextStyles.sourceSans.body3
+                                .colour(UiConstants.kTealTextColor),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding12,
+                      )
+                    ],
+                    if (widget.showBreakDown)
+                      Divider(
+                        color:
+                            UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
+                      ),
                   ],
-                  if (widget.model.appliedCoupon != null) ...[
-                    Divider(
-                      color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding12,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          Assets.ticketTilted,
-                        ),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        Text(
-                          '${widget.model.appliedCoupon?.code} coupon applied',
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.kTealTextColor),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding12,
-                    )
-                  ],
-                  if (widget.showBreakDown)
-                    Divider(
-                      color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
-                    ),
-                ],
-              ),
-            if (widget.showPaymentOption) ...[
-              if (widget.model.isIntentFlow && !_isNetbankingMandatory)
-                UpiAppsGridView(
-                  apps: widget.model.appMetaList,
-                  onTap: (i) {
-                    if ((widget.model.buyAmount ?? 0) <
-                        widget.model.minAmount) {
-                      BaseUtil.showNegativeAlert(
-                        "Invalid Amount",
-                        "Please Enter Amount Greater than ${widget.model.minAmount}",
-                      );
-                      return;
-                    }
-
-                    if (!widget.model.isBuyInProgress) {
-                      Haptic.vibrate();
-                      FocusScope.of(context).unfocus();
-                      widget.model.selectedUpiApplication = i == -1
-                          ? ApplicationMeta.android(
-                              UpiApplication.PhonePeSimulator,
-                              Uint8List(10),
-                              1,
-                              1,
-                            )
-                          : widget.model.appMetaList[i];
-                      widget.model.initiateBuy();
-                    }
-
-                    AppState.backButtonDispatcher?.didPopRoute();
-                  },
                 ),
-              if (!widget.model.isIntentFlow && !_isNetbankingMandatory)
+              if (widget.showPaymentOption) ...[
+                if (widget.model.isIntentFlow && !_isNetbankingMandatory)
+                  UpiAppsGridView(
+                    apps: widget.model.appMetaList,
+                    onTap: (i) {
+                      if ((widget.model.buyAmount ?? 0) <
+                          widget.model.minAmount) {
+                        BaseUtil.showNegativeAlert(
+                          "Invalid Amount",
+                          "Please Enter Amount Greater than ${widget.model.minAmount}",
+                        );
+                        return;
+                      }
+
+                      if (!widget.model.isBuyInProgress) {
+                        Haptic.vibrate();
+                        FocusScope.of(context).unfocus();
+                        widget.model.selectedUpiApplication = i == -1
+                            ? ApplicationMeta.android(
+                                UpiApplication.PhonePeSimulator,
+                                Uint8List(10),
+                                1,
+                                1,
+                              )
+                            : widget.model.appMetaList[i];
+                        widget.model.initiateBuy();
+                      }
+
+                      AppState.backButtonDispatcher?.didPopRoute();
+                    },
+                  ),
+                if (!widget.model.isIntentFlow && !_isNetbankingMandatory)
+                  AppPositiveBtn(
+                    width: SizeConfig.screenWidth!,
+                    onPressed: () {
+                      if ((widget.model.buyAmount ?? 0) <
+                          widget.model.minAmount) {
+                        BaseUtil.showNegativeAlert(
+                          "Invalid Amount",
+                          "Please Enter Amount Greater than ${widget.model.minAmount}",
+                        );
+                        return;
+                      }
+
+                      if (!widget.model.isBuyInProgress) {
+                        FocusScope.of(context).unfocus();
+                        widget.model.initiateBuy();
+                      }
+
+                      AppState.backButtonDispatcher?.didPopRoute();
+                    },
+                    btnText: 'Save'.toUpperCase(),
+                  ),
+                if (_isNetbankingMandatory)
+                  NetBankingWidget(
+                    netbankingValidationMixin: widget.model,
+                    initiatePayment: widget.model.initiateBuy,
+                  ),
+              ],
+              if (widget.isBreakDown)
                 AppPositiveBtn(
                   width: SizeConfig.screenWidth!,
+                  btnText: 'Save'.toUpperCase(),
                   onPressed: () {
                     if ((widget.model.buyAmount ?? 0) <
                         widget.model.minAmount) {
@@ -1027,43 +1074,16 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                       return;
                     }
 
+                    AppState.backButtonDispatcher?.didPopRoute();
+
                     if (!widget.model.isBuyInProgress) {
                       FocusScope.of(context).unfocus();
-                      widget.model.initiateBuy();
+                      widget.onSave?.call();
                     }
-
-                    AppState.backButtonDispatcher?.didPopRoute();
                   },
-                  btnText: 'Save'.toUpperCase(),
-                ),
-              if (_isNetbankingMandatory)
-                NetBankingWidget(
-                  netbankingValidationMixin: widget.model,
-                  initiatePayment: widget.model.initiateBuy,
                 ),
             ],
-            if (widget.isBreakDown)
-              AppPositiveBtn(
-                width: SizeConfig.screenWidth!,
-                btnText: 'Save'.toUpperCase(),
-                onPressed: () {
-                  if ((widget.model.buyAmount ?? 0) < widget.model.minAmount) {
-                    BaseUtil.showNegativeAlert(
-                      "Invalid Amount",
-                      "Please Enter Amount Greater than ${widget.model.minAmount}",
-                    );
-                    return;
-                  }
-
-                  AppState.backButtonDispatcher?.didPopRoute();
-
-                  if (!widget.model.isBuyInProgress) {
-                    FocusScope.of(context).unfocus();
-                    widget.onSave?.call();
-                  }
-                },
-              ),
-          ],
+          ),
         ),
       ),
     );

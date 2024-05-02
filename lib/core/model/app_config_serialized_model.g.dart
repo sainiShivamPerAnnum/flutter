@@ -90,6 +90,7 @@ LendboxAssetConfiguration _$LendboxAssetConfigurationFromJson(
       minAmountText: json['minAmountText'] as String,
       descText: json['descText'] as String,
       tambolaMultiplier: json['tambolaMultiplier'] as num,
+      reinvestInterestGain: json['reinvestInterestGain'] as num,
       isForOldLb: json['isForOldLb'] as bool? ?? false,
       interest: json['interest'] as num? ?? 10,
       maturityDuration: json['maturityDuration'] as int? ?? 3,

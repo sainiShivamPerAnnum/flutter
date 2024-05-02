@@ -38,6 +38,7 @@ class UiConstants {
   static const Color titleTextColor = Colors.white;
   static const Color textColor = Colors.black87;
   static const Color errorText = Color(0xffC34B29);
+  static const Color greyBg = Color(0xffF5F5F8);
 
   static const MaterialColor kPrimaryColor = MaterialColor(
     0xff2EB19F,

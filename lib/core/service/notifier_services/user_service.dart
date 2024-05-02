@@ -26,6 +26,7 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/feature_flag_service/feature_flag_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
+import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -920,15 +921,21 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           final type = baseUser?.favAsset == 'AUGGOLD99'
               ? InvestmentType.AUGGOLD99
               : InvestmentType.LENDBOXP2P;
-
-          AppState.delegate!.appState.currentAction = PageAction(
-            state: PageState.addWidget,
-            page: SaveAssetsViewConfig,
-            widget: AssetSectionView(
-              type: type,
-            ),
-          );
-
+          if (type == InvestmentType.LENDBOXP2P) {
+            AppState.delegate!.appState.currentAction = PageAction(
+              page: P2PHomePageConfig,
+              widget: const P2PHomePage(),
+              state: PageState.addWidget,
+            );
+          } else {
+            AppState.delegate!.appState.currentAction = PageAction(
+              state: PageState.addWidget,
+              page: SaveAssetsViewConfig,
+              widget: AssetSectionView(
+                type: type,
+              ),
+            );
+          }
           return;
         }
 

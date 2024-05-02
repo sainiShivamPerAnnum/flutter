@@ -1,3 +1,7 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -45,7 +49,8 @@ class Footer extends StatelessWidget {
               Expanded(
                 child: SecondaryOutlinedButton(
                   label: 'SAVE ONCE',
-                  onPressed: () {},
+                  onPressed: () =>
+                      DefaultTabController.of(context).animateTo(1),
                 ),
               ),
               SizedBox(
@@ -54,7 +59,13 @@ class Footer extends StatelessWidget {
               Expanded(
                 child: SecondaryButton(
                   label: 'SAVE DAILY',
-                  onPressed: () {},
+                  onPressed: () {
+                    AppState.delegate!.appState.currentAction = PageAction(
+                      page: SipIntroPageConfig,
+                      widget: const SipIntroView(),
+                      state: PageState.addWidget,
+                    );
+                  },
                 ),
               ),
             ],
