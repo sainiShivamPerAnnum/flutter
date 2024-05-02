@@ -37,7 +37,7 @@ class TransactionDetailsVM extends BaseViewModel {
     try {
       var res = await _lendboxRepo.updateUserInvestmentPreference(
         _transactionInfo.id,
-        value ? '1' : '0',
+        value ? '1' : '2',
         hasConfirmed: true,
       );
       isProcessingPreference = false;
@@ -46,7 +46,7 @@ class TransactionDetailsVM extends BaseViewModel {
         BaseUtil.showNegativeAlert(
             'Preference update failed', res.errorMessage.toString());
       } else {
-        transactionPrefence = value ? '1' : '0';
+        transactionPrefence = value ? '1' : '2';
       }
       return res.model ?? false;
     } catch (e) {

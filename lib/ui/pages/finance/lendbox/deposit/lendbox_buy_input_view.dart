@@ -240,8 +240,9 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                     gains: widget.model.config.reinvestInterestGain,
                     initialValue: false,
                     onChange: (value) {
-                      widget.model.selectedOption =
-                          value ? UserDecision.reInvest : UserDecision.withdraw;
+                      widget.model.selectedOption = value
+                          ? UserDecision.reInvest
+                          : UserDecision.moveToFlexi;
                     },
                   ),
                 ],

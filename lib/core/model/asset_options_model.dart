@@ -58,12 +58,12 @@ class Data {
 class MaturityDetails {
   final String notDecided;
   final String reInvest;
-  final String withdraw;
+  final String moveToFlexi;
 
   const MaturityDetails({
     required this.notDecided,
     required this.reInvest,
-    required this.withdraw,
+    required this.moveToFlexi,
   });
 
   factory MaturityDetails.fromJson(Map<String, dynamic> json) {
@@ -71,7 +71,7 @@ class MaturityDetails {
     return MaturityDetails(
       notDecided: formatter.format(DateTime.parse(json["NA"])),
       reInvest: formatter.format(DateTime.parse(json["1"])),
-      withdraw: formatter.format(DateTime.parse(json["0"])),
+      moveToFlexi: formatter.format(DateTime.parse(json["2"])),
     );
   }
 }

@@ -203,7 +203,7 @@ class _InvestedHeader extends StatelessWidget {
             child: _MyInvestedAmount(
               totalInvestment: portfolio.principle,
               currentValue: portfolio.absGain,
-              tickets: portfolio.percGain,
+              tickets: (portfolio.principle / 500) * 1,
             ),
           ),
           SizedBox(
