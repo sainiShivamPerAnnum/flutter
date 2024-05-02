@@ -8,8 +8,6 @@ import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
-import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -34,15 +32,13 @@ import 'transaction_details_vm.dart';
 class TransactionDetailsPage extends StatefulWidget {
   const TransactionDetailsPage({
     required this.txn,
-    this.fundBloc,
-    this.transactionBloc,
+    this.onUpdatePrefrence,
     super.key,
   });
 
   final UserTransaction txn;
 
-  final MyFundsBloc? fundBloc;
-  final TransactionBloc? transactionBloc;
+  final VoidCallback? onUpdatePrefrence;
 
   @override
   State<TransactionDetailsPage> createState() => _TransactionDetailsPageState();
@@ -454,11 +450,8 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                         initialValue: model.transactionPrefence == '1',
                         onChanged: (value) async {
                           var res = await model.updateMaturityPreference(value);
-                          if (widget.fundBloc != null && res) {
-                            widget.fundBloc!.reset();
-                          }
-                          if (widget.transactionBloc != null && res) {
-                            widget.transactionBloc!.reset();
+                          if (widget.onUpdatePrefrence != null && res) {
+                            widget.onUpdatePrefrence!.call();
                           }
                         },
                         isLoading: model.isProcessingPreference,

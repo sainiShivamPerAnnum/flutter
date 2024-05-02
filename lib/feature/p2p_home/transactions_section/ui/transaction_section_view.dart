@@ -147,8 +147,10 @@ class _TransactionTile extends StatelessWidget {
             page: TransactionDetailsPageConfig,
             widget: TransactionDetailsPage(
               txn: transaction,
-              fundBloc: fundBloc,
-              transactionBloc: transactionBloc,
+              onUpdatePrefrence: () {
+                fundBloc.reset();
+                transactionBloc.reset();
+              },
             ),
           );
         },

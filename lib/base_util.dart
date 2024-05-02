@@ -432,9 +432,9 @@ class BaseUtil extends ChangeNotifier {
     locator<BackButtonActions>().isTransactionCancelled = false;
     final bool? islBoxDepositBanned = userService.userBootUp?.data!.banMap
         ?.investments?.depositV2?.flo![floAssetType]?.isBanned;
-    final String? lBoxDepositBanNotice = userService.userBootUp?.data!.banMap
-        ?.investments?.depositV2?.flo![floAssetType]?.reason;
     if (islBoxDepositBanned != null && islBoxDepositBanned) {
+      final String? lBoxDepositBanNotice = userService.userBootUp?.data!.banMap
+          ?.investments?.depositV2?.flo![floAssetType]?.reason;
       BaseUtil.showNegativeAlert(
         lBoxDepositBanNotice ?? locale.assetNotAvailable,
         locale.tryLater,

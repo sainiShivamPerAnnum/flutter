@@ -627,21 +627,6 @@ class LendboxBuyViewModel extends BaseViewModel
   }
 
   void showOfferModal(LendboxBuyViewModel? model) {
-    // BaseUtil.openModalBottomSheet(
-    //   content: FloCouponModalSheet(model: model),
-    //   addToScreenStack: true,
-    //   backgroundColor: UiConstants.kSecondaryBackgroundColor,
-    //   borderRadius: BorderRadius.only(
-    //     topLeft: Radius.circular(SizeConfig.roundness12),
-    //     topRight: Radius.circular(SizeConfig.roundness12),
-    //   ),
-    //   boxContraints: BoxConstraints(
-    //     maxHeight: SizeConfig.screenHeight! * 0.75,
-    //     minHeight: SizeConfig.screenHeight! * 0.75,
-    //   ),
-    //   isBarrierDismissible: false,
-    //   isScrollControlled: true,
-    // );
     AppState.delegate!.appState.currentAction = PageAction(
       page: LendboxCouponViewConfig,
       state: PageState.addWidget,

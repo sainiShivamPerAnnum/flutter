@@ -410,27 +410,16 @@ class InvestmentsBanMap {
 }
 
 class TransactionMap {
-  Map<String, AssetBanMap>? flo;
-  Map<String, AssetBanMap>? auggold;
+  final Map<String, AssetBanMap> flo;
+  final Map<String, AssetBanMap> auggold;
 
-  TransactionMap({
+  const TransactionMap({
     required this.flo,
     required this.auggold,
   });
-  TransactionMap copyWith({
-    Map<String, AssetBanMap>? flo,
-    Map<String, AssetBanMap>? auggold,
-  }) {
-    return TransactionMap(
-      flo: flo ?? this.flo,
-      auggold: auggold ?? this.auggold,
-    );
-  }
-
-  TransactionMap.base() {
-    flo = {};
-    auggold = {};
-  }
+  TransactionMap.base()
+      : flo = const {},
+        auggold = const {};
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -441,16 +430,10 @@ class TransactionMap {
 
   factory TransactionMap.fromMap(Map<String, dynamic> map) {
     return TransactionMap(
-      flo: map['flo'],
-      auggold: map['auggold'],
+      flo: map['flo'] ?? const {},
+      auggold: map['auggold'] ?? const {},
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory TransactionMap.fromJson(String source) =>
-      TransactionMap.fromMap(json.decode(source) as Map<String, dynamic>);
-
   @override
   String toString() => 'TransactionMap(flo: $flo, auggold: $auggold)';
 
