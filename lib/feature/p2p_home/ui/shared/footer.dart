@@ -7,8 +7,43 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/constants/analytics_events_constants.dart';
+import '../../../../core/service/analytics/analytics_service.dart';
+import '../../../../util/locator.dart';
+
 class Footer extends StatelessWidget {
   const Footer({super.key});
+  void trackSaveDailyButtonTapped() {
+    // ! TODO(@hirdesh)
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.saveDailyTappedOnAssetDetailPage,
+      properties: {
+        // "asset name": "${widget.model.config.interest}% Flo",
+        // "new user": locator<UserService>().userSegments.contains(
+        //       Constants.NEW_USER,
+        //     ),
+        // "invested amount": investedAmount,
+        // "current amount": currentAmount,
+        // "maturity date": maturityDate
+      },
+    );
+  }
+
+  void trackSaveOnceButtonTapped() {
+    // ! TODO(@hirdesh)
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.saveOnceTappedOnAssetDetailPage,
+      properties: {
+        // "asset name": "${widget.model.config.interest}% Flo",
+        // "new user": locator<UserService>().userSegments.contains(
+        //       Constants.NEW_USER,
+        //     ),
+        // "invested amount": investedAmount,
+        // "current amount": currentAmount,
+        // "maturity date": maturityDate
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +84,10 @@ class Footer extends StatelessWidget {
               Expanded(
                 child: SecondaryOutlinedButton(
                   label: 'SAVE ONCE',
-                  onPressed: () =>
-                      DefaultTabController.of(context).animateTo(1),
+                  onPressed: () {
+                    trackSaveOnceButtonTapped();
+                    DefaultTabController.of(context).animateTo(1);
+                  },
                 ),
               ),
               SizedBox(
@@ -60,6 +97,7 @@ class Footer extends StatelessWidget {
                 child: SecondaryButton(
                   label: 'SAVE DAILY',
                   onPressed: () {
+                    trackSaveDailyButtonTapped();
                     AppState.delegate!.appState.currentAction = PageAction(
                       page: SipIntroPageConfig,
                       widget: const SipIntroView(),

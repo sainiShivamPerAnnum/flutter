@@ -15,6 +15,9 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/constants/analytics_events_constants.dart';
+import '../../../../../core/service/analytics/analytics_service.dart';
+
 class TransactionCard extends StatelessWidget {
   const TransactionCard({
     required this.transaction,
@@ -25,6 +28,22 @@ class TransactionCard extends StatelessWidget {
   final UserTransaction transaction;
   final MyFundsBloc fundBloc;
 
+  void trackTransactionDetailsScreen() {
+    // ! TODO(@hirdesh)
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.transactionDetailsScreen,
+      properties: {
+        // "asset name": "${widget.model.config.interest}% Flo",
+        // "new user": locator<UserService>().userSegments.contains(
+        //       Constants.NEW_USER,
+        //     ),
+        // "invested amount": investedAmount,
+        // "current amount": currentAmount,
+        // "maturity date": maturityDate
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final locale = locator<S>();
@@ -34,7 +53,7 @@ class TransactionCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Haptic.vibrate();
-
+        trackTransactionDetailsScreen();
         final transactionBloc = context.read<TransactionBloc>();
         AppState.delegate!.appState.currentAction = PageAction(
           state: PageState.addWidget,

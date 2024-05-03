@@ -279,6 +279,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                           "investmentType": InvestmentType.LENDBOXP2P.name,
                         },
                       );
+                      //! Do we need to keep AnalyticsEvents.saveInitiate event only or add save checkout also
                       if ((widget.model.buyAmount ?? 0) <
                           widget.model.minAmount) {
                         BaseUtil.showNegativeAlert(
@@ -363,6 +364,19 @@ class _ReInvestNudgeState extends State<_ReInvestNudge> {
       _value = value;
       widget.onChange(_value);
     });
+    //TODO(@hirdesh)
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.reinvestmentPreferenceChanged,
+      properties: {
+        // "asset name": "${widget.model.config.interest}% Flo",
+        // "new user": locator<UserService>().userSegments.contains(
+        //       Constants.NEW_USER,
+        //     ),
+        // "invested amount": investedAmount,
+        // "current amount": currentAmount,
+        // "maturity date": maturityDate
+      },
+    );
   }
 
   @override

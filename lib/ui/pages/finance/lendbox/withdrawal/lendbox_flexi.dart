@@ -3,7 +3,9 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../core/constants/analytics_events_constants.dart';
 import '../../../../../core/enums/page_state_enum.dart';
+import '../../../../../core/service/analytics/analytics_service.dart';
 import '../../../../../core/service/notifier_services/user_service.dart';
 import '../../../../../navigator/app_state.dart';
 import '../../../../../navigator/router/ui_pages.dart';
@@ -25,6 +27,20 @@ class FlexiBalanceView extends StatefulWidget {
 
 class _FlexiBalanceViewState extends State<FlexiBalanceView> {
   final UserService _usrService = locator<UserService>();
+
+  void trackBasicCardWithdrawTap() {
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.withdrawFloTapped,
+      properties: {
+        // "asset name": isLendboxOldUser ? "10% Flo" : "8% Flo",
+        // "new user":
+        //     locator<UserService>().userSegments.contains(Constants.NEW_USER),
+        // "invested amount": getPrinciple(isLendboxOldUser),
+        // "current amount": getBalance(isLendboxOldUser),
+        // "lockin period": lockIn,
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,6 +172,7 @@ class _FlexiBalanceViewState extends State<FlexiBalanceView> {
                   child: SecondaryButton(
                     onPressed: () {
                       Haptic.vibrate();
+                      trackBasicCardWithdrawTap();
                       BaseUtil.openModalBottomSheet(
                         addToScreenStack: true,
                         enableDrag: false,

@@ -41,20 +41,6 @@ class FloBasicCard extends StatelessWidget {
     );
   }
 
-  void trackBasicCardInvestTap(bool isLendboxOldUser, String lockIn) {
-    locator<AnalyticsService>().track(
-      eventName: AnalyticsEvents.investFloBannerTapped,
-      properties: {
-        "asset name": isLendboxOldUser ? "10% Flo" : "8% Flo",
-        "new user":
-            locator<UserService>().userSegments.contains(Constants.NEW_USER),
-        "invested amount": getPrinciple(isLendboxOldUser),
-        "current amount": getBalance(isLendboxOldUser),
-        "lockin period": lockIn,
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     bool isLendboxOldUser = model.userSegments.contains(Constants.US_FLO_OLD);
@@ -259,13 +245,6 @@ class FloBasicCard extends StatelessWidget {
                         onPressed: () {
                           BaseUtil.openFloBuySheet(
                             floAssetType: Constants.ASSET_TYPE_FLO_FELXI,
-                          );
-                          trackBasicCardInvestTap(
-                            isLendboxOldUser,
-                            isLendboxOldUser
-                                ? lendboxDetails[2]["maturityPeriodText"]
-                                : lendboxDetails[3]["maturityPeriodText"] ??
-                                    "1 Week Lockin",
                           );
                         },
                         child: Text(
