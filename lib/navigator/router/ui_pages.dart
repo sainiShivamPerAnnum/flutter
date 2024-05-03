@@ -89,6 +89,7 @@ const String FppCompletedMatchDetailsPath = "fppCompletedMatchDetailsPath";
 const String PowerPlayFTUXPath = '/powerPlayFTUXPath';
 const String PowerPlaySeasonLeaderboardPath = "powerplaySeasonLeaderboardPath";
 const String LendboxBuyViewPath = "/LendboxBuyViewPath";
+const String LendboxCouponViewPath = "/LendboxCouponViewPath";
 const String AssetSelectionViewPath = "/assetSelectionViewPath";
 const String QuizWebViewPath = "/quizWebViewPath";
 const String BalloonLottieScreenPath = "/bolloonLottieScreenPath";
@@ -115,6 +116,7 @@ const String SipFormPageViewPath = "/sipform";
 const String SipStatusPage = '/sip/status';
 const String SipMandateViewPath = '/sip/mandateView';
 const String P2PHomeViewPath = '/p2p/homeView';
+const String flexiBalanceViewPath = "/flexiBalanceViewPath";
 
 enum Pages {
   Splash,
@@ -201,6 +203,7 @@ enum Pages {
   PowerPlayFTUX,
   PowerPlaySeasonLeaderboard,
   LendboxBuyView,
+  LendboxCouponView,
   AssetSelectionView,
   QuizWebView,
   BalloonLottieScreen,
@@ -224,6 +227,9 @@ enum Pages {
   SipStatusView,
   SipMandateView,
   P2PHomeView,
+
+  //p2pv2
+  FlexiBalaceView
 }
 
 class PageConfiguration {
@@ -792,6 +798,11 @@ PageConfiguration LendboxBuyViewConfig = PageConfiguration(
     path: LendboxBuyViewPath,
     uiPage: Pages.LendboxBuyView,
     name: "Lendbox Buy View Screen");
+PageConfiguration LendboxCouponViewConfig = PageConfiguration(
+    key: 'LendboxCouponViewPath',
+    path: LendboxCouponViewPath,
+    uiPage: Pages.LendboxCouponView,
+    name: "Lendbox Coupon Screen");
 
 PageConfiguration AssetSelectionViewConfig = PageConfiguration(
     key: 'AssetSelectionViewPath',
@@ -910,4 +921,11 @@ PageConfiguration P2PHomePageConfig = PageConfiguration(
   path: P2PHomeViewPath,
   uiPage: Pages.P2PHomeView,
   name: 'P2P Home View Path',
+);
+
+PageConfiguration FlexiBalancePageConfig = PageConfiguration(
+  key: 'flexiBalanceViewPath',
+  path: flexiBalanceViewPath,
+  uiPage: Pages.FlexiBalaceView,
+  name: "Flexi Balance View",
 );

@@ -1,7 +1,8 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/sip_asset_type.dart';
+import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
 import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
 
 class SipCalculation {
@@ -17,7 +18,7 @@ class SipCalculation {
   static String getReturn({
     required int formAmount,
     required bool interestOnly,
-    SIPAssetTypes? currentAsset,
+    AssetOptions? currentAsset,
     int? currentTab,
     int? numberOfYears,
     String? frequency,
@@ -32,11 +33,13 @@ class SipCalculation {
                 .instance.data.amountSelectionScreen.options[currentTab ?? 0]]!
         .numberOfPeriodsPerYear;
 
-    num interest = interestSelection ??
+    num? interest = interestSelection ??
         SipDataHolder.instance.data.selectAssetScreen.options
-            .where((element) => element.type == currentAsset)
-            .first
-            .interest;
+            .firstWhereOrNull((element) => element.type == currentAsset!.type)
+            ?.interest;
+    if (interest == null) {
+      return 'N/A';
+    }
     double interestRate = (interest * .01) / numberOfPeriodsPerYear;
     int numberOfYear = numberOfYears ?? 5;
 

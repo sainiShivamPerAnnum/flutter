@@ -331,24 +331,34 @@ class BanMap {
 class InvestmentsBanMap {
   InvestmentTypeBanMap? deposit;
   InvestmentTypeBanMap? withdrawal;
+  TransactionMap? depositV2;
+  TransactionMap? withdrawalV2;
 
   InvestmentsBanMap({
     required this.deposit,
     required this.withdrawal,
+    required this.depositV2,
+    required this.withdrawalV2,
   });
 
   InvestmentsBanMap.base() {
     deposit = InvestmentTypeBanMap.base();
     withdrawal = InvestmentTypeBanMap.base();
+    depositV2 = TransactionMap.base();
+    withdrawalV2 = TransactionMap.base();
   }
 
   InvestmentsBanMap copyWith({
     InvestmentTypeBanMap? deposit,
     InvestmentTypeBanMap? withdrawal,
+    TransactionMap? depositV2,
+    TransactionMap? withdrawalV2,
   }) {
     return InvestmentsBanMap(
       deposit: deposit ?? this.deposit,
       withdrawal: withdrawal ?? this.withdrawal,
+      depositV2: depositV2 ?? this.depositV2,
+      withdrawalV2: withdrawalV2 ?? this.withdrawalV2,
     );
   }
 
@@ -356,6 +366,8 @@ class InvestmentsBanMap {
     return <String, dynamic>{
       'deposit': deposit!.toMap(),
       'withdrawal': withdrawal!.toMap(),
+      'depositV2': depositV2!.toMap(),
+      'withdrawalV2': withdrawalV2!.toMap(),
     };
   }
 
@@ -368,6 +380,12 @@ class InvestmentsBanMap {
           ? InvestmentTypeBanMap.fromMap(
               map['withdrawal'] as Map<String, dynamic>)
           : InvestmentTypeBanMap.base(),
+      depositV2: map['depositV2'] != null
+          ? TransactionMap.fromMap(map['depositV2'] as Map<String, dynamic>)
+          : TransactionMap.base(),
+      withdrawalV2: map['withdrawalV2'] != null
+          ? TransactionMap.fromMap(map['withdrawalV2'] as Map<String, dynamic>)
+          : TransactionMap.base(),
     );
   }
 
@@ -389,6 +407,45 @@ class InvestmentsBanMap {
 
   @override
   int get hashCode => deposit.hashCode ^ withdrawal.hashCode;
+}
+
+class TransactionMap {
+  final Map<String, AssetBanMap> flo;
+  final Map<String, AssetBanMap> auggold;
+
+  const TransactionMap({
+    required this.flo,
+    required this.auggold,
+  });
+  TransactionMap.base()
+      : flo = const {},
+        auggold = const {};
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'flo': flo,
+      'auggold': auggold,
+    };
+  }
+
+  factory TransactionMap.fromMap(Map<String, dynamic> map) {
+    return TransactionMap(
+      flo: map['flo'] ?? const {},
+      auggold: map['auggold'] ?? const {},
+    );
+  }
+  @override
+  String toString() => 'TransactionMap(flo: $flo, auggold: $auggold)';
+
+  @override
+  bool operator ==(covariant TransactionMap other) {
+    if (identical(this, other)) return true;
+
+    return other.flo == flo && other.auggold == auggold;
+  }
+
+  @override
+  int get hashCode => flo.hashCode ^ auggold.hashCode;
 }
 
 class InvestmentTypeBanMap {

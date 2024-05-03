@@ -5,13 +5,13 @@ sealed class AutoSaveSetupState extends Equatable {
 }
 
 final class SelectAssetCubitState extends AutoSaveSetupState {
-  final SIPAssetTypes? selectedAsset;
+  final AssetOptions? selectedAsset;
   const SelectAssetCubitState({
     this.selectedAsset,
   });
 
   SelectAssetCubitState copyWith({
-    SIPAssetTypes? selectedAsset,
+    AssetOptions? selectedAsset,
   }) {
     return SelectAssetCubitState(
       selectedAsset: selectedAsset ?? this.selectedAsset,

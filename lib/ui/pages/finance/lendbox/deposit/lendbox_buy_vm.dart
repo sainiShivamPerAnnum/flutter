@@ -28,7 +28,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/flo_coupon_modal_sheet.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/flo_coupon_page.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
 import 'package:felloapp/ui/pages/finance/preffered_upi_option_mixin.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -99,7 +99,7 @@ class LendboxBuyViewModel extends BaseViewModel
   bool isSpecialCoupon = true;
   bool showCouponAppliedText = false;
   bool _addSpecialCoupon = false;
-  UserDecision _selectedOption = UserDecision.notDecided;
+  UserDecision _selectedOption = UserDecision.moveToFlexi;
   bool isIntentFlow = true;
 
   ///  ---------- getter and setter ------------
@@ -506,7 +506,15 @@ class LendboxBuyViewModel extends BaseViewModel
         couponsRes.model != null &&
         (couponsRes.model?.length ?? 0) >= 1) {
       couponList = couponsRes.model;
-      if (couponList?[0].priority == 1) focusCoupon = couponList?[0];
+      if (couponList!.length > 1) {
+        couponList!.sort(
+          (a, b) => b.maxRewardAmount!.compareTo(a.maxRewardAmount!),
+        );
+      }
+      // if (couponList?[0].priority == 1) focusCoupon = couponList?[0];
+      // initial coupon pending?
+      focusCoupon = couponList!.firstWhere((element) =>
+          element.minPurchase! <= int.parse(amountController!.text));
       showCoupons = true;
     }
   }
@@ -563,6 +571,8 @@ class LendboxBuyViewModel extends BaseViewModel
     buyAmount = assetOptionsModel?.data.userOptions[index].value.toInt();
     amountController!.text = buyAmount!.toString();
 
+    focusCoupon = couponList!.firstWhereOrNull(
+        (element) => element.minPurchase! <= int.parse(amountController!.text));
     appliedCoupon = null;
 
     analyticsService.track(
@@ -610,31 +620,26 @@ class LendboxBuyViewModel extends BaseViewModel
 
     updateFieldWidth();
 
+    focusCoupon = couponList!.firstWhereOrNull(
+        (element) => element.minPurchase! <= int.parse(amountController!.text));
+
     appliedCoupon = null;
   }
 
   void showOfferModal(LendboxBuyViewModel? model) {
-    BaseUtil.openModalBottomSheet(
-      content: FloCouponModalSheet(model: model),
-      addToScreenStack: true,
-      backgroundColor: UiConstants.kSecondaryBackgroundColor,
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(SizeConfig.roundness12),
-        topRight: Radius.circular(SizeConfig.roundness12),
+    AppState.delegate!.appState.currentAction = PageAction(
+      page: LendboxCouponViewConfig,
+      state: PageState.addWidget,
+      widget: FloCouponPage(
+        model1: model,
       ),
-      boxContraints: BoxConstraints(
-        maxHeight: SizeConfig.screenHeight! * 0.75,
-        minHeight: SizeConfig.screenHeight! * 0.75,
-      ),
-      isBarrierDismissible: false,
-      isScrollControlled: true,
     );
   }
 
   String getMaturityTime(UserDecision decision) {
     final maturity = assetOptionsModel!.data.maturityAt!;
     return switch (decision) {
-      UserDecision.notDecided => maturity.notDecided,
+      UserDecision.moveToFlexi => maturity.moveToFlexi,
       UserDecision.reInvest => maturity.reInvest,
       _ => maturity.notDecided,
     };
@@ -736,7 +741,8 @@ class LendboxBuyViewModel extends BaseViewModel
         checkForSpecialCoupon(response.model!);
 
         appliedCoupon = response.model;
-
+        focusCoupon = couponList!.firstWhereOrNull(
+            (element) => element.code! == response.model!.code);
         BaseUtil.showPositiveAlert(
           locale.couponAppliedSucc,
           response.model?.message,

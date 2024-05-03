@@ -943,10 +943,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case "floDetails":
         appState.currentAction = PageAction(
           state: PageState.addWidget,
-          page: SaveAssetsViewConfig,
-          widget: const AssetSectionView(
-            type: InvestmentType.LENDBOXP2P,
-          ),
+          page: P2PHomePageConfig,
+          widget: const P2PHomePage(),
         );
         break;
       case "flo10Details":

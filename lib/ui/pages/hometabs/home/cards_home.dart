@@ -11,6 +11,7 @@ import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
+import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/fund_breakdown_dialog.dart';
@@ -145,11 +146,9 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
           }));
 
       AppState.delegate!.appState.currentAction = PageAction(
+        page: P2PHomePageConfig,
+        widget: const P2PHomePage(),
         state: PageState.addWidget,
-        page: SaveAssetsViewConfig,
-        widget: AssetSectionView(
-          type: investmentType,
-        ),
       );
     }
   }

@@ -1,4 +1,5 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
 import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/create_subs_response.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
@@ -59,7 +60,7 @@ class SubscriptionRepo extends BaseRepo {
     required num amount,
     required num lbAmt,
     required num augAmt,
-    required String assetType,
+    required AssetOptions assetType,
     String? package,
   }) async {
     try {
@@ -68,7 +69,7 @@ class SubscriptionRepo extends BaseRepo {
         "lbAmt": lbAmt,
         "augAmt": augAmt,
         "frequency": freq,
-        "assetType": assetType,
+        "assetType": assetType.type,
         if (package != null) "pspPackage": package,
       };
 

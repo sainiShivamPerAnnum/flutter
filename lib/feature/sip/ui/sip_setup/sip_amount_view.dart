@@ -1,7 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
@@ -36,7 +37,7 @@ class SipFormAmountView extends StatelessWidget {
   final String? prefillFrequency;
   final bool? isEdit;
   final String? editId;
-  final SIPAssetTypes sipAssetType;
+  final AssetOptions sipAssetType;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +63,7 @@ class SipFormAmount extends StatefulWidget {
   final bool mandateAvailable;
   final bool? isEdit;
   final String? editId;
-  final SIPAssetTypes sipAssetType;
+  final AssetOptions sipAssetType;
 
   @override
   State<SipFormAmount> createState() => _SipFormAmountState();
@@ -76,10 +77,9 @@ class _SipFormAmountState extends State<SipFormAmount> {
 
   @override
   Widget build(BuildContext context) {
-    num percentage = SipDataHolder.instance.data.selectAssetScreen.options
-        .where((element) => element.type == widget.sipAssetType)
-        .first
-        .interest;
+    num? percentage = SipDataHolder.instance.data.selectAssetScreen.options
+        .firstWhereOrNull((element) => element.type == widget.sipAssetType.type)
+        ?.interest;
     return Scaffold(
         backgroundColor: UiConstants.kBackgroundColor,
         appBar: AppBar(
@@ -255,10 +255,13 @@ class _SipFormAmountState extends State<SipFormAmount> {
                                           .copyWith(color: UiConstants.grey1),
                                     ),
                                     Text(
-                                      locale.percentageReturns(percentage) +
-                                          (widget.sipAssetType.isAugGold
-                                              ? '*'
-                                              : ''),
+                                      percentage == null
+                                          ? 'N/A'
+                                          : locale.percentageReturns(
+                                                  percentage) +
+                                              (widget.sipAssetType.isAugGold
+                                                  ? '*'
+                                                  : ''),
                                       style: TextStyles.sourceSans.body4
                                           .copyWith(color: UiConstants.grey1),
                                     ),
@@ -317,7 +320,7 @@ class _Footer extends StatefulWidget {
   final String? id;
   final bool isEdit;
   final bool isValidAmount;
-  final SIPAssetTypes sipAssetType;
+  final AssetOptions sipAssetType;
   final String defaultChip;
   final String defaultTickets;
   final String minAmount;

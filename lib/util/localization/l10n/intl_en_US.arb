@@ -424,7 +424,8 @@
   "btnSeeAll": "See All",
   "btnNotifyMe": "NOTIFY ME",
   "btnCongratulations": "Congratulations!",
-  "btnApplyCoupon": "Apply Coupon",
+  "btnApplyCoupon": "Apply Coupons",
+  "moreCoupons": "More Coupons",
   "btnContinue": "Continue",
   "btnCheckHere": "Check here",
   "btnGetStarted": "Get Started",
@@ -592,6 +593,7 @@
   "txnEnterCoupon": "Enter a Coupon Code here",
   "txnApply": "Apply",
   "txnEnterCode": "Please enter a code to continue",
+  "enterCoupon" : "Enter coupon",
   "txnInvalidCouponCode": "Invalid Coupon code",
   "txnActiveCoupon": "Active Coupons",
   "txnDetailsTitle": "Transaction Details",
@@ -1091,7 +1093,7 @@
       }
     }
   },
-  "retiiredFlexi": "8% P2P Flexi",
+  "retiiredFlexi": "P2P Vault",
   "flexiIvested": "Invested Amount",
   "lastLockIn": "Last Lock-in Date",
   "withdrable": "Withdrable Amount",
@@ -1107,7 +1109,7 @@
 
   "@_flo_transaction_details": {},
   "reinvestMessage": "Compounding returns on your investment",
-  "disabledReinvestTitle": "Moving to P2P Flexi on maturity",
+  "disabledReinvestTitle": "Moving to P2P Wallet on maturity",
   "disabledReinvestSubtitle":"Can withdraw anytime after maturity",
 
 
@@ -1128,6 +1130,14 @@
   "perAnnum": "Per annum",
   "extraReturns": "+ {percentage}% Returns",
   "@extraReturns" : {
+    "placeholders": {
+      "percentage": {
+        "type":"num"
+      }
+    }
+  },
+  "loosingReturns": "Loosing Extra {percentage}%",
+  "@loosingReturns" : {
     "placeholders": {
       "percentage": {
         "type":"num"
@@ -1172,7 +1182,7 @@
   "perAnnumLabel":"per annum",
   "lockInTill":"Lock-in till",
   "reInvestOnMaturity":"Re-Invest on maturity",
-  
+  "movesToVault": "Moves to P2P Vault on maturity",
 
 
   "@_investment_section" : {},
@@ -1181,5 +1191,14 @@
   "p2pCalculatorInvestmentAmount":"Investment Amount -",
   "p2pCalculatorInvestmentDuration":"Time Period -",
   "p2pCalculatorInvestmentDurationUnit":"Year",
-  "p2pCalculator5YearsReturns":"Your Money in 5 Years-"
+  "p2pCalculator5YearsReturns":"Your Money in 5 Years-",
+  "switchOnFor": "Switch On for ",
+  "onreinvestment":" on reinvestment",
+  "WithdrawMaturity": "Withdraw-able after maturity from ",
+  "extra": "Extra ",
+  "ReinvestTitle": "Reinvest on Maturity",
+  "floPortFolio": "Fello P2P Portfolio",
+  "floInvested": "Invested",
+  "floCurrentReturn": "Current Return",
+  "ticketsEarnedflo": "Tickets Earned"
 }

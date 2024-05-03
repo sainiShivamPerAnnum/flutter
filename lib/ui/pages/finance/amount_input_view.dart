@@ -64,153 +64,143 @@ class _AmountInputViewState extends State<AmountInputView> {
     final AnalyticsService analyticsService = locator<AnalyticsService>();
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding12,
-            vertical: SizeConfig.padding16,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              if (widget.notice != null && widget.notice!.isNotEmpty)
-                Container(
-                  margin: EdgeInsets.only(bottom: SizeConfig.padding16),
-                  decoration: BoxDecoration(
-                    color: UiConstants.primaryLight,
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-                  ),
-                  width: SizeConfig.screenWidth,
-                  padding: EdgeInsets.all(SizeConfig.padding16),
-                  child: Text(
-                    widget.notice!,
-                    textAlign: TextAlign.center,
-                    style: TextStyles.body3.light,
-                  ),
-                ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Text(
-                      "₹",
-                      style: TextStyles.rajdhaniB.title50.colour(
-                        widget.amountController!.text == "0"
-                            ? UiConstants.kTextColor2
-                            : UiConstants.kTextColor,
-                      ),
-                    ),
-                  ),
-                  AnimatedContainer(
-                    duration: const Duration(seconds: 0),
-                    curve: Curves.easeIn,
-                    width: widget.model.fieldWidth,
-                    child: TextFormField(
-                      key: const ValueKey('floAmountInput'),
-                      autofocus: true,
-                      showCursor: true,
-                      readOnly: widget.readOnly,
-                      onTap: widget.onTap,
-                      controller: widget.amountController,
-                      focusNode: widget.focusNode,
-                      enabled: widget.isEnabled,
-                      maxLength: widget.maxAmount.toString().length,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      onChanged: widget.model.onValueChanged,
-                      decoration: const InputDecoration(
-                        focusedBorder: InputBorder.none,
-                        border: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        isDense: true,
-                        counter: Offstage(),
-                      ),
-                      textAlign: TextAlign.center,
-                      style: TextStyles.rajdhaniB.title50.colour(
-                        widget.amountController!.text == "0"
-                            ? UiConstants.kTextColor2
-                            : UiConstants.kTextColor,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    widget.model.showHappyHourSubtitle(),
-                    style: TextStyles.sourceSans.body3.bold.copyWith(
-                      color: UiConstants.grey1,
-                      height: 1,
-                    ),
-                  ),
-                  if (widget.model.showInfoIcon) ...[
-                    SizedBox(
-                      width: SizeConfig.padding8,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        analyticsService.track(
-                          eventName: AnalyticsEvents.tambolaTicketInfoTapped,
-                          properties: {
-                            'Ticket count': widget.model.numberOfTambolaTickets,
-                            'happy hour ticket count':
-                                widget.model.happyHourTickets,
-                          },
-                        );
-
-                        BaseUtil.openModalBottomSheet(
-                          isBarrierDismissible: true,
-                          addToScreenStack: true,
-                          content: FloBreakdownView(
-                            model: widget.model,
-                            showPaymentOption: false,
-                          ),
-                          hapticVibrate: true,
-                          isScrollControlled: true,
-                        );
-                      },
-                      child: const Icon(
-                        Icons.info_outline,
-                        size: 14,
-                        color: UiConstants.grey1,
-                      ),
-                    ),
-                  ]
-                ],
-              ),
-              if (widget.model.showMaxCapText)
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding1),
-                  child: Text(
-                    widget.maxAmountMsg,
-                    style: TextStyles.sourceSans.body4.bold.colour(
-                      UiConstants.grey1,
-                    ),
-                  ),
-                ),
-              if (currentAmt < widget.minAmount)
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding1),
-                  child: Text(
-                    widget.minAmountMsg,
-                    style: TextStyles.sourceSans.body4.bold
-                        .colour(Colors.red[400]),
-                  ),
-                ),
-            ],
-          ),
+        SizedBox(
+          height: SizeConfig.padding25,
         ),
+        if (widget.notice != null && widget.notice!.isNotEmpty)
+          Container(
+            margin: EdgeInsets.only(bottom: SizeConfig.padding16),
+            decoration: BoxDecoration(
+              color: UiConstants.primaryLight,
+              borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+            ),
+            width: SizeConfig.screenWidth,
+            padding: EdgeInsets.all(SizeConfig.padding16),
+            child: Text(
+              widget.notice!,
+              textAlign: TextAlign.center,
+              style: TextStyles.body3.light,
+            ),
+          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "₹",
+              style: TextStyles.rajdhaniB.title50.colour(
+                widget.amountController!.text == "0"
+                    ? UiConstants.kTextColor2
+                    : UiConstants.kTextColor,
+              ),
+            ),
+            AnimatedContainer(
+              padding: EdgeInsets.zero,
+              margin: EdgeInsets.zero,
+              duration: const Duration(seconds: 0),
+              curve: Curves.easeIn,
+              width: widget.model.fieldWidth,
+              child: TextFormField(
+                maxLines: 1,
+                key: const ValueKey('floAmountInput'),
+                autofocus: true,
+                showCursor: true,
+                readOnly: widget.readOnly,
+                onTap: widget.onTap,
+                controller: widget.amountController,
+                focusNode: widget.focusNode,
+                enabled: widget.isEnabled,
+                maxLength: widget.maxAmount.toString().length,
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                onChanged: widget.model.onValueChanged,
+                decoration: const InputDecoration(
+                  focusedBorder: InputBorder.none,
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  isDense: true,
+                  counter: Offstage(),
+                ),
+                textAlign: TextAlign.center,
+                style: TextStyles.rajdhaniB.title50.colour(
+                  widget.amountController!.text == "0"
+                      ? UiConstants.kTextColor2
+                      : UiConstants.kTextColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              widget.model.showHappyHourSubtitle(),
+              style: TextStyles.sourceSans.body3.bold.copyWith(
+                color: UiConstants.grey1,
+                height: 1,
+              ),
+            ),
+            if (widget.model.showInfoIcon) ...[
+              SizedBox(
+                width: SizeConfig.padding8,
+              ),
+              GestureDetector(
+                onTap: () {
+                  analyticsService.track(
+                    eventName: AnalyticsEvents.tambolaTicketInfoTapped,
+                    properties: {
+                      'Ticket count': widget.model.numberOfTambolaTickets,
+                      'happy hour ticket count': widget.model.happyHourTickets,
+                    },
+                  );
+
+                  BaseUtil.openModalBottomSheet(
+                    isBarrierDismissible: true,
+                    addToScreenStack: true,
+                    content: FloBreakdownView(
+                      model: widget.model,
+                      showPaymentOption: false,
+                    ),
+                    hapticVibrate: true,
+                    isScrollControlled: true,
+                  );
+                },
+                child: const Icon(
+                  Icons.info_outline,
+                  size: 14,
+                  color: UiConstants.grey1,
+                ),
+              ),
+            ]
+          ],
+        ),
+        if (widget.model.showMaxCapText)
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: SizeConfig.padding1),
+            child: Text(
+              widget.maxAmountMsg,
+              style: TextStyles.sourceSans.body4.bold.colour(
+                UiConstants.grey1,
+              ),
+            ),
+          ),
+        if (currentAmt < widget.minAmount)
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: SizeConfig.padding1),
+            child: Text(
+              widget.minAmountMsg,
+              style: TextStyles.sourceSans.body4.bold.colour(Colors.red[400]),
+            ),
+          ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -229,7 +219,7 @@ class _AmountInputViewState extends State<AmountInputView> {
               .toList(),
         ),
         SizedBox(
-          height: SizeConfig.padding16,
+          height: SizeConfig.padding32,
         ),
       ],
     );

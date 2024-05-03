@@ -25,7 +25,6 @@ import 'package:felloapp/ui/pages/finance/preferred_payment_option.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -50,6 +49,10 @@ class LendboxBuyInputView extends StatefulWidget {
 
   @override
   State<LendboxBuyInputView> createState() => _LendboxBuyInputViewState();
+}
+
+String _getTitle(num interest) {
+  return '$interest% P2P';
 }
 
 class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
@@ -126,7 +129,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   LendBoxAppBar(
-                    assetName: widget.model.config.assetName,
+                    assetName: _getTitle(widget.model.config.interest),
                     isEnabled: !widget.model.isBuyInProgress,
                     trackClosingEvent: () {
                       analyticsService.track(
@@ -205,18 +208,16 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                         );
                       },
                     ),
-                  SizedBox(
-                    height: SizeConfig.padding10,
-                  ),
                   if (widget.model.showCoupons) ...[
                     Divider(
                       color: UiConstants.kModalSheetSecondaryBackgroundColor
                           .withOpacity(0.2),
+                      height: SizeConfig.padding1,
                       indent: SizeConfig.pageHorizontalMargins,
                       endIndent: SizeConfig.pageHorizontalMargins,
                     ),
                     SizedBox(
-                      height: SizeConfig.padding16,
+                      height: SizeConfig.padding24,
                     ),
                     FloCouponWidget(
                       widget.model.couponList,
@@ -234,8 +235,10 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                     indent: SizeConfig.pageHorizontalMargins,
                     endIndent: SizeConfig.pageHorizontalMargins,
                   ),
+                  SizedBox(height: SizeConfig.padding24),
                   _ReInvestNudge(
-                    initialValue: true,
+                    gains: widget.model.config.reinvestInterestGain,
+                    initialValue: false,
                     onChange: (value) {
                       widget.model.selectedOption = value
                           ? UserDecision.reInvest
@@ -335,9 +338,11 @@ class _ReInvestNudge extends StatefulWidget {
   const _ReInvestNudge({
     required this.initialValue,
     required this.onChange,
+    required this.gains,
   });
 
   final bool initialValue;
+  final num gains;
   final ValueChanged<bool> onChange;
 
   @override
@@ -345,7 +350,7 @@ class _ReInvestNudge extends StatefulWidget {
 }
 
 class _ReInvestNudgeState extends State<_ReInvestNudge> {
-  bool _value = true;
+  bool _value = false;
 
   @override
   void initState() {
@@ -370,14 +375,26 @@ class _ReInvestNudgeState extends State<_ReInvestNudge> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                locale.floAutoInvest,
-                style: TextStyles.sourceSans.body3.copyWith(
-                  color: UiConstants.grey1,
-                ),
+              Row(
+                children: [
+                  Text(
+                    locale.ReinvestTitle,
+                    style: TextStyles.sourceSans.body3.copyWith(
+                      color: UiConstants.grey1,
+                    ),
+                  ),
+                  SizedBox(
+                    width: SizeConfig.padding8,
+                  ),
+                  const Icon(
+                    Icons.info_outline,
+                    size: 14,
+                    color: UiConstants.grey1,
+                  ),
+                ],
               ),
               CustomSwitch(
-                initialValue: true,
+                initialValue: widget.initialValue,
                 onChanged: _onChanged,
               )
             ],
@@ -385,11 +402,70 @@ class _ReInvestNudgeState extends State<_ReInvestNudge> {
           SizedBox(
             height: SizeConfig.padding12,
           ),
-          if (!_value)
-            locale.floReInvestMessage.beautify(
-              style: TextStyles.sourceSans.body4,
-              alignment: TextAlign.center,
-            ),
+          if (_value)
+            Text.rich(
+              TextSpan(
+                style: TextStyles.sourceSans.body3.colour(
+                  UiConstants.KGoldProSecondary,
+                ),
+                children: [
+                  TextSpan(text: locale.extra),
+                  TextSpan(
+                    text: '+${widget.gains}%',
+                    style: TextStyles.sourceSansSB.body3.colour(
+                      UiConstants.KGoldProSecondary,
+                    ),
+                  ),
+                  TextSpan(text: locale.onreinvestment)
+                ],
+              ),
+            )
+          else
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: SizeConfig.padding180,
+                  child: Text.rich(
+                    TextSpan(
+                      style: TextStyles.sourceSans.body4.colour(
+                        UiConstants.grey1,
+                      ),
+                      children: [
+                        TextSpan(text: locale.WithdrawMaturity),
+                        TextSpan(
+                          text: locale.wallet,
+                          style: TextStyles.sourceSansB.body4.colour(
+                            UiConstants.grey1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: SizeConfig.padding132,
+                  child: Text.rich(
+                    TextSpan(
+                      style: TextStyles.sourceSans.body4.colour(
+                        UiConstants.teal3,
+                      ),
+                      children: [
+                        TextSpan(text: locale.switchOnFor),
+                        TextSpan(
+                          text: '+${widget.gains}%',
+                          style: TextStyles.sourceSansB.body4.colour(
+                            UiConstants.teal3,
+                          ),
+                        ),
+                        TextSpan(text: locale.onreinvestment),
+                      ],
+                    ),
+                    textAlign: TextAlign.end,
+                  ),
+                )
+              ],
+            )
         ],
       ),
     );
@@ -407,12 +483,12 @@ class FloBuyNavBar extends StatelessWidget {
   final VoidCallback onTap;
 
   String _getTitle(num interest) {
-    return '$interest% Returns p.a.';
+    return '$interest% P2P';
   }
 
   String _getSubString() {
     final date = model.getMaturityTime(model.selectedOption);
-    return 'Maturity on $date';
+    return 'Lock-in till $date';
   }
 
   void _openPaymentSheet({
@@ -526,8 +602,10 @@ class FloBuyNavBar extends StatelessWidget {
           Row(
             children: [
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SvgPicture.asset(
                         Assets.floWithoutShadow,
@@ -559,32 +637,9 @@ class FloBuyNavBar extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  InkWell(
-                    onTap: () {
-                      if (!isAmountIsValid) return;
-                      _showBreakDown();
-                    },
-                    child: Row(
-                      children: [
-                        Text(
-                          'Payment summary',
-                          style: TextStyles.sourceSansSB.body4.copyWith(
-                            height: 1,
-                            color: UiConstants.kFAQsAnswerColor.withOpacity(
-                              !isAmountIsValid ? .5 : 1,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: SizeConfig.padding8,
-                        ),
-                        SvgPicture.asset(
-                          Assets.arrow,
-                          color: UiConstants.kFAQsAnswerColor,
-                          height: 5,
-                        ),
-                      ],
-                    ),
+                  Text(
+                    model.config.assetName,
+                    style: TextStyles.sourceSansB.body3,
                   ),
                   if (couponCode != null)
                     Padding(

@@ -1,5 +1,7 @@
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/bloc_pagination/bloc_pagination.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/cupertino.dart';
@@ -47,6 +49,11 @@ class _MyFundSectionState extends State<MyFundSection> {
             ),
           );
         }
+        if (fundsBloc.state.entries.isEmpty) {
+          return GestureDetector(
+              onTap: () => DefaultTabController.of(context).animateTo(1),
+              child: const AppImage(Assets.p2pNonInvest));
+        }
 
         return Stack(
           alignment: Alignment.bottomCenter,
@@ -76,6 +83,7 @@ class _MyFundSectionState extends State<MyFundSection> {
                     itemBuilder: (context, index) {
                       return TransactionCard(
                         transaction: fundsBloc.state.entries[index],
+                        fundBloc: fundsBloc,
                       );
                     },
                     itemCount: fundsBloc.state.entries.length,

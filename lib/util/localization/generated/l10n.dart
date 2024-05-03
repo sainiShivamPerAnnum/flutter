@@ -3766,11 +3766,21 @@ class S {
     );
   }
 
-  /// `Apply Coupon`
+  /// `Apply Coupons`
   String get btnApplyCoupon {
     return Intl.message(
-      'Apply Coupon',
+      'Apply Coupons',
       name: 'btnApplyCoupon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `More Coupons`
+  String get moreCoupons {
+    return Intl.message(
+      'More Coupons',
+      name: 'moreCoupons',
       desc: '',
       args: [],
     );
@@ -5389,6 +5399,16 @@ class S {
     return Intl.message(
       'Please enter a code to continue',
       name: 'txnEnterCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter coupon`
+  String get enterCoupon {
+    return Intl.message(
+      'Enter coupon',
+      name: 'enterCoupon',
       desc: '',
       args: [],
     );
@@ -9616,10 +9636,10 @@ class S {
     );
   }
 
-  /// `8% P2P Flexi`
+  /// `P2P Vault`
   String get retiiredFlexi {
     return Intl.message(
-      '8% P2P Flexi',
+      'P2P Vault',
       name: 'retiiredFlexi',
       desc: '',
       args: [],
@@ -9756,10 +9776,10 @@ class S {
     );
   }
 
-  /// `Moving to P2P Flexi on maturity`
+  /// `Moving to P2P Wallet on maturity`
   String get disabledReinvestTitle {
     return Intl.message(
-      'Moving to P2P Flexi on maturity',
+      'Moving to P2P Wallet on maturity',
       name: 'disabledReinvestTitle',
       desc: '',
       args: [],
@@ -9856,6 +9876,16 @@ class S {
     );
   }
 
+  /// `Loosing Extra {percentage}%`
+  String loosingReturns(num percentage) {
+    return Intl.message(
+      'Loosing Extra $percentage%',
+      name: 'loosingReturns',
+      desc: '',
+      args: [percentage],
+    );
+  }
+
   /// `{interest}%`
   String interest(num interest) {
     return Intl.message(
@@ -9946,6 +9976,16 @@ class S {
     );
   }
 
+  /// `Moves to P2P Vault on maturity`
+  String get movesToVault {
+    return Intl.message(
+      'Moves to P2P Vault on maturity',
+      name: 'movesToVault',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Return Calculator`
   String get p2pReturnsCalculatorTitle {
     return Intl.message(
@@ -10001,6 +10041,96 @@ class S {
     return Intl.message(
       'Your Money in 5 Years-',
       name: 'p2pCalculator5YearsReturns',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Switch On for `
+  String get switchOnFor {
+    return Intl.message(
+      'Switch On for ',
+      name: 'switchOnFor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ` on reinvestment`
+  String get onreinvestment {
+    return Intl.message(
+      ' on reinvestment',
+      name: 'onreinvestment',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Withdraw-able after maturity from `
+  String get WithdrawMaturity {
+    return Intl.message(
+      'Withdraw-able after maturity from ',
+      name: 'WithdrawMaturity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Extra `
+  String get extra {
+    return Intl.message(
+      'Extra ',
+      name: 'extra',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reinvest on Maturity`
+  String get ReinvestTitle {
+    return Intl.message(
+      'Reinvest on Maturity',
+      name: 'ReinvestTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fello P2P Portfolio`
+  String get floPortFolio {
+    return Intl.message(
+      'Fello P2P Portfolio',
+      name: 'floPortFolio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invested`
+  String get floInvested {
+    return Intl.message(
+      'Invested',
+      name: 'floInvested',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current Return`
+  String get floCurrentReturn {
+    return Intl.message(
+      'Current Return',
+      name: 'floCurrentReturn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tickets Earned`
+  String get ticketsEarnedflo {
+    return Intl.message(
+      'Tickets Earned',
+      name: 'ticketsEarnedflo',
       desc: '',
       args: [],
     );

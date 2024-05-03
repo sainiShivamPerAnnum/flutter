@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/sip_asset_type.dart';
+import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
 import 'package:felloapp/core/model/sip_model/sip_options.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -98,7 +98,7 @@ class SipFormCubit extends Cubit<SipFormState> {
   Future<void> createSubscription({
     required num amount,
     required String freq,
-    required SIPAssetTypes assetType,
+    required AssetOptions assetType,
   }) async {
     if (state is SipFormCubitState) {
       emit((state as SipFormCubitState).copyWith(isLoading: true));
@@ -106,7 +106,7 @@ class SipFormCubit extends Cubit<SipFormState> {
       final response = await _subscriptionRepo.createSubscription(
         freq: freq,
         amount: amount,
-        assetType: assetType.name,
+        assetType: assetType,
         lbAmt: assetType.isLendBox ? amount : 0,
         augAmt: assetType.isAugGold ? amount : 0,
       );
@@ -140,7 +140,7 @@ class SipFormCubit extends Cubit<SipFormState> {
     num amount,
     String frequency,
     String? id,
-    SIPAssetTypes sipAssetType,
+    AssetOptions sipAssetType,
     String defultChip,
     String defaultTickets,
     String minAmount,

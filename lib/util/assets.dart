@@ -483,4 +483,8 @@ class Assets {
       'https://ik.imagekit.io/9xfwtu0xm/p2p_home_v2/lb_info.png';
   static const String howFelloFloWorks =
       "https://d37gtxigg82zaw.cloudfront.net/flo-workflow.mp4";
+
+  static const String p2pWallet = "assets/images/p2pWallet.png";
+  static const String p2pNonInvest =
+      "https://ik.imagekit.io/9xfwtu0xm/p2p_home_v2/empty_fund.png";
 }

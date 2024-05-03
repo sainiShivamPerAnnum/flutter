@@ -32,10 +32,13 @@ import 'transaction_details_vm.dart';
 class TransactionDetailsPage extends StatefulWidget {
   const TransactionDetailsPage({
     required this.txn,
+    this.onUpdatePrefrence,
     super.key,
   });
 
   final UserTransaction txn;
+
+  final VoidCallback? onUpdatePrefrence;
 
   @override
   State<TransactionDetailsPage> createState() => _TransactionDetailsPageState();
@@ -78,7 +81,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
   String floSubtype() {
     if (widget.txn.subType == "LENDBOXP2P") {
       final response = AppConfigV2.instance.lendBoxP2P.firstWhere(
-        (element) => element.fundType == widget.txn.subType,
+        (element) => element.fundType == widget.txn.lbMap.fundType,
       );
       return response.assetName;
     }
@@ -102,7 +105,8 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
         widget.txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD ||
             widget.txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD_FD;
     return BaseView<TransactionDetailsVM>(
-      create: () => TransactionDetailsVM(widget.txn),
+      create: () => TransactionDetailsVM(
+          widget.txn, widget.txn.lbMap.maturityPref ?? 'NA'),
       builder: (context, model, child) => Scaffold(
         backgroundColor: const Color(0xff151D22),
         appBar: FAppBar(
@@ -443,11 +447,14 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                         height: 20,
                       ),
                       _ReInvestNudge(
-                        initialValue: true,
-                        onTap: () {
-                          ///TODO:
+                        initialValue: model.transactionPrefence == '1',
+                        onChanged: (value) async {
+                          var res = await model.updateMaturityPreference(value);
+                          if (widget.onUpdatePrefrence != null && res) {
+                            widget.onUpdatePrefrence!.call();
+                          }
                         },
-                        isLoading: false,
+                        isLoading: model.isProcessingPreference,
                       )
                     ]
                   ],
@@ -539,12 +546,12 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
 class _ReInvestNudge extends StatelessWidget {
   const _ReInvestNudge({
     required this.initialValue,
-    required this.onTap,
+    required this.onChanged,
     this.isLoading = false,
   });
 
   final bool initialValue;
-  final VoidCallback onTap;
+  final ValueChanged<bool> onChanged;
   final bool isLoading;
 
   @override
@@ -561,10 +568,15 @@ class _ReInvestNudge extends StatelessWidget {
                 locale.floAutoInvest,
                 style: TextStyles.sourceSans.body3,
               ),
-              CustomSwitch(
-                initialValue: initialValue,
-                onTap: onTap,
-              )
+              isLoading
+                  ? SpinKitThreeInOut(
+                      color: UiConstants.teal2,
+                      size: SizeConfig.padding20,
+                    )
+                  : CustomSwitch(
+                      initialValue: initialValue,
+                      onChanged: onChanged,
+                    )
             ],
           ),
           SizedBox(

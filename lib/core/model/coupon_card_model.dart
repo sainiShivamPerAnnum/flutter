@@ -12,6 +12,7 @@ class CouponModel {
   final int? maxUse;
   final int? priority;
   final int? minPurchase;
+  final num? maxRewardAmount;
   final String? highlight;
   static final helper =
       HelperModel<CouponModel>((map) => CouponModel.fromMap(map));
@@ -24,6 +25,7 @@ class CouponModel {
     this.maxUse,
     this.priority,
     this.minPurchase,
+    this.maxRewardAmount,
     this.highlight,
   });
 
@@ -36,6 +38,7 @@ class CouponModel {
     int? maxUse,
     int? priority,
     int? minPurchase,
+    num? maxRewardAmount,
     String? highlight,
   }) {
     return CouponModel(
@@ -48,6 +51,7 @@ class CouponModel {
       priority: priority ?? this.priority,
       minPurchase: minPurchase ?? this.minPurchase,
       highlight: highlight ?? this.highlight,
+      maxRewardAmount: maxRewardAmount ?? this.maxRewardAmount,
     );
   }
 
@@ -62,6 +66,7 @@ class CouponModel {
       'priority': priority,
       'minPurchase': minPurchase,
       'highlight': highlight,
+      'maxRewardAmount': maxRewardAmount,
     };
   }
 
@@ -76,6 +81,7 @@ class CouponModel {
       priority: map['priority'] ?? 0,
       minPurchase: map['minPurchase'] ?? 0,
       highlight: map['highlight'] ?? '',
+      maxRewardAmount: map['maxRewardAmount'] ?? 0,
     );
   }
 
@@ -90,6 +96,7 @@ class CouponModel {
       priority: 0,
       minPurchase: 0,
       highlight: '',
+      maxRewardAmount: 0,
     );
   }
 
@@ -115,7 +122,8 @@ class CouponModel {
         other.maxUse == maxUse &&
         other.priority == priority &&
         other.minPurchase == minPurchase &&
-        other.highlight == highlight;
+        other.highlight == highlight &&
+        other.maxRewardAmount == maxRewardAmount;
   }
 
   @override
@@ -128,6 +136,7 @@ class CouponModel {
         maxUse.hashCode ^
         priority.hashCode ^
         minPurchase.hashCode ^
+        maxRewardAmount.hashCode ^
         highlight.hashCode;
   }
 }

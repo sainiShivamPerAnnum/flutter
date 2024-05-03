@@ -1,23 +1,18 @@
-import 'package:collection/collection.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../../core/enums/page_state_enum.dart';
-import '../../../../../core/service/notifier_services/transaction_history_service.dart';
 import '../../../../../core/service/notifier_services/user_service.dart';
 import '../../../../../navigator/app_state.dart';
 import '../../../../../navigator/router/ui_pages.dart';
-import '../../../../../util/constants.dart';
 import '../../../../../util/haptic.dart';
 import '../../../../../util/localization/generated/l10n.dart';
 import '../../../../../util/locator.dart';
 import '../../../../architecture/base_view.dart';
 import '../../../../elements/appbar/appbar.dart';
 import '../../../static/app_widget.dart';
-import '../../transactions_history/transactions_history_view.dart';
 import 'lendbox_withdrawal_view.dart';
 import 'lendbox_withdrawal_vm.dart';
 
@@ -30,7 +25,6 @@ class FlexiBalanceView extends StatefulWidget {
 
 class _FlexiBalanceViewState extends State<FlexiBalanceView> {
   final UserService _usrService = locator<UserService>();
-  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
 
   @override
   Widget build(BuildContext context) {
@@ -70,26 +64,6 @@ class _FlexiBalanceViewState extends State<FlexiBalanceView> {
       body: BaseView<LendboxWithdrawalViewModel>(
         onModelReady: (model) => model.init(),
         builder: (ctx, model, child) {
-          final String lastDate2 = (() {
-            try {
-              if (_txnHistoryService.txnList != null &&
-                  _txnHistoryService.txnList!.isNotEmpty) {
-                var transaction = _txnHistoryService.txnList!.firstWhereOrNull(
-                  (e) => e.lbMap.fundType == Constants.ASSET_TYPE_FLO_FELXI,
-                );
-                if (transaction != null && transaction.timestamp != null) {
-                  return DateFormat('dd MMM, yyyy').format(
-                    DateTime.fromMillisecondsSinceEpoch(
-                      transaction.timestamp!.millisecondsSinceEpoch,
-                    ),
-                  );
-                }
-              }
-              return "NA";
-            } catch (e) {
-              return "NA";
-            }
-          })();
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
             child: Column(
@@ -125,39 +99,8 @@ class _FlexiBalanceViewState extends State<FlexiBalanceView> {
                   height: SizeConfig.padding30,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          locale.flexiIvested,
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.kFAQsAnswerColor),
-                        ),
-                        Text(
-                          BaseUtil.formatIndianRupees(
-                            _usrService.userPortfolio.flo.flexi.principle
-                                .toDouble(),
-                          ),
-                          style: TextStyles.sourceSans.body2
-                              .colour(UiConstants.textGray70),
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding16,
-                        ),
-                        Text(
-                          locale.lastLockIn,
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.kFAQsAnswerColor),
-                        ),
-                        Text(
-                          lastDate2,
-                          style: TextStyles.sourceSans.body2
-                              .colour(UiConstants.textGray70),
-                        )
-                      ],
-                    ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -176,6 +119,14 @@ class _FlexiBalanceViewState extends State<FlexiBalanceView> {
                         SizedBox(
                           height: SizeConfig.padding16,
                         ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding90,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Text(
                           locale.annualInterest,
                           style: TextStyles.sourceSans.body3
@@ -186,6 +137,9 @@ class _FlexiBalanceViewState extends State<FlexiBalanceView> {
                           style: TextStyles.sourceSans.body2
                               .colour(UiConstants.textGray70),
                         ),
+                        SizedBox(
+                          height: SizeConfig.padding16,
+                        ),
                       ],
                     )
                   ],
@@ -195,39 +149,6 @@ class _FlexiBalanceViewState extends State<FlexiBalanceView> {
                   child: const Divider(
                     color: UiConstants.kDividerColorLight,
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      locale.transaction,
-                      style: TextStyles.sourceSansSB.body2
-                          .colour(UiConstants.kTextColor),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        AppState.delegate!.appState.currentAction = PageAction(
-                          state: PageState.addWidget,
-                          widget: const TransactionsHistory(),
-                          page: TransactionsHistoryPageConfig,
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          Text(
-                            locale.saveViewAll,
-                            style: TextStyles.sourceSans.body3
-                                .colour(UiConstants.kTabBorderColor),
-                          ),
-                          Icon(
-                            Icons.chevron_right,
-                            color: UiConstants.kTabBorderColor,
-                            size: SizeConfig.body3,
-                          )
-                        ],
-                      ),
-                    )
-                  ],
                 ),
                 const Spacer(),
                 Padding(
