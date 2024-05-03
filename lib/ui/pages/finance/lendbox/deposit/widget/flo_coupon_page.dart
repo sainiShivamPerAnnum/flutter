@@ -198,7 +198,8 @@ class IndividualCouponView extends StatelessWidget {
                   style: TextStyles.sourceSansSB.body2,
                 ),
                 const Spacer(),
-                lendboxBuyViewModel.couponApplyInProgress
+                lendboxBuyViewModel.couponApplyInProgress &&
+                        lendboxBuyViewModel.couponCode == model.code
                     ? const SpinKitThreeBounce(
                         color: UiConstants.teal2,
                         size: 14,

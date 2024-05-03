@@ -40,11 +40,11 @@ class _MyFundSectionState extends State<MyFundSection> {
         }
 
         if (state.status.isFetchingInitialPage) {
-          return const Center(
+          return Center(
             child: SizedBox.square(
-              dimension: 30,
-              child: CircularProgressIndicator(
-                color: UiConstants.primaryColor,
+              dimension: SizeConfig.padding200,
+              child: const AppImage(
+                Assets.fullScreenLoaderLottie,
               ),
             ),
           );
@@ -69,8 +69,10 @@ class _MyFundSectionState extends State<MyFundSection> {
                     horizontal: SizeConfig.pageHorizontalMargins,
                     vertical: SizeConfig.padding16,
                   ),
-                  sliver: const SliverToBoxAdapter(
-                    child: WalletBalanceCard(),
+                  sliver: SliverToBoxAdapter(
+                    child: WalletBalanceCard(
+                      fundBloc: fundsBloc,
+                    ),
                   ),
                 ),
                 SliverPadding(

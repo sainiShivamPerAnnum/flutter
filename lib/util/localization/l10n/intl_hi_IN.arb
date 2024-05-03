@@ -1053,7 +1053,7 @@
       }
     }
   },
-  "retiiredFlexi": "P2P मेहराब",
+  "retiiredFlexi": "P2P बटुआ",
 "flexiIvested": "निवेशित राशि",
 "lastLockIn": "अंतिम लॉक-इन तारीख",
 "withdrable": "निकासी योग्य राशि",
@@ -1083,5 +1083,6 @@
     }
   },
   "disabledReinvestTitle": "परिपक्वता पर P2P वॉलेट में स्थानांतरित हो रहा है",
-  "enterCoupon": "कूपन दर्ज करें"
+  "enterCoupon": "कूपन दर्ज करें",
+  "assetSelectionCalculator": "संपत्ति प्रकार -"
 }

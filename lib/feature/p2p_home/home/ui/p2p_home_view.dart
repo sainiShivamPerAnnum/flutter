@@ -51,6 +51,7 @@ class P2PHomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     final locale = locator<S>();
     var portfolio = locator<UserService>().userPortfolio.flo;
+    var tickets = locator<UserService>().userFundWallet?.tickets;
     final List<String> tabs = <String>[
       locale.myFundsSection,
       locale.investSection,
@@ -68,7 +69,10 @@ class P2PHomeView extends StatelessWidget {
             return <Widget>[
               SliverToBoxAdapter(
                 child: portfolio.balance > 0
-                    ? _InvestedHeader(portfolio: portfolio)
+                    ? _InvestedHeader(
+                        portfolio: portfolio,
+                        tickets: tickets,
+                      )
                     : CachedNetworkImage(
                         imageUrl: Assets.p2pHomeBanner,
                       ),
@@ -151,8 +155,10 @@ class _TabBar extends StatelessWidget {
 }
 
 class _InvestedHeader extends StatelessWidget {
-  const _InvestedHeader({required this.portfolio, super.key});
+  const _InvestedHeader(
+      {required this.portfolio, required this.tickets, super.key});
   final FloTiers portfolio;
+  final Map<String, dynamic>? tickets;
 
   @override
   Widget build(BuildContext context) {
@@ -179,22 +185,8 @@ class _InvestedHeader extends StatelessWidget {
                   BaseUtil.formatCompactRupees(portfolio.balance.toDouble())),
               style:
                   TextStyles.rajdhaniSB.title1.colour(UiConstants.kTextColor)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // AppText.body1(
-              //   locale.oneDayChange(
-              //     BaseUtil.formatRupeesWithNegativeIndicator(
-              //       portfolio.oneDayChange.toDouble(),
-              //     ),
-              //   ),
-              //   color: AppColors.greyBg,
-              // ),
-              // PercentageChip(value: portfolio.oneDayChange.toDouble()),
-            ],
-          ),
           SizedBox(
-            height: SizeConfig.padding22,
+            height: SizeConfig.padding24,
           ),
           Padding(
             padding: EdgeInsets.symmetric(
@@ -203,11 +195,11 @@ class _InvestedHeader extends StatelessWidget {
             child: _MyInvestedAmount(
               totalInvestment: portfolio.principle,
               currentValue: portfolio.absGain,
-              tickets: (portfolio.principle / 500) * 1,
+              tickets: tickets?['fromFlo'],
             ),
           ),
           SizedBox(
-            height: SizeConfig.padding12,
+            height: SizeConfig.padding14,
           ),
         ],
       ),

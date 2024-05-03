@@ -7,6 +7,7 @@ import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/marketing_event_handler_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
@@ -16,7 +17,7 @@ import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/detail_page/widgets/star_custom_painter.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_banner.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
@@ -230,6 +231,7 @@ class FloPlanWidget extends StatelessWidget {
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
     List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
 
+    final assets = AppConfigV2.instance.lbV2.values.toList();
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: SizeConfig.padding16,
@@ -258,7 +260,7 @@ class FloPlanWidget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Save in Fello Flo',
+                    'Save in Fello P2P',
                     style: TextStyles.rajdhaniSB.body0,
                   ),
                   SizedBox(height: SizeConfig.padding4),
@@ -272,58 +274,20 @@ class FloPlanWidget extends StatelessWidget {
             ],
           ),
           SizedBox(height: SizeConfig.padding26),
-          FelloFloPrograms(
-            key: const ValueKey('12%'),
-            percentage: '12%',
-            isRecommended: true,
-            chipString1: lendboxDetails[0]["maturityPeriodText"],
-            chipString2: lendboxDetails[0]["minAmountText"],
-            floAssetType: Constants.ASSET_TYPE_FLO_FIXED_6,
-            amount: amount,
-            isSkipMl: isSkipMl,
-            promoText: lendboxDetails[0]["tambolaMultiplier"] != null
-                ? "Get *${lendboxDetails[0]["tambolaMultiplier"]}X tickets* on saving"
-                : null,
-            // promoText: "Get *5X tickets* on saving",
-          ),
-          // SizedBox(height: SizeConfig.padding12),
-          FelloFloPrograms(
-            key: const ValueKey('10%'),
-            percentage: '10%',
-            isRecommended: false,
-            chipString1: isLendboxOldUser
-                ? lendboxDetails[2]["maturityPeriodText"]
-                : lendboxDetails[1]["maturityPeriodText"] ?? "1 Week Lockin",
-            chipString2: isLendboxOldUser
-                ? lendboxDetails[2]["minAmountText"]
-                : lendboxDetails[1]["minAmountText"] ?? 'Min - ₹1000',
-            floAssetType: isLendboxOldUser
-                ? Constants.ASSET_TYPE_FLO_FELXI
-                : Constants.ASSET_TYPE_FLO_FIXED_3,
-            amount: amount,
-            isSkipMl: isSkipMl,
-            promoText: isLendboxOldUser
-                ? lendboxDetails[2]["tambolaMultiplier"] != null
-                    ? "Get *${lendboxDetails[2]["tambolaMultiplier"]}X tickets* on saving"
-                    : null
-                : lendboxDetails[1]["tambolaMultiplier"] != null
-                    ? "Get *${lendboxDetails[1]["tambolaMultiplier"]}X tickets* on saving"
-                    : null,
-          ),
-          // SizedBox(height: SizeConfig.padding12),
-          if (!isLendboxOldUser)
+          for (var floItem in assets) ...[
             FelloFloPrograms(
-                key: const ValueKey('8%'),
-                //key: const ValueKey(Constants.ASSET_TYPE_FLO_FELXI),
-                percentage: '8%',
-                isRecommended: false,
-                chipString1:
-                    lendboxDetails[3]["maturityPeriodText"] ?? "1 Week Lockin",
-                chipString2: lendboxDetails[3]["minAmountText"] ?? 'Min - ₹100',
-                floAssetType: Constants.ASSET_TYPE_FLO_FELXI,
-                amount: amount,
-                isSkipMl: isSkipMl,
-                promoText: null),
+              key: ValueKey(floItem.assetName),
+              percentage: '${floItem.interest}%',
+              isRecommended: true,
+              chipString1: floItem.assetName,
+              chipString2: floItem.minAmountText,
+              floAssetType: floItem.fundType,
+              isSkipMl: isSkipMl,
+              promoText:
+                  "Get *${floItem.reinvestInterestGain}% Returns* on reinvestment",
+            ),
+            SizedBox(height: SizeConfig.padding12),
+          ]
         ],
       ),
     );
@@ -519,7 +483,7 @@ class FelloFloPrograms extends StatelessWidget {
                               Column(
                                 children: [
                                   Text(
-                                    'Flo',
+                                    'per annum',
                                     style: TextStyles.sourceSansSB.body3
                                         .colour(Colors.white.withOpacity(0.8)),
                                   ),
@@ -544,7 +508,17 @@ class FelloFloPrograms extends StatelessWidget {
                             width: SizeConfig.padding24,
                           ),
                           SizedBox(height: SizeConfig.padding12),
-                          Text(chipString2, style: TextStyles.sourceSans.body4)
+                          Row(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/svg/tambola_icon.svg',
+                                height: SizeConfig.padding16,
+                              ),
+                              SizedBox(width: SizeConfig.padding4),
+                              Text(chipString2,
+                                  style: TextStyles.sourceSans.body4),
+                            ],
+                          )
                         ],
                       ),
                     ],
@@ -567,11 +541,6 @@ class FelloFloPrograms extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SvgPicture.asset(
-                          'assets/svg/tambola_icon.svg',
-                          height: SizeConfig.padding16,
-                        ),
-                        SizedBox(width: SizeConfig.padding4),
                         promoText!.beautify(
                           boldStyle:
                               TextStyles.sourceSansB.body4.colour(Colors.white),

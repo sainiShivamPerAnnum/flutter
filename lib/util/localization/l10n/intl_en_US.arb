@@ -1093,7 +1093,7 @@
       }
     }
   },
-  "retiiredFlexi": "P2P Vault",
+  "retiiredFlexi": "P2P Wallet",
   "flexiIvested": "Invested Amount",
   "lastLockIn": "Last Lock-in Date",
   "withdrable": "Withdrable Amount",
@@ -1200,5 +1200,6 @@
   "floPortFolio": "Fello P2P Portfolio",
   "floInvested": "Invested",
   "floCurrentReturn": "Current Return",
-  "ticketsEarnedflo": "Tickets Earned"
+  "ticketsEarnedflo": "Tickets Earned",
+  "assetSelectionCalculator": "Asset Type -"
 }

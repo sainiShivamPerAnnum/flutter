@@ -167,6 +167,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "askfrndForInvesText2": m2,
         "assetNotAvailable": MessageLookupByLibrary.simpleMessage(
             "संपत्ति इस समय उपलब्ध नहीं है"),
+        "assetSelectionCalculator":
+            MessageLookupByLibrary.simpleMessage("संपत्ति प्रकार -"),
         "augmountOnboardSubTitle": MessageLookupByLibrary.simpleMessage(
             "कृपया ऑगमोंट ऑनबोर्डिंग पहले समाप्त करें"),
         "augmountOnboardTitle": MessageLookupByLibrary.simpleMessage(
@@ -1089,7 +1091,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("ऑटोसेव फिर से शुरू करें"),
         "resumeSipbtn":
             MessageLookupByLibrary.simpleMessage("SIP फिर से शुरू करें"),
-        "retiiredFlexi": MessageLookupByLibrary.simpleMessage("P2P मेहराब"),
+        "retiiredFlexi": MessageLookupByLibrary.simpleMessage("P2P बटुआ"),
         "returnSubText": m30,
         "returnsCalculator": MessageLookupByLibrary.simpleMessage(
             "अपने SIP रिटर्न्स की गणना करें"),

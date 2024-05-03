@@ -15,7 +15,6 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
@@ -123,7 +122,6 @@ class RootViewModel extends BaseViewModel {
         _checkForAppUpdates();
         if (!await verifyUserBootupDetails()) return;
         await showLastWeekOverview();
-        await locator<LendboxMaturityService>().init();
         showMarketingCampings();
         await Future.wait([
           _referralService.verifyReferral(),

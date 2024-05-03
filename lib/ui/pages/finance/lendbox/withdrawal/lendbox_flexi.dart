@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../../../../core/enums/page_state_enum.dart';
 import '../../../../../core/service/notifier_services/user_service.dart';
@@ -16,14 +17,14 @@ import '../../../static/app_widget.dart';
 import 'lendbox_withdrawal_view.dart';
 import 'lendbox_withdrawal_vm.dart';
 
-class FlexiBalanceView extends StatefulWidget {
-  const FlexiBalanceView({super.key});
+class FlexiBalanceView extends StatelessWidget {
+  FlexiBalanceView({
+    required this.onWithDrawalSubitted,
+    super.key,
+  });
 
-  @override
-  State<FlexiBalanceView> createState() => _FlexiBalanceViewState();
-}
+  final VoidCallback? onWithDrawalSubitted;
 
-class _FlexiBalanceViewState extends State<FlexiBalanceView> {
   final UserService _usrService = locator<UserService>();
 
   @override
@@ -80,7 +81,7 @@ class _FlexiBalanceViewState extends State<FlexiBalanceView> {
                     ),
                     Text(
                       locale.retiiredFlexi,
-                      style: TextStyles.rajdhaniSB.body2
+                      style: TextStyles.rajdhaniSB.title5
                           .colour(UiConstants.kTextColor),
                     )
                   ],
@@ -109,13 +110,25 @@ class _FlexiBalanceViewState extends State<FlexiBalanceView> {
                           style: TextStyles.sourceSans.body3
                               .colour(UiConstants.kFAQsAnswerColor),
                         ),
-                        Text(
-                          BaseUtil.formatIndianRupees(
-                            model.withdrawableQuantity?.amount ?? 0.toDouble(),
-                          ),
-                          style: TextStyles.sourceSans.body2
-                              .colour(UiConstants.textGray70),
-                        ),
+                        model.withdrawableQuantity == null
+                            ? const SpinKitThreeBounce(
+                                color: UiConstants.teal2,
+                                size: 14,
+                              )
+                            : model.withdrawableResponseMessage.isNotEmpty
+                                ? Text(
+                                    model.withdrawableResponseMessage,
+                                    style: TextStyles.sourceSans.body2
+                                        .colour(UiConstants.textGray70),
+                                  )
+                                : Text(
+                                    BaseUtil.formatIndianRupees(
+                                      model.withdrawableQuantity?.amount ??
+                                          0.toDouble(),
+                                    ),
+                                    style: TextStyles.sourceSans.body2
+                                        .colour(UiConstants.textGray70),
+                                  ),
                         SizedBox(
                           height: SizeConfig.padding16,
                         ),
@@ -163,7 +176,9 @@ class _FlexiBalanceViewState extends State<FlexiBalanceView> {
                         isBarrierDismissible: false,
                         backgroundColor: Colors.transparent,
                         isScrollControlled: true,
-                        content: LendboxWithdrawalView(),
+                        content: LendboxWithdrawalView(
+                          onWithDrawalSubitted: onWithDrawalSubitted,
+                        ),
                       );
                     },
                     label: locale.withdraw,

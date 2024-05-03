@@ -31,6 +31,7 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/flo_coupon_page.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
 import 'package:felloapp/ui/pages/finance/preffered_upi_option_mixin.dart';
+import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -361,7 +362,7 @@ class LendboxBuyViewModel extends BaseViewModel
         isIntentFlow: assetOptionsModel!.data.intent,
       ),
     );
-
+    await locator<RootViewModel>().pullToRefresh();
     _isBuyInProgress = false;
     forcedBuy = false;
     notifyListeners();
@@ -732,6 +733,9 @@ class LendboxBuyViewModel extends BaseViewModel
           amountController!.text =
               response.model!.minAmountRequired!.toInt().toString();
           buyAmount = response.model!.minAmountRequired?.toInt();
+          lastTappedChipIndex = assetOptionsModel!.data.userOptions.indexWhere(
+            (element) => element.value >= (buyAmount ?? 0),
+          );
           // updateGoldAmount();
           showMaxCapText = false;
           showMinCapText = false;

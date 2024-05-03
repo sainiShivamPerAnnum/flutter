@@ -188,6 +188,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "askfrndForInvesText2": m2,
         "assetNotAvailable": MessageLookupByLibrary.simpleMessage(
             "Asset not available at the moment"),
+        "assetSelectionCalculator":
+            MessageLookupByLibrary.simpleMessage("Asset Type -"),
         "augmountOnboardSubTitle": MessageLookupByLibrary.simpleMessage(
             "Please finish augmont onboarding first"),
         "augmountOnboardTitle": MessageLookupByLibrary.simpleMessage(
@@ -1146,7 +1148,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "resumeAutoSave":
             MessageLookupByLibrary.simpleMessage("Resume Autosave"),
         "resumeSipbtn": MessageLookupByLibrary.simpleMessage("Resume SIP"),
-        "retiiredFlexi": MessageLookupByLibrary.simpleMessage("P2P Vault"),
+        "retiiredFlexi": MessageLookupByLibrary.simpleMessage("P2P Wallet"),
         "returnSubText": m30,
         "returnsCalculator":
             MessageLookupByLibrary.simpleMessage("Calculate your SIP returns"),

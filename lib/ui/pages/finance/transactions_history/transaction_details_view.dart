@@ -439,8 +439,8 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                     SizedBox(
                       height: SizeConfig.padding16,
                     ),
-                    if (widget.txn.subType ==
-                        InvestmentType.LENDBOXP2P.name) ...[
+                    if (widget.txn.subType == InvestmentType.LENDBOXP2P.name &&
+                        widget.txn.type == "DEPOSIT") ...[
                       Divider(
                         color: UiConstants.kModalSheetSecondaryBackgroundColor
                             .withOpacity(0.2),

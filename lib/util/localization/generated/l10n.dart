@@ -9636,10 +9636,10 @@ class S {
     );
   }
 
-  /// `P2P Vault`
+  /// `P2P Wallet`
   String get retiiredFlexi {
     return Intl.message(
-      'P2P Vault',
+      'P2P Wallet',
       name: 'retiiredFlexi',
       desc: '',
       args: [],
@@ -10131,6 +10131,16 @@ class S {
     return Intl.message(
       'Tickets Earned',
       name: 'ticketsEarnedflo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Asset Type -`
+  String get assetSelectionCalculator {
+    return Intl.message(
+      'Asset Type -',
+      name: 'assetSelectionCalculator',
       desc: '',
       args: [],
     );

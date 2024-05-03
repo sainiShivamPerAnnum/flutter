@@ -8,6 +8,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transaction_details_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/bloc_pagination/bloc_pagination.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -49,11 +50,11 @@ class _TransactionSectionState extends State<TransactionSection> {
         }
 
         if (state.status.isFetchingInitialPage) {
-          return const Center(
+          return Center(
             child: SizedBox.square(
-              dimension: 30,
-              child: CircularProgressIndicator(
-                color: UiConstants.primaryColor,
+              dimension: SizeConfig.padding200,
+              child: const AppImage(
+                Assets.fullScreenLoaderLottie,
               ),
             ),
           );
@@ -178,7 +179,7 @@ class _TransactionTile extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  locale.amount(transaction.amount.round().toString()),
+                  locale.amount(transaction.amount.abs().round().toString()),
                   style: TextStyles.sourceSansSB.body2,
                 ),
                 SizedBox(
