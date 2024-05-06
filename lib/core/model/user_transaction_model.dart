@@ -298,7 +298,7 @@ class UserTransaction {
 
   String get showRewardsTextValue => type == UserTransaction.TRAN_TYPE_WITHDRAW
       ? "Rewards Deducted:"
-      : (subType != Constants.ASSET_TYPE_LENDBOX &&
+      : (subType != 'LENDBOXP2P' &&
               augmnt != null &&
               augmnt!["aBlockId"] == null)
           ? "You redeemed ₹${amount} from your total winnings."

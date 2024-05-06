@@ -295,7 +295,7 @@ class _MyInvestedAmount extends StatelessWidget {
                     ],
                   ),
                   showDuration: const Duration(seconds: 10),
-                  message: 'todo',
+                  message: locale.ticketsTooltip,
                   child: Icon(
                     Icons.info_outline,
                     size: SizeConfig.padding14,
@@ -321,7 +321,7 @@ class _MyInvestedAmount extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                      text: ' every week',
+                      text: locale.everyWeek,
                       style: TextStyles.sourceSans.body4
                           .colour(UiConstants.kTextColor)),
                 ],

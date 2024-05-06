@@ -2,9 +2,11 @@
 
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
@@ -27,9 +29,10 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
-import 'package:felloapp/ui/modalsheets/coupon_modal_sheet.dart';
+import 'package:felloapp/ui/pages/finance/gold_coupon_widget.dart';
 import 'package:felloapp/ui/pages/finance/preffered_upi_option_mixin.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
@@ -40,8 +43,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../../../../../util/styles/ui_constants.dart';
 
 mixin NetbankingValidationMixin on BaseViewModel {
   BankAndPanService get bankingService;
@@ -62,7 +63,6 @@ class GoldBuyViewModel extends BaseViewModel
   @override
   final bankingService = locator<BankAndPanService>();
   final CustomLogger _logger = locator<CustomLogger>();
-  final DBModel _dbModel = locator<DBModel>();
   final AugmontService _augmontModel = locator<AugmontService>();
   final UserService _userService = locator<UserService>();
   final AugmontTransactionService _augTxnService =
@@ -88,6 +88,7 @@ class GoldBuyViewModel extends BaseViewModel
   bool isSpecialCoupon = true;
   bool showCouponAppliedText = false;
   bool isIntentFlow = true;
+  bool _isBuyInProgess = false;
 
   bool _skipMl = false;
   double _fieldWidth = 0.0;
@@ -121,6 +122,13 @@ class GoldBuyViewModel extends BaseViewModel
 
   set goldBuyAmount(num? value) {
     _goldBuyAmount = value;
+    notifyListeners();
+  }
+
+  bool get isBuyInProgess => _isBuyInProgess;
+
+  set isBuyInProgess(bool value) {
+    _isBuyInProgess = value;
     notifyListeners();
   }
 
@@ -275,7 +283,7 @@ class GoldBuyViewModel extends BaseViewModel
   }) async {
     setState(ViewState.Busy);
     await initAndSetPreferredPaymentOption();
-
+    isBuyInProgess = _augTxnService.isGoldBuyInProgress;
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
     animationController = AnimationController(
         vsync: vsync, duration: const Duration(milliseconds: 500));
@@ -371,8 +379,10 @@ class GoldBuyViewModel extends BaseViewModel
     locator<BackButtonActions>().isTransactionCancelled = false;
     if (_augTxnService.isGoldSellInProgress || couponApplyInProgress) return;
     _augTxnService.isGoldBuyInProgress = true;
+    isBuyInProgess = true;
     if (!await initChecks()) {
       _augTxnService.isGoldBuyInProgress = false;
+      isBuyInProgess = false;
       return;
     }
     await _augTxnService.initiateAugmontTransaction(
@@ -485,6 +495,8 @@ class GoldBuyViewModel extends BaseViewModel
     goldAmountController!.selection = TextSelection.fromPosition(
         TextPosition(offset: goldAmountController!.text.length));
     //checkIfCouponIsStillApplicable();
+    focusCoupon = couponList!.firstWhereOrNull((element) =>
+        element.minPurchase! <= int.parse(goldAmountController!.text));
     appliedCoupon = null;
     _analyticsService
         .track(eventName: AnalyticsEvents.suggestedAmountTapped, properties: {
@@ -573,6 +585,9 @@ class GoldBuyViewModel extends BaseViewModel
 
       updateGoldAmount();
     }
+
+    focusCoupon = couponList!.firstWhereOrNull((element) =>
+        element.minPurchase! <= int.parse(goldAmountController!.text));
     appliedCoupon = null;
   }
 
@@ -611,20 +626,12 @@ class GoldBuyViewModel extends BaseViewModel
   }
 
   void showOfferModal(GoldBuyViewModel? model) {
-    BaseUtil.openModalBottomSheet(
-      content: CouponModalSheet(model: model),
-      addToScreenStack: true,
-      backgroundColor: UiConstants.kSecondaryBackgroundColor,
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(SizeConfig.roundness12),
-        topRight: Radius.circular(SizeConfig.roundness12),
+    AppState.delegate!.appState.currentAction = PageAction(
+      page: GoldCouponViewConfig,
+      state: PageState.addWidget,
+      widget: GoldCouponPage(
+        model: model,
       ),
-      boxContraints: BoxConstraints(
-        maxHeight: SizeConfig.screenHeight! * 0.75,
-        minHeight: SizeConfig.screenHeight! * 0.75,
-      ),
-      isBarrierDismissible: false,
-      isScrollControlled: true,
     );
   }
 
@@ -647,6 +654,13 @@ class GoldBuyViewModel extends BaseViewModel
         (couponsRes.model?.isNotEmpty ?? false)) {
       couponList = couponsRes.model;
       if (couponList![0].priority == 1) focusCoupon = couponList![0];
+      if (couponList!.length > 1) {
+        couponList!.sort(
+          (a, b) => b.maxRewardAmount!.compareTo(a.maxRewardAmount!),
+        );
+      }
+      focusCoupon = couponList!.firstWhere((element) =>
+          element.minPurchase! <= int.parse(goldAmountController!.text));
       showCoupons = true;
     }
   }
@@ -711,6 +725,9 @@ class GoldBuyViewModel extends BaseViewModel
         checkForSpecialCoupon(response.model!);
 
         appliedCoupon = response.model;
+
+        focusCoupon = couponList!.firstWhereOrNull(
+            (element) => element.code! == response.model!.code);
 
         BaseUtil.showPositiveAlert(
             locale.couponAppliedSucc, response.model?.message);

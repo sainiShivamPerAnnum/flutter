@@ -1,9 +1,9 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 
 extension ReturnInvestments on int {
@@ -39,18 +39,16 @@ extension ReturnInvestments on int {
       ((percentage * month) / 12) / 100;
 
   String calculateAmountAfterMaturity(String amount, int year) {
+    List<LendboxAssetConfiguration> lendboxDetails =
+        AppConfigV2.instance.lbV2.values.toList();
     final floAssetType = locator<LendboxTransactionService>().floAssetType;
-
-    final bool isLendboxOldUser =
-        locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
     int interest = 1;
 
-    interest =
-        floAssetType == Constants.ASSET_TYPE_FLO_FELXI && !isLendboxOldUser
-            ? 10
-            : floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6
-                ? 12
-                : 10;
+    interest = (lendboxDetails
+                .firstWhereOrNull((element) => element.fundType == floAssetType)
+                ?.interest ??
+            10)
+        .toInt();
 
     double principal = double.tryParse(amount) ?? 0.0;
     double rateOfInterest = interest / 100.0;

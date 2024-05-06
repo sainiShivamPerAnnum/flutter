@@ -969,26 +969,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           queryParams: queryParams,
         );
         break;
-      case 'lboxBuy12':
-        BaseUtil.openFloBuySheet(
-          floAssetType: Constants.ASSET_TYPE_FLO_FIXED_6,
-          queryParams: queryParams,
-        );
-        break;
-      case 'lboxBuy8':
-        BaseUtil.openFloBuySheet(
-          floAssetType: Constants.ASSET_TYPE_FLO_FELXI,
-          queryParams: queryParams,
-        );
-        break;
-
-      case 'lboxBuy10':
-        BaseUtil.openFloBuySheet(
-          floAssetType: Constants.ASSET_TYPE_FLO_FIXED_3,
-          queryParams: queryParams,
-        );
-        break;
-
       case 'lboxSell':
         BaseUtil()
             .openSellModalSheet(investmentType: InvestmentType.LENDBOXP2P);

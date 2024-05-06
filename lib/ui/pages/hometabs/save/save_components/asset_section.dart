@@ -33,7 +33,7 @@ class SaveAssetsGroupCard extends StatelessWidget {
               subtitle:
                   "Save in Lendbox powered P2P Assets with upto 12% Returns",
               chipText: const ["P2P Asset", "Safe & Secure", "12% Returns"],
-              key: const Key(Constants.ASSET_TYPE_LENDBOX),
+              key: const Key('LENDBOXP2P'),
               cardBgColor: UiConstants.kSaveStableFelloCardBg,
               cardAssetName: Assets.felloFlo,
               investmentType: InvestmentType.LENDBOXP2P,

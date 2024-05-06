@@ -269,11 +269,11 @@ class GetterRepository extends BaseRepo {
 
       final subComboModelData =
           SubComboModel.helper.fromMapArray(subComboResponse["data"]["combos"]);
-      final augChips = AmountChipsModel.helper.fromMapArray(
-          subComboResponse["data"][Constants.ASSET_TYPE_LENDBOX]["chips"]);
+      final augChips = AmountChipsModel.helper
+          .fromMapArray(subComboResponse["data"]['LENDBOXP2P']["chips"]);
 
-      final lbChips = AmountChipsModel.helper.fromMapArray(
-          subComboResponse["data"][Constants.ASSET_TYPE_LENDBOX]["chips"]);
+      final lbChips = AmountChipsModel.helper
+          .fromMapArray(subComboResponse["data"]['LENDBOXP2P']["chips"]);
 
       final minMaxInfo = MaxMin.fromMap({
         "min": subComboResponse["data"]["min"],

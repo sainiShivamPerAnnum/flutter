@@ -35,6 +35,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../../feature/p2p_home/home/widgets/tooltip_shape.dart';
+
 class LendboxBuyInputView extends StatefulWidget {
   final int? amount;
   final bool? skipMl;
@@ -238,11 +240,14 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                   SizedBox(height: SizeConfig.padding24),
                   _ReInvestNudge(
                     gains: widget.model.config.reinvestInterestGain,
+                    buyInProgess: widget.model.isBuyInProgress,
                     initialValue: false,
                     onChange: (value) {
-                      widget.model.selectedOption = value
-                          ? UserDecision.reInvest
-                          : UserDecision.moveToFlexi;
+                      if (!widget.model.isBuyInProgress) {
+                        widget.model.selectedOption = value
+                            ? UserDecision.reInvest
+                            : UserDecision.moveToFlexi;
+                      }
                     },
                   ),
                 ],
@@ -339,11 +344,13 @@ class _ReInvestNudge extends StatefulWidget {
     required this.initialValue,
     required this.onChange,
     required this.gains,
+    required this.buyInProgess,
   });
 
   final bool initialValue;
   final num gains;
   final ValueChanged<bool> onChange;
+  final bool buyInProgess;
 
   @override
   State<_ReInvestNudge> createState() => _ReInvestNudgeState();
@@ -359,10 +366,12 @@ class _ReInvestNudgeState extends State<_ReInvestNudge> {
   }
 
   void _onChanged(bool value) {
-    setState(() {
-      _value = value;
-      widget.onChange(_value);
-    });
+    if (!widget.buyInProgess) {
+      setState(() {
+        _value = value;
+        widget.onChange(_value);
+      });
+    }
   }
 
   @override
@@ -386,16 +395,39 @@ class _ReInvestNudgeState extends State<_ReInvestNudge> {
                   SizedBox(
                     width: SizeConfig.padding8,
                   ),
-                  const Icon(
-                    Icons.info_outline,
-                    size: 14,
-                    color: UiConstants.grey1,
+                  Tooltip(
+                    margin:
+                        EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
+                    padding: const EdgeInsets.all(15),
+                    triggerMode: TooltipTriggerMode.tap,
+                    preferBelow: false,
+                    decoration: const ShapeDecoration(
+                      color: Colors.black,
+                      shape: TooltipShapeBorder(
+                        arrowArc: 0.2,
+                        radius: 10,
+                      ),
+                      shadows: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 4.0,
+                          offset: Offset(2, 2),
+                        )
+                      ],
+                    ),
+                    showDuration: const Duration(seconds: 10),
+                    message: locale.reinvestTooltip,
+                    child: Icon(
+                      Icons.info_outline,
+                      size: SizeConfig.padding14,
+                      color: UiConstants.greyBg,
+                    ),
                   ),
                 ],
               ),
               CustomSwitch(
                 initialValue: widget.initialValue,
-                onChanged: _onChanged,
+                onChanged: !widget.buyInProgess ? _onChanged : null,
               )
             ],
           ),

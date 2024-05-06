@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../../../util/constants.dart';
-
 /// Available options after maturity period.
 enum UserDecision {
   notDecided(lbMapping: 'NA', maturityTerm: 1),
@@ -131,112 +129,6 @@ class OptionContainer<T> extends StatelessWidget {
               ],
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class InvestmentForeseenWidget extends StatelessWidget {
-  const InvestmentForeseenWidget({
-    required this.amount,
-    required this.assetType,
-    super.key,
-  });
-
-  final String amount;
-  final String assetType;
-
-  String getTitle() {
-    if (assetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-      return "in 12% Flo";
-    }
-
-    if (assetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
-      return "in 10% Flo";
-    }
-    return "";
-  }
-
-  String getSubTitle() {
-    if (assetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-      return "for 6 months";
-    }
-
-    if (assetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
-      return "for 3 months";
-    }
-    return "";
-  }
-
-  String calculateAmountAfter6Months(String amount) {
-    int interest = assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
-
-    double principal = double.tryParse(amount) ?? 0.0;
-    double rateOfInterest = interest / 100.0;
-    int timeInMonths = assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 2 : 4;
-
-    double amountAfterMonths =
-        rateOfInterest / 365 * principal * (365 / timeInMonths);
-
-    return (principal + amountAfterMonths).toStringAsFixed(2);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // if (assetType == Constants.ASSET_TYPE_FLO_FELXI) {
-    //   return const SizedBox.shrink();
-    // }
-
-    return Container(
-      padding: EdgeInsets.all(SizeConfig.padding16),
-      margin: EdgeInsets.only(bottom: SizeConfig.padding24),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-        color: Colors.white.withOpacity(0.1),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "You Invest",
-                style: TextStyles.rajdhaniSB.body3,
-              ),
-              Text(
-                "₹${double.tryParse(amount)?.toStringAsFixed(2)}",
-                style: TextStyles.sourceSansB.title5,
-              )
-            ],
-          ),
-          Column(
-            children: [
-              Text(
-                getTitle(),
-                style: TextStyles.rajdhaniB.body2
-                    .colour(UiConstants.kTabBorderColor),
-              ),
-              Text(
-                getSubTitle(),
-                style: TextStyles.sourceSansB.body3,
-              )
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "You get",
-                style: TextStyles.rajdhaniSB.body3,
-              ),
-              Text(
-                "₹${calculateAmountAfter6Months(amount)}",
-                style: TextStyles.sourceSansB.title5,
-              )
-            ],
-          )
         ],
       ),
     );

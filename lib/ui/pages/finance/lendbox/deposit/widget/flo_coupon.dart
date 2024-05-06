@@ -1,7 +1,10 @@
 import 'package:felloapp/core/model/coupon_card_model.dart';
+import 'package:felloapp/core/model/fello_badges_model.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -25,7 +28,7 @@ class FloCouponWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (_coupons.isEmpty) return const SizedBox.shrink();
-    final locale = S.of(context);
+    final locale = locator<S>();
     return Container(
       padding:
           EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
@@ -41,11 +44,13 @@ class FloCouponWidget extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  model.buyFieldNode.unfocus();
-                  model.showOfferModal(model);
+                  if (!model.isBuyInProgress) {
+                    model.buyFieldNode.unfocus();
+                    model.showOfferModal(model);
+                  }
                 },
                 child: Text(
-                  'View All',
+                  locale.saveViewAll,
                   style: TextStyles.sourceSans.body3
                       .colour(UiConstants.kTabBorderColor),
                 ),
@@ -71,6 +76,7 @@ class CouponViewV2 extends StatelessWidget {
     required this.model,
     required this.lendboxBuyViewModel,
     required this.onTap,
+    super.key,
   });
 
   final CouponModel model;
@@ -79,12 +85,21 @@ class CouponViewV2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return lendboxBuyViewModel.focusCoupon != null
         ? IndividualCouponView(
             appliedCode: lendboxBuyViewModel.appliedCoupon?.code,
             model: lendboxBuyViewModel.focusCoupon!,
+            ticketMultiplier:
+                lendboxBuyViewModel.focusCoupon!.ticketMultiplier!,
+            icon: lendboxBuyViewModel.focusCoupon!.icon,
             desc: lendboxBuyViewModel.focusCoupon!.description!,
+            disabledDesc: lendboxBuyViewModel.focusCoupon!.disabledDescription!,
             lendboxBuyViewModel: lendboxBuyViewModel,
+            isDisabled:
+                lendboxBuyViewModel.focusCoupon!.couponType == "SUPER_FELLO" &&
+                    locator<UserService>().baseUser!.superFelloLevel !=
+                        SuperFelloLevel.SUPER_FELLO,
             onTap: (coupon) => lendboxBuyViewModel.applyCoupon(
               coupon.code,
               false,
@@ -120,7 +135,7 @@ class CouponViewV2 extends StatelessWidget {
                     width: SizeConfig.padding8,
                   ),
                   Text(
-                    'View all coupons',
+                    locale.viewAllCoupons,
                     style: TextStyles.sourceSansSB.body2,
                   ),
                   const Spacer(),

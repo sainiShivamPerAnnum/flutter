@@ -794,8 +794,6 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
 
   @override
   Widget build(BuildContext context) {
-    final showMaturity =
-        !(widget.model.floAssetType == Constants.ASSET_TYPE_FLO_FELXI);
     final currentDateTime = DateTime.now();
 
     return WillPopScope(

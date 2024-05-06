@@ -1201,5 +1201,18 @@
   "floInvested": "Invested",
   "floCurrentReturn": "Current Return",
   "ticketsEarnedflo": "Tickets Earned",
-  "assetSelectionCalculator": "Asset Type -"
+  "assetSelectionCalculator": "Asset Type -",
+  "ticketsTooltip": "Historical average of the tickets you have earned",
+  "everyWeek": " every week",
+  "reinvestTooltip": "For your ease we will reinvest your money on maturity, you still have the option to change this preference later.",
+  "getTicketMutiplier" : "Get {tickets}X Tickets", 
+  "@getTicketMutiplier": {
+    "placeholders" :{
+      "tickets": {
+        "type":"num"
+      }
+    }
+  },
+  "addAmountCoupons": "Add Amount",
+  "viewAllCoupons": "View all coupons"
 }

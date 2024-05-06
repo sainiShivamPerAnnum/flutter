@@ -10145,6 +10145,66 @@ class S {
       args: [],
     );
   }
+
+  /// `Historical average of the tickets you have earned`
+  String get ticketsTooltip {
+    return Intl.message(
+      'Historical average of the tickets you have earned',
+      name: 'ticketsTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ` every week`
+  String get everyWeek {
+    return Intl.message(
+      ' every week',
+      name: 'everyWeek',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `For your ease we will reinvest your money on maturity, you still have the option to change this preference later.`
+  String get reinvestTooltip {
+    return Intl.message(
+      'For your ease we will reinvest your money on maturity, you still have the option to change this preference later.',
+      name: 'reinvestTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get {tickets}X Tickets`
+  String getTicketMutiplier(num tickets) {
+    return Intl.message(
+      'Get ${tickets}X Tickets',
+      name: 'getTicketMutiplier',
+      desc: '',
+      args: [tickets],
+    );
+  }
+
+  /// `Add Amount`
+  String get addAmountCoupons {
+    return Intl.message(
+      'Add Amount',
+      name: 'addAmountCoupons',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View all coupons`
+  String get viewAllCoupons {
+    return Intl.message(
+      'View all coupons',
+      name: 'viewAllCoupons',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -740,7 +740,7 @@ class _BuildOwnAsset extends StatelessWidget {
               right: SizeConfig.pageHorizontalMargins / 2,
             ),
             child: const FloBalanceBriefRow(
-              tier: Constants.ASSET_TYPE_LENDBOX,
+              tier: 'ASSET_TYPE_LENDBOX',
             ),
           );
   }

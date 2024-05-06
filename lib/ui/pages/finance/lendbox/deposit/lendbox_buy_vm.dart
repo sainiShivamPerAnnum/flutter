@@ -219,16 +219,11 @@ class LendboxBuyViewModel extends BaseViewModel
     String modelFlowType = floAssetType;
     List<LendboxAssetConfiguration> lendBoxDetails =
         AppConfigV2.instance.lendBoxP2P;
-    final isLendBoxOldUser =
-        locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
 
     LendboxAssetConfiguration? assetInformation =
         lendBoxDetails.firstWhereOrNull(
       (element) {
-        return modelFlowType == Constants.ASSET_TYPE_FLO_FELXI
-            ? (element.isForOldLb == isLendBoxOldUser &&
-                element.fundType == modelFlowType)
-            : element.fundType == modelFlowType;
+        return element.fundType == modelFlowType;
       },
     );
 
@@ -467,6 +462,9 @@ class LendboxBuyViewModel extends BaseViewModel
   }
 
   String getMaturityTitle() {
+    final config = AppConfigV2.instance.lendBoxP2P.firstWhere(
+      (element) => element.fundType == floAssetType,
+    );
     switch (selectedOption) {
       case UserDecision.notDecided:
         return 'N/A';
@@ -475,10 +473,10 @@ class LendboxBuyViewModel extends BaseViewModel
         return "Withdraw to bank";
 
       case UserDecision.reInvest:
-        return "ReInvest in ${floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10}%";
+        return "ReInvest in ${config.interest}%";
 
       case UserDecision.moveToFlexi:
-        return "Move to ${floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 10 : 8}%";
+        return "Move to 8%";
     }
   }
 
@@ -644,42 +642,6 @@ class LendboxBuyViewModel extends BaseViewModel
       UserDecision.reInvest => maturity.reInvest,
       _ => maturity.notDecided,
     };
-  }
-
-  Widget showReinvestSubTitle() {
-    final amount = int.tryParse(amountController!.text) ?? 0;
-    final maturityDuration =
-        floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3;
-    final terms = selectedOption.maturityTerm;
-    final rate = floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
-
-    final i = BaseUtil.calculateCompoundInterest(
-      amount: amount,
-      interestRate: rate,
-      maturityDuration: maturityDuration,
-      terms: selectedOption.maturityTerm,
-    ).toInt();
-
-    return Flexible(
-      child: Text.rich(
-        TextSpan(
-          children: [
-            TextSpan(
-              text: '${maturityDuration * terms} months',
-            ),
-            TextSpan(
-              text: ' (Returns = ₹${i + amount})',
-              style: TextStyles.sourceSansSB.body3.colour(
-                Colors.white,
-              ),
-            ),
-          ],
-        ),
-        style: TextStyles.sourceSans.body3.colour(UiConstants.grey1),
-        textAlign: TextAlign.left,
-        maxLines: 2,
-      ),
-    );
   }
 
   Future<void> _applyInitialCoupon(String? coupon) async {

@@ -1084,5 +1084,18 @@
   },
   "disabledReinvestTitle": "परिपक्वता पर P2P वॉलेट में स्थानांतरित हो रहा है",
   "enterCoupon": "कूपन दर्ज करें",
-  "assetSelectionCalculator": "संपत्ति प्रकार -"
+  "assetSelectionCalculator": "संपत्ति प्रकार -",
+  "ticketsTooltip": "आपके कमाए गए टिकट का ऐतिहासिक औसत",
+  "everyWeek": " हर हफ्ते",
+  "reinvestTooltip": "आपकी सुविधा के लिए, हम आपके पैसे को परिपूर्णता पर पुनर्निवेशित करेंगे, आपके पास इस प्राथमिकता को बाद में बदलने का विकल्प भी है।",
+  "getTicketMutiplier" : "लाभ लें {tickets}X टिकट", 
+  "@getTicketMutiplier": {
+    "placeholders" :{
+      "tickets": {
+        "type":"num"
+      }
+    }
+  },
+  "addAmountCoupons": "राशि जोड़ें",
+  "viewAllCoupons": "सभी कूपन देखें"
 }
