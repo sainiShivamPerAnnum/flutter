@@ -247,7 +247,21 @@ class LendboxBuyViewModel extends BaseViewModel
       (element) => element.fundType == floAssetType,
     );
     _txnService.floAssetType = floAssetType;
-    showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
+    final HappyHourCampign? happyHourModel =
+        locator.isRegistered<HappyHourCampign>()
+            ? locator<HappyHourCampign>()
+            : null;
+    if (happyHourModel?.data?.forAssets != null) {
+      try {
+        showHappyHour =
+            locator<MarketingEventHandlerService>().showHappyHourBanner &&
+                happyHourModel!.data!.forAssets!.contains(floAssetType);
+      } catch (e) {
+        showHappyHour = false;
+      }
+    } else {
+      showHappyHour = false;
+    }
     animationController = AnimationController(
       vsync: vsync,
       duration: const Duration(milliseconds: 500),

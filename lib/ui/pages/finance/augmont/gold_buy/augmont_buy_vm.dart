@@ -284,7 +284,23 @@ class GoldBuyViewModel extends BaseViewModel
     setState(ViewState.Busy);
     await initAndSetPreferredPaymentOption();
     isBuyInProgess = _augTxnService.isGoldBuyInProgress;
-    showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
+    final HappyHourCampign? happyHourModel =
+        locator.isRegistered<HappyHourCampign>()
+            ? locator<HappyHourCampign>()
+            : null;
+    if (happyHourModel?.data?.forAssets != null) {
+      try {
+        showHappyHour =
+            locator<MarketingEventHandlerService>().showHappyHourBanner &&
+                happyHourModel!.data!.forAssets!.contains(
+                  'AUGGOLD99',
+                );
+      } catch (e) {
+        showHappyHour = false;
+      }
+    } else {
+      showHappyHour = false;
+    }
     animationController = AnimationController(
         vsync: vsync, duration: const Duration(milliseconds: 500));
     await getAssetOptionsModel(entryPoint: entryPoint);
