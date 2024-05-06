@@ -604,6 +604,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "चयनित फ़ाइल का आकार बहुत बड़ा है। कृपया 5 एमबी से कम आकार की छवि चुनें।"),
         "invalidUsername":
             MessageLookupByLibrary.simpleMessage("उपयोगकर्ता नाम अमान्य"),
+        "investP2p": MessageLookupByLibrary.simpleMessage("निवेश करें"),
         "investSafelyInGoldText": MessageLookupByLibrary.simpleMessage(
             "टोकन जीतने के लिए हमारे ऑटो सिप के साथ गोल्ड\nमें सुरक्षित रूप से निवेश करें"),
         "invested": MessageLookupByLibrary.simpleMessage("निवेश"),
@@ -765,6 +766,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("कोई फ़ाइल चयनित नहीं"),
         "noKYCfound":
             MessageLookupByLibrary.simpleMessage("कोई KYC डेटा नहीं मिला"),
+        "noP2Pinvestment": MessageLookupByLibrary.simpleMessage(
+            "लगता है आपने अभी तक पीयर-टू-पीयर लेनदेन नहीं किया है।"),
         "noRewards":
             MessageLookupByLibrary.simpleMessage("अभी तक कोई पुरस्कार नहीं"),
         "noScratchCards": MessageLookupByLibrary.simpleMessage(
@@ -1407,6 +1410,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "transaction": MessageLookupByLibrary.simpleMessage("लेन-देन"),
         "transactionProgress":
             MessageLookupByLibrary.simpleMessage("आपका लेन-देन हो रहा है"),
+        "transactionTooltip": MessageLookupByLibrary.simpleMessage(
+            "परिपक्वता के बाद आपका पैसा फेलो वॉलेट में चला जाता है, ताकि आप ब्याज कमाते रहें और किसी भी समय पैसे निकाल सकें।"),
         "trustedBy":
             MessageLookupByLibrary.simpleMessage("द्वारा भरोसा किया गया"),
         "tryAgain":
@@ -1565,6 +1570,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("अपना ईमेल सत्यापित करें"),
         "verifyFailed":
             MessageLookupByLibrary.simpleMessage("सत्यापित करने में असमर्थ"),
+        "verifyKyc": MessageLookupByLibrary.simpleMessage("KYC सत्यापित करें"),
         "view": MessageLookupByLibrary.simpleMessage("देखना"),
         "viewAllCoupons":
             MessageLookupByLibrary.simpleMessage("सभी कूपन देखें"),

@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../home/widgets/no_transaction_widget.dart';
 import '../../ui/shared/footer.dart';
 import 'widgets/widgets.dart';
 
@@ -37,6 +38,7 @@ class _MyFundSectionState extends State<MyFundSection> {
       builder: (context, state) {
         if (state.status.isFailedToLoadInitial) {
           ///TODO(@DK070202): Error widget here.
+          //Todo(@Hirdesh)
         }
 
         if (state.status.isFetchingInitialPage) {
@@ -50,9 +52,7 @@ class _MyFundSectionState extends State<MyFundSection> {
           );
         }
         if (fundsBloc.state.entries.isEmpty) {
-          return GestureDetector(
-              onTap: () => DefaultTabController.of(context).animateTo(1),
-              child: const AppImage(Assets.p2pNonInvest));
+          return NoTransactions();
         }
 
         return Stack(

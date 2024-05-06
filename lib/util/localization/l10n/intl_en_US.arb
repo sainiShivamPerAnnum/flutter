@@ -1214,5 +1214,9 @@
     }
   },
   "addAmountCoupons": "Add Amount",
-  "viewAllCoupons": "View all coupons"
+  "viewAllCoupons": "View all coupons",
+  "transactionTooltip": "After maturity you money move to Fello wallet, so that you continue earning interest and can withdraw any time.",
+  "noP2Pinvestment": "Looks like You don’t have any transactions in P2P yet",
+  "investP2p": "INVEST",
+  "verifyKyc": "Verify KYC"
 }

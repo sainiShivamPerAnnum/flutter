@@ -16,6 +16,7 @@ import 'package:felloapp/util/assets.dart' as a;
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:upi_pay/upi_pay.dart';
 
+import '../../../../../../feature/p2p_home/home/widgets/tooltip_shape.dart';
 import '../../../../../../util/locator.dart';
 
 class GoldBreakdownView extends StatefulWidget {
@@ -778,6 +780,7 @@ class FloBreakdownView extends StatefulWidget {
 
 class _FloBreakdownViewState extends State<FloBreakdownView> {
   bool _isNetbankingMandatory = false;
+  final locale = locator<S>();
 
   final num _multiplicationFactor = 1;
 
@@ -892,11 +895,34 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                         SizedBox(
                           width: SizeConfig.padding4,
                         ),
-                        Icon(
-                          Icons.info_outlined,
-                          color: UiConstants.grey1,
-                          size: SizeConfig.padding16,
-                        )
+                        Tooltip(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding10),
+                          padding: const EdgeInsets.all(15),
+                          triggerMode: TooltipTriggerMode.tap,
+                          preferBelow: false,
+                          decoration: const ShapeDecoration(
+                            color: Colors.black,
+                            shape: TooltipShapeBorder(
+                              arrowArc: 0.2,
+                              radius: 10,
+                            ),
+                            shadows: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 4.0,
+                                offset: Offset(2, 2),
+                              )
+                            ],
+                          ),
+                          showDuration: const Duration(seconds: 10),
+                          message: locale.transactionTooltip,
+                          child: Icon(
+                            Icons.info_outline,
+                            color: UiConstants.grey1,
+                            size: SizeConfig.padding16,
+                          ),
+                        ),
                       ],
                     ),
                     SizedBox(

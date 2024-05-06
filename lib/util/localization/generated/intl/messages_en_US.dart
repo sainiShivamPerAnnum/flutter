@@ -643,6 +643,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Selected file size is very large. Please select an image of size less than 5 MB."),
         "invalidUsername":
             MessageLookupByLibrary.simpleMessage("Username invalid"),
+        "investP2p": MessageLookupByLibrary.simpleMessage("INVEST"),
         "investSafelyInGoldText": MessageLookupByLibrary.simpleMessage(
             "Invest safely in Gold\nwith our Auto SIP to win tokens"),
         "investSection": MessageLookupByLibrary.simpleMessage("Invest"),
@@ -805,6 +806,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "noFileSelected":
             MessageLookupByLibrary.simpleMessage("No file selected"),
         "noKYCfound": MessageLookupByLibrary.simpleMessage("No Kyc Data Found"),
+        "noP2Pinvestment": MessageLookupByLibrary.simpleMessage(
+            "Looks like You don’t have any transactions in P2P yet"),
         "noRewards": MessageLookupByLibrary.simpleMessage("No rewards yet"),
         "noScratchCards": MessageLookupByLibrary.simpleMessage(
             "You don’t have any Scratch Cards"),
@@ -1473,6 +1476,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Your transaction is in progress"),
         "transactionSection":
             MessageLookupByLibrary.simpleMessage("Transactions"),
+        "transactionTooltip": MessageLookupByLibrary.simpleMessage(
+            "After maturity you money move to Fello wallet, so that you continue earning interest and can withdraw any time."),
         "trustedBy": MessageLookupByLibrary.simpleMessage("Trusted by"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Please try again"),
         "tryAgainMessage":
@@ -1636,6 +1641,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Verify your Email"),
         "verifyFailed":
             MessageLookupByLibrary.simpleMessage("Unable to verify"),
+        "verifyKyc": MessageLookupByLibrary.simpleMessage("Verify KYC"),
         "view": MessageLookupByLibrary.simpleMessage("View"),
         "viewAllCoupons":
             MessageLookupByLibrary.simpleMessage("View all coupons"),

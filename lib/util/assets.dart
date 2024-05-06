@@ -486,5 +486,5 @@ class Assets {
 
   static const String p2pWallet = "assets/images/p2pWallet.png";
   static const String p2pNonInvest =
-      "https://ik.imagekit.io/9xfwtu0xm/p2p_home_v2/empty_fund.png";
+      "https://ik.imagekit.io/9xfwtu0xm/p2p_home_v2/empty_Fund.png";
 }

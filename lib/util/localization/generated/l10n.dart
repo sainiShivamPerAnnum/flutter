@@ -10205,6 +10205,46 @@ class S {
       args: [],
     );
   }
+
+  /// `After maturity you money move to Fello wallet, so that you continue earning interest and can withdraw any time.`
+  String get transactionTooltip {
+    return Intl.message(
+      'After maturity you money move to Fello wallet, so that you continue earning interest and can withdraw any time.',
+      name: 'transactionTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Looks like You don’t have any transactions in P2P yet`
+  String get noP2Pinvestment {
+    return Intl.message(
+      'Looks like You don’t have any transactions in P2P yet',
+      name: 'noP2Pinvestment',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `INVEST`
+  String get investP2p {
+    return Intl.message(
+      'INVEST',
+      name: 'investP2p',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verify KYC`
+  String get verifyKyc {
+    return Intl.message(
+      'Verify KYC',
+      name: 'verifyKyc',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
