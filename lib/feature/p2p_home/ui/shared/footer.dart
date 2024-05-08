@@ -8,6 +8,7 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/analytics_events_constants.dart';
+import '../../../../core/enums/investment_type.dart';
 import '../../../../core/service/analytics/analytics_service.dart';
 import '../../../../core/service/notifier_services/user_service.dart';
 import '../../../../util/locator.dart';
@@ -20,21 +21,19 @@ class Footer extends StatelessWidget {
     locator<AnalyticsService>().track(
       eventName: AnalyticsEvents.saveDailyTappedOnAssetDetailPage,
       properties: {
-        // ! TODO(@hirdesh)
-        // "total_transactions": ,
+        "type": InvestmentType.LENDBOXP2P.name,
         "total_investments": totalInvestment,
       },
     );
   }
 
   void trackSaveOnceButtonTapped() {
-    // ! TODO(@hirdesh)
     final totalInvestment =
         locator<UserService>().userPortfolio.flo.balance.toDouble();
     locator<AnalyticsService>().track(
       eventName: AnalyticsEvents.saveOnceTappedOnAssetDetailPage,
       properties: {
-        // "total_transactions": ,
+        "type": InvestmentType.LENDBOXP2P.name,
         "total_investments": totalInvestment,
       },
     );
