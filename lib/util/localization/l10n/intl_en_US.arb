@@ -210,7 +210,7 @@
   "autoSIP": "ACTIVE SIP",
   "felloFloMainTitle": "Fello Flo",
   "digitalGoldMailTitle": "Digital Gold",
-  "currentValue": "Current Value",
+  "currentValue": "Current Amount",
   "sellCardTitle1": "Sell your Digital Gold \nat current market rate",
   "sellCardTitle2": "Withdraw from Flo",
   "sellCardSubTitle1": "With every withdrawal, some tokens and tambola tickets will be deducted.",
@@ -1093,7 +1093,7 @@
       }
     }
   },
-  "retiiredFlexi": "P2P Vault",
+  "retiiredFlexi": "P2P Wallet",
   "flexiIvested": "Invested Amount",
   "lastLockIn": "Last Lock-in Date",
   "withdrable": "Withdrable Amount",
@@ -1182,7 +1182,7 @@
   "perAnnumLabel":"per annum",
   "lockInTill":"Lock-in till",
   "reInvestOnMaturity":"Re-Invest on maturity",
-  "movesToVault": "Moves to P2P Vault on maturity",
+  "movesToVault": "Moves to P2P Wallet on maturity",
 
 
   "@_investment_section" : {},
@@ -1200,5 +1200,25 @@
   "floPortFolio": "Fello P2P Portfolio",
   "floInvested": "Invested",
   "floCurrentReturn": "Current Return",
-  "ticketsEarnedflo": "Tickets Earned"
+  "ticketsEarnedflo": "Tickets Earned",
+  "assetSelectionCalculator": "Asset Type -",
+  "ticketsTooltip": "Historical average of the tickets you have earned",
+  "everyWeek": " every week",
+  "reinvestTooltip": "For your ease we will reinvest your money on maturity, you still have the option to change this preference later.",
+  "getTicketMutiplier" : "Get {tickets}X Tickets", 
+  "@getTicketMutiplier": {
+    "placeholders" :{
+      "tickets": {
+        "type":"num"
+      }
+    }
+  },
+  "addAmountCoupons": "Add Amount",
+  "viewAllCoupons": "View all coupons",
+  "transactionTooltip": "After maturity you money move to Fello wallet, so that you continue earning interest and can withdraw any time.",
+  "noP2Pinvestment": "Looks like You don’t have any transactions in P2P yet",
+  "investP2p": "INVEST",
+  "verifyKyc": "Verify KYC",
+  "reinvestInSamePlan": "Reinvestment in same plan",
+  "withdrawMaturity":"Withdraw-able after Maturity"
 }

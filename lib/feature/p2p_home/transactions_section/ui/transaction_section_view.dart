@@ -1,12 +1,14 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/feature/p2p_home/home/widgets/no_transaction_widget.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'package:felloapp/feature/p2p_home/ui/shared/footer.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transaction_details_view.dart';
+import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/bloc_pagination/bloc_pagination.dart';
@@ -21,6 +23,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/constants/analytics_events_constants.dart';
 import '../../../../core/service/analytics/analytics_service.dart';
+import '../../ui/shared/error_state.dart';
 
 class TransactionSection extends StatefulWidget {
   const TransactionSection({
@@ -48,24 +51,21 @@ class _TransactionSectionState extends State<TransactionSection> {
       bloc: transactionBloc,
       builder: (context, state) {
         if (state.status.isFailedToLoadInitial) {
-          ///TODO(@DK070202): Error widget here.
+          return const ErrorPage();
         }
 
         if (state.status.isFetchingInitialPage) {
-          return const Center(
+          return Center(
             child: SizedBox.square(
-              dimension: 30,
-              child: CircularProgressIndicator(
-                color: UiConstants.primaryColor,
+              dimension: SizeConfig.padding200,
+              child: const AppImage(
+                Assets.fullScreenLoaderLottie,
               ),
             ),
           );
         }
         if (state.entries.isEmpty) {
-          return GestureDetector(
-            onTap: () => DefaultTabController.of(context).animateTo(1),
-            child: const AppImage(Assets.p2pNonInvest),
-          );
+          return NoTransactions();
         }
 
         return Stack(
@@ -199,8 +199,12 @@ class _TransactionTile extends StatelessWidget {
             ),
             Row(
               children: [
+                TransactionStatusChip(
+                  color: getTileColor(transaction.tranStatus),
+                  status: transaction.tranStatus,
+                ),
                 Text(
-                  locale.amount(transaction.amount.round().toString()),
+                  locale.amount(transaction.amount.abs().round().toString()),
                   style: TextStyles.sourceSansSB.body2,
                 ),
                 SizedBox(
@@ -217,4 +221,20 @@ class _TransactionTile extends StatelessWidget {
       ),
     );
   }
+}
+
+Color getTileColor(String? type) {
+  if (type == UserTransaction.TRAN_STATUS_CANCELLED ||
+      type == UserTransaction.TRAN_STATUS_FAILED) {
+    return Colors.redAccent;
+  } else if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
+    return UiConstants.kTabBorderColor;
+  } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
+    return Colors.amber;
+  } else if (type == UserTransaction.TRAN_STATUS_PROCESSING) {
+    return Colors.amber;
+  } else if (type == UserTransaction.TRAN_STATUS_REFUNDED) {
+    return Colors.blue;
+  }
+  return Colors.black54;
 }

@@ -1,7 +1,9 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../../../../core/constants/analytics_events_constants.dart';
 import '../../../../../core/enums/page_state_enum.dart';
@@ -16,17 +18,16 @@ import '../../../../../util/locator.dart';
 import '../../../../architecture/base_view.dart';
 import '../../../../elements/appbar/appbar.dart';
 import '../../../static/app_widget.dart';
-import 'lendbox_withdrawal_view.dart';
 import 'lendbox_withdrawal_vm.dart';
 
-class FlexiBalanceView extends StatefulWidget {
-  const FlexiBalanceView({super.key});
+class FlexiBalanceView extends StatelessWidget {
+  FlexiBalanceView({
+    required this.onWithDrawalSubitted,
+    super.key,
+  });
 
-  @override
-  State<FlexiBalanceView> createState() => _FlexiBalanceViewState();
-}
+  final VoidCallback? onWithDrawalSubitted;
 
-class _FlexiBalanceViewState extends State<FlexiBalanceView> {
   final UserService _usrService = locator<UserService>();
 
   void trackBasicCardWithdrawTap(num withdrawableAmount) {
@@ -95,7 +96,7 @@ class _FlexiBalanceViewState extends State<FlexiBalanceView> {
                     ),
                     Text(
                       locale.retiiredFlexi,
-                      style: TextStyles.rajdhaniSB.body2
+                      style: TextStyles.rajdhaniSB.title5
                           .colour(UiConstants.kTextColor),
                     )
                   ],
@@ -124,13 +125,25 @@ class _FlexiBalanceViewState extends State<FlexiBalanceView> {
                           style: TextStyles.sourceSans.body3
                               .colour(UiConstants.kFAQsAnswerColor),
                         ),
-                        Text(
-                          BaseUtil.formatIndianRupees(
-                            model.withdrawableQuantity?.amount ?? 0.toDouble(),
-                          ),
-                          style: TextStyles.sourceSans.body2
-                              .colour(UiConstants.textGray70),
-                        ),
+                        model.withdrawableQuantity == null
+                            ? const SpinKitThreeBounce(
+                                color: UiConstants.teal2,
+                                size: 14,
+                              )
+                            : model.withdrawableResponseMessage.isNotEmpty
+                                ? Text(
+                                    model.withdrawableResponseMessage,
+                                    style: TextStyles.sourceSans.body2
+                                        .colour(UiConstants.textGray70),
+                                  )
+                                : Text(
+                                    BaseUtil.formatIndianRupees(
+                                      model.withdrawableQuantity?.amount ??
+                                          0.toDouble(),
+                                    ),
+                                    style: TextStyles.sourceSans.body2
+                                        .colour(UiConstants.textGray70),
+                                  ),
                         SizedBox(
                           height: SizeConfig.padding16,
                         ),
@@ -172,15 +185,11 @@ class _FlexiBalanceViewState extends State<FlexiBalanceView> {
                     onPressed: () {
                       Haptic.vibrate();
                       trackBasicCardWithdrawTap(
-                          model.withdrawableQuantity?.amount ?? 0.toDouble());
-                      BaseUtil.openModalBottomSheet(
-                        addToScreenStack: true,
-                        enableDrag: false,
-                        hapticVibrate: true,
-                        isBarrierDismissible: false,
-                        backgroundColor: Colors.transparent,
-                        isScrollControlled: true,
-                        content: LendboxWithdrawalView(),
+                        model.withdrawableQuantity?.amount ?? 0.toDouble(),
+                      );
+                      BaseUtil().openSellModalSheet(
+                        investmentType: InvestmentType.LENDBOXP2P,
+                        onWithDrawalSubitted: onWithDrawalSubitted,
                       );
                     },
                     label: locale.withdraw,

@@ -301,7 +301,7 @@ class SubService extends ChangeNotifier {
         if (res.model!.length < 30) hasNoMoreAugSubsTxns = true;
         augSubTxnList.addAll(res.model!);
       }
-    } else if (asset == Constants.ASSET_TYPE_LENDBOX) {
+    } else if (asset == 'LENDBOXP2P') {
       if (lbSubTxnList.isNotEmpty && !paginate) return;
       if (hasNoMoreSubsTxns) {
         lbSubTxnList.clear();

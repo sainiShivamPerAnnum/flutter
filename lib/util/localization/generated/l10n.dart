@@ -1768,10 +1768,10 @@ class S {
     );
   }
 
-  /// `Current Value`
+  /// `Current Amount`
   String get currentValue {
     return Intl.message(
-      'Current Value',
+      'Current Amount',
       name: 'currentValue',
       desc: '',
       args: [],
@@ -9636,10 +9636,10 @@ class S {
     );
   }
 
-  /// `P2P Vault`
+  /// `P2P Wallet`
   String get retiiredFlexi {
     return Intl.message(
-      'P2P Vault',
+      'P2P Wallet',
       name: 'retiiredFlexi',
       desc: '',
       args: [],
@@ -9976,10 +9976,10 @@ class S {
     );
   }
 
-  /// `Moves to P2P Vault on maturity`
+  /// `Moves to P2P Wallet on maturity`
   String get movesToVault {
     return Intl.message(
-      'Moves to P2P Vault on maturity',
+      'Moves to P2P Wallet on maturity',
       name: 'movesToVault',
       desc: '',
       args: [],
@@ -10131,6 +10131,136 @@ class S {
     return Intl.message(
       'Tickets Earned',
       name: 'ticketsEarnedflo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Asset Type -`
+  String get assetSelectionCalculator {
+    return Intl.message(
+      'Asset Type -',
+      name: 'assetSelectionCalculator',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Historical average of the tickets you have earned`
+  String get ticketsTooltip {
+    return Intl.message(
+      'Historical average of the tickets you have earned',
+      name: 'ticketsTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ` every week`
+  String get everyWeek {
+    return Intl.message(
+      ' every week',
+      name: 'everyWeek',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `For your ease we will reinvest your money on maturity, you still have the option to change this preference later.`
+  String get reinvestTooltip {
+    return Intl.message(
+      'For your ease we will reinvest your money on maturity, you still have the option to change this preference later.',
+      name: 'reinvestTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get {tickets}X Tickets`
+  String getTicketMutiplier(num tickets) {
+    return Intl.message(
+      'Get ${tickets}X Tickets',
+      name: 'getTicketMutiplier',
+      desc: '',
+      args: [tickets],
+    );
+  }
+
+  /// `Add Amount`
+  String get addAmountCoupons {
+    return Intl.message(
+      'Add Amount',
+      name: 'addAmountCoupons',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View all coupons`
+  String get viewAllCoupons {
+    return Intl.message(
+      'View all coupons',
+      name: 'viewAllCoupons',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `After maturity you money move to Fello wallet, so that you continue earning interest and can withdraw any time.`
+  String get transactionTooltip {
+    return Intl.message(
+      'After maturity you money move to Fello wallet, so that you continue earning interest and can withdraw any time.',
+      name: 'transactionTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Looks like You don’t have any transactions in P2P yet`
+  String get noP2Pinvestment {
+    return Intl.message(
+      'Looks like You don’t have any transactions in P2P yet',
+      name: 'noP2Pinvestment',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `INVEST`
+  String get investP2p {
+    return Intl.message(
+      'INVEST',
+      name: 'investP2p',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verify KYC`
+  String get verifyKyc {
+    return Intl.message(
+      'Verify KYC',
+      name: 'verifyKyc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reinvestment in same plan`
+  String get reinvestInSamePlan {
+    return Intl.message(
+      'Reinvestment in same plan',
+      name: 'reinvestInSamePlan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Withdraw-able after Maturity`
+  String get withdrawMaturity {
+    return Intl.message(
+      'Withdraw-able after Maturity',
+      name: 'withdrawMaturity',
       desc: '',
       args: [],
     );

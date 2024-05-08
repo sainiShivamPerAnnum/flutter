@@ -31,6 +31,7 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/flo_coupon_page.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
 import 'package:felloapp/ui/pages/finance/preffered_upi_option_mixin.dart';
+import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -218,16 +219,11 @@ class LendboxBuyViewModel extends BaseViewModel
     String modelFlowType = floAssetType;
     List<LendboxAssetConfiguration> lendBoxDetails =
         AppConfigV2.instance.lendBoxP2P;
-    final isLendBoxOldUser =
-        locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
 
     LendboxAssetConfiguration? assetInformation =
         lendBoxDetails.firstWhereOrNull(
       (element) {
-        return modelFlowType == Constants.ASSET_TYPE_FLO_FELXI
-            ? (element.isForOldLb == isLendBoxOldUser &&
-                element.fundType == modelFlowType)
-            : element.fundType == modelFlowType;
+        return element.fundType == modelFlowType;
       },
     );
 
@@ -251,7 +247,21 @@ class LendboxBuyViewModel extends BaseViewModel
       (element) => element.fundType == floAssetType,
     );
     _txnService.floAssetType = floAssetType;
-    showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
+    final HappyHourCampign? happyHourModel =
+        locator.isRegistered<HappyHourCampign>()
+            ? locator<HappyHourCampign>()
+            : null;
+    if (happyHourModel?.data?.forAssets != null) {
+      try {
+        showHappyHour =
+            locator<MarketingEventHandlerService>().showHappyHourBanner &&
+                happyHourModel!.data!.forAssets!.contains(floAssetType);
+      } catch (e) {
+        showHappyHour = false;
+      }
+    } else {
+      showHappyHour = false;
+    }
     animationController = AnimationController(
       vsync: vsync,
       duration: const Duration(milliseconds: 500),
@@ -468,6 +478,9 @@ class LendboxBuyViewModel extends BaseViewModel
   }
 
   String getMaturityTitle() {
+    final config = AppConfigV2.instance.lendBoxP2P.firstWhere(
+      (element) => element.fundType == floAssetType,
+    );
     switch (selectedOption) {
       case UserDecision.notDecided:
         return 'N/A';
@@ -476,10 +489,10 @@ class LendboxBuyViewModel extends BaseViewModel
         return "Withdraw to bank";
 
       case UserDecision.reInvest:
-        return "ReInvest in ${floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10}%";
+        return "ReInvest in ${config.interest}%";
 
       case UserDecision.moveToFlexi:
-        return "Move to ${floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 10 : 8}%";
+        return "Move to 8%";
     }
   }
 
@@ -546,8 +559,9 @@ class LendboxBuyViewModel extends BaseViewModel
       return '';
     }
 
-    numberOfTambolaTickets = parsedFloAmount ~/ tambolaCost;
-    totalTickets = numberOfTambolaTickets! * tambolaMultiplier;
+    numberOfTambolaTickets =
+        (parsedFloAmount ~/ tambolaCost) * tambolaMultiplier;
+    totalTickets = numberOfTambolaTickets!;
 
     happyHourTickets =
         showHappyHour && happyHourModel?.data?.rewards?[0].type == 'tt'
@@ -555,8 +569,7 @@ class LendboxBuyViewModel extends BaseViewModel
             : null;
 
     if (parsedFloAmount >= minAmount && happyHourTickets != null) {
-      totalTickets =
-          (numberOfTambolaTickets! * tambolaMultiplier) + happyHourTickets!;
+      totalTickets = (numberOfTambolaTickets!) + happyHourTickets!;
       showInfoIcon = true;
     } else {
       showInfoIcon = false;
@@ -650,42 +663,6 @@ class LendboxBuyViewModel extends BaseViewModel
     };
   }
 
-  Widget showReinvestSubTitle() {
-    final amount = int.tryParse(amountController!.text) ?? 0;
-    final maturityDuration =
-        floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3;
-    final terms = selectedOption.maturityTerm;
-    final rate = floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
-
-    final i = BaseUtil.calculateCompoundInterest(
-      amount: amount,
-      interestRate: rate,
-      maturityDuration: maturityDuration,
-      terms: selectedOption.maturityTerm,
-    ).toInt();
-
-    return Flexible(
-      child: Text.rich(
-        TextSpan(
-          children: [
-            TextSpan(
-              text: '${maturityDuration * terms} months',
-            ),
-            TextSpan(
-              text: ' (Returns = ₹${i + amount})',
-              style: TextStyles.sourceSansSB.body3.colour(
-                Colors.white,
-              ),
-            ),
-          ],
-        ),
-        style: TextStyles.sourceSans.body3.colour(UiConstants.grey1),
-        textAlign: TextAlign.left,
-        maxLines: 2,
-      ),
-    );
-  }
-
   Future<void> _applyInitialCoupon(String? coupon) async {
     if (coupon == null) return;
     try {
@@ -737,9 +714,13 @@ class LendboxBuyViewModel extends BaseViewModel
           amountController!.text =
               response.model!.minAmountRequired!.toInt().toString();
           buyAmount = response.model!.minAmountRequired?.toInt();
+          lastTappedChipIndex = assetOptionsModel!.data.userOptions.indexWhere(
+            (element) => element.value >= (buyAmount ?? 0),
+          );
           // updateGoldAmount();
           showMaxCapText = false;
           showMinCapText = false;
+          await AppState.backButtonDispatcher!.didPopRoute();
           await animationController?.forward();
           updateFieldWidth();
         }

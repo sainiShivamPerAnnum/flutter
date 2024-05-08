@@ -15,7 +15,7 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/buy_app_bar.d
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/buy_nav_bar.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/enter_amount_view.dart';
 import 'package:felloapp/ui/pages/finance/banner_widget.dart';
-import 'package:felloapp/ui/pages/finance/coupon_widget.dart';
+import 'package:felloapp/ui/pages/finance/gold_coupon_widget.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -150,7 +150,7 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
               height: SizeConfig.padding24,
             ),
             if (widget.model.showCoupons)
-              CouponWidget(
+              GoldCouponWidget(
                 widget.model.couponList,
                 widget.model,
                 onTap: (coupon) {

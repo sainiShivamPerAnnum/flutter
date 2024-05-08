@@ -2,7 +2,6 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
@@ -18,7 +17,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   final CustomLogger _logger = locator<CustomLogger>();
   final SubService _subscriptionService = locator<SubService>();
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
-  final _lendboxMaturityService = locator<LendboxMaturityService>();
+  // final _lendboxMaturityService = locator<LendboxMaturityService>();
 
   int _filter = 1;
   bool _isMoreTxnsBeingFetched = false;
@@ -263,15 +262,5 @@ class TransactionsHistoryViewModel extends BaseViewModel {
         _filteredSIPList = _subscriptionService.lbSubTxnList;
       }
     }
-  }
-
-  Future<void> updateMaturityPreference({
-    required String pref,
-    required String txnId,
-  }) async {
-    await _lendboxMaturityService.updateInvestmentPrefForTransaction(
-      txnId,
-      pref,
-    );
   }
 }

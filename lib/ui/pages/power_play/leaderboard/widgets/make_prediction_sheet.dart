@@ -22,16 +22,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 /// Type of available asset at time of investment through fello power play.
 enum AssetType {
-  flo8(
-    assetPath: Assets.floWithoutShadow,
-    label: "8% FLO",
-  ),
-
-  flo10(
-    assetPath: Assets.floWithoutShadow,
-    label: "10% FLO",
-  ),
-
   gold(
     assetPath: Assets.goldWithoutShadow,
     label: "Digital Gold",
@@ -44,9 +34,6 @@ enum AssetType {
 
   final String assetPath;
   final String label;
-
-  bool get isFlo8 => this == AssetType.flo8;
-  bool get isFlo10 => this == AssetType.flo10;
   bool get isGold => this == AssetType.gold;
 }
 
@@ -125,16 +112,6 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
   /// Redirects user to relative asset investment page based on the [assetType].
   void _openAssetPage(AssetType assetType, int? amount) {
     switch (assetType) {
-      case AssetType.flo8:
-      case AssetType.flo10:
-        BaseUtil.openFloBuySheet(
-          floAssetType: Constants.ASSET_TYPE_FLO_FELXI,
-          amt: amount,
-          isSkipMl: false,
-          entryPoint: 'power-play',
-        );
-        break;
-
       case AssetType.gold:
         BaseUtil().openRechargeModalSheet(
           investmentType: InvestmentType.AUGGOLD99,
@@ -157,9 +134,8 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
         left: 20,
         child: InvestOptionContextMenu(
           currentAsset: _assetType.value,
-          availableAssets: [
+          availableAssets: const [
             AssetType.gold,
-            if (_isOldUser) AssetType.flo10 else AssetType.flo8,
           ],
         ),
       );
@@ -187,11 +163,6 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
     if (assetType.isGold && runs <= 9) {
       return 'Please enter a prediction of more than 10 runs';
     }
-
-    if ((assetType.isFlo8 || assetType.isFlo10) && runs <= 99) {
-      return '''Change the asset to Digital Gold to record a prediction of less than 100 runs''';
-    }
-
     return null;
   }
 

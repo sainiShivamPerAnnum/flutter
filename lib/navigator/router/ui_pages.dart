@@ -90,6 +90,7 @@ const String PowerPlayFTUXPath = '/powerPlayFTUXPath';
 const String PowerPlaySeasonLeaderboardPath = "powerplaySeasonLeaderboardPath";
 const String LendboxBuyViewPath = "/LendboxBuyViewPath";
 const String LendboxCouponViewPath = "/LendboxCouponViewPath";
+const String GoldCouponViewPath = "/GoldCouponViewPath";
 const String AssetSelectionViewPath = "/assetSelectionViewPath";
 const String QuizWebViewPath = "/quizWebViewPath";
 const String BalloonLottieScreenPath = "/bolloonLottieScreenPath";
@@ -195,6 +196,7 @@ enum Pages {
   PlayView,
   YoutubePlayerView,
   EarnMoreReturnsView,
+  GoldCouponView,
   //POWER PLAY
   PowerPlayHome,
   PowerPlayLeaderBoard,
@@ -803,6 +805,11 @@ PageConfiguration LendboxCouponViewConfig = PageConfiguration(
     path: LendboxCouponViewPath,
     uiPage: Pages.LendboxCouponView,
     name: "Lendbox Coupon Screen");
+PageConfiguration GoldCouponViewConfig = PageConfiguration(
+    key: 'GoldCouponViewPath',
+    path: GoldCouponViewPath,
+    uiPage: Pages.GoldCouponView,
+    name: "Gold Coupon Screen");
 
 PageConfiguration AssetSelectionViewConfig = PageConfiguration(
     key: 'AssetSelectionViewPath',

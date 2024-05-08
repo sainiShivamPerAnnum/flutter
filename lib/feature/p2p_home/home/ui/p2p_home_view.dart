@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
+import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/p2p_home/home/widgets/percentage_chip.dart';
 import 'package:felloapp/feature/p2p_home/invest_section/ui/invest_section_view.dart';
@@ -17,10 +18,12 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
+import 'package:super_tooltip/super_tooltip.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../../../core/constants/analytics_events_constants.dart';
 import '../../../../core/service/analytics/analytics_service.dart';
-import '../../../../ui/pages/hometabs/journey/elements/jMilestones.dart';
 import '../../transactions_section/ui/transaction_section_view.dart';
 
 class P2PHomePage extends StatelessWidget {
@@ -52,7 +55,6 @@ class P2PHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = locator<S>();
-    var portfolio = locator<UserService>().userPortfolio.flo;
     final List<String> tabs = <String>[
       locale.myFundsSection,
       locale.investSection,
@@ -69,11 +71,21 @@ class P2PHomeView extends StatelessWidget {
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return <Widget>[
               SliverToBoxAdapter(
-                child: portfolio.balance > 0
-                    ? _InvestedHeader(portfolio: portfolio)
-                    : CachedNetworkImage(
-                        imageUrl: Assets.p2pHomeBanner,
-                      ),
+                child:
+                    Selector<UserService, Tuple2<Portfolio, UserFundWallet?>>(
+                  builder: (_, value, child) => value.item1.flo.balance > 0
+                      ? _InvestedHeader(
+                          portfolio: value.item1.flo,
+                          tickets: value.item2?.tickets,
+                        )
+                      : CachedNetworkImage(
+                          imageUrl: Assets.p2pHomeBanner,
+                        ),
+                  selector: (_, userService) => Tuple2(
+                    userService.userPortfolio,
+                    userService.userFundWallet,
+                  ),
+                ),
               ),
               SliverOverlapAbsorber(
                 handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
@@ -171,8 +183,12 @@ class _TabBar extends StatelessWidget {
 }
 
 class _InvestedHeader extends StatelessWidget {
-  const _InvestedHeader({required this.portfolio});
+  const _InvestedHeader({
+    required this.portfolio,
+    required this.tickets,
+  });
   final FloTiers portfolio;
+  final Map<String, dynamic>? tickets;
 
   @override
   Widget build(BuildContext context) {
@@ -196,27 +212,11 @@ class _InvestedHeader extends StatelessWidget {
                 .colour(UiConstants.kTextColor.withOpacity(0.5)),
           ),
           Text(
-            locale.amount(
-              BaseUtil.formatCompactRupees(portfolio.balance.toDouble()),
-            ),
+            locale.amount(BaseUtil.formatCompactRupees(portfolio.balance)),
             style: TextStyles.rajdhaniSB.title1.colour(UiConstants.kTextColor),
           ),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // AppText.body1(
-              //   locale.oneDayChange(
-              //     BaseUtil.formatRupeesWithNegativeIndicator(
-              //       portfolio.oneDayChange.toDouble(),
-              //     ),
-              //   ),
-              //   color: AppColors.greyBg,
-              // ),
-              // PercentageChip(value: portfolio.oneDayChange.toDouble()),
-            ],
-          ),
           SizedBox(
-            height: SizeConfig.padding22,
+            height: SizeConfig.padding24,
           ),
           Padding(
             padding: EdgeInsets.symmetric(
@@ -225,11 +225,11 @@ class _InvestedHeader extends StatelessWidget {
             child: _MyInvestedAmount(
               totalInvestment: portfolio.principle,
               currentValue: portfolio.absGain,
-              tickets: (portfolio.principle / 500) * 1,
+              tickets: tickets?['fromFlo'],
             ),
           ),
           SizedBox(
-            height: SizeConfig.padding12,
+            height: SizeConfig.padding14,
           ),
         ],
       ),
@@ -262,9 +262,7 @@ class _MyInvestedAmount extends StatelessWidget {
             ),
             SizedBox(height: SizeConfig.padding4),
             Text(
-              locale.amount(
-                BaseUtil.formatCompactRupees(totalInvestment.toDouble()),
-              ),
+              locale.amount(BaseUtil.formatCompactRupees(totalInvestment)),
               style:
                   TextStyles.sourceSansSB.body1.colour(UiConstants.kTextColor),
             )
@@ -282,11 +280,8 @@ class _MyInvestedAmount extends StatelessWidget {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: locale.amount(
-                      BaseUtil.formatCompactRupees(
-                        currentValue.toDouble(),
-                      ),
-                    ),
+                    text: locale
+                        .amount(BaseUtil.formatCompactRupees(currentValue)),
                     style: TextStyles.sourceSansSB.body1
                         .colour(UiConstants.kTextColor),
                   ),
@@ -313,28 +308,20 @@ class _MyInvestedAmount extends StatelessWidget {
                 SizedBox(
                   width: SizeConfig.padding2,
                 ),
-                Tooltip(
-                  margin:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
-                  padding: const EdgeInsets.all(15),
-                  triggerMode: TooltipTriggerMode.tap,
-                  preferBelow: false,
-                  decoration: const ShapeDecoration(
-                    color: Colors.black,
-                    shape: TooltipShapeBorder(
-                      arrowArc: 0.2,
-                      radius: 10,
+                SuperTooltip(
+                  hideTooltipOnTap: true,
+                  backgroundColor: UiConstants.kTextColor4,
+                  popupDirection: TooltipDirection.up,
+                  content: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      locale.ticketsTooltip,
+                      softWrap: true,
+                      style: const TextStyle(
+                        color: UiConstants.kTextColor,
+                      ),
                     ),
-                    shadows: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 4.0,
-                        offset: Offset(2, 2),
-                      )
-                    ],
                   ),
-                  showDuration: const Duration(seconds: 10),
-                  message: 'todo',
                   child: Icon(
                     Icons.info_outline,
                     size: SizeConfig.padding14,
@@ -361,7 +348,7 @@ class _MyInvestedAmount extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: ' every week',
+                    text: locale.everyWeek,
                     style: TextStyles.sourceSans.body4
                         .colour(UiConstants.kTextColor),
                   ),

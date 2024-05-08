@@ -15,7 +15,6 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/fello_badges/ui/fello_badges_home.dart';
-import 'package:felloapp/feature/flo_withdrawals/ui/balloon_lottie_screen.dart';
 import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
@@ -32,7 +31,6 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_details_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_transactions/gold_pro_txns_view.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/my_account_view.dart';
@@ -372,13 +370,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(
             const TicketsTutorialsView(),
             TicketsTutorialViewPageConfig,
-          );
-          break;
-
-        case Pages.BalloonLottieScreen:
-          _addPageData(
-            const BalloonLottieScreen(),
-            BalloonLottieScreenViewConfig,
           );
           break;
 
@@ -947,17 +938,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           widget: const P2PHomePage(),
         );
         break;
-      case "flo10Details":
-      case "flo12Details":
-      case "floFixed":
-        appState.currentAction = PageAction(
-          state: PageState.addWidget,
-          page: FloPremiumDetailsPageConfig,
-          widget: FloPremiumDetailsView(
-            fundType: queryParams['type'] ?? 'UNI_FIXED_6',
-          ),
-        );
-        break;
 
       case 'quickTour':
         // Future.delayed(const Duration(seconds: 2),
@@ -989,26 +969,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           queryParams: queryParams,
         );
         break;
-      case 'lboxBuy12':
-        BaseUtil.openFloBuySheet(
-          floAssetType: Constants.ASSET_TYPE_FLO_FIXED_6,
-          queryParams: queryParams,
-        );
-        break;
-      case 'lboxBuy8':
-        BaseUtil.openFloBuySheet(
-          floAssetType: Constants.ASSET_TYPE_FLO_FELXI,
-          queryParams: queryParams,
-        );
-        break;
-
-      case 'lboxBuy10':
-        BaseUtil.openFloBuySheet(
-          floAssetType: Constants.ASSET_TYPE_FLO_FIXED_3,
-          queryParams: queryParams,
-        );
-        break;
-
       case 'lboxSell':
         BaseUtil()
             .openSellModalSheet(investmentType: InvestmentType.LENDBOXP2P);

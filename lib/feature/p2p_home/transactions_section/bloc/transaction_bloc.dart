@@ -14,7 +14,6 @@ class TransactionBloc
           },
           paginationCallBack: (pageReference) async {
             final response = await transactionHistoryRepo.getUserTransactions(
-              type: "DEPOSIT",
               subtype: "LENDBOXP2P",
               lbActiveFunds: false,
               offset: pageReference,

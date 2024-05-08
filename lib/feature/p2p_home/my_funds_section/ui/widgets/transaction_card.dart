@@ -64,6 +64,9 @@ class TransactionCard extends StatelessWidget {
     final assetInformation = AppConfigV2.instance.lendBoxP2P.firstWhere(
       (e) => e.fundType == transaction.lbMap.fundType,
     );
+    bool isNewAsset = AppConfigV2.instance.lbV2.values
+        .toList()
+        .any((fund) => fund.fundType == transaction.lbMap.fundType);
     return GestureDetector(
       onTap: () {
         Haptic.vibrate();
@@ -199,26 +202,29 @@ class TransactionCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  transaction.lbMap.maturityPref == '0' ||
-                          transaction.lbMap.maturityPref == 'NA'
-                      ? locale.movesToVault
-                      : locale.reInvestOnMaturity,
+                  transaction.lbMap.maturityPref == '1'
+                      ? locale.reInvestOnMaturity
+                      : locale.movesToVault,
                   style: TextStyles.sourceSans.body4.copyWith(
                     color: UiConstants.textGray60,
                   ),
                 ),
                 Text(
-                  transaction.lbMap.maturityPref == '0' ||
-                          transaction.lbMap.maturityPref == 'NA'
-                      ? locale
-                          .loosingReturns(assetInformation.reinvestInterestGain)
-                      : locale
-                          .extraReturns(assetInformation.reinvestInterestGain),
+                  transaction.lbMap.maturityPref == '1'
+                      ? isNewAsset
+                          ? locale.extraReturns(
+                              assetInformation.reinvestInterestGain,
+                            )
+                          : locale.reinvestInSamePlan
+                      : isNewAsset
+                          ? locale.loosingReturns(
+                              assetInformation.reinvestInterestGain,
+                            )
+                          : locale.withdrawMaturity,
                   style: TextStyles.sourceSans.body4.copyWith(
-                    color: transaction.lbMap.maturityPref == '0' ||
-                            transaction.lbMap.maturityPref == 'NA'
-                        ? UiConstants.peach2
-                        : UiConstants.yellow2,
+                    color: transaction.lbMap.maturityPref == '1'
+                        ? UiConstants.yellow2
+                        : UiConstants.peach2,
                   ),
                 )
               ],

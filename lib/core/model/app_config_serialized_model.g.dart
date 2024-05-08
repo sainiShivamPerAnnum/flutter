@@ -95,6 +95,7 @@ LendboxAssetConfiguration _$LendboxAssetConfigurationFromJson(
       assetName: json['assetName'] as String? ?? '',
       highlights: json['highlights'] as String? ?? '',
       description: json['description'] as String? ?? '',
+      minAmount: json['minAmount'] as num? ?? 100,
     );
 
 OverrideUrls _$OverrideUrlsFromJson(Map<String, dynamic> json) => OverrideUrls(

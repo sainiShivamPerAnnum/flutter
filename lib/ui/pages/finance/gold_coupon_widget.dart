@@ -1,8 +1,9 @@
+import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -11,20 +12,153 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'augmont/gold_buy/augmont_buy_vm.dart';
 
-import '../../../../../../core/model/coupon_card_model.dart';
-import '../../../../../../util/assets.dart';
+class GoldCouponWidget extends StatelessWidget {
+  const GoldCouponWidget(
+    List<CouponModel>? coupons,
+    this.model, {
+    required this.onTap,
+    super.key,
+  }) : _coupons = coupons ?? const <CouponModel>[];
 
-class FloCouponPage extends StatelessWidget {
-  FloCouponPage({required this.model1, super.key});
-  final LendboxBuyViewModel? model1;
+  final List<CouponModel> _coupons;
+  final ValueChanged<CouponModel> onTap;
+  final GoldBuyViewModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    if (_coupons.isEmpty) return const SizedBox.shrink();
+    final locale = locator<S>();
+    return Container(
+      padding:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                locale.btnApplyCoupon,
+                style: TextStyles.sourceSansSB.body1,
+              ),
+              GestureDetector(
+                onTap: () {
+                  if (!model.isBuyInProgess) {
+                    model.buyFieldNode.unfocus();
+                    model.showOfferModal(model);
+                  }
+                },
+                child: Text(
+                  locale.saveViewAll,
+                  style: TextStyles.sourceSans.body3
+                      .colour(UiConstants.kTabBorderColor),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: SizeConfig.padding25,
+          ),
+          CouponViewV2(
+            model: _coupons[0],
+            goldBuymodel: model,
+            onTap: onTap,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CouponViewV2 extends StatelessWidget {
+  const CouponViewV2({
+    required this.model,
+    required this.goldBuymodel,
+    required this.onTap,
+    super.key,
+  });
+
+  final CouponModel model;
+  final ValueChanged<CouponModel> onTap;
+  final GoldBuyViewModel goldBuymodel;
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = locator<S>();
+    return goldBuymodel.focusCoupon != null
+        ? IndividualCouponView(
+            appliedCode: goldBuymodel.appliedCoupon?.code,
+            model: goldBuymodel.focusCoupon!,
+            desc: goldBuymodel.focusCoupon!.description!,
+            goldBuymodel: goldBuymodel,
+            disabledDesc: goldBuymodel.focusCoupon!.disabledDescription!,
+            ticketMultiplier: goldBuymodel.focusCoupon!.ticketMultiplier!,
+            icon: goldBuymodel.focusCoupon!.icon,
+            isDisabled: goldBuymodel.focusCoupon!.couponType == "SUPER_FELLO" &&
+                locator<UserService>().baseUser!.superFelloLevel !=
+                    SuperFelloLevel.SUPER_FELLO,
+            onTap: (coupon) => goldBuymodel.applyCoupon(
+              coupon.code,
+              false,
+            ),
+          )
+        : GestureDetector(
+            onTap: () {
+              goldBuymodel.buyFieldNode.unfocus();
+              goldBuymodel.showOfferModal(goldBuymodel);
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.padding8,
+                horizontal: SizeConfig.padding16,
+              ),
+              decoration: BoxDecoration(
+                color: Color(0xff2A343A),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(
+                    SizeConfig.padding10,
+                  ),
+                ),
+              ),
+              child: Row(
+                children: [
+                  AppImage(
+                    Assets.ticketTilted,
+                    width: SizeConfig.iconSize0,
+                    height: SizeConfig.iconSize0,
+                    color: UiConstants.teal2,
+                  ),
+                  SizedBox(
+                    width: SizeConfig.padding8,
+                  ),
+                  Text(
+                    locale.viewAllCoupons,
+                    style: TextStyles.sourceSansSB.body2,
+                  ),
+                  const Spacer(),
+                  const Icon(
+                    Icons.chevron_right,
+                    color: UiConstants.kTextColor,
+                  )
+                ],
+              ),
+            ),
+          );
+  }
+}
+
+class GoldCouponPage extends StatelessWidget {
+  GoldCouponPage({required this.model, super.key});
+  final GoldBuyViewModel? model;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController couponCodeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final locale = locator<S>();
     return ChangeNotifierProvider.value(
-      value: model1,
+      value: model,
       child: Scaffold(
         backgroundColor: UiConstants.kAnimationBackGroundColor,
         appBar: AppBar(
@@ -45,7 +179,7 @@ class FloCouponPage extends StatelessWidget {
             style: TextStyles.rajdhaniSB.title5,
           ),
         ),
-        body: Consumer<LendboxBuyViewModel>(
+        body: Consumer<GoldBuyViewModel>(
           builder: (context, model, child) {
             return Padding(
               padding: EdgeInsets.symmetric(
@@ -111,12 +245,8 @@ class FloCouponPage extends StatelessWidget {
                                     EdgeInsets.only(top: SizeConfig.padding16),
                                 child: IndividualCouponView(
                                   model: model.couponList![i],
-                                  ticketMultiplier:
-                                      model.couponList![i].ticketMultiplier!,
                                   appliedCode: model.appliedCoupon?.code,
-                                  icon: model.couponList![i].icon,
                                   desc: model.couponList![i].description!,
-                                  lendboxBuyViewModel: model,
                                   isDisabled: model.couponList![i].couponType ==
                                           "SUPER_FELLO" &&
                                       locator<UserService>()
@@ -125,12 +255,14 @@ class FloCouponPage extends StatelessWidget {
                                           SuperFelloLevel.SUPER_FELLO,
                                   disabledDesc:
                                       model.couponList![i].disabledDescription!,
-                                  onTap: (coupon) {
-                                    model.applyCoupon(
-                                      coupon.code,
-                                      false,
-                                    );
-                                  },
+                                  ticketMultiplier:
+                                      model.couponList![i].ticketMultiplier!,
+                                  icon: model.couponList![i].icon,
+                                  goldBuymodel: model,
+                                  onTap: (coupon) => model.applyCoupon(
+                                    coupon.code,
+                                    false,
+                                  ),
                                 ),
                               ),
                       ),
@@ -153,7 +285,7 @@ class IndividualCouponView extends StatelessWidget {
     required this.model,
     required this.desc,
     required this.onTap,
-    required this.lendboxBuyViewModel,
+    required this.goldBuymodel,
     required this.disabledDesc,
     required this.ticketMultiplier,
     required this.isDisabled,
@@ -165,7 +297,7 @@ class IndividualCouponView extends StatelessWidget {
   final String desc;
   final String disabledDesc;
   final ValueChanged<CouponModel> onTap;
-  final LendboxBuyViewModel lendboxBuyViewModel;
+  final GoldBuyViewModel goldBuymodel;
   final int ticketMultiplier;
   final bool isDisabled;
 
@@ -177,9 +309,9 @@ class IndividualCouponView extends StatelessWidget {
         if (isDisabled) {
           return;
         }
-        if (lendboxBuyViewModel.appliedCoupon == null ||
-            lendboxBuyViewModel.appliedCoupon?.code != model.code) {
-          if (!lendboxBuyViewModel.couponApplyInProgress) onTap(model);
+        if (goldBuymodel.appliedCoupon == null ||
+            goldBuymodel.appliedCoupon?.code != model.code) {
+          if (!goldBuymodel.couponApplyInProgress) onTap(model);
         }
       },
       child: Container(
@@ -212,7 +344,7 @@ class IndividualCouponView extends StatelessWidget {
                   height: SizeConfig.iconSize0,
                   color: model.minPurchase! <=
                           int.parse(
-                            lendboxBuyViewModel.amountController!.text,
+                            goldBuymodel.goldAmountController!.text,
                           )
                       ? UiConstants.teal2
                       : UiConstants.textGray70,
@@ -223,8 +355,8 @@ class IndividualCouponView extends StatelessWidget {
                   style: TextStyles.sourceSansSB.body2,
                 ),
                 const Spacer(),
-                lendboxBuyViewModel.couponApplyInProgress &&
-                        lendboxBuyViewModel.couponCode == model.code
+                goldBuymodel.couponApplyInProgress &&
+                        goldBuymodel.couponCode == model.code
                     ? const SpinKitThreeBounce(
                         color: UiConstants.teal2,
                         size: 14,
@@ -235,8 +367,8 @@ class IndividualCouponView extends StatelessWidget {
                               Text(
                                 model.minPurchase! <=
                                         int.parse(
-                                          lendboxBuyViewModel
-                                              .amountController!.text,
+                                          goldBuymodel
+                                              .goldAmountController!.text,
                                         )
                                     ? locale.txnApply
                                     : locale.addAmountCoupons,
@@ -261,13 +393,13 @@ class IndividualCouponView extends StatelessWidget {
             Text(
               model.minPurchase! <=
                       int.parse(
-                        lendboxBuyViewModel.amountController!.text,
+                        goldBuymodel.goldAmountController!.text,
                       )
                   ? desc
                   : disabledDesc,
               style: TextStyles.sourceSans.body4.colour(model.minPurchase! <=
                       int.parse(
-                        lendboxBuyViewModel.amountController!.text,
+                        goldBuymodel.goldAmountController!.text,
                       )
                   ? UiConstants.kFAQsAnswerColor
                   : UiConstants.peach2),
@@ -286,7 +418,7 @@ class IndividualCouponView extends StatelessWidget {
                     style: TextStyles.sourceSansSB.body3.colour(
                       model.minPurchase! <=
                                   int.parse(
-                                    lendboxBuyViewModel.amountController!.text,
+                                    goldBuymodel.goldAmountController!.text,
                                   ) &&
                               !isDisabled
                           ? UiConstants.teal2

@@ -1167,10 +1167,7 @@ class CustomSwitch extends StatefulWidget {
     this.onChanged,
     this.onTap,
     super.key,
-  }) : assert(
-          (onTap != null) ^ (onChanged != null),
-          'Either client is allowed to use onTap or onChanged',
-        );
+  });
 
   @override
   State<CustomSwitch> createState() => _CustomSwitchState();

@@ -22,8 +22,6 @@ import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/elements/video_player/app_video_player.dart';
 import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_basic_card.dart';
-import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_premium_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_hero_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_rate_widget.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
@@ -253,10 +251,6 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                             SizedBox(
                               height: SizeConfig.padding14,
                             ),
-                            if (!_isGold) ...[
-                              FloPremiumSection(model: model),
-                              FloBasicCard(model: model),
-                            ],
                             if (!isNewUser) ...[
                               MiniTransactionCard(
                                 investmentType: widget.type,
@@ -746,7 +740,7 @@ class _BuildOwnAsset extends StatelessWidget {
               right: SizeConfig.pageHorizontalMargins / 2,
             ),
             child: const FloBalanceBriefRow(
-              tier: Constants.ASSET_TYPE_LENDBOX,
+              tier: 'ASSET_TYPE_LENDBOX',
             ),
           );
   }
