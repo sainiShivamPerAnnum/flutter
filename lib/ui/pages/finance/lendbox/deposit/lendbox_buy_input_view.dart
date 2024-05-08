@@ -152,7 +152,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                           locator<BackButtonActions>()
                               .showWantToCloseTransactionBottomSheet(
                                   double.parse(
-                                    widget.model.amountController!.text,
+                                    widget.model.buyAmount.toString(),
                                   ).round(),
                                   InvestmentType.LENDBOXP2P, () {
                             widget.model.initiateBuy();

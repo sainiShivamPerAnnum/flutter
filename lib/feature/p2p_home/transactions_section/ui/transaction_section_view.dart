@@ -8,6 +8,7 @@ import 'package:felloapp/feature/p2p_home/ui/shared/footer.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transaction_details_view.dart';
+import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/bloc_pagination/bloc_pagination.dart';
@@ -19,7 +20,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class TransactionSection extends StatefulWidget {
   const TransactionSection({
@@ -176,6 +176,10 @@ class _TransactionTile extends StatelessWidget {
             ),
             Row(
               children: [
+                TransactionStatusChip(
+                  color: getTileColor(transaction.tranStatus),
+                  status: transaction.tranStatus,
+                ),
                 Text(
                   locale.amount(transaction.amount.abs().round().toString()),
                   style: TextStyles.sourceSansSB.body2,
@@ -194,4 +198,20 @@ class _TransactionTile extends StatelessWidget {
       ),
     );
   }
+}
+
+Color getTileColor(String? type) {
+  if (type == UserTransaction.TRAN_STATUS_CANCELLED ||
+      type == UserTransaction.TRAN_STATUS_FAILED) {
+    return Colors.redAccent;
+  } else if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
+    return UiConstants.kTabBorderColor;
+  } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
+    return Colors.amber;
+  } else if (type == UserTransaction.TRAN_STATUS_PROCESSING) {
+    return Colors.amber;
+  } else if (type == UserTransaction.TRAN_STATUS_REFUNDED) {
+    return Colors.blue;
+  }
+  return Colors.black54;
 }

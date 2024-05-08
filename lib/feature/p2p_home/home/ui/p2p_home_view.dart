@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
+import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/p2p_home/home/widgets/percentage_chip.dart';
 import 'package:felloapp/feature/p2p_home/invest_section/ui/invest_section_view.dart';
@@ -17,6 +18,8 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../../../ui/pages/hometabs/journey/elements/jMilestones.dart';
 import '../../transactions_section/ui/transaction_section_view.dart';
@@ -50,8 +53,6 @@ class P2PHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = locator<S>();
-    var portfolio = locator<UserService>().userPortfolio.flo;
-    var tickets = locator<UserService>().userFundWallet?.tickets;
     final List<String> tabs = <String>[
       locale.myFundsSection,
       locale.investSection,
@@ -68,14 +69,19 @@ class P2PHomeView extends StatelessWidget {
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return <Widget>[
               SliverToBoxAdapter(
-                child: portfolio.balance > 0
-                    ? _InvestedHeader(
-                        portfolio: portfolio,
-                        tickets: tickets,
-                      )
-                    : CachedNetworkImage(
-                        imageUrl: Assets.p2pHomeBanner,
-                      ),
+                child:
+                    Selector<UserService, Tuple2<Portfolio, UserFundWallet?>>(
+                  builder: (_, value, child) => value.item1.flo.balance > 0
+                      ? _InvestedHeader(
+                          portfolio: value.item1.flo,
+                          tickets: value.item2?.tickets,
+                        )
+                      : CachedNetworkImage(
+                          imageUrl: Assets.p2pHomeBanner,
+                        ),
+                  selector: (_, userService) => Tuple2(
+                      userService.userPortfolio, userService.userFundWallet),
+                ),
               ),
               SliverOverlapAbsorber(
                 handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
@@ -180,9 +186,7 @@ class _InvestedHeader extends StatelessWidget {
             style: TextStyles.rajdhaniSB.body2
                 .colour(UiConstants.kTextColor.withOpacity(0.5)),
           ),
-          Text(
-              locale.amount(
-                  BaseUtil.formatCompactRupees(portfolio.balance.toDouble())),
+          Text(locale.amount(BaseUtil.formatCompactRupees(portfolio.balance)),
               style:
                   TextStyles.rajdhaniSB.title1.colour(UiConstants.kTextColor)),
           SizedBox(
@@ -230,9 +234,7 @@ class _MyInvestedAmount extends StatelessWidget {
             Text(locale.floInvested,
                 style: TextStyles.sourceSans.body3.colour(UiConstants.greyBg)),
             SizedBox(height: SizeConfig.padding4),
-            Text(
-                locale.amount(
-                    BaseUtil.formatCompactRupees(totalInvestment.toDouble())),
+            Text(locale.amount(BaseUtil.formatCompactRupees(totalInvestment)),
                 style: TextStyles.sourceSansSB.body1
                     .colour(UiConstants.kTextColor))
           ],
@@ -247,8 +249,8 @@ class _MyInvestedAmount extends StatelessWidget {
               TextSpan(
                 children: [
                   TextSpan(
-                      text: locale.amount(BaseUtil.formatCompactRupees(
-                          currentValue.toDouble())),
+                      text: locale
+                          .amount(BaseUtil.formatCompactRupees(currentValue)),
                       style: TextStyles.sourceSansSB.body1
                           .colour(UiConstants.kTextColor)),
                   WidgetSpan(

@@ -951,7 +951,7 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                           ),
                           const Spacer(),
                           Text(
-                            "$totalTicketsEarned",
+                            "${widget.model.totalTickets}",
                             style: TextStyles.sourceSansSB.body1,
                           ),
                         ],

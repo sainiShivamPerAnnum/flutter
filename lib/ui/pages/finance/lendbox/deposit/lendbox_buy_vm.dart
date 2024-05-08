@@ -371,7 +371,7 @@ class LendboxBuyViewModel extends BaseViewModel
         isIntentFlow: assetOptionsModel!.data.intent,
       ),
     );
-    await locator<RootViewModel>().pullToRefresh();
+
     _isBuyInProgress = false;
     forcedBuy = false;
     notifyListeners();
@@ -556,8 +556,9 @@ class LendboxBuyViewModel extends BaseViewModel
       return '';
     }
 
-    numberOfTambolaTickets = parsedFloAmount ~/ tambolaCost;
-    totalTickets = numberOfTambolaTickets! * tambolaMultiplier;
+    numberOfTambolaTickets =
+        (parsedFloAmount ~/ tambolaCost) * tambolaMultiplier;
+    totalTickets = numberOfTambolaTickets!;
 
     happyHourTickets =
         showHappyHour && happyHourModel?.data?.rewards?[0].type == 'tt'
@@ -565,8 +566,7 @@ class LendboxBuyViewModel extends BaseViewModel
             : null;
 
     if (parsedFloAmount >= minAmount && happyHourTickets != null) {
-      totalTickets =
-          (numberOfTambolaTickets! * tambolaMultiplier) + happyHourTickets!;
+      totalTickets = (numberOfTambolaTickets!) + happyHourTickets!;
       showInfoIcon = true;
     } else {
       showInfoIcon = false;
@@ -715,6 +715,7 @@ class LendboxBuyViewModel extends BaseViewModel
           // updateGoldAmount();
           showMaxCapText = false;
           showMinCapText = false;
+          await AppState.backButtonDispatcher!.didPopRoute();
           await animationController?.forward();
           updateFieldWidth();
         }

@@ -91,9 +91,7 @@ class _LendboxSuccessViewState extends State<LendboxSuccessView> {
       );
     }
 
-    while (AppState.screenStack.length > 1) {
-      await AppState.backButtonDispatcher!.didPopRoute();
-    }
+    await AppState.backButtonDispatcher!.didPopRoute();
 
     AppState.delegate!.appState.setCurrentTabIndex =
         DynamicUiUtils.navBar.indexWhere((element) => element == 'SV');

@@ -20,8 +20,14 @@ class P2PInvestmentCalculator extends StatefulWidget {
 class _P2PInvestmentCalculatorState extends State<P2PInvestmentCalculator> {
   final _amountNotifier = ValueNotifier(100);
   final _durationNotifier = ValueNotifier(2);
-  final _assetSelected = ValueNotifier(1);
+  final _assetSelected = ValueNotifier(0);
   final assets = AppConfigV2.instance.lbV2.values.toList();
+
+  @override
+  void initState() {
+    super.initState();
+    _amountNotifier.value = assets[0].minAmount.toInt();
+  }
 
   @override
   void dispose() {
@@ -79,9 +85,9 @@ class _P2PInvestmentCalculatorState extends State<P2PInvestmentCalculator> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ValueListenableBuilder(
-                valueListenable: _amountNotifier,
-                builder: (context, value, child) {
+              ListenableBuilder(
+                listenable: Listenable.merge([_amountNotifier, _assetSelected]),
+                builder: (context, child) {
                   return CalculatorField(
                     onChangeEnd: (x) => _amountNotifier.value = x,
                     requiresQuickButtons: false,
@@ -102,8 +108,8 @@ class _P2PInvestmentCalculatorState extends State<P2PInvestmentCalculator> {
                       })
                     ],
                     maxValue: 100000,
-                    minValue: 100,
-                    value: value,
+                    minValue: assets[_assetSelected.value].minAmount.toDouble(),
+                    value: _amountNotifier.value,
                   );
                 },
               ),
@@ -150,7 +156,10 @@ class _P2PInvestmentCalculatorState extends State<P2PInvestmentCalculator> {
                     runItemCount: 3,
                     itemCount: assets.length,
                     itemBuilder: (context, index) => GestureDetector(
-                      onTap: () => _assetSelected.value = index,
+                      onTap: () {
+                        _amountNotifier.value = assets[index].minAmount.toInt();
+                        _assetSelected.value = index;
+                      },
                       child: Container(
                         padding: EdgeInsets.symmetric(
                           vertical: SizeConfig.padding8,

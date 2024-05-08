@@ -227,10 +227,6 @@ class FloPlanWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isLendboxOldUser =
-        locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
-    List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
-
     final assets = AppConfigV2.instance.lbV2.values.toList();
     return Container(
       padding: EdgeInsets.symmetric(

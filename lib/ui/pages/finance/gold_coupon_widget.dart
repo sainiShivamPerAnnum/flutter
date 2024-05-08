@@ -208,7 +208,6 @@ class GoldCouponPage extends StatelessWidget {
                           if (_formKey.currentState!.validate()) {
                             model.applyCoupon(
                                 couponCodeController.text.trim(), true);
-                            AppState.backButtonDispatcher!.didPopRoute();
                           }
                         },
                       ),

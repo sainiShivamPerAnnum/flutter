@@ -736,6 +736,7 @@ class GoldBuyViewModel extends BaseViewModel
           updateGoldAmount();
           showMaxCapText = false;
           showMinCapText = false;
+          await AppState.backButtonDispatcher!.didPopRoute();
           await animationController?.forward();
         }
         checkForSpecialCoupon(response.model!);

@@ -549,12 +549,3 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
         ));
   }
 }
-
-class TransactionTypeChoiceSelector extends StatelessWidget {
-  const TransactionTypeChoiceSelector({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}

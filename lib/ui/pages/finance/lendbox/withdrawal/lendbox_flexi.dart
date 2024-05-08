@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,6 @@ import '../../../../../util/locator.dart';
 import '../../../../architecture/base_view.dart';
 import '../../../../elements/appbar/appbar.dart';
 import '../../../static/app_widget.dart';
-import 'lendbox_withdrawal_view.dart';
 import 'lendbox_withdrawal_vm.dart';
 
 class FlexiBalanceView extends StatelessWidget {
@@ -169,16 +169,9 @@ class FlexiBalanceView extends StatelessWidget {
                   child: SecondaryButton(
                     onPressed: () {
                       Haptic.vibrate();
-                      BaseUtil.openModalBottomSheet(
-                        addToScreenStack: true,
-                        enableDrag: false,
-                        hapticVibrate: true,
-                        isBarrierDismissible: false,
-                        backgroundColor: Colors.transparent,
-                        isScrollControlled: true,
-                        content: LendboxWithdrawalView(
-                          onWithDrawalSubitted: onWithDrawalSubitted,
-                        ),
+                      BaseUtil().openSellModalSheet(
+                        investmentType: InvestmentType.LENDBOXP2P,
+                        onWithDrawalSubitted: onWithDrawalSubitted,
                       );
                     },
                     label: locale.withdraw,
