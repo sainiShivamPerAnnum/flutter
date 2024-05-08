@@ -19,6 +19,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/constants/analytics_events_constants.dart';
+import '../../../../core/service/analytics/analytics_service.dart';
+
 class TransactionSection extends StatefulWidget {
   const TransactionSection({
     super.key,
@@ -125,11 +128,29 @@ class _TransactionTile extends StatelessWidget {
   const _TransactionTile(this.transaction, {required this.transactionBloc});
   final UserTransaction transaction;
   final TransactionBloc transactionBloc;
+  void trackTransactionTileTapped({required String assetName}) {
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.transactionDetailsScreen,
+      properties: {
+        "transaction_date": DateFormat("ddMMyyyy").format(
+          DateTime.fromMillisecondsSinceEpoch(
+            transaction.timestamp!.millisecondsSinceEpoch,
+          ),
+        ),
+        "amount": transaction.amount.round(),
+        "transaction_type": transaction.type,
+        "asset": assetName,
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     String formattedDate = DateFormat(" 'on' ddMMM, yyyy 'at' hh:mm a").format(
-        DateTime.fromMillisecondsSinceEpoch(
-            transaction.timestamp!.millisecondsSinceEpoch));
+      DateTime.fromMillisecondsSinceEpoch(
+        transaction.timestamp!.millisecondsSinceEpoch,
+      ),
+    );
     final assetInformation = AppConfigV2.instance.lendBoxP2P.firstWhere(
       (e) => e.fundType == transaction.lbMap.fundType,
     );
@@ -142,6 +163,7 @@ class _TransactionTile extends StatelessWidget {
         onTap: () {
           final fundBloc = context.read<MyFundsBloc>();
           Haptic.vibrate();
+          trackTransactionTileTapped(assetName: assetInformation.assetName);
           AppState.delegate!.appState.currentAction = PageAction(
             state: PageState.addWidget,
             page: TransactionDetailsPageConfig,

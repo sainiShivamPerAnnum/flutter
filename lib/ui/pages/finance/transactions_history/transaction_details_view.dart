@@ -29,6 +29,8 @@ import 'package:open_filex/open_filex.dart';
 import '../../../../base_util.dart';
 import '../../../../core/constants/analytics_events_constants.dart';
 import '../../../../core/service/analytics/analytics_service.dart';
+import '../../../../core/service/notifier_services/user_service.dart';
+import '../../../../util/constants.dart';
 import 'transaction_details_vm.dart';
 
 class TransactionDetailsPage extends StatefulWidget {
@@ -480,6 +482,16 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                       ),
                       _ReInvestNudge(
                         initialValue: model.transactionPrefence == '1',
+                        assetName:
+                            isGold ? locale.digitalGoldText : floSubtype(),
+                        currentAmount: widget.txn.amount +
+                            (widget.txn.lbMap.gainAmount ?? 0),
+                        investedAmount: widget.txn.amount,
+                        maturityAt: DateFormat('dd/MM/yyyy').format(
+                          DateTime.fromMicrosecondsSinceEpoch(
+                            widget.txn.lbMap.maturityAt!.microsecondsSinceEpoch,
+                          ),
+                        ),
                         onChanged: (value) async {
                           var res = await model.updateMaturityPreference(value);
                           if (widget.onUpdatePrefrence != null && res) {
@@ -586,12 +598,20 @@ class _ReInvestNudge extends StatelessWidget {
   const _ReInvestNudge({
     required this.initialValue,
     required this.onChanged,
+    required this.assetName,
+    required this.investedAmount,
+    required this.maturityAt,
+    required this.currentAmount,
     this.isLoading = false,
   });
 
   final bool initialValue;
   final ValueChanged<bool> onChanged;
   final bool isLoading;
+  final String assetName;
+  final num investedAmount;
+  final String maturityAt;
+  final num currentAmount;
 
   void trackDecideButtonTap(
     bool switchVal,
@@ -599,7 +619,14 @@ class _ReInvestNudge extends StatelessWidget {
     locator<AnalyticsService>().track(
       eventName: AnalyticsEvents.decideOnDepositCardTapped,
       properties: {
-        "Updated Value": switchVal,
+        "updated_value": switchVal,
+        "asset_name": assetName,
+        "new_user": locator<UserService>().userSegments.contains(
+              Constants.NEW_USER,
+            ),
+        "invested_amount": investedAmount,
+        "current_amount": currentAmount,
+        "maturity_date": maturityAt
       },
     );
   }

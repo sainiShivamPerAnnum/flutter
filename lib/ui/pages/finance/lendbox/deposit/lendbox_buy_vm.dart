@@ -321,7 +321,7 @@ class LendboxBuyViewModel extends BaseViewModel
     log(res.model?.message ?? '');
   }
 
-  Future<void> initiateBuy() async {
+  Future<void> initiateBuy({bool? shouldReinvestOnMaturity}) async {
     log("amountController ${amountController?.text}");
     if (couponApplyInProgress || _isBuyInProgress) return;
 
@@ -349,7 +349,8 @@ class LendboxBuyViewModel extends BaseViewModel
 
     _isBuyInProgress = true;
     notifyListeners();
-    _trackCheckOut(amount.toDouble());
+    _trackCheckOut(amount.toDouble(),
+        shouldReinvestOnMaturity: shouldReinvestOnMaturity);
     await _txnService.initiateTransaction(
       FloPurchaseDetails(
         floAssetType: floAssetType,
@@ -393,7 +394,7 @@ class LendboxBuyViewModel extends BaseViewModel
     }
   }
 
-  void _trackCheckOut(double? amount) {
+  void _trackCheckOut(double? amount, {bool? shouldReinvestOnMaturity}) {
     _txnService.currentTransactionAnalyticsDetails = {
       "Asset": "Flo",
       "Amount Entered": amount ?? 0,
@@ -405,6 +406,7 @@ class LendboxBuyViewModel extends BaseViewModel
         extraValuesMap: {
           "Asset": floAssetType,
           "Amount Entered": amount ?? 0,
+          "reinvestment_preference": shouldReinvestOnMaturity
         },
       ),
     );
@@ -513,8 +515,9 @@ class LendboxBuyViewModel extends BaseViewModel
       }
       // if (couponList?[0].priority == 1) focusCoupon = couponList?[0];
       // initial coupon pending?
-      focusCoupon = couponList!.firstWhere((element) =>
-          element.minPurchase! <= int.parse(amountController!.text));
+      focusCoupon = couponList!.firstWhere(
+        (element) => element.minPurchase! <= int.parse(amountController!.text),
+      );
       showCoupons = true;
     }
   }
@@ -572,7 +575,8 @@ class LendboxBuyViewModel extends BaseViewModel
     amountController!.text = buyAmount!.toString();
 
     focusCoupon = couponList!.firstWhereOrNull(
-        (element) => element.minPurchase! <= int.parse(amountController!.text));
+      (element) => element.minPurchase! <= int.parse(amountController!.text),
+    );
     appliedCoupon = null;
 
     analyticsService.track(
@@ -621,7 +625,8 @@ class LendboxBuyViewModel extends BaseViewModel
     updateFieldWidth();
 
     focusCoupon = couponList!.firstWhereOrNull(
-        (element) => element.minPurchase! <= int.parse(amountController!.text));
+      (element) => element.minPurchase! <= int.parse(amountController!.text),
+    );
 
     appliedCoupon = null;
   }
@@ -742,7 +747,8 @@ class LendboxBuyViewModel extends BaseViewModel
 
         appliedCoupon = response.model;
         focusCoupon = couponList!.firstWhereOrNull(
-            (element) => element.code! == response.model!.code);
+          (element) => element.code! == response.model!.code,
+        );
         BaseUtil.showPositiveAlert(
           locale.couponAppliedSucc,
           response.model?.message,

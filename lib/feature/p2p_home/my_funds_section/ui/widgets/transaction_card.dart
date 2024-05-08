@@ -14,9 +14,12 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../core/constants/analytics_events_constants.dart';
 import '../../../../../core/service/analytics/analytics_service.dart';
+import '../../../../../core/service/notifier_services/user_service.dart';
+import '../../../../../util/constants.dart';
 
 class TransactionCard extends StatelessWidget {
   const TransactionCard({
@@ -28,18 +31,29 @@ class TransactionCard extends StatelessWidget {
   final UserTransaction transaction;
   final MyFundsBloc fundBloc;
 
-  void trackTransactionDetailsScreen() {
-    // ! TODO(@hirdesh)
+  void trackDepositCardInFloSlabTapped({
+    required LendboxAssetConfiguration assetInformation,
+    required num totalInvested,
+    required num currentValue,
+    required String maturityDate,
+  }) {
+    final kycStatus = locator<UserService>().baseUser!.isKycVerified;
     locator<AnalyticsService>().track(
-      eventName: AnalyticsEvents.transactionDetailsScreen,
+      eventName: AnalyticsEvents.depositCardInFloSlabTapped,
       properties: {
-        // "asset name": "${widget.model.config.interest}% Flo",
-        // "new user": locator<UserService>().userSegments.contains(
-        //       Constants.NEW_USER,
-        //     ),
-        // "invested amount": investedAmount,
-        // "current amount": currentAmount,
-        // "maturity date": maturityDate
+        "type": assetInformation.fundType,
+        "interest": assetInformation.interest,
+        "total_invested": totalInvested,
+        // "total_transaction": ,
+        "kyc_status": kycStatus,
+
+        "asset_name": assetInformation.assetName,
+        "new_user": locator<UserService>().userSegments.contains(
+              Constants.NEW_USER,
+            ),
+
+        "current_amount": currentValue,
+        "maturity_date": maturityDate
       },
     );
   }
@@ -53,7 +67,17 @@ class TransactionCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Haptic.vibrate();
-        trackTransactionDetailsScreen();
+        trackDepositCardInFloSlabTapped(
+          assetInformation: assetInformation,
+          totalInvested: transaction.amount,
+          currentValue:
+              transaction.amount + (transaction.lbMap.gainAmount ?? 0),
+          maturityDate: DateFormat('dd/MMM/yyyy').format(
+            DateTime.fromMicrosecondsSinceEpoch(
+              transaction.lbMap.maturityAt!.microsecondsSinceEpoch,
+            ),
+          ),
+        );
         final transactionBloc = context.read<TransactionBloc>();
         AppState.delegate!.appState.currentAction = PageAction(
           state: PageState.addWidget,

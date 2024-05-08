@@ -204,6 +204,7 @@ class AnalyticsEvents {
   static const investFloBannerTapped = "Invest on Flo Slab Tapped";
   static const depositCardInFloSlabTapped = "Deposit Card in Flo Slab Tapped";
   static const decideOnDepositCardTapped = "Decide on Deposit Card Tapped";
+  static const returnCalculatorUsed = "Return Calculator Used";
   static const decisionOnDepositCard = "Decision on Deposit Card";
   static const felloFloTabChanged = "Fello Flo Tab changed";
   static const transactionDetailsScreen = "Transaction Details Screen";

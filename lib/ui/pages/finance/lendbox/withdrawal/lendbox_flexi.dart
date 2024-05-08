@@ -9,6 +9,7 @@ import '../../../../../core/service/analytics/analytics_service.dart';
 import '../../../../../core/service/notifier_services/user_service.dart';
 import '../../../../../navigator/app_state.dart';
 import '../../../../../navigator/router/ui_pages.dart';
+import '../../../../../util/constants.dart';
 import '../../../../../util/haptic.dart';
 import '../../../../../util/localization/generated/l10n.dart';
 import '../../../../../util/locator.dart';
@@ -28,16 +29,14 @@ class FlexiBalanceView extends StatefulWidget {
 class _FlexiBalanceViewState extends State<FlexiBalanceView> {
   final UserService _usrService = locator<UserService>();
 
-  void trackBasicCardWithdrawTap() {
+  void trackBasicCardWithdrawTap(num withdrawableAmount) {
     locator<AnalyticsService>().track(
       eventName: AnalyticsEvents.withdrawFloTapped,
       properties: {
-        // "asset name": isLendboxOldUser ? "10% Flo" : "8% Flo",
-        // "new user":
-        //     locator<UserService>().userSegments.contains(Constants.NEW_USER),
-        // "invested amount": getPrinciple(isLendboxOldUser),
-        // "current amount": getBalance(isLendboxOldUser),
-        // "lockin period": lockIn,
+        "new user":
+            locator<UserService>().userSegments.contains(Constants.NEW_USER),
+        "withdrawable_amount": withdrawableAmount,
+        "interest_rate": '8%',
       },
     );
   }
@@ -172,7 +171,8 @@ class _FlexiBalanceViewState extends State<FlexiBalanceView> {
                   child: SecondaryButton(
                     onPressed: () {
                       Haptic.vibrate();
-                      trackBasicCardWithdrawTap();
+                      trackBasicCardWithdrawTap(
+                          model.withdrawableQuantity?.amount ?? 0.toDouble());
                       BaseUtil.openModalBottomSheet(
                         addToScreenStack: true,
                         enableDrag: false,

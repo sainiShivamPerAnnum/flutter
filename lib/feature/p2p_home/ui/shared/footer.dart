@@ -9,38 +9,33 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/analytics_events_constants.dart';
 import '../../../../core/service/analytics/analytics_service.dart';
+import '../../../../core/service/notifier_services/user_service.dart';
 import '../../../../util/locator.dart';
 
 class Footer extends StatelessWidget {
   const Footer({super.key});
   void trackSaveDailyButtonTapped() {
-    // ! TODO(@hirdesh)
+    final totalInvestment =
+        locator<UserService>().userPortfolio.flo.balance.toDouble();
     locator<AnalyticsService>().track(
       eventName: AnalyticsEvents.saveDailyTappedOnAssetDetailPage,
       properties: {
-        // "asset name": "${widget.model.config.interest}% Flo",
-        // "new user": locator<UserService>().userSegments.contains(
-        //       Constants.NEW_USER,
-        //     ),
-        // "invested amount": investedAmount,
-        // "current amount": currentAmount,
-        // "maturity date": maturityDate
+        // ! TODO(@hirdesh)
+        // "total_transactions": ,
+        "total_investments": totalInvestment,
       },
     );
   }
 
   void trackSaveOnceButtonTapped() {
     // ! TODO(@hirdesh)
+    final totalInvestment =
+        locator<UserService>().userPortfolio.flo.balance.toDouble();
     locator<AnalyticsService>().track(
       eventName: AnalyticsEvents.saveOnceTappedOnAssetDetailPage,
       properties: {
-        // "asset name": "${widget.model.config.interest}% Flo",
-        // "new user": locator<UserService>().userSegments.contains(
-        //       Constants.NEW_USER,
-        //     ),
-        // "invested amount": investedAmount,
-        // "current amount": currentAmount,
-        // "maturity date": maturityDate
+        // "total_transactions": ,
+        "total_investments": totalInvestment,
       },
     );
   }

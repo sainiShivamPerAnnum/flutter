@@ -35,6 +35,9 @@ enum UserDecision {
     required this.lbMapping,
     required this.maturityTerm,
   });
+
+  bool get isReInvest => this == UserDecision.reInvest;
+  bool get isWithdraw => this == UserDecision.withdraw;
 }
 
 class OptionContainer<T> extends StatelessWidget {
