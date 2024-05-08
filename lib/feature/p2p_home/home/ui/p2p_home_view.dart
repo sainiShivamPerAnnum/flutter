@@ -18,6 +18,8 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/constants/analytics_events_constants.dart';
+import '../../../../core/service/analytics/analytics_service.dart';
 import '../../../../ui/pages/hometabs/journey/elements/jMilestones.dart';
 import '../../transactions_section/ui/transaction_section_view.dart';
 
@@ -129,6 +131,21 @@ class _TabBar extends StatelessWidget {
 
   final List<String> tabs;
 
+  void trackFelloFloTabChanged(String changedTab) {
+    final totalInvestment =
+        locator<UserService>().userPortfolio.flo.balance.toDouble();
+    final props = {
+      "new_tab": changedTab,
+      "total_invested": totalInvestment,
+      "kyc_verified": locator<UserService>().baseUser!.isSimpleKycVerified,
+    };
+
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.felloFloTabChanged,
+      properties: props,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -144,6 +161,9 @@ class _TabBar extends StatelessWidget {
         unselectedLabelStyle: TextStyles.sourceSans.body2,
         indicatorPadding: const EdgeInsets.symmetric(horizontal: 20),
         isScrollable: false,
+        onTap: (value) {
+          trackFelloFloTabChanged(tabs[value]);
+        },
         tabs: tabs.map((e) => Tab(text: e)).toList(),
       ),
     );
@@ -151,7 +171,7 @@ class _TabBar extends StatelessWidget {
 }
 
 class _InvestedHeader extends StatelessWidget {
-  const _InvestedHeader({required this.portfolio, super.key});
+  const _InvestedHeader({required this.portfolio});
   final FloTiers portfolio;
 
   @override
@@ -159,11 +179,12 @@ class _InvestedHeader extends StatelessWidget {
     final locale = locator<S>();
     return Container(
       decoration: const BoxDecoration(
-          gradient: LinearGradient(
-        colors: [UiConstants.kFloContainerColor, Color(0xff297264)],
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-      )),
+        gradient: LinearGradient(
+          colors: [UiConstants.kFloContainerColor, Color(0xff297264)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
       child: Column(
         children: [
           SizedBox(
@@ -175,11 +196,12 @@ class _InvestedHeader extends StatelessWidget {
                 .colour(UiConstants.kTextColor.withOpacity(0.5)),
           ),
           Text(
-              locale.amount(
-                  BaseUtil.formatCompactRupees(portfolio.balance.toDouble())),
-              style:
-                  TextStyles.rajdhaniSB.title1.colour(UiConstants.kTextColor)),
-          Row(
+            locale.amount(
+              BaseUtil.formatCompactRupees(portfolio.balance.toDouble()),
+            ),
+            style: TextStyles.rajdhaniSB.title1.colour(UiConstants.kTextColor),
+          ),
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // AppText.body1(
@@ -220,7 +242,6 @@ class _MyInvestedAmount extends StatelessWidget {
     required this.totalInvestment,
     required this.currentValue,
     required this.tickets,
-    super.key,
   });
   final num totalInvestment;
   final num currentValue;
@@ -235,30 +256,40 @@ class _MyInvestedAmount extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(locale.floInvested,
-                style: TextStyles.sourceSans.body3.colour(UiConstants.greyBg)),
+            Text(
+              locale.floInvested,
+              style: TextStyles.sourceSans.body3.colour(UiConstants.greyBg),
+            ),
             SizedBox(height: SizeConfig.padding4),
             Text(
-                locale.amount(
-                    BaseUtil.formatCompactRupees(totalInvestment.toDouble())),
-                style: TextStyles.sourceSansSB.body1
-                    .colour(UiConstants.kTextColor))
+              locale.amount(
+                BaseUtil.formatCompactRupees(totalInvestment.toDouble()),
+              ),
+              style:
+                  TextStyles.sourceSansSB.body1.colour(UiConstants.kTextColor),
+            )
           ],
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(locale.floCurrentReturn,
-                style: TextStyles.sourceSans.body3.colour(UiConstants.greyBg)),
+            Text(
+              locale.floCurrentReturn,
+              style: TextStyles.sourceSans.body3.colour(UiConstants.greyBg),
+            ),
             SizedBox(height: SizeConfig.padding4),
             Text.rich(
               TextSpan(
                 children: [
                   TextSpan(
-                      text: locale.amount(BaseUtil.formatCompactRupees(
-                          currentValue.toDouble())),
-                      style: TextStyles.sourceSansSB.body1
-                          .colour(UiConstants.kTextColor)),
+                    text: locale.amount(
+                      BaseUtil.formatCompactRupees(
+                        currentValue.toDouble(),
+                      ),
+                    ),
+                    style: TextStyles.sourceSansSB.body1
+                        .colour(UiConstants.kTextColor),
+                  ),
                   WidgetSpan(
                     child: PercentageChip(
                       value: (currentValue / totalInvestment) * 100.toDouble(),
@@ -319,9 +350,10 @@ class _MyInvestedAmount extends StatelessWidget {
               TextSpan(
                 children: [
                   TextSpan(
-                      text: '$tickets ',
-                      style: TextStyles.sourceSans.body4
-                          .colour(UiConstants.kTextColor)),
+                    text: '$tickets ',
+                    style: TextStyles.sourceSans.body4
+                        .colour(UiConstants.kTextColor),
+                  ),
                   WidgetSpan(
                     child: AppImage(
                       Assets.singleTambolaTicket,
@@ -329,9 +361,10 @@ class _MyInvestedAmount extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                      text: ' every week',
-                      style: TextStyles.sourceSans.body4
-                          .colour(UiConstants.kTextColor)),
+                    text: ' every week',
+                    style: TextStyles.sourceSans.body4
+                        .colour(UiConstants.kTextColor),
+                  ),
                 ],
               ),
             ),
