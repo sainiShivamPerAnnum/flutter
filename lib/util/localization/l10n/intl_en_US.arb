@@ -210,7 +210,7 @@
   "autoSIP": "ACTIVE SIP",
   "felloFloMainTitle": "Fello Flo",
   "digitalGoldMailTitle": "Digital Gold",
-  "currentValue": "Current Value",
+  "currentValue": "Current Amount",
   "sellCardTitle1": "Sell your Digital Gold \nat current market rate",
   "sellCardTitle2": "Withdraw from Flo",
   "sellCardSubTitle1": "With every withdrawal, some tokens and tambola tickets will be deducted.",
@@ -1182,7 +1182,7 @@
   "perAnnumLabel":"per annum",
   "lockInTill":"Lock-in till",
   "reInvestOnMaturity":"Re-Invest on maturity",
-  "movesToVault": "Moves to P2P Vault on maturity",
+  "movesToVault": "Moves to P2P Wallet on maturity",
 
 
   "@_investment_section" : {},
@@ -1218,5 +1218,7 @@
   "transactionTooltip": "After maturity you money move to Fello wallet, so that you continue earning interest and can withdraw any time.",
   "noP2Pinvestment": "Looks like You don’t have any transactions in P2P yet",
   "investP2p": "INVEST",
-  "verifyKyc": "Verify KYC"
+  "verifyKyc": "Verify KYC",
+  "reinvestInSamePlan": "Reinvestment in same plan",
+  "withdrawMaturity":"Withdraw-able after Maturity"
 }

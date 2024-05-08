@@ -376,7 +376,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "currentText": MessageLookupByLibrary.simpleMessage("Current"),
         "currentTokens":
             MessageLookupByLibrary.simpleMessage("Current Tokens:"),
-        "currentValue": MessageLookupByLibrary.simpleMessage("Current Value"),
+        "currentValue": MessageLookupByLibrary.simpleMessage("Current Amount"),
         "currentWinings":
             MessageLookupByLibrary.simpleMessage("Current Winnings"),
         "customerSupportText": MessageLookupByLibrary.simpleMessage(
@@ -777,7 +777,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "moretxns": MessageLookupByLibrary.simpleMessage(
             "Looking for more transactions, please wait ..."),
         "movesToVault": MessageLookupByLibrary.simpleMessage(
-            "Moves to P2P Vault on maturity"),
+            "Moves to P2P Wallet on maturity"),
         "movetoflexi": MessageLookupByLibrary.simpleMessage(
             "\'Moving to 8% P2P Flexi on maturity"),
         "myFundsSection": MessageLookupByLibrary.simpleMessage("My Funds"),
@@ -1138,6 +1138,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Your friend installs Fello and signs up using your referral link or referral code."),
         "refsubtitle": MessageLookupByLibrary.simpleMessage(
             "Earn ₹ 25 and 200 Fello tokens for every referral and referrer of the month will get a brand new iphone 13"),
+        "reinvestInSamePlan":
+            MessageLookupByLibrary.simpleMessage("Reinvestment in same plan"),
         "reinvestMessage": MessageLookupByLibrary.simpleMessage(
             "Compounding returns on your investment"),
         "reinvestTooltip": MessageLookupByLibrary.simpleMessage(
@@ -1701,6 +1703,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Can withdraw anytime after maturity"),
         "withdrawGoldBalance":
             MessageLookupByLibrary.simpleMessage("Withdrawable Gold Balance"),
+        "withdrawMaturity": MessageLookupByLibrary.simpleMessage(
+            "Withdraw-able after Maturity"),
         "withdrawal": MessageLookupByLibrary.simpleMessage("Withdrawal"),
         "wonGT": MessageLookupByLibrary.simpleMessage("You won a scratch card"),
         "worthOfGold": MessageLookupByLibrary.simpleMessage("worth of gold"),

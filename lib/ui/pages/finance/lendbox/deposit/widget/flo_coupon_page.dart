@@ -130,8 +130,6 @@ class FloCouponPage extends StatelessWidget {
                                       coupon.code,
                                       false,
                                     );
-                                    AppState.backButtonDispatcher!
-                                        .didPopRoute();
                                   },
                                 ),
                               ),

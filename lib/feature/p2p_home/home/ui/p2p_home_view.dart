@@ -19,9 +19,8 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 import 'package:tuple/tuple.dart';
-
-import '../../../../ui/pages/hometabs/journey/elements/jMilestones.dart';
 import '../../transactions_section/ui/transaction_section_view.dart';
 
 class P2PHomePage extends StatelessWidget {
@@ -276,28 +275,20 @@ class _MyInvestedAmount extends StatelessWidget {
                 SizedBox(
                   width: SizeConfig.padding2,
                 ),
-                Tooltip(
-                  margin:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
-                  padding: const EdgeInsets.all(15),
-                  triggerMode: TooltipTriggerMode.tap,
-                  preferBelow: false,
-                  decoration: const ShapeDecoration(
-                    color: Colors.black,
-                    shape: TooltipShapeBorder(
-                      arrowArc: 0.2,
-                      radius: 10,
+                SuperTooltip(
+                  hideTooltipOnTap: true,
+                  backgroundColor: UiConstants.kTextColor4,
+                  popupDirection: TooltipDirection.up,
+                  content: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      locale.ticketsTooltip,
+                      softWrap: true,
+                      style: const TextStyle(
+                        color: UiConstants.kTextColor,
+                      ),
                     ),
-                    shadows: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 4.0,
-                        offset: Offset(2, 2),
-                      )
-                    ],
                   ),
-                  showDuration: const Duration(seconds: 10),
-                  message: locale.ticketsTooltip,
                   child: Icon(
                     Icons.info_outline,
                     size: SizeConfig.padding14,

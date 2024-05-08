@@ -60,8 +60,6 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
 
   bool _isInvoiceLoading = false;
 
-  bool _isMaturityOn = false;
-
   @override
   void initState() {
     if (widget.txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
@@ -101,6 +99,9 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
 
   @override
   Widget build(BuildContext context) {
+    bool isNewAsset = AppConfigV2.instance.lbV2.values
+        .toList()
+        .any((fund) => fund.fundType == widget.txn.lbMap.fundType);
     final isGold =
         widget.txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD ||
             widget.txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD_FD;
@@ -440,7 +441,8 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                       height: SizeConfig.padding16,
                     ),
                     if (widget.txn.subType == InvestmentType.LENDBOXP2P.name &&
-                        widget.txn.type == "DEPOSIT") ...[
+                        widget.txn.type == "DEPOSIT" &&
+                        isNewAsset) ...[
                       Divider(
                         color: UiConstants.kModalSheetSecondaryBackgroundColor
                             .withOpacity(0.2),

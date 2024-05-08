@@ -24,9 +24,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 import 'package:upi_pay/upi_pay.dart';
-
-import '../../../../../../feature/p2p_home/home/widgets/tooltip_shape.dart';
 import '../../../../../../util/locator.dart';
 
 class GoldBreakdownView extends StatefulWidget {
@@ -895,32 +894,24 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                         SizedBox(
                           width: SizeConfig.padding4,
                         ),
-                        Tooltip(
-                          margin: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.padding10),
-                          padding: const EdgeInsets.all(15),
-                          triggerMode: TooltipTriggerMode.tap,
-                          preferBelow: false,
-                          decoration: const ShapeDecoration(
-                            color: Colors.black,
-                            shape: TooltipShapeBorder(
-                              arrowArc: 0.2,
-                              radius: 10,
+                        SuperTooltip(
+                          hideTooltipOnTap: true,
+                          backgroundColor: UiConstants.kTextColor4,
+                          popupDirection: TooltipDirection.up,
+                          content: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              locale.transactionTooltip,
+                              softWrap: true,
+                              style: const TextStyle(
+                                color: UiConstants.kTextColor,
+                              ),
                             ),
-                            shadows: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 4.0,
-                                offset: Offset(2, 2),
-                              )
-                            ],
                           ),
-                          showDuration: const Duration(seconds: 10),
-                          message: locale.transactionTooltip,
                           child: Icon(
                             Icons.info_outline,
-                            color: UiConstants.grey1,
-                            size: SizeConfig.padding16,
+                            size: SizeConfig.padding14,
+                            color: UiConstants.greyBg,
                           ),
                         ),
                       ],
@@ -964,12 +955,16 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                                   children: [
                                     Text(
                                       "Happy Hour Tickets",
-                                      style: TextStyles.sourceSans.body2,
+                                      style: TextStyles.sourceSans.body2.colour(
+                                        UiConstants.kBlogTitleColor,
+                                      ),
                                     ),
                                     const Spacer(),
                                     Text(
                                       "${widget.model.happyHourTickets}",
-                                      style: TextStyles.sourceSans.body2,
+                                      style: TextStyles.sourceSans.body2.colour(
+                                        UiConstants.kBlogTitleColor,
+                                      ),
                                     ),
                                   ],
                                 ),

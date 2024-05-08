@@ -190,7 +190,7 @@
   "autoSIP": "सक्रिय एसआईपी",
   "felloFloMainTitle": "फेलो फ़्लो (10%)",
   "digitalGoldMailTitle": "डिजिटल गोल्ड",
-  "currentValue": "वर्तमान मूल्य",
+  "currentValue": "वर्तमान राशि",
   "sellCardTitle1": "अपना डिजिटल सोना \na वर्तमान बाजार दर पर बेचें",
   "sellCardTitle2": "फ़्लो से हटें",
   "sellCardSubTitle1": "हर निकासी के साथ कुछ टोकन और तंबोला टिकट काटे जाएंगे।",
@@ -1073,7 +1073,7 @@
   "floInvested": "निवेशित",
   "floCurrentReturn": "वर्तमान लाभ",
   "ticketsEarnedflo": "अर्जित टिकट",
-  "movesToVault": "परिपक्वता पर P2P वॉल्ट में स्थानांतरित हो जाता है",
+  "movesToVault": "P2P वॉलेट में परिपक्वता पर चलें।",
   "loosingReturns": "अतिरिक्त {percentage}% खो रहे हैं",
   "@loosingReturns": {
     "placeholders": {
@@ -1101,5 +1101,7 @@
   "transactionTooltip": "परिपक्वता के बाद आपका पैसा फेलो वॉलेट में चला जाता है, ताकि आप ब्याज कमाते रहें और किसी भी समय पैसे निकाल सकें।",
   "noP2Pinvestment": "लगता है आपने अभी तक पीयर-टू-पीयर लेनदेन नहीं किया है।",
 "investP2p": "निवेश करें",
-"verifyKyc": "KYC सत्यापित करें"
+"verifyKyc": "KYC सत्यापित करें",
+"reinvestInSamePlan": "समान योजना में पुनर्निवेश",
+"withdrawMaturity": "परिपक्वता के बाद निकासी-योग्य"
 }

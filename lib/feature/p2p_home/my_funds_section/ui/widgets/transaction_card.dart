@@ -31,6 +31,9 @@ class TransactionCard extends StatelessWidget {
     final assetInformation = AppConfigV2.instance.lendBoxP2P.firstWhere(
       (e) => e.fundType == transaction.lbMap.fundType,
     );
+    bool isNewAsset = AppConfigV2.instance.lbV2.values
+        .toList()
+        .any((fund) => fund.fundType == transaction.lbMap.fundType);
     return GestureDetector(
       onTap: () {
         Haptic.vibrate();
@@ -165,10 +168,16 @@ class TransactionCard extends StatelessWidget {
                 ),
                 Text(
                   transaction.lbMap.maturityPref == '1'
-                      ? locale
-                          .extraReturns(assetInformation.reinvestInterestGain)
-                      : locale.loosingReturns(
-                          assetInformation.reinvestInterestGain),
+                      ? isNewAsset
+                          ? locale.extraReturns(
+                              assetInformation.reinvestInterestGain,
+                            )
+                          : locale.reinvestInSamePlan
+                      : isNewAsset
+                          ? locale.loosingReturns(
+                              assetInformation.reinvestInterestGain,
+                            )
+                          : locale.withdrawMaturity,
                   style: TextStyles.sourceSans.body4.copyWith(
                     color: transaction.lbMap.maturityPref == '1'
                         ? UiConstants.yellow2

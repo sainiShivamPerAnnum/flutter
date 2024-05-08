@@ -34,8 +34,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
-
-import '../../../../../feature/p2p_home/home/widgets/tooltip_shape.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 
 class LendboxBuyInputView extends StatefulWidget {
   final int? amount;
@@ -395,28 +394,20 @@ class _ReInvestNudgeState extends State<_ReInvestNudge> {
                   SizedBox(
                     width: SizeConfig.padding8,
                   ),
-                  Tooltip(
-                    margin:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
-                    padding: const EdgeInsets.all(15),
-                    triggerMode: TooltipTriggerMode.tap,
-                    preferBelow: false,
-                    decoration: const ShapeDecoration(
-                      color: Colors.black,
-                      shape: TooltipShapeBorder(
-                        arrowArc: 0.2,
-                        radius: 10,
+                  SuperTooltip(
+                    hideTooltipOnTap: true,
+                    backgroundColor: UiConstants.kTextColor4,
+                    popupDirection: TooltipDirection.up,
+                    content: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        locale.reinvestTooltip,
+                        softWrap: true,
+                        style: const TextStyle(
+                          color: UiConstants.kTextColor,
+                        ),
                       ),
-                      shadows: [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 4.0,
-                          offset: Offset(2, 2),
-                        )
-                      ],
                     ),
-                    showDuration: const Duration(seconds: 10),
-                    message: locale.reinvestTooltip,
                     child: Icon(
                       Icons.info_outline,
                       size: SizeConfig.padding14,

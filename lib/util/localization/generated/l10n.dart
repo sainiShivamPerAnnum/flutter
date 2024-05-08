@@ -1768,10 +1768,10 @@ class S {
     );
   }
 
-  /// `Current Value`
+  /// `Current Amount`
   String get currentValue {
     return Intl.message(
-      'Current Value',
+      'Current Amount',
       name: 'currentValue',
       desc: '',
       args: [],
@@ -9976,10 +9976,10 @@ class S {
     );
   }
 
-  /// `Moves to P2P Vault on maturity`
+  /// `Moves to P2P Wallet on maturity`
   String get movesToVault {
     return Intl.message(
-      'Moves to P2P Vault on maturity',
+      'Moves to P2P Wallet on maturity',
       name: 'movesToVault',
       desc: '',
       args: [],
@@ -10241,6 +10241,26 @@ class S {
     return Intl.message(
       'Verify KYC',
       name: 'verifyKyc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reinvestment in same plan`
+  String get reinvestInSamePlan {
+    return Intl.message(
+      'Reinvestment in same plan',
+      name: 'reinvestInSamePlan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Withdraw-able after Maturity`
+  String get withdrawMaturity {
+    return Intl.message(
+      'Withdraw-able after Maturity',
+      name: 'withdrawMaturity',
       desc: '',
       args: [],
     );

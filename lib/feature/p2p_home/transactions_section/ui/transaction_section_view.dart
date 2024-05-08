@@ -21,6 +21,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../ui/shared/error_state.dart';
+
 class TransactionSection extends StatefulWidget {
   const TransactionSection({
     super.key,
@@ -47,7 +49,7 @@ class _TransactionSectionState extends State<TransactionSection> {
       bloc: transactionBloc,
       builder: (context, state) {
         if (state.status.isFailedToLoadInitial) {
-          ///TODO(@DK070202): Error widget here.
+          return const ErrorPage();
         }
 
         if (state.status.isFetchingInitialPage) {

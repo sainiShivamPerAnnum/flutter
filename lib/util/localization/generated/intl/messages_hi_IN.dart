@@ -355,7 +355,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "वर्तमान दरें लोड नहीं की जा सकीं। कृपया पुनः प्रयास करें"),
         "currentText": MessageLookupByLibrary.simpleMessage("वर्तमान"),
         "currentTokens": MessageLookupByLibrary.simpleMessage("मौजूदा टोकन:"),
-        "currentValue": MessageLookupByLibrary.simpleMessage("वर्तमान मूल्य"),
+        "currentValue": MessageLookupByLibrary.simpleMessage("वर्तमान राशि"),
         "currentWinings": MessageLookupByLibrary.simpleMessage("वर्तमान जीत"),
         "customerSupportText": MessageLookupByLibrary.simpleMessage(
             "कृपया ग्राहक सहायता से संपर्क करें"),
@@ -737,7 +737,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "moretxns": MessageLookupByLibrary.simpleMessage(
             "अधिक लेन-देन की तलाश में हैं, कृपया प्रतीक्षा करें ..."),
         "movesToVault": MessageLookupByLibrary.simpleMessage(
-            "परिपक्वता पर P2P वॉल्ट में स्थानांतरित हो जाता है"),
+            "P2P वॉलेट में परिपक्वता पर चलें।"),
         "movetoflexi": MessageLookupByLibrary.simpleMessage(
             "परिपक्वता पर 8% P2P फ्लेक्सी में स्थानांतरण"),
         "myReward": MessageLookupByLibrary.simpleMessage("मेरा इनाम"),
@@ -1082,6 +1082,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "आपका मित्र फेलो को स्थापित करता है और आपके रेफ़रल लिंक या रेफ़रल कोड का उपयोग करके साइन अप करता है।"),
         "refsubtitle": MessageLookupByLibrary.simpleMessage(
             "हर रेफरल के लिए ₹ 25 और 200 फेलो टोकन कमाएं और महीने के रेफर करने वाले को एक नया आईफोन 13 मिलेगा"),
+        "reinvestInSamePlan":
+            MessageLookupByLibrary.simpleMessage("समान योजना में पुनर्निवेश"),
         "reinvestTooltip": MessageLookupByLibrary.simpleMessage(
             "आपकी सुविधा के लिए, हम आपके पैसे को परिपूर्णता पर पुनर्निवेशित करेंगे, आपके पास इस प्राथमिकता को बाद में बदलने का विकल्प भी है।"),
         "reqPermission":
@@ -1627,6 +1629,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "परिपक्वता के बाद कभी भी निकासी संभव"),
         "withdrawGoldBalance": MessageLookupByLibrary.simpleMessage(
             "निकासी योग्य सोने की शेष राशि"),
+        "withdrawMaturity": MessageLookupByLibrary.simpleMessage(
+            "परिपक्वता के बाद निकासी-योग्य"),
         "withdrawal": MessageLookupByLibrary.simpleMessage("निकासी"),
         "wonGT":
             MessageLookupByLibrary.simpleMessage("आपने गोल्डन टिकट जीता है"),
