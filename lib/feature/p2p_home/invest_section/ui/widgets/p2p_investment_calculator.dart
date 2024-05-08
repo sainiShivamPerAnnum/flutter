@@ -9,6 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../core/constants/analytics_events_constants.dart';
+import '../../../../../core/service/analytics/analytics_service.dart';
+
 class P2PInvestmentCalculator extends StatefulWidget {
   const P2PInvestmentCalculator({super.key});
 
@@ -35,6 +38,15 @@ class _P2PInvestmentCalculatorState extends State<P2PInvestmentCalculator> {
     _amountNotifier.dispose();
     _durationNotifier.dispose();
     _assetSelected.dispose();
+  }
+
+  void trackReturnCalculatorUsed(String assetName) {
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.returnCalculatorUsed,
+      properties: {
+        "range": assetName,
+      },
+    );
   }
 
   @override
@@ -71,7 +83,7 @@ class _P2PInvestmentCalculatorState extends State<P2PInvestmentCalculator> {
               SizeConfig.roundness12,
             ),
             border: Border.all(
-              color: Color(0xffFFF9F900).withOpacity(.10),
+              color: const Color(0xfffff9f900).withOpacity(.10),
             ),
             boxShadow: [
               BoxShadow(
@@ -159,6 +171,7 @@ class _P2PInvestmentCalculatorState extends State<P2PInvestmentCalculator> {
                       onTap: () {
                         _amountNotifier.value = assets[index].minAmount.toInt();
                         _assetSelected.value = index;
+                        trackReturnCalculatorUsed(assets[index].assetName);
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
