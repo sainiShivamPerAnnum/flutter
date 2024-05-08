@@ -48,7 +48,7 @@ class Footer extends StatelessWidget {
             children: [
               Expanded(
                 child: SecondaryOutlinedButton(
-                  label: 'SAVE ONCE',
+                  label: 'INVEST ONCE',
                   onPressed: () =>
                       DefaultTabController.of(context).animateTo(1),
                 ),
@@ -58,7 +58,7 @@ class Footer extends StatelessWidget {
               ),
               Expanded(
                 child: SecondaryButton(
-                  label: 'SAVE DAILY',
+                  label: 'START SIP',
                   onPressed: () {
                     AppState.delegate!.appState.currentAction = PageAction(
                       page: SipIntroPageConfig,

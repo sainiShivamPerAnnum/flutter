@@ -1,8 +1,10 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_serialized_model.dart';
+import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/feature/p2p_home/home/widgets/no_transaction_widget.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
+import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'package:felloapp/feature/p2p_home/ui/shared/footer.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -21,7 +23,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/service/notifier_services/transaction_history_service.dart';
 import '../../ui/shared/error_state.dart';
+import '../../ui/shared/tab_slider.dart';
 
 class TransactionSection extends StatefulWidget {
   const TransactionSection({
@@ -32,92 +36,184 @@ class TransactionSection extends StatefulWidget {
   State<TransactionSection> createState() => _TransactionSectionState();
 }
 
-class _TransactionSectionState extends State<TransactionSection> {
+class _TransactionSectionState extends State<TransactionSection>
+    with SingleTickerProviderStateMixin {
+  List<String> tabOptions = ['One Time', 'SIP'];
+  late TabController _tabController;
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: tabOptions.length, vsync: this);
     final transactionBloc = context.read<TransactionBloc>();
+    final sipTransactionBloc = context.read<SIPTransactionBloc>();
     transactionBloc.fetchFirstPage();
+    sipTransactionBloc.fetchFirstPage();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final transactionBloc = context.read<TransactionBloc>();
+    final sipTransactionBloc = context.read<SIPTransactionBloc>();
 
-    return BlocBuilder<TransactionBloc,
-        PaginationState<UserTransaction, int, Object>>(
-      bloc: transactionBloc,
-      builder: (context, state) {
-        if (state.status.isFailedToLoadInitial) {
-          return const ErrorPage();
-        }
-
-        if (state.status.isFetchingInitialPage) {
-          return Center(
-            child: SizedBox.square(
-              dimension: SizeConfig.padding200,
-              child: const AppImage(
-                Assets.fullScreenLoaderLottie,
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        CustomScrollView(
+          slivers: [
+            SliverOverlapInjector(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+            ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins,
+                vertical: SizeConfig.padding16,
+              ),
+              sliver: SliverToBoxAdapter(
+                child: Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding50),
+                  child: TabSlider<String>(
+                    tabs: tabOptions,
+                    controller: _tabController,
+                    labelBuilder: (label) => label,
+                    onTap: (current, i) {
+                      setState(() {});
+                    },
+                  ),
+                ),
               ),
             ),
-          );
-        }
-        if (state.entries.isEmpty) {
-          return NoTransactions();
-        }
+            if (_tabController.index == 0)
+              SliverPadding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.pageHorizontalMargins,
+                ),
+                sliver: BlocBuilder<TransactionBloc,
+                    PaginationState<UserTransaction, int, Object>>(
+                  bloc: transactionBloc,
+                  builder: (context, state) {
+                    if (state.status.isFailedToLoadInitial) {
+                      return const SliverToBoxAdapter(child: ErrorPage());
+                    }
 
-        return Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            CustomScrollView(
-              slivers: [
-                SliverOverlapInjector(
-                  handle:
-                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                ),
-                SliverPadding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.pageHorizontalMargins,
-                    vertical: SizeConfig.padding16,
-                  ),
-                  sliver: SliverList.separated(
-                    itemBuilder: (context, index) {
-                      if (state.entries.length - 1 == index &&
-                          !state.status.isFetchingInitialPage) {
-                        transactionBloc.fetchNextPage();
-                      }
-                      return _TransactionTile(
-                        state.entries[index],
-                        transactionBloc: transactionBloc,
+                    if (state.status.isFetchingInitialPage) {
+                      return SliverToBoxAdapter(
+                        child: Center(
+                          child: SizedBox.square(
+                            dimension: SizeConfig.padding200,
+                            child: const AppImage(
+                              Assets.fullScreenLoaderLottie,
+                            ),
+                          ),
+                        ),
                       );
-                    },
-                    itemCount: state.entries.length,
-                    separatorBuilder: (context, index) {
-                      return const Divider(
-                        color: UiConstants.grey2,
-                        height: 1,
-                      );
-                    },
-                  ),
+                    }
+                    if (state.entries.isEmpty) {
+                      return SliverToBoxAdapter(child: NoTransactions());
+                    }
+
+                    return SliverList.separated(
+                      itemBuilder: (context, index) {
+                        if (state.entries.length - 1 == index &&
+                            !state.status.isFetchingInitialPage) {
+                          transactionBloc.fetchNextPage();
+                        }
+
+                        return state.entries.length - 1 == index &&
+                                state.status.isFetchingSuccessive
+                            ? const SliverToBoxAdapter(
+                                child: CupertinoActivityIndicator(
+                                  radius: 15,
+                                  color: Colors.white24,
+                                ),
+                              )
+                            : _TransactionTile(
+                                state.entries[index],
+                                transactionBloc: transactionBloc,
+                              );
+                      },
+                      itemCount: state.entries.length,
+                      separatorBuilder: (context, index) {
+                        return const Divider(
+                          color: UiConstants.grey2,
+                          height: 1,
+                        );
+                      },
+                    );
+                  },
                 ),
-                if (state.status.isFetchingSuccessive)
-                  const SliverToBoxAdapter(
-                    child: CupertinoActivityIndicator(
-                      radius: 15,
-                      color: Colors.white24,
-                    ),
-                  ),
-                const SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 120,
-                  ),
-                )
-              ],
-            ),
-            const Footer()
+              ),
+            if (_tabController.index == 1)
+              SliverPadding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.pageHorizontalMargins,
+                ),
+                sliver: BlocBuilder<SIPTransactionBloc,
+                    PaginationState<SubscriptionTransactionModel, int, Object>>(
+                  bloc: sipTransactionBloc,
+                  builder: (context, state) {
+                    if (state.status.isFailedToLoadInitial) {
+                      return const SliverToBoxAdapter(child: ErrorPage());
+                    }
+                    if (state.status.isFetchingInitialPage) {
+                      return SliverToBoxAdapter(
+                        child: Center(
+                          child: SizedBox.square(
+                            dimension: SizeConfig.padding200,
+                            child: const AppImage(
+                              Assets.fullScreenLoaderLottie,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    if (state.entries.isEmpty) {
+                      return SliverToBoxAdapter(child: NoTransactions());
+                    }
+                    return SliverList.separated(
+                      itemBuilder: (context, index) {
+                        if (state.entries.length - 1 == index &&
+                            !state.status.isFetchingInitialPage) {
+                          sipTransactionBloc.fetchNextPage();
+                        }
+                        return state.entries.length - 1 == index &&
+                                state.status.isFetchingSuccessive
+                            ? const SliverToBoxAdapter(
+                                child: CupertinoActivityIndicator(
+                                  radius: 15,
+                                  color: Colors.white24,
+                                ),
+                              )
+                            : _TransactionSIPTile(
+                                txn: state.entries[index],
+                              );
+                      },
+                      itemCount: state.entries.length,
+                      separatorBuilder: (context, index) {
+                        return const Divider(
+                          color: UiConstants.grey2,
+                          height: 1,
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            const SliverToBoxAdapter(
+              child: SizedBox(
+                height: 120,
+              ),
+            )
           ],
-        );
-      },
+        ),
+        const Footer()
+      ],
     );
   }
 }
@@ -216,4 +312,44 @@ Color getTileColor(String? type) {
     return Colors.blue;
   }
   return Colors.black54;
+}
+
+class _TransactionSIPTile extends StatelessWidget {
+  final SubscriptionTransactionModel? txn;
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
+
+  _TransactionSIPTile({
+    required this.txn,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    S locale = S.of(context);
+    return ListTile(
+      onTap: Haptic.vibrate,
+      contentPadding: EdgeInsets.zero,
+      dense: true,
+      title: Text(locale.btnDeposit.toUpperCase(),
+          style: TextStyles.sourceSans.body3),
+      subtitle: Text(
+        _txnHistoryService.getFormattedSIPDate(
+            DateTime.parse(txn!.createdOn.toDate().toString())),
+        style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
+      ),
+      trailing: Wrap(
+        children: [
+          TransactionStatusChip(
+            color: _txnHistoryService.getTileColor(txn!.status),
+            status: txn!.status,
+          ),
+          Text(
+            _txnHistoryService.getFormattedTxnAmount(
+                double.tryParse(txn!.lbMap?.amount.toString() ?? '0') ?? 0),
+            style: TextStyles.sourceSansM.body3,
+          ),
+        ],
+      ),
+    );
+  }
 }

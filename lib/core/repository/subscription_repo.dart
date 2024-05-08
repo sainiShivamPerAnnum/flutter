@@ -35,7 +35,7 @@ class SubscriptionRepo extends BaseRepo {
         queryParams: {
           "limit": limit.toString(),
           if (asset.isNotEmpty) "asset": asset,
-          if (offset != null) ...{
+          if (offset != null && offset != 0) ...{
             "offset": offset.toString(),
           }
         },

@@ -21,7 +21,6 @@ class NoTransactions extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(height: SizeConfig.padding84),
         SizedBox(
           width: SizeConfig.padding252,
           child: Text(

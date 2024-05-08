@@ -52,7 +52,10 @@ class _MyFundSectionState extends State<MyFundSection> {
           );
         }
         if (fundsBloc.state.entries.isEmpty) {
-          return NoTransactions();
+          return Padding(
+            padding: EdgeInsets.only(top: SizeConfig.padding82),
+            child: NoTransactions(),
+          );
         }
 
         return Stack(
