@@ -620,7 +620,6 @@ class FloBuyNavBar extends StatelessWidget {
     final amt = model.amountController?.text;
     final amtInNum = num.tryParse(amt ?? '');
     final amount = amt != null && amt.isNotEmpty ? amt : '_ _';
-    final isAmountIsValid = amt != null && amt.isNotEmpty;
     final preferredOption = model.getPreferredUpiOption;
 
     return Container(

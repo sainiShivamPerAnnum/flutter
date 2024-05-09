@@ -96,10 +96,9 @@ class CouponViewV2 extends StatelessWidget {
             desc: lendboxBuyViewModel.focusCoupon!.description!,
             disabledDesc: lendboxBuyViewModel.focusCoupon!.disabledDescription!,
             lendboxBuyViewModel: lendboxBuyViewModel,
-            isDisabled:
-                lendboxBuyViewModel.focusCoupon!.couponType == "SUPER_FELLO" &&
-                    locator<UserService>().baseUser!.superFelloLevel !=
-                        SuperFelloLevel.SUPER_FELLO,
+            isDisabled: lendboxBuyViewModel.focusCoupon!.isSuperFello! &&
+                locator<UserService>().baseUser!.superFelloLevel !=
+                    SuperFelloLevel.SUPER_FELLO,
             onTap: (coupon) => lendboxBuyViewModel.applyCoupon(
               coupon.code,
               false,

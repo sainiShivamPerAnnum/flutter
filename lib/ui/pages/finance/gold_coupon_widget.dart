@@ -96,7 +96,7 @@ class CouponViewV2 extends StatelessWidget {
             disabledDesc: goldBuymodel.focusCoupon!.disabledDescription!,
             ticketMultiplier: goldBuymodel.focusCoupon!.ticketMultiplier!,
             icon: goldBuymodel.focusCoupon!.icon,
-            isDisabled: goldBuymodel.focusCoupon!.couponType == "SUPER_FELLO" &&
+            isDisabled: goldBuymodel.focusCoupon!.isSuperFello! &&
                 locator<UserService>().baseUser!.superFelloLevel !=
                     SuperFelloLevel.SUPER_FELLO,
             onTap: (coupon) => goldBuymodel.applyCoupon(
@@ -247,12 +247,12 @@ class GoldCouponPage extends StatelessWidget {
                                   model: model.couponList![i],
                                   appliedCode: model.appliedCoupon?.code,
                                   desc: model.couponList![i].description!,
-                                  isDisabled: model.couponList![i].couponType ==
-                                          "SUPER_FELLO" &&
-                                      locator<UserService>()
-                                              .baseUser!
-                                              .superFelloLevel !=
-                                          SuperFelloLevel.SUPER_FELLO,
+                                  isDisabled:
+                                      model.couponList![i].isSuperFello! &&
+                                          locator<UserService>()
+                                                  .baseUser!
+                                                  .superFelloLevel !=
+                                              SuperFelloLevel.SUPER_FELLO,
                                   disabledDesc:
                                       model.couponList![i].disabledDescription!,
                                   ticketMultiplier:
@@ -343,9 +343,10 @@ class IndividualCouponView extends StatelessWidget {
                   width: SizeConfig.iconSize0,
                   height: SizeConfig.iconSize0,
                   color: model.minPurchase! <=
-                          int.parse(
-                            goldBuymodel.goldAmountController!.text,
-                          )
+                              int.parse(
+                                goldBuymodel.goldAmountController!.text,
+                              ) &&
+                          !isDisabled
                       ? UiConstants.teal2
                       : UiConstants.textGray70,
                 ),

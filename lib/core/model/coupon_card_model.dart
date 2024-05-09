@@ -18,6 +18,7 @@ class CouponModel {
   final String? disabledDescription;
   final String? icon;
   final String? couponType;
+  final bool? isSuperFello;
   static final helper =
       HelperModel<CouponModel>((map) => CouponModel.fromMap(map));
   CouponModel({
@@ -35,6 +36,7 @@ class CouponModel {
     this.disabledDescription,
     this.icon,
     this.couponType,
+    this.isSuperFello,
   });
 
   CouponModel copyWith({
@@ -52,6 +54,7 @@ class CouponModel {
     String? disabledDescription,
     String? icon,
     String? couponType,
+    bool? isSuperFello,
   }) {
     return CouponModel(
       id: id ?? this.id,
@@ -68,6 +71,7 @@ class CouponModel {
       disabledDescription: disabledDescription ?? this.disabledDescription,
       icon: icon ?? this.icon,
       couponType: couponType ?? this.couponType,
+      isSuperFello: isSuperFello ?? this.isSuperFello,
     );
   }
 
@@ -87,6 +91,7 @@ class CouponModel {
       'disabledDescription': disabledDescription,
       'icon': icon,
       'couponType': couponType,
+      'isSuperFello': isSuperFello,
     };
   }
 
@@ -106,6 +111,7 @@ class CouponModel {
       disabledDescription: map['disabledDesc'] ?? 'Disabled',
       icon: map['icon'],
       couponType: map['couponType'],
+      isSuperFello: map['isSuperFello'] ?? false,
     );
   }
 
@@ -125,6 +131,7 @@ class CouponModel {
       disabledDescription: 'Disabled',
       icon: null,
       couponType: null,
+      isSuperFello: false,
     );
   }
 
@@ -155,6 +162,7 @@ class CouponModel {
         other.ticketMultiplier == ticketMultiplier &&
         other.disabledDescription == disabledDescription &&
         other.couponType == couponType &&
+        other.isSuperFello == isSuperFello &&
         other.icon == icon;
   }
 
@@ -173,6 +181,7 @@ class CouponModel {
         disabledDescription.hashCode ^
         icon.hashCode ^
         couponType.hashCode ^
+        isSuperFello.hashCode ^
         highlight.hashCode;
   }
 }

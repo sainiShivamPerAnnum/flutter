@@ -117,12 +117,12 @@ class FloCouponPage extends StatelessWidget {
                                   icon: model.couponList![i].icon,
                                   desc: model.couponList![i].description!,
                                   lendboxBuyViewModel: model,
-                                  isDisabled: model.couponList![i].couponType ==
-                                          "SUPER_FELLO" &&
-                                      locator<UserService>()
-                                              .baseUser!
-                                              .superFelloLevel !=
-                                          SuperFelloLevel.SUPER_FELLO,
+                                  isDisabled:
+                                      model.couponList![i].isSuperFello! &&
+                                          locator<UserService>()
+                                                  .baseUser!
+                                                  .superFelloLevel !=
+                                              SuperFelloLevel.SUPER_FELLO,
                                   disabledDesc:
                                       model.couponList![i].disabledDescription!,
                                   onTap: (coupon) {
@@ -211,9 +211,10 @@ class IndividualCouponView extends StatelessWidget {
                   width: SizeConfig.iconSize0,
                   height: SizeConfig.iconSize0,
                   color: model.minPurchase! <=
-                          int.parse(
-                            lendboxBuyViewModel.amountController!.text,
-                          )
+                              int.parse(
+                                lendboxBuyViewModel.amountController!.text,
+                              ) &&
+                          !isDisabled
                       ? UiConstants.teal2
                       : UiConstants.textGray70,
                 ),

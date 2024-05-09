@@ -114,6 +114,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
                       entryPoint: widget.entryPoint,
                       quickCheckout: widget.quickCheckout,
                     ),
+                    onModelDispose: (model) => model.onDispose(),
                     builder: (ctx, model, child) {
                       if (model.state.isBusy) {
                         return const Center(child: FullScreenLoader());

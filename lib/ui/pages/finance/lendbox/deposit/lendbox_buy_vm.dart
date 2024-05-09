@@ -31,7 +31,6 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/flo_coupon_page.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
 import 'package:felloapp/ui/pages/finance/preffered_upi_option_mixin.dart';
-import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -284,7 +283,16 @@ class LendboxBuyViewModel extends BaseViewModel
     amountController = TextEditingController(
       text: amount?.toString() ?? data.toString(),
     );
+    amountController!.addListener(() {
+      final text = amountController!.text;
+      amountController!.value = amountController!.value.copyWith(
+        text: text,
+        selection: TextSelection.collapsed(offset: text.length),
+        composing: TextRange.empty,
+      );
+    });
     buyAmount = amount ?? data;
+    AppState.amt = (buyAmount ?? 0) * 1.0;
 
     lastTappedChipIndex = assetOptionsModel?.data.userOptions
             .indexWhere((element) => element.best) ??
@@ -302,6 +310,10 @@ class LendboxBuyViewModel extends BaseViewModel
     if (quickCheckout) {
       await initiateBuy();
     }
+  }
+
+  void onDispose() {
+    amountController!.dispose();
   }
 
   void listener() {
@@ -586,6 +598,7 @@ class LendboxBuyViewModel extends BaseViewModel
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     buyAmount = assetOptionsModel?.data.userOptions[index].value.toInt();
     amountController!.text = buyAmount!.toString();
+    AppState.amt = (buyAmount ?? 0) * 1.0;
 
     focusCoupon = couponList!.firstWhereOrNull(
       (element) => element.minPurchase! <= int.parse(amountController!.text),
@@ -714,6 +727,7 @@ class LendboxBuyViewModel extends BaseViewModel
           amountController!.text =
               response.model!.minAmountRequired!.toInt().toString();
           buyAmount = response.model!.minAmountRequired?.toInt();
+          AppState.amt = (buyAmount ?? 0) * 1.0;
           lastTappedChipIndex = assetOptionsModel!.data.userOptions.indexWhere(
             (element) => element.value >= (buyAmount ?? 0),
           );
