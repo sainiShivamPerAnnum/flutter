@@ -1,9 +1,11 @@
 import 'package:felloapp/core/model/app_config_serialized_model.dart';
+import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/elements/video_player/app_video_player.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/ui/shared/asset_comparision_section.dart';
 import 'package:felloapp/ui/shared/asset_info_footer.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -63,7 +65,7 @@ class InvestSection extends StatelessWidget {
         ),
         SliverToBoxAdapter(
           child: SizedBox(
-            height: SizeConfig.padding24,
+            height: SizeConfig.padding40,
           ),
         ),
         SliverToBoxAdapter(
@@ -94,6 +96,11 @@ class InvestSection extends StatelessWidget {
           child: AssetInfoFooter(
             isGold: false,
             toShowText: true,
+          ),
+        ),
+        const SliverToBoxAdapter(
+          child: TermsAndConditions(
+            url: Constants.savingstnc,
           ),
         ),
       ],

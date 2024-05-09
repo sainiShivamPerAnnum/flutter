@@ -136,7 +136,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: const [
-        Row(children: [FaqPill(type: FaqsType.yourAccount)]),
+        Row(children: [FaqPill(type: FaqsType.flo)]),
       ],
     );
   }

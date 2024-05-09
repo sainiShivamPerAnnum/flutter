@@ -27,7 +27,7 @@ class TransactionBloc
             if (result.isLastPage ?? false) {
               interrupter.call();
             }
-            return previousState++;
+            return previousState + 1;
           },
         );
 }

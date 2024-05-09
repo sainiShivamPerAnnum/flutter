@@ -123,13 +123,14 @@ class _TransactionSectionState extends State<TransactionSection>
                     return SliverList.separated(
                       itemBuilder: (context, index) {
                         if (state.entries.length - 1 == index &&
-                            !state.status.isFetchingInitialPage) {
+                            !state.status.isFetchingInitialPage &&
+                            !state.status.isFetchingSuccessive) {
                           transactionBloc.fetchNextPage();
                         }
 
                         return state.entries.length - 1 == index &&
                                 state.status.isFetchingSuccessive
-                            ? const SliverToBoxAdapter(
+                            ? const Center(
                                 child: CupertinoActivityIndicator(
                                   radius: 15,
                                   color: Colors.white24,
@@ -181,12 +182,13 @@ class _TransactionSectionState extends State<TransactionSection>
                     return SliverList.separated(
                       itemBuilder: (context, index) {
                         if (state.entries.length - 1 == index &&
-                            !state.status.isFetchingInitialPage) {
+                            !state.status.isFetchingInitialPage &&
+                            !state.status.isFetchingSuccessive) {
                           sipTransactionBloc.fetchNextPage();
                         }
                         return state.entries.length - 1 == index &&
                                 state.status.isFetchingSuccessive
-                            ? const SliverToBoxAdapter(
+                            ? const Center(
                                 child: CupertinoActivityIndicator(
                                   radius: 15,
                                   color: Colors.white24,
@@ -207,9 +209,9 @@ class _TransactionSectionState extends State<TransactionSection>
                   },
                 ),
               ),
-            const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: SizedBox(
-                height: 120,
+                height: SizeConfig.padding124,
               ),
             )
           ],
