@@ -5,10 +5,13 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../../../../../core/constants/analytics_events_constants.dart';
 import '../../../../../core/enums/page_state_enum.dart';
+import '../../../../../core/service/analytics/analytics_service.dart';
 import '../../../../../core/service/notifier_services/user_service.dart';
 import '../../../../../navigator/app_state.dart';
 import '../../../../../navigator/router/ui_pages.dart';
+import '../../../../../util/constants.dart';
 import '../../../../../util/haptic.dart';
 import '../../../../../util/localization/generated/l10n.dart';
 import '../../../../../util/locator.dart';
@@ -26,6 +29,18 @@ class FlexiBalanceView extends StatelessWidget {
   final VoidCallback? onWithDrawalSubitted;
 
   final UserService _usrService = locator<UserService>();
+
+  void trackBasicCardWithdrawTap(num withdrawableAmount) {
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.withdrawFloTapped,
+      properties: {
+        "new user":
+            locator<UserService>().userSegments.contains(Constants.NEW_USER),
+        "withdrawable_amount": withdrawableAmount,
+        "interest_rate": '8%',
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,6 +184,9 @@ class FlexiBalanceView extends StatelessWidget {
                   child: SecondaryButton(
                     onPressed: () {
                       Haptic.vibrate();
+                      trackBasicCardWithdrawTap(
+                        model.withdrawableQuantity?.amount ?? 0.toDouble(),
+                      );
                       BaseUtil().openSellModalSheet(
                         investmentType: InvestmentType.LENDBOXP2P,
                         onWithDrawalSubitted: onWithDrawalSubitted,

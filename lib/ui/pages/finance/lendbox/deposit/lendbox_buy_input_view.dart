@@ -36,6 +36,8 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
+import '../../../../../core/service/notifier_services/user_service.dart';
+
 class LendboxBuyInputView extends StatefulWidget {
   final int? amount;
   final bool? skipMl;
@@ -281,8 +283,11 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                         eventName: AnalyticsEvents.saveInitiate,
                         properties: {
                           "investmentType": InvestmentType.LENDBOXP2P.name,
+                          "reinvestment_preference":
+                              widget.model.selectedOption.isReInvest
                         },
                       );
+
                       if ((widget.model.buyAmount ?? 0) <
                           widget.model.minAmount) {
                         BaseUtil.showNegativeAlert(
@@ -294,7 +299,10 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
 
                       if (!widget.model.isBuyInProgress) {
                         FocusScope.of(context).unfocus();
-                        widget.model.initiateBuy();
+                        widget.model.initiateBuy(
+                          shouldReinvestOnMaturity:
+                              widget.model.selectedOption.isReInvest,
+                        );
                       }
                     },
                   )
@@ -371,6 +379,14 @@ class _ReInvestNudgeState extends State<_ReInvestNudge> {
         widget.onChange(_value);
       });
     }
+
+    final totalInvestment =
+        locator<UserService>().userPortfolio.flo.balance.toDouble();
+
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.reinvestmentPreferenceChanged,
+      properties: {"final_state": value, "total_investments": totalInvestment},
+    );
   }
 
   @override

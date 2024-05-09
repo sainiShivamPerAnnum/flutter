@@ -27,6 +27,10 @@ import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
 
 import '../../../../base_util.dart';
+import '../../../../core/constants/analytics_events_constants.dart';
+import '../../../../core/service/analytics/analytics_service.dart';
+import '../../../../core/service/notifier_services/user_service.dart';
+import '../../../../util/constants.dart';
 import 'transaction_details_vm.dart';
 
 class TransactionDetailsPage extends StatefulWidget {
@@ -107,7 +111,9 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
             widget.txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD_FD;
     return BaseView<TransactionDetailsVM>(
       create: () => TransactionDetailsVM(
-          widget.txn, widget.txn.lbMap.maturityPref ?? 'NA'),
+        widget.txn,
+        widget.txn.lbMap.maturityPref ?? 'NA',
+      ),
       builder: (context, model, child) => Scaffold(
         backgroundColor: const Color(0xff151D22),
         appBar: FAppBar(
@@ -195,10 +201,12 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.only(top: 4, bottom: 8),
-                          child: Text(locale.txnHappyHours,
-                              textAlign: TextAlign.center,
-                              style: TextStyles.sourceSans.body2
-                                  .colour(const Color(0xffB5CDCB))),
+                          child: Text(
+                            locale.txnHappyHours,
+                            textAlign: TextAlign.center,
+                            style: TextStyles.sourceSans.body2
+                                .colour(const Color(0xffB5CDCB)),
+                          ),
                         ),
                       ),
                     ],
@@ -209,7 +217,8 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                         widget.txn.transactionUpdatesMap!.isNotEmpty)
                       Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding6),
+                          horizontal: SizeConfig.padding6,
+                        ),
                         child: Column(
                           children: [
                             Row(
@@ -223,10 +232,13 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.brightness_1_rounded,
-                                        size: SizeConfig.padding8,
-                                        color: _txnHistoryService.getTileColor(
-                                            widget.txn.tranStatus)),
+                                    Icon(
+                                      Icons.brightness_1_rounded,
+                                      size: SizeConfig.padding8,
+                                      color: _txnHistoryService.getTileColor(
+                                        widget.txn.tranStatus,
+                                      ),
+                                    ),
                                     SizedBox(
                                       width: SizeConfig.padding2,
                                     ),
@@ -234,8 +246,10 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                       widget.txn.tranStatus?.capitalizeFirst ??
                                           '',
                                       style: TextStyles.sourceSans.colour(
-                                          _txnHistoryService.getTileColor(
-                                              widget.txn.tranStatus)),
+                                        _txnHistoryService.getTileColor(
+                                          widget.txn.tranStatus,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -243,18 +257,19 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                             ),
                             // ignore: lines_longer_than_80_chars
                             TransactionSummary(
-                                assetType: isGold
-                                    ? InvestmentType.AUGGOLD99
-                                    : InvestmentType.LENDBOXP2P,
-                                txnType: widget.txn.type,
-                                lbMap: !isGold ? widget.txn.lbMap : null,
-                                createdOn: TimestampModel.fromTimestamp(
-                                  widget.txn.timestamp ??
-                                      Timestamp.fromDate(
-                                        DateTime.now(),
-                                      ),
-                                ),
-                                summary: widget.txn.transactionUpdatesMap),
+                              assetType: isGold
+                                  ? InvestmentType.AUGGOLD99
+                                  : InvestmentType.LENDBOXP2P,
+                              txnType: widget.txn.type,
+                              lbMap: !isGold ? widget.txn.lbMap : null,
+                              createdOn: TimestampModel.fromTimestamp(
+                                widget.txn.timestamp ??
+                                    Timestamp.fromDate(
+                                      DateTime.now(),
+                                    ),
+                              ),
+                              summary: widget.txn.transactionUpdatesMap,
+                            ),
                             const Divider(
                               color: Color(0xff3E3E3E),
                             ),
@@ -267,7 +282,9 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                           .TRAN_SUBTYPE_AUGMONT_GOLD_FD)) ...[
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 2, vertical: 8),
+                                    horizontal: 2,
+                                    vertical: 8,
+                                  ),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -278,8 +295,9 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                             .colour(const Color(0xffA9C6D6)),
                                       ),
                                       Text(
-                                          "₹${widget.txn.augmnt?["aLockPrice"] ?? 0} /gm",
-                                          style: TextStyles.sourceSans.body3)
+                                        "₹${widget.txn.augmnt?["aLockPrice"] ?? 0} /gm",
+                                        style: TextStyles.sourceSans.body3,
+                                      )
                                     ],
                                   ),
                                 ),
@@ -289,7 +307,9 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                               ],
                               Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 2, vertical: 8),
+                                  horizontal: 2,
+                                  vertical: 8,
+                                ),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -300,8 +320,9 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                           .colour(const Color(0xffA9C6D6)),
                                     ),
                                     Text(
-                                        "${widget.txn.augmnt!["aGoldInTxn"]} gms",
-                                        style: TextStyles.sourceSans.body3)
+                                      "${widget.txn.augmnt!["aGoldInTxn"]} gms",
+                                      style: TextStyles.sourceSans.body3,
+                                    )
                                   ],
                                 ),
                               ),
@@ -313,7 +334,9 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                 if (_showAppliedCoupon) ...[
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 2, vertical: 8),
+                                      horizontal: 2,
+                                      vertical: 8,
+                                    ),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -321,7 +344,8 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                         Row(
                                           children: [
                                             SvgPicture.asset(
-                                                Assets.couponsAsset),
+                                              Assets.couponsAsset,
+                                            ),
                                             const SizedBox(
                                               width: 4,
                                             ),
@@ -330,14 +354,16 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                               style: TextStyles
                                                   .sourceSansSB.body3
                                                   .colour(
-                                                      const Color(0xffA5FCE7)),
+                                                const Color(0xffA5FCE7),
+                                              ),
                                             ),
                                             Text(
                                               " coupon applied",
                                               style: TextStyles
                                                   .sourceSansL.body3
                                                   .colour(
-                                                      const Color(0xffA5FCE7)),
+                                                const Color(0xffA5FCE7),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -345,17 +371,22 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                                 ?.containsKey("goldQty") ??
                                             false)
                                           Text(
-                                              "+ ${BaseUtil.digitPrecision(widget.txn.couponMap?["goldQty"], 4, false)} gms",
-                                              style: TextStyles.sourceSans.body3
-                                                  .colour(
-                                                      const Color(0xffA5FCE7))),
+                                            "+ ${BaseUtil.digitPrecision(widget.txn.couponMap?["goldQty"], 4, false)} gms",
+                                            style: TextStyles.sourceSans.body3
+                                                .colour(
+                                              const Color(0xffA5FCE7),
+                                            ),
+                                          ),
                                         if (widget.txn.couponMap
                                                 ?.containsKey("gtId") ??
                                             false)
-                                          Text("+ 1 Ticket",
-                                              style: TextStyles.sourceSans.body3
-                                                  .colour(
-                                                      const Color(0xffA5FCE7)))
+                                          Text(
+                                            "+ 1 Ticket",
+                                            style: TextStyles.sourceSans.body3
+                                                .colour(
+                                              const Color(0xffA5FCE7),
+                                            ),
+                                          )
                                       ],
                                     ),
                                   ),
@@ -365,7 +396,9 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                 ],
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 2, vertical: 8),
+                                    horizontal: 2,
+                                    vertical: 8,
+                                  ),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -378,7 +411,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                         ),
                                       ),
                                       Text(
-                                        "${widget.txn.couponMap!.containsKey("goldQty") ? (BaseUtil.digitPrecision(widget.txn.augmnt!["aGoldInTxn"] + widget.txn.couponMap!["goldQty"], 6, false)).toString() : BaseUtil.digitPrecision(widget.txn.augmnt!["aGoldInTxn"], 6, false).toString()} gms",
+                                        "${widget.txn.couponMap!.containsKey("goldQty") ? BaseUtil.digitPrecision(widget.txn.augmnt!["aGoldInTxn"] + widget.txn.couponMap!["goldQty"], 6, false).toString() : BaseUtil.digitPrecision(widget.txn.augmnt!["aGoldInTxn"], 6, false).toString()} gms",
                                         style:
                                             TextStyles.sourceSansB.body3.colour(
                                           const Color(0xffE3CD95),
@@ -419,18 +452,19 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                 children: [
                                   if (ticketsPresent)
                                     RewardsCard(
-                                        rewardType: RewardType.tt,
-                                        rewardQuantity: widget
-                                            .txn.misMap!["tickets"]
-                                            .toString(),
-                                        txnType: widget.txn.type ?? '',
-                                        isRewardTypeTicket: true),
+                                      rewardType: RewardType.tt,
+                                      rewardQuantity: widget
+                                          .txn.misMap!["tickets"]
+                                          .toString(),
+                                      txnType: widget.txn.type ?? '',
+                                      isRewardTypeTicket: true,
+                                    ),
                                   if (goldPresent)
                                     RewardsCard(
-                                        rewardType: RewardType.sc,
-                                        rewardQuantity:
-                                            widget.txn.rewardQuantity,
-                                        txnType: widget.txn.type ?? '')
+                                      rewardType: RewardType.sc,
+                                      rewardQuantity: widget.txn.rewardQuantity,
+                                      txnType: widget.txn.type ?? '',
+                                    )
                                 ],
                               ),
                             ]
@@ -450,6 +484,16 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                       ),
                       _ReInvestNudge(
                         initialValue: model.transactionPrefence == '1',
+                        assetName:
+                            isGold ? locale.digitalGoldText : floSubtype(),
+                        currentAmount: widget.txn.amount +
+                            (widget.txn.lbMap.gainAmount ?? 0),
+                        investedAmount: widget.txn.amount,
+                        maturityAt: DateFormat('dd/MM/yyyy').format(
+                          DateTime.fromMicrosecondsSinceEpoch(
+                            widget.txn.lbMap.maturityAt!.microsecondsSinceEpoch,
+                          ),
+                        ),
                         onChanged: (value) async {
                           var res = await model.updateMaturityPreference(value);
                           if (widget.onUpdatePrefrence != null && res) {
@@ -487,8 +531,9 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                               OpenFilex.open(generatedPdfFilePath);
                             } else {
                               BaseUtil.showNegativeAlert(
-                                  locale.txnInvoiceFailed,
-                                  locale.txnTryAfterSomeTime);
+                                locale.txnInvoiceFailed,
+                                locale.txnTryAfterSomeTime,
+                              );
                             }
                           }),
                         );
@@ -506,8 +551,10 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                             color: Colors.white,
                             duration: const Duration(milliseconds: 500),
                           )
-                        : Text(locale.btnDownloadInvoice.toUpperCase(),
-                            style: TextStyles.rajdhaniSB.body1),
+                        : Text(
+                            locale.btnDownloadInvoice.toUpperCase(),
+                            style: TextStyles.rajdhaniSB.body1,
+                          ),
                   ),
                 ),
               ),
@@ -536,25 +583,55 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
     );
   }
 
-  String get getFormattedDate =>
-      DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(
-          widget.txn.timestamp!.millisecondsSinceEpoch));
+  String get getFormattedDate => DateFormat('dd MMM, yyyy').format(
+        DateTime.fromMillisecondsSinceEpoch(
+          widget.txn.timestamp!.millisecondsSinceEpoch,
+        ),
+      );
 
-  String get formattedTime =>
-      DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(
-          widget.txn.timestamp!.millisecondsSinceEpoch));
+  String get formattedTime => DateFormat('hh:mm a').format(
+        DateTime.fromMillisecondsSinceEpoch(
+          widget.txn.timestamp!.millisecondsSinceEpoch,
+        ),
+      );
 }
 
 class _ReInvestNudge extends StatelessWidget {
   const _ReInvestNudge({
     required this.initialValue,
     required this.onChanged,
+    required this.assetName,
+    required this.investedAmount,
+    required this.maturityAt,
+    required this.currentAmount,
     this.isLoading = false,
   });
 
   final bool initialValue;
   final ValueChanged<bool> onChanged;
   final bool isLoading;
+  final String assetName;
+  final num investedAmount;
+  final String maturityAt;
+  final num currentAmount;
+
+  void trackDecideButtonTap(
+    bool switchVal,
+  ) {
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.decideOnDepositCardTapped,
+      properties: {
+        "updated_value": switchVal,
+        "asset_name": assetName,
+        "new_user": locator<UserService>().userSegments.contains(
+              Constants.NEW_USER,
+            ),
+        "invested_amount": investedAmount,
+        "current_amount": currentAmount,
+        "maturity_date": maturityAt
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -577,7 +654,10 @@ class _ReInvestNudge extends StatelessWidget {
                     )
                   : CustomSwitch(
                       initialValue: initialValue,
-                      onChanged: onChanged,
+                      onChanged: (val) {
+                        onChanged(val);
+                        trackDecideButtonTap(val);
+                      },
                     )
             ],
           ),

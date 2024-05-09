@@ -23,6 +23,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/constants/analytics_events_constants.dart';
+import '../../../../core/service/analytics/analytics_service.dart';
 import '../../../../core/service/notifier_services/transaction_history_service.dart';
 import '../../ui/shared/error_state.dart';
 import '../../ui/shared/tab_slider.dart';
@@ -222,11 +224,29 @@ class _TransactionTile extends StatelessWidget {
   const _TransactionTile(this.transaction, {required this.transactionBloc});
   final UserTransaction transaction;
   final TransactionBloc transactionBloc;
+  void trackTransactionTileTapped({required String assetName}) {
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.transactionDetailsScreen,
+      properties: {
+        "transaction_date": DateFormat("ddMMyyyy").format(
+          DateTime.fromMillisecondsSinceEpoch(
+            transaction.timestamp!.millisecondsSinceEpoch,
+          ),
+        ),
+        "amount": transaction.amount.round(),
+        "transaction_type": transaction.type,
+        "asset": assetName,
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     String formattedDate = DateFormat(" 'on' ddMMM, yyyy 'at' hh:mm a").format(
-        DateTime.fromMillisecondsSinceEpoch(
-            transaction.timestamp!.millisecondsSinceEpoch));
+      DateTime.fromMillisecondsSinceEpoch(
+        transaction.timestamp!.millisecondsSinceEpoch,
+      ),
+    );
     final assetInformation = AppConfigV2.instance.lendBoxP2P.firstWhere(
       (e) => e.fundType == transaction.lbMap.fundType,
     );
@@ -239,6 +259,7 @@ class _TransactionTile extends StatelessWidget {
         onTap: () {
           final fundBloc = context.read<MyFundsBloc>();
           Haptic.vibrate();
+          trackTransactionTileTapped(assetName: assetInformation.assetName);
           AppState.delegate!.appState.currentAction = PageAction(
             state: PageState.addWidget,
             page: TransactionDetailsPageConfig,
@@ -320,7 +341,6 @@ class _TransactionSIPTile extends StatelessWidget {
 
   _TransactionSIPTile({
     required this.txn,
-    super.key,
   });
 
   @override
@@ -330,11 +350,14 @@ class _TransactionSIPTile extends StatelessWidget {
       onTap: Haptic.vibrate,
       contentPadding: EdgeInsets.zero,
       dense: true,
-      title: Text(locale.btnDeposit.toUpperCase(),
-          style: TextStyles.sourceSans.body3),
+      title: Text(
+        locale.btnDeposit.toUpperCase(),
+        style: TextStyles.sourceSans.body3,
+      ),
       subtitle: Text(
         _txnHistoryService.getFormattedSIPDate(
-            DateTime.parse(txn!.createdOn.toDate().toString())),
+          DateTime.parse(txn!.createdOn.toDate().toString()),
+        ),
         style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
       ),
       trailing: Wrap(
@@ -345,7 +368,8 @@ class _TransactionSIPTile extends StatelessWidget {
           ),
           Text(
             _txnHistoryService.getFormattedTxnAmount(
-                double.tryParse(txn!.lbMap?.amount.toString() ?? '0') ?? 0),
+              double.tryParse(txn!.lbMap?.amount.toString() ?? '0') ?? 0,
+            ),
             style: TextStyles.sourceSansM.body3,
           ),
         ],
