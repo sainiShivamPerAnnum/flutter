@@ -1191,7 +1191,7 @@
   "p2pCalculatorInvestmentAmount":"Investment Amount -",
   "p2pCalculatorInvestmentDuration":"Time Period -",
   "p2pCalculatorInvestmentDurationUnit":"Year",
-  "p2pCalculator5YearsReturns":"Your Money in 5 Years-",
+  "p2pCalculator5YearsReturns":"Your Amount on maturity-",
   "switchOnFor": "Switch On for ",
   "onreinvestment":" on reinvestment",
   "WithdrawMaturity": "Withdraw-able after maturity from ",

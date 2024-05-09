@@ -969,6 +969,20 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           queryParams: queryParams,
         );
         break;
+      case 'lboxBuyAsset':
+        final asset = queryParams['asset'];
+        if (asset == null) {
+          BaseUtil().openRechargeModalSheet(
+            investmentType: InvestmentType.LENDBOXP2P,
+            queryParams: queryParams,
+          );
+        } else {
+          BaseUtil.openFloBuySheet(
+            floAssetType: asset,
+            queryParams: queryParams,
+          );
+        }
+        break;
       case 'lboxSell':
         BaseUtil()
             .openSellModalSheet(investmentType: InvestmentType.LENDBOXP2P);

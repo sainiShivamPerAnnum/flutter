@@ -211,22 +211,22 @@ class _P2PInvestmentCalculatorState extends State<P2PInvestmentCalculator> {
               SizedBox(
                 height: SizeConfig.padding20,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    locale.p2pCalculator5YearsReturns,
-                    style: TextStyles.sourceSansSB.body2
-                        .colour(UiConstants.kTextColor),
-                  ),
-                  ListenableBuilder(
-                    listenable: Listenable.merge([
-                      _amountNotifier,
-                      _durationNotifier,
-                      _assetSelected,
-                    ]),
-                    builder: (context, child) {
-                      return Text(
+              ListenableBuilder(
+                listenable: Listenable.merge([
+                  _amountNotifier,
+                  _durationNotifier,
+                  _assetSelected,
+                ]),
+                builder: (context, child) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        locale.p2pCalculator5YearsReturns,
+                        style: TextStyles.sourceSansSB.body2
+                            .colour(UiConstants.kTextColor),
+                      ),
+                      Text(
                         BaseUtil.formatIndianRupees(
                           _amountNotifier.value +
                               BaseUtil.calculateCompoundInterest(
@@ -241,10 +241,10 @@ class _P2PInvestmentCalculatorState extends State<P2PInvestmentCalculator> {
                         style: TextStyles.sourceSansSB.title5.colour(
                           UiConstants.kTabBorderColor,
                         ),
-                      );
-                    },
-                  ),
-                ],
+                      ),
+                    ],
+                  );
+                },
               ),
             ],
           ),

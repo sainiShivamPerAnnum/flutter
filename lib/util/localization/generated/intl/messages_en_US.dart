@@ -998,7 +998,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "otpSentSuccess":
             MessageLookupByLibrary.simpleMessage("OTP resent successfully"),
         "p2pCalculator5YearsReturns":
-            MessageLookupByLibrary.simpleMessage("Your Money in 5 Years-"),
+            MessageLookupByLibrary.simpleMessage("Your Amount on maturity-"),
         "p2pCalculatorInvestmentAmount":
             MessageLookupByLibrary.simpleMessage("Investment Amount -"),
         "p2pCalculatorInvestmentDuration":

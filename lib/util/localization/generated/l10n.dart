@@ -10036,10 +10036,10 @@ class S {
     );
   }
 
-  /// `Your Money in 5 Years-`
+  /// `Your Amount on maturity-`
   String get p2pCalculator5YearsReturns {
     return Intl.message(
-      'Your Money in 5 Years-',
+      'Your Amount on maturity-',
       name: 'p2pCalculator5YearsReturns',
       desc: '',
       args: [],
