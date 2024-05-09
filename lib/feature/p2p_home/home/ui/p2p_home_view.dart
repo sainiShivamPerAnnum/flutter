@@ -8,6 +8,7 @@ import 'package:felloapp/feature/p2p_home/home/widgets/percentage_chip.dart';
 import 'package:felloapp/feature/p2p_home/invest_section/ui/invest_section_view.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/ui/my_funds_section_view.dart';
+import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
@@ -41,6 +42,11 @@ class P2PHomePage extends StatelessWidget {
         BlocProvider(
           create: (context) => MyFundsBloc(
             transactionHistoryRepo: locator(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => SIPTransactionBloc(
+            subscriptionRepo: locator(),
           ),
         ),
       ],

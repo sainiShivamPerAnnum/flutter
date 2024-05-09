@@ -204,7 +204,9 @@ class TransactionCard extends StatelessWidget {
                 Text(
                   transaction.lbMap.maturityPref == '1'
                       ? locale.reInvestOnMaturity
-                      : locale.movesToVault,
+                      : isNewAsset
+                          ? locale.movesToVault
+                          : 'Moves to P2P Wallet',
                   style: TextStyles.sourceSans.body4.copyWith(
                     color: UiConstants.textGray60,
                   ),

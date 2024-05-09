@@ -247,6 +247,7 @@ class UiConstants {
   static const teal3 = Color(0xFF62E3C4);
   static const teal4 = Color(0xFF01656B);
   static const teal5 = Color(0xFF023C40);
+  static const teal6 = Color(0xff1CA98F);
 
   static const blue3 = Color(0xff93B5FE);
 

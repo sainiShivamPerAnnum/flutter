@@ -77,7 +77,7 @@ class Footer extends StatelessWidget {
             children: [
               Expanded(
                 child: SecondaryOutlinedButton(
-                  label: 'SAVE ONCE',
+                  label: 'INVEST ONCE',
                   onPressed: () {
                     trackSaveOnceButtonTapped();
                     DefaultTabController.of(context).animateTo(1);
@@ -89,7 +89,7 @@ class Footer extends StatelessWidget {
               ),
               Expanded(
                 child: SecondaryButton(
-                  label: 'SAVE DAILY',
+                  label: 'START SIP',
                   onPressed: () {
                     trackSaveDailyButtonTapped();
                     AppState.delegate!.appState.currentAction = PageAction(
