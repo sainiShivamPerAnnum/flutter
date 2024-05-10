@@ -63,161 +63,170 @@ class _TransactionSectionState extends State<TransactionSection>
     final transactionBloc = context.read<TransactionBloc>();
     final sipTransactionBloc = context.read<SIPTransactionBloc>();
 
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        CustomScrollView(
-          slivers: [
-            SliverOverlapInjector(
-              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-            ),
-            SliverPadding(
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.pageHorizontalMargins,
-                vertical: SizeConfig.padding16,
+    return RefreshIndicator.adaptive(
+      onRefresh: () async {
+        transactionBloc.reset();
+        sipTransactionBloc.reset();
+      },
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          CustomScrollView(
+            slivers: [
+              SliverOverlapInjector(
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
               ),
-              sliver: SliverToBoxAdapter(
-                child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding50),
-                  child: TabSlider<String>(
-                    tabs: tabOptions,
-                    controller: _tabController,
-                    labelBuilder: (label) => label,
-                    onTap: (current, i) {
-                      setState(() {});
-                    },
+              SliverPadding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.pageHorizontalMargins,
+                  vertical: SizeConfig.padding16,
+                ),
+                sliver: SliverToBoxAdapter(
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: SizeConfig.padding50),
+                    child: TabSlider<String>(
+                      tabs: tabOptions,
+                      controller: _tabController,
+                      labelBuilder: (label) => label,
+                      onTap: (current, i) {
+                        setState(() {});
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),
-            if (_tabController.index == 0)
-              SliverPadding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins,
-                ),
-                sliver: BlocBuilder<TransactionBloc,
-                    PaginationState<UserTransaction, int, Object>>(
-                  bloc: transactionBloc,
-                  builder: (context, state) {
-                    if (state.status.isFailedToLoadInitial) {
-                      return const SliverToBoxAdapter(child: ErrorPage());
-                    }
+              if (_tabController.index == 0)
+                SliverPadding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins,
+                  ),
+                  sliver: BlocBuilder<TransactionBloc,
+                      PaginationState<UserTransaction, int, Object>>(
+                    bloc: transactionBloc,
+                    builder: (context, state) {
+                      if (state.status.isFailedToLoadInitial) {
+                        return const SliverToBoxAdapter(child: ErrorPage());
+                      }
 
-                    if (state.status.isFetchingInitialPage) {
-                      return SliverToBoxAdapter(
-                        child: Center(
-                          child: SizedBox.square(
-                            dimension: SizeConfig.padding200,
-                            child: const AppImage(
-                              Assets.fullScreenLoaderLottie,
+                      if (state.status.isFetchingInitialPage) {
+                        return SliverToBoxAdapter(
+                          child: Center(
+                            child: SizedBox.square(
+                              dimension: SizeConfig.padding200,
+                              child: const AppImage(
+                                Assets.fullScreenLoaderLottie,
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    }
-                    if (state.entries.isEmpty) {
-                      return SliverToBoxAdapter(child: NoTransactions());
-                    }
-
-                    return SliverList.separated(
-                      itemBuilder: (context, index) {
-                        if (state.entries.length - 1 == index &&
-                            !state.status.isFetchingInitialPage &&
-                            !state.status.isFetchingSuccessive) {
-                          transactionBloc.fetchNextPage();
-                        }
-
-                        return state.entries.length - 1 == index &&
-                                state.status.isFetchingSuccessive
-                            ? const Center(
-                                child: CupertinoActivityIndicator(
-                                  radius: 15,
-                                  color: Colors.white24,
-                                ),
-                              )
-                            : _TransactionTile(
-                                state.entries[index],
-                                transactionBloc: transactionBloc,
-                              );
-                      },
-                      itemCount: state.entries.length,
-                      separatorBuilder: (context, index) {
-                        return const Divider(
-                          color: UiConstants.grey2,
-                          height: 1,
                         );
-                      },
-                    );
-                  },
+                      }
+                      if (state.entries.isEmpty) {
+                        return SliverToBoxAdapter(child: NoTransactions());
+                      }
+
+                      return SliverList.separated(
+                        itemBuilder: (context, index) {
+                          if (state.entries.length - 1 == index &&
+                              !state.status.isFetchingInitialPage &&
+                              !state.status.isFetchingSuccessive) {
+                            transactionBloc.fetchNextPage();
+                          }
+
+                          return state.entries.length - 1 == index &&
+                                  state.status.isFetchingSuccessive
+                              ? const Center(
+                                  child: CupertinoActivityIndicator(
+                                    radius: 15,
+                                    color: Colors.white24,
+                                  ),
+                                )
+                              : _TransactionTile(
+                                  state.entries[index],
+                                  transactionBloc: transactionBloc,
+                                );
+                        },
+                        itemCount: state.entries.length,
+                        separatorBuilder: (context, index) {
+                          return const Divider(
+                            color: UiConstants.grey2,
+                            height: 1,
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
-              ),
-            if (_tabController.index == 1)
-              SliverPadding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins,
-                ),
-                sliver: BlocBuilder<SIPTransactionBloc,
-                    PaginationState<SubscriptionTransactionModel, int, Object>>(
-                  bloc: sipTransactionBloc,
-                  builder: (context, state) {
-                    if (state.status.isFailedToLoadInitial) {
-                      return const SliverToBoxAdapter(child: ErrorPage());
-                    }
-                    if (state.status.isFetchingInitialPage) {
-                      return SliverToBoxAdapter(
-                        child: Center(
-                          child: SizedBox.square(
-                            dimension: SizeConfig.padding200,
-                            child: const AppImage(
-                              Assets.fullScreenLoaderLottie,
+              if (_tabController.index == 1)
+                SliverPadding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins,
+                  ),
+                  sliver: BlocBuilder<
+                      SIPTransactionBloc,
+                      PaginationState<SubscriptionTransactionModel, int,
+                          Object>>(
+                    bloc: sipTransactionBloc,
+                    builder: (context, state) {
+                      if (state.status.isFailedToLoadInitial) {
+                        return const SliverToBoxAdapter(child: ErrorPage());
+                      }
+                      if (state.status.isFetchingInitialPage) {
+                        return SliverToBoxAdapter(
+                          child: Center(
+                            child: SizedBox.square(
+                              dimension: SizeConfig.padding200,
+                              child: const AppImage(
+                                Assets.fullScreenLoaderLottie,
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    }
-                    if (state.entries.isEmpty) {
-                      return SliverToBoxAdapter(child: NoTransactions());
-                    }
-                    return SliverList.separated(
-                      itemBuilder: (context, index) {
-                        if (state.entries.length - 1 == index &&
-                            !state.status.isFetchingInitialPage &&
-                            !state.status.isFetchingSuccessive) {
-                          sipTransactionBloc.fetchNextPage();
-                        }
-                        return state.entries.length - 1 == index &&
-                                state.status.isFetchingSuccessive
-                            ? const Center(
-                                child: CupertinoActivityIndicator(
-                                  radius: 15,
-                                  color: Colors.white24,
-                                ),
-                              )
-                            : _TransactionSIPTile(
-                                txn: state.entries[index],
-                              );
-                      },
-                      itemCount: state.entries.length,
-                      separatorBuilder: (context, index) {
-                        return const Divider(
-                          color: UiConstants.grey2,
-                          height: 1,
                         );
-                      },
-                    );
-                  },
+                      }
+                      if (state.entries.isEmpty) {
+                        return SliverToBoxAdapter(child: NoTransactions());
+                      }
+                      return SliverList.separated(
+                        itemBuilder: (context, index) {
+                          if (state.entries.length - 1 == index &&
+                              !state.status.isFetchingInitialPage &&
+                              !state.status.isFetchingSuccessive) {
+                            sipTransactionBloc.fetchNextPage();
+                          }
+                          return state.entries.length - 1 == index &&
+                                  state.status.isFetchingSuccessive
+                              ? const Center(
+                                  child: CupertinoActivityIndicator(
+                                    radius: 15,
+                                    color: Colors.white24,
+                                  ),
+                                )
+                              : _TransactionSIPTile(
+                                  txn: state.entries[index],
+                                );
+                        },
+                        itemCount: state.entries.length,
+                        separatorBuilder: (context, index) {
+                          return const Divider(
+                            color: UiConstants.grey2,
+                            height: 1,
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
-              ),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: SizeConfig.padding124,
-              ),
-            )
-          ],
-        ),
-        const Footer()
-      ],
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: SizeConfig.padding124,
+                ),
+              )
+            ],
+          ),
+          const Footer()
+        ],
+      ),
     );
   }
 }
