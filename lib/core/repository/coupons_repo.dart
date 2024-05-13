@@ -70,7 +70,7 @@ class CouponRepository extends BaseRepo {
           model: coupons, code: 200, errorMessage: couponResponse['message']);
     } catch (e) {
       return ApiResponse.withError(
-        e.toString() ?? "Unable to fetch coupons",
+        e.toString(),
         400,
       );
     }

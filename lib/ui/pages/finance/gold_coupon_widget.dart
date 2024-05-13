@@ -96,7 +96,8 @@ class CouponViewV2 extends StatelessWidget {
             disabledDesc: goldBuymodel.focusCoupon!.disabledDescription!,
             ticketMultiplier: goldBuymodel.focusCoupon!.ticketMultiplier!,
             icon: goldBuymodel.focusCoupon!.icon,
-            isDisabled: goldBuymodel.focusCoupon!.isSuperFello! &&
+            isDisabled: goldBuymodel.focusCoupon!.couponSubType != null &&
+                goldBuymodel.focusCoupon!.couponSubType == 'SUPER_FELLO' &&
                 locator<UserService>().baseUser!.superFelloLevel !=
                     SuperFelloLevel.SUPER_FELLO,
             onTap: (coupon) => goldBuymodel.applyCoupon(
@@ -248,7 +249,10 @@ class GoldCouponPage extends StatelessWidget {
                                   appliedCode: model.appliedCoupon?.code,
                                   desc: model.couponList![i].description!,
                                   isDisabled:
-                                      model.couponList![i].isSuperFello! &&
+                                      model.couponList![i].couponSubType !=
+                                              null &&
+                                          model.couponList![i].couponSubType ==
+                                              'SUPER_FELLO' &&
                                           locator<UserService>()
                                                   .baseUser!
                                                   .superFelloLevel !=

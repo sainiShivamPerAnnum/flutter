@@ -28,7 +28,7 @@ class SIPTransactionBloc extends PaginationBloc<SubscriptionTransactionModel,
             if (result.length < 30) {
               interrupter.call();
             }
-            return previousState++;
+            return previousState + result.length;
           },
         );
 }

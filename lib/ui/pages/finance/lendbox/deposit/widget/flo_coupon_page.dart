@@ -118,7 +118,10 @@ class FloCouponPage extends StatelessWidget {
                                   desc: model.couponList![i].description!,
                                   lendboxBuyViewModel: model,
                                   isDisabled:
-                                      model.couponList![i].isSuperFello! &&
+                                      model.couponList![i].couponSubType !=
+                                              null &&
+                                          model.couponList![i].couponSubType ==
+                                              'SUPER_FELLO' &&
                                           locator<UserService>()
                                                   .baseUser!
                                                   .superFelloLevel !=
