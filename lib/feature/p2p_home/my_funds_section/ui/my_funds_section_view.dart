@@ -95,18 +95,10 @@ class _MyFundSectionState extends State<MyFundSection> {
                             !state.status.isFetchingSuccessive) {
                           fundsBloc.fetchNextPage();
                         }
-                        return state.entries.length - 1 == index &&
-                                state.status.isFetchingSuccessive
-                            ? const Center(
-                                child: CupertinoActivityIndicator(
-                                  radius: 15,
-                                  color: Colors.white24,
-                                ),
-                              )
-                            : TransactionCard(
-                                transaction: fundsBloc.state.entries[index],
-                                fundBloc: fundsBloc,
-                              );
+                        return TransactionCard(
+                          transaction: fundsBloc.state.entries[index],
+                          fundBloc: fundsBloc,
+                        );
                       },
                       itemCount: fundsBloc.state.entries.length,
                       separatorBuilder: (context, index) => SizedBox(

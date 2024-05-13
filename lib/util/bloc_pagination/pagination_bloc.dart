@@ -263,7 +263,7 @@ class PaginationBloc<Type, Result, PageReference, Error extends Object>
 
         final pageReference = _referenceConverterCallBack(
           result,
-          state.pageReference,
+          _initialPageReference,
           terminationCallback,
         );
 
