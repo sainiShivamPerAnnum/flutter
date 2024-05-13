@@ -230,12 +230,14 @@ class _P2PInvestmentCalculatorState extends State<P2PInvestmentCalculator> {
                         BaseUtil.formatIndianRupees(
                           _amountNotifier.value +
                               BaseUtil.calculateCompoundInterest(
-                                amount: _amountNotifier.value, //principle
-                                interestRate: assets[_assetSelected.value]
-                                    .interest, // tbd
+                                amount: _amountNotifier.value,
+                                interestRate:
+                                    assets[_assetSelected.value].interest,
                                 maturityDuration: assets[_assetSelected.value]
-                                    .maturityDuration, // yearly
-                                terms: _durationNotifier.value, //years
+                                    .maturityDuration,
+                                terms: (_durationNotifier.value * 12) ~/
+                                    assets[_assetSelected.value]
+                                        .maturityDuration,
                               ),
                         ),
                         style: TextStyles.sourceSansSB.title5.colour(
