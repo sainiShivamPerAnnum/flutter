@@ -1460,6 +1460,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("s top scorers: "),
         "topWinners": MessageLookupByLibrary.simpleMessage("Top Winners"),
         "totalBalance": MessageLookupByLibrary.simpleMessage("Total Balance"),
+        "totalP2PBalance":
+            MessageLookupByLibrary.simpleMessage("Total P2P Balance"),
         "totalPercentage":
             MessageLookupByLibrary.simpleMessage("Total Interest Percentage"),
         "totalReturnGained":

@@ -1220,5 +1220,6 @@
   "investP2p": "INVEST",
   "verifyKyc": "Verify KYC",
   "reinvestInSamePlan": "Reinvestment in same plan",
-  "withdrawMaturity":"Withdraw-able after Maturity"
+  "withdrawMaturity":"Withdraw-able after Maturity",
+  "totalP2PBalance":"Total P2P Balance"
 }

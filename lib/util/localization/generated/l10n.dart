@@ -10265,6 +10265,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Total P2P Balance`
+  String get totalP2PBalance {
+    return Intl.message(
+      'Total P2P Balance',
+      name: 'totalP2PBalance',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

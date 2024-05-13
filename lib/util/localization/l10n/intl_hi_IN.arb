@@ -1103,5 +1103,6 @@
 "investP2p": "निवेश करें",
 "verifyKyc": "KYC सत्यापित करें",
 "reinvestInSamePlan": "समान योजना में पुनर्निवेश",
-"withdrawMaturity": "परिपक्वता के बाद निकासी-योग्य"
+"withdrawMaturity": "परिपक्वता के बाद निकासी-योग्य",
+"totalP2PBalance":"कुल पी2पी शेष राशि"
 }

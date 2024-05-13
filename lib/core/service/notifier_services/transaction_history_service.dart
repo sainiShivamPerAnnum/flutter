@@ -49,12 +49,12 @@ class TxnHistoryService extends ChangeNotifier {
   }
 
   appendTxns(List<UserTransaction> list) {
-    list.forEach((txn) {
+    for (var txn in list) {
       UserTransaction? duplicate =
-          _txnList!.firstWhereOrNull((t) => t.timestamp == txn.timestamp);
-      if (duplicate == null) _txnList!.add(txn);
-    });
-    _txnList!
+          _txnList.firstWhereOrNull((t) => t.timestamp == txn.timestamp);
+      if (duplicate == null) _txnList.add(txn);
+    }
+    _txnList
         .sort((a, b) => b.timestamp!.seconds.compareTo(a.timestamp!.seconds));
     notifyListeners();
   }
@@ -69,7 +69,7 @@ class TxnHistoryService extends ChangeNotifier {
       type: type,
       subtype: subtype.name,
       status: status,
-      offset: txnList?.length ?? 0,
+      offset: txnList.length,
     );
 
     if (!response.isSuccess()) {
@@ -85,7 +85,7 @@ class TxnHistoryService extends ChangeNotifier {
       // if transaction list already have some items
       appendTxns(response.model!.transactions!);
     }
-    _logger.d("Current Transaction List length: ${_txnList!.length}");
+    _logger.d("Current Transaction List length: ${_txnList.length}");
 
     // check and set which category has no more items to fetch
     if (response.model!.transactions!.length < 30) {
@@ -134,7 +134,7 @@ class TxnHistoryService extends ChangeNotifier {
     hasMoreDepositTxns = true;
     hasMoreWithdrawalTxns = true;
     hasMoreRefundedTxns = true;
-    txnList?.clear();
+    txnList.clear();
     await fetchTransactions(subtype: investmentType);
     _logger.i("Transactions got updated");
   }

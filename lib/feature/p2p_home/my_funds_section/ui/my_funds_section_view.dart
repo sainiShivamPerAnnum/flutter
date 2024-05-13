@@ -90,10 +90,23 @@ class _MyFundSectionState extends State<MyFundSection> {
                     ),
                     sliver: SliverList.separated(
                       itemBuilder: (context, index) {
-                        return TransactionCard(
-                          transaction: fundsBloc.state.entries[index],
-                          fundBloc: fundsBloc,
-                        );
+                        if (state.entries.length - 1 == index &&
+                            !state.status.isFetchingInitialPage &&
+                            !state.status.isFetchingSuccessive) {
+                          fundsBloc.fetchNextPage();
+                        }
+                        return state.entries.length - 1 == index &&
+                                state.status.isFetchingSuccessive
+                            ? const Center(
+                                child: CupertinoActivityIndicator(
+                                  radius: 15,
+                                  color: Colors.white24,
+                                ),
+                              )
+                            : TransactionCard(
+                                transaction: fundsBloc.state.entries[index],
+                                fundBloc: fundsBloc,
+                              );
                       },
                       itemCount: fundsBloc.state.entries.length,
                       separatorBuilder: (context, index) => SizedBox(

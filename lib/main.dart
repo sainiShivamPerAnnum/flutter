@@ -34,6 +34,9 @@ import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 import 'core/service/notifier_services/user_coin_service.dart';
+import 'feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
+import 'feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
+import 'feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'feature/sip/cubit/autosave_cubit.dart';
 
 class MyApp extends HookWidget {
@@ -64,6 +67,21 @@ class MyApp extends HookWidget {
       child: MultiProvider(
         providers: [
           Provider(create: (_) => SipCubit()),
+          Provider(
+            create: (_) => TransactionBloc(
+              transactionHistoryRepo: locator(),
+            ),
+          ),
+          Provider(
+            create: (_) => MyFundsBloc(
+              transactionHistoryRepo: locator(),
+            ),
+          ),
+          Provider(
+            create: (_) => SIPTransactionBloc(
+              subscriptionRepo: locator(),
+            ),
+          ),
           ChangeNotifierProvider(create: (_) => locator<ConnectivityService>()),
           ChangeNotifierProvider(create: (_) => locator<DBModel>()),
           ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),

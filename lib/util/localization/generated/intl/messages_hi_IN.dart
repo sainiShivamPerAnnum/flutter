@@ -1396,6 +1396,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("शीर्ष स्कोरर:"),
         "topWinners": MessageLookupByLibrary.simpleMessage("शीर्ष विजेता"),
         "totalBalance": MessageLookupByLibrary.simpleMessage("कुल शेष"),
+        "totalP2PBalance":
+            MessageLookupByLibrary.simpleMessage("कुल पी2पी शेष राशि"),
         "totalPercentage":
             MessageLookupByLibrary.simpleMessage("कुल ब्याज प्रतिशत"),
         "totalReturnGained":

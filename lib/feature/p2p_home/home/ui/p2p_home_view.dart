@@ -6,10 +6,7 @@ import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/p2p_home/home/widgets/percentage_chip.dart';
 import 'package:felloapp/feature/p2p_home/invest_section/ui/invest_section_view.dart';
-import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/ui/my_funds_section_view.dart';
-import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
-import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -18,7 +15,6 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 import 'package:tuple/tuple.dart';
@@ -32,26 +28,7 @@ class P2PHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => TransactionBloc(
-            transactionHistoryRepo: locator(),
-          ),
-        ),
-        BlocProvider(
-          create: (context) => MyFundsBloc(
-            transactionHistoryRepo: locator(),
-          ),
-        ),
-        BlocProvider(
-          create: (context) => SIPTransactionBloc(
-            subscriptionRepo: locator(),
-          ),
-        ),
-      ],
-      child: const P2PHomeView(),
-    );
+    return const P2PHomeView();
   }
 }
 
