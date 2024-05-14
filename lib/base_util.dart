@@ -431,10 +431,10 @@ class BaseUtil extends ChangeNotifier {
     AppState.isTxnProcessing = false;
     locator<BackButtonActions>().isTransactionCancelled = false;
     final bool? islBoxDepositBanned = userService.userBootUp?.data!.banMap
-        ?.investments?.depositV2?.flo![floAssetType]?.isBanned;
+        ?.investments?.depositV2?.flo[floAssetType]?.isBanned;
     if (islBoxDepositBanned != null && islBoxDepositBanned) {
       final String? lBoxDepositBanNotice = userService.userBootUp?.data!.banMap
-          ?.investments?.depositV2?.flo![floAssetType]?.reason;
+          ?.investments?.depositV2?.flo[floAssetType]?.reason;
       BaseUtil.showNegativeAlert(
         lBoxDepositBanNotice ?? locale.assetNotAvailable,
         locale.tryLater,
@@ -531,7 +531,9 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  void openSellModalSheet({required InvestmentType investmentType}) {
+  void openSellModalSheet(
+      {required InvestmentType investmentType,
+      VoidCallback? onWithDrawalSubitted}) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final bool? isAugSellLocked = _userService
           .userBootUp?.data!.banMap?.investments?.withdrawal?.augmont?.isBanned;
@@ -574,7 +576,9 @@ class BaseUtil extends ChangeNotifier {
         isScrollControlled: true,
         content: investmentType == InvestmentType.AUGGOLD99
             ? const GoldSellView()
-            : LendboxWithdrawalView(),
+            : LendboxWithdrawalView(
+                onWithDrawalSubitted: onWithDrawalSubitted,
+              ),
       );
     });
   }
@@ -973,7 +977,7 @@ class BaseUtil extends ChangeNotifier {
     return formatter.format(value);
   }
 
-  static String formatCompactRupees(double value) {
+  static String formatCompactRupees(num value) {
     late NumberFormat formatter;
     formatter = value > 99999
         ? NumberFormat.compactCurrency(

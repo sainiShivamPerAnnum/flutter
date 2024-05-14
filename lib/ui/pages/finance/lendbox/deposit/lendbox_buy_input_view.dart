@@ -34,6 +34,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:super_tooltip/super_tooltip.dart';
+
+import '../../../../../core/service/notifier_services/user_service.dart';
 
 class LendboxBuyInputView extends StatefulWidget {
   final int? amount;
@@ -150,7 +153,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                           locator<BackButtonActions>()
                               .showWantToCloseTransactionBottomSheet(
                                   double.parse(
-                                    widget.model.amountController!.text,
+                                    widget.model.buyAmount.toString(),
                                   ).round(),
                                   InvestmentType.LENDBOXP2P, () {
                             widget.model.initiateBuy();
@@ -238,11 +241,14 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                   SizedBox(height: SizeConfig.padding24),
                   _ReInvestNudge(
                     gains: widget.model.config.reinvestInterestGain,
+                    buyInProgess: widget.model.isBuyInProgress,
                     initialValue: false,
                     onChange: (value) {
-                      widget.model.selectedOption = value
-                          ? UserDecision.reInvest
-                          : UserDecision.moveToFlexi;
+                      if (!widget.model.isBuyInProgress) {
+                        widget.model.selectedOption = value
+                            ? UserDecision.reInvest
+                            : UserDecision.moveToFlexi;
+                      }
                     },
                   ),
                 ],
@@ -277,8 +283,11 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                         eventName: AnalyticsEvents.saveInitiate,
                         properties: {
                           "investmentType": InvestmentType.LENDBOXP2P.name,
+                          "reinvestment_preference":
+                              widget.model.selectedOption.isReInvest
                         },
                       );
+
                       if ((widget.model.buyAmount ?? 0) <
                           widget.model.minAmount) {
                         BaseUtil.showNegativeAlert(
@@ -290,7 +299,10 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
 
                       if (!widget.model.isBuyInProgress) {
                         FocusScope.of(context).unfocus();
-                        widget.model.initiateBuy();
+                        widget.model.initiateBuy(
+                          shouldReinvestOnMaturity:
+                              widget.model.selectedOption.isReInvest,
+                        );
                       }
                     },
                   )
@@ -339,11 +351,13 @@ class _ReInvestNudge extends StatefulWidget {
     required this.initialValue,
     required this.onChange,
     required this.gains,
+    required this.buyInProgess,
   });
 
   final bool initialValue;
   final num gains;
   final ValueChanged<bool> onChange;
+  final bool buyInProgess;
 
   @override
   State<_ReInvestNudge> createState() => _ReInvestNudgeState();
@@ -359,10 +373,20 @@ class _ReInvestNudgeState extends State<_ReInvestNudge> {
   }
 
   void _onChanged(bool value) {
-    setState(() {
-      _value = value;
-      widget.onChange(_value);
-    });
+    if (!widget.buyInProgess) {
+      setState(() {
+        _value = value;
+        widget.onChange(_value);
+      });
+    }
+
+    final totalInvestment =
+        locator<UserService>().userPortfolio.flo.balance.toDouble();
+
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.reinvestmentPreferenceChanged,
+      properties: {"final_state": value, "total_investments": totalInvestment},
+    );
   }
 
   @override
@@ -386,16 +410,31 @@ class _ReInvestNudgeState extends State<_ReInvestNudge> {
                   SizedBox(
                     width: SizeConfig.padding8,
                   ),
-                  const Icon(
-                    Icons.info_outline,
-                    size: 14,
-                    color: UiConstants.grey1,
+                  SuperTooltip(
+                    hideTooltipOnTap: true,
+                    backgroundColor: UiConstants.kTextColor4,
+                    popupDirection: TooltipDirection.up,
+                    content: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        locale.reinvestTooltip,
+                        softWrap: true,
+                        style: const TextStyle(
+                          color: UiConstants.kTextColor,
+                        ),
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.info_outline,
+                      size: SizeConfig.padding14,
+                      color: UiConstants.greyBg,
+                    ),
                   ),
                 ],
               ),
               CustomSwitch(
                 initialValue: widget.initialValue,
-                onChanged: _onChanged,
+                onChanged: !widget.buyInProgess ? _onChanged : null,
               )
             ],
           ),
@@ -581,7 +620,6 @@ class FloBuyNavBar extends StatelessWidget {
     final amt = model.amountController?.text;
     final amtInNum = num.tryParse(amt ?? '');
     final amount = amt != null && amt.isNotEmpty ? amt : '_ _';
-    final isAmountIsValid = amt != null && amt.isNotEmpty;
     final preferredOption = model.getPreferredUpiOption;
 
     return Container(

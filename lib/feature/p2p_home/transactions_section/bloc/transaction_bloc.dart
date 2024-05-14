@@ -14,7 +14,6 @@ class TransactionBloc
           },
           paginationCallBack: (pageReference) async {
             final response = await transactionHistoryRepo.getUserTransactions(
-              type: "DEPOSIT",
               subtype: "LENDBOXP2P",
               lbActiveFunds: false,
               offset: pageReference,
@@ -28,7 +27,7 @@ class TransactionBloc
             if (result.isLastPage ?? false) {
               interrupter.call();
             }
-            return previousState++;
+            return previousState + result.transactions!.length;
           },
         );
 }

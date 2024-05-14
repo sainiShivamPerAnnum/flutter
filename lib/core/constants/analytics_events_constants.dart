@@ -204,12 +204,20 @@ class AnalyticsEvents {
   static const investFloBannerTapped = "Invest on Flo Slab Tapped";
   static const depositCardInFloSlabTapped = "Deposit Card in Flo Slab Tapped";
   static const decideOnDepositCardTapped = "Decide on Deposit Card Tapped";
+  static const returnCalculatorUsed = "Return Calculator Used";
   static const decisionOnDepositCard = "Decision on Deposit Card";
+  static const felloFloTabChanged = "Fello Flo Tab changed";
+  static const transactionDetailsScreen = "Transaction Details Screen";
+  static const saveDailyTappedOnAssetDetailPage =
+      "Save Daily Tapped on Asset Detail Page";
+  static const saveOnceTappedOnAssetDetailPage =
+      "Save Once Tapped on Asset Detail Page";
+  static const reinvestmentPreferenceChanged =
+      'Reinvestment Preference changed';
   static const helpInFloSlabTapped = "Help Banner in Flo Slab Tapped";
   static const investNowInFloSlabTapped = "Invest Now in Flo Slab Tapped";
   static const assetSelectionProceed = "Asset Selection Proceed";
   static const tambolaTicketInfoTapped = "Tambola Ticket Info HH Tapped";
-
   static const maturityChoiceTapped = "Maturity Details Choose Tapped";
   static const maturitySelectionContinueTapped =
       "Maturity Selection Continue Tapped";
@@ -352,10 +360,9 @@ class AnalyticsEvents {
   static const howToEarnRewards = 'How to earn rewards cards clicked';
   static const earnRewardsClicked = 'Earn rewards clicked';
 
-
   //Gold Pro Auto Lease
   static const goldProAutoLeaseToggle = 'Gold pro auto lease toggle';
-  
+
   static const sipSummaryTicketClicked = "Tickets Click";
   static const sipSummaryGtClicked = "Scratch Card Click";
   static const sipSummaryButtonClicked = "Check Rewards click";
@@ -363,5 +370,4 @@ class AnalyticsEvents {
 
   static const editSipOption = "Edit SIP Options";
   static const pauseSipOption = "Pause SIP Confirm";
-
 }

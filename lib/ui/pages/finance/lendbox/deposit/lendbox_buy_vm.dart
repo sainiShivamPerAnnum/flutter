@@ -218,16 +218,11 @@ class LendboxBuyViewModel extends BaseViewModel
     String modelFlowType = floAssetType;
     List<LendboxAssetConfiguration> lendBoxDetails =
         AppConfigV2.instance.lendBoxP2P;
-    final isLendBoxOldUser =
-        locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
 
     LendboxAssetConfiguration? assetInformation =
         lendBoxDetails.firstWhereOrNull(
       (element) {
-        return modelFlowType == Constants.ASSET_TYPE_FLO_FELXI
-            ? (element.isForOldLb == isLendBoxOldUser &&
-                element.fundType == modelFlowType)
-            : element.fundType == modelFlowType;
+        return element.fundType == modelFlowType;
       },
     );
 
@@ -251,7 +246,21 @@ class LendboxBuyViewModel extends BaseViewModel
       (element) => element.fundType == floAssetType,
     );
     _txnService.floAssetType = floAssetType;
-    showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
+    final HappyHourCampign? happyHourModel =
+        locator.isRegistered<HappyHourCampign>()
+            ? locator<HappyHourCampign>()
+            : null;
+    if (happyHourModel?.data?.forAssets != null) {
+      try {
+        showHappyHour =
+            locator<MarketingEventHandlerService>().showHappyHourBanner &&
+                happyHourModel!.data!.forAssets!.contains(floAssetType);
+      } catch (e) {
+        showHappyHour = false;
+      }
+    } else {
+      showHappyHour = false;
+    }
     animationController = AnimationController(
       vsync: vsync,
       duration: const Duration(milliseconds: 500),
@@ -274,7 +283,16 @@ class LendboxBuyViewModel extends BaseViewModel
     amountController = TextEditingController(
       text: amount?.toString() ?? data.toString(),
     );
+    amountController!.addListener(() {
+      final text = amountController!.text;
+      amountController!.value = amountController!.value.copyWith(
+        text: text,
+        selection: TextSelection.collapsed(offset: text.length),
+        composing: TextRange.empty,
+      );
+    });
     buyAmount = amount ?? data;
+    AppState.amt = (buyAmount ?? 0) * 1.0;
 
     lastTappedChipIndex = assetOptionsModel?.data.userOptions
             .indexWhere((element) => element.best) ??
@@ -292,6 +310,10 @@ class LendboxBuyViewModel extends BaseViewModel
     if (quickCheckout) {
       await initiateBuy();
     }
+  }
+
+  void onDispose() {
+    amountController!.dispose();
   }
 
   void listener() {
@@ -321,7 +343,7 @@ class LendboxBuyViewModel extends BaseViewModel
     log(res.model?.message ?? '');
   }
 
-  Future<void> initiateBuy() async {
+  Future<void> initiateBuy({bool? shouldReinvestOnMaturity}) async {
     log("amountController ${amountController?.text}");
     if (couponApplyInProgress || _isBuyInProgress) return;
 
@@ -349,7 +371,8 @@ class LendboxBuyViewModel extends BaseViewModel
 
     _isBuyInProgress = true;
     notifyListeners();
-    _trackCheckOut(amount.toDouble());
+    _trackCheckOut(amount.toDouble(),
+        shouldReinvestOnMaturity: shouldReinvestOnMaturity);
     await _txnService.initiateTransaction(
       FloPurchaseDetails(
         floAssetType: floAssetType,
@@ -393,7 +416,7 @@ class LendboxBuyViewModel extends BaseViewModel
     }
   }
 
-  void _trackCheckOut(double? amount) {
+  void _trackCheckOut(double? amount, {bool? shouldReinvestOnMaturity}) {
     _txnService.currentTransactionAnalyticsDetails = {
       "Asset": "Flo",
       "Amount Entered": amount ?? 0,
@@ -405,6 +428,7 @@ class LendboxBuyViewModel extends BaseViewModel
         extraValuesMap: {
           "Asset": floAssetType,
           "Amount Entered": amount ?? 0,
+          "reinvestment_preference": shouldReinvestOnMaturity
         },
       ),
     );
@@ -466,6 +490,9 @@ class LendboxBuyViewModel extends BaseViewModel
   }
 
   String getMaturityTitle() {
+    final config = AppConfigV2.instance.lendBoxP2P.firstWhere(
+      (element) => element.fundType == floAssetType,
+    );
     switch (selectedOption) {
       case UserDecision.notDecided:
         return 'N/A';
@@ -474,10 +501,10 @@ class LendboxBuyViewModel extends BaseViewModel
         return "Withdraw to bank";
 
       case UserDecision.reInvest:
-        return "ReInvest in ${floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10}%";
+        return "ReInvest in ${config.interest}%";
 
       case UserDecision.moveToFlexi:
-        return "Move to ${floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 10 : 8}%";
+        return "Move to 8%";
     }
   }
 
@@ -513,8 +540,9 @@ class LendboxBuyViewModel extends BaseViewModel
       }
       // if (couponList?[0].priority == 1) focusCoupon = couponList?[0];
       // initial coupon pending?
-      focusCoupon = couponList!.firstWhere((element) =>
-          element.minPurchase! <= int.parse(amountController!.text));
+      focusCoupon = couponList!.firstWhere(
+        (element) => element.minPurchase! <= int.parse(amountController!.text),
+      );
       showCoupons = true;
     }
   }
@@ -543,8 +571,9 @@ class LendboxBuyViewModel extends BaseViewModel
       return '';
     }
 
-    numberOfTambolaTickets = parsedFloAmount ~/ tambolaCost;
-    totalTickets = numberOfTambolaTickets! * tambolaMultiplier;
+    numberOfTambolaTickets =
+        (parsedFloAmount ~/ tambolaCost) * tambolaMultiplier;
+    totalTickets = numberOfTambolaTickets!;
 
     happyHourTickets =
         showHappyHour && happyHourModel?.data?.rewards?[0].type == 'tt'
@@ -552,8 +581,7 @@ class LendboxBuyViewModel extends BaseViewModel
             : null;
 
     if (parsedFloAmount >= minAmount && happyHourTickets != null) {
-      totalTickets =
-          (numberOfTambolaTickets! * tambolaMultiplier) + happyHourTickets!;
+      totalTickets = (numberOfTambolaTickets!) + happyHourTickets!;
       showInfoIcon = true;
     } else {
       showInfoIcon = false;
@@ -570,9 +598,11 @@ class LendboxBuyViewModel extends BaseViewModel
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     buyAmount = assetOptionsModel?.data.userOptions[index].value.toInt();
     amountController!.text = buyAmount!.toString();
+    AppState.amt = (buyAmount ?? 0) * 1.0;
 
     focusCoupon = couponList!.firstWhereOrNull(
-        (element) => element.minPurchase! <= int.parse(amountController!.text));
+      (element) => element.minPurchase! <= int.parse(amountController!.text),
+    );
     appliedCoupon = null;
 
     analyticsService.track(
@@ -621,7 +651,8 @@ class LendboxBuyViewModel extends BaseViewModel
     updateFieldWidth();
 
     focusCoupon = couponList!.firstWhereOrNull(
-        (element) => element.minPurchase! <= int.parse(amountController!.text));
+      (element) => element.minPurchase! <= int.parse(amountController!.text),
+    );
 
     appliedCoupon = null;
   }
@@ -643,42 +674,6 @@ class LendboxBuyViewModel extends BaseViewModel
       UserDecision.reInvest => maturity.reInvest,
       _ => maturity.notDecided,
     };
-  }
-
-  Widget showReinvestSubTitle() {
-    final amount = int.tryParse(amountController!.text) ?? 0;
-    final maturityDuration =
-        floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3;
-    final terms = selectedOption.maturityTerm;
-    final rate = floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
-
-    final i = BaseUtil.calculateCompoundInterest(
-      amount: amount,
-      interestRate: rate,
-      maturityDuration: maturityDuration,
-      terms: selectedOption.maturityTerm,
-    ).toInt();
-
-    return Flexible(
-      child: Text.rich(
-        TextSpan(
-          children: [
-            TextSpan(
-              text: '${maturityDuration * terms} months',
-            ),
-            TextSpan(
-              text: ' (Returns = ₹${i + amount})',
-              style: TextStyles.sourceSansSB.body3.colour(
-                Colors.white,
-              ),
-            ),
-          ],
-        ),
-        style: TextStyles.sourceSans.body3.colour(UiConstants.grey1),
-        textAlign: TextAlign.left,
-        maxLines: 2,
-      ),
-    );
   }
 
   Future<void> _applyInitialCoupon(String? coupon) async {
@@ -732,9 +727,14 @@ class LendboxBuyViewModel extends BaseViewModel
           amountController!.text =
               response.model!.minAmountRequired!.toInt().toString();
           buyAmount = response.model!.minAmountRequired?.toInt();
+          AppState.amt = (buyAmount ?? 0) * 1.0;
+          lastTappedChipIndex = assetOptionsModel!.data.userOptions.indexWhere(
+            (element) => element.value >= (buyAmount ?? 0),
+          );
           // updateGoldAmount();
           showMaxCapText = false;
           showMinCapText = false;
+          await AppState.backButtonDispatcher!.didPopRoute();
           await animationController?.forward();
           updateFieldWidth();
         }
@@ -742,7 +742,8 @@ class LendboxBuyViewModel extends BaseViewModel
 
         appliedCoupon = response.model;
         focusCoupon = couponList!.firstWhereOrNull(
-            (element) => element.code! == response.model!.code);
+          (element) => element.code! == response.model!.code,
+        );
         BaseUtil.showPositiveAlert(
           locale.couponAppliedSucc,
           response.model?.message,

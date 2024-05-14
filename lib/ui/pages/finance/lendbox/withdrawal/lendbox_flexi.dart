@@ -1,30 +1,46 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../../../../../core/constants/analytics_events_constants.dart';
 import '../../../../../core/enums/page_state_enum.dart';
+import '../../../../../core/service/analytics/analytics_service.dart';
 import '../../../../../core/service/notifier_services/user_service.dart';
 import '../../../../../navigator/app_state.dart';
 import '../../../../../navigator/router/ui_pages.dart';
+import '../../../../../util/constants.dart';
 import '../../../../../util/haptic.dart';
 import '../../../../../util/localization/generated/l10n.dart';
 import '../../../../../util/locator.dart';
 import '../../../../architecture/base_view.dart';
 import '../../../../elements/appbar/appbar.dart';
 import '../../../static/app_widget.dart';
-import 'lendbox_withdrawal_view.dart';
 import 'lendbox_withdrawal_vm.dart';
 
-class FlexiBalanceView extends StatefulWidget {
-  const FlexiBalanceView({super.key});
+class FlexiBalanceView extends StatelessWidget {
+  FlexiBalanceView({
+    required this.onWithDrawalSubitted,
+    super.key,
+  });
 
-  @override
-  State<FlexiBalanceView> createState() => _FlexiBalanceViewState();
-}
+  final VoidCallback? onWithDrawalSubitted;
 
-class _FlexiBalanceViewState extends State<FlexiBalanceView> {
   final UserService _usrService = locator<UserService>();
+
+  void trackBasicCardWithdrawTap(num withdrawableAmount) {
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.withdrawFloTapped,
+      properties: {
+        "new user":
+            locator<UserService>().userSegments.contains(Constants.NEW_USER),
+        "withdrawable_amount": withdrawableAmount,
+        "interest_rate": '8%',
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +96,7 @@ class _FlexiBalanceViewState extends State<FlexiBalanceView> {
                     ),
                     Text(
                       locale.retiiredFlexi,
-                      style: TextStyles.rajdhaniSB.body2
+                      style: TextStyles.rajdhaniSB.title5
                           .colour(UiConstants.kTextColor),
                     )
                   ],
@@ -109,13 +125,25 @@ class _FlexiBalanceViewState extends State<FlexiBalanceView> {
                           style: TextStyles.sourceSans.body3
                               .colour(UiConstants.kFAQsAnswerColor),
                         ),
-                        Text(
-                          BaseUtil.formatIndianRupees(
-                            model.withdrawableQuantity?.amount ?? 0.toDouble(),
-                          ),
-                          style: TextStyles.sourceSans.body2
-                              .colour(UiConstants.textGray70),
-                        ),
+                        model.withdrawableQuantity == null
+                            ? const SpinKitThreeBounce(
+                                color: UiConstants.teal2,
+                                size: 14,
+                              )
+                            : model.withdrawableResponseMessage.isNotEmpty
+                                ? Text(
+                                    model.withdrawableResponseMessage,
+                                    style: TextStyles.sourceSans.body2
+                                        .colour(UiConstants.textGray70),
+                                  )
+                                : Text(
+                                    BaseUtil.formatIndianRupees(
+                                      model.withdrawableQuantity?.amount ??
+                                          0.toDouble(),
+                                    ),
+                                    style: TextStyles.sourceSans.body2
+                                        .colour(UiConstants.textGray70),
+                                  ),
                         SizedBox(
                           height: SizeConfig.padding16,
                         ),
@@ -156,14 +184,12 @@ class _FlexiBalanceViewState extends State<FlexiBalanceView> {
                   child: SecondaryButton(
                     onPressed: () {
                       Haptic.vibrate();
-                      BaseUtil.openModalBottomSheet(
-                        addToScreenStack: true,
-                        enableDrag: false,
-                        hapticVibrate: true,
-                        isBarrierDismissible: false,
-                        backgroundColor: Colors.transparent,
-                        isScrollControlled: true,
-                        content: LendboxWithdrawalView(),
+                      trackBasicCardWithdrawTap(
+                        model.withdrawableQuantity?.amount ?? 0.toDouble(),
+                      );
+                      BaseUtil().openSellModalSheet(
+                        investmentType: InvestmentType.LENDBOXP2P,
+                        onWithDrawalSubitted: onWithDrawalSubitted,
                       );
                     },
                     label: locale.withdraw,

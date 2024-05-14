@@ -7,8 +7,37 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/constants/analytics_events_constants.dart';
+import '../../../../core/enums/investment_type.dart';
+import '../../../../core/service/analytics/analytics_service.dart';
+import '../../../../core/service/notifier_services/user_service.dart';
+import '../../../../util/locator.dart';
+
 class Footer extends StatelessWidget {
   const Footer({super.key});
+  void trackSaveDailyButtonTapped() {
+    final totalInvestment =
+        locator<UserService>().userPortfolio.flo.balance.toDouble();
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.saveDailyTappedOnAssetDetailPage,
+      properties: {
+        "type": InvestmentType.LENDBOXP2P.name,
+        "total_investments": totalInvestment,
+      },
+    );
+  }
+
+  void trackSaveOnceButtonTapped() {
+    final totalInvestment =
+        locator<UserService>().userPortfolio.flo.balance.toDouble();
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.saveOnceTappedOnAssetDetailPage,
+      properties: {
+        "type": InvestmentType.LENDBOXP2P.name,
+        "total_investments": totalInvestment,
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +77,11 @@ class Footer extends StatelessWidget {
             children: [
               Expanded(
                 child: SecondaryOutlinedButton(
-                  label: 'SAVE ONCE',
-                  onPressed: () =>
-                      DefaultTabController.of(context).animateTo(1),
+                  label: 'INVEST ONCE',
+                  onPressed: () {
+                    trackSaveOnceButtonTapped();
+                    DefaultTabController.of(context).animateTo(1);
+                  },
                 ),
               ),
               SizedBox(
@@ -58,8 +89,9 @@ class Footer extends StatelessWidget {
               ),
               Expanded(
                 child: SecondaryButton(
-                  label: 'SAVE DAILY',
+                  label: 'START SIP',
                   onPressed: () {
+                    trackSaveDailyButtonTapped();
                     AppState.delegate!.appState.currentAction = PageAction(
                       page: SipIntroPageConfig,
                       widget: const SipIntroView(),

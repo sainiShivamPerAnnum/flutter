@@ -59,7 +59,7 @@ class _LendboxAmountInputViewState extends State<LendboxAmountInputView> {
         (e) => e.value.toString() == (widget.amountController?.text ?? ''),
       );
     } else {
-      widget.amountController!.text = '1';
+      widget.amountController!.text = '10';
     }
     updateFieldWidth();
   }

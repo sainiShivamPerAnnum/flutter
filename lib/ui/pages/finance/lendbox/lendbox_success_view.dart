@@ -5,6 +5,9 @@ import 'package:felloapp/core/enums/transaction_type_enum.dart';
 import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
+import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
+import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
+import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -19,6 +22,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 
 class LendboxSuccessView extends StatefulWidget {
@@ -53,6 +57,12 @@ class _LendboxSuccessViewState extends State<LendboxSuccessView> {
     super.initState();
     AppState.blockNavigation();
     locator<TambolaService>().getBestTambolaTickets(forced: true);
+    final fundsBloc = context.read<MyFundsBloc>();
+    final transactionBloc = context.read<TransactionBloc>();
+    final sipTransactionBloc = context.read<SIPTransactionBloc>();
+    fundsBloc.reset();
+    transactionBloc.reset();
+    sipTransactionBloc.reset();
   }
 
   String getTicketMultiplier() {
@@ -91,9 +101,7 @@ class _LendboxSuccessViewState extends State<LendboxSuccessView> {
       );
     }
 
-    while (AppState.screenStack.length > 1) {
-      await AppState.backButtonDispatcher!.didPopRoute();
-    }
+    await AppState.backButtonDispatcher!.didPopRoute();
 
     AppState.delegate!.appState.setCurrentTabIndex =
         DynamicUiUtils.navBar.indexWhere((element) => element == 'SV');
@@ -285,7 +293,7 @@ class _LendboxSuccessViewState extends State<LendboxSuccessView> {
                                                     ?.maturityDate !=
                                                 null
                                             ? "Return %"
-                                            : locale.totalBalance,
+                                            : locale.totalP2PBalance,
                                         style: TextStyles.sourceSans.body2
                                             .colour(UiConstants.kTextColor2),
                                       ),

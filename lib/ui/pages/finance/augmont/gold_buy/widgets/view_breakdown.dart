@@ -16,6 +16,7 @@ import 'package:felloapp/util/assets.dart' as a;
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +24,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 import 'package:upi_pay/upi_pay.dart';
-
 import '../../../../../../util/locator.dart';
 
 class GoldBreakdownView extends StatefulWidget {
@@ -778,6 +779,7 @@ class FloBreakdownView extends StatefulWidget {
 
 class _FloBreakdownViewState extends State<FloBreakdownView> {
   bool _isNetbankingMandatory = false;
+  final locale = locator<S>();
 
   final num _multiplicationFactor = 1;
 
@@ -794,8 +796,6 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
 
   @override
   Widget build(BuildContext context) {
-    final showMaturity =
-        !(widget.model.floAssetType == Constants.ASSET_TYPE_FLO_FELXI);
     final currentDateTime = DateTime.now();
 
     return WillPopScope(
@@ -894,11 +894,26 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                         SizedBox(
                           width: SizeConfig.padding4,
                         ),
-                        Icon(
-                          Icons.info_outlined,
-                          color: UiConstants.grey1,
-                          size: SizeConfig.padding16,
-                        )
+                        SuperTooltip(
+                          hideTooltipOnTap: true,
+                          backgroundColor: UiConstants.kTextColor4,
+                          popupDirection: TooltipDirection.up,
+                          content: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              locale.transactionTooltip,
+                              softWrap: true,
+                              style: const TextStyle(
+                                color: UiConstants.kTextColor,
+                              ),
+                            ),
+                          ),
+                          child: Icon(
+                            Icons.info_outline,
+                            size: SizeConfig.padding14,
+                            color: UiConstants.greyBg,
+                          ),
+                        ),
                       ],
                     ),
                     SizedBox(
@@ -927,7 +942,7 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                           ),
                           const Spacer(),
                           Text(
-                            "$totalTicketsEarned",
+                            "${widget.model.totalTickets}",
                             style: TextStyles.sourceSansSB.body1,
                           ),
                         ],
@@ -940,12 +955,16 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                                   children: [
                                     Text(
                                       "Happy Hour Tickets",
-                                      style: TextStyles.sourceSans.body2,
+                                      style: TextStyles.sourceSans.body2.colour(
+                                        UiConstants.kBlogTitleColor,
+                                      ),
                                     ),
                                     const Spacer(),
                                     Text(
                                       "${widget.model.happyHourTickets}",
-                                      style: TextStyles.sourceSans.body2,
+                                      style: TextStyles.sourceSans.body2.colour(
+                                        UiConstants.kBlogTitleColor,
+                                      ),
                                     ),
                                   ],
                                 ),

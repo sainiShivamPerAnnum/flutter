@@ -104,6 +104,7 @@ dependencies:
   showcaseview:
     path: packages/showcaseview
   sliver_tools: ^0.2.12
+  super_tooltip: ^2.0.7
 
 
 

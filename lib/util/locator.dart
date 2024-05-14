@@ -42,7 +42,6 @@ import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/feature_flag_service/feature_flag_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
-import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -77,7 +76,6 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_vm.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transaction_history_vm.dart';
@@ -179,7 +177,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(MarketingEventHandlerService.new);
   locator.registerLazySingleton(SubService.new);
   locator.registerLazySingleton(PowerPlayService.new);
-  locator.registerLazySingleton(LendboxMaturityService.new);
+  // locator.registerLazySingleton(LendboxMaturityService.new);
 
   //Repository
   locator.registerLazySingleton(DBModel.new);
@@ -273,8 +271,6 @@ Future<void> setupLocator() async {
   locator.registerFactory(FelloCoinBarViewModel.new);
   locator.registerFactory(FAQCardViewModel.new);
   locator.registerFactory(SourceAdaptiveAssetViewModel.new);
-
-  locator.registerFactory(FloPremiumDetailsViewModel.new);
   locator.registerFactory(AssetPreferenceViewModel.new);
 
   await locator.allReady();

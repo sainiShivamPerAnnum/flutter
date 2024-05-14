@@ -14,6 +14,12 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+
+import '../../../../../core/constants/analytics_events_constants.dart';
+import '../../../../../core/service/analytics/analytics_service.dart';
+import '../../../../../core/service/notifier_services/user_service.dart';
+import '../../../../../util/constants.dart';
 
 class TransactionCard extends StatelessWidget {
   const TransactionCard({
@@ -25,16 +31,56 @@ class TransactionCard extends StatelessWidget {
   final UserTransaction transaction;
   final MyFundsBloc fundBloc;
 
+  void trackDepositCardInFloSlabTapped({
+    required LendboxAssetConfiguration assetInformation,
+    required num totalInvested,
+    required num currentValue,
+    required String maturityDate,
+  }) {
+    final kycStatus = locator<UserService>().baseUser!.isKycVerified;
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.depositCardInFloSlabTapped,
+      properties: {
+        "type": assetInformation.fundType,
+        "interest": assetInformation.interest,
+        "total_invested": totalInvested,
+        // "total_transaction": ,
+        "kyc_status": kycStatus,
+
+        "asset_name": assetInformation.assetName,
+        "new_user": locator<UserService>().userSegments.contains(
+              Constants.NEW_USER,
+            ),
+
+        "current_amount": currentValue,
+        "maturity_date": maturityDate
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final locale = locator<S>();
     final assetInformation = AppConfigV2.instance.lendBoxP2P.firstWhere(
       (e) => e.fundType == transaction.lbMap.fundType,
     );
+    bool isNewAsset = AppConfigV2.instance.lbV2.values
+        .toList()
+        .any((fund) => fund.fundType == transaction.lbMap.fundType);
     return GestureDetector(
       onTap: () {
         Haptic.vibrate();
-
+        trackDepositCardInFloSlabTapped(
+          assetInformation: assetInformation,
+          totalInvested: transaction.amount,
+          currentValue:
+              transaction.amount + (transaction.lbMap.gainAmount ?? 0),
+          maturityDate: DateFormat('dd/MMM/yyyy').format(
+            DateTime.fromMicrosecondsSinceEpoch(
+              transaction.lbMap.maturityAt!.microsecondsSinceEpoch,
+            ),
+          ),
+        );
         final transactionBloc = context.read<TransactionBloc>();
         AppState.delegate!.appState.currentAction = PageAction(
           state: PageState.addWidget,
@@ -156,26 +202,31 @@ class TransactionCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  transaction.lbMap.maturityPref == '0' ||
-                          transaction.lbMap.maturityPref == 'NA'
-                      ? locale.movesToVault
-                      : locale.reInvestOnMaturity,
+                  transaction.lbMap.maturityPref == '1'
+                      ? locale.reInvestOnMaturity
+                      : isNewAsset
+                          ? locale.movesToVault
+                          : 'Moves to P2P Wallet',
                   style: TextStyles.sourceSans.body4.copyWith(
                     color: UiConstants.textGray60,
                   ),
                 ),
                 Text(
-                  transaction.lbMap.maturityPref == '0' ||
-                          transaction.lbMap.maturityPref == 'NA'
-                      ? locale
-                          .loosingReturns(assetInformation.reinvestInterestGain)
-                      : locale
-                          .extraReturns(assetInformation.reinvestInterestGain),
+                  transaction.lbMap.maturityPref == '1'
+                      ? isNewAsset
+                          ? locale.extraReturns(
+                              assetInformation.reinvestInterestGain,
+                            )
+                          : locale.reinvestInSamePlan
+                      : isNewAsset
+                          ? locale.loosingReturns(
+                              assetInformation.reinvestInterestGain,
+                            )
+                          : locale.withdrawMaturity,
                   style: TextStyles.sourceSans.body4.copyWith(
-                    color: transaction.lbMap.maturityPref == '0' ||
-                            transaction.lbMap.maturityPref == 'NA'
-                        ? UiConstants.peach2
-                        : UiConstants.yellow2,
+                    color: transaction.lbMap.maturityPref == '1'
+                        ? UiConstants.yellow2
+                        : UiConstants.peach2,
                   ),
                 )
               ],

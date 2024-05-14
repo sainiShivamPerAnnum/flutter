@@ -180,6 +180,7 @@ class LendboxAssetConfiguration {
   final int maturityDuration;
   final String assetName;
   final num reinvestInterestGain;
+  final num minAmount;
 
   const LendboxAssetConfiguration({
     required this.fundType,
@@ -194,6 +195,7 @@ class LendboxAssetConfiguration {
     this.assetName = '',
     this.highlights = '',
     this.description = '',
+    this.minAmount = 100,
   });
 
   factory LendboxAssetConfiguration.fromJson(Map<String, dynamic> json) =>

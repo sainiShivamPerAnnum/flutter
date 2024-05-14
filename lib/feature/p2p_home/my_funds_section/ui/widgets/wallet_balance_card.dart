@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
+import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_flexi.dart';
@@ -10,20 +12,29 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WalletBalanceCard extends StatelessWidget {
   const WalletBalanceCard({
+    required this.fundBloc,
     super.key,
   });
+  final MyFundsBloc fundBloc;
 
   @override
   Widget build(BuildContext context) {
     final locale = locator<S>();
     return GestureDetector(
       onTap: () {
+        final transactionBloc = context.read<TransactionBloc>();
         AppState.delegate!.appState.currentAction = PageAction(
           state: PageState.addWidget,
-          widget: const FlexiBalanceView(),
+          widget: FlexiBalanceView(
+            onWithDrawalSubitted: () {
+              fundBloc.reset();
+              transactionBloc.reset();
+            },
+          ),
           page: FlexiBalancePageConfig,
         );
       },

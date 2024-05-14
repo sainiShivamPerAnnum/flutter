@@ -14,6 +14,11 @@ class CouponModel {
   final int? minPurchase;
   final num? maxRewardAmount;
   final String? highlight;
+  final int? ticketMultiplier;
+  final String? disabledDescription;
+  final String? icon;
+  final String? couponType;
+  final String? couponSubType;
   static final helper =
       HelperModel<CouponModel>((map) => CouponModel.fromMap(map));
   CouponModel({
@@ -27,6 +32,11 @@ class CouponModel {
     this.minPurchase,
     this.maxRewardAmount,
     this.highlight,
+    this.ticketMultiplier,
+    this.disabledDescription,
+    this.icon,
+    this.couponType,
+    this.couponSubType,
   });
 
   CouponModel copyWith({
@@ -40,6 +50,11 @@ class CouponModel {
     int? minPurchase,
     num? maxRewardAmount,
     String? highlight,
+    int? ticketMultiplier,
+    String? disabledDescription,
+    String? icon,
+    String? couponType,
+    String? couponSubType,
   }) {
     return CouponModel(
       id: id ?? this.id,
@@ -52,6 +67,11 @@ class CouponModel {
       minPurchase: minPurchase ?? this.minPurchase,
       highlight: highlight ?? this.highlight,
       maxRewardAmount: maxRewardAmount ?? this.maxRewardAmount,
+      ticketMultiplier: ticketMultiplier ?? this.ticketMultiplier,
+      disabledDescription: disabledDescription ?? this.disabledDescription,
+      icon: icon ?? this.icon,
+      couponType: couponType ?? this.couponType,
+      couponSubType: couponSubType ?? this.couponSubType,
     );
   }
 
@@ -67,12 +87,17 @@ class CouponModel {
       'minPurchase': minPurchase,
       'highlight': highlight,
       'maxRewardAmount': maxRewardAmount,
+      'ticketMultiplier': ticketMultiplier,
+      'disabledDescription': disabledDescription,
+      'icon': icon,
+      'couponType': couponType,
+      'couponSubType': couponSubType,
     };
   }
 
   factory CouponModel.fromMap(Map<String, dynamic> map) {
     return CouponModel(
-      id: map['id'].toString() ?? '',
+      id: map['id'].toString(),
       code: map['code'] ?? '',
       description: map['description'] ?? '',
       expiresOn: TimestampModel.fromMap(map['expiresOn']),
@@ -82,6 +107,11 @@ class CouponModel {
       minPurchase: map['minPurchase'] ?? 0,
       highlight: map['highlight'] ?? '',
       maxRewardAmount: map['maxRewardAmount'] ?? 0,
+      ticketMultiplier: map['ticketMultiplier'] ?? 0,
+      disabledDescription: map['disabledDesc'] ?? 'Disabled',
+      icon: map['icon'],
+      couponType: map['couponType'],
+      couponSubType: map['couponSubType'],
     );
   }
 
@@ -97,6 +127,11 @@ class CouponModel {
       minPurchase: 0,
       highlight: '',
       maxRewardAmount: 0,
+      ticketMultiplier: 0,
+      disabledDescription: 'Disabled',
+      icon: null,
+      couponType: null,
+      couponSubType: '',
     );
   }
 
@@ -123,7 +158,12 @@ class CouponModel {
         other.priority == priority &&
         other.minPurchase == minPurchase &&
         other.highlight == highlight &&
-        other.maxRewardAmount == maxRewardAmount;
+        other.maxRewardAmount == maxRewardAmount &&
+        other.ticketMultiplier == ticketMultiplier &&
+        other.disabledDescription == disabledDescription &&
+        other.couponType == couponType &&
+        other.couponSubType == couponSubType &&
+        other.icon == icon;
   }
 
   @override
@@ -137,6 +177,11 @@ class CouponModel {
         priority.hashCode ^
         minPurchase.hashCode ^
         maxRewardAmount.hashCode ^
+        ticketMultiplier.hashCode ^
+        disabledDescription.hashCode ^
+        icon.hashCode ^
+        couponType.hashCode ^
+        couponSubType.hashCode ^
         highlight.hashCode;
   }
 }

@@ -38,6 +38,8 @@ import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:tuple/tuple.dart';
 
+import '../hometabs/home/card_actions_notifier.dart';
+
 GlobalKey felloAppBarKey = GlobalKey();
 
 class Root extends StatefulWidget {
@@ -114,20 +116,20 @@ class _RootState extends State<Root> {
                   const QABanner(),
                 ],
               ),
-              // floatingActionButtonLocation:
-              //     FloatingActionButtonLocation.miniCenterDocked,
-              // floatingActionButton: Selector<CardActionsNotifier, bool>(
-              //     selector: (_, notifier) => notifier.isVerticalView,
-              //     builder: (context, isCardsOpen, child) {
-              //       return AnimatedScale(
-              //         scale: isCardsOpen ? 0 : 1,
-              //         curve: Curves.easeIn,
-              //         duration: const Duration(milliseconds: 300),
-              //         child: rootController.navItems.values.length % 2 == 0
-              //             ? model.centerTab(ctx)
-              //             : const SizedBox(),
-              //       );
-              //     }),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.miniCenterDocked,
+              floatingActionButton: Selector<CardActionsNotifier, bool>(
+                  selector: (_, notifier) => notifier.isVerticalView,
+                  builder: (context, isCardsOpen, child) {
+                    return AnimatedScale(
+                      scale: isCardsOpen ? 0 : 1,
+                      curve: Curves.easeIn,
+                      duration: const Duration(milliseconds: 300),
+                      child: rootController.navItems.values.length % 2 == 0
+                          ? model.centerTab(ctx)
+                          : const SizedBox(),
+                    );
+                  }),
               bottomNavigationBar: const BottomNavBar(),
             ),
             const CircularAnim(),

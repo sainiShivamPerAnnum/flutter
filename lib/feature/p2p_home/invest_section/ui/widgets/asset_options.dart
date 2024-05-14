@@ -7,6 +7,10 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../base_util.dart';
+import '../../../../../core/constants/analytics_events_constants.dart';
+import '../../../../../core/service/analytics/analytics_service.dart';
+import '../../../../../core/service/notifier_services/user_service.dart';
+import '../../../../../util/constants.dart';
 
 class AssetOptionsWidget extends StatelessWidget {
   final List<LendboxAssetConfiguration> assets;
@@ -30,6 +34,28 @@ class AssetOptionsWidget extends StatelessWidget {
 class AssetInformationCard extends StatelessWidget {
   final LendboxAssetConfiguration config;
 
+  void trackFloSlabBannerTapped() {
+    final totalInvestment =
+        locator<UserService>().userPortfolio.flo.balance.toDouble();
+    final props = {
+      "interest": config.interest,
+      "tickets_multiple": config.tambolaMultiplier,
+      "reinvestment_interest": config.reinvestInterestGain,
+      "type": config.fundType,
+      "total_invested": totalInvestment,
+      "asset_name": config.assetName,
+      "new_user": locator<UserService>().userSegments.contains(
+            Constants.NEW_USER,
+          ),
+      "lockin period": config.maturityDuration,
+    };
+
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.floSlabBannerTapped,
+      properties: props,
+    );
+  }
+
   const AssetInformationCard({
     required this.config,
     super.key,
@@ -40,6 +66,7 @@ class AssetInformationCard extends StatelessWidget {
     final locale = locator<S>();
     return GestureDetector(
       onTap: () {
+        trackFloSlabBannerTapped();
         BaseUtil.openFloBuySheet(floAssetType: config.fundType);
       },
       child: Container(

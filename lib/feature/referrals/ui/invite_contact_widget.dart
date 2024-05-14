@@ -9,7 +9,7 @@ import 'package:felloapp/feature/referrals/bloc/referral_cubit.dart';
 import 'package:felloapp/feature/referrals/ui/contact_list_widget.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/loader.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/detail_page/widgets/star_custom_painter.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_vm.dart';
 import 'package:felloapp/util/locator.dart';
