@@ -16,7 +16,7 @@ class LendboxRepo extends BaseRepo {
   static const _lendBox = 'lendbox';
 
   Future<ApiResponse<String>> createWithdrawal(
-    int amount,
+    num amount,
     String? payoutSourceId,
   ) async {
     try {
