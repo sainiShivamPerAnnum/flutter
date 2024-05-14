@@ -149,8 +149,9 @@ class _ButTicketsComponentState extends State<ButTicketsComponent> {
       width: SizeConfig.screenWidth,
       margin: const EdgeInsets.symmetric(horizontal: 18),
       padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.pageHorizontalMargins,
-          vertical: SizeConfig.padding32),
+        horizontal: SizeConfig.pageHorizontalMargins,
+        vertical: SizeConfig.padding32,
+      ),
       decoration: BoxDecoration(
         color: UiConstants.kBuyTicketBg,
         borderRadius: BorderRadius.all(
@@ -177,9 +178,7 @@ class _ButTicketsComponentState extends State<ButTicketsComponent> {
           Row(
             children: [
               Container(
-                // width: SizeConfig.screenWidth! * 0.30,
                 decoration: BoxDecoration(
-                  // color: const Color(0xff000000).withOpacity(0.5),
                   borderRadius: BorderRadius.circular(SizeConfig.roundness40),
                   border: Border.all(color: Colors.white, width: 1),
                 ),
@@ -218,7 +217,8 @@ class _ButTicketsComponentState extends State<ButTicketsComponent> {
                                 enabled: false,
                                 keyboardType:
                                     const TextInputType.numberWithOptions(
-                                        signed: true),
+                                  signed: true,
+                                ),
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                 ],

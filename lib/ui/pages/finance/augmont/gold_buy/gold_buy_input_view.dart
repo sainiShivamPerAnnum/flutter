@@ -53,21 +53,26 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
     AppState.onTap = () async {
       unawaited(AppState.backButtonDispatcher!.didPopRoute());
 
-      locator<AnalyticsService>()
-          .track(eventName: AnalyticsEvents.saveInitiate, properties: {
-        "investmentType": InvestmentType.AUGGOLD99.name,
-      });
+      locator<AnalyticsService>().track(
+        eventName: AnalyticsEvents.saveInitiate,
+        properties: {
+          "investmentType": InvestmentType.AUGGOLD99.name,
+        },
+      );
       if (widget.model.isIntentFlow) {
-        unawaited(BaseUtil.openModalBottomSheet(
-          isBarrierDismissible: true,
-          backgroundColor: const Color(0xff1A1A1A),
-          addToScreenStack: true,
-          isScrollControlled: true,
-          content: GoldBreakdownView(
-            model: widget.model,
-            showBreakDown: AppConfig.getValue(AppConfigKey.payment_brief_view),
+        unawaited(
+          BaseUtil.openModalBottomSheet(
+            isBarrierDismissible: true,
+            backgroundColor: const Color(0xff1A1A1A),
+            addToScreenStack: true,
+            isScrollControlled: true,
+            content: GoldBreakdownView(
+              model: widget.model,
+              showBreakDown:
+                  AppConfig.getValue(AppConfigKey.payment_brief_view),
+            ),
           ),
-        ));
+        );
       } else {
         if (!widget.augTxnService.isGoldBuyInProgress) {
           await widget.model.initiateBuy();
@@ -92,22 +97,25 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
               txnService: widget.augTxnService,
               trackCloseTapped: () {
                 analyticsService.track(
-                    eventName: AnalyticsEvents.savePageClosed,
-                    properties: {
-                      "Amount entered": widget.model.goldAmountController!.text,
-                      "Grams of gold": widget.model.goldAmountInGrams,
-                      "Asset": 'Gold',
-                      "Coupon Applied": widget.model.appliedCoupon != null
-                          ? widget.model.appliedCoupon!.code
-                          : "Not Applied",
-                    });
+                  eventName: AnalyticsEvents.savePageClosed,
+                  properties: {
+                    "Amount entered": widget.model.goldAmountController!.text,
+                    "Grams of gold": widget.model.goldAmountInGrams,
+                    "Asset": 'Gold',
+                    "Coupon Applied": widget.model.appliedCoupon != null
+                        ? widget.model.appliedCoupon!.code
+                        : "Not Applied",
+                  },
+                );
                 if (locator<BackButtonActions>().isTransactionCancelled) {
                   if (!AppState.isRepeated) {
                     locator<BackButtonActions>()
                         .showWantToCloseTransactionBottomSheet(
-                            double.parse(
-                                    widget.model.goldAmountController!.text)
-                                .round(),
+                            num.tryParse(
+                                  widget.model.goldAmountController?.text ??
+                                      "0",
+                                )?.round() ??
+                                0,
                             InvestmentType.AUGGOLD99, () {
                       widget.model.initiateBuy();
                       AppState.backButtonDispatcher!.didPopRoute();
@@ -142,7 +150,8 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
             Container(
               height: 1,
               margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins),
+                horizontal: SizeConfig.pageHorizontalMargins,
+              ),
               color: UiConstants.kModalSheetSecondaryBackgroundColor
                   .withOpacity(0.2),
             ),
@@ -182,7 +191,8 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
           ],
         ),
         CustomKeyboardSubmitButton(
-            onSubmit: () => widget.model.buyFieldNode.unfocus()),
+          onSubmit: () => widget.model.buyFieldNode.unfocus(),
+        ),
       ],
     );
   }

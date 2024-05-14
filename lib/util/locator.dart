@@ -41,7 +41,6 @@ import 'package:felloapp/core/service/fcm/fcm_handler_v2/fcm_handler_v2.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/feature_flag_service/feature_flag_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/lcl_db_api.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -111,7 +110,6 @@ import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/settings/settings_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_viewModel.dart';
-
 import 'package:felloapp/ui/service_elements/last_week/last_week_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -140,7 +138,7 @@ Future<void> setupLocator() async {
     ),
   );
   locator.registerLazySingleton(Api.new);
-  locator.registerLazySingleton(LocalApi.new);
+
   locator.registerLazySingleton(FcmHandlerDataPayloads.new);
   locator.registerLazySingleton(FcmHandler.new);
   locator.registerLazySingleton(() => FcmListener(locator()));
