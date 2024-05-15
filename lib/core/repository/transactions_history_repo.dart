@@ -23,7 +23,7 @@ class TransactionHistoryRepository extends BaseRepo {
   //todo @Hirdesh2101
   final _subsBaseUrl = FlavorConfig.isDevelopment()
       ? 'https://2je5zoqtuc.execute-api.ap-south-1.amazonaws.com/dev'
-      : 'https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod';
+      : 'https://2z48o79cm5.execute-api.ap-south-1.amazonaws.com/prod';
 
   Future<ApiResponse<TransactionResponse>> getUserTransactions({
     int limit = 30,

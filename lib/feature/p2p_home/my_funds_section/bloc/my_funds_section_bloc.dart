@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/sip_transaction_model.dart';
 import 'package:felloapp/core/model/transaction_response_model.dart';
@@ -16,31 +14,43 @@ class MyFundsBloc extends PaginationBloc<dynamic,
           initialPageReference: 0,
           resultConverterCallback: (result) {
             List<dynamic> combinedList = [];
-            int transactionSize = (result.item1.transactions ?? []).length;
-            int sipTransactionSize = result.item2.length;
+            List<dynamic>? transactions = result.item1.transactions ?? [];
+            List<dynamic> sipTransactions = result.item2;
+            int transactionSize = transactions.length;
+            int sipTransactionSize = sipTransactions.length;
+
             int i = 0, j = 0;
-            for (int k = 0; k < max(transactionSize, sipTransactionSize); k++) {
-              if (result.item1.transactions![i].timestamp!.compareTo(
-                    Timestamp.fromDate(
-                      DateTime.parse(result.item2[j].startDate),
-                    ),
-                  ) >=
+
+            // Handle edge case where any list might be empty
+            if (transactionSize == 0) return sipTransactions;
+            if (sipTransactionSize == 0) return transactions;
+
+            while (i < transactionSize && j < sipTransactionSize) {
+              // Convert startDate string to Timestamp (or similar object you use)
+              Timestamp transactionTimestamp = transactions[i].timestamp;
+              Timestamp sipTransactionTimestamp = Timestamp.fromDate(
+                  DateTime.parse(sipTransactions[j].startDate));
+
+              if (transactionTimestamp.compareTo(sipTransactionTimestamp) >=
                   0) {
-                combinedList.add(result.item1.transactions![i]);
+                combinedList.add(transactions[i]);
                 i++;
               } else {
-                combinedList.add(result.item2[j]);
+                combinedList.add(sipTransactions[j]);
                 j++;
               }
             }
+
+            // Append the remaining elements from either list
             while (i < transactionSize) {
-              combinedList.add(result.item1.transactions![i]);
+              combinedList.add(transactions[i]);
               i++;
             }
             while (j < sipTransactionSize) {
-              combinedList.add(result.item2[j]);
+              combinedList.add(sipTransactions[j]);
               j++;
             }
+
             return combinedList;
           },
           paginationCallBack: (pageReference) async {
