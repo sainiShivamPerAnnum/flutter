@@ -67,21 +67,9 @@ class MyApp extends HookWidget {
       child: MultiProvider(
         providers: [
           Provider(create: (_) => SipCubit()),
-          Provider(
-            create: (_) => TransactionBloc(
-              transactionHistoryRepo: locator(),
-            ),
-          ),
-          Provider(
-            create: (_) => MyFundsBloc(
-              transactionHistoryRepo: locator(),
-            ),
-          ),
-          Provider(
-            create: (_) => SIPTransactionBloc(
-              subscriptionRepo: locator(),
-            ),
-          ),
+          Provider(create: (_) => locator<TransactionBloc>()),
+          Provider(create: (_) => locator<MyFundsBloc>()),
+          Provider(create: (_) => locator<SIPTransactionBloc>()),
           ChangeNotifierProvider(create: (_) => locator<ConnectivityService>()),
           ChangeNotifierProvider(create: (_) => locator<DBModel>()),
           ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),

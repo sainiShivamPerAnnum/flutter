@@ -36,7 +36,8 @@ class SipCalculation {
     num? interest = interestSelection ??
         SipDataHolder.instance.data.selectAssetScreen.options
             .firstWhereOrNull((element) => element.type == currentAsset!.type)
-            ?.interest;
+            ?.interest ??
+        8;
     if (interest == null) {
       return 'N/A';
     }

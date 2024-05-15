@@ -118,6 +118,7 @@ class PaginationBloc<Type, Result, PageReference, Error extends Object>
     on<_FetchInitialPage>(_fetchInitialPage);
     on<_FetchNextPage>(_fetchNextPage);
     on<_Reset>(_reset);
+    on<_Dispose>(_dispose);
   }
 
   final PaginationCallBack<Result, PageReference, Error> _paginationCallBack;
@@ -278,6 +279,16 @@ class PaginationBloc<Type, Result, PageReference, Error extends Object>
     );
   }
 
+  /// Handles the event to dispose the pagination to its initial state.
+  Future<void> _dispose(
+    _Dispose event,
+    Emitter<PaginationState<Type, PageReference, Error>> emitter,
+  ) async {
+    emitter(
+      PaginationState(pageReference: _initialPageReference),
+    );
+  }
+
   /// Triggers the event to fetch the first page.
   void fetchFirstPage() {
     if (state.entries.isNotEmpty ||
@@ -301,5 +312,9 @@ class PaginationBloc<Type, Result, PageReference, Error extends Object>
   /// Triggers the event to reset the pagination.
   void reset() {
     add(const _Reset());
+  }
+
+  void dispose() {
+    add(const _Dispose());
   }
 }

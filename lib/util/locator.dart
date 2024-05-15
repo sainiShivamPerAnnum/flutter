@@ -59,6 +59,9 @@ import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
+import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
+import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'package:felloapp/feature/tambola/src/repos/tambola_repo.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_vm.dart';
@@ -175,6 +178,21 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(MarketingEventHandlerService.new);
   locator.registerLazySingleton(SubService.new);
   locator.registerLazySingleton(PowerPlayService.new);
+  locator.registerLazySingleton(
+    () => TransactionBloc(
+      transactionHistoryRepo: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => MyFundsBloc(
+      transactionHistoryRepo: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => SIPTransactionBloc(
+      subscriptionRepo: locator(),
+    ),
+  );
   // locator.registerLazySingleton(LendboxMaturityService.new);
 
   //Repository

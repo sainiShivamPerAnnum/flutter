@@ -1,5 +1,7 @@
+import 'package:felloapp/core/model/sip_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
+import 'package:felloapp/feature/p2p_home/my_funds_section/ui/widgets/sip_transaction_card.dart';
 import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
@@ -38,8 +40,7 @@ class _MyFundSectionState extends State<MyFundSection> {
       onRefresh: () async {
         fundsBloc.reset();
       },
-      child: BlocBuilder<MyFundsBloc,
-          PaginationState<UserTransaction, int, Object>>(
+      child: BlocBuilder<MyFundsBloc, PaginationState<dynamic, int, Object>>(
         builder: (context, state) {
           if (state.status.isFailedToLoadInitial) {
             return const ErrorPage();
@@ -95,10 +96,18 @@ class _MyFundSectionState extends State<MyFundSection> {
                             !state.status.isFetchingSuccessive) {
                           fundsBloc.fetchNextPage();
                         }
-                        return TransactionCard(
-                          transaction: fundsBloc.state.entries[index],
-                          fundBloc: fundsBloc,
-                        );
+                        if (fundsBloc.state.entries[index] is UserTransaction) {
+                          return TransactionCard(
+                            transaction: fundsBloc.state.entries[index],
+                            fundBloc: fundsBloc,
+                          );
+                        }
+                        if (fundsBloc.state.entries[index] is Subs) {
+                          return SIPTransactionCard(
+                            transaction: fundsBloc.state.entries[index],
+                          );
+                        }
+                        return null;
                       },
                       itemCount: fundsBloc.state.entries.length,
                       separatorBuilder: (context, index) => SizedBox(

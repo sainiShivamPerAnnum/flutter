@@ -24,6 +24,9 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
+import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
+import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -62,6 +65,9 @@ class RootViewModel extends BaseViewModel {
   final ScratchCardService _gtService = locator<ScratchCardService>();
   final BankAndPanService _bankAndKycService = locator<BankAndPanService>();
   final PowerPlayService _powerPlayService = locator<PowerPlayService>();
+  final TransactionBloc _transactionBloc = locator<TransactionBloc>();
+  final MyFundsBloc _myFundsBloc = locator<MyFundsBloc>();
+  final SIPTransactionBloc _sipTransactionBloc = locator<SIPTransactionBloc>();
   final AppState appState = locator<AppState>();
   final SubService _subscriptionService = locator<SubService>();
   final S locale;
@@ -512,6 +518,9 @@ class RootViewModel extends BaseViewModel {
               _bankAndKycService.dump();
               _subscriptionService.dispose();
               _powerPlayService.dump();
+              _transactionBloc.dispose();
+              _myFundsBloc.dispose();
+              _sipTransactionBloc.dispose();
               AppState.delegate!.appState.currentAction = PageAction(
                   state: PageState.replaceAll, page: SplashPageConfig);
               BaseUtil.showPositiveAlert(

@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/model/sip_transaction_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/transaction_response_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
@@ -17,6 +18,11 @@ class TransactionHistoryRepository extends BaseRepo {
 
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev'
+      : 'https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod';
+
+  //todo @Hirdesh2101
+  final _subsBaseUrl = FlavorConfig.isDevelopment()
+      ? 'https://2je5zoqtuc.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod';
 
   Future<ApiResponse<TransactionResponse>> getUserTransactions({
@@ -64,6 +70,23 @@ class TransactionHistoryRepository extends BaseRepo {
           TransactionResponse(isLastPage: isLastPage, transactions: events);
 
       return ApiResponse<TransactionResponse>(model: txnResponse, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<MySIPFunds>> getSubsTransactions() async {
+    try {
+      final String? uid = userService.baseUser!.uid;
+      final response = await APIService.instance.getData(
+        ApiPath.kSingleSipTransactions(uid),
+        cBaseUrl: _subsBaseUrl,
+        apiName: '$_transactions/getAllSubs',
+      );
+      final MySIPFunds txnResponse = MySIPFunds.fromJson(response);
+
+      return ApiResponse<MySIPFunds>(model: txnResponse, code: 200);
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 400);

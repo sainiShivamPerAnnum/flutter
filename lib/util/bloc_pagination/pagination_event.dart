@@ -30,3 +30,10 @@ class _FetchNextPage extends PaginationEvent {
 class _Reset extends PaginationEvent {
   const _Reset();
 }
+
+/// An event to close the pagination state.
+///
+/// This event clears the pagination state to its initial state
+class _Dispose extends PaginationEvent {
+  const _Dispose();
+}
