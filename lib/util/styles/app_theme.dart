@@ -8,6 +8,7 @@ class FelloTheme {
 
   static ThemeData darkMode() {
     return ThemeData(
+      useMaterial3: false,
       textSelectionTheme:
           const TextSelectionThemeData(cursorColor: UiConstants.primaryColor),
       primaryColor: const Color(0xff34C3A7),
