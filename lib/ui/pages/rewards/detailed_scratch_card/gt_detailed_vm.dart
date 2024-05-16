@@ -110,8 +110,8 @@ class GTDetailedViewModel extends BaseViewModel {
     });
   }
 
-  Future<String?> _getBearerToken() async {
-    String? token = await _userService.firebaseUser!.getIdToken();
+  Future<String> _getBearerToken() async {
+    String token = await _userService.firebaseUser!.getIdToken();
     _logger.d(token);
 
     return token;
