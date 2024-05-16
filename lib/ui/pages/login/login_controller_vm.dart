@@ -699,8 +699,8 @@ class LoginControllerViewModel extends BaseViewModel {
     }
   }
 
-  Future<String?> _getBearerToken() async {
-    String? token = await userService.firebaseUser!.getIdToken();
+  Future<String> _getBearerToken() async {
+    String token = await userService.firebaseUser!.getIdToken();
     logger.d("BearerToken: $token");
     return token;
   }
