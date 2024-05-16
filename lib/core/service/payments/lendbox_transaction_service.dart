@@ -166,9 +166,12 @@ class LendboxTransactionService extends BaseTransactionService
         currentTransactionState = TransactionState.success;
         Haptic.vibrate();
       }
-      _transactionBloc.reset();
-      _sipTransactionBloc.reset();
-      _myFundsBloc.reset();
+      if (currentTransactionState == TransactionState.success) {
+        _transactionBloc.reset();
+        _sipTransactionBloc.reset();
+        _myFundsBloc.reset();
+        unawaited(_userService.updatePortFolio());
+      }
       unawaited(
           _txnHistoryService.updateTransactions(InvestmentType.LENDBOXP2P));
     } catch (e) {

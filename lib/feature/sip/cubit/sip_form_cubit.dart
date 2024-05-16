@@ -54,7 +54,7 @@ class SipFormCubit extends Cubit<SipFormState> {
     List<String> tabOptions =
         SipDataHolder.instance.data.amountSelectionScreen.options;
     int editSipTab = SipDataHolder.instance.data.amountSelectionScreen.options
-        .indexOf(prefillFrequency ?? 'DAILY');
+        .indexOf(prefillFrequency ?? tabOptions[0]);
     List<SipOptions> options = SipDataHolder.instance.data.amountSelectionScreen
         .data[tabOptions[editSipTab]]!.options;
     SipOptions? maxValueOption = options.reduce((currentMax, next) =>

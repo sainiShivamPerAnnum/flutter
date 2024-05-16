@@ -102,7 +102,7 @@ class AssetComparisonSection extends StatelessWidget {
                               width: SizeConfig.padding20,
                             ),
                             Text(
-                              isGold ? "100%" : "10%",
+                              isGold ? "100%" : "11%",
                               style: TextStyles.rajdhaniSB.title1,
                             ),
 

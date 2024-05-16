@@ -167,7 +167,7 @@ class GetterRepository extends BaseRepo {
       '',
       apiName: '$_getters/getPageData',
       cBaseUrl:
-          'https://d18gbwu7fwwwtf.cloudfront.net/new_user_flow/$variant.json',
+          'https://d18gbwu7fwwwtf.cloudfront.net/new_user_flow/v1/$variant.json',
     );
     try {
       final pageData = PageData.fromJson(response);

@@ -129,7 +129,7 @@ class _MyFundSectionState extends State<MyFundSection> {
                   )
                 ],
               ),
-              const Footer(),
+              if (fundsBloc.state.entries.isNotEmpty) const Footer(),
             ],
           );
         },
