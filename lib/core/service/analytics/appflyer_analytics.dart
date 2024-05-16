@@ -62,12 +62,12 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
       );
 
       _appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
-      await _appsflyerSdk.setAppInviteOneLinkID('uxu0', (res) {
+      _appsflyerSdk.setAppInviteOneLinkID('uxu0', (res) {
         _logger.d("appsflyer setAppInviteOneLinkID callback:$res");
       });
       // _appsflyerSdk.setOneLinkCustomDomain([_brandedDomain]);
 
-      _appsflyerSdk.onDeepLinking((result) {
+      _appsflyerSdk.onDeepLinking((DeepLinkResult result) {
         _logger.d('appflyer deeplink $result');
       });
 
