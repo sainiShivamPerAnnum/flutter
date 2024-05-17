@@ -48,8 +48,8 @@ FloTiers _$FloTiersFromJson(Map<String, dynamic> json) => FloTiers(
     );
 
 Asset _$AssetFromJson(Map<String, dynamic> json) => Asset(
-      absGains: json['absGains'] as num? ?? 0.0,
-      percGains: json['percGains'] as num? ?? 0.0,
+      absGains: json['absGain'] as num? ?? 0.0,
+      percGains: json['percGain'] as num? ?? 0.0,
       principle: json['principle'] as num? ?? 0.0,
       balance: json['balance'] as num? ?? 0.0,
       currentValue: json['currentValue'] as num? ?? 0.0,

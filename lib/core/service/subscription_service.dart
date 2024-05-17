@@ -230,7 +230,10 @@ class SubService extends ChangeNotifier {
     required int amount,
   }) async {
     final res = await _subscriptionRepo.updateSubscription(
-        freq: freq, id: id, amount: amount);
+      freq: freq,
+      id: id,
+      amount: amount,
+    );
     if (res.isSuccess()) {
       return true;
     } else {
@@ -267,15 +270,18 @@ class SubService extends ChangeNotifier {
     }
   }
 
-  Future<void> getSubscriptionTransactionHistory(
-      {bool paginate = false, String asset = ''}) async {
+  Future<void> getSubscriptionTransactionHistory({
+    bool paginate = false,
+    String asset = '',
+  }) async {
     if (asset.isEmpty) {
       if (allSubTxnList.isNotEmpty && !paginate) return;
       if (hasNoMoreSubsTxns) return;
       final res = await _subscriptionRepo.getSubscriptionTransactionHistory(
-          limit: 30,
-          offset: allSubTxnList.isEmpty ? null : allSubTxnList.length,
-          asset: '');
+        limit: 30,
+        offset: allSubTxnList.isEmpty ? null : allSubTxnList.length,
+        asset: '',
+      );
       if (res.isSuccess()) {
         if (res.model!.length < 30) hasNoMoreSubsTxns = true;
         allSubTxnList.addAll(res.model!);
@@ -294,9 +300,10 @@ class SubService extends ChangeNotifier {
       }
       if (hasNoMoreAugSubsTxns) return;
       final res = await _subscriptionRepo.getSubscriptionTransactionHistory(
-          limit: 30,
-          offset: augSubTxnList.isEmpty ? null : augSubTxnList.length,
-          asset: asset);
+        limit: 30,
+        offset: augSubTxnList.isEmpty ? null : augSubTxnList.length,
+        asset: asset,
+      );
       if (res.isSuccess()) {
         if (res.model!.length < 30) hasNoMoreAugSubsTxns = true;
         augSubTxnList.addAll(res.model!);
@@ -314,9 +321,10 @@ class SubService extends ChangeNotifier {
       }
       if (hasNoMoreLbSubsTxns) return;
       final res = await _subscriptionRepo.getSubscriptionTransactionHistory(
-          limit: 30,
-          offset: lbSubTxnList.isEmpty ? null : lbSubTxnList.length,
-          asset: asset);
+        limit: 30,
+        offset: lbSubTxnList.isEmpty ? null : lbSubTxnList.length,
+        asset: asset,
+      );
       if (res.isSuccess()) {
         if (res.model!.length < 30) hasNoMoreLbSubsTxns = true;
         lbSubTxnList.addAll(res.model!);
@@ -398,7 +406,8 @@ class SubService extends ChangeNotifier {
       try {
         List<ApplicationMeta> allUpiApps =
             await UpiPay.getInstalledUpiApplications(
-                statusType: UpiApplicationDiscoveryAppStatusType.all);
+          statusType: UpiApplicationDiscoveryAppStatusType.all,
+        );
 
         for (final element in allUpiApps) {
           if (element.upiApplication.appName == "Paytm" &&
@@ -411,16 +420,16 @@ class SubService extends ChangeNotifier {
                   .contains('E')) {
             appMetaList.add(element);
           }
-          //todo @Hirdesh2101
+          // todo @Hirdesh2101
           // debug assertion to avoid this in production.
-          // assert(() {
-          if (element.upiApplication.appName == "PhonePe Simulator" &&
-              AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
-                  .contains('E')) {
-            appMetaList.add(element);
-          }
-          // return true;
-          // }());
+          assert(() {
+            if (element.upiApplication.appName == "PhonePe Simulator" &&
+                AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+                    .contains('E')) {
+              appMetaList.add(element);
+            }
+            return true;
+          }());
 
           if (element.upiApplication.appName == "PhonePe Preprod" &&
               AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)

@@ -859,7 +859,8 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                                         style: TextStyles
                                                             .rajdhaniM.body3
                                                             .colour(
-                                                                Colors.white),
+                                                          Colors.white,
+                                                        ),
                                                       ),
                                                     )
                                                   : GestureDetector(

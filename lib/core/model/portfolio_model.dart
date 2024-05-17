@@ -75,7 +75,9 @@ class FloTiers {
 
 @_deserializable
 class Asset {
+  @JsonKey(name: "absGain")
   final num absGains;
+  @JsonKey(name: "percGain")
   final num percGains;
   final num principle;
   final num balance; // gold balance in rupees.
