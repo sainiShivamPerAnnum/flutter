@@ -224,7 +224,11 @@ class _TransactionSectionState extends State<TransactionSection>
               )
             ],
           ),
-          const Footer()
+          if ((transactionBloc.state.entries.isNotEmpty &&
+                  _tabController.index == 0) ||
+              (sipTransactionBloc.state.entries.isNotEmpty &&
+                  _tabController.index == 1))
+            const Footer()
         ],
       ),
     );
