@@ -420,7 +420,7 @@ class SubService extends ChangeNotifier {
                   .contains('E')) {
             appMetaList.add(element);
           }
-          // todo @Hirdesh2101
+
           // debug assertion to avoid this in production.
           assert(() {
             if (element.upiApplication.appName == "PhonePe Simulator" &&
