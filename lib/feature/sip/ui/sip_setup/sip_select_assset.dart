@@ -1,6 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/sip/cubit/selectedAsset_cubit.dart';
 import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -48,7 +47,6 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
   ];
   List<String> titles = [];
   List<String> subTitle = [];
-  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   @override
   void initState() {

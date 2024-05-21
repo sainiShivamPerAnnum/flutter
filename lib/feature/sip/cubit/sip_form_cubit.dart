@@ -37,16 +37,19 @@ class SipFormCubit extends Cubit<SipFormState> {
           .instance.data.amountSelectionScreen.data[tabOptions[index]]!.options;
       SipOptions? maxValueOption = options.reduce((currentMax, next) =>
           next.value > currentMax.value ? next : currentMax);
-      int _upperLimit = maxValueOption.value;
-      int _division = options.length;
+      SipOptions? minValueOption = options.reduce((currentMax, next) =>
+          next.value < currentMax.value ? next : currentMax);
       int currentAmount = options.firstWhere((option) => option.best).value;
-      emit((state as SipFormCubitState).copyWith(
+      emit(
+        (state as SipFormCubitState).copyWith(
           currentTab: index,
           bestOption: options.firstWhere((option) => option.best),
           division: options.length,
           upperLimit: maxValueOption.value,
           formAmount: currentAmount,
-          lowerLimit: _upperLimit / _division));
+          lowerLimit: minValueOption.value,
+        ),
+      );
     }
   }
 
@@ -59,17 +62,18 @@ class SipFormCubit extends Cubit<SipFormState> {
         .data[tabOptions[editSipTab]]!.options;
     SipOptions? maxValueOption = options.reduce((currentMax, next) =>
         next.value > currentMax.value ? next : currentMax);
+    SipOptions? minValueOption = options.reduce((currentMax, next) =>
+        next.value < currentMax.value ? next : currentMax);
     SipOptions bestOption = options.firstWhere((option) => option.best);
     int currentAmount = prefillAmount ?? bestOption.value;
-    int _upperLimit = maxValueOption.value;
-    int _division = options.length;
     emit(SipFormCubitState(
-        formAmount: currentAmount,
-        currentTab: editSipTab,
-        bestOption: bestOption,
-        division: options.length,
-        upperLimit: maxValueOption.value,
-        lowerLimit: _upperLimit / _division));
+      formAmount: currentAmount,
+      currentTab: editSipTab,
+      bestOption: bestOption,
+      division: options.length,
+      upperLimit: maxValueOption.value,
+      lowerLimit: minValueOption.value,
+    ));
   }
 
   Future<bool> editSipTrigger(

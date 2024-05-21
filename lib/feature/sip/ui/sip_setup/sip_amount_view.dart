@@ -3,6 +3,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
+import 'package:felloapp/core/model/sip_model/sip_options.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
@@ -185,10 +186,15 @@ class _SipFormAmountState extends State<SipFormAmount> {
                               AmountSlider(
                                 lowerLimit: state.lowerLimit.toDouble(),
                                 upperLimit: state.upperLimit.toDouble(),
-                                division: state.division.toInt(),
                                 amount: state.formAmount.toDouble(),
                                 onChanged: formmodel.setAmount,
-                                bestOption: state.bestOption.order,
+                                options: SipDataHolder
+                                        .instance
+                                        .data
+                                        .amountSelectionScreen
+                                        .data[tabOptions[state.currentTab]]
+                                        ?.options ??
+                                    [],
                               ),
                             ],
                           ),
@@ -612,20 +618,18 @@ class BorderPainter extends CustomPainter {
 class AmountSlider extends StatelessWidget {
   const AmountSlider({
     required this.onChanged,
-    required this.bestOption,
+    required this.options,
     this.amount = 10000,
     this.upperLimit = 15000,
     this.lowerLimit = 500,
     super.key,
-    this.division = 5,
   });
 
   final void Function(int) onChanged;
   final double amount;
   final double upperLimit;
   final double lowerLimit;
-  final int division;
-  final int bestOption;
+  final List<SipOptions> options;
 
   @override
   Widget build(BuildContext context) {
@@ -639,16 +643,15 @@ class AmountSlider extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              for (int i = 0; i < division; i++)
+              for (int i = 0; i < options.length; i++)
                 Builder(
                   builder: (context) {
-                    final amt = ((upperLimit / division) * (i + 1)).toInt();
                     return GestureDetector(
-                      onTap: () => onChanged(amt),
+                      onTap: () => onChanged(options[i].value),
                       child: SipAmountChip(
-                        isBest: i == bestOption,
-                        isSelected: amount == amt,
-                        label: '₹${amt.toInt()}',
+                        isBest: options[i].best,
+                        isSelected: amount == options[i].value,
+                        label: '₹${options[i].value.toInt()}',
                       ),
                     );
                   },
@@ -658,7 +661,7 @@ class AmountSlider extends StatelessWidget {
           Slider(
             max: upperLimit,
             min: lowerLimit,
-            divisions: division - 1,
+            divisions: options.length - 1,
             value: amount < lowerLimit
                 ? lowerLimit
                 : amount > upperLimit
