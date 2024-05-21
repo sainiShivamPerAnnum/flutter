@@ -61,7 +61,7 @@ class TransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = locator<S>();
-    final assetInformation = AppConfigV2.instance.lendBoxP2P.firstWhere(
+    final assetInformation = AppConfigV2.instance.lendBoxP2Pv2.firstWhere(
       (e) => e.fundType == transaction.lbMap.fundType,
     );
     bool isNewAsset = AppConfigV2.instance.lbV2.values

@@ -21,8 +21,8 @@ Portfolio _$PortfolioFromJson(Map<String, dynamic> json) => Portfolio(
     );
 
 AugmontTiers _$AugmontTiersFromJson(Map<String, dynamic> json) => AugmontTiers(
-      absGains: (json['absGains'] as num?)?.toDouble() ?? 0.0,
-      percGains: (json['percGains'] as num?)?.toDouble() ?? 0.0,
+      absGains: (json['absGain'] as num?)?.toDouble() ?? 0.0,
+      percGains: (json['percGain'] as num?)?.toDouble() ?? 0.0,
       principle: (json['principle'] as num?)?.toDouble() ?? 0.0,
       balance: (json['balance'] as num?)?.toDouble() ?? 0.0,
       gold: json['gold'] == null

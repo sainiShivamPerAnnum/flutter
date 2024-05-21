@@ -22,6 +22,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:async/async.dart' show StreamGroup;
 
 import '../../../../core/constants/analytics_events_constants.dart';
 import '../../../../core/service/analytics/analytics_service.dart';
@@ -224,11 +225,18 @@ class _TransactionSectionState extends State<TransactionSection>
               )
             ],
           ),
-          if ((transactionBloc.state.entries.isNotEmpty &&
-                  _tabController.index == 0) ||
-              (sipTransactionBloc.state.entries.isNotEmpty &&
-                  _tabController.index == 1))
-            const Footer()
+          StreamBuilder(
+            stream: StreamGroup.merge([
+              context.watch<TransactionBloc>().stream,
+              context.watch<SIPTransactionBloc>().stream
+            ]),
+            builder: (context, snapshot) {
+              if (snapshot.hasData && snapshot.data!.entries.isNotEmpty) {
+                return const Footer();
+              }
+              return const SizedBox.shrink();
+            },
+          ),
         ],
       ),
     );
@@ -262,7 +270,7 @@ class _TransactionTile extends StatelessWidget {
         transaction.timestamp!.millisecondsSinceEpoch,
       ),
     );
-    final assetInformation = AppConfigV2.instance.lendBoxP2P.firstWhere(
+    final assetInformation = AppConfigV2.instance.lendBoxP2Pv2.firstWhere(
       (e) => e.fundType == transaction.lbMap.fundType,
     );
     final locale = locator<S>();

@@ -82,7 +82,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
 
   String floSubtype() {
     if (widget.txn.subType == "LENDBOXP2P") {
-      final response = AppConfigV2.instance.lendBoxP2P.firstWhere(
+      final response = AppConfigV2.instance.lendBoxP2Pv2.firstWhere(
         (element) => element.fundType == widget.txn.lbMap.fundType,
       );
       return response.assetName;
@@ -491,7 +491,9 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                         investedAmount: widget.txn.amount,
                         maturityAt: DateFormat('dd/MM/yyyy').format(
                           DateTime.fromMicrosecondsSinceEpoch(
-                            widget.txn.lbMap.maturityAt!.microsecondsSinceEpoch,
+                            widget.txn.lbMap.maturityAt
+                                    ?.microsecondsSinceEpoch ??
+                                DateTime.now().microsecondsSinceEpoch,
                           ),
                         ),
                         onChanged: (value) async {
@@ -612,7 +614,7 @@ class _ReInvestNudge extends StatelessWidget {
   final bool isLoading;
   final String assetName;
   final num investedAmount;
-  final String maturityAt;
+  final String? maturityAt;
   final num currentAmount;
 
   void trackDecideButtonTap(

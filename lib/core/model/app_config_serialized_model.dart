@@ -65,8 +65,8 @@ class AppConfigV2Data {
 
   final bool canChangePostMaturityPreference;
 
-  @JsonKey(name: "LENDBOXP2P")
-  final List<LendboxAssetConfiguration> lendBoxP2P;
+  @JsonKey(name: "LENDBOX_P2P_V2")
+  final List<LendboxAssetConfiguration> lendBoxP2Pv2;
 
   @JsonKey(name: "p2p_v2", fromJson: _convertP2PV2)
   final Map<String, LendboxAssetConfiguration> lbV2;
@@ -123,7 +123,7 @@ class AppConfigV2Data {
     this.showNewAutosave = false,
     this.enableJourney = false,
     this.canChangePostMaturityPreference = false,
-    this.lendBoxP2P = const [],
+    this.lendBoxP2Pv2 = const [],
     this.lbV2 = const {},
     this.youtubeVideos = const [],
     this.ticketsYoutubeVideos = const [],
@@ -188,7 +188,7 @@ class LendboxAssetConfiguration {
     required this.minAmountText,
     required this.descText,
     required this.tambolaMultiplier,
-    required this.reinvestInterestGain,
+    this.reinvestInterestGain = 0,
     this.isForOldLb = false,
     this.interest = 10,
     this.maturityDuration = 3,

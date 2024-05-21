@@ -242,7 +242,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                   _ReInvestNudge(
                     gains: widget.model.config.reinvestInterestGain,
                     buyInProgess: widget.model.isBuyInProgress,
-                    initialValue: false,
+                    initialValue: true,
                     onChange: (value) {
                       if (!widget.model.isBuyInProgress) {
                         widget.model.selectedOption = value

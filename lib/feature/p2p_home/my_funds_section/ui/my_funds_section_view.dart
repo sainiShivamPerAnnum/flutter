@@ -6,11 +6,13 @@ import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/bloc_pagination/bloc_pagination.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/service/notifier_services/user_service.dart';
 import '../../home/widgets/no_transaction_widget.dart';
 import '../../ui/shared/footer.dart';
 import 'widgets/widgets.dart';
@@ -35,7 +37,7 @@ class _MyFundSectionState extends State<MyFundSection> {
   @override
   Widget build(BuildContext context) {
     final fundsBloc = context.read<MyFundsBloc>();
-
+    final DateTime now = DateTime.now();
     return RefreshIndicator.adaptive(
       onRefresh: () async {
         fundsBloc.reset();
@@ -56,7 +58,14 @@ class _MyFundSectionState extends State<MyFundSection> {
               ),
             );
           }
-          if (fundsBloc.state.entries.isEmpty) {
+          if (fundsBloc.state.entries.isEmpty &&
+              locator<UserService>()
+                      .userPortfolio
+                      .flo
+                      .flexi
+                      .balance
+                      .toDouble() ==
+                  0) {
             return Padding(
               padding: EdgeInsets.only(top: SizeConfig.padding82),
               child: NoTransactions(),
@@ -96,7 +105,21 @@ class _MyFundSectionState extends State<MyFundSection> {
                             !state.status.isFetchingSuccessive) {
                           fundsBloc.fetchNextPage();
                         }
-                        if (fundsBloc.state.entries[index] is UserTransaction) {
+                        if (fundsBloc.state.entries[index] is UserTransaction &&
+                            (fundsBloc.state.entries[index] as UserTransaction)
+                                    .lbMap
+                                    .maturityAt !=
+                                null &&
+                            now.compareTo(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                    (fundsBloc.state.entries[index]
+                                            as UserTransaction)
+                                        .lbMap
+                                        .maturityAt!
+                                        .millisecondsSinceEpoch,
+                                  ),
+                                ) <
+                                0) {
                           return TransactionCard(
                             transaction: fundsBloc.state.entries[index],
                             fundBloc: fundsBloc,

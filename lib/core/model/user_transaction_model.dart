@@ -391,7 +391,7 @@ class LbMap {
       fundType: map['fundType'] != null ? map['fundType'] as String : "",
       maturityAt: map['maturityAt'] != null
           ? TimestampModel.fromMap(map['maturityAt'])
-          : TimestampModel.currentTimeStamp(),
+          : null,
       maturityPref:
           map['maturityPref'] != null ? map['maturityPref'] as String : "NA",
       gainAmount:

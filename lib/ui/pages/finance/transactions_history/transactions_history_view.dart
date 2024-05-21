@@ -164,7 +164,7 @@ class SingleTransactionView extends StatelessWidget {
               : Column(
                   children: [
                     Expanded(
-                      child: model!.filteredList!.isEmpty
+                      child: model!.filteredList.isEmpty
                           ? Column(
                               children: [
                                 SizedBox(
@@ -401,7 +401,7 @@ class TransactionTile extends StatelessWidget {
 
   String floSubtype() {
     if (txn.subType == "LENDBOXP2P") {
-      final response = AppConfigV2.instance.lendBoxP2P.firstWhere(
+      final response = AppConfigV2.instance.lendBoxP2Pv2.firstWhere(
         (element) => element.fundType == txn.lbMap.fundType,
       );
       return '${response.interest} Flo on';

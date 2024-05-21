@@ -28,7 +28,9 @@ class Portfolio {
 
 @_deserializable
 class AugmontTiers {
+  @JsonKey(name: "absGain")
   final double absGains;
+  @JsonKey(name: "percGain")
   final double percGains;
   final double principle;
   final double balance;

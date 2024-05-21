@@ -48,7 +48,7 @@ class SIPTransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = locator<S>();
-    final assetInformation = AppConfigV2.instance.lendBoxP2P.firstWhere(
+    final assetInformation = AppConfigV2.instance.lendBoxP2Pv2.firstWhere(
       (e) => e.fundType == transaction.fundType,
     );
     return GestureDetector(

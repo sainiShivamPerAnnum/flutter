@@ -38,7 +38,7 @@ class _LendboxSuccessViewState extends State<LendboxSuccessView> {
       locator<LendboxTransactionService>();
   late final fundType =
       _txnService.transactionResponseModel?.data?.floDepositDetails?.fundType;
-  late final details = AppConfigV2.instance.lendBoxP2P.firstWhere(
+  late final details = AppConfigV2.instance.lendBoxP2Pv2.firstWhere(
     (element) => element.fundType == fundType,
   );
 

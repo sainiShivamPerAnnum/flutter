@@ -90,7 +90,7 @@ class LendboxBuyViewModel extends BaseViewModel
   int? _buyAmount = 0;
   bool isLendboxOldUser = false;
   late String floAssetType;
-  LendboxAssetConfiguration config = AppConfigV2.instance.lendBoxP2P.first;
+  LendboxAssetConfiguration config = AppConfigV2.instance.lendBoxP2Pv2.first;
   double _fieldWidth = 0.0;
   bool _forcedBuy = false;
   bool _showMaxCapText = false;
@@ -217,7 +217,7 @@ class LendboxBuyViewModel extends BaseViewModel
   void _caluculateFactor() {
     String modelFlowType = floAssetType;
     List<LendboxAssetConfiguration> lendBoxDetails =
-        AppConfigV2.instance.lendBoxP2P;
+        AppConfigV2.instance.lendBoxP2Pv2;
 
     LendboxAssetConfiguration? assetInformation =
         lendBoxDetails.firstWhereOrNull(
@@ -242,7 +242,7 @@ class LendboxBuyViewModel extends BaseViewModel
   }) async {
     setState(ViewState.Busy);
     floAssetType = assetTypeFlow;
-    config = AppConfigV2.instance.lendBoxP2P.firstWhere(
+    config = AppConfigV2.instance.lendBoxP2Pv2.firstWhere(
       (element) => element.fundType == floAssetType,
     );
     _txnService.floAssetType = floAssetType;
@@ -483,14 +483,14 @@ class LendboxBuyViewModel extends BaseViewModel
   }
 
   String getLockin() {
-    final config = AppConfigV2.instance.lendBoxP2P.firstWhere(
+    final config = AppConfigV2.instance.lendBoxP2Pv2.firstWhere(
       (element) => element.fundType == floAssetType,
     );
     return '${config.maturityDuration} month';
   }
 
   String getMaturityTitle() {
-    final config = AppConfigV2.instance.lendBoxP2P.firstWhere(
+    final config = AppConfigV2.instance.lendBoxP2Pv2.firstWhere(
       (element) => element.fundType == floAssetType,
     );
     switch (selectedOption) {

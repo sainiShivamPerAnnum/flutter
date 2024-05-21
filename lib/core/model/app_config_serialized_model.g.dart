@@ -30,7 +30,7 @@ AppConfigV2Data _$AppConfigV2DataFromJson(Map<String, dynamic> json) =>
       enableJourney: json['enableJourney'] as bool? ?? false,
       canChangePostMaturityPreference:
           json['canChangePostMaturityPreference'] as bool? ?? false,
-      lendBoxP2P: (json['LENDBOXP2P'] as List<dynamic>?)
+      lendBoxP2Pv2: (json['LENDBOX_P2P_V2'] as List<dynamic>?)
               ?.map((e) =>
                   LendboxAssetConfiguration.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -88,7 +88,7 @@ LendboxAssetConfiguration _$LendboxAssetConfigurationFromJson(
       minAmountText: json['minAmountText'] as String,
       descText: json['descText'] as String,
       tambolaMultiplier: json['tambolaMultiplier'] as num,
-      reinvestInterestGain: json['reinvestInterestGain'] as num,
+      reinvestInterestGain: json['reinvestInterestGain'] as num? ?? 0,
       isForOldLb: json['isForOldLb'] as bool? ?? false,
       interest: json['interest'] as num? ?? 10,
       maturityDuration: json['maturityDuration'] as int? ?? 3,
