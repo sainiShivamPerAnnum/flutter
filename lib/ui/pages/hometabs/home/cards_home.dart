@@ -1507,7 +1507,7 @@ class CardContent extends StatelessWidget {
       case "Fello Flo":
         return portfolio?.flo.percGain ?? 0.0;
       case "Digital Gold":
-        return portfolio?.augmont.percGains ?? 0.0;
+        return portfolio?.augmont.gold.percGains ?? 0.0;
       case "Fello Rewards":
         return 0.0;
       default:
