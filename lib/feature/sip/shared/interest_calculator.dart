@@ -24,14 +24,14 @@ class SipCalculation {
     String? frequency,
     num? interestSelection,
   }) {
-    int numberOfPeriodsPerYear = SipDataHolder
+    int? numberOfPeriodsPerYear = SipDataHolder
         .instance
         .data
         .amountSelectionScreen
         .data[frequency ??
             SipDataHolder
-                .instance.data.amountSelectionScreen.options[currentTab ?? 0]]!
-        .numberOfPeriodsPerYear;
+                .instance.data.amountSelectionScreen.options[currentTab ?? 0]]
+        ?.numberOfPeriodsPerYear;
 
     num? interest = interestSelection ??
         SipDataHolder.instance.data.selectAssetScreen.options
@@ -39,6 +39,9 @@ class SipCalculation {
             ?.interest ??
         8;
     if (interest == null) {
+      return 'N/A';
+    }
+    if (numberOfPeriodsPerYear == null) {
       return 'N/A';
     }
     double interestRate = (interest * .01) / numberOfPeriodsPerYear;

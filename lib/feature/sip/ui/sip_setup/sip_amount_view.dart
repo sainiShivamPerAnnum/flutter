@@ -79,8 +79,10 @@ class _SipFormAmountState extends State<SipFormAmount> {
   @override
   Widget build(BuildContext context) {
     num? percentage = SipDataHolder.instance.data.selectAssetScreen.options
-        .firstWhereOrNull((element) => element.type == widget.sipAssetType.type)
-        ?.interest;
+            .firstWhereOrNull(
+                (element) => element.type == widget.sipAssetType.type)
+            ?.interest ??
+        8;
     return Scaffold(
         backgroundColor: UiConstants.kBackgroundColor,
         appBar: AppBar(

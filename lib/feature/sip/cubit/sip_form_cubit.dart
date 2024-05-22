@@ -58,22 +58,45 @@ class SipFormCubit extends Cubit<SipFormState> {
         SipDataHolder.instance.data.amountSelectionScreen.options;
     int editSipTab = SipDataHolder.instance.data.amountSelectionScreen.options
         .indexOf(prefillFrequency ?? tabOptions[0]);
-    List<SipOptions> options = SipDataHolder.instance.data.amountSelectionScreen
-        .data[tabOptions[editSipTab]]!.options;
-    SipOptions? maxValueOption = options.reduce((currentMax, next) =>
-        next.value > currentMax.value ? next : currentMax);
-    SipOptions? minValueOption = options.reduce((currentMax, next) =>
-        next.value < currentMax.value ? next : currentMax);
-    SipOptions bestOption = options.firstWhere((option) => option.best);
-    int currentAmount = prefillAmount ?? bestOption.value;
-    emit(SipFormCubitState(
-      formAmount: currentAmount,
-      currentTab: editSipTab,
-      bestOption: bestOption,
-      division: options.length,
-      upperLimit: maxValueOption.value,
-      lowerLimit: minValueOption.value,
-    ));
+    if (editSipTab == -1) {
+      List<SipOptions> options = SipDataHolder
+          .instance.data.amountSelectionScreen.data[tabOptions[0]]!.options;
+      SipOptions? maxValueOption = options.reduce((currentMax, next) =>
+          next.value > currentMax.value ? next : currentMax);
+      SipOptions? minValueOption = options.reduce((currentMax, next) =>
+          next.value < currentMax.value ? next : currentMax);
+      SipOptions bestOption = options.firstWhere((option) => option.best);
+      int currentAmount = prefillAmount ?? bestOption.value;
+      emit(SipFormCubitState(
+        formAmount: currentAmount,
+        currentTab: 0,
+        bestOption: bestOption,
+        division: options.length,
+        upperLimit: maxValueOption.value,
+        lowerLimit: minValueOption.value,
+      ));
+    } else {
+      List<SipOptions> options = SipDataHolder
+          .instance
+          .data
+          .amountSelectionScreen
+          .data[prefillFrequency ?? tabOptions[0]]!
+          .options;
+      SipOptions? maxValueOption = options.reduce((currentMax, next) =>
+          next.value > currentMax.value ? next : currentMax);
+      SipOptions? minValueOption = options.reduce((currentMax, next) =>
+          next.value < currentMax.value ? next : currentMax);
+      SipOptions bestOption = options.firstWhere((option) => option.best);
+      int currentAmount = prefillAmount ?? bestOption.value;
+      emit(SipFormCubitState(
+        formAmount: currentAmount,
+        currentTab: editSipTab,
+        bestOption: bestOption,
+        division: options.length,
+        upperLimit: maxValueOption.value,
+        lowerLimit: minValueOption.value,
+      ));
+    }
   }
 
   Future<bool> editSipTrigger(
