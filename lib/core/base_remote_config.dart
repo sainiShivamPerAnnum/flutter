@@ -8,7 +8,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class BaseRemoteConfig {
-  static late RemoteConfig remoteConfig;
+  static late FirebaseRemoteConfig remoteConfig;
   static final UserService _userService = locator<UserService>();
   static final InternalOpsService _internalOpsService =
       locator<InternalOpsService>();
@@ -376,7 +376,7 @@ class BaseRemoteConfig {
   static Future<bool> init() async {
     final CustomLogger logger = locator<CustomLogger>();
     logger.i('initializing remote config');
-    remoteConfig = RemoteConfig.instance;
+    remoteConfig = FirebaseRemoteConfig.instance;
     try {
       // await remoteConfig.activateFetched();
       //TODO remoteConfig lazy?

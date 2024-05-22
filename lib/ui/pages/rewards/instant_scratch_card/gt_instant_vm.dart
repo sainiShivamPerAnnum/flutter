@@ -132,7 +132,7 @@ class GTInstantViewModel extends BaseViewModel {
 
     try {
       _getBearerToken().then(
-        (String token) => _gtRepo.redeemReward(scratchCard!.gtId).then(
+        (String? token) => _gtRepo.redeemReward(scratchCard!.gtId).then(
           (_) {
             _gtService.updateUnscratchedGTCount();
             _userService.getUserFundWalletData();
@@ -163,8 +163,8 @@ class GTInstantViewModel extends BaseViewModel {
     });
   }
 
-  Future<String> _getBearerToken() async {
-    String token = await _userService.firebaseUser!.getIdToken();
+  Future<String?> _getBearerToken() async {
+    String? token = await _userService.firebaseUser!.getIdToken();
     _logger.d(token);
 
     return token;
