@@ -3,7 +3,7 @@ description: Game-based Investments
 
 publish_to: "none"
 
-version: 4.9.0+252
+version: 5.0.0+253
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -19,22 +19,22 @@ dependencies:
   carousel_slider: ^4.2.1
   cloud_firestore: ^4.2.0
   collection: ^1.15.0-nullsafety.4
-  connectivity_plus: ^4.0.1
+  connectivity_plus: ^5.0.2
   dart_jsonwebtoken: ^2.4.2
   device_info_plus: ^7.0.0
   device_preview: ^1.1.0
   encrypt: ^5.0.0
-  firebase_analytics: ^10.0.7
-  firebase_auth: ^4.2.1
-  firebase_core: ^2.4.0
-  firebase_crashlytics: ^3.0.7
-  firebase_database: ^10.0.7
+  firebase_analytics: ^10.7.1
+  firebase_auth: ^4.14.1
+  firebase_core: ^2.23.0
+  firebase_crashlytics: ^3.4.5
+  firebase_database: ^10.3.5
   firebase_dynamic_links: ^5.0.9
-  firebase_in_app_messaging: ^0.7.0-8
-  firebase_messaging: ^14.1.4
-  firebase_performance: ^0.9.0-7
-  firebase_remote_config: ^3.0.7
-  firebase_storage: ^11.0.8
+  firebase_in_app_messaging: ^0.7.4+5
+  firebase_messaging: ^14.7.5
+  firebase_performance: ^0.9.3+5
+  firebase_remote_config: ^4.3.5
+  firebase_storage: ^11.5.2
   flutter:
     sdk: flutter
   flutter_facebook_sdk:
