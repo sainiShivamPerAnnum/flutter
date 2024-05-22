@@ -26,6 +26,7 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/feature_flag_service/feature_flag_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
+import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -71,7 +72,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   // Depends on app config so late would be required in order to lazy evaluation
   // of expression.
   late final _featureEvaluator = locator<FeatureFlagService>();
-  Portfolio _userPortfolio = Portfolio.base();
+  Portfolio _userPortfolio = const Portfolio();
 
   Portfolio get userPortfolio => _userPortfolio;
 
@@ -284,7 +285,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     if (res.isSuccess()) {
       userPortfolio = res.model!;
     } else {
-      userPortfolio = Portfolio.base();
+      userPortfolio = const Portfolio();
     }
   }
 
@@ -498,7 +499,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       // await _apiCacheManager!.clearCacheMemory();
       _logger.d("UserService signout called");
       _userFundWallet = null;
-      _userPortfolio = Portfolio.base();
+      _userPortfolio = const Portfolio();
       _firebaseUser = null;
       _baseUser = null;
       _myUserDpUrl = null;
@@ -920,15 +921,21 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           final type = baseUser?.favAsset == 'AUGGOLD99'
               ? InvestmentType.AUGGOLD99
               : InvestmentType.LENDBOXP2P;
-
-          AppState.delegate!.appState.currentAction = PageAction(
-            state: PageState.addWidget,
-            page: SaveAssetsViewConfig,
-            widget: AssetSectionView(
-              type: type,
-            ),
-          );
-
+          if (type == InvestmentType.LENDBOXP2P) {
+            AppState.delegate!.appState.currentAction = PageAction(
+              page: P2PHomePageConfig,
+              widget: const P2PHomePage(),
+              state: PageState.addWidget,
+            );
+          } else {
+            AppState.delegate!.appState.currentAction = PageAction(
+              state: PageState.addWidget,
+              page: SaveAssetsViewConfig,
+              widget: AssetSectionView(
+                type: type,
+              ),
+            );
+          }
           return;
         }
 

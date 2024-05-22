@@ -41,7 +41,6 @@ import 'package:felloapp/core/service/fcm/fcm_handler_v2/fcm_handler_v2.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/feature_flag_service/feature_flag_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -60,6 +59,9 @@ import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
+import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
+import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'package:felloapp/feature/tambola/src/repos/tambola_repo.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_vm.dart';
@@ -76,7 +78,6 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_vm.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transaction_history_vm.dart';
@@ -177,7 +178,22 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(MarketingEventHandlerService.new);
   locator.registerLazySingleton(SubService.new);
   locator.registerLazySingleton(PowerPlayService.new);
-  locator.registerLazySingleton(LendboxMaturityService.new);
+  locator.registerLazySingleton(
+    () => TransactionBloc(
+      transactionHistoryRepo: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => MyFundsBloc(
+      transactionHistoryRepo: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => SIPTransactionBloc(
+      subscriptionRepo: locator(),
+    ),
+  );
+  // locator.registerLazySingleton(LendboxMaturityService.new);
 
   //Repository
   locator.registerLazySingleton(DBModel.new);
@@ -271,8 +287,6 @@ Future<void> setupLocator() async {
   locator.registerFactory(FelloCoinBarViewModel.new);
   locator.registerFactory(FAQCardViewModel.new);
   locator.registerFactory(SourceAdaptiveAssetViewModel.new);
-
-  locator.registerFactory(FloPremiumDetailsViewModel.new);
   locator.registerFactory(AssetPreferenceViewModel.new);
 
   await locator.allReady();

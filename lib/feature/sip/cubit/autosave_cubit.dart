@@ -3,8 +3,8 @@ import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/sip_model/calculator_details.dart';
+import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
 import 'package:felloapp/core/model/sip_model/sip_data_model.dart';
 import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -123,7 +123,7 @@ class SipCubit extends Cubit<SipState> {
   }
 
   Future<void> editSip(num principalAmount, String frequency, int index,
-      SIPAssetTypes assetType) async {
+      AssetOptions assetType) async {
     Future.delayed(
         Duration.zero, () => AppState.backButtonDispatcher!.didPopRoute());
     AppState.delegate!.appState.currentAction = PageAction(

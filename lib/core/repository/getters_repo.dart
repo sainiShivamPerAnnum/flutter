@@ -167,7 +167,7 @@ class GetterRepository extends BaseRepo {
       '',
       apiName: '$_getters/getPageData',
       cBaseUrl:
-          'https://d18gbwu7fwwwtf.cloudfront.net/new_user_flow/$variant.json',
+          'https://d18gbwu7fwwwtf.cloudfront.net/new_user_flow/v1/$variant.json',
     );
     try {
       final pageData = PageData.fromJson(response);
@@ -269,11 +269,11 @@ class GetterRepository extends BaseRepo {
 
       final subComboModelData =
           SubComboModel.helper.fromMapArray(subComboResponse["data"]["combos"]);
-      final augChips = AmountChipsModel.helper.fromMapArray(
-          subComboResponse["data"][Constants.ASSET_TYPE_LENDBOX]["chips"]);
+      final augChips = AmountChipsModel.helper
+          .fromMapArray(subComboResponse["data"]['LENDBOXP2P']["chips"]);
 
-      final lbChips = AmountChipsModel.helper.fromMapArray(
-          subComboResponse["data"][Constants.ASSET_TYPE_LENDBOX]["chips"]);
+      final lbChips = AmountChipsModel.helper
+          .fromMapArray(subComboResponse["data"]['LENDBOXP2P']["chips"]);
 
       final minMaxInfo = MaxMin.fromMap({
         "min": subComboResponse["data"]["min"],

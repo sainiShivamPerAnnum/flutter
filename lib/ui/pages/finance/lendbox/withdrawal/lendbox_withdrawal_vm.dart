@@ -35,7 +35,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   String withdrawableResponseMessage = "";
 
   int lastTappedChipIndex = 1;
-  final double minAmount = 1;
+  final num minAmount = 10;
 
   FocusNode fieldNode = FocusNode();
   String? buyNotice;
@@ -60,7 +60,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   Future<void> init() async {
     setState(ViewState.Busy);
     amountController = TextEditingController(
-      text: "1",
+      text: "10",
     );
 
     final response = await _lendboxRepo.getWithdrawableQuantity();
@@ -74,7 +74,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   }
 
   void resetBuyOptions() {
-    amountController!.text = '1';
+    amountController!.text = '10';
     lastTappedChipIndex = 1;
     notifyListeners();
   }
@@ -125,7 +125,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
     );
   }
 
-  Future<void> processWithdraw(int amount) async {
+  Future<void> processWithdraw(num amount) async {
     log(amount.toString());
     _inProgress = true;
     notifyListeners();
@@ -169,8 +169,8 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<int> initChecks() async {
-    final amount = int.tryParse(amountController!.text) ?? 0;
+  Future<num> initChecks() async {
+    final amount = num.tryParse(amountController!.text) ?? 0;
 
     if (amount == 0) {
       BaseUtil.showNegativeAlert(locale.noAmountEntered, locale.enterAmount);

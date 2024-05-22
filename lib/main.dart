@@ -2,7 +2,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
@@ -35,6 +34,9 @@ import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 import 'core/service/notifier_services/user_coin_service.dart';
+import 'feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
+import 'feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
+import 'feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'feature/sip/cubit/autosave_cubit.dart';
 
 class MyApp extends HookWidget {
@@ -49,12 +51,12 @@ class MyApp extends HookWidget {
     final backButtonDispatcher =
         useMemoized(() => FelloBackButtonDispatcher(delegate));
 
-    useEffect(() {
+    useMemoized(() {
       AppState.backButtonDispatcher = backButtonDispatcher;
       AppState.delegate = delegate;
       delegate.setNewRoutePath(SplashPageConfig);
       return null;
-    }, []);
+    }, const []);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -65,6 +67,9 @@ class MyApp extends HookWidget {
       child: MultiProvider(
         providers: [
           Provider(create: (_) => SipCubit()),
+          Provider(create: (_) => locator<TransactionBloc>()),
+          Provider(create: (_) => locator<MyFundsBloc>()),
+          Provider(create: (_) => locator<SIPTransactionBloc>()),
           ChangeNotifierProvider(create: (_) => locator<ConnectivityService>()),
           ChangeNotifierProvider(create: (_) => locator<DBModel>()),
           ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
@@ -89,9 +94,6 @@ class MyApp extends HookWidget {
           ),
           ChangeNotifierProvider(
             create: (_) => locator<CardActionsNotifier>(),
-          ),
-          ChangeNotifierProvider(
-            create: (_) => locator<LendboxMaturityService>(),
           ),
         ],
         child: PropertyChangeProvider<UserService, UserServiceProperties>(

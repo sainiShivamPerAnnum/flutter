@@ -2,9 +2,9 @@ import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/sip_model/calculator_data.dart';
 import 'package:felloapp/core/model/sip_model/calculator_details.dart';
+import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
 import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
@@ -226,17 +226,17 @@ class _SipIntroViewState extends State<SipIntroView> {
                                     AssetSipContainer(
                                       model: model,
                                       index: i,
-                                      assetType: state
-                                          .activeSubscription.subs[i].assetType,
+                                      assetType: state.activeSubscription
+                                          .subs[i].assetOptionsModel,
                                       state: state
                                           .activeSubscription.subs[i].status,
                                       allowEdit: !state.activeSubscription
-                                          .subs[i].assetType.isCombined,
+                                          .subs[i].isCombined,
                                       assetUrl: state.activeSubscription.subs[i]
-                                              .assetType.isCombined
+                                              .isCombined
                                           ? Assets.goldAndflo
                                           : state.activeSubscription.subs[i]
-                                                  .assetType.isLendBox
+                                                  .isLendbox
                                               ? Assets.floWithoutShadow
                                               : Assets.goldWithoutShadow,
                                       nextDueDate: state
@@ -245,10 +245,10 @@ class _SipIntroViewState extends State<SipIntroView> {
                                           .activeSubscription.subs[i].amount
                                           .toInt(),
                                       sipName: state.activeSubscription.subs[i]
-                                              .assetType.isCombined
+                                              .isCombined
                                           ? locale.bothassetSip
                                           : state.activeSubscription.subs[i]
-                                                  .assetType.isLendBox
+                                                  .isLendbox
                                               ? locale.floSip
                                               : locale.goldSip,
                                       startDate: state.activeSubscription
@@ -344,7 +344,7 @@ class AssetSipContainer extends StatelessWidget {
   final int index;
   final AutosaveState state;
   final bool allowEdit;
-  final SIPAssetTypes assetType;
+  final AssetOptions assetType;
   final SipCubit model;
   final locale = locator<S>();
 
@@ -579,7 +579,7 @@ class _SipCalculatorState extends State<SipCalculator>
                           onChangeEnd: (x) =>
                               model.sendEvent(widget.state.options),
                           requiresQuickButtons: false,
-                          changeFunction: (x) =>
+                          onChange: (x) =>
                               model.setAmount(int.tryParse(x) ?? 0),
                           label: locale.sipamount,
                           prefixText: "₹",
@@ -611,8 +611,7 @@ class _SipCalculatorState extends State<SipCalculator>
                           onChangeEnd: (x) =>
                               model.sendEvent(widget.state.options),
                           requiresQuickButtons: false,
-                          changeFunction: (x) =>
-                              model.setTP(int.tryParse(x) ?? 0),
+                          onChange: (x) => model.setTP(int.tryParse(x) ?? 0),
                           label: locale.timePeriod,
                           suffixText: locale.sipYear,
                           inputFormatters: [
@@ -645,8 +644,7 @@ class _SipCalculatorState extends State<SipCalculator>
                               ),
                             ],
                             isPercentage: true,
-                            changeFunction: (x) =>
-                                model.setROI(int.tryParse(x) ?? 0),
+                            onChange: (x) => model.setROI(int.tryParse(x) ?? 0),
                             value: state.calculatorRoi),
                         SizedBox(
                           height: SizeConfig.padding20,

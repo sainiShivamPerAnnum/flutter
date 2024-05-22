@@ -21,7 +21,7 @@ class TxnHistoryService extends ChangeNotifier {
   final TransactionHistoryRepository _transactionHistoryRepo =
       locator<TransactionHistoryRepository>();
   final _paymentRepo = locator<PaymentRepository>();
-  List<UserTransaction>? _txnList = [];
+  List<UserTransaction> _txnList = [];
   List<GoldProInvestmentResponseModel> _goldProTxns = [];
 
   List<GoldProInvestmentResponseModel> get goldProTxns => _goldProTxns;
@@ -41,20 +41,20 @@ class TxnHistoryService extends ChangeNotifier {
   bool hasMoreWithdrawalTxns = true;
   bool hasMoreRefundedTxns = true;
 
-  List<UserTransaction>? get txnList => _txnList;
+  List<UserTransaction> get txnList => _txnList;
 
-  set txnList(List<UserTransaction>? list) {
+  set txnList(List<UserTransaction> list) {
     _txnList = list;
     notifyListeners();
   }
 
   appendTxns(List<UserTransaction> list) {
-    list.forEach((txn) {
+    for (var txn in list) {
       UserTransaction? duplicate =
-          _txnList!.firstWhereOrNull((t) => t.timestamp == txn.timestamp);
-      if (duplicate == null) _txnList!.add(txn);
-    });
-    _txnList!
+          _txnList.firstWhereOrNull((t) => t.timestamp == txn.timestamp);
+      if (duplicate == null) _txnList.add(txn);
+    }
+    _txnList
         .sort((a, b) => b.timestamp!.seconds.compareTo(a.timestamp!.seconds));
     notifyListeners();
   }
@@ -69,7 +69,7 @@ class TxnHistoryService extends ChangeNotifier {
       type: type,
       subtype: subtype.name,
       status: status,
-      offset: txnList?.length ?? 0,
+      offset: txnList.length,
     );
 
     if (!response.isSuccess()) {
@@ -79,54 +79,19 @@ class TxnHistoryService extends ChangeNotifier {
       );
     }
     // if transaction list is empty
-    if (_txnList == null || _txnList!.isEmpty) {
-      txnList = response.model!.transactions;
+    if (_txnList.isEmpty) {
+      txnList = response.model!.transactions ?? [];
     } else {
       // if transaction list already have some items
       appendTxns(response.model!.transactions!);
     }
-    _logger.d("Current Transaction List length: ${_txnList!.length}");
+    _logger.d("Current Transaction List length: ${_txnList.length}");
 
     // check and set which category has no more items to fetch
     if (response.model!.transactions!.length < 30) {
       setHasMoreTxnsValue(type: type, status: status);
     }
   }
-
-  // String? getLastTxnDocType({String? status, String? type}) {
-  //   if (status == null && type == null) return lastTxnDocId;
-  //   if (status != null) return lastRefundedTxnDocId;
-  //   if (type != null) {
-  //     if (type == UserTransaction.TRAN_TYPE_DEPOSIT) return lastDepositTxnDocId;
-  //     if (type == UserTransaction.TRAN_TYPE_PRIZE) return lastPrizeTxnDocId;
-  //     if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
-  //       return lastWithdrawalTxnDocId;
-  //     }
-  //   }
-  //   return lastTxnDocId;
-  // }
-
-  // setLastTxnDocType({String? status, String? type, String? lastDocId}) {
-  //   if (status == null && type == null) {
-  //     lastTxnDocId = lastDocId;
-  //     lastRefundedTxnDocId = lastDocId;
-  //     lastDepositTxnDocId = lastDocId;
-  //     lastWithdrawalTxnDocId = lastDocId;
-  //     lastPrizeTxnDocId = lastDocId;
-  //   } else if (status != null) {
-  //     lastRefundedTxnDocId = lastDocId;
-  //   } else if (type != null) {
-  //     if (type == UserTransaction.TRAN_TYPE_DEPOSIT) {
-  //       lastDepositTxnDocId = lastDocId;
-  //     }
-  //     if (type == UserTransaction.TRAN_TYPE_PRIZE) {
-  //       lastPrizeTxnDocId = lastDocId;
-  //     }
-  //     if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
-  //       lastWithdrawalTxnDocId = lastDocId;
-  //     }
-  //   }
-  // }
 
   setHasMoreTxnsValue({String? status, String? type}) {
     if (status == null && type == null) {
@@ -169,7 +134,7 @@ class TxnHistoryService extends ChangeNotifier {
     hasMoreDepositTxns = true;
     hasMoreWithdrawalTxns = true;
     hasMoreRefundedTxns = true;
-    txnList?.clear();
+    txnList.clear();
     await fetchTransactions(subtype: investmentType);
     _logger.i("Transactions got updated");
   }

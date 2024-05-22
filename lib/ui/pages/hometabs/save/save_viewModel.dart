@@ -11,9 +11,7 @@ import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
-import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
-import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
@@ -21,6 +19,7 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/tambola_mini_info_card.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -28,7 +27,6 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/finance/blogs/all_blogs_view.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/elements/help_fab.dart';
-import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_pending_action.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
@@ -72,9 +70,6 @@ class SaveViewModel extends BaseViewModel {
   // BaseUtil? baseProvider;
 
   final BankAndPanService _sellService = locator<BankAndPanService>();
-  final TransactionHistoryRepository _transactionHistoryRepo =
-      locator<TransactionHistoryRepository>();
-  final PaymentRepository _paymentRepo = locator<PaymentRepository>();
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final BaseUtil _baseUtil = locator<BaseUtil>();
@@ -434,11 +429,9 @@ class SaveViewModel extends BaseViewModel {
           }));
 
       AppState.delegate!.appState.currentAction = PageAction(
+        page: P2PHomePageConfig,
+        widget: const P2PHomePage(),
         state: PageState.addWidget,
-        page: SaveAssetsViewConfig,
-        widget: AssetSectionView(
-          type: investmentType,
-        ),
       );
     }
   }
@@ -525,7 +518,9 @@ class QuickLinks extends StatelessWidget {
             ),
           ),
         ),
-        const FloPendingAction(),
+        SizedBox(
+          height: SizeConfig.padding10,
+        ),
         const TicketsPendingAction()
       ],
     );

@@ -89,6 +89,8 @@ const String FppCompletedMatchDetailsPath = "fppCompletedMatchDetailsPath";
 const String PowerPlayFTUXPath = '/powerPlayFTUXPath';
 const String PowerPlaySeasonLeaderboardPath = "powerplaySeasonLeaderboardPath";
 const String LendboxBuyViewPath = "/LendboxBuyViewPath";
+const String LendboxCouponViewPath = "/LendboxCouponViewPath";
+const String GoldCouponViewPath = "/GoldCouponViewPath";
 const String AssetSelectionViewPath = "/assetSelectionViewPath";
 const String QuizWebViewPath = "/quizWebViewPath";
 const String BalloonLottieScreenPath = "/bolloonLottieScreenPath";
@@ -114,6 +116,8 @@ const String SipAssetsSelectViewPath = "/sipassets";
 const String SipFormPageViewPath = "/sipform";
 const String SipStatusPage = '/sip/status';
 const String SipMandateViewPath = '/sip/mandateView';
+const String P2PHomeViewPath = '/p2p/homeView';
+const String flexiBalanceViewPath = "/flexiBalanceViewPath";
 
 enum Pages {
   Splash,
@@ -192,6 +196,7 @@ enum Pages {
   PlayView,
   YoutubePlayerView,
   EarnMoreReturnsView,
+  GoldCouponView,
   //POWER PLAY
   PowerPlayHome,
   PowerPlayLeaderBoard,
@@ -200,6 +205,7 @@ enum Pages {
   PowerPlayFTUX,
   PowerPlaySeasonLeaderboard,
   LendboxBuyView,
+  LendboxCouponView,
   AssetSelectionView,
   QuizWebView,
   BalloonLottieScreen,
@@ -221,7 +227,11 @@ enum Pages {
   SipAssetSelectView,
   SipFormView,
   SipStatusView,
-  SipMandateView
+  SipMandateView,
+  P2PHomeView,
+
+  //p2pv2
+  FlexiBalaceView
 }
 
 class PageConfiguration {
@@ -790,6 +800,16 @@ PageConfiguration LendboxBuyViewConfig = PageConfiguration(
     path: LendboxBuyViewPath,
     uiPage: Pages.LendboxBuyView,
     name: "Lendbox Buy View Screen");
+PageConfiguration LendboxCouponViewConfig = PageConfiguration(
+    key: 'LendboxCouponViewPath',
+    path: LendboxCouponViewPath,
+    uiPage: Pages.LendboxCouponView,
+    name: "Lendbox Coupon Screen");
+PageConfiguration GoldCouponViewConfig = PageConfiguration(
+    key: 'GoldCouponViewPath',
+    path: GoldCouponViewPath,
+    uiPage: Pages.GoldCouponView,
+    name: "Gold Coupon Screen");
 
 PageConfiguration AssetSelectionViewConfig = PageConfiguration(
     key: 'AssetSelectionViewPath',
@@ -895,9 +915,24 @@ PageConfiguration SipPollingPageConfig = PageConfiguration(
   uiPage: Pages.SipStatusView,
   name: 'Sip polling page config',
 );
+
 PageConfiguration SipMandatePageConfig = PageConfiguration(
   key: 'SipMandateViewPath',
   path: SipMandateViewPath,
   uiPage: Pages.SipMandateView,
   name: 'Sip madate page config',
+);
+
+PageConfiguration P2PHomePageConfig = PageConfiguration(
+  key: 'P2PHomeConfigPath',
+  path: P2PHomeViewPath,
+  uiPage: Pages.P2PHomeView,
+  name: 'P2P Home View Path',
+);
+
+PageConfiguration FlexiBalancePageConfig = PageConfiguration(
+  key: 'flexiBalanceViewPath',
+  path: flexiBalanceViewPath,
+  uiPage: Pages.FlexiBalaceView,
+  name: "Flexi Balance View",
 );

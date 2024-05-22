@@ -230,7 +230,10 @@ class SubService extends ChangeNotifier {
     required int amount,
   }) async {
     final res = await _subscriptionRepo.updateSubscription(
-        freq: freq, id: id, amount: amount);
+      freq: freq,
+      id: id,
+      amount: amount,
+    );
     if (res.isSuccess()) {
       return true;
     } else {
@@ -267,15 +270,18 @@ class SubService extends ChangeNotifier {
     }
   }
 
-  Future<void> getSubscriptionTransactionHistory(
-      {bool paginate = false, String asset = ''}) async {
+  Future<void> getSubscriptionTransactionHistory({
+    bool paginate = false,
+    String asset = '',
+  }) async {
     if (asset.isEmpty) {
       if (allSubTxnList.isNotEmpty && !paginate) return;
       if (hasNoMoreSubsTxns) return;
       final res = await _subscriptionRepo.getSubscriptionTransactionHistory(
-          limit: 30,
-          offset: allSubTxnList.isEmpty ? null : allSubTxnList.length,
-          asset: '');
+        limit: 30,
+        offset: allSubTxnList.isEmpty ? null : allSubTxnList.length,
+        asset: '',
+      );
       if (res.isSuccess()) {
         if (res.model!.length < 30) hasNoMoreSubsTxns = true;
         allSubTxnList.addAll(res.model!);
@@ -294,14 +300,15 @@ class SubService extends ChangeNotifier {
       }
       if (hasNoMoreAugSubsTxns) return;
       final res = await _subscriptionRepo.getSubscriptionTransactionHistory(
-          limit: 30,
-          offset: augSubTxnList.isEmpty ? null : augSubTxnList.length,
-          asset: asset);
+        limit: 30,
+        offset: augSubTxnList.isEmpty ? null : augSubTxnList.length,
+        asset: asset,
+      );
       if (res.isSuccess()) {
         if (res.model!.length < 30) hasNoMoreAugSubsTxns = true;
         augSubTxnList.addAll(res.model!);
       }
-    } else if (asset == Constants.ASSET_TYPE_LENDBOX) {
+    } else if (asset == 'LENDBOXP2P') {
       if (lbSubTxnList.isNotEmpty && !paginate) return;
       if (hasNoMoreSubsTxns) {
         lbSubTxnList.clear();
@@ -314,9 +321,10 @@ class SubService extends ChangeNotifier {
       }
       if (hasNoMoreLbSubsTxns) return;
       final res = await _subscriptionRepo.getSubscriptionTransactionHistory(
-          limit: 30,
-          offset: lbSubTxnList.isEmpty ? null : lbSubTxnList.length,
-          asset: asset);
+        limit: 30,
+        offset: lbSubTxnList.isEmpty ? null : lbSubTxnList.length,
+        asset: asset,
+      );
       if (res.isSuccess()) {
         if (res.model!.length < 30) hasNoMoreLbSubsTxns = true;
         lbSubTxnList.addAll(res.model!);
@@ -398,7 +406,8 @@ class SubService extends ChangeNotifier {
       try {
         List<ApplicationMeta> allUpiApps =
             await UpiPay.getInstalledUpiApplications(
-                statusType: UpiApplicationDiscoveryAppStatusType.all);
+          statusType: UpiApplicationDiscoveryAppStatusType.all,
+        );
 
         for (final element in allUpiApps) {
           if (element.upiApplication.appName == "Paytm" &&

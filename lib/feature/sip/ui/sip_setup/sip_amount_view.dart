@@ -1,7 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
+import 'package:felloapp/core/model/sip_model/sip_options.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
@@ -36,7 +38,7 @@ class SipFormAmountView extends StatelessWidget {
   final String? prefillFrequency;
   final bool? isEdit;
   final String? editId;
-  final SIPAssetTypes sipAssetType;
+  final AssetOptions sipAssetType;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +64,7 @@ class SipFormAmount extends StatefulWidget {
   final bool mandateAvailable;
   final bool? isEdit;
   final String? editId;
-  final SIPAssetTypes sipAssetType;
+  final AssetOptions sipAssetType;
 
   @override
   State<SipFormAmount> createState() => _SipFormAmountState();
@@ -76,10 +78,11 @@ class _SipFormAmountState extends State<SipFormAmount> {
 
   @override
   Widget build(BuildContext context) {
-    num percentage = SipDataHolder.instance.data.selectAssetScreen.options
-        .where((element) => element.type == widget.sipAssetType)
-        .first
-        .interest;
+    num? percentage = SipDataHolder.instance.data.selectAssetScreen.options
+            .firstWhereOrNull(
+                (element) => element.type == widget.sipAssetType.type)
+            ?.interest ??
+        8;
     return Scaffold(
         backgroundColor: UiConstants.kBackgroundColor,
         appBar: AppBar(
@@ -146,7 +149,7 @@ class _SipFormAmountState extends State<SipFormAmount> {
                                 mandateAvailable: widget.mandateAvailable,
                                 lowerLimit: state.lowerLimit.toDouble(),
                                 upperLimit: state.upperLimit.toDouble(),
-                                division: state.division.toInt(),
+                                currentTab: state.currentTab,
                                 amount: state.formAmount,
                                 ticketMultiplier: ticketMultiplier,
                                 onChange: formmodel.setAmount,
@@ -185,10 +188,15 @@ class _SipFormAmountState extends State<SipFormAmount> {
                               AmountSlider(
                                 lowerLimit: state.lowerLimit.toDouble(),
                                 upperLimit: state.upperLimit.toDouble(),
-                                division: state.division.toInt(),
                                 amount: state.formAmount.toDouble(),
                                 onChanged: formmodel.setAmount,
-                                bestOption: state.bestOption.order,
+                                options: SipDataHolder
+                                        .instance
+                                        .data
+                                        .amountSelectionScreen
+                                        .data[tabOptions[state.currentTab]]
+                                        ?.options ??
+                                    [],
                               ),
                             ],
                           ),
@@ -255,10 +263,13 @@ class _SipFormAmountState extends State<SipFormAmount> {
                                           .copyWith(color: UiConstants.grey1),
                                     ),
                                     Text(
-                                      locale.percentageReturns(percentage) +
-                                          (widget.sipAssetType.isAugGold
-                                              ? '*'
-                                              : ''),
+                                      percentage == null
+                                          ? 'N/A'
+                                          : locale.percentageReturns(
+                                                  percentage) +
+                                              (widget.sipAssetType.isAugGold
+                                                  ? '*'
+                                                  : ''),
                                       style: TextStyles.sourceSans.body4
                                           .copyWith(color: UiConstants.grey1),
                                     ),
@@ -317,7 +328,7 @@ class _Footer extends StatefulWidget {
   final String? id;
   final bool isEdit;
   final bool isValidAmount;
-  final SIPAssetTypes sipAssetType;
+  final AssetOptions sipAssetType;
   final String defaultChip;
   final String defaultTickets;
   final String minAmount;
@@ -410,7 +421,7 @@ class _FooterState extends State<_Footer> {
                           );
                         }),
                   ),
-                _ => SizedBox.shrink(),
+                _ => const SizedBox.shrink(),
               };
             },
           ),
@@ -609,20 +620,18 @@ class BorderPainter extends CustomPainter {
 class AmountSlider extends StatelessWidget {
   const AmountSlider({
     required this.onChanged,
-    required this.bestOption,
+    required this.options,
     this.amount = 10000,
     this.upperLimit = 15000,
     this.lowerLimit = 500,
     super.key,
-    this.division = 5,
   });
 
   final void Function(int) onChanged;
   final double amount;
   final double upperLimit;
   final double lowerLimit;
-  final int division;
-  final int bestOption;
+  final List<SipOptions> options;
 
   @override
   Widget build(BuildContext context) {
@@ -636,16 +645,15 @@ class AmountSlider extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              for (int i = 0; i < division; i++)
+              for (int i = 0; i < options.length; i++)
                 Builder(
                   builder: (context) {
-                    final amt = ((upperLimit / division) * (i + 1)).toInt();
                     return GestureDetector(
-                      onTap: () => onChanged(amt),
+                      onTap: () => onChanged(options[i].value),
                       child: SipAmountChip(
-                        isBest: i == bestOption,
-                        isSelected: amount == amt,
-                        label: '₹${amt.toInt()}',
+                        isBest: options[i].best,
+                        isSelected: amount == options[i].value,
+                        label: '₹${options[i].value.toInt()}',
                       ),
                     );
                   },
@@ -655,7 +663,7 @@ class AmountSlider extends StatelessWidget {
           Slider(
             max: upperLimit,
             min: lowerLimit,
-            divisions: division - 1,
+            divisions: options.length - 1,
             value: amount < lowerLimit
                 ? lowerLimit
                 : amount > upperLimit
@@ -676,18 +684,18 @@ class AmountInputWidget extends StatefulWidget {
     required this.onChange,
     required this.ticketMultiplier,
     required this.mandateAvailable,
+    required this.currentTab,
     super.key,
     this.upperLimit = 15000,
     this.lowerLimit = 500,
-    this.division = 5,
   });
 
   final int amount;
   final double upperLimit;
   final double lowerLimit;
   final num ticketMultiplier;
-  final int division;
   final bool mandateAvailable;
+  final int currentTab;
   final void Function(int value) onChange;
 
   @override
@@ -696,6 +704,8 @@ class AmountInputWidget extends StatefulWidget {
 
 class _AmountInputWidgetState extends State<AmountInputWidget> {
   late final TextEditingController _amountController;
+  List<String> tabOptions =
+      SipDataHolder.instance.data.amountSelectionScreen.options;
 
   @override
   void initState() {
@@ -730,12 +740,15 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
       if (widget.amount < widget.lowerLimit) {
         widget.onChange(widget.lowerLimit.toInt());
       } else {
-        final value =
-            (widget.amount + (widget.upperLimit / widget.division)).toInt();
-        if (value > widget.upperLimit) {
-          widget.onChange(widget.upperLimit.toInt());
+        List<SipOptions> options = SipDataHolder.instance.data
+            .amountSelectionScreen.data[tabOptions[widget.currentTab]]!.options;
+        SipOptions? optionGreaterThanAmount = options.firstWhereOrNull(
+          (option) => option.value > widget.amount,
+        );
+        if (optionGreaterThanAmount != null) {
+          widget.onChange(optionGreaterThanAmount.value);
         } else {
-          widget.onChange(value);
+          widget.onChange(widget.upperLimit.toInt());
         }
       }
     }
@@ -743,9 +756,16 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
 
   void _onDecrement() {
     if (widget.amount > widget.lowerLimit) {
-      final value =
-          (widget.amount - (widget.upperLimit / widget.division)).toInt();
-      widget.onChange(value);
+      List<SipOptions> options = SipDataHolder.instance.data
+          .amountSelectionScreen.data[tabOptions[widget.currentTab]]!.options;
+      SipOptions? optionLessThanAmount = options.reversed.firstWhereOrNull(
+        (option) => option.value < widget.amount,
+      );
+      if (optionLessThanAmount != null) {
+        widget.onChange(optionLessThanAmount.value);
+      } else {
+        widget.onChange(widget.upperLimit.toInt());
+      }
     }
   }
 

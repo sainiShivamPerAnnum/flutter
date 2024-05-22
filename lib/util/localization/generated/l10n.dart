@@ -1768,10 +1768,10 @@ class S {
     );
   }
 
-  /// `Current Value`
+  /// `Current Amount`
   String get currentValue {
     return Intl.message(
-      'Current Value',
+      'Current Amount',
       name: 'currentValue',
       desc: '',
       args: [],
@@ -3766,11 +3766,21 @@ class S {
     );
   }
 
-  /// `Apply Coupon`
+  /// `Apply Coupons`
   String get btnApplyCoupon {
     return Intl.message(
-      'Apply Coupon',
+      'Apply Coupons',
       name: 'btnApplyCoupon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `More Coupons`
+  String get moreCoupons {
+    return Intl.message(
+      'More Coupons',
+      name: 'moreCoupons',
       desc: '',
       args: [],
     );
@@ -5389,6 +5399,16 @@ class S {
     return Intl.message(
       'Please enter a code to continue',
       name: 'txnEnterCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter coupon`
+  String get enterCoupon {
+    return Intl.message(
+      'Enter coupon',
+      name: 'enterCoupon',
       desc: '',
       args: [],
     );
@@ -9603,6 +9623,656 @@ class S {
       name: 'startedSip',
       desc: '',
       args: [date],
+    );
+  }
+
+  /// `Get *${multiplier}X tickets* on saving in {percent}% Flo till maturity`
+  String floTicketEarningOnAsset(num multiplier, num percent) {
+    return Intl.message(
+      'Get *\$${multiplier}X tickets* on saving in $percent% Flo till maturity',
+      name: 'floTicketEarningOnAsset',
+      desc: '',
+      args: [multiplier, percent],
+    );
+  }
+
+  /// `P2P Wallet`
+  String get retiiredFlexi {
+    return Intl.message(
+      'P2P Wallet',
+      name: 'retiiredFlexi',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invested Amount`
+  String get flexiIvested {
+    return Intl.message(
+      'Invested Amount',
+      name: 'flexiIvested',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Last Lock-in Date`
+  String get lastLockIn {
+    return Intl.message(
+      'Last Lock-in Date',
+      name: 'lastLockIn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Withdrable Amount`
+  String get withdrable {
+    return Intl.message(
+      'Withdrable Amount',
+      name: 'withdrable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Annual Interest`
+  String get annualInterest {
+    return Intl.message(
+      'Annual Interest',
+      name: 'annualInterest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transaction`
+  String get transaction {
+    return Intl.message(
+      'Transaction',
+      name: 'transaction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Withdraw`
+  String get withdraw {
+    return Intl.message(
+      'Withdraw',
+      name: 'withdraw',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Auto-invest on Maturity`
+  String get autoInvest {
+    return Intl.message(
+      'Auto-invest on Maturity',
+      name: 'autoInvest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Compounding returns on your investment`
+  String get maturityOn {
+    return Intl.message(
+      'Compounding returns on your investment',
+      name: 'maturityOn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `'Moving to 8% P2P Flexi on maturity`
+  String get movetoflexi {
+    return Intl.message(
+      '\'Moving to 8% P2P Flexi on maturity',
+      name: 'movetoflexi',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Can withdraw anytime after maturity`
+  String get withdrawAfterMaturity {
+    return Intl.message(
+      'Can withdraw anytime after maturity',
+      name: 'withdrawAfterMaturity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Auto Invest on Maturity`
+  String get floAutoInvest {
+    return Intl.message(
+      'Auto Invest on Maturity',
+      name: 'floAutoInvest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Moving to *P2P Flexi* on maturity\nCan withdraw anytime after maturity`
+  String get floReInvestMessage {
+    return Intl.message(
+      'Moving to *P2P Flexi* on maturity\nCan withdraw anytime after maturity',
+      name: 'floReInvestMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Compounding returns on your investment`
+  String get reinvestMessage {
+    return Intl.message(
+      'Compounding returns on your investment',
+      name: 'reinvestMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Moving to P2P Wallet on maturity`
+  String get disabledReinvestTitle {
+    return Intl.message(
+      'Moving to P2P Wallet on maturity',
+      name: 'disabledReinvestTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Can withdraw anytime after maturity`
+  String get disabledReinvestSubtitle {
+    return Intl.message(
+      'Can withdraw anytime after maturity',
+      name: 'disabledReinvestSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fello P2P`
+  String get felloP2P {
+    return Intl.message(
+      'Fello P2P',
+      name: 'felloP2P',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My Funds`
+  String get myFundsSection {
+    return Intl.message(
+      'My Funds',
+      name: 'myFundsSection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invest`
+  String get investSection {
+    return Intl.message(
+      'Invest',
+      name: 'investSection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transactions`
+  String get transactionSection {
+    return Intl.message(
+      'Transactions',
+      name: 'transactionSection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How Fello P2P Works?`
+  String get howFelloP2PWorks {
+    return Intl.message(
+      'How Fello P2P Works?',
+      name: 'howFelloP2PWorks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{multiplicationFactor}X Tickets`
+  String ticketsMultiplication(num multiplicationFactor) {
+    return Intl.message(
+      '${multiplicationFactor}X Tickets',
+      name: 'ticketsMultiplication',
+      desc: '',
+      args: [multiplicationFactor],
+    );
+  }
+
+  /// `Per annum`
+  String get perAnnum {
+    return Intl.message(
+      'Per annum',
+      name: 'perAnnum',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `+ {percentage}% Returns`
+  String extraReturns(num percentage) {
+    return Intl.message(
+      '+ $percentage% Returns',
+      name: 'extraReturns',
+      desc: '',
+      args: [percentage],
+    );
+  }
+
+  /// `Loosing Extra {percentage}%`
+  String loosingReturns(num percentage) {
+    return Intl.message(
+      'Loosing Extra $percentage%',
+      name: 'loosingReturns',
+      desc: '',
+      args: [percentage],
+    );
+  }
+
+  /// `{interest}%`
+  String interest(num interest) {
+    return Intl.message(
+      '$interest%',
+      name: 'interest',
+      desc: '',
+      args: [interest],
+    );
+  }
+
+  /// `P2P Wallet`
+  String get wallet {
+    return Intl.message(
+      'P2P Wallet',
+      name: 'wallet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{interest} % Returns on your investment`
+  String walletInterest(num interest) {
+    return Intl.message(
+      '$interest % Returns on your investment',
+      name: 'walletInterest',
+      desc: '',
+      args: [interest],
+    );
+  }
+
+  /// `Current Value:`
+  String get walletCurrentValueLabel {
+    return Intl.message(
+      'Current Value:',
+      name: 'walletCurrentValueLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `₹{amount}`
+  String amount(String amount) {
+    return Intl.message(
+      '₹$amount',
+      name: 'amount',
+      desc: '',
+      args: [amount],
+    );
+  }
+
+  /// `{interest}%`
+  String percentage(num interest) {
+    return Intl.message(
+      '$interest%',
+      name: 'percentage',
+      desc: '',
+      args: [interest],
+    );
+  }
+
+  /// `per annum`
+  String get perAnnumLabel {
+    return Intl.message(
+      'per annum',
+      name: 'perAnnumLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lock-in till`
+  String get lockInTill {
+    return Intl.message(
+      'Lock-in till',
+      name: 'lockInTill',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Re-Invest on maturity`
+  String get reInvestOnMaturity {
+    return Intl.message(
+      'Re-Invest on maturity',
+      name: 'reInvestOnMaturity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Moves to P2P Wallet on maturity`
+  String get movesToVault {
+    return Intl.message(
+      'Moves to P2P Wallet on maturity',
+      name: 'movesToVault',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Return Calculator`
+  String get p2pReturnsCalculatorTitle {
+    return Intl.message(
+      'Return Calculator',
+      name: 'p2pReturnsCalculatorTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Calculate your Returns`
+  String get p2pReturnsCalculatorSubtitle {
+    return Intl.message(
+      'Calculate your Returns',
+      name: 'p2pReturnsCalculatorSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Investment Amount -`
+  String get p2pCalculatorInvestmentAmount {
+    return Intl.message(
+      'Investment Amount -',
+      name: 'p2pCalculatorInvestmentAmount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Time Period -`
+  String get p2pCalculatorInvestmentDuration {
+    return Intl.message(
+      'Time Period -',
+      name: 'p2pCalculatorInvestmentDuration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Year`
+  String get p2pCalculatorInvestmentDurationUnit {
+    return Intl.message(
+      'Year',
+      name: 'p2pCalculatorInvestmentDurationUnit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Amount on maturity-`
+  String get p2pCalculator5YearsReturns {
+    return Intl.message(
+      'Your Amount on maturity-',
+      name: 'p2pCalculator5YearsReturns',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Switch On for `
+  String get switchOnFor {
+    return Intl.message(
+      'Switch On for ',
+      name: 'switchOnFor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ` on reinvestment`
+  String get onreinvestment {
+    return Intl.message(
+      ' on reinvestment',
+      name: 'onreinvestment',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Withdraw-able after maturity from `
+  String get WithdrawMaturity {
+    return Intl.message(
+      'Withdraw-able after maturity from ',
+      name: 'WithdrawMaturity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Extra `
+  String get extra {
+    return Intl.message(
+      'Extra ',
+      name: 'extra',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reinvest on Maturity`
+  String get ReinvestTitle {
+    return Intl.message(
+      'Reinvest on Maturity',
+      name: 'ReinvestTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fello P2P Portfolio`
+  String get floPortFolio {
+    return Intl.message(
+      'Fello P2P Portfolio',
+      name: 'floPortFolio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invested`
+  String get floInvested {
+    return Intl.message(
+      'Invested',
+      name: 'floInvested',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current Return`
+  String get floCurrentReturn {
+    return Intl.message(
+      'Current Return',
+      name: 'floCurrentReturn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tickets Earned`
+  String get ticketsEarnedflo {
+    return Intl.message(
+      'Tickets Earned',
+      name: 'ticketsEarnedflo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Asset Type -`
+  String get assetSelectionCalculator {
+    return Intl.message(
+      'Asset Type -',
+      name: 'assetSelectionCalculator',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Historical average of the tickets you have earned`
+  String get ticketsTooltip {
+    return Intl.message(
+      'Historical average of the tickets you have earned',
+      name: 'ticketsTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ` every week`
+  String get everyWeek {
+    return Intl.message(
+      ' every week',
+      name: 'everyWeek',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `For your ease we will reinvest your money on maturity, you still have the option to change this preference later.`
+  String get reinvestTooltip {
+    return Intl.message(
+      'For your ease we will reinvest your money on maturity, you still have the option to change this preference later.',
+      name: 'reinvestTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get {tickets}X Tickets`
+  String getTicketMutiplier(num tickets) {
+    return Intl.message(
+      'Get ${tickets}X Tickets',
+      name: 'getTicketMutiplier',
+      desc: '',
+      args: [tickets],
+    );
+  }
+
+  /// `Add Amount`
+  String get addAmountCoupons {
+    return Intl.message(
+      'Add Amount',
+      name: 'addAmountCoupons',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View all coupons`
+  String get viewAllCoupons {
+    return Intl.message(
+      'View all coupons',
+      name: 'viewAllCoupons',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `After maturity you money move to Fello wallet, so that you continue earning interest and can withdraw any time.`
+  String get transactionTooltip {
+    return Intl.message(
+      'After maturity you money move to Fello wallet, so that you continue earning interest and can withdraw any time.',
+      name: 'transactionTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Looks like You don’t have any transactions in P2P yet`
+  String get noP2Pinvestment {
+    return Intl.message(
+      'Looks like You don’t have any transactions in P2P yet',
+      name: 'noP2Pinvestment',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `INVEST`
+  String get investP2p {
+    return Intl.message(
+      'INVEST',
+      name: 'investP2p',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verify KYC`
+  String get verifyKyc {
+    return Intl.message(
+      'Verify KYC',
+      name: 'verifyKyc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reinvestment in same plan`
+  String get reinvestInSamePlan {
+    return Intl.message(
+      'Reinvestment in same plan',
+      name: 'reinvestInSamePlan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Withdraw-able after Maturity`
+  String get withdrawMaturity {
+    return Intl.message(
+      'Withdraw-able after Maturity',
+      name: 'withdrawMaturity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total P2P Balance`
+  String get totalP2PBalance {
+    return Intl.message(
+      'Total P2P Balance',
+      name: 'totalP2PBalance',
+      desc: '',
+      args: [],
     );
   }
 }

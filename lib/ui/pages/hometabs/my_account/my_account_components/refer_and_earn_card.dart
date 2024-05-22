@@ -105,7 +105,7 @@ class ReferEarnCard extends StatelessWidget {
                         SizedBox(
                           width: SizeConfig.screenWidth! * 0.44,
                           child:
-                              'Earn *₹${(AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest1k'] ?? 50) + (AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest10kflo12'] ?? 450)}* when your friend saves in 12% Flo'
+                              'Earn *₹${(AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest1k'] ?? 50) + (AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest10kflo12'] ?? 450)}* when your friend saves in 11% Flo'
                                   .beautify(
                             style: TextStyles.sourceSans.body2
                                 .colour(Colors.white.withOpacity(0.8)),
@@ -117,8 +117,9 @@ class ReferEarnCard extends StatelessWidget {
                       ],
                     ),
                     SvgPicture.network(
-                        'https://d37gtxigg82zaw.cloudfront.net/revamped-referrals/icon.svg',
-                        height: SizeConfig.padding80),
+                      'https://d37gtxigg82zaw.cloudfront.net/revamped-referrals/icon.svg',
+                      height: SizeConfig.padding80,
+                    ),
                   ],
                 ),
                 SizedBox(
@@ -129,12 +130,14 @@ class ReferEarnCard extends StatelessWidget {
                   children: [
                     Container(
                       padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding12,
-                          vertical: SizeConfig.padding6),
+                        horizontal: SizeConfig.padding12,
+                        vertical: SizeConfig.padding6,
+                      ),
                       decoration: BoxDecoration(
                         color: UiConstants.kArrowButtonBackgroundColor,
                         borderRadius: BorderRadius.all(
-                            Radius.circular(SizeConfig.roundness8)),
+                          Radius.circular(SizeConfig.roundness8),
+                        ),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -153,10 +156,12 @@ class ReferEarnCard extends StatelessWidget {
                             },
                             child: Row(
                               children: [
-                                Text(locale.copy,
-                                    style: TextStyles.sourceSans.body3.colour(
-                                        UiConstants.kTextColor3
-                                            .withOpacity(0.7))),
+                                Text(
+                                  locale.copy,
+                                  style: TextStyles.sourceSans.body3.colour(
+                                    UiConstants.kTextColor3.withOpacity(0.7),
+                                  ),
+                                ),
                                 SizedBox(
                                   width: SizeConfig.padding6,
                                 ),
@@ -186,8 +191,10 @@ class ReferEarnCard extends StatelessWidget {
                         if (!await canLaunchUrl(
                           Uri.parse('https://wa.me/?text=$message'),
                         )) {
-                          BaseUtil.showNegativeAlert('Whatsapp not installed',
-                              'Please install whatsapp to share referral link');
+                          BaseUtil.showNegativeAlert(
+                            'Whatsapp not installed',
+                            'Please install whatsapp to share referral link',
+                          );
                           return;
                         }
 

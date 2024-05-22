@@ -210,7 +210,7 @@
   "autoSIP": "ACTIVE SIP",
   "felloFloMainTitle": "Fello Flo",
   "digitalGoldMailTitle": "Digital Gold",
-  "currentValue": "Current Value",
+  "currentValue": "Current Amount",
   "sellCardTitle1": "Sell your Digital Gold \nat current market rate",
   "sellCardTitle2": "Withdraw from Flo",
   "sellCardSubTitle1": "With every withdrawal, some tokens and tambola tickets will be deducted.",
@@ -424,7 +424,8 @@
   "btnSeeAll": "See All",
   "btnNotifyMe": "NOTIFY ME",
   "btnCongratulations": "Congratulations!",
-  "btnApplyCoupon": "Apply Coupon",
+  "btnApplyCoupon": "Apply Coupons",
+  "moreCoupons": "More Coupons",
   "btnContinue": "Continue",
   "btnCheckHere": "Check here",
   "btnGetStarted": "Get Started",
@@ -592,6 +593,7 @@
   "txnEnterCoupon": "Enter a Coupon Code here",
   "txnApply": "Apply",
   "txnEnterCode": "Please enter a code to continue",
+  "enterCoupon" : "Enter coupon",
   "txnInvalidCouponCode": "Invalid Coupon code",
   "txnActiveCoupon": "Active Coupons",
   "txnDetailsTitle": "Transaction Details",
@@ -1077,5 +1079,147 @@
         "type": "String"
       }
     }
-  }
+  },
+
+  "@_flo_premium_details" : {},
+  "floTicketEarningOnAsset" : "Get *${multiplier}X tickets* on saving in {percent}% Flo till maturity",
+  "@floTicketEarningOnAsset": {
+    "placeholders" : {
+      "multiplier" : { 
+        "type" : "num"
+      },
+      "percent" : {
+        "type": "num"
+      }
+    }
+  },
+  "retiiredFlexi": "P2P Wallet",
+  "flexiIvested": "Invested Amount",
+  "lastLockIn": "Last Lock-in Date",
+  "withdrable": "Withdrable Amount",
+  "annualInterest": "Annual Interest",
+  "transaction": "Transaction",
+  "withdraw": "Withdraw",
+  "autoInvest": "Auto-invest on Maturity",
+  "maturityOn": "Compounding returns on your investment",
+  "movetoflexi":"'Moving to 8% P2P Flexi on maturity",
+  "withdrawAfterMaturity": "Can withdraw anytime after maturity",
+  "floAutoInvest":"Auto Invest on Maturity",
+  "floReInvestMessage":"Moving to *P2P Flexi* on maturity\nCan withdraw anytime after maturity",
+
+  "@_flo_transaction_details": {},
+  "reinvestMessage": "Compounding returns on your investment",
+  "disabledReinvestTitle": "Moving to P2P Wallet on maturity",
+  "disabledReinvestSubtitle":"Can withdraw anytime after maturity",
+
+
+  "@_p2p_home_page_v2" : {},
+  "felloP2P":"Fello P2P",
+  "myFundsSection":"My Funds",
+  "investSection":"Invest",
+  "transactionSection":"Transactions",
+  "howFelloP2PWorks": "How Fello P2P Works?",
+  "ticketsMultiplication" : "{multiplicationFactor}X Tickets",
+  "@ticketsMultiplication" : {
+    "placeholders": {
+      "multiplicationFactor" : {
+        "type":"num"
+      }
+    }
+  },
+  "perAnnum": "Per annum",
+  "extraReturns": "+ {percentage}% Returns",
+  "@extraReturns" : {
+    "placeholders": {
+      "percentage": {
+        "type":"num"
+      }
+    }
+  },
+  "loosingReturns": "Loosing Extra {percentage}%",
+  "@loosingReturns" : {
+    "placeholders": {
+      "percentage": {
+        "type":"num"
+      }
+    }
+  },
+  "interest" : "{interest}%",
+  "@interest": {
+    "placeholders": {
+      "interest": {
+        "type" : "num"
+      }
+    }
+  },
+  "@_my_funds" : {},
+  "wallet":"P2P Wallet",
+  "walletInterest" : "{interest} % Returns on your investment",
+  "@walletInterest" : {
+    "placeholders" : {
+      "interest" : {
+        "type":"num"
+      }
+    }
+  },
+  "walletCurrentValueLabel": "Current Value:",
+  "amount":"₹{amount}",
+  "@amount" : {
+    "placeholders": {
+      "amount":{
+        "type":"String"
+      }
+    }
+  },
+  "percentage" : "{interest}%", 
+  "@percentage": {
+    "placeholders" :{
+      "interest": {
+        "type":"num"
+      }
+    }
+  },
+  "perAnnumLabel":"per annum",
+  "lockInTill":"Lock-in till",
+  "reInvestOnMaturity":"Re-Invest on maturity",
+  "movesToVault": "Moves to P2P Wallet on maturity",
+
+
+  "@_investment_section" : {},
+  "p2pReturnsCalculatorTitle":"Return Calculator",
+  "p2pReturnsCalculatorSubtitle":"Calculate your Returns",
+  "p2pCalculatorInvestmentAmount":"Investment Amount -",
+  "p2pCalculatorInvestmentDuration":"Time Period -",
+  "p2pCalculatorInvestmentDurationUnit":"Year",
+  "p2pCalculator5YearsReturns":"Your Amount on maturity-",
+  "switchOnFor": "Switch On for ",
+  "onreinvestment":" on reinvestment",
+  "WithdrawMaturity": "Withdraw-able after maturity from ",
+  "extra": "Extra ",
+  "ReinvestTitle": "Reinvest on Maturity",
+  "floPortFolio": "Fello P2P Portfolio",
+  "floInvested": "Invested",
+  "floCurrentReturn": "Current Return",
+  "ticketsEarnedflo": "Tickets Earned",
+  "assetSelectionCalculator": "Asset Type -",
+  "ticketsTooltip": "Historical average of the tickets you have earned",
+  "everyWeek": " every week",
+  "reinvestTooltip": "For your ease we will reinvest your money on maturity, you still have the option to change this preference later.",
+  "getTicketMutiplier" : "Get {tickets}X Tickets", 
+  "@getTicketMutiplier": {
+    "placeholders" :{
+      "tickets": {
+        "type":"num"
+      }
+    }
+  },
+  "addAmountCoupons": "Add Amount",
+  "viewAllCoupons": "View all coupons",
+  "transactionTooltip": "After maturity you money move to Fello wallet, so that you continue earning interest and can withdraw any time.",
+  "noP2Pinvestment": "Looks like You don’t have any transactions in P2P yet",
+  "investP2p": "INVEST",
+  "verifyKyc": "Verify KYC",
+  "reinvestInSamePlan": "Reinvestment in same plan",
+  "withdrawMaturity":"Withdraw-able after Maturity",
+  "totalP2PBalance":"Total P2P Balance"
 }

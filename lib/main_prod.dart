@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:felloapp/boot_strap.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/util/crashlytics_widget.dart';

@@ -15,7 +15,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/fello_badges/ui/fello_badges_home.dart';
-import 'package:felloapp/feature/flo_withdrawals/ui/balloon_lottie_screen.dart';
+import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
@@ -31,7 +31,6 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_details_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_transactions/gold_pro_txns_view.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/my_account_view.dart';
@@ -182,8 +181,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     );
   }
 
-  void _insertPageData(Widget child, PageConfiguration pageConfig,
-      {int? index}) {
+  void _insertPageData(
+    Widget child,
+    PageConfiguration pageConfig, {
+    int? index,
+  }) {
     AppState.screenStack
         .insert(index ?? AppState.screenStack.length, ScreenItem.page);
     debugPrint("Inserted a page ${pageConfig.key} to Index $index");
@@ -209,8 +211,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     //notifyListeners();
   }
 
-  void addPage(PageConfiguration? pageConfig,
-      {Map<String, dynamic>? queryParams}) {
+  void addPage(
+    PageConfiguration? pageConfig, {
+    Map<String, dynamic>? queryParams,
+  }) {
     final shouldAddPage = _pages.isEmpty ||
         (_pages.last.arguments as PageConfiguration).uiPage !=
             pageConfig!.uiPage;
@@ -252,7 +256,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.TxnHistory:
           _addPageData(
-              const TransactionsHistory(), TransactionsHistoryPageConfig);
+            const TransactionsHistory(),
+            TransactionsHistoryPageConfig,
+          );
           break;
         case Pages.KycDetails:
           _addPageData(const KYCDetailsView(), KycDetailsPageConfig);
@@ -260,9 +266,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.BankDetails:
           _addPageData(
             BankDetailsView(
-                validation: bool.tryParse(
-              queryParams?['withNetBankingValidation'] ?? 'false',
-            )),
+              validation: bool.tryParse(
+                queryParams?['withNetBankingValidation'] ?? 'false',
+              ),
+            ),
             BankDetailsPageConfig,
           );
           break;
@@ -296,8 +303,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
 
         case Pages.ScratchCardsView:
-          _addPageData(ScratchCardsView(model: locator<ScratchCardService>()),
-              ScratchCardsViewPageConfig);
+          _addPageData(
+            ScratchCardsView(model: locator<ScratchCardService>()),
+            ScratchCardsViewPageConfig,
+          );
           break;
         case Pages.JourneyView:
           _addPageData(const JourneyView(), JourneyViewPageConfig);
@@ -320,8 +329,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(const HowItWorks(), pageConfig);
           break;
         case Pages.PowerPlaySeasonLeaderboard:
-          _addPageData(const SeasonLeaderboard(),
-              PowerPlaySeasonLeaderboardDetailsConfig);
+          _addPageData(
+            const SeasonLeaderboard(),
+            PowerPlaySeasonLeaderboardDetailsConfig,
+          );
           break;
 
         case Pages.PowerPlayFTUX:
@@ -335,7 +346,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.GoldProDetailsView:
           _addPageData(
-              const GoldProDetailsView(), GoldProDetailsViewPageConfig);
+            const GoldProDetailsView(),
+            GoldProDetailsViewPageConfig,
+          );
           break;
         case Pages.GoldProBuyView:
           _addPageData(const GoldProBuyView(), GoldProBuyViewPageConfig);
@@ -355,12 +368,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
         case Pages.TicketsTutorialViewPath:
           _addPageData(
-              const TicketsTutorialsView(), TicketsTutorialViewPageConfig);
-          break;
-
-        case Pages.BalloonLottieScreen:
-          _addPageData(
-              const BalloonLottieScreen(), BalloonLottieScreenViewConfig);
+            const TicketsTutorialsView(),
+            TicketsTutorialViewPageConfig,
+          );
           break;
 
         case Pages.FelloBadgeHome:
@@ -372,23 +382,35 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.SipAssetSelectView:
           _addPageData(
-              SipAssetSelectView(
-                isMandateAvailable: queryParams?['mandateAvailable'] ?? false,
-              ),
-              SipAssetSelectPageConfig);
+            SipAssetSelectView(
+              isMandateAvailable: queryParams?['mandateAvailable'] ?? false,
+            ),
+            SipAssetSelectPageConfig,
+          );
           break;
         case Pages.SipFormView:
           _addPageData(
-              SipFormAmountView(
-                mandateAvailable: queryParams?['mandateAvailable'] ?? false,
-                sipAssetType: queryParams?['sipAssetType'],
-              ),
-              SipFormPageConfig);
+            SipFormAmountView(
+              mandateAvailable: queryParams?['mandateAvailable'] ?? false,
+              sipAssetType: queryParams?['sipAssetType'],
+            ),
+            SipFormPageConfig,
+          );
           break;
         case Pages.SipMandateView:
-          _addPageData(SipMandateView(assetType: queryParams?['sipAssetType']),
-              SipMandatePageConfig);
+          _addPageData(
+            SipMandateView(assetType: queryParams?['sipAssetType']),
+            SipMandatePageConfig,
+          );
           break;
+
+        case Pages.P2PHomeView:
+          _addPageData(
+            const P2PHomePage(),
+            P2PHomePageConfig,
+          );
+          break;
+
         default:
           break;
       }
@@ -753,7 +775,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         // 8
         _setPageAction(appState.currentAction);
         pushWidget(
-            appState.currentAction.widget!, appState.currentAction.page!);
+          appState.currentAction.widget!,
+          appState.currentAction.page!,
+        );
         break;
       case PageState.addBelow:
         _setPageAction(appState.currentAction);
@@ -766,7 +790,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case PageState.replaceWidget:
         replaceWidget(
-            appState.currentAction.widget!, appState.currentAction.page!);
+          appState.currentAction.widget!,
+          appState.currentAction.page!,
+        );
         break;
     }
     // 10
@@ -844,12 +870,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         barrierDismissible: barrierDismissable,
         builder: (ctx) {
           return WillPopScope(
-              onWillPop: () {
-                AppState.backButtonDispatcher!.didPopRoute();
-                debugPrint("Popped the dialog");
-                return Future.value(true);
-              },
-              child: dialogWidget!);
+            onWillPop: () {
+              AppState.backButtonDispatcher!.didPopRoute();
+              debugPrint("Popped the dialog");
+              return Future.value(true);
+            },
+            child: dialogWidget!,
+          );
         },
       );
     }
@@ -907,23 +934,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case "floDetails":
         appState.currentAction = PageAction(
           state: PageState.addWidget,
-          page: SaveAssetsViewConfig,
-          widget: const AssetSectionView(
-            type: InvestmentType.LENDBOXP2P,
-          ),
+          page: P2PHomePageConfig,
+          widget: const P2PHomePage(),
         );
-        break;
-      case "flo10Details":
-        appState.currentAction = PageAction(
-            state: PageState.addWidget,
-            page: FloPremiumDetailsPageConfig,
-            widget: const FloPremiumDetailsView(is12: false));
-        break;
-      case "flo12Details":
-        appState.currentAction = PageAction(
-            state: PageState.addWidget,
-            page: FloPremiumDetailsPageConfig,
-            widget: const FloPremiumDetailsView(is12: true));
         break;
 
       case 'quickTour':
@@ -951,31 +964,19 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         );
         break;
       case 'lboxBuy':
-        BaseUtil().openRechargeModalSheet(
-          investmentType: InvestmentType.LENDBOXP2P,
-          queryParams: queryParams,
-        );
+        final asset = queryParams['asset'];
+        if (asset == null) {
+          BaseUtil().openRechargeModalSheet(
+            investmentType: InvestmentType.LENDBOXP2P,
+            queryParams: queryParams,
+          );
+        } else {
+          BaseUtil.openFloBuySheet(
+            floAssetType: asset,
+            queryParams: queryParams,
+          );
+        }
         break;
-      case 'lboxBuy12':
-        BaseUtil.openFloBuySheet(
-          floAssetType: Constants.ASSET_TYPE_FLO_FIXED_6,
-          queryParams: queryParams,
-        );
-        break;
-      case 'lboxBuy8':
-        BaseUtil.openFloBuySheet(
-          floAssetType: Constants.ASSET_TYPE_FLO_FELXI,
-          queryParams: queryParams,
-        );
-        break;
-
-      case 'lboxBuy10':
-        BaseUtil.openFloBuySheet(
-          floAssetType: Constants.ASSET_TYPE_FLO_FIXED_3,
-          queryParams: queryParams,
-        );
-        break;
-
       case 'lboxSell':
         BaseUtil()
             .openSellModalSheet(investmentType: InvestmentType.LENDBOXP2P);
@@ -1102,8 +1103,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     }
     var rootController = locator<RootController>();
 
-    rootController.onChange(rootController.navItems.values
-        .toList()[rootController.navItems.values.toList().indexOf(item)]);
+    rootController.onChange(
+      rootController.navItems.values
+          .toList()[rootController.navItems.values.toList().indexOf(item)],
+    );
 
     appState.setCurrentTabIndex =
         rootController.navItems.values.toList().indexOf(item);
@@ -1114,8 +1117,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
     var rootController = locator<RootController>();
 
-    rootController.onChange(rootController.navItems.values
-        .toList()[rootController.navItems.values.toList().indexOf(item)]);
+    rootController.onChange(
+      rootController.navItems.values
+          .toList()[rootController.navItems.values.toList().indexOf(item)],
+    );
 
     appState.setCurrentTabIndex =
         rootController.navItems.values.toList().indexOf(item);
@@ -1135,10 +1140,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     }
 
     if (isLocked) {
-      BaseUtil.showNegativeAlert('Game is locked for you',
-          'Save more in Gold or Flo to unlock the game and complete the milestone');
+      BaseUtil.showNegativeAlert(
+        'Game is locked for you',
+        'Save more in Gold or Flo to unlock the game and complete the milestone',
+      );
       appState.onItemTapped(
-          DynamicUiUtils.navBar.indexWhere((element) => element == 'PL'));
+        DynamicUiUtils.navBar.indexWhere((element) => element == 'PL'),
+      );
     } else {
       BaseUtil.openGameModalSheet(game);
     }
@@ -1196,15 +1204,19 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     if (isUserAlreadyRated) return false;
 
     if (PreferenceHelper.exists(
-        PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP)) {
+      PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP,
+    )) {
       int expiryTimeStampInMSE = PreferenceHelper.getInt(
-          PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP);
+        PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP,
+      );
       if (DateTime.now().millisecondsSinceEpoch < expiryTimeStampInMSE) {
         return false;
       }
     }
-    PreferenceHelper.setInt(PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP,
-        DateTime.now().add(const Duration(days: 10)).millisecondsSinceEpoch);
+    PreferenceHelper.setInt(
+      PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP,
+      DateTime.now().add(const Duration(days: 10)).millisecondsSinceEpoch,
+    );
     return true;
   }
 }

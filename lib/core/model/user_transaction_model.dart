@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/foundation.dart';
 
@@ -64,6 +63,7 @@ class UserTransaction {
   Map<String, dynamic>? couponMap;
   LbMap lbMap;
   List<TransactionStatusMapItemModel>? transactionUpdatesMap;
+  String id;
 
   static const String fldAmount = 'tAmount';
   static const String fldClosingBalance = 'tClosingBalance';
@@ -86,7 +86,6 @@ class UserTransaction {
   static const String subFldPaytmStatus = 'status';
   static const String subFldPaytmTxnAmount = 'txnAmount';
   static const String subFldPaytmTxnDate = 'txnDate';
-  static const String subFldPaytmTxnId = 'txnId';
 
   ///razorpay submap fields
   static const String subFldRzpOrderId = 'rOrderId';
@@ -161,6 +160,7 @@ class UserTransaction {
     this.misMap,
     this.couponMap,
     this.lbMap,
+    this.id,
   );
 
   UserTransaction.fromMap(Map<String, dynamic> data, String documentID)
@@ -181,6 +181,7 @@ class UserTransaction {
           data['miscMap'] ?? {},
           data["coupon"] ?? {},
           LbMap.fromMap(data["lbMap"] ?? {}),
+          data['id'],
         );
 
   UserTransaction.fromJSON(Map<String, dynamic> data, String documentID)
@@ -201,6 +202,7 @@ class UserTransaction {
           data['miscMap'],
           data["coupon"],
           LbMap.fromMap(data["lbMap"] ?? {}),
+          data['id'],
         );
 
   toJson() {
@@ -295,7 +297,7 @@ class UserTransaction {
 
   String get showRewardsTextValue => type == UserTransaction.TRAN_TYPE_WITHDRAW
       ? "Rewards Deducted:"
-      : (subType != Constants.ASSET_TYPE_LENDBOX &&
+      : (subType != 'LENDBOXP2P' &&
               augmnt != null &&
               augmnt!["aBlockId"] == null)
           ? "You redeemed ₹${amount} from your total winnings."
@@ -368,27 +370,28 @@ class TransactionStatusMapItemModel {
 }
 
 class LbMap {
-  String? fundType;
-  TimestampModel? maturityAt;
-  String? maturityPref;
-  double? gainAmount;
-  bool? hasDecidedPref;
-  bool? hasMatured;
+  final String? fundType;
+  final TimestampModel? maturityAt;
+  final String? maturityPref;
+  final double? gainAmount;
+  final bool? hasDecidedPref;
+  final bool? hasMatured;
 
-  LbMap(
-      {this.fundType,
-      this.maturityAt,
-      this.maturityPref,
-      this.gainAmount,
-      this.hasDecidedPref,
-      this.hasMatured});
+  const LbMap({
+    this.fundType,
+    this.maturityAt,
+    this.maturityPref,
+    this.gainAmount,
+    this.hasDecidedPref,
+    this.hasMatured,
+  });
 
   factory LbMap.fromMap(Map<String, dynamic> map) {
     return LbMap(
       fundType: map['fundType'] != null ? map['fundType'] as String : "",
       maturityAt: map['maturityAt'] != null
           ? TimestampModel.fromMap(map['maturityAt'])
-          : TimestampModel.currentTimeStamp(),
+          : null,
       maturityPref:
           map['maturityPref'] != null ? map['maturityPref'] as String : "NA",
       gainAmount:

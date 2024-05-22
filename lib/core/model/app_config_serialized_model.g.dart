@@ -30,10 +30,14 @@ AppConfigV2Data _$AppConfigV2DataFromJson(Map<String, dynamic> json) =>
       enableJourney: json['enableJourney'] as bool? ?? false,
       canChangePostMaturityPreference:
           json['canChangePostMaturityPreference'] as bool? ?? false,
-      lendBoxP2P: (json['LENDBOXP2P'] as List<dynamic>?)
-              ?.map((e) => Lendboxp2P.fromJson(e as Map<String, dynamic>))
+      lendBoxP2Pv2: (json['LENDBOX_P2P_V2'] as List<dynamic>?)
+              ?.map((e) =>
+                  LendboxAssetConfiguration.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      lbV2: json['p2p_v2'] == null
+          ? const {}
+          : AppConfigV2Data._convertP2PV2(json['p2p_v2'] as List?),
       youtubeVideos: (json['youtubeVideos'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -76,13 +80,22 @@ AppConfigV2Data _$AppConfigV2DataFromJson(Map<String, dynamic> json) =>
       features: json['features'] as Map<String, dynamic>? ?? const {},
     );
 
-Lendboxp2P _$Lendboxp2PFromJson(Map<String, dynamic> json) => Lendboxp2P(
-      fundType: json['fundType'] as String? ?? '',
-      maturityPeriodText: json['maturityPeriodText'] as String? ?? '',
-      minAmountText: json['minAmountText'] as String? ?? '',
-      descText: json['descText'] as String? ?? '',
-      tamBolaMultiplier: json['tambolaMultiplier'] as num? ?? 0,
+LendboxAssetConfiguration _$LendboxAssetConfigurationFromJson(
+        Map<String, dynamic> json) =>
+    LendboxAssetConfiguration(
+      fundType: json['fundType'] as String,
+      maturityPeriodText: json['maturityPeriodText'] as String,
+      minAmountText: json['minAmountText'] as String,
+      descText: json['descText'] as String,
+      tambolaMultiplier: json['tambolaMultiplier'] as num,
+      reinvestInterestGain: json['reinvestInterestGain'] as num? ?? 0,
       isForOldLb: json['isForOldLb'] as bool? ?? false,
+      interest: json['interest'] as num? ?? 10,
+      maturityDuration: json['maturityDuration'] as int? ?? 3,
+      assetName: json['assetName'] as String? ?? '',
+      highlights: json['highlights'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      minAmount: json['minAmount'] as num? ?? 100,
     );
 
 OverrideUrls _$OverrideUrlsFromJson(Map<String, dynamic> json) => OverrideUrls(
