@@ -147,7 +147,7 @@ class _SipFormAmountState extends State<SipFormAmount> {
                                 mandateAvailable: widget.mandateAvailable,
                                 lowerLimit: state.lowerLimit.toDouble(),
                                 upperLimit: state.upperLimit.toDouble(),
-                                division: state.division.toInt(),
+                                currentTab: state.currentTab,
                                 amount: state.formAmount,
                                 ticketMultiplier: ticketMultiplier,
                                 onChange: formmodel.setAmount,
@@ -419,7 +419,7 @@ class _FooterState extends State<_Footer> {
                           );
                         }),
                   ),
-                _ => SizedBox.shrink(),
+                _ => const SizedBox.shrink(),
               };
             },
           ),
@@ -682,18 +682,18 @@ class AmountInputWidget extends StatefulWidget {
     required this.onChange,
     required this.ticketMultiplier,
     required this.mandateAvailable,
+    required this.currentTab,
     super.key,
     this.upperLimit = 15000,
     this.lowerLimit = 500,
-    this.division = 5,
   });
 
   final int amount;
   final double upperLimit;
   final double lowerLimit;
   final num ticketMultiplier;
-  final int division;
   final bool mandateAvailable;
+  final int currentTab;
   final void Function(int value) onChange;
 
   @override
@@ -702,6 +702,8 @@ class AmountInputWidget extends StatefulWidget {
 
 class _AmountInputWidgetState extends State<AmountInputWidget> {
   late final TextEditingController _amountController;
+  List<String> tabOptions =
+      SipDataHolder.instance.data.amountSelectionScreen.options;
 
   @override
   void initState() {
@@ -736,12 +738,15 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
       if (widget.amount < widget.lowerLimit) {
         widget.onChange(widget.lowerLimit.toInt());
       } else {
-        final value =
-            (widget.amount + (widget.upperLimit / widget.division)).toInt();
-        if (value > widget.upperLimit) {
-          widget.onChange(widget.upperLimit.toInt());
+        List<SipOptions> options = SipDataHolder.instance.data
+            .amountSelectionScreen.data[tabOptions[widget.currentTab]]!.options;
+        SipOptions? optionGreaterThanAmount = options.firstWhereOrNull(
+          (option) => option.value > widget.amount,
+        );
+        if (optionGreaterThanAmount != null) {
+          widget.onChange(optionGreaterThanAmount.value);
         } else {
-          widget.onChange(value);
+          widget.onChange(widget.upperLimit.toInt());
         }
       }
     }
@@ -749,9 +754,16 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
 
   void _onDecrement() {
     if (widget.amount > widget.lowerLimit) {
-      final value =
-          (widget.amount - (widget.upperLimit / widget.division)).toInt();
-      widget.onChange(value);
+      List<SipOptions> options = SipDataHolder.instance.data
+          .amountSelectionScreen.data[tabOptions[widget.currentTab]]!.options;
+      SipOptions? optionLessThanAmount = options.reversed.firstWhereOrNull(
+        (option) => option.value < widget.amount,
+      );
+      if (optionLessThanAmount != null) {
+        widget.onChange(optionLessThanAmount.value);
+      } else {
+        widget.onChange(widget.upperLimit.toInt());
+      }
     }
   }
 

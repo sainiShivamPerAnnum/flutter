@@ -263,8 +263,8 @@ class _MyInvestedAmount extends StatelessWidget {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: locale
-                        .amount(BaseUtil.formatCompactRupees(currentValue)),
+                    text:
+                        "${locale.amount(BaseUtil.formatCompactRupees(currentValue))} ",
                     style: TextStyles.sourceSansSB.body1
                         .colour(UiConstants.kTextColor),
                   ),
