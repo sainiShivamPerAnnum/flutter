@@ -20,90 +20,93 @@ class InvestSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverOverlapInjector(
-          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-        ),
-        SliverToBoxAdapter(
-          child: SizedBox(
-            height: SizeConfig.padding16,
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: CustomScrollView(
+        slivers: [
+          SliverOverlapInjector(
+            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
           ),
-        ),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins,
-            ),
-            child: AssetOptionsWidget(
-              assets: AppConfigV2.instance.lbV2.values.toList(),
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: SizeConfig.padding16,
             ),
           ),
-        ),
-        SliverToBoxAdapter(
-          child: SizedBox(
-            height: SizeConfig.padding24,
-          ),
-        ),
-        SliverToBoxAdapter(
-          child: AutosaveCard(
-            titleStyle: TextStyles.rajdhaniSB.title5,
-          ),
-        ),
-        SliverToBoxAdapter(
-          child: SizedBox(
-            height: SizeConfig.padding24,
-          ),
-        ),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins,
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins,
+              ),
+              child: AssetOptionsWidget(
+                assets: AppConfigV2.instance.lbV2.values.toList(),
+              ),
             ),
-            child: const P2PInvestmentCalculator(),
           ),
-        ),
-        SliverToBoxAdapter(
-          child: SizedBox(
-            height: SizeConfig.padding40,
-          ),
-        ),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins,
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: SizeConfig.padding24,
             ),
-            child: const HowFelloFloWorks(),
           ),
-        ),
-        SliverToBoxAdapter(
-          child: SizedBox(
-            height: SizeConfig.padding24,
+          SliverToBoxAdapter(
+            child: AutosaveCard(
+              titleStyle: TextStyles.rajdhaniSB.title5,
+            ),
           ),
-        ),
-        const SliverToBoxAdapter(
-          child: AssetComparisonSection(
-            backgroundColor: Colors.transparent,
-            isGold: false,
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: SizeConfig.padding24,
+            ),
           ),
-        ),
-        SliverToBoxAdapter(
-          child: SizedBox(
-            height: SizeConfig.padding24,
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins,
+              ),
+              child: const P2PInvestmentCalculator(),
+            ),
           ),
-        ),
-        const SliverToBoxAdapter(
-          child: AssetInfoFooter(
-            isGold: false,
-            toShowText: true,
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: SizeConfig.padding40,
+            ),
           ),
-        ),
-        const SliverToBoxAdapter(
-          child: TermsAndConditions(
-            url: Constants.savingstnc,
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins,
+              ),
+              child: const HowFelloFloWorks(),
+            ),
           ),
-        ),
-      ],
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: SizeConfig.padding24,
+            ),
+          ),
+          const SliverToBoxAdapter(
+            child: AssetComparisonSection(
+              backgroundColor: Colors.transparent,
+              isGold: false,
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: SizeConfig.padding24,
+            ),
+          ),
+          const SliverToBoxAdapter(
+            child: AssetInfoFooter(
+              isGold: false,
+              toShowText: true,
+            ),
+          ),
+          const SliverToBoxAdapter(
+            child: TermsAndConditions(
+              url: Constants.savingstnc,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
