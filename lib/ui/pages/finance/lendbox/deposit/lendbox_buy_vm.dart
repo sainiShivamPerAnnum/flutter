@@ -283,14 +283,6 @@ class LendboxBuyViewModel extends BaseViewModel
     amountController = TextEditingController(
       text: amount?.toString() ?? data.toString(),
     );
-    amountController!.addListener(() {
-      final text = amountController!.text;
-      amountController!.value = amountController!.value.copyWith(
-        text: text,
-        selection: TextSelection.collapsed(offset: text.length),
-        composing: TextRange.empty,
-      );
-    });
     buyAmount = amount ?? data;
     AppState.amt = (buyAmount ?? 0) * 1.0;
 
@@ -598,6 +590,9 @@ class LendboxBuyViewModel extends BaseViewModel
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     buyAmount = assetOptionsModel?.data.userOptions[index].value.toInt();
     amountController!.text = buyAmount!.toString();
+    amountController!.selection = TextSelection.fromPosition(
+      TextPosition(offset: amountController!.text.length),
+    );
     AppState.amt = (buyAmount ?? 0) * 1.0;
 
     focusCoupon = couponList!.firstWhereOrNull(
@@ -632,6 +627,9 @@ class LendboxBuyViewModel extends BaseViewModel
         buyAmount = maxAmount.toInt();
         showMaxCapText = true;
         amountController!.text = buyAmount!.toInt().toString();
+        amountController!.selection = TextSelection.fromPosition(
+          TextPosition(offset: amountController!.text.length),
+        );
       } else {
         buyAmount = int.tryParse(val);
         if ((buyAmount ?? 0.0) < minAmount) showMinCapText = true;
@@ -726,6 +724,9 @@ class LendboxBuyViewModel extends BaseViewModel
             (buyAmount ?? 0) < response.model!.minAmountRequired!) {
           amountController!.text =
               response.model!.minAmountRequired!.toInt().toString();
+          amountController!.selection = TextSelection.fromPosition(
+            TextPosition(offset: amountController!.text.length),
+          );
           buyAmount = response.model!.minAmountRequired?.toInt();
           AppState.amt = (buyAmount ?? 0) * 1.0;
           lastTappedChipIndex = assetOptionsModel!.data.userOptions.indexWhere(
