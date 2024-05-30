@@ -79,7 +79,8 @@ class _MyFundSectionState extends State<MyFundSection> {
                 slivers: [
                   SliverOverlapInjector(
                     handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                        context),
+                      context,
+                    ),
                   ),
                   SliverPadding(
                     padding: EdgeInsets.symmetric(
@@ -130,7 +131,7 @@ class _MyFundSectionState extends State<MyFundSection> {
                             transaction: fundsBloc.state.entries[index],
                           );
                         }
-                        return null;
+                        return const SizedBox.shrink();
                       },
                       itemCount: fundsBloc.state.entries.length,
                       separatorBuilder: (context, index) => SizedBox(
