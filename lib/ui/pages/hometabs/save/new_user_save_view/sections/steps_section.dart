@@ -1,16 +1,13 @@
 import 'package:felloapp/core/model/action.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart'
     as sections;
-import 'package:felloapp/ui/pages/root/tutorial_keys.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/shared/show_case.dart';
 import 'package:felloapp/util/action_resolver.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart' hide Action;
-import 'package:showcaseview/showcaseview.dart';
 
 class StepsSection extends StatelessWidget {
   const StepsSection({
@@ -52,39 +49,9 @@ class StepsSection extends StatelessWidget {
                           i == 0 ? SizeConfig.padding20 : SizeConfig.padding16,
                       right: i == steps.length - 1 ? SizeConfig.padding20 : 0,
                     ),
-                    child: ShowCaseView(
-                      globalKey: TutorialKeys.tutorialkey1,
-                      title: null,
-                      description: locale.tutorial1,
-                      toolTipPosition: TooltipPosition.top,
-                      targetPadding:
-                          EdgeInsets.only(left: SizeConfig.padding10),
-                      shapeBorder: const RoundedRectangleBorder(),
-                      targetBorderRadius: BorderRadius.circular(10),
-                      child: ShowCaseView(
-                        globalKey: TutorialKeys.tutorialkey2,
-                        title: null,
-                        description: locale.tutorial2,
-                        targetPadding:
-                            EdgeInsets.only(left: SizeConfig.padding10),
-                        toolTipPosition: TooltipPosition.bottom,
-                        shapeBorder: const RoundedRectangleBorder(),
-                        targetBorderRadius: BorderRadius.circular(10),
-                        child: ShowCaseView(
-                          globalKey: TutorialKeys.tutorialkey6,
-                          title: null,
-                          description: locale.tutorial6,
-                          targetPadding:
-                              EdgeInsets.only(left: SizeConfig.padding10),
-                          toolTipPosition: TooltipPosition.bottom,
-                          shapeBorder: const RoundedRectangleBorder(),
-                          targetBorderRadius: BorderRadius.circular(10),
-                          child: _Step(
-                            step: steps[i],
-                            style: styles[steps[i].style]!,
-                          ),
-                        ),
-                      ),
+                    child: _Step(
+                      step: steps[i],
+                      style: styles[steps[i].style]!,
                     ),
                   )
                 else

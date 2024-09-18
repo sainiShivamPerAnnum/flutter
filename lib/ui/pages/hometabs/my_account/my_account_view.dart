@@ -3,7 +3,6 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
-import 'package:felloapp/ui/keys/keys.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/current_winnings_info.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/fello_badge_profile_widget.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/news_component.dart';
@@ -33,81 +32,83 @@ class MyAccount extends StatelessWidget {
         final isNewUser = locator<UserService>().userSegments.contains(
               Constants.NEW_USER,
             );
-        return Builder(builder: (context) {
-          if (model.state == ViewState.Busy) {
-            return SizedBox(
-              width: SizeConfig.screenWidth,
-              child: const FullScreenLoader(),
-            );
-          }
-          return Scaffold(
-            backgroundColor: UiConstants.kBackgroundColor,
-            appBar: FAppBar(
-              title: "My Account",
-              showHelpButton: true,
-              type: FaqsType.yourAccount,
-              showCoinBar: false,
-              showAvatar: false,
-              leadingPadding: false,
-              action: Row(children: [NotificationButton()]),
-            ),
-            body: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                ProfileBadgeWidget(
-                  onPickImage: model.showCustomAvatarsDialog,
-                  superFelloLevel: model.superFelloLevel,
-                ),
-
-                AccountInfoTiles(
-                  key: const Key('userProfileEntry'),
-                  //key: K.userProfileEntryCTAKey,
-                  title: locale.abMyProfile,
-                  uri: "/profile",
-                ),
-
-                const AccountInfoTiles(
-                  title: "KYC Details",
-                  uri: "/kycVerify",
-                ),
-
-                AccountInfoTiles(
-                    title: locale.bankAccDetails, uri: "/bankDetails"),
-                AccountInfoTiles(
-                  title: 'Last Week on Fello',
-                  uri: "",
-                  onTap: () => model.showLastWeekSummary(),
-                ),
-                AccountInfoTiles(
-                  title: 'Rate Us',
-                  uri: "",
-                  onTap: () => model.showRatingSheet(),
-                ),
-                if (isNewUser)
-                  AccountInfoTiles(
-                    title: 'Watch Tutorial',
-                    uri: "",
-                    onTap: () => model.showTutorial(context),
+        return Builder(
+          builder: (context) {
+            if (model.state == ViewState.Busy) {
+              return SizedBox(
+                width: SizeConfig.screenWidth,
+                child: const FullScreenLoader(),
+              );
+            }
+            return Scaffold(
+              backgroundColor: UiConstants.kBackgroundColor,
+              appBar: FAppBar(
+                title: "My Account",
+                showHelpButton: true,
+                type: FaqsType.yourAccount,
+                showCoinBar: false,
+                showAvatar: false,
+                leadingPadding: false,
+                action: Row(children: [NotificationButton()]),
+              ),
+              body: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  ProfileBadgeWidget(
+                    onPickImage: model.showCustomAvatarsDialog,
+                    superFelloLevel: model.superFelloLevel,
                   ),
-                //Scratch Cards count and navigation
-                const ScratchCardsInfoStrip(),
-                //Current Winnings Information
-                const CurrentWinningsInfo(),
-                //Refer and Earn
-                const ReferEarnCard(),
-                //Fello News
-                FelloNewsComponent(model: model),
-                SizedBox(
-                  height: SizeConfig.padding12,
-                ),
-                const CacheClearWidget(),
-                SizedBox(
-                  height: SizeConfig.padding10,
-                ),
-              ],
-            ),
-          );
-        });
+
+                  AccountInfoTiles(
+                    key: const Key('userProfileEntry'),
+                    //key: K.userProfileEntryCTAKey,
+                    title: locale.abMyProfile,
+                    uri: "/profile",
+                  ),
+
+                  const AccountInfoTiles(
+                    title: "KYC Details",
+                    uri: "/kycVerify",
+                  ),
+
+                  AccountInfoTiles(
+                    title: locale.bankAccDetails,
+                    uri: "/bankDetails",
+                  ),
+                  const AccountInfoTiles(
+                    title: "Tickets",
+                    uri: "/tambolaHome",
+                  ),
+                  AccountInfoTiles(
+                    title: 'Last Week on Fello',
+                    uri: "",
+                    onTap: () => model.showLastWeekSummary(),
+                  ),
+                  AccountInfoTiles(
+                    title: 'Rate Us',
+                    uri: "",
+                    onTap: () => model.showRatingSheet(),
+                  ),
+                  //Scratch Cards count and navigation
+                  const ScratchCardsInfoStrip(),
+                  //Current Winnings Information
+                  const CurrentWinningsInfo(),
+                  //Refer and Earn
+                  const ReferEarnCard(),
+                  //Fello News
+                  FelloNewsComponent(model: model),
+                  SizedBox(
+                    height: SizeConfig.padding12,
+                  ),
+                  const CacheClearWidget(),
+                  SizedBox(
+                    height: SizeConfig.padding10,
+                  ),
+                ],
+              ),
+            );
+          },
+        );
       },
     );
   }

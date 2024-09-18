@@ -101,8 +101,7 @@ dependencies:
   flutter_blurhash: ^0.8.2
   story_view: ^0.16.0
   freezed_annotation: ^2.4.1
-  showcaseview:
-    path: packages/showcaseview
+  hmssdk_flutter: ^1.10.6
   sliver_tools: ^0.2.12
   super_tooltip: ^2.0.7
 

@@ -5,8 +5,6 @@ import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart'
 import 'package:felloapp/core/repository/local/stories_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/root/tutorial_keys.dart';
-import 'package:felloapp/ui/shared/show_case.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -90,31 +88,13 @@ class _StoriesSectionState extends State<StoriesSection> {
                         : 0,
                   ),
                   child: InkWell(
-                    child: i == 0
-                        ? ShowCaseView(
-                            title: null,
-                            description: locale.tutorial5,
-                            globalKey: i == 0 ? TutorialKeys.tutorialkey5 : GlobalKey(),
-                            shapeBorder: const RoundedRectangleBorder(),
-                            targetBorderRadius: BorderRadius.all(
-                              Radius.circular(SizeConfig.roundness12),
-                            ),
-                            child: _StoryCard(
-                              style:
-                                  widget.style[widget.data.stories[i].style]!,
-                              storyStatus: _storiesRepo.getStoryStatusById(
-                                widget.data.stories[i].id,
-                              ),
-                              story: widget.data.stories[i],
-                            ),
-                          )
-                        : _StoryCard(
-                            style: widget.style[widget.data.stories[i].style]!,
-                            storyStatus: _storiesRepo.getStoryStatusById(
-                              widget.data.stories[i].id,
-                            ),
-                            story: widget.data.stories[i],
-                          ),
+                    child: _StoryCard(
+                      style: widget.style[widget.data.stories[i].style]!,
+                      storyStatus: _storiesRepo.getStoryStatusById(
+                        widget.data.stories[i].id,
+                      ),
+                      story: widget.data.stories[i],
+                    ),
                     onTap: () => _onTapStory(i, widget.data.stories[i]),
                   ),
                 ),
@@ -157,10 +137,12 @@ class _StoryCardState extends State<_StoryCard>
     _tween = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(CurvedAnimation(
-      parent: _focusAnimationController,
-      curve: Curves.easeIn,
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _focusAnimationController,
+        curve: Curves.easeIn,
+      ),
+    );
 
     if (widget.storyStatus.isFocused) {
       _focusAnimationController.repeat(

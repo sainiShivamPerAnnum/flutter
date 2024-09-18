@@ -31,7 +31,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcaseview.dart';
 
 import 'core/service/notifier_services/user_coin_service.dart';
 import 'feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
@@ -51,12 +50,15 @@ class MyApp extends HookWidget {
     final backButtonDispatcher =
         useMemoized(() => FelloBackButtonDispatcher(delegate));
 
-    useMemoized(() {
-      AppState.backButtonDispatcher = backButtonDispatcher;
-      AppState.delegate = delegate;
-      delegate.setNewRoutePath(SplashPageConfig);
-      return null;
-    }, const []);
+    useMemoized(
+      () {
+        AppState.backButtonDispatcher = backButtonDispatcher;
+        AppState.delegate = delegate;
+        delegate.setNewRoutePath(SplashPageConfig);
+        return null;
+      },
+      const [],
+    );
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -85,9 +87,11 @@ class MyApp extends HookWidget {
           ChangeNotifierProvider(create: (_) => locator<BankAndPanService>()),
           ChangeNotifierProvider(create: (_) => locator<TambolaService>()),
           ChangeNotifierProvider(
-              create: (_) => locator<AugmontTransactionService>()),
+            create: (_) => locator<AugmontTransactionService>(),
+          ),
           ChangeNotifierProvider(
-              create: (_) => locator<LendboxTransactionService>()),
+            create: (_) => locator<LendboxTransactionService>(),
+          ),
           ChangeNotifierProvider(create: (_) => locator<PowerPlayService>()),
           ChangeNotifierProvider(
             create: (_) => locator<ScratchCardService>(),
@@ -101,10 +105,7 @@ class MyApp extends HookWidget {
           child: MaterialApp.router(
             title: Constants.APP_NAME,
             builder: (context, child) {
-              return ShowCaseWidget(
-                enableAutoScroll: true,
-                builder: Builder(builder: (context) => child!),
-              );
+              return child!;
             },
             theme: FelloTheme.darkMode(),
             debugShowCheckedModeBanner: false,
