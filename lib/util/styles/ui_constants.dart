@@ -264,6 +264,7 @@ class UiConstants {
 
   static const greyDivider = Color(0xFF7F86A3);
   static const rewardsCardColor = Color(0xff212B31);
+  static const greyVarient = Color(0xff2D3135);
 }
 
 extension ColorExtension on String {

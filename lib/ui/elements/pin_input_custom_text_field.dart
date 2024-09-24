@@ -532,12 +532,12 @@ class _PinPaint extends CustomPainter {
     required PinDecoration decoration,
     this.themeData,
   }) : decoration = decoration.copyWith(
-          textStyle: decoration.textStyle ?? themeData!.textTheme.headline5,
+          textStyle: decoration.textStyle ?? themeData!.textTheme.headlineMedium,
           errorTextStyle: decoration.errorTextStyle ??
-              themeData!.textTheme.caption!
-                  .copyWith(color: themeData.errorColor),
+              themeData!.textTheme.bodySmall!
+    .copyWith(color: themeData.colorScheme.error),
           hintTextStyle: decoration.hintTextStyle ??
-              themeData!.textTheme.headline5!
+              themeData!.textTheme.headlineMedium!
                   .copyWith(color: themeData.hintColor),
         );
 

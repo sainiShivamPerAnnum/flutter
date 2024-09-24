@@ -31,7 +31,7 @@ class Blogs extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const TitleSubtitleContainer(
-                title: "Fin-gyan by Fello",
+                title: "Fin-gyan",
               ),
               Padding(
                 padding: EdgeInsets.only(
@@ -44,7 +44,7 @@ class Blogs extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(top: SizeConfig.padding2),
                       child: Text(
-                        locale.btnSeeAll,
+                        locale.saveViewAll,
                         style: TextStyles.rajdhaniSB.body2,
                       ),
                     ),

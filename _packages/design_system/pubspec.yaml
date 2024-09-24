@@ -1,0 +1,25 @@
+name: design_system
+description: A new Flutter package project.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ">=3.0.5 <4.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared: 
+    path: ../shared
+  flutter_screenutil: ^5.9.0
+  google_fonts: 4.0.4
+  flutter_svg: ^2.0.0+1
+  lottie: ^1.1.0
+  
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:

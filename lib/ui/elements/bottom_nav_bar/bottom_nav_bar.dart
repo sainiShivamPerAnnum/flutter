@@ -8,7 +8,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class BottomNavBar extends StatelessWidget {
@@ -103,17 +102,15 @@ class NavBarIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+         SizedBox(height: SizeConfig.navBarHeight * 0.1),
         SizedBox(
-          height: kBottomNavigationBarHeight * 0.61,
-          width: kBottomNavigationBarHeight * 0.65,
-          child: Lottie.asset(
-            item.lottie,
-            fit: BoxFit.contain,
-            animate: animate,
-            repeat: false,
+          height: kBottomNavigationBarHeight * 0.5,
+          width: kBottomNavigationBarHeight * 0.5,
+          child: Image.asset(
+            item.icon,
+            color: style.color,
           ),
         ),
-        const SizedBox(height: kBottomNavigationBarHeight * 0.05),
         Text(item.title, style: style),
         // SizedBox(height: SizeConfig.navBarHeight * 0.1)
       ],

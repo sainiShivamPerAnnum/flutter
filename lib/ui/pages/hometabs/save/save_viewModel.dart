@@ -8,6 +8,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/blog_model.dart';
 import 'package:felloapp/core/model/event_model.dart';
+import 'package:felloapp/core/model/top_expert_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
@@ -19,6 +20,7 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/expert/consultant_card.dart';
 import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/tambola_mini_info_card.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -26,11 +28,14 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/finance/blogs/all_blogs_view.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
+import 'package:felloapp/ui/pages/hometabs/home/cards_new.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/elements/help_fab.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/experts.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/live.dart';
 import 'package:felloapp/ui/pages/hometabs/save/ticket_components.dart/ticket_pendingAction.dart';
 import 'package:felloapp/ui/pages/power_play/root_card.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -90,6 +95,7 @@ class SaveViewModel extends BaseViewModel {
   late final PageController offersController = PageController(initialPage: 0);
   List<EventModel>? _ongoingEvents;
   List<BlogPostModel>? _blogPosts;
+  List<TopExpertModel>? _topExperts;
   List<BlogPostModelByCategory>? _blogPostsByCategory;
   bool _isLoading = true;
   bool _isChallenegsLoading = true;
@@ -130,6 +136,8 @@ class SaveViewModel extends BaseViewModel {
 
   List<BlogPostModel>? get blogPosts => _blogPosts;
 
+  List<TopExpertModel>? get topExperts => _topExperts;
+
   List<BlogPostModelByCategory>? get blogPostsByCategory =>
       _blogPostsByCategory;
 
@@ -166,6 +174,11 @@ class SaveViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  set topExperts(List<TopExpertModel>? value) {
+    _topExperts = value;
+    notifyListeners();
+  }
+
   set blogPosts(List<BlogPostModel>? value) {
     _blogPosts = value;
     notifyListeners();
@@ -191,6 +204,7 @@ class SaveViewModel extends BaseViewModel {
     // baseProvider = BaseUtil();
     await _userService.getUserFundWalletData();
     await _userCoinService.getUserCoinBalance();
+    await getTopExperts();
     await locator<SubService>().init();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -238,26 +252,32 @@ class SaveViewModel extends BaseViewModel {
 
   List<Widget> getSaveViewItems(SaveViewModel smodel) {
     List<Widget> saveViewItems = [];
-    saveViewItems.addAll([
-      Selector<CardActionsNotifier, bool>(
-        selector: (p0, p1) => p1.isVerticalView,
-        builder: (context, value, child) => AnimatedContainer(
-          curve: Curves.easeIn,
-          duration: const Duration(milliseconds: 300),
-          height: SizeConfig.screenWidth! * (value ? 1.54 : 0.8),
-        ),
-      ),
-    ]);
-
     for (final key in DynamicUiUtils.saveViewOrder[1]) {
       switch (key) {
+        case 'PBL':
+          saveViewItems.add(PortfolioCard());
+          break;
         case "QL":
           saveViewItems.add(const QuickLinks());
           break;
         case "TM":
           saveViewItems.add(const TambolaMiniInfoCard());
           break;
-
+        case "LV":
+          saveViewItems.add(Live(
+            model: smodel,
+          ));
+          break;
+        case "EXP":
+          saveViewItems.add(
+            Experts(
+              model: smodel,
+            ),
+          );
+          break;
+        case "SN":
+          saveViewItems.add(ConsultationWidget());
+          break;
         case "PP":
           saveViewItems.add(const PowerPlayCard());
           break;
@@ -283,9 +303,6 @@ class SaveViewModel extends BaseViewModel {
     }
 
     saveViewItems.addAll([
-      SizedBox(height: SizeConfig.padding32),
-      const SaveAssetsFooter(),
-      const HelpFooter(),
       SizedBox(
         height: SizeConfig.navBarHeight * 0.5,
       )
@@ -303,6 +320,15 @@ class SaveViewModel extends BaseViewModel {
     }
 
     isChallengesLoading = false;
+  }
+
+  Future<void> getTopExperts() async {
+    final response = await _saveRepo.getTopExperts();
+    if (response.isSuccess()) {
+      topExperts = response.model;
+    } else {
+      print(response.errorMessage);
+    }
   }
 
   Future<void> getSaveViewBlogs() async {
@@ -486,30 +512,51 @@ class QuickLinks extends StatelessWidget {
       children: [
         Container(
           margin: EdgeInsets.only(
-              top: SizeConfig.padding24, bottom: SizeConfig.padding8),
+            top: SizeConfig.padding24,
+            bottom: SizeConfig.padding8,
+          ),
           width: SizeConfig.screenWidth,
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: List.generate(
               quickLinks.length,
-              (index) => Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    Haptic.vibrate();
-                    AppState.delegate!
-                        .parseRoute(Uri.parse(quickLinks[index].deeplink));
-                    locator<AnalyticsService>().track(
-                      eventName: AnalyticsEvents.iconTrayTapped,
-                      properties: {'icon': quickLinks[index].name},
-                    );
-                  },
+              (index) => GestureDetector(
+                onTap: () {
+                  Haptic.vibrate();
+                  AppState.delegate!
+                      .parseRoute(Uri.parse(quickLinks[index].deeplink));
+                  locator<AnalyticsService>().track(
+                    eventName: AnalyticsEvents.iconTrayTapped,
+                    properties: {'icon': quickLinks[index].name},
+                  );
+                },
+                child: Container(
+                  width: SizeConfig.padding86,
+                  padding: EdgeInsets.all(SizeConfig.padding10),
+                  decoration: BoxDecoration(
+                      color: UiConstants.greyVarient,
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(SizeConfig.padding8))),
                   child: Column(
                     children: [
-                      _QuickLinkAvatar(quickLinksModel: quickLinks[index]),
+                      SizedBox(
+                        width: quickLinks[index].asset == Assets.goldAsset ||
+                                quickLinks[index].asset == Assets.floAsset
+                            ? SizeConfig.padding56
+                            : SizeConfig.padding36,
+                        height: quickLinks[index].asset == Assets.goldAsset ||
+                                quickLinks[index].asset == Assets.floAsset
+                            ? SizeConfig.padding56
+                            : SizeConfig.padding36,
+                        child: AppImage(
+                          quickLinks[index].asset,
+                        ),
+                      ),
                       SizedBox(height: SizeConfig.padding8),
                       Text(
                         quickLinks[index].name,
                         style:
-                            TextStyles.sourceSansSB.body3.colour(Colors.white),
+                            TextStyles.sourceSansSB.body4.colour(Colors.white),
                       )
                     ],
                   ),
@@ -518,10 +565,6 @@ class QuickLinks extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(
-          height: SizeConfig.padding10,
-        ),
-        const TicketsPendingAction()
       ],
     );
   }

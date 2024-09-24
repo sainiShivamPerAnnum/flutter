@@ -236,43 +236,10 @@ class AppState extends ChangeNotifier {
   void trackEvent(int index) {
     final ScratchCardService gtService = locator<ScratchCardService>();
     if (_rootController.currentNavBarItemModel ==
-        RootController.journeyNavBarItem) {
-      _analyticsService.track(
-          eventName: AnalyticsEvents.journeySection,
-          properties: AnalyticsProperties.getDefaultPropertiesMap());
-    } else if (_rootController.currentNavBarItemModel ==
         RootController.saveNavBarItem) {
       _analyticsService.track(
           eventName: AnalyticsEvents.saveSection,
           properties: AnalyticsProperties.getDefaultPropertiesMap());
-    } else if (_rootController.currentNavBarItemModel ==
-        RootController.playNavBarItem) {
-      _analyticsService.track(
-          eventName: AnalyticsEvents.playSection,
-          properties:
-              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-            "Time left for draw Tambola (mins)":
-                AnalyticsProperties.getTimeLeftForTambolaDraw(),
-            "Tambola Tickets Owned":
-                AnalyticsProperties.getTambolaTicketCount(),
-          }));
-    } else if (_rootController.currentNavBarItemModel ==
-        RootController.winNavBarItem) {
-      _analyticsService.track(
-          eventName: "Account section tapped",
-          properties:
-              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-            "Winnings Amount": AnalyticsProperties.getUserCurrentWinnings(),
-            "Unscratched Ticket Count": gtService.unscratchedTicketsCount,
-            "Scratched Ticket Count": (gtService.activeScratchCards.length) -
-                gtService.unscratchedTicketsCount,
-          }));
-    } else if (_rootController.currentNavBarItemModel ==
-        RootController.tambolaNavBar) {
-      _analyticsService.track(eventName: "Tambola tab tapped", properties: {
-        // "Ticket count": locator<TambolaService>().userWeeklyBoards?.length ?? 0,
-        "index": index
-      });
     }
   }
 

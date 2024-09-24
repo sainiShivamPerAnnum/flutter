@@ -13,7 +13,7 @@ class FontSizes {
 }
 
 class TextStyles {
-  static TextStyle get sourceSansT => GoogleFonts.sourceSansPro(
+  static TextStyle get sourceSansT => GoogleFonts.sourceSans3(
         fontWeight: FontWeight.w100,
         color: UiConstants.kTextColor,
       );
@@ -21,7 +21,7 @@ class TextStyles {
         fontWeight: FontWeight.w100,
         color: UiConstants.kTextColor,
       );
-  static TextStyle get sourceSansEL => GoogleFonts.sourceSansPro(
+  static TextStyle get sourceSansEL => GoogleFonts.sourceSans3(
         fontWeight: FontWeight.w200,
         color: UiConstants.kTextColor,
       );
@@ -29,7 +29,7 @@ class TextStyles {
         fontWeight: FontWeight.w200,
         color: UiConstants.kTextColor,
       );
-  static TextStyle get sourceSansL => GoogleFonts.sourceSansPro(
+  static TextStyle get sourceSansL => GoogleFonts.sourceSans3(
         fontWeight: FontWeight.w300,
         color: UiConstants.kTextColor,
       );
@@ -37,7 +37,7 @@ class TextStyles {
         fontWeight: FontWeight.w300,
         color: UiConstants.kTextColor,
       );
-  static TextStyle get sourceSans => GoogleFonts.sourceSansPro(
+  static TextStyle get sourceSans => GoogleFonts.sourceSans3(
         fontWeight: FontWeight.w400,
         color: UiConstants.kTextColor,
       );
@@ -45,7 +45,7 @@ class TextStyles {
         fontWeight: FontWeight.w400,
         color: UiConstants.kTextColor,
       );
-  static TextStyle get sourceSansM => GoogleFonts.sourceSansPro(
+  static TextStyle get sourceSansM => GoogleFonts.sourceSans3(
         fontWeight: FontWeight.w500,
         color: UiConstants.kTextColor,
       );
@@ -53,7 +53,7 @@ class TextStyles {
         fontWeight: FontWeight.w500,
         color: UiConstants.kTextColor,
       );
-  static TextStyle get sourceSansSB => GoogleFonts.sourceSansPro(
+  static TextStyle get sourceSansSB => GoogleFonts.sourceSans3(
         fontWeight: FontWeight.w600,
         color: UiConstants.kTextColor,
       );
@@ -61,7 +61,7 @@ class TextStyles {
         fontWeight: FontWeight.w600,
         color: UiConstants.kTextColor,
       );
-  static TextStyle get sourceSansB => GoogleFonts.sourceSansPro(
+  static TextStyle get sourceSansB => GoogleFonts.sourceSans3(
         fontWeight: FontWeight.w700,
         color: UiConstants.kTextColor,
       );
@@ -69,7 +69,7 @@ class TextStyles {
         fontWeight: FontWeight.w700,
         color: UiConstants.kTextColor,
       );
-  static TextStyle get sourceSansEB => GoogleFonts.sourceSansPro(
+  static TextStyle get sourceSansEB => GoogleFonts.sourceSans3(
         fontWeight: FontWeight.w800,
         color: UiConstants.kTextColor,
       );
@@ -77,7 +77,7 @@ class TextStyles {
         fontWeight: FontWeight.w800,
         color: UiConstants.kTextColor,
       );
-  static TextStyle get sourceSansBL => GoogleFonts.sourceSansPro(
+  static TextStyle get sourceSansBL => GoogleFonts.sourceSans3(
         fontWeight: FontWeight.w900,
         color: UiConstants.kTextColor,
       );
@@ -89,9 +89,9 @@ class TextStyles {
   // 3.0 Code START {Need to retire after 4.0 release}
 
   static TextStyle get bodyFont =>
-      GoogleFonts.sourceSansPro(); //TextStyle(fontFamily: "Arctick");
+      GoogleFonts.sourceSans3(); //TextStyle(fontFamily: "Arctick");
   static TextStyle get titleFont =>
-      GoogleFonts.sourceSansPro(); //TextStyle(fontFamily: "Arctick");
+      GoogleFonts.sourceSans3(); //TextStyle(fontFamily: "Arctick");
 
   static TextStyle get title0 =>
       titleFont.copyWith(fontSize: SizeConfig.title0);

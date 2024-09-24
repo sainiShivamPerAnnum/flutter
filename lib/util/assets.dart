@@ -487,4 +487,17 @@ class Assets {
   static const String p2pWallet = "assets/images/p2pWallet.png";
   static const String p2pNonInvest =
       "https://ik.imagekit.io/9xfwtu0xm/p2p_home_v2/empty_flov2.png";
+
+  static const String home_bottom_nav =
+      "assets/vectors/home.png";
+
+  static const String live_bottom_nav =
+      "assets/vectors/live.png";
+
+  static const String experts_bottom_nav =
+      "assets/vectors/experts.png";
+static const String support_bottom_nav =
+      "assets/vectors/support.png";
+      static const String calender=
+      "https://ik.imagekit.io/9xfwtu0xm/static/calender.png";
 }

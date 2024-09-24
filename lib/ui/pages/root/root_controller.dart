@@ -8,22 +8,22 @@ import 'package:felloapp/util/show_case_key.dart';
 import 'package:flutter/material.dart';
 
 class RootController {
-  static final tambolaNavBar = NavBarItemModel(
-      "Tickets", Assets.navTambolaLottie, ShowCaseKeys.TambolaKey);
-  static final journeyNavBarItem =
-      NavBarItemModel("Journey", Assets.navJourneyLottie, ShowCaseKeys.Journey);
+  // static final tambolaNavBar = NavBarItemModel(
+  //     "Tickets", Assets.navTambolaLottie, ShowCaseKeys.TambolaKey);
+  static final liveNavBarItem =
+      NavBarItemModel("Live", Assets.live_bottom_nav, ShowCaseKeys.Journey);
 
-  static final playNavBarItem =
-      NavBarItemModel("Play", Assets.navPlayLottie, ShowCaseKeys.PlayKey);
+  static final expertNavBarItem = NavBarItemModel(
+      "Experts", Assets.experts_bottom_nav, ShowCaseKeys.PlayKey);
 
-  static final winNavBarItem =
-      NavBarItemModel("Account", Assets.navWinLottie, ShowCaseKeys.AccountKey);
+  static final supportNavBarItem = NavBarItemModel(
+      "Support", Assets.support_bottom_nav, ShowCaseKeys.AccountKey);
   static final saveNavBarItem =
-      NavBarItemModel("Save", Assets.navSaveLottie, ShowCaseKeys.SaveKey);
+      NavBarItemModel("Home", Assets.home_bottom_nav, ShowCaseKeys.SaveKey);
 
   NavBarItemModel currentNavBarItemModel = NavBarItemModel(
-    "Save",
-    Assets.navSaveLottie,
+    "Home",
+    Assets.home_bottom_nav,
     ShowCaseKeys.SaveKey,
   );
 
@@ -45,11 +45,22 @@ class RootController {
       case "SV":
         navItems.putIfAbsent(const Save(), () => RootController.saveNavBarItem);
         break;
-      case "TM":
-        navItems.putIfAbsent(
-            const TambolaHomeTicketsView(), () => RootController.tambolaNavBar);
+      // case "TM":
+      //   navItems.putIfAbsent(
+      //       const TambolaHomeTicketsView(), () => RootController.tambolaNavBar);
+      //   break;
+      case "LV":
+        navItems.putIfAbsent(const TambolaHomeTicketsView(),
+            () => RootController.liveNavBarItem);
         break;
-
+      case "EP":
+        navItems.putIfAbsent(const TambolaHomeTicketsView(),
+            () => RootController.expertNavBarItem);
+        break;
+      case "SP":
+        navItems.putIfAbsent(const TambolaHomeTicketsView(),
+            () => RootController.supportNavBarItem);
+        break;
       default:
     }
   }

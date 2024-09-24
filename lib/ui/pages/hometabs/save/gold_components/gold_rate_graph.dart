@@ -148,7 +148,7 @@ class _LineGradientChartState extends State<LineGradientChart> {
                                 children: [
                                   Text(
                                     "${returnsList![selectedIndex]}% ",
-                                    style: GoogleFonts.sourceSansPro(
+                                    style: GoogleFonts.sourceSans3(
                                         fontWeight: FontWeight.w700,
                                         fontSize: SizeConfig.title2,
                                         color: Colors.white),
@@ -158,7 +158,7 @@ class _LineGradientChartState extends State<LineGradientChart> {
                                         bottom: SizeConfig.padding6),
                                     child: Text(
                                       "(${chips[selectedIndex]})",
-                                      style: GoogleFonts.sourceSansPro(
+                                      style: GoogleFonts.sourceSans3(
                                           fontSize: SizeConfig.body3,
                                           color: Colors.white),
                                     ),
@@ -201,7 +201,7 @@ class _LineGradientChartState extends State<LineGradientChart> {
                                         children: [
                                           Text(
                                             "₹${((portfolio.augmont.fd.principle * pow((1 + 0.155), selectedIndex + 1)).toInt())}",
-                                            style: GoogleFonts.sourceSansPro(
+                                            style: GoogleFonts.sourceSans3(
                                                 fontWeight: FontWeight.w700,
                                                 fontSize: SizeConfig.title2,
                                                 color: UiConstants
@@ -212,7 +212,7 @@ class _LineGradientChartState extends State<LineGradientChart> {
                                                 bottom: SizeConfig.padding6),
                                             child: Text(
                                               "(15.5%)",
-                                              style: GoogleFonts.sourceSansPro(
+                                              style: GoogleFonts.sourceSans3(
                                                   fontSize:
                                                       SizeConfig.title4 * 0.7,
                                                   color: UiConstants
@@ -253,11 +253,11 @@ class _LineGradientChartState extends State<LineGradientChart> {
                       borderWidth: 0,
                       borderColor: Colors.transparent,
                     ),
-                    series: <ChartSeries<ChartData, int>>[
+                    series: [
                       SplineAreaSeries(
                         dataSource: chartData!,
-                        xValueMapper: (ChartData data, _) => data.day,
-                        yValueMapper: (ChartData data, _) => data.price,
+                        xValueMapper: (data, _) => data.day,
+                        yValueMapper: (data, _) => data.price,
                         splineType: SplineType.natural,
                         animationDuration: 0,
                         animationDelay: 0,
@@ -286,8 +286,8 @@ class _LineGradientChartState extends State<LineGradientChart> {
                         animationDelay: 0,
                         animationDuration: 0,
                         dataSource: chartData!,
-                        xValueMapper: (ChartData data, _) => data.day,
-                        yValueMapper: (ChartData data, _) => data.price,
+                        xValueMapper: (data, _) => data.day,
+                        yValueMapper: (data, _) => data.price,
                         splineType: SplineType.natural,
                       )
                     ],

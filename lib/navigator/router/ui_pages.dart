@@ -118,6 +118,10 @@ const String SipStatusPage = '/sip/status';
 const String SipMandateViewPath = '/sip/mandateView';
 const String P2PHomeViewPath = '/p2p/homeView';
 const String flexiBalanceViewPath = "/flexiBalanceViewPath";
+const String balanceViewPath = "/balanceViewPath";
+
+const String liveSectionViewPath = "/live";
+const String livePreviewSectionViewPath = "/livePreview";
 
 enum Pages {
   Splash,
@@ -231,7 +235,11 @@ enum Pages {
   P2PHomeView,
 
   //p2pv2
-  FlexiBalaceView
+  FlexiBalaceView,
+  BalanceView,
+
+  Live,
+  LivePreview,
 }
 
 class PageConfiguration {
@@ -935,4 +943,24 @@ PageConfiguration FlexiBalancePageConfig = PageConfiguration(
   path: flexiBalanceViewPath,
   uiPage: Pages.FlexiBalaceView,
   name: "Flexi Balance View",
+);
+PageConfiguration BalancePageConfig = PageConfiguration(
+  key: 'balanceViewPath',
+  path: balanceViewPath,
+  uiPage: Pages.BalanceView,
+  name: "Balance View",
+);
+
+PageConfiguration LivePageConfig = PageConfiguration(
+  key: 'LiveViewPath',
+  path: liveSectionViewPath,
+  uiPage: Pages.Live,
+  name: "Live Section",
+);
+
+PageConfiguration LivePreviewPageConfig = PageConfiguration(
+  key: 'LivePreviewViewPath',
+  path: livePreviewSectionViewPath,
+  uiPage: Pages.LivePreview,
+  name: "Live Section Preview",
 );

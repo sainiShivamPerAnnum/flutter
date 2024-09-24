@@ -89,21 +89,6 @@ class _RootState extends State<Root> {
                   const QABanner(),
                 ],
               ),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.miniCenterDocked,
-              floatingActionButton: Selector<CardActionsNotifier, bool>(
-                selector: (_, notifier) => notifier.isVerticalView,
-                builder: (context, isCardsOpen, child) {
-                  return AnimatedScale(
-                    scale: isCardsOpen ? 0 : 1,
-                    curve: Curves.easeIn,
-                    duration: const Duration(milliseconds: 300),
-                    child: rootController.navItems.values.length % 2 == 0
-                        ? model.centerTab(ctx)
-                        : const SizedBox(),
-                  );
-                },
-              ),
               bottomNavigationBar: const BottomNavBar(),
             ),
             const CircularAnim(),
@@ -182,9 +167,7 @@ class RootAppBar extends StatelessWidget {
                 final enableJourney = AppConfig.getValue(
                   AppConfigKey.enableJourney,
                 );
-                return (locator<RootController>().currentNavBarItemModel !=
-                        RootController.journeyNavBarItem)
-                    ? Container(
+                return  Container(
                         width: SizeConfig.screenWidth,
                         height: kToolbarHeight + SizeConfig.viewInsets.top,
                         alignment: Alignment.bottomCenter,
@@ -276,8 +259,7 @@ class RootAppBar extends StatelessWidget {
                             ],
                           ),
                         ),
-                      )
-                    : const SizedBox();
+                      );
               },
             );
           },

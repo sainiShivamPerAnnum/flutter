@@ -91,14 +91,14 @@ class RootViewModel extends BaseViewModel {
   final RootController _rootController = locator<RootController>();
 
   Future<void> pullToRefresh() async {
-    if (_rootController.currentNavBarItemModel ==
-        RootController.tambolaNavBar) {
-      await Future.wait([
-        // _tambolaService.getTambolaTickets(limit: 1),
-        _tambolaService.getBestTambolaTickets(forced: true)
-      ]);
-      return;
-    }
+    // if (_rootController.currentNavBarItemModel ==
+    //     RootController.tambolaNavBar) {
+    //   await Future.wait([
+    //     // _tambolaService.getTambolaTickets(limit: 1),
+    //     _tambolaService.getBestTambolaTickets(forced: true)
+    //   ]);
+    //   return;
+    // }
 
     await Future.wait([
       _userCoinService.getUserCoinBalance(),

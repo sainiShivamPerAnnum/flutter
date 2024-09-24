@@ -348,7 +348,7 @@ class GetterRepository extends BaseRepo {
     try {
       return await _cacheService.cachedApi(
         CacheKeys.PAGE_CONFIGS,
-        TTL.ONE_DAY,
+        0,
         () => APIService.instance.getData(
           "dynamicUi.txt",
           cBaseUrl: _cdnBaseUrl,
@@ -357,7 +357,7 @@ class GetterRepository extends BaseRepo {
         ),
         (response) {
           final responseData = response["dynamicUi"];
-
+          logger.d("Page Config: ${responseData.toString()}");
           // logger.d("Page Config: $responseData");
           final pageConfig = DynamicUI.fromMap(responseData);
           logger.d("Page Config: ${pageConfig.toString()}");

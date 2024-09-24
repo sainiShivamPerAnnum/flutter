@@ -15,12 +15,14 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/fello_badges/ui/fello_badges_home.dart';
+import 'package:felloapp/feature/live/home_page.dart';
 import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_select_assset.dart';
+import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -224,6 +226,17 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Splash:
           _addPageData(const LauncherView(), SplashPageConfig);
           break;
+        case Pages.THome:
+          if (locator<UserService>()
+                  .baseUser!
+                  .userPreferences
+                  .getPreference(Preferences.TAMBOLAONBOARDING) !=
+              1) {
+            AppState.delegate!.parseRoute(Uri.parse("ticketsIntro"));
+            return;
+          }
+          _addPageData(const TambolaHomeTicketsView(), THomePageConfig);
+          break;
         case Pages.Login:
           _addPageData(const LoginControllerView(), LoginPageConfig);
           break;
@@ -410,7 +423,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
             P2PHomePageConfig,
           );
           break;
-
+        case Pages.Live:
+          _addPageData(const LiveHomePage(), LivePageConfig);
+          break;
         default:
           break;
       }
@@ -742,6 +757,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.SipMandateView:
         SipMandatePageConfig.currentPageAction = action;
         break;
+      case Pages.Live:
+        LivePageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -904,9 +922,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'play':
         pageConfiguration = PlayViewConfig;
         break;
-      case 'win':
-        onTapItem(RootController.winNavBarItem);
-        break;
 
       case 'profile':
         pageConfiguration = UserProfileDetailsConfig;
@@ -984,6 +999,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'augTxns':
         openTransactions(InvestmentType.AUGGOLD99);
         break;
+      case 'live':
+        pageConfiguration = LivePageConfig;
+        break;
       case 'lboxTxns':
         openTransactions(InvestmentType.LENDBOXP2P);
         break;
@@ -991,11 +1009,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = ReferralDetailsPageConfig;
         break;
       case 'tambolaHome':
-        if (rootController.navItems
-            .containsValue(RootController.tambolaNavBar)) {
-          onTapItem(RootController.tambolaNavBar);
-          break;
-        }
+        // if (rootController.navItems
+        //     .containsValue(RootController.tambolaNavBar)) {
+        //   onTapItem(RootController.tambolaNavBar);
+        //   break;
+        // }
         pageConfiguration = THomePageConfig;
         break;
       case 'myWinnings':

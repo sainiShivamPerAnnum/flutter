@@ -52,6 +52,7 @@ class FAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       leading: leading,
+      iconTheme: const IconThemeData(color: Colors.white),
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

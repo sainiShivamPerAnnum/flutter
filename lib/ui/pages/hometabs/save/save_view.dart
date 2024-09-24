@@ -44,71 +44,14 @@ class Save extends StatelessWidget {
 class SaveViewWrapper extends StatelessWidget {
   const SaveViewWrapper({required this.model, Key? key}) : super(key: key);
   final SaveViewModel model;
-
   @override
   Widget build(BuildContext context) {
-    return PropertyChangeConsumer<UserService, UserServiceProperties>(
-      properties: const [UserServiceProperties.mySegments],
-      builder: (_, prop, ___) {
-        return Stack(
-          children: [
-            SingleChildScrollView(
-              controller: RootController.controller,
-              child: Stack(
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: model.getSaveViewItems(model),
-                  ),
-                  const Cards(),
-                ],
-              ),
-            ),
-            Positioned(
-              top: 0,
-              bottom: 0,
-              child: Consumer<CardActionsNotifier>(
-                builder: (context, cardActions, child) =>
-                    cardActions.isVerticalView
-                        ? SizedBox(
-                            height: SizeConfig.screenHeight,
-                            width: SizeConfig.screenWidth,
-                            child: Column(
-                              children: [
-                                IgnorePointer(
-                                  child: AnimatedContainer(
-                                    curve: Curves.easeIn,
-                                    duration: const Duration(milliseconds: 300),
-                                    height: SizeConfig.screenWidth! * 1.54,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      if (cardActions.isVerticalView) {
-                                        cardActions.isVerticalView = false;
-                                      }
-                                    },
-                                    onVerticalDragUpdate: (details) {
-                                      if (details.delta.dy < 30) {
-                                        if (cardActions.isVerticalView) {
-                                          cardActions.isVerticalView = false;
-                                        }
-                                      }
-                                    },
-                                    child: Container(
-                                        color: Colors.black.withOpacity(0.2)),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        : const SizedBox(),
-              ),
-            ),
-          ],
-        );
-      },
+    return SingleChildScrollView(
+      controller: RootController.controller,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: model.getSaveViewItems(model),
+      ),
     );
   }
 }
