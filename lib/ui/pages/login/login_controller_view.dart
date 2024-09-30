@@ -94,7 +94,10 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                 Positioned(
                   bottom: MediaQuery.of(context).viewInsets.bottom,
                   child: GestureDetector(
-                    onTap: () => model.processScreenInput(model.currentPage),
+                    onTap: () => {
+                      print({'_formKey.currentStat', model.currentPage}),
+                      model.processScreenInput(model.currentPage),
+                    },
                     child: Container(
                       key: const ValueKey("LoginCTA"),
                       //key: K.loginNextCTAKey,

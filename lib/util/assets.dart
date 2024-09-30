@@ -180,6 +180,12 @@ class Assets {
   static const String felloRewards = "assets/images/fello_prize.png";
   static const String voucherBg = "assets/images/voucher_bg.jpg";
 
+  // Support
+  static const String message = "assets/images/message.png";
+  static const String live = "assets/images/live.png";
+  static const String cal = "assets/images/calender.png";
+  static const String help = "assets/images/help.png";
+
   //GT ASSETS
 
   static const String gtBackground = "assets/images/gtdbg.png";
@@ -488,16 +494,12 @@ class Assets {
   static const String p2pNonInvest =
       "https://ik.imagekit.io/9xfwtu0xm/p2p_home_v2/empty_flov2.png";
 
-  static const String home_bottom_nav =
-      "assets/vectors/home.png";
+  static const String home_bottom_nav = "assets/vectors/home.png";
 
-  static const String live_bottom_nav =
-      "assets/vectors/live.png";
+  static const String live_bottom_nav = "assets/vectors/live.png";
 
-  static const String experts_bottom_nav =
-      "assets/vectors/experts.png";
-static const String support_bottom_nav =
-      "assets/vectors/support.png";
-      static const String calender=
+  static const String experts_bottom_nav = "assets/vectors/experts.png";
+  static const String support_bottom_nav = "assets/vectors/support.png";
+  static const String calender =
       "https://ik.imagekit.io/9xfwtu0xm/static/calender.png";
 }

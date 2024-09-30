@@ -8316,6 +8316,15 @@ class S {
     );
   }
 
+  String get support {
+    return Intl.message(
+      'Support',
+      name: 'support',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Contact Us`
   String get contactUsTitle {
     return Intl.message(

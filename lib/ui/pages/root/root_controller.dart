@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
+import 'package:felloapp/ui/pages/support-new/support_new.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/show_case_key.dart';
 import 'package:flutter/material.dart';
@@ -58,8 +59,8 @@ class RootController {
             () => RootController.expertNavBarItem);
         break;
       case "SP":
-        navItems.putIfAbsent(const TambolaHomeTicketsView(),
-            () => RootController.supportNavBarItem);
+        navItems.putIfAbsent(
+            const SupportNewPage(), () => RootController.supportNavBarItem);
         break;
       default:
     }

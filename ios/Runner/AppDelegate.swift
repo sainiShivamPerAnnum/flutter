@@ -7,7 +7,7 @@ import Contacts
 import CleverTapSDK
 import clevertap_plugin
 
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate {
     
     var resultMyFlutter: FlutterResult?

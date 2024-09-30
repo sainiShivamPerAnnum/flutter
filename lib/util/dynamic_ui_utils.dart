@@ -16,6 +16,8 @@ class DynamicUiUtils {
 
   static String goldTag = "";
   static String lbTag = "";
+  static List<String> support = ["LV", "QL", "BL", "SN"];
+
   // static Text trendingTag=
   static List<String> navBar = ["SV", "LV", "EP", "SP", "TM"];
   static List<String> playViewOrder = ['TA', 'AG', 'HTP', 'GOW', 'ST'];

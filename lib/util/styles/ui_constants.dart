@@ -128,7 +128,7 @@ class UiConstants {
   static const Color kDarkBoxColor = Color(0xFF3B3B3B);
   // Recharge Modal Sheet
   static const Color kRechargeModalSheetAmountSectionBackgroundColor =
-      Color(0xFF1B262C);
+      Color(0xFF232326);
 
   static const Color kpurpleTicketColor = Color(0xFFCEC5FF);
 

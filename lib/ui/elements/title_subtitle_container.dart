@@ -30,7 +30,7 @@ class TitleSubtitleContainer extends StatelessWidget {
           : padding ??
               EdgeInsets.only(
                   left: leadingPadding
-                      ? SizeConfig.padding24
+                      ? SizeConfig.padding20
                       : SizeConfig.padding14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
