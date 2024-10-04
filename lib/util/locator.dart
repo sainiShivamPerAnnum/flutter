@@ -106,6 +106,7 @@ import 'package:felloapp/ui/pages/rewards/multiple_scratch_cards/multiple_scratc
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
+import 'package:felloapp/ui/pages/support-new/support_viewModel.dart';
 import 'package:felloapp/ui/pages/support/faq/faq_page_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/bank_details/bank_details_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_vm.dart';
@@ -241,6 +242,9 @@ Future<void> setupLocator() async {
   locator.registerFactory(SaveViewModel.new);
   locator.registerFactory(MyAccountVM.new);
   locator.registerFactory(JourneyPageViewModel.new);
+
+  ///Support Tab
+  locator.registerFactory(SupportViewModel.new);
 
   /// VIEW MODELS
   locator.registerFactory(TransactionsHistoryViewModel.new);
