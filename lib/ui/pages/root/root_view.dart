@@ -24,8 +24,6 @@ import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
-import '../hometabs/home/card_actions_notifier.dart';
-
 GlobalKey felloAppBarKey = GlobalKey();
 
 class Root extends StatefulWidget {
@@ -164,10 +162,13 @@ class RootAppBar extends StatelessWidget {
               selector: (_, tambolaService) =>
                   tambolaService.tambolaTicketCount,
               builder: (_, ticketCount, child) {
-                final enableJourney = AppConfig.getValue(
-                  AppConfigKey.enableJourney,
-                );
-                return  Container(
+                // final enableJourney = AppConfig.getValue(
+                //   AppConfigKey.enableJourney,
+                // );
+                return Consumer<AppState>(
+                  builder: (ctx, m, child) {
+                    if (m.rootIndex == 0) {
+                      return Container(
                         width: SizeConfig.screenWidth,
                         height: kToolbarHeight + SizeConfig.viewInsets.top,
                         alignment: Alignment.bottomCenter,
@@ -260,6 +261,15 @@ class RootAppBar extends StatelessWidget {
                           ),
                         ),
                       );
+                    }
+                    return Container(
+                      width: SizeConfig.screenWidth,
+                      height: SizeConfig.viewInsets.top,
+                      alignment: Alignment.bottomCenter,
+                      child: const SizedBox.shrink(),
+                    );
+                  },
+                );
               },
             );
           },

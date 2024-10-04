@@ -201,6 +201,10 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       }
     }
 
+    if(AppState.isLiveVideoInProgess){
+      
+    }
+
     // If onboarding is in progress
     else if (AppState.isOnboardingInProgress) {
       BaseUtil().showConfirmExit();

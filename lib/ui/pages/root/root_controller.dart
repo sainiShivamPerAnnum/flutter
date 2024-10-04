@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
+import 'package:felloapp/feature/expert/expert_root.dart';
+import 'package:felloapp/feature/live/live_root.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/util/assets.dart';
@@ -50,12 +52,12 @@ class RootController {
       //       const TambolaHomeTicketsView(), () => RootController.tambolaNavBar);
       //   break;
       case "LV":
-        navItems.putIfAbsent(const TambolaHomeTicketsView(),
-            () => RootController.liveNavBarItem);
+        navItems.putIfAbsent(const LiveHome(),
+            () => RootController.liveNavBarItem,);
         break;
       case "EP":
-        navItems.putIfAbsent(const TambolaHomeTicketsView(),
-            () => RootController.expertNavBarItem);
+        navItems.putIfAbsent(const ExpertHome(),
+            () => RootController.expertNavBarItem,);
         break;
       case "SP":
         navItems.putIfAbsent(const TambolaHomeTicketsView(),

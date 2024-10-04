@@ -58,6 +58,7 @@ class AppState extends ChangeNotifier {
   static bool isUpdateScreen = false;
   static bool isQuizInProgress = false;
   static bool isNetbankingInProgress = false;
+  static bool isLiveVideoInProgess = false;
 
   // static bool isDrawerOpened = false;
   static bool isUserSignedIn = false;
