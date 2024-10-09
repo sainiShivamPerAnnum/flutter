@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 abstract class ShowCaseKeys {
   static final PlayKey = GlobalKey();
-  static final SaveKey = GlobalKey();
   static final Journey = GlobalKey();
   static final TambolaKey = GlobalKey();
   static final AccountKey = GlobalKey();
@@ -31,4 +30,10 @@ abstract class ShowCaseKeys {
   static final CurrentWinnings = GlobalKey();
   static final floAmountKey = GlobalKey();
   static final floKYCKey = GlobalKey();
+
+  static final SaveKey = GlobalKey();
+  static final LiveKey = GlobalKey();
+  static final ExpertsKey = GlobalKey();
+  static final ShortsKey = GlobalKey();
+  static final SupportKey = GlobalKey();
 }

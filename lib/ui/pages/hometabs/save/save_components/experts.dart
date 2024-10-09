@@ -42,26 +42,26 @@ class TopExperts extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: SizeConfig.padding10),
       child: SizedBox(
-        child:  Column(
-                children: [
-                  for (int i = 0; i < model.topExperts!.length; i++)
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 18)
-                          .copyWith(bottom: 8),
-                      child: ExpertCard(
-                        imageUrl: model.topExperts![i].bgImage,
-                        name: model.topExperts![i].name,
-                        experience: model.topExperts![i].exp.toString(),
-                        expertise: model.topExperts![i].expertise.toString(),
-                        qualifications:
-                            model.topExperts![i].qualifications.toString(),
-                        availableSlots: model.topExperts![i].availableSlot,
-                        rating: model.topExperts![i].rating,
-                        onBookCall: () {},
-                      ),
-                    ),
-                ],
+        child: Column(
+          children: [
+            for (int i = 0; i < model.topExperts!.length; i++)
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding18)
+                    .copyWith(bottom: SizeConfig.padding16),
+                child: ExpertCard(
+                  imageUrl: model.topExperts![i].bgImage,
+                  name: model.topExperts![i].name,
+                  experience: model.topExperts![i].exp.toString(),
+                  expertise: model.topExperts![i].expertise.toString(),
+                  qualifications:
+                      model.topExperts![i].qualifications.toString(),
+                  price: '₹10/min',
+                  rating: model.topExperts![i].rating,
+                  onBookCall: () {},
+                ),
               ),
+          ],
+        ),
       ),
     );
   }

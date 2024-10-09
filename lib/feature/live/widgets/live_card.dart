@@ -1,3 +1,4 @@
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 class LiveCardWidget extends StatelessWidget {
@@ -10,13 +11,14 @@ class LiveCardWidget extends StatelessWidget {
   final int? liveCount;
   final String? duration;
 
-  LiveCardWidget({
+  const LiveCardWidget({
     required this.status,
     required this.title,
     required this.subTitle,
     required this.author,
     required this.category,
     required this.bgImage,
+    super.key,
     this.liveCount,
     this.duration,
   });
@@ -24,25 +26,25 @@ class LiveCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
+      constraints: BoxConstraints(maxWidth: SizeConfig.padding300),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Color(0xff2D3135),
+        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+        color: UiConstants.greyVarient,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Image with play button overlay
           Stack(
             alignment: AlignmentDirectional.center,
             children: [
               Container(
                 width: double.infinity,
-                height: 150,
+                height: SizeConfig.padding152,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10)),
+                    topLeft: Radius.circular(SizeConfig.roundness8),
+                    topRight: Radius.circular(SizeConfig.roundness8),
+                  ),
                   image: DecorationImage(
                     image: NetworkImage(bgImage),
                     fit: BoxFit.cover,
@@ -51,87 +53,126 @@ class LiveCardWidget extends StatelessWidget {
               ),
               if (status == 'live')
                 Positioned(
-                  bottom: 10,
-                  left: 10,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      'LIVE',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
+                  bottom: SizeConfig.padding10,
+                  left: SizeConfig.padding10,
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding8,
+                          vertical: SizeConfig.padding4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: UiConstants.kred1,
+                          borderRadius: BorderRadius.circular(
+                            SizeConfig.roundness5,
+                          ),
+                        ),
+                        child: Text(
+                          'LIVE',
+                          style: TextStyles.sourceSansSB.body4.colour(
+                            UiConstants.titleTextColor,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: SizeConfig.padding4),
+                        decoration: BoxDecoration(
+                          color: UiConstants.kTextColor4,
+                          borderRadius: BorderRadius.circular(
+                            SizeConfig.roundness5,
+                          ),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding8,
+                          vertical: SizeConfig.padding4,
+                        ),
+                        child: Row(
+                          children: [
+                            if (liveCount != null)
+                              Icon(
+                                Icons.visibility,
+                                color: Colors.white,
+                                size: SizeConfig.body4,
+                              ),
+                            if (liveCount != null)
+                              SizedBox(
+                                width: SizeConfig.padding4,
+                              ),
+                            if (liveCount != null)
+                              Text(
+                                '${liveCount! ~/ 1000}K',
+                                style: TextStyles.sourceSansSB.body4.colour(
+                                  UiConstants.titleTextColor,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              Positioned(
-                bottom: 15,
-                left: 65,
-                child: Row(
-                  children: [
-                    if (liveCount != null)
-                      Icon(Icons.visibility, color: Colors.white, size: 16),
-                    if (liveCount != null) SizedBox(width: 4),
-                    if (liveCount != null)
-                      Text(
-                        '${liveCount! ~/ 1000}K',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                  ],
-                ),
-              ),
               if (status == 'live')
                 Align(
                   alignment: Alignment.center,
-                  child: Icon(Icons.play_circle_filled,
-                      color: Colors.white, size: 50),
+                  child: Container(
+                    padding: EdgeInsets.all(SizeConfig.padding8),
+                    decoration: BoxDecoration(
+                      color: UiConstants.kTextColor.withOpacity(0.5),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.play_arrow_rounded,
+                      color: Colors.white,
+                      size: SizeConfig.iconSize5,
+                    ),
+                  ),
                 ),
             ],
           ),
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(SizeConfig.padding16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: EdgeInsets.all(SizeConfig.padding4),
                   decoration: BoxDecoration(
-                    color: getCategoryColor(category),
+                    color: UiConstants.kblue2.withOpacity(.4),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     category.toUpperCase(),
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12),
+                    style: TextStyles.sourceSansSB.body4.colour(
+                      UiConstants.kblue1,
+                    ),
                   ),
                 ),
-                SizedBox(height: 5),
-
+                SizedBox(height: SizeConfig.padding4),
                 // Title
                 Text(
                   title,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
+                  style: TextStyles.sourceSansSB.body2.colour(
+                    UiConstants.kTextColor,
+                  ),
                 ),
-                SizedBox(height: 5),
+                SizedBox(height: SizeConfig.padding4),
 
                 // Subtitle (time started or duration)
                 Text(
                   subTitle,
-                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                   style: TextStyles.sourceSans.body4.colour(
+                    UiConstants.kTextColor5,
+                  ),
                 ),
-                SizedBox(height: 5),
+                SizedBox(height: SizeConfig.padding20),
 
                 // Author's name
                 Text(
                   author,
-                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                 style: TextStyles.sourceSans.body4.colour(
+                    UiConstants.kTextColor,
+                  ),
                 ),
               ],
             ),
@@ -140,18 +181,5 @@ class LiveCardWidget extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Color getCategoryColor(String category) {
-    switch (category.toLowerCase()) {
-      case 'stocks':
-        return Colors.green;
-      case 'crypto':
-        return Colors.blue;
-      case 'investments':
-        return Colors.orange;
-      default:
-        return Colors.grey;
-    }
   }
 }

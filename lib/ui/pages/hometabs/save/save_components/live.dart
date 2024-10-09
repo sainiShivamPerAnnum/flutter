@@ -11,7 +11,6 @@ class Live extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // S locale = S.of(context);
     return Column(
       children: [
         SizedBox(height: SizeConfig.padding14),
@@ -27,6 +26,7 @@ class Live extends StatelessWidget {
             ],
           ),
         ),
+         SizedBox(height: SizeConfig.padding14),
         TopLive(model: model),
       ],
     );
@@ -72,7 +72,7 @@ class TopLive extends StatelessWidget {
       }
     ];
     return Padding(
-      padding: EdgeInsets.only(top: SizeConfig.padding10),
+      padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
       child: SizedBox(
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -80,18 +80,19 @@ class TopLive extends StatelessWidget {
             children: [
               for (int i = 0; i < data.length; i++)
                 Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 8).copyWith(bottom: 8),
-                    child: LiveCardWidget(
-                      status: data[i]['status'],
-                      title: data[i]['title'],
-                      subTitle: data[i]['subTitle'],
-                      author: data[i]['author'],
-                      category: data[i]['category'],
-                      bgImage: data[i]['bgImage'],
-                      liveCount: data[i]["metadata"]['liveCount'],
-                      duration: data[i]["metadata"]['duration'],
-                    )),
+                  padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8)
+                      .copyWith(bottom: SizeConfig.padding8),
+                  child: LiveCardWidget(
+                    status: data[i]['status'],
+                    title: data[i]['title'],
+                    subTitle: data[i]['subTitle'],
+                    author: data[i]['author'],
+                    category: data[i]['category'],
+                    bgImage: data[i]['bgImage'],
+                    liveCount: data[i]["metadata"]['liveCount'],
+                    duration: data[i]["metadata"]['duration'],
+                  ),
+                ),
             ],
           ),
         ),

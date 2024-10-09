@@ -73,7 +73,7 @@ class DefaultChip extends StatelessWidget {
             ),
             child: Text(
               'Best',
-              style: GoogleFonts.sourceSansPro(
+              style: GoogleFonts.sourceSans3(
                 fontWeight: FontWeight.w700,
                 fontSize: 10.sp,
                 height: 1.4,

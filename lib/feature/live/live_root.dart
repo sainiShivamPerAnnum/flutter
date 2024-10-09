@@ -68,15 +68,17 @@ class _LiveHomeState extends State<LiveHome> {
             subtitle: 'Interact with advisors in live sessions for free',
             onViewAllPressed: () {},
           ),
-          SizedBox(
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
                   for (int i = 0; i < data.length; i++)
                     Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8)
-                            .copyWith(bottom: 8),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding8,
+                        ).copyWith(bottom: 8),
                         child: LiveCardWidget(
                           status: data[i]['status'],
                           title: data[i]['title'],

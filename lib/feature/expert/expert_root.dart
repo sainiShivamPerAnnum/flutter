@@ -23,9 +23,9 @@ class _ExpertHomeState extends State<ExpertHome>
 
   void _onWidgetInView(String id, bool isInView) {
     if (isInView) {
-      setState(() {
-            _currentSection = id;
-          });
+      // setState(() {
+      //       _currentSection = id;
+      //     });
     }
   }
 
@@ -64,7 +64,7 @@ class _ExpertHomeState extends State<ExpertHome>
                 experience: '₹10/min',
                 onBookCall: () {},
                 rating: 3.2,
-                availableSlots: 2,
+                price: '10 ',
                 imageUrl:
                     'https://ik.imagekit.io/9xfwtu0xm/experts/randomuser2.jpg?updatedAt=1726836184236',
               );
@@ -90,18 +90,14 @@ class _ExpertHomeState extends State<ExpertHome>
               // Trigger the state change when this widget is in view
               _onWidgetInView('Personal Finance', isInView);
               return Container(
-                height: 100,
-                color: isInView ? Colors.green : Colors.amber,
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: const Text(
-                    'Personal Finance',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: const Text(
+                  'Personal Finance',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
               );
             },
@@ -117,7 +113,7 @@ class _ExpertHomeState extends State<ExpertHome>
                 experience: '₹10/min',
                 onBookCall: () {},
                 rating: 3.2,
-                availableSlots: 2,
+                price: '10 ',
                 imageUrl:
                     'https://ik.imagekit.io/9xfwtu0xm/experts/randomuser2.jpg?updatedAt=1726836184236',
               );
@@ -133,18 +129,14 @@ class _ExpertHomeState extends State<ExpertHome>
               // Trigger the state change when this widget is in view
               _onWidgetInView('Stock Market', isInView);
               return Container(
-                height: 100,
-                color: isInView ? Colors.green : Colors.amber,
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: const Text(
-                    'Stock Market',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: const Text(
+                  'Stock Market',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
               );
             },
@@ -160,7 +152,7 @@ class _ExpertHomeState extends State<ExpertHome>
                 experience: '₹10/min',
                 onBookCall: () {},
                 rating: 3.2,
-                availableSlots: 2,
+                price: '10 ',
                 imageUrl:
                     'https://ik.imagekit.io/9xfwtu0xm/experts/randomuser2.jpg?updatedAt=1726836184236',
               );
@@ -176,18 +168,14 @@ class _ExpertHomeState extends State<ExpertHome>
               // Trigger the state change when this widget is in view
               _onWidgetInView('Mutual Funds', isInView);
               return Container(
-                height: 100,
-                color: isInView ? Colors.green : Colors.amber,
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: const Text(
-                    'Mutual Funds',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: const Text(
+                  'Mutual Funds',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
               );
             },
@@ -203,7 +191,7 @@ class _ExpertHomeState extends State<ExpertHome>
                 experience: '₹10/min',
                 onBookCall: () {},
                 rating: 3.2,
-                availableSlots: 2,
+                price: '10 ',
                 imageUrl:
                     'https://ik.imagekit.io/9xfwtu0xm/experts/randomuser2.jpg?updatedAt=1726836184236',
               );

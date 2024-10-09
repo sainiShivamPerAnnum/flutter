@@ -2,6 +2,7 @@ import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -104,9 +105,9 @@ class NavBarIcon extends StatelessWidget {
       children: [
          SizedBox(height: SizeConfig.navBarHeight * 0.1),
         SizedBox(
-          height: kBottomNavigationBarHeight * 0.5,
-          width: kBottomNavigationBarHeight * 0.5,
-          child: Image.asset(
+          height: SizeConfig.body1,
+          width: SizeConfig.body1,
+          child: AppImage(
             item.icon,
             color: style.color,
           ),

@@ -112,6 +112,10 @@ dependencies:
   draggable_widget: ^2.0.0
   pointer_interceptor: ^0.10.1+2
   inview_notifier_list: ^3.0.0
+  flutter_preload_videos:
+    path: packages/flutter_preload_videos/
+  design_system:
+    path: _packages/design_system/
 
 
 

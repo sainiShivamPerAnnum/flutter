@@ -16,6 +16,7 @@ targets:
         enabled: true
         generate_for:
           - "lib/core/model/sdui/**.dart"
+          - "lib/feature/shorts/bloc/**.dart"
         options: 
           copy_with: false
           map: false

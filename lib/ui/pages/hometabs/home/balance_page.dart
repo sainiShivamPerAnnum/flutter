@@ -1,166 +1,244 @@
-import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:design_system/design_system.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
-class FelloBalancePage extends StatelessWidget {
+class FelloBalanceScreen extends StatelessWidget {
+  const FelloBalanceScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor:UiConstants.bg,
+    return AppScaffold(
+      showBackgroundGrid: true,
       appBar: AppBar(
-        title: Text('Fello Balance'),
+        backgroundColor: Colors.transparent,
+        title: Text(
+          'Fello Balance',
+          style: TextStyles.rajdhaniSB.body1.colour(UiConstants.kTextColor),
+        ),
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: UiConstants.kTextColor,
+          ),
+          onPressed: () {
+            // Handle back navigation
+          },
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BalanceHeader(),
-            SizedBox(height: 20),
-            InvestmentSection(
-              title: 'Fello Flo',
-              balance: '₹502',
-              change: '₹2',
-              investedAmount: '₹500',
-              buttonLabel: 'Invest',
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Fello Balance",
+                    style: TextStyles.sourceSansSB.body2,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // View Breakdown action
+                    },
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.padding10,
+                        vertical: SizeConfig.padding6,
+                      ),
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(SizeConfig.roundness5),
+                        ),
+                      ),
+                    ),
+                    child: Text(
+                      "View Breakdown",
+                      style: TextStyles.sourceSansSB.body4
+                          .colour(UiConstants.kTextColor4),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: 20),
-            InvestmentSection(
-              title: 'Digital Gold',
-              balance: '₹502',
-              change: '₹2',
-              investedAmount: '₹500',
-              buttonLabel: 'Invest',
+            SizedBox(height: SizeConfig.padding6),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+              child: Row(
+                children: [
+                  Text(
+                    "₹ 12,66,320.78",
+                    style: TextStyles.sourceSansSB.title3.colour(
+                      UiConstants.kTextColor,
+                    ),
+                  ),
+                  SizedBox(width: SizeConfig.padding8),
+                  Text(
+                    "+11.3%",
+                    style: TextStyles.sourceSansSB.body3
+                        .colour(UiConstants.kTabBorderColor),
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: 20),
-            InvestmentSection(
-              title: 'Fello Rewards',
-              balance: '₹502',
-              change: '₹2',
-              investedAmount: '₹500',
-              buttonLabel: 'Redeem',
+            SizedBox(height: SizeConfig.padding20),
+            buildInvestmentSection(
+              iconData: Icons.star,
+              title: "Fello Flo",
+              balance: "₹502",
+              change: "₹2",
+              invested: "₹500",
+              buttonText: "Invest",
+              buttonAction: () {
+                // Handle Invest button
+              },
+            ),
+            buildInvestmentSection(
+              iconData: Icons.circle,
+              title: "Digital Gold",
+              balance: "₹502",
+              change: "₹2",
+              invested: "₹500",
+              buttonText: "Invest",
+              buttonAction: () {
+                // Handle Invest button
+              },
+            ),
+            buildInvestmentSection(
+              iconData: Icons.card_giftcard,
+              title: "Fello Rewards",
+              balance: "₹502",
+              change: "₹2",
+              invested: "₹500",
+              buttonText: "Redeem",
+              buttonAction: () {
+                // Handle Redeem button
+              },
+            ),
+            const Divider(
+              color: UiConstants.kDividerColorLight,
             ),
           ],
         ),
       ),
     );
   }
-}
 
-class BalanceHeader extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget buildInvestmentSection({
+    required IconData iconData,
+    required String title,
+    required String balance,
+    required String change,
+    required String invested,
+    required String buttonText,
+    required VoidCallback buttonAction,
+  }) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Text(
-              'Fello Balance',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Spacer(),
-            ElevatedButton(
-              onPressed: () {},
-              child: Text('View Breakdown'),
-            ),
-          ],
+        const Divider(
+          color: UiConstants.kDividerColorLight,
         ),
-        SizedBox(height: 10),
-        Row(
-          children: [
-            Text(
-              '₹ 12,66,320.78',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+        Container(
+          padding: EdgeInsets.symmetric(
+            vertical: SizeConfig.padding16,
+            horizontal: SizeConfig.padding24,
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        iconData,
+                        color: Colors.white,
+                        size: SizeConfig.body0,
+                      ), // Replace with Image if needed
+                      SizedBox(width: SizeConfig.padding10),
+                      Text(
+                        title,
+                        style: TextStyles.sourceSansSB.body1,
+                      ),
+                    ],
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // View Breakdown action
+                    },
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.padding32,
+                        vertical: SizeConfig.padding6,
+                      ),
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(SizeConfig.roundness5),
+                        ),
+                      ),
+                    ),
+                    child: Text(
+                      buttonText,
+                      style: TextStyles.sourceSansSB.body4
+                          .colour(UiConstants.kTextColor4),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            SizedBox(width: 10),
-            Text(
-              '+11.3%',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.green,
+              SizedBox(height: SizeConfig.padding14),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Flo Balance",
+                        style: TextStyles.sourceSansSB.body2
+                            .colour(UiConstants.kTextColor.withOpacity(.7)),
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Text(
+                            balance,
+                            style: TextStyles.sourceSansSB.body1,
+                          ),
+                          SizedBox(width: SizeConfig.padding2),
+                          Text(
+                            change,
+                            style: TextStyles.sourceSansSB.body3
+                                .colour(UiConstants.chipColor),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Invested",
+                        style: TextStyles.sourceSansSB.body2
+                            .colour(UiConstants.kTextColor.withOpacity(.7)),
+                      ),
+                      SizedBox(height: SizeConfig.padding4),
+                      Text(
+                        invested,
+                        style: TextStyles.sourceSansSB.body1,
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
-    );
-  }
-}
-
-class InvestmentSection extends StatelessWidget {
-  final String title;
-  final String balance;
-  final String change;
-  final String investedAmount;
-  final String buttonLabel;
-
-  InvestmentSection({
-    required this.title,
-    required this.balance,
-    required this.change,
-    required this.investedAmount,
-    required this.buttonLabel,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey[900],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 10),
-          Row(
-            children: [
-              Text(
-                '₹$balance',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              SizedBox(width: 5),
-              Text(
-                '▲$change',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.green,
-                ),
-              ),
-              Spacer(),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text(buttonLabel),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-          Row(
-            children: [
-              Text('Gold Value'),
-              Spacer(),
-              Text(investedAmount),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }

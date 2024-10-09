@@ -75,6 +75,7 @@ class SizeConfig {
   static double get body3 => screenWidth! * 0.037; //14
   static double get body4 => screenWidth! * 0.032; //12;
   static double get body5 => screenWidth! * 0.024; //8;
+  static double get body6 => screenWidth! * 0.028; //10;
 
   // ICON SIZES
   static double get iconSize0 => screenWidth! * 0.0533; //20
@@ -213,7 +214,7 @@ class SizeConfig {
 
   static double get padding152 => screenWidth! * 0.3648;
 
-  static double get padding156 => screenWidth! * 0.3744;
+  static double get padding156 => screenWidth! * 0.3844;
 
   static double get padding160 => screenWidth! * 0.384;
 

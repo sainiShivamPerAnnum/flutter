@@ -255,7 +255,7 @@ class SaveViewModel extends BaseViewModel {
     for (final key in DynamicUiUtils.saveViewOrder[1]) {
       switch (key) {
         case 'PBL':
-          saveViewItems.add(PortfolioCard());
+          saveViewItems.add(const PortfolioCard());
           break;
         case "QL":
           saveViewItems.add(const QuickLinks());
@@ -266,7 +266,7 @@ class SaveViewModel extends BaseViewModel {
         case "LV":
           saveViewItems.add(Live(
             model: smodel,
-          ));
+          ),);
           break;
         case "EXP":
           saveViewItems.add(
@@ -276,7 +276,7 @@ class SaveViewModel extends BaseViewModel {
           );
           break;
         case "SN":
-          saveViewItems.add(ConsultationWidget());
+          saveViewItems.add(const ConsultationWidget());
           break;
         case "PP":
           saveViewItems.add(const PowerPlayCard());
@@ -507,65 +507,60 @@ class QuickLinks extends StatelessWidget {
       AppConfig.getValue(AppConfigKey.quickActions),
     );
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          margin: EdgeInsets.only(
-            top: SizeConfig.padding24,
-            bottom: SizeConfig.padding8,
-          ),
-          width: SizeConfig.screenWidth,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: List.generate(
-              quickLinks.length,
-              (index) => GestureDetector(
-                onTap: () {
-                  Haptic.vibrate();
-                  AppState.delegate!
-                      .parseRoute(Uri.parse(quickLinks[index].deeplink));
-                  locator<AnalyticsService>().track(
-                    eventName: AnalyticsEvents.iconTrayTapped,
-                    properties: {'icon': quickLinks[index].name},
-                  );
-                },
-                child: Container(
-                  width: SizeConfig.padding86,
-                  padding: EdgeInsets.all(SizeConfig.padding10),
-                  decoration: BoxDecoration(
-                      color: UiConstants.greyVarient,
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(SizeConfig.padding8))),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        width: quickLinks[index].asset == Assets.goldAsset ||
-                                quickLinks[index].asset == Assets.floAsset
-                            ? SizeConfig.padding56
-                            : SizeConfig.padding36,
-                        height: quickLinks[index].asset == Assets.goldAsset ||
-                                quickLinks[index].asset == Assets.floAsset
-                            ? SizeConfig.padding56
-                            : SizeConfig.padding36,
-                        child: AppImage(
-                          quickLinks[index].asset,
-                        ),
-                      ),
-                      SizedBox(height: SizeConfig.padding8),
-                      Text(
-                        quickLinks[index].name,
-                        style:
-                            TextStyles.sourceSansSB.body4.colour(Colors.white),
-                      )
-                    ],
+    return Container(
+      margin: EdgeInsets.only(
+        top: SizeConfig.padding24,
+        bottom: SizeConfig.padding8,
+      ),
+      width: SizeConfig.screenWidth,
+      child: Wrap(
+        alignment: WrapAlignment.spaceEvenly,
+        children: List.generate(
+          quickLinks.length,
+          (index) => GestureDetector(
+            onTap: () {
+              Haptic.vibrate();
+              AppState.delegate!
+                  .parseRoute(Uri.parse(quickLinks[index].deeplink));
+              locator<AnalyticsService>().track(
+                eventName: AnalyticsEvents.iconTrayTapped,
+                properties: {'icon': quickLinks[index].name},
+              );
+            },
+            child: Container(
+              padding: EdgeInsets.all(SizeConfig.padding8),
+              decoration: BoxDecoration(
+                color: UiConstants.greyVarient,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(
+                    SizeConfig.padding8,
                   ),
                 ),
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: SizeConfig.padding36,
+                    height: SizeConfig.padding36,
+                    child: AppImage(
+                      quickLinks[index].asset,
+                    ),
+                  ),
+                  SizedBox(height: SizeConfig.padding8),
+                  SizedBox(
+                    width: SizeConfig.padding70,
+                    child: Text(
+                      quickLinks[index].name,
+                      style: TextStyles.sourceSansSB.body4.colour(Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 }

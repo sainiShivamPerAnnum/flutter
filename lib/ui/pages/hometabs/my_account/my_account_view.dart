@@ -79,10 +79,6 @@ class MyAccount extends StatelessWidget {
                     title: "Tickets",
                     uri: "/tambolaHome",
                   ),
-                  const AccountInfoTiles(
-                    title: "Live Section",
-                    uri: "/live",
-                  ),
                   AccountInfoTiles(
                     title: 'Last Week on Fello',
                     uri: "",

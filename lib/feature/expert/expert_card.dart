@@ -1,3 +1,4 @@
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 class ExpertCard extends StatelessWidget {
@@ -5,7 +6,7 @@ class ExpertCard extends StatelessWidget {
   final String name;
   final String expertise;
   final String qualifications;
-  final int availableSlots;
+  final String price;
   final String experience;
   final double rating;
   final VoidCallback onBookCall;
@@ -15,7 +16,7 @@ class ExpertCard extends StatelessWidget {
     required this.name,
     required this.expertise,
     required this.qualifications,
-    required this.availableSlots,
+    required this.price,
     required this.experience,
     required this.rating,
     required this.onBookCall,
@@ -25,8 +26,8 @@ class ExpertCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[850],
-        borderRadius: BorderRadius.circular(12),
+        color: UiConstants.greyVarient,
+        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
       ),
       child: Row(
         children: [
@@ -34,148 +35,184 @@ class ExpertCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                    bottomLeft: Radius.circular(8)),
+                  topLeft: Radius.circular(SizeConfig.roundness8),
+                  bottomLeft: Radius.circular(
+                    SizeConfig.roundness8,
+                  ),
+                ),
                 child: Image.network(
                   imageUrl,
-                  fit: BoxFit.fitHeight,
+                  height: SizeConfig.padding156,
+                  width: SizeConfig.padding140,
+                  fit: BoxFit.cover,
                 ),
               ),
               Positioned(
-                bottom: 4,
-                left: 4,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.7),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.schedule, color: Colors.white, size: 14),
-                      SizedBox(width: 4),
-                      Text(
-                        '$experience Years',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
+                bottom: SizeConfig.padding8,
+                left: SizeConfig.padding10,
+                child: Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(
+                        SizeConfig.padding4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: UiConstants.kTextColor4.withOpacity(0.3),
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness5),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.badge,
+                            color: UiConstants.kTabBorderColor,
+                            size: SizeConfig.body6,
+                          ),
+                          SizedBox(
+                            width: SizeConfig.padding2,
+                          ),
+                          Text(
+                            '$experience Years',
+                            style: TextStyles.sourceSans.body6,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(
+                        SizeConfig.padding4,
+                      ),
+                      margin: EdgeInsets.only(left: SizeConfig.padding12),
+                      decoration: BoxDecoration(
+                        color: UiConstants.kTextColor4.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(
+                          SizeConfig.roundness5,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 4,
-                right: 4,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.7),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.star, color: Colors.amber, size: 14),
-                      SizedBox(width: 4),
-                      Text(
-                        '$rating',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.star,
+                            color: UiConstants.kamber,
+                            size: SizeConfig.body6,
+                          ),
+                          SizedBox(
+                            width: SizeConfig.padding2,
+                          ),
+                          Text(
+                            '$rating',
+                            style: TextStyles.sourceSans.body6,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          SizedBox(width: 12),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding16,
+                vertical: SizeConfig.padding10,
+              ),
+              constraints: BoxConstraints(
+                maxHeight: SizeConfig.padding156,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    name,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment
-                        .start, // Makes sure it aligns at the top
-                    children: [
-                      Icon(Icons.work, color: Colors.white60, size: 16),
-                      SizedBox(width: 4),
-                      Flexible(
-                        child: Text(
-                          expertise,
-                          style: TextStyle(
-                            color: Colors.white60,
-                            fontSize: 14,
-                          ),
-                          maxLines: 2, // Optional, can set a max number of lines
-                          overflow: TextOverflow
-                              .visible, // Allows it to wrap to the next line
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 4),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment
-                        .start, // Makes sure it aligns at the top
-                    children: [
-                      Icon(Icons.school, color: Colors.white60, size: 16),
-                      SizedBox(width: 4),
-                      Flexible(
-                        child: Text(
-                          qualifications,
-                          style: TextStyle(
-                            color: Colors.white60,
-                            fontSize: 14,
-                          ),
-                          maxLines: 2, // Optional, can set a max number of lines
-                          overflow: TextOverflow
-                              .visible, // Allows it to wrap to the next line
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '$availableSlots Slots Available',
-                        style: TextStyle(
-                          color: Colors.greenAccent,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
+                        name,
+                        style: TextStyles.sourceSansSB.body1.colour(
+                          UiConstants.kTextColor,
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: onBookCall,
-                        style: ElevatedButton.styleFrom(
-                          // primary: Colors.white,
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: UiConstants.kTextColor,
+                        size: SizeConfig.body2,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: SizeConfig.padding4),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.star,
+                        color: UiConstants.kTextColor6,
+                        size: SizeConfig.body4,
+                      ),
+                      SizedBox(width: SizeConfig.padding4),
+                      Expanded(
+                        child: Text(
+                          expertise,
+                          style: TextStyles.sourceSans.body4.colour(
+                            UiConstants.kTextColor6,
                           ),
                         ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: SizeConfig.padding4),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.school,
+                        color: UiConstants.kTextColor6,
+                        size: SizeConfig.body4,
+                      ),
+                      SizedBox(width: SizeConfig.padding4),
+                      Expanded(
                         child: Text(
-                          'Book a Call',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
+                          qualifications,
+                          style: TextStyles.sourceSans.body4.colour(
+                            UiConstants.kTextColor6,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: SizeConfig.padding8),
+                  const Divider(
+                    color: UiConstants.grey6,
+                  ),
+                  SizedBox(height: SizeConfig.padding8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        price,
+                        style: TextStyles.sourceSansSB.body3.colour(
+                          UiConstants.kTextColor,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: onBookCall,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding8,
+                            vertical: SizeConfig.padding6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: UiConstants.kTextColor,
+                            borderRadius: BorderRadius.circular(
+                              SizeConfig.roundness5,
+                            ),
+                          ),
+                          child: Text(
+                            'Book a Call',
+                            style: TextStyles.sourceSansSB.body4.colour(
+                              UiConstants.kTextColor4,
+                            ),
                           ),
                         ),
                       ),
