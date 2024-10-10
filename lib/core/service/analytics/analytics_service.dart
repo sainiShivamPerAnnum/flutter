@@ -7,6 +7,7 @@ import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/core/service/analytics/clever_tap_analytics.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/core/service/analytics/singular_analytics.dart';
+import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -21,6 +22,7 @@ class AnalyticsService extends BaseAnalyticsService {
   final AppFlyerAnalytics _appFlyer = locator<AppFlyerAnalytics>();
   final SingularAnalytics _singular = locator<SingularAnalytics>();
   final CleverTapAnalytics _cleverTap = locator<CleverTapAnalytics>();
+  final WebEngageAnalytics _webengage = locator<WebEngageAnalytics>();
   final CustomLogger _logger = locator<CustomLogger>();
 
   @override
@@ -29,6 +31,7 @@ class AnalyticsService extends BaseAnalyticsService {
     _appFlyer.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     _singular.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     _cleverTap.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
+    _webengage.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     // for daily session event
     DateTime now = DateTime.now();
     final lastDateOpened =
@@ -43,6 +46,7 @@ class AnalyticsService extends BaseAnalyticsService {
   @override
   void signOut() {
     _mixpanel.signOut();
+    _webengage.signOut();
     _appFlyer.signOut();
     _singular.signOut();
     _cleverTap.signOut();
@@ -81,6 +85,9 @@ class AnalyticsService extends BaseAnalyticsService {
       if (cleverTap) {
         _cleverTap.track(eventName: eventName, properties: properties);
       }
+      if (webEngage) {
+        _webengage.track(eventName: eventName, properties: properties);
+      }
     } catch (e) {
       String error = e as String ?? "Unable to track event: $eventName";
       _logger.e(error);
@@ -91,6 +98,7 @@ class AnalyticsService extends BaseAnalyticsService {
   void trackScreen({String? screen, Map<String, dynamic>? properties}) {
     _mixpanel.track(eventName: screen, properties: properties);
     _cleverTap.track(eventName: screen, properties: properties);
+    _webengage.trackScreen(screen: screen, properties: properties);
   }
 
   Future<void> trackSignup(String? userId) async {
