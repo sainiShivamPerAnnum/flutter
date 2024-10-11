@@ -1,154 +1,190 @@
+import 'package:felloapp/core/model/live/live_home.dart';
+import 'package:felloapp/feature/live/bloc/live_bloc.dart';
 import 'package:felloapp/feature/live/widgets/header.dart';
 import 'package:felloapp/feature/live/widgets/live_card.dart';
+import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:flutter/widgets.dart';
+import 'package:felloapp/util/styles/styles.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LiveHome extends StatefulWidget {
-  const LiveHome({super.key});
+class LiveHomeView extends StatelessWidget {
+  const LiveHomeView({
+    super.key,
+  });
 
-  @override
-  State<LiveHome> createState() => _LiveHomeState();
-}
-
-class _LiveHomeState extends State<LiveHome> {
-  final List<dynamic> data = [
-    {
-      "status": "live",
-      "title": "Trade in Indian Stock Market",
-      "subTitle": "Started at 11:00AM",
-      "author": "Vibhor Varshney",
-      "category": "Stocks",
-      "bgImage":
-          "https://ik.imagekit.io/9xfwtu0xm/experts/live1.png?updatedAt=1727083174845",
-      "metadata": {"duration": null, "liveCount": 2000}
-    },
-    {
-      "status": "upcoming",
-      "title": "Cryptocurrency Trends",
-      "subTitle": "Starts at 2:00PM",
-      "author": "Meera Kapoor",
-      "category": "Crypto",
-      "bgImage":
-          "https://ik.imagekit.io/9xfwtu0xm/experts/live2.png?updatedAt=1727083175271",
-      "metadata": {"duration": null, "liveCount": null}
-    },
-    {
-      "status": "completed",
-      "title": "Understanding Mutual Funds",
-      "subTitle": "Completed at 9:30AM",
-      "author": "Arjun Patel",
-      "category": "Investments",
-      "bgImage":
-          "https://ik.imagekit.io/9xfwtu0xm/experts/live2.png?updatedAt=1727083175271",
-      "metadata": {"duration": "1h 30m", "liveCount": null}
-    }
-  ];
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => LiveBloc(
+        locator(),
+      )..add(const LoadHomeData()),
+      child: const _LiveHome(),
+    );
+  }
+}
+
+class _LiveHome extends StatefulWidget {
+  const _LiveHome();
+
+  @override
+  State<_LiveHome> createState() => __LiveHomeState();
+}
+
+class __LiveHomeState extends State<_LiveHome> {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<LiveBloc, LiveState>(
+      builder: (context, state) {
+        if (state is LoadingHomeData) {
+          return const Center(
+            child: FullScreenLoader(),
+          );
+        } else if (state is LiveHomeData) {
+          final liveData = state.homeData;
+          if (liveData == null) {
+            return const ErrorPage();
+          }
+          return SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+              child: Column(
+                children: [
+                  SizedBox(height: SizeConfig.padding14),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TitleSubtitleContainer(
+                        title: "Live",
+                        zeroPadding: true,
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.padding24,
+                    ),
+                    child: LiveHeader(
+                      title: liveData.sections.live.title,
+                      subtitle: liveData.sections.live.subtitle,
+                      onViewAllPressed: () {},
+                    ),
+                  ),
+                  _buildLiveSection(liveData.live),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.padding24,
+                    ),
+                    child: LiveHeader(
+                      title: liveData.sections.upcoming.title,
+                      subtitle: liveData.sections.upcoming.subtitle,
+                      onViewAllPressed: () {},
+                    ),
+                  ),
+                  _buildUpcomingSection(liveData.upcoming),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.padding24,
+                    ),
+                    child: LiveHeader(
+                      title: liveData.sections.recent.title,
+                      subtitle: liveData.sections.recent.subtitle,
+                      onViewAllPressed: () {},
+                    ),
+                  ),
+                  _buildRecentSection(liveData.recent),
+                  SizedBox(height: SizeConfig.padding14),
+                ],
+              ),
+            ),
+          );
+        } else {
+          return const Center(
+            child: Text('Failed to load live data'),
+          );
+        }
+      },
+    );
+  }
+
+  Widget _buildUpcomingSection(List<UpcomingStream> liveData) {
     return SingleChildScrollView(
-      child: Column(
+      scrollDirection: Axis.horizontal,
+      child: Row(
         children: [
-          SizedBox(height: SizeConfig.padding14),
-          GestureDetector(
-            onTap: () {},
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                TitleSubtitleContainer(
-                  title: "Live",
-                ),
-              ],
-            ),
-          ),
-          // TopLive(model: model),
-          LiveHeader(
-            title: 'Streaming Live',
-            subtitle: 'Interact with advisors in live sessions for free',
-            onViewAllPressed: () {},
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  for (int i = 0; i < data.length; i++)
-                    Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding8,
-                        ).copyWith(bottom: 8),
-                        child: LiveCardWidget(
-                          status: data[i]['status'],
-                          title: data[i]['title'],
-                          subTitle: data[i]['subTitle'],
-                          author: data[i]['author'],
-                          category: data[i]['category'],
-                          bgImage: data[i]['bgImage'],
-                          liveCount: data[i]["metadata"]['liveCount'],
-                          duration: data[i]["metadata"]['duration'],
-                        )),
-                ],
+          for (final live in liveData)
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding8,
+              ).copyWith(bottom: 8),
+              child: LiveCardWidget(
+                status: 'upcoming',
+                title: live.title,
+                subTitle: live.subtitle,
+                author: live.author,
+                category: live.category,
+                bgImage: live.thumbnail,
+                duration: live.startTime,
               ),
             ),
-          ),
-          LiveHeader(
-            title: 'Recent Live Streams',
-            subtitle: 'Catch up on our latest live streams for expert insights',
-            onViewAllPressed: () {},
-          ),
-          SizedBox(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  for (int i = 0; i < data.length; i++)
-                    Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8)
-                            .copyWith(bottom: 8),
-                        child: LiveCardWidget(
-                          status: data[i]['status'],
-                          title: data[i]['title'],
-                          subTitle: data[i]['subTitle'],
-                          author: data[i]['author'],
-                          category: data[i]['category'],
-                          bgImage: data[i]['bgImage'],
-                          liveCount: data[i]["metadata"]['liveCount'],
-                          duration: data[i]["metadata"]['duration'],
-                        )),
-                ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLiveSection(List<LiveStream> liveData) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          for (final live in liveData)
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding8,
+              ).copyWith(bottom: 8),
+              child: LiveCardWidget(
+                status: 'live',
+                title: live.title,
+                subTitle: live.subtitle,
+                author: live.author,
+                category: live.category,
+                bgImage: live.thumbnail,
+                liveCount: live.liveCount,
               ),
             ),
-          ),
-          LiveHeader(
-            title: 'Streaming Live',
-            subtitle: 'Interact with advisors in live sessions for free',
-            onViewAllPressed: () {},
-          ),
-          SizedBox(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  for (int i = 0; i < data.length; i++)
-                    Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8)
-                            .copyWith(bottom: 8),
-                        child: LiveCardWidget(
-                          status: data[i]['status'],
-                          title: data[i]['title'],
-                          subTitle: data[i]['subTitle'],
-                          author: data[i]['author'],
-                          category: data[i]['category'],
-                          bgImage: data[i]['bgImage'],
-                          liveCount: data[i]["metadata"]['liveCount'],
-                          duration: data[i]["metadata"]['duration'],
-                        )),
-                ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRecentSection(List<RecentStream> recentData) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          for (final recent in recentData)
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding8,
+              ).copyWith(
+                bottom: SizeConfig.padding8,
+              ),
+              child: LiveCardWidget(
+                status: 'recent',
+                title: recent.title,
+                subTitle: recent.subtitle,
+                author: recent.author,
+                category: recent.category,
+                bgImage: recent.thumbnail,
+                liveCount:
+                    recent.views, // Number of views instead of live count
+                duration: recent.duration.toString(),
               ),
             ),
-          ),
         ],
       ),
     );

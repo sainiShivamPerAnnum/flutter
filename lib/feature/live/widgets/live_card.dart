@@ -10,6 +10,7 @@ class LiveCardWidget extends StatelessWidget {
   final String bgImage;
   final int? liveCount;
   final String? duration;
+  final String? startTime;
 
   const LiveCardWidget({
     required this.status,
@@ -21,6 +22,7 @@ class LiveCardWidget extends StatelessWidget {
     super.key,
     this.liveCount,
     this.duration,
+    this.startTime,
   });
 
   @override
@@ -51,83 +53,12 @@ class LiveCardWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              if (status == 'live')
-                Positioned(
-                  bottom: SizeConfig.padding10,
-                  left: SizeConfig.padding10,
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding8,
-                          vertical: SizeConfig.padding4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: UiConstants.kred1,
-                          borderRadius: BorderRadius.circular(
-                            SizeConfig.roundness5,
-                          ),
-                        ),
-                        child: Text(
-                          'LIVE',
-                          style: TextStyles.sourceSansSB.body4.colour(
-                            UiConstants.titleTextColor,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(left: SizeConfig.padding4),
-                        decoration: BoxDecoration(
-                          color: UiConstants.kTextColor4,
-                          borderRadius: BorderRadius.circular(
-                            SizeConfig.roundness5,
-                          ),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding8,
-                          vertical: SizeConfig.padding4,
-                        ),
-                        child: Row(
-                          children: [
-                            if (liveCount != null)
-                              Icon(
-                                Icons.visibility,
-                                color: Colors.white,
-                                size: SizeConfig.body4,
-                              ),
-                            if (liveCount != null)
-                              SizedBox(
-                                width: SizeConfig.padding4,
-                              ),
-                            if (liveCount != null)
-                              Text(
-                                '${liveCount! ~/ 1000}K',
-                                style: TextStyles.sourceSansSB.body4.colour(
-                                  UiConstants.titleTextColor,
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              if (status == 'live')
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    padding: EdgeInsets.all(SizeConfig.padding8),
-                    decoration: BoxDecoration(
-                      color: UiConstants.kTextColor.withOpacity(0.5),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.play_arrow_rounded,
-                      color: Colors.white,
-                      size: SizeConfig.iconSize5,
-                    ),
-                  ),
-                ),
+              if (status == 'live') ...[
+                buildLiveIndicator(),
+                buildPlayIcon(),
+              ],
+              if (status == 'upcoming') buildUpcomingIndicator(),
+              if (status == 'recent') buildRecentIndicator(),
             ],
           ),
           Padding(
@@ -161,7 +92,7 @@ class LiveCardWidget extends StatelessWidget {
                 // Subtitle (time started or duration)
                 Text(
                   subTitle,
-                   style: TextStyles.sourceSans.body4.colour(
+                  style: TextStyles.sourceSans.body4.colour(
                     UiConstants.kTextColor5,
                   ),
                 ),
@@ -170,15 +101,156 @@ class LiveCardWidget extends StatelessWidget {
                 // Author's name
                 Text(
                   author,
-                 style: TextStyles.sourceSans.body4.colour(
+                  style: TextStyles.sourceSans.body4.colour(
                     UiConstants.kTextColor,
                   ),
                 ),
               ],
             ),
-          )
-          // Category tag
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget buildLiveIndicator() {
+    return Positioned(
+      bottom: SizeConfig.padding10,
+      left: SizeConfig.padding10,
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding8,
+              vertical: SizeConfig.padding4,
+            ),
+            decoration: BoxDecoration(
+              color: UiConstants.kred1,
+              borderRadius: BorderRadius.circular(
+                SizeConfig.roundness5,
+              ),
+            ),
+            child: Text(
+              'LIVE',
+              style: TextStyles.sourceSansSB.body4.colour(
+                UiConstants.titleTextColor,
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: SizeConfig.padding4),
+            decoration: BoxDecoration(
+              color: UiConstants.kTextColor4,
+              borderRadius: BorderRadius.circular(
+                SizeConfig.roundness5,
+              ),
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding8,
+              vertical: SizeConfig.padding4,
+            ),
+            child: Row(
+              children: [
+                if (liveCount != null)
+                  Icon(
+                    Icons.visibility,
+                    color: Colors.white,
+                    size: SizeConfig.body4,
+                  ),
+                if (liveCount != null)
+                  SizedBox(
+                    width: SizeConfig.padding4,
+                  ),
+                if (liveCount != null)
+                  Text(
+                    '${liveCount! ~/ 1000}K',
+                    style: TextStyles.sourceSansSB.body4.colour(
+                      UiConstants.titleTextColor,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildPlayIcon() {
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        padding: EdgeInsets.all(SizeConfig.padding8),
+        decoration: BoxDecoration(
+          color: UiConstants.kTextColor.withOpacity(0.5),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          Icons.play_arrow_rounded,
+          color: Colors.white,
+          size: SizeConfig.iconSize5,
+        ),
+      ),
+    );
+  }
+
+  Widget buildUpcomingIndicator() {
+    return Positioned(
+      bottom: SizeConfig.padding10,
+      left: SizeConfig.padding10,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.padding8,
+          vertical: SizeConfig.padding4,
+        ),
+        decoration: BoxDecoration(
+          color: UiConstants.kTextColor4,
+          borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+        ),
+        child: Text(
+          'STARTS IN ${_calculateStartTimeDifference()}',
+          style: TextStyles.sourceSansSB.body4.colour(
+            UiConstants.titleTextColor,
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _calculateStartTimeDifference() {
+    if (startTime == null) return '';
+    final now = DateTime.now();
+    final start = DateTime.parse(startTime!);
+    final difference = start.difference(now);
+    return formatDuration(difference);
+  }
+
+  String formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
+
+  Widget buildRecentIndicator() {
+    return Positioned(
+      bottom: SizeConfig.padding10,
+      left: SizeConfig.padding10,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.padding8,
+          vertical: SizeConfig.padding4,
+        ),
+        decoration: BoxDecoration(
+          color: UiConstants.kTextColor4,
+          borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+        ),
+        child: Text(
+          '$duration MINS',
+          style: TextStyles.sourceSansSB.body4.colour(
+            UiConstants.titleTextColor,
+          ),
+        ),
       ),
     );
   }

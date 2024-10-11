@@ -8,12 +8,14 @@ import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/clientComms_repo.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
+import 'package:felloapp/core/repository/experts_repo.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
+import 'package:felloapp/core/repository/live_repository.dart';
 import 'package:felloapp/core/repository/local/stories_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
@@ -292,6 +294,9 @@ Future<void> setupLocator() async {
   locator.registerFactory(FAQCardViewModel.new);
   locator.registerFactory(SourceAdaptiveAssetViewModel.new);
   locator.registerFactory(AssetPreferenceViewModel.new);
+
+  locator.registerFactory(LiveRepository.new);
+  locator.registerFactory(ExpertsRepository.new);
 
   await locator.allReady();
 }

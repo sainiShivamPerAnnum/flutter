@@ -29,13 +29,13 @@ class RootController {
   );
   static final saveNavBarItem = NavBarItemModel(
     "Home",
-    Assets.shorts_bottom_nav,
+    Assets.home_bottom_nav,
     ShowCaseKeys.SaveKey,
   );
 
   static final shortsNavBarItem = NavBarItemModel(
     "Shorts",
-    Assets.home_bottom_nav,
+    Assets.shorts_bottom_nav,
     ShowCaseKeys.ShortsKey,
   );
 
@@ -71,13 +71,13 @@ class RootController {
         break;
       case "LV":
         navItems.putIfAbsent(
-          const LiveHome(),
+          const LiveHomeView(),
           () => RootController.liveNavBarItem,
         );
         break;
       case "EP":
         navItems.putIfAbsent(
-          const ExpertHome(),
+          const ExpertsHomeView(),
           () => RootController.expertNavBarItem,
         );
         break;

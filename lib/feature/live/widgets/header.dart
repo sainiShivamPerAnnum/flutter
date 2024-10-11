@@ -1,3 +1,4 @@
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 class LiveHeader extends StatelessWidget {
@@ -14,55 +15,44 @@ class LiveHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyles.sourceSansSB.body2,
+              ),
+              SizedBox(height: SizeConfig.padding4),
+              Text(
+                subtitle,
+                style: TextStyles.sourceSans.body4.colour(
+                  UiConstants.kTextColor5,
                 ),
-                SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: onViewAllPressed,
-            child: Row(
-              children: [
-                Text(
-                  'VIEW ALL',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                  ),
-                ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white,
-                  size: 14,
-                ),
-              ],
-            ),
+        ),
+        TextButton(
+          onPressed: onViewAllPressed,
+          child: Row(
+            children: [
+              Text(
+                'VIEW ALL',
+                 style: TextStyles.sourceSansSB.body3,
+              ),
+              Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.white,
+                size: SizeConfig.body3,
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

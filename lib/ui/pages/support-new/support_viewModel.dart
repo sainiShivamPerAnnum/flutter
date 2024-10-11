@@ -8,7 +8,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/blog_model.dart';
 import 'package:felloapp/core/model/event_model.dart';
-import 'package:felloapp/core/model/top_expert_model.dart';
+// import 'package:felloapp/core/model/top_expert_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
@@ -98,7 +98,7 @@ class SupportViewModel extends BaseViewModel {
   late final PageController offersController = PageController(initialPage: 0);
   List<EventModel>? _ongoingEvents;
   List<BlogPostModel>? _blogPosts;
-  List<TopExpertModel>? _topExperts;
+  // List<TopExpertModel>? _topExperts;
   List<BlogPostModelByCategory>? _blogPostsByCategory;
   bool _isLoading = true;
   bool _isChallenegsLoading = true;
@@ -139,7 +139,7 @@ class SupportViewModel extends BaseViewModel {
 
   List<BlogPostModel>? get blogPosts => _blogPosts;
 
-  List<TopExpertModel>? get topExperts => _topExperts;
+  // List<TopExpertModel>? get topExperts => _topExperts;
 
   List<BlogPostModelByCategory>? get blogPostsByCategory =>
       _blogPostsByCategory;
@@ -177,10 +177,10 @@ class SupportViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  set topExperts(List<TopExpertModel>? value) {
-    _topExperts = value;
-    notifyListeners();
-  }
+  // set topExperts(List<TopExpertModel>? value) {
+  //   _topExperts = value;
+  //   notifyListeners();
+  // }
 
   set blogPosts(List<BlogPostModel>? value) {
     _blogPosts = value;
@@ -207,7 +207,7 @@ class SupportViewModel extends BaseViewModel {
     // baseProvider = BaseUtil();
     await _userService.getUserFundWalletData();
     await _userCoinService.getUserCoinBalance();
-    await getTopExperts();
+    // await getTopExperts();
     await locator<SubService>().init();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -300,14 +300,14 @@ class SupportViewModel extends BaseViewModel {
     isChallengesLoading = false;
   }
 
-  Future<void> getTopExperts() async {
-    final response = await _saveRepo.getTopExperts();
-    if (response.isSuccess()) {
-      topExperts = response.model;
-    } else {
-      print(response.errorMessage);
-    }
-  }
+  // Future<void> getTopExperts() async {
+  //   final response = await _saveRepo.getTopExperts();
+  //   if (response.isSuccess()) {
+  //     topExperts = response.model;
+  //   } else {
+  //     print(response.errorMessage);
+  //   }
+  // }
 
   Future<void> getSaveViewBlogs() async {
     final response = await _saveRepo.getBlogs(5);

@@ -503,4 +503,8 @@ class Assets {
   static const String shorts_bottom_nav = "assets/svg/shorts.svg";
   static const String calender =
       "https://ik.imagekit.io/9xfwtu0xm/static/calender.png";
+
+       static const String video_share = "assets/svg/share_video.svg"; 
+       static const String book_call = "assets/svg/calender.svg"; 
+       static const String video_like = "assets/svg/like.svg";
 }
