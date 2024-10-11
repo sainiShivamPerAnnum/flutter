@@ -20,7 +20,7 @@ mixin _$PreloadEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() getVideosFromApi,
     required TResult Function() setLoading,
-    required TResult Function(List<String> urls) updateUrls,
+    required TResult Function(List<VideoData> videos) updateUrls,
     required TResult Function(int index) onVideoIndexChanged,
     required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
         updateConstants,
@@ -30,7 +30,7 @@ mixin _$PreloadEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? getVideosFromApi,
     TResult? Function()? setLoading,
-    TResult? Function(List<String> urls)? updateUrls,
+    TResult? Function(List<VideoData> videos)? updateUrls,
     TResult? Function(int index)? onVideoIndexChanged,
     TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
@@ -40,7 +40,7 @@ mixin _$PreloadEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? getVideosFromApi,
     TResult Function()? setLoading,
-    TResult Function(List<String> urls)? updateUrls,
+    TResult Function(List<VideoData> videos)? updateUrls,
     TResult Function(int index)? onVideoIndexChanged,
     TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
@@ -135,7 +135,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
   TResult when<TResult extends Object?>({
     required TResult Function() getVideosFromApi,
     required TResult Function() setLoading,
-    required TResult Function(List<String> urls) updateUrls,
+    required TResult Function(List<VideoData> videos) updateUrls,
     required TResult Function(int index) onVideoIndexChanged,
     required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
         updateConstants,
@@ -148,7 +148,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? getVideosFromApi,
     TResult? Function()? setLoading,
-    TResult? Function(List<String> urls)? updateUrls,
+    TResult? Function(List<VideoData> videos)? updateUrls,
     TResult? Function(int index)? onVideoIndexChanged,
     TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
@@ -161,7 +161,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? getVideosFromApi,
     TResult Function()? setLoading,
-    TResult Function(List<String> urls)? updateUrls,
+    TResult Function(List<VideoData> videos)? updateUrls,
     TResult Function(int index)? onVideoIndexChanged,
     TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
@@ -258,7 +258,7 @@ class _$SetLoadingImpl implements _SetLoading {
   TResult when<TResult extends Object?>({
     required TResult Function() getVideosFromApi,
     required TResult Function() setLoading,
-    required TResult Function(List<String> urls) updateUrls,
+    required TResult Function(List<VideoData> videos) updateUrls,
     required TResult Function(int index) onVideoIndexChanged,
     required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
         updateConstants,
@@ -271,7 +271,7 @@ class _$SetLoadingImpl implements _SetLoading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? getVideosFromApi,
     TResult? Function()? setLoading,
-    TResult? Function(List<String> urls)? updateUrls,
+    TResult? Function(List<VideoData> videos)? updateUrls,
     TResult? Function(int index)? onVideoIndexChanged,
     TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
@@ -284,7 +284,7 @@ class _$SetLoadingImpl implements _SetLoading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? getVideosFromApi,
     TResult Function()? setLoading,
-    TResult Function(List<String> urls)? updateUrls,
+    TResult Function(List<VideoData> videos)? updateUrls,
     TResult Function(int index)? onVideoIndexChanged,
     TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
@@ -347,7 +347,7 @@ abstract class _$$UpdateUrlsImplCopyWith<$Res> {
           _$UpdateUrlsImpl value, $Res Function(_$UpdateUrlsImpl) then) =
       __$$UpdateUrlsImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<String> urls});
+  $Res call({List<VideoData> videos});
 }
 
 /// @nodoc
@@ -361,13 +361,13 @@ class __$$UpdateUrlsImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? urls = null,
+    Object? videos = null,
   }) {
     return _then(_$UpdateUrlsImpl(
-      null == urls
-          ? _value._urls
-          : urls // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+      null == videos
+          ? _value._videos
+          : videos // ignore: cast_nullable_to_non_nullable
+              as List<VideoData>,
     ));
   }
 }
@@ -375,19 +375,19 @@ class __$$UpdateUrlsImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$UpdateUrlsImpl implements _UpdateUrls {
-  const _$UpdateUrlsImpl(final List<String> urls) : _urls = urls;
+  const _$UpdateUrlsImpl(final List<VideoData> videos) : _videos = videos;
 
-  final List<String> _urls;
+  final List<VideoData> _videos;
   @override
-  List<String> get urls {
-    if (_urls is EqualUnmodifiableListView) return _urls;
+  List<VideoData> get videos {
+    if (_videos is EqualUnmodifiableListView) return _videos;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_urls);
+    return EqualUnmodifiableListView(_videos);
   }
 
   @override
   String toString() {
-    return 'PreloadEvent.updateUrls(urls: $urls)';
+    return 'PreloadEvent.updateUrls(videos: $videos)';
   }
 
   @override
@@ -395,12 +395,12 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$UpdateUrlsImpl &&
-            const DeepCollectionEquality().equals(other._urls, _urls));
+            const DeepCollectionEquality().equals(other._videos, _videos));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_urls));
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_videos));
 
   @JsonKey(ignore: true)
   @override
@@ -413,12 +413,12 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
   TResult when<TResult extends Object?>({
     required TResult Function() getVideosFromApi,
     required TResult Function() setLoading,
-    required TResult Function(List<String> urls) updateUrls,
+    required TResult Function(List<VideoData> videos) updateUrls,
     required TResult Function(int index) onVideoIndexChanged,
     required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
         updateConstants,
   }) {
-    return updateUrls(urls);
+    return updateUrls(videos);
   }
 
   @override
@@ -426,12 +426,12 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? getVideosFromApi,
     TResult? Function()? setLoading,
-    TResult? Function(List<String> urls)? updateUrls,
+    TResult? Function(List<VideoData> videos)? updateUrls,
     TResult? Function(int index)? onVideoIndexChanged,
     TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
   }) {
-    return updateUrls?.call(urls);
+    return updateUrls?.call(videos);
   }
 
   @override
@@ -439,14 +439,14 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? getVideosFromApi,
     TResult Function()? setLoading,
-    TResult Function(List<String> urls)? updateUrls,
+    TResult Function(List<VideoData> videos)? updateUrls,
     TResult Function(int index)? onVideoIndexChanged,
     TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
     required TResult orElse(),
   }) {
     if (updateUrls != null) {
-      return updateUrls(urls);
+      return updateUrls(videos);
     }
     return orElse();
   }
@@ -493,9 +493,9 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
 }
 
 abstract class _UpdateUrls implements PreloadEvent {
-  const factory _UpdateUrls(final List<String> urls) = _$UpdateUrlsImpl;
+  const factory _UpdateUrls(final List<VideoData> videos) = _$UpdateUrlsImpl;
 
-  List<String> get urls;
+  List<VideoData> get videos;
   @JsonKey(ignore: true)
   _$$UpdateUrlsImplCopyWith<_$UpdateUrlsImpl> get copyWith =>
       throw _privateConstructorUsedError;
@@ -568,7 +568,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
   TResult when<TResult extends Object?>({
     required TResult Function() getVideosFromApi,
     required TResult Function() setLoading,
-    required TResult Function(List<String> urls) updateUrls,
+    required TResult Function(List<VideoData> videos) updateUrls,
     required TResult Function(int index) onVideoIndexChanged,
     required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
         updateConstants,
@@ -581,7 +581,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? getVideosFromApi,
     TResult? Function()? setLoading,
-    TResult? Function(List<String> urls)? updateUrls,
+    TResult? Function(List<VideoData> videos)? updateUrls,
     TResult? Function(int index)? onVideoIndexChanged,
     TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
@@ -594,7 +594,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? getVideosFromApi,
     TResult Function()? setLoading,
-    TResult Function(List<String> urls)? updateUrls,
+    TResult Function(List<VideoData> videos)? updateUrls,
     TResult Function(int index)? onVideoIndexChanged,
     TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
@@ -744,7 +744,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
   TResult when<TResult extends Object?>({
     required TResult Function() getVideosFromApi,
     required TResult Function() setLoading,
-    required TResult Function(List<String> urls) updateUrls,
+    required TResult Function(List<VideoData> videos) updateUrls,
     required TResult Function(int index) onVideoIndexChanged,
     required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
         updateConstants,
@@ -757,7 +757,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? getVideosFromApi,
     TResult? Function()? setLoading,
-    TResult? Function(List<String> urls)? updateUrls,
+    TResult? Function(List<VideoData> videos)? updateUrls,
     TResult? Function(int index)? onVideoIndexChanged,
     TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
@@ -770,7 +770,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? getVideosFromApi,
     TResult Function()? setLoading,
-    TResult Function(List<String> urls)? updateUrls,
+    TResult Function(List<VideoData> videos)? updateUrls,
     TResult Function(int index)? onVideoIndexChanged,
     TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
@@ -839,7 +839,7 @@ abstract class _UpdateConstants implements PreloadEvent {
 
 /// @nodoc
 mixin _$PreloadState {
-  List<String> get urls => throw _privateConstructorUsedError;
+  List<VideoData> get videos => throw _privateConstructorUsedError;
   Map<int, VideoPlayerController> get controllers =>
       throw _privateConstructorUsedError;
   int get focusedIndex => throw _privateConstructorUsedError;
@@ -858,7 +858,7 @@ abstract class $PreloadStateCopyWith<$Res> {
       _$PreloadStateCopyWithImpl<$Res, PreloadState>;
   @useResult
   $Res call(
-      {List<String> urls,
+      {List<VideoData> videos,
       Map<int, VideoPlayerController> controllers,
       int focusedIndex,
       int reloadCounter,
@@ -878,17 +878,17 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? urls = null,
+    Object? videos = null,
     Object? controllers = null,
     Object? focusedIndex = null,
     Object? reloadCounter = null,
     Object? isLoading = null,
   }) {
     return _then(_value.copyWith(
-      urls: null == urls
-          ? _value.urls
-          : urls // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+      videos: null == videos
+          ? _value.videos
+          : videos // ignore: cast_nullable_to_non_nullable
+              as List<VideoData>,
       controllers: null == controllers
           ? _value.controllers
           : controllers // ignore: cast_nullable_to_non_nullable
@@ -918,7 +918,7 @@ abstract class _$$PreloadStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<String> urls,
+      {List<VideoData> videos,
       Map<int, VideoPlayerController> controllers,
       int focusedIndex,
       int reloadCounter,
@@ -936,17 +936,17 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? urls = null,
+    Object? videos = null,
     Object? controllers = null,
     Object? focusedIndex = null,
     Object? reloadCounter = null,
     Object? isLoading = null,
   }) {
     return _then(_$PreloadStateImpl(
-      urls: null == urls
-          ? _value.urls
-          : urls // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+      videos: null == videos
+          ? _value.videos
+          : videos // ignore: cast_nullable_to_non_nullable
+              as List<VideoData>,
       controllers: null == controllers
           ? _value.controllers
           : controllers // ignore: cast_nullable_to_non_nullable
@@ -971,14 +971,14 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
 
 class _$PreloadStateImpl implements _PreloadState {
   _$PreloadStateImpl(
-      {required this.urls,
+      {required this.videos,
       required this.controllers,
       required this.focusedIndex,
       required this.reloadCounter,
       required this.isLoading});
 
   @override
-  final List<String> urls;
+  final List<VideoData> videos;
   @override
   final Map<int, VideoPlayerController> controllers;
   @override
@@ -990,7 +990,7 @@ class _$PreloadStateImpl implements _PreloadState {
 
   @override
   String toString() {
-    return 'PreloadState(urls: $urls, controllers: $controllers, focusedIndex: $focusedIndex, reloadCounter: $reloadCounter, isLoading: $isLoading)';
+    return 'PreloadState(videos: $videos, controllers: $controllers, focusedIndex: $focusedIndex, reloadCounter: $reloadCounter, isLoading: $isLoading)';
   }
 
   @override
@@ -998,7 +998,7 @@ class _$PreloadStateImpl implements _PreloadState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PreloadStateImpl &&
-            const DeepCollectionEquality().equals(other.urls, urls) &&
+            const DeepCollectionEquality().equals(other.videos, videos) &&
             const DeepCollectionEquality()
                 .equals(other.controllers, controllers) &&
             (identical(other.focusedIndex, focusedIndex) ||
@@ -1012,7 +1012,7 @@ class _$PreloadStateImpl implements _PreloadState {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(urls),
+      const DeepCollectionEquality().hash(videos),
       const DeepCollectionEquality().hash(controllers),
       focusedIndex,
       reloadCounter,
@@ -1027,14 +1027,14 @@ class _$PreloadStateImpl implements _PreloadState {
 
 abstract class _PreloadState implements PreloadState {
   factory _PreloadState(
-      {required final List<String> urls,
+      {required final List<VideoData> videos,
       required final Map<int, VideoPlayerController> controllers,
       required final int focusedIndex,
       required final int reloadCounter,
       required final bool isLoading}) = _$PreloadStateImpl;
 
   @override
-  List<String> get urls;
+  List<VideoData> get videos;
   @override
   Map<int, VideoPlayerController> get controllers;
   @override

@@ -24,10 +24,10 @@ class IsolateService {
 
     final isolateResponse = await isolateResponseReceivePort.first;
 
-    final List<String> urls = isolateResponse as List<String>;
+    final List<VideoData> videos = isolateResponse as List<VideoData>;
 
     // Update new URLs in the main BLoC
-    preloadBloc.add(PreloadEvent.updateUrls(urls));
+    preloadBloc.add(PreloadEvent.updateUrls(videos));
   }
 
   static void _getVideosTask(SendPort mySendPort) async {
@@ -42,7 +42,7 @@ class IsolateService {
         final SendPort isolateResponseSendPort = message[1] as SendPort;
 
         // Fetch videos using the API service and constants
-        final List<String> urls = await ApiService.getVideos(
+        final List<VideoData> urls = await ApiService.getVideos(
             id: index + VideoPreloadConstants.preloadLimit);
 
         // Send the result back to the main isolate

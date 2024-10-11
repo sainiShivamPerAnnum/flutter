@@ -27,8 +27,8 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       },
       getVideosFromApi: (e) async {
         /// Fetch first 5 videos from api
-        final List<String> urls = await ApiService.getVideos();
-        state.urls.addAll(urls);
+        final videos = await ApiService.getVideos(id: state.focusedIndex);
+        state.videos.addAll(videos);
 
         /// Initialize 1st video
         await _initializeControllerAtIndex(0);
@@ -45,7 +45,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       onVideoIndexChanged: (e) {
         /// Condition to fetch new videos
         final bool shouldFetch = (e.index + VideoPreloadConstants.kPreloadLimit) % VideoPreloadConstants.kNextLimit == 0 &&
-            state.urls.length == e.index + VideoPreloadConstants.kPreloadLimit;
+            state.videos.length == e.index + VideoPreloadConstants.kPreloadLimit;
 
         if (shouldFetch) {
           IsolateService.createIsolate(e.index,this);
@@ -69,7 +69,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       },
       updateUrls: (e) {
         /// Add new urls to current urls
-        state.urls.addAll(e.urls);
+        state.videos.addAll(e.videos);
 
         /// Initialize new url
         _initializeControllerAtIndex(state.focusedIndex + 1);
@@ -110,58 +110,60 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
   }
 
   Future _initializeControllerAtIndex(int index) async {
-    if (state.urls.length > index && index >= 0) {
+    if (state.videos.length > index && index >= 0) {
       /// Create new controller
-      final VideoPlayerController _controller =
-          VideoPlayerController.network(state.urls[index]);
+      final VideoPlayerController controller =
+          VideoPlayerController.networkUrl(Uri.parse( state.videos[index].url));
 
       /// Add to [controllers] list
-      state.controllers[index] = _controller;
+      state.controllers[index] = controller;
 
       /// Initialize
-      await _controller.initialize();
+      await controller.initialize();
+      await controller.setLooping(true);
+      await controller.setVolume(1);
 
       log('🚀🚀🚀 INITIALIZED $index');
     }
   }
 
   void _playControllerAtIndex(int index) {
-    if (state.urls.length > index && index >= 0) {
+    if (state.videos.length > index && index >= 0) {
       /// Get controller at [index]
-      final VideoPlayerController _controller = state.controllers[index]!;
+      final VideoPlayerController controller = state.controllers[index]!;
 
       /// Play controller
-      _controller.play();
+      controller.play();
 
       log('🚀🚀🚀 PLAYING $index');
     }
   }
 
   void _stopControllerAtIndex(int index) {
-    if (state.urls.length > index && index >= 0) {
+    if (state.videos.length > index && index >= 0) {
       /// Get controller at [index]
-      final VideoPlayerController _controller = state.controllers[index]!;
+      final VideoPlayerController controller = state.controllers[index]!;
 
       /// Pause
-      _controller.pause();
+      controller.pause();
 
       /// Reset postiton to beginning
-      _controller.seekTo(const Duration());
+      controller.seekTo(const Duration());
 
       log('🚀🚀🚀 STOPPED $index');
     }
   }
 
   void _disposeControllerAtIndex(int index) {
-    if (state.urls.length > index && index >= 0) {
+    if (state.videos.length > index && index >= 0) {
       /// Get controller at [index]
-      final VideoPlayerController? _controller = state.controllers[index];
+      final VideoPlayerController? controller = state.controllers[index];
 
       /// Dispose controller
-      _controller?.dispose();
+      controller?.dispose();
 
-      if (_controller != null) {
-        state.controllers.remove(_controller);
+      if (controller != null) {
+        state.controllers.remove(controller);
       }
 
       log('🚀🚀🚀 DISPOSED $index');
