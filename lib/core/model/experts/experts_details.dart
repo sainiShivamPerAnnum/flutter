@@ -15,7 +15,7 @@ class ExpertDetails {
   final String experience;
   final int sessionCount;
   final double rating;
-  final List<QuickAction> quickActions;
+  final List<QuickAction> QuickActions;
   final List<License> licenses;
   final List<Social> social;
   final RatingInfo ratingInfo;
@@ -28,7 +28,7 @@ class ExpertDetails {
     required this.experience,
     required this.sessionCount,
     required this.rating,
-    required this.quickActions,
+    required this.QuickActions,
     required this.licenses,
     required this.social,
     required this.ratingInfo,

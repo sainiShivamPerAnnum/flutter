@@ -211,17 +211,20 @@ class SelectUPIApplicationSection extends StatelessWidget {
     required this.onSelectApplication,
     super.key,
     this.upiApps = const [],
+    this.showHeading = true,
   });
 
   final List<ApplicationMeta> upiApps;
   final locale = locator<S>();
   final ValueChanged<ApplicationMeta> onSelectApplication;
+  final bool showHeading;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        if(showHeading)
         Text(
           locale.mandateStep1,
           style: TextStyles.rajdhaniSB.body1,

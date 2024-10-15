@@ -15,7 +15,7 @@ ExpertDetails _$ExpertDetailsFromJson(Map<String, dynamic> json) =>
       experience: json['experience'] as String,
       sessionCount: json['sessionCount'] as int,
       rating: (json['rating'] as num).toDouble(),
-      quickActions: (json['quickActions'] as List<dynamic>)
+      QuickActions: (json['QuickActions'] as List<dynamic>)
           .map((e) => QuickAction.fromJson(e as Map<String, dynamic>))
           .toList(),
       licenses: (json['licenses'] as List<dynamic>)

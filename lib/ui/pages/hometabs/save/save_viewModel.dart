@@ -7,6 +7,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/blog_model.dart';
+import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
 import 'package:felloapp/core/model/event_model.dart';
 // import 'package:felloapp/core/model/top_expert_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
@@ -20,7 +21,7 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
-import 'package:felloapp/feature/expert/consultant_card.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/consultant_card.dart';
 import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/tambola_mini_info_card.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -35,7 +36,10 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_secti
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/experts.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/first_free_call.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/live.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/past_bookings.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/upcoming_bookings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/ticket_components.dart/ticket_pendingAction.dart';
 import 'package:felloapp/ui/pages/power_play/root_card.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -48,6 +52,7 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/model/quick_links_model.dart';
@@ -95,7 +100,7 @@ class SaveViewModel extends BaseViewModel {
   late final PageController offersController = PageController(initialPage: 0);
   List<EventModel>? _ongoingEvents;
   List<BlogPostModel>? _blogPosts;
-  // List<TopExpertModel>? _topExperts;
+  List<Booking> _upcomingBookings = [];
   List<BlogPostModelByCategory>? _blogPostsByCategory;
   bool _isLoading = true;
   bool _isChallenegsLoading = true;
@@ -136,7 +141,7 @@ class SaveViewModel extends BaseViewModel {
 
   List<BlogPostModel>? get blogPosts => _blogPosts;
 
-  // List<TopExpertModel>? get topExperts => _topExperts;
+  List<Booking> get upcomingBookings => _upcomingBookings;
 
   List<BlogPostModelByCategory>? get blogPostsByCategory =>
       _blogPostsByCategory;
@@ -174,10 +179,10 @@ class SaveViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  // set topExperts(List<TopExpertModel>? value) {
-  //   _topExperts = value;
-  //   notifyListeners();
-  // }
+  set upcomingBookings(List<Booking> value) {
+    _upcomingBookings = value;
+    notifyListeners();
+  }
 
   set blogPosts(List<BlogPostModel>? value) {
     _blogPosts = value;
@@ -204,7 +209,7 @@ class SaveViewModel extends BaseViewModel {
     // baseProvider = BaseUtil();
     await _userService.getUserFundWalletData();
     await _userCoinService.getUserCoinBalance();
-    // await getTopExperts();
+    await getUpcomingBooking();
     await locator<SubService>().init();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -264,9 +269,11 @@ class SaveViewModel extends BaseViewModel {
           saveViewItems.add(const TambolaMiniInfoCard());
           break;
         case "LV":
-          saveViewItems.add(Live(
-            model: smodel,
-          ),);
+          saveViewItems.add(
+            Live(
+              model: smodel,
+            ),
+          );
           break;
         case "EXP":
           saveViewItems.add(
@@ -301,7 +308,9 @@ class SaveViewModel extends BaseViewModel {
           break;
       }
     }
-
+    saveViewItems.add(UpcomingBookingsComponent(model: smodel));
+    saveViewItems.add(const FirstFreeCall());
+    saveViewItems.add(PastBookingsComponent(model: smodel));
     saveViewItems.addAll([
       SizedBox(
         height: SizeConfig.navBarHeight * 0.5,
@@ -322,14 +331,14 @@ class SaveViewModel extends BaseViewModel {
     isChallengesLoading = false;
   }
 
-  // Future<void> getTopExperts() async {
-  //   final response = await _saveRepo.getTopExperts();
-  //   if (response.isSuccess()) {
-  //     topExperts = response.model;
-  //   } else {
-  //     print(response.errorMessage);
-  //   }
-  // }
+  Future<void> getUpcomingBooking() async {
+    final response = await _saveRepo.getUpcomingBookings();
+    if (response.isSuccess()) {
+      upcomingBookings = response.model ?? [];
+    } else {
+      print(response.errorMessage);
+    }
+  }
 
   Future<void> getSaveViewBlogs() async {
     final response = await _saveRepo.getBlogs(5);

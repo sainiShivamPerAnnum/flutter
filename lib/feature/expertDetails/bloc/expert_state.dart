@@ -13,20 +13,34 @@ class LoadingExpertsDetails extends ExpertDetailsState {
 
 final class ExpertDetailsLoaded extends ExpertDetailsState {
   final ExpertDetails? expertDetails;
+  final List<RecentStream> recentLive;
+  final List<RecentStream> shortsData;
+  final int currentTab;
   const ExpertDetailsLoaded({
     required this.expertDetails,
+    this.currentTab = 0,
+    this.recentLive = const [],
+    this.shortsData = const [],
   });
   ExpertDetailsState copyWith({
     ExpertDetails? expertDetails,
-    String? currentSection,
+    int? currentTab,
+  final List<RecentStream>? recentLive,
+  final List<RecentStream>? shortsData,
   }) {
     return ExpertDetailsLoaded(
-      expertDetails: expertDetails ?? expertDetails,
+      expertDetails: expertDetails ?? this.expertDetails,
+      currentTab: currentTab ?? this.currentTab,
+      recentLive: recentLive ?? this.recentLive,
+      shortsData: shortsData ?? this.shortsData,
     );
   }
 
   @override
   List<Object?> get props => [
         expertDetails,
+        currentTab,
+        recentLive,
+        shortsData,
       ];
 }

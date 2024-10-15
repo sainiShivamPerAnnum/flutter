@@ -1,7 +1,11 @@
 import 'dart:developer';
 
+import 'package:felloapp/core/model/bookings/new_booking.dart';
+import 'package:felloapp/core/model/bookings/payment_polling.dart';
+import 'package:felloapp/core/model/bookings/payment_response.dart';
 import 'package:felloapp/core/model/experts/experts_details.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
+import 'package:felloapp/core/model/live/live_home.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -9,22 +13,20 @@ import 'package:felloapp/util/flavor_config.dart';
 
 class ExpertsRepository extends BaseRepo {
   static const _experts = 'experts';
+  static const _booking = 'booking';
 
   final _baseUrl = FlavorConfig.isDevelopment()
-      ? 'https://d65113af-eecb-4123-ba2b-16cd3f277974.mock.pstmn.io/expertsHome'
+      ? 'https://advisors.fello-dev.net/'
       : 'https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod';
 
   Future<ApiResponse<ExpertsHome>> getExpertsHomeData() async {
     try {
-      final String? uid = userService.baseUser!.uid;
-
       final response = await APIService.instance.getData(
-        '',
+        'advisors/sections',
         cBaseUrl: _baseUrl,
         apiName: '$_experts/getExpertsHomeData',
       );
-      // final responseData = response["data"];
-      final responseData = response;
+      final responseData = response["data"];
       log("Experts data: $responseData");
       return ApiResponse<ExpertsHome>(
         model: ExpertsHome.fromJson(responseData),
@@ -40,18 +42,249 @@ class ExpertsRepository extends BaseRepo {
     required String advisorId,
   }) async {
     try {
-      final String? uid = userService.baseUser!.uid;
-
       final response = await APIService.instance.getData(
-        '',
+        'advisors/$advisorId',
         cBaseUrl: _baseUrl,
         apiName: '$_experts/getExperDetailsByID',
       );
-      // final responseData = response["data"];
-      final responseData = response;
+      final responseData = response["data"];
       log("Experts data: $responseData");
       return ApiResponse<ExpertDetails>(
         model: ExpertDetails.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<Schedule>> getExpertAvailableSlots({
+    required String advisorId,
+  }) async {
+    try {
+      final response = await APIService.instance.getData(
+        'booking/available-slots',
+        queryParams: {
+          "advisorId": advisorId,
+        },
+        cBaseUrl: _baseUrl,
+        apiName: '$_experts/getExpertAvailableSlots',
+      );
+      final responseData = response;
+      log("Slot data: $responseData");
+      return ApiResponse<Schedule>(
+        model: Schedule.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<List<RecentStream>>> getLiveByAdvisor({
+    required String advisorId,
+  }) async {
+    try {
+      final response = await APIService.instance.getData(
+        'videos/$advisorId',
+        queryParams: {
+          'type': "live",
+        },
+        cBaseUrl: _baseUrl,
+        apiName: '$_experts/getLiveByAdvisor',
+      );
+      final responseData = response["data"];
+      log("Experts live data: $responseData");
+      final List<RecentStream> recentStreams = (responseData as List)
+          .map(
+            (item) => RecentStream.fromJson(
+              item,
+            ),
+          )
+          .toList();
+
+      return ApiResponse<List<RecentStream>>(
+        model: recentStreams,
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<List<RecentStream>>> getShortsByAdvisor({
+    required String advisorId,
+  }) async {
+    try {
+      final response = await APIService.instance.getData(
+        'videos/$advisorId',
+        queryParams: {
+          'type': "shorts",
+        },
+        cBaseUrl: _baseUrl,
+        apiName: '$_experts/getShortsByAdvisor',
+      );
+      final responseData = response["data"];
+      log("Experts shorts data: $responseData");
+      final List<RecentStream> recentStreams = (responseData as List)
+          .map(
+            (item) => RecentStream.fromJson(
+              item,
+            ),
+          )
+          .toList();
+
+      return ApiResponse<List<RecentStream>>(
+        model: recentStreams,
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<PaymentStatusResponse>> getPricing({
+    required String date,
+    required String time,
+  }) async {
+    try {
+      final String? uid = userService.baseUser!.uid;
+      final body = {
+        "date": date,
+        "time": time,
+        "userId": uid,
+      };
+
+      // final response = await APIService.instance.postData(
+      //   'booking',
+      //   body: body,
+      //   cBaseUrl: _baseUrl,
+      //   apiName: '$_booking/submitBooking',
+      // );
+      // final responseData = response;
+      // log("Pricing data: $responseData");
+      return ApiResponse<PaymentStatusResponse>(
+        model: PaymentStatusResponse.fromJson({}),
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+  String formatUpiAppName(String name) {
+    switch (name) {
+      case "Phonepe":
+        return "PHONE_PE";
+      case "Paytm":
+        return "PAYTM";
+      case "Google Pay":
+        return "GOOGLE_PAY";
+      default:
+        return "PHONE_PE";
+    }
+  }
+
+  Future<ApiResponse<PaymentStatusResponse>> submitBooking({
+    required String advisorId,
+    required num amount,
+    required String fromTime,
+    required num duration,
+    required String appuse,
+  }) async {
+    try {
+      final String? uid = userService.baseUser!.uid;
+      final body = {
+        "advisorId": advisorId,
+        "amount": amount,
+        "userId": uid,
+        "fromTime": fromTime,
+        "duration": duration,
+      };
+      final headers = {
+        "appuse": formatUpiAppName(appuse),
+        "paymode": 'UPI_INTENT',
+      };
+
+      final response = await APIService.instance.postData(
+        'booking',
+        body: body,
+        cBaseUrl: _baseUrl,
+        headers: headers,
+        apiName: '$_booking/submitBooking',
+      );
+      final responseData = response;
+      log("Booking data: $responseData");
+      return ApiResponse<PaymentStatusResponse>(
+        model: PaymentStatusResponse.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<PollingStatusResponse>> pollForPayemtStatus(
+    String paymentId,
+  ) async {
+    int pollCount = 1;
+    const pollLimit = 6;
+    const relayDuration = Duration(seconds: 5);
+
+    ApiResponse<PollingStatusResponse> lastResult =
+        await getPollingResponse(paymentId);
+
+    while (pollCount < pollLimit) {
+      final data = lastResult.model?.data;
+
+      // Termination condition for polling:
+      // - Either the request fails completely then break further polling and
+      // propagate error response to further.
+      // - Or request completes with success and the status of payment is
+      // complete.
+      final predicate = lastResult.isSuccess() &&
+              data != null &&
+              data.paymentDetails != null &&
+              data.paymentDetails!.status == BookingPaymentStatus.complete ||
+          !lastResult.isSuccess();
+
+      if (predicate) {
+        return lastResult;
+      }
+
+      // delay between two requests.
+      if (pollCount > 1) {
+        await Future.delayed(
+          relayDuration,
+        );
+      }
+
+      lastResult = await getPollingResponse(paymentId);
+
+      pollCount++;
+    }
+
+    return lastResult;
+  }
+
+  Future<ApiResponse<PollingStatusResponse>> getPollingResponse(
+    String paymentID,
+  ) async {
+    try {
+      final response = await APIService.instance.getData(
+        'payments/$paymentID',
+        cBaseUrl: _baseUrl,
+        apiName: '$_booking/getPollingResponse',
+      );
+      final responseData = response;
+      log("Polling data: $responseData");
+      return ApiResponse<PollingStatusResponse>(
+        model: PollingStatusResponse.fromJson(responseData),
         code: 200,
       );
     } catch (e) {

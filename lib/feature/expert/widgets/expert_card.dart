@@ -70,7 +70,7 @@ class ExpertCard extends StatelessWidget {
                               width: SizeConfig.padding2,
                             ),
                             Text(
-                              expert.experience,
+                              expert.experience.toString(),
                               style: TextStyles.sourceSans.body6,
                             ),
                           ],
@@ -153,7 +153,7 @@ class ExpertCard extends StatelessWidget {
                         SizedBox(width: SizeConfig.padding4),
                         Expanded(
                           child: Text(
-                            expert.expertise.join(', '),
+                            expert.expertise,
                             style: TextStyles.sourceSans.body4.colour(
                               UiConstants.kTextColor6,
                             ),
@@ -174,7 +174,7 @@ class ExpertCard extends StatelessWidget {
                         SizedBox(width: SizeConfig.padding4),
                         Expanded(
                           child: Text(
-                            expert.qualifications.join(', '),
+                            expert.qualifications,
                             style: TextStyles.sourceSans.body4.colour(
                               UiConstants.kTextColor6,
                             ),

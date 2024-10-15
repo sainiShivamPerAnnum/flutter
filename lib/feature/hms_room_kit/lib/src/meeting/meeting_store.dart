@@ -1,4 +1,5 @@
 ///Dart imports
+library;
 
 import 'dart:async';
 import 'dart:convert';
@@ -292,10 +293,8 @@ class MeetingStore extends ChangeNotifier
     ///Here we create the config using tokenData and userName
     if (tokenData != null) {
       joinConfig = HMSConfig(
-          authToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3Nfa2V5IjoiNjZlMTQ2ODYzM2NlNzRhYjliZTkzZGE0Iiwicm9vbV9pZCI6IjY2ZjY4OWUyMGFmY2Q3YzQ5NzNiN2IxNSIsInVzZXJfaWQiOiJ0ZXN0VXNlciIsInJvbGUiOiJndWVzdCIsInR5cGUiOiJhcHAiLCJ2ZXJzaW9uIjoyLCJpYXQiOjE3Mjc0MzM1NDUsIm5iZiI6MTcyNzQzMzU0NSwiZXhwIjoxNzI3NTE5OTQ1LCJqdGkiOiJkYmVlMmZkMS05Zjg2LTRmNjAtOWEyYi1jNjk5YjA4MTJiNjQifQ.KJd2Cy-yjOXcEjbMTcNNhFgC2ILpPHBDRYAvhdjHrSA",
+          authToken: tokenData,
           userName: userName,
-          //todo add image and uid here for hms
-          metaData: jsonEncode({'image': 'https://ik.imagekit.io/9xfwtu0xm/experts/randomuser2.jpg?updatedAt=1726836184236'}),
           // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
           //This is only for 100ms internal testing, endPoint can be safely removed from
           //the HMSConfig for external usage

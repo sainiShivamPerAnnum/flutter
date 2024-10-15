@@ -1,11 +1,18 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/experts/experts_details.dart';
+import 'package:felloapp/core/model/live/live_home.dart';
 import 'package:felloapp/feature/expert/booking_sheet.dart';
 import 'package:felloapp/feature/expertDetails/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/expertDetails/widgets/ratingSheet.dart';
+import 'package:felloapp/feature/live/widgets/live_card.dart';
+import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class ExpertsDetailsView extends StatelessWidget {
   final String advisorID;
@@ -20,32 +27,42 @@ class ExpertsDetailsView extends StatelessWidget {
       create: (_) => ExpertDetailsBloc(
         locator(),
       )..add(LoadExpertsDetails(advisorID)),
-      child: const _ExpertProfilePage(),
+      child: _ExpertProfilePage(
+        advisorID: advisorID,
+      ),
     );
   }
 }
 
 class _ExpertProfilePage extends StatelessWidget {
-  const _ExpertProfilePage();
+  const _ExpertProfilePage({
+    required this.advisorID,
+  });
+  final String advisorID;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ExpertDetailsBloc, ExpertDetailsState>(
       builder: (context, state) {
         if (state is LoadingExpertsDetails) {
-          return const Center(child: CircularProgressIndicator());
+          return const BaseScaffold(
+            showBackgroundGrid: true,
+            body: Center(child: FullScreenLoader()),
+          );
         }
         if (state is ExpertDetailsLoaded) {
           final expertDetails = state.expertDetails;
-
+          final tab = state.currentTab;
+          final recentlive = state.recentLive;
           return DefaultTabController(
             length: 3,
-            child: Scaffold(
+            initialIndex: 0,
+            child: BaseScaffold(
+              showBackgroundGrid: true,
               floatingActionButton: GestureDetector(
                 onTap: () {
-                  BaseUtil.openModalBottomSheet(
-                    isBarrierDismissible: true,
-                    content: BookCallBottomSheet(),
+                  BaseUtil.openBookAdvisorSheet(
+                    advisorId: advisorID,
                   );
                 },
                 child: Container(
@@ -81,15 +98,12 @@ class _ExpertProfilePage extends StatelessWidget {
                   ),
                 ),
               ),
-              backgroundColor: UiConstants.bg,
               appBar: AppBar(
-                backgroundColor: UiConstants.bg,
+                backgroundColor: Colors.transparent,
                 centerTitle: true,
                 title: Text('Profile', style: TextStyles.rajdhaniSB.body1),
-                leading: Icon(
-                  Icons.arrow_back,
+                leading: const BackButton(
                   color: Colors.white,
-                  size: SizeConfig.body1,
                 ),
               ),
               body: SingleChildScrollView(
@@ -106,13 +120,13 @@ class _ExpertProfilePage extends StatelessWidget {
                         radius: SizeConfig.padding35,
                         backgroundImage: NetworkImage(
                           expertDetails!.image,
-                        ), // Load image from the model
+                        ),
                       ),
                       SizedBox(
                         height: SizeConfig.padding20,
                       ),
                       Text(
-                        expertDetails.name, // Display expert's name
+                        expertDetails.name,
                         style: TextStyles.sourceSansSB.body0.colour(
                           UiConstants.kTextColor,
                         ),
@@ -121,8 +135,7 @@ class _ExpertProfilePage extends StatelessWidget {
                         height: SizeConfig.padding6,
                       ),
                       Text(
-                        expertDetails
-                            .description, // Display expert's description
+                        expertDetails.description,
                         style: TextStyles.sourceSansSB.body4.colour(
                           UiConstants.kTextColor.withOpacity(.7),
                         ),
@@ -189,7 +202,9 @@ class _ExpertProfilePage extends StatelessWidget {
                       SizedBox(
                         height: SizeConfig.padding32,
                       ),
-                      const CustomCarousel(),
+                      CustomCarousel(
+                        quickActions: expertDetails.QuickActions,
+                      ),
                       SizedBox(
                         height: SizeConfig.padding48,
                         child: TabBar(
@@ -206,149 +221,178 @@ class _ExpertProfilePage extends StatelessWidget {
                           labelStyle: TextStyles.sourceSansSB.body3,
                           unselectedLabelStyle: TextStyles.sourceSansSB.body3,
                           tabs: const [
-                            Tab(text: "Popular Live"),
                             Tab(text: "About"),
+                            Tab(text: "Shorts"),
+                            Tab(text: "Popular Live"),
                           ],
+                          onTap: (value) {
+                            BlocProvider.of<ExpertDetailsBloc>(context)
+                                .add(TabChanged(value, advisorID));
+                          },
                         ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: SizeConfig.padding18,
-                          ),
-                          Text(
-                            "Licenses",
-                            style: TextStyles.sourceSansSB.body2,
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding18,
-                          ),
-                          for (final license
-                              in expertDetails.licenses) // Display licenses
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: SizeConfig.padding46,
-                                  height: SizeConfig.padding46,
-                                  decoration: BoxDecoration(
-                                    color: UiConstants.greyVarient,
-                                    borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness8,
-                                    ),
-                                  ),
-                                  child: const Center(
-                                    child: Text(
-                                      "SEBI", // You can replace this with license name
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: SizeConfig.padding10,
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        license.name, // Display license name
-                                        style: TextStyles.sourceSansSB.body3,
-                                      ),
-                                      SizedBox(
-                                        height: SizeConfig.padding2,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Issued on ${license.issueDate}", // Display issue date
-                                            style: TextStyles.sourceSansSB.body3
-                                                .colour(
-                                              UiConstants.kTextColor
-                                                  .withOpacity(.7),
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              // Handle the 'View Credentials' tap
-                                            },
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  "View Credentials",
-                                                  style: TextStyles
-                                                      .sourceSans.body4
-                                                      .colour(Colors.white70)
-                                                      .copyWith(
-                                                        decoration:
-                                                            TextDecoration
-                                                                .underline,
-                                                      ),
-                                                ),
-                                                SizedBox(
-                                                  width: SizeConfig.padding4,
-                                                ),
-                                                Icon(
-                                                  Icons.open_in_new,
-                                                  color: Colors.white70,
-                                                  size: SizeConfig.body6,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                      if (tab == 0)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: SizeConfig.padding18,
                             ),
-                          SizedBox(
-                            height: SizeConfig.padding24,
-                          ),
-                          Text(
-                            "Social",
-                            style: TextStyles.sourceSansSB.body2,
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding18,
-                          ),
-                          Row(
-                            children: expertDetails.social.map((social) {
-                              return GestureDetector(
-                                onTap: () {
-                                  // Handle social media tap
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.all(SizeConfig.padding14),
-                                  decoration: BoxDecoration(
-                                    color: UiConstants.greyVarient,
-                                    borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness8,
+                            Text(
+                              "Licenses",
+                              style: TextStyles.sourceSansSB.body2,
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding18,
+                            ),
+                            for (final license in expertDetails.licenses)
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: SizeConfig.padding46,
+                                    height: SizeConfig.padding46,
+                                    margin: EdgeInsets.only(
+                                      bottom: SizeConfig.padding4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: UiConstants.greyVarient,
+                                      borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness8,
+                                      ),
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        "SEBI",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                  child: Icon(
-                                    Icons.safety_check,
-                                    color: UiConstants.kTextColor5,
-                                    size: SizeConfig.body2,
+                                  SizedBox(
+                                    width: SizeConfig.padding10,
                                   ),
-                                ),
-                              );
-                            }).toList(),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          license.name,
+                                          style: TextStyles.sourceSansSB.body3,
+                                        ),
+                                        SizedBox(
+                                          height: SizeConfig.padding2,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "Issued on ${DateFormat('MMMM d, y').format(license.issueDate)}",
+                                              style: TextStyles
+                                                  .sourceSansSB.body3
+                                                  .colour(
+                                                UiConstants.kTextColor
+                                                    .withOpacity(.7),
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                // Handle the 'View Credentials' tap
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "View Credentials",
+                                                    style: TextStyles
+                                                        .sourceSans.body4
+                                                        .colour(Colors.white70)
+                                                        .copyWith(
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .underline,
+                                                        ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: SizeConfig.padding4,
+                                                  ),
+                                                  Icon(
+                                                    Icons.open_in_new,
+                                                    color: Colors.white70,
+                                                    size: SizeConfig.body6,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            SizedBox(
+                              height: SizeConfig.padding24,
+                            ),
+                            Text(
+                              "Social",
+                              style: TextStyles.sourceSansSB.body2,
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding18,
+                            ),
+                            Row(
+                              children: expertDetails.social.map((social) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    // Handle social media tap
+                                  },
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.all(SizeConfig.padding14),
+                                    margin: EdgeInsets.only(
+                                      right: SizeConfig.padding4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: UiConstants.greyVarient,
+                                      borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness8,
+                                      ),
+                                    ),
+                                    child: Icon(
+                                      Icons.safety_check,
+                                      color: UiConstants.kTextColor5,
+                                      size: SizeConfig.body2,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding24,
+                            ),
+                            RatingReviewSection(
+                              ratingInfo: expertDetails.ratingInfo,
+                            ),
+                          ],
+                        )
+                      else if (tab == 2) ...[
+                        for (int i = 0; i < recentlive.length; i++)
+                          LiveCardWidget(
+                            status: 'recent',
+                            title: recentlive[i].title,
+                            subTitle: recentlive[i].subtitle,
+                            author: recentlive[i].author,
+                            category: recentlive[i].categories.join(', '),
+                            bgImage: recentlive[i].thumbnail,
+                            liveCount: recentlive[i].views,
+                            duration: recentlive[i].duration.toString(),
                           ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding24,
-                      ),
-                      const RatingReviewSection(),
+                      ] else
+                        _buildTabOneData(recentlive),
                     ],
                   ),
                 ),
@@ -362,14 +406,91 @@ class _ExpertProfilePage extends StatelessWidget {
   }
 }
 
-class CustomCarousel extends StatefulWidget {
-  const CustomCarousel({super.key});
+Widget _buildTabOneData(List<RecentStream> shortsData) {
+  if (shortsData == null || shortsData.isEmpty) {
+    return const Center(child: ErrorPage());
+  }
 
-  @override
-  _CustomCarouselState createState() => _CustomCarouselState();
+  // Define the height for the GridView
+  final double gridHeight = (shortsData.length / 2).ceil() * 250.0;
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      SizedBox(height: 16),
+      SizedBox(
+        height: gridHeight,
+        child: GridView.builder(
+          physics:
+              const NeverScrollableScrollPhysics(), // Disable scrolling inside GridView
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            childAspectRatio: 0.7,
+          ),
+          itemCount: shortsData.length,
+          itemBuilder: (context, index) {
+            final video = shortsData[index];
+
+            return Stack(
+              children: [
+                // Video Thumbnail
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        video.thumbnail,
+                      ),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+
+                // Overlay with view count at the bottom left
+                Positioned(
+                  bottom: 8,
+                  left: 8,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.play_arrow, color: Colors.white, size: 16),
+                        SizedBox(width: 4),
+                        Text(
+                          '${video.views} views',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    ],
+  );
 }
 
-class _CustomCarouselState extends State<CustomCarousel> {
+class CustomCarousel extends StatefulWidget {
+  const CustomCarousel({required this.quickActions, super.key});
+  final List<QuickAction> quickActions;
+
+  @override
+  CustomCarouselState createState() => CustomCarouselState();
+}
+
+class CustomCarouselState extends State<CustomCarousel> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
 
@@ -386,52 +507,47 @@ class _CustomCarouselState extends State<CustomCarousel> {
                 _currentIndex = index;
               });
             },
-            children: [
-              buildCarouselItem(
-                "ASK VIBHOR!",
-                "Is my mutual fund allocation right?",
+            children: widget.quickActions.map((e) {
+              return buildCarouselItem(
+                e.heading,
+                e.subheading,
+                e.buttonText,
                 onTap: () {
-                  print("Chat tapped!");
+                  print("Chat tapped: ${e.buttonCTA}");
                 },
-              ),
-              buildCarouselItem(
-                "ASK VIBHOR!",
-                "Should I increase my SIP amount?",
-                onTap: () {
-                  print("Chat tapped!");
-                },
-              ),
-              // Add more carousel items here
-            ],
+              );
+            }).toList(),
           ),
         ),
         SizedBox(
           height: SizeConfig.padding12,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(2, (index) {
-            return Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding4,
-                vertical: SizeConfig.padding8,
-              ),
-              width: SizeConfig.padding4,
-              height: SizeConfig.padding4,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: _currentIndex == index ? Colors.white : Colors.grey,
-              ),
-            );
-          }),
-        ),
+        if (widget.quickActions.length > 1)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(widget.quickActions.length, (index) {
+              return Container(
+                margin: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.padding4,
+                  vertical: SizeConfig.padding8,
+                ),
+                width: SizeConfig.padding4,
+                height: SizeConfig.padding4,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _currentIndex == index ? Colors.white : Colors.grey,
+                ),
+              );
+            }),
+          ),
       ],
     );
   }
 
   Widget buildCarouselItem(
     String title,
-    String description, {
+    String description,
+    String btnTxt, {
     required VoidCallback onTap,
   }) {
     return Container(
@@ -480,7 +596,7 @@ class _CustomCarouselState extends State<CustomCarousel> {
               ),
             ),
             child: Text(
-              'Ask on Chat',
+              btnTxt,
               style: TextStyles.sourceSansSB.body4.colour(
                 UiConstants.kTextColor4,
               ),
@@ -493,7 +609,9 @@ class _CustomCarouselState extends State<CustomCarousel> {
 }
 
 class RatingReviewSection extends StatelessWidget {
-  const RatingReviewSection({super.key});
+  final RatingInfo ratingInfo;
+
+  const RatingReviewSection({required this.ratingInfo, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -510,7 +628,7 @@ class RatingReviewSection extends StatelessWidget {
         Row(
           children: [
             Text(
-              '5.0',
+              ratingInfo.overallRating.toStringAsFixed(1),
               style: TextStyles.sourceSansSB.title2,
             ),
             SizedBox(
@@ -523,13 +641,15 @@ class RatingReviewSection extends StatelessWidget {
                   children: List.generate(5, (index) {
                     return Icon(
                       Icons.star_rounded,
-                      color: Colors.amber,
+                      color: index < ratingInfo.overallRating
+                          ? Colors.amber
+                          : Colors.grey,
                       size: SizeConfig.body6,
                     );
                   }),
                 ),
                 Text(
-                  '26 ratings',
+                  '${ratingInfo.ratingCount} ratings',
                   style: TextStyles.sourceSans.body4
                       .colour(UiConstants.kTextColor.withOpacity(.7)),
                 ),
@@ -563,12 +683,18 @@ class RatingReviewSection extends StatelessWidget {
           ],
         ),
         SizedBox(height: SizeConfig.padding32),
-        const ReviewCard(
-          name: 'Devanshu Verma',
-          date: 'March 3, 2023',
-          rating: 5,
-          review:
-              'The call was great and super insightful. He always gives the best advice regarding financial planning.',
+
+        // Render the list of user reviews
+        Column(
+          children: ratingInfo.userRatings.map((userRating) {
+            return ReviewCard(
+              name: userRating.name,
+              date: userRating.date,
+              rating: userRating.rating,
+              review: userRating.review,
+              image: userRating.image,
+            );
+          }).toList(),
         ),
       ],
     );
@@ -580,12 +706,14 @@ class ReviewCard extends StatelessWidget {
   final String date;
   final int rating;
   final String review;
+  final String image;
 
   const ReviewCard({
     required this.name,
     required this.date,
     required this.rating,
     required this.review,
+    required this.image,
     super.key,
   });
 
@@ -597,9 +725,8 @@ class ReviewCard extends StatelessWidget {
         Row(
           children: [
             CircleAvatar(
-              backgroundImage: const AssetImage(
-                'assets/avatar.png',
-              ), // Add a profile picture here
+              backgroundImage:
+                  NetworkImage(image), // Use the image from UserRating
               radius: SizeConfig.padding16,
             ),
             SizedBox(width: SizeConfig.padding8),

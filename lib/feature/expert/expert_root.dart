@@ -1,13 +1,15 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/expert/widgets/expert_card.dart';
+import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/styles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inview_notifier_list/inview_notifier_list.dart';
@@ -38,12 +40,8 @@ class _ExpertHome extends StatefulWidget {
 class __ExpertHomeState extends State<_ExpertHome>
     with SingleTickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
-
   final double tabBarHeight = 50.0;
-
-  GlobalKey personalFinanceKey = GlobalKey();
-  GlobalKey stockMarketKey = GlobalKey();
-  GlobalKey mutualFundsKey = GlobalKey();
+  Map<String, GlobalKey> sectionKeys = {};
 
   void _scrollToSection(GlobalKey key) {
     Scrollable.ensureVisible(key.currentContext!);
@@ -60,11 +58,18 @@ class __ExpertHomeState extends State<_ExpertHome>
         } else if (state is ExpertHomeLoaded) {
           final expertsData = state.expertsHome;
 
-          if (expertsData == null) {
+          if (expertsData == null || expertsData.list.isEmpty) {
             return const Center(
               child: ErrorPage(),
             );
           }
+          sectionKeys = {
+            for (final section in expertsData.list)
+              if (!section.toLowerCase().contains('top')) section: GlobalKey(),
+          };
+          final topSectionKey = expertsData.list.firstWhere(
+            (section) => section.toLowerCase().contains('top'),
+          );
 
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
@@ -101,85 +106,27 @@ class __ExpertHomeState extends State<_ExpertHome>
                     ),
                   ),
                 ),
-                _buildExpertList(expertsData.our_top_experts),
+                _buildExpertList(expertsData.values[topSectionKey] ?? []),
                 SliverPersistentHeader(
                   pinned: true,
                   delegate: _StickyHeaderDelegate(
+                    sections: expertsData.list,
                     currentSection: state.currentSection,
                     scrollToSection: _scrollToSection,
-                    stockMarketKey: stockMarketKey,
-                    personalFinanceKey: personalFinanceKey,
-                    mutualFundsKey: mutualFundsKey,
+                    sectionKeys: sectionKeys,
                   ),
                 ),
-                SliverToBoxAdapter(
-                  key: personalFinanceKey,
-                  child: InViewNotifierWidget(
-                    id: 'Personal Finance',
-                    builder: (context, isInView, child) {
-                      if (isInView) {
-                        BlocProvider.of<ExpertBloc>(context)
-                            .add(const SectionChanged('Personal Finance'));
-                      }
-                      return Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: SizeConfig.padding22,
+                ...expertsData.list
+                    .where((section) => !section.toLowerCase().contains('top'))
+                    .expand(
+                      (section) => [
+                        _buildSectionContent(section),
+                        _buildExpertList(
+                          expertsData.values[section] ?? [],
                         ),
-                        child: Text(
-                          'Personal Finance',
-                          style: TextStyles.sourceSansSB.body1,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                _buildExpertList(
-                  expertsData.personal_finace,
-                ),
-                SliverToBoxAdapter(
-                  key: stockMarketKey,
-                  child: InViewNotifierWidget(
-                    id: 'Stock Market',
-                    builder: (context, isInView, child) {
-                      if (isInView) {
-                        BlocProvider.of<ExpertBloc>(context)
-                            .add(const SectionChanged('Stock Market'));
-                      }
-                      return Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: SizeConfig.padding22,
-                        ),
-                        child: Text(
-                          'Stock Market',
-                          style: TextStyles.sourceSansSB.body1,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                _buildExpertList(expertsData.stock_market),
-                SliverToBoxAdapter(
-                  key: mutualFundsKey,
-                  child: InViewNotifierWidget(
-                    id: 'Mutual Funds',
-                    builder: (context, isInView, child) {
-                      if (isInView) {
-                        BlocProvider.of<ExpertBloc>(context)
-                            .add(const SectionChanged('Mutual Funds'));
-                      }
-                      return Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: SizeConfig.padding22,
-                        ),
-                        child: Text(
-                          'Mutual Funds',
-                          style: TextStyles.sourceSansSB.body1,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                _buildExpertList(expertsData.mutual_funds),
+                      ],
+                    )
+                    .toList(),
               ],
             ),
           );
@@ -189,6 +136,29 @@ class __ExpertHomeState extends State<_ExpertHome>
           );
         }
       },
+    );
+  }
+
+  Widget _buildSectionContent(String section) {
+    return SliverToBoxAdapter(
+      key: sectionKeys[section],
+      child: InViewNotifierWidget(
+        id: section,
+        builder: (context, isInView, child) {
+          if (isInView) {
+            BlocProvider.of<ExpertBloc>(context).add(SectionChanged(section));
+          }
+          return Container(
+            padding: EdgeInsets.symmetric(
+              vertical: SizeConfig.padding22,
+            ),
+            child: Text(
+              section,
+              style: TextStyles.sourceSansSB.body1,
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -202,7 +172,15 @@ class __ExpertHomeState extends State<_ExpertHome>
             child: ExpertCard(
               expert: expert,
               onBookCall: () {},
-              onTap: (){},
+              onTap: () {
+                AppState.delegate!.appState.currentAction = PageAction(
+                  page: ExpertDetailsPageConfig,
+                  state: PageState.addWidget,
+                  widget: ExpertsDetailsView(
+                    advisorID: expert.advisorId,
+                  ),
+                );
+              },
             ),
           );
         },
@@ -214,16 +192,14 @@ class __ExpertHomeState extends State<_ExpertHome>
 
 class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
   final String currentSection;
-  final GlobalKey personalFinanceKey;
-  final GlobalKey stockMarketKey;
-  final GlobalKey mutualFundsKey;
+  final List<String> sections;
+  final Map<String, GlobalKey> sectionKeys;
   final Function(GlobalKey) scrollToSection;
 
   _StickyHeaderDelegate({
     required this.currentSection,
-    required this.personalFinanceKey,
-    required this.stockMarketKey,
-    required this.mutualFundsKey,
+    required this.sections,
+    required this.sectionKeys,
     required this.scrollToSection,
   });
 
@@ -237,23 +213,15 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
       color: UiConstants.bg,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          buildTabItem(
-            'Personal Finance',
-            'Personal Finance',
-            () => scrollToSection(personalFinanceKey),
-          ),
-          buildTabItem(
-            'Stock Market',
-            'Stock Market',
-            () => scrollToSection(stockMarketKey),
-          ),
-          buildTabItem(
-            'Mutual Funds',
-            'Mutual Funds',
-            () => scrollToSection(mutualFundsKey),
-          ),
-        ],
+        children: sections
+            .where((section) => !section.toLowerCase().contains('top'))
+            .map((section) {
+          return buildTabItem(
+            section,
+            sectionKeys[section],
+            () => scrollToSection(sectionKeys[section]!),
+          );
+        }).toList(),
       ),
     );
   }
@@ -271,7 +239,7 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
 
   Widget buildTabItem(
     String title,
-    String key,
+    GlobalKey? key,
     VoidCallback onSectionTap,
   ) {
     bool isSelected = currentSection == title;

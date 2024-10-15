@@ -8,18 +8,12 @@ const _deserializable = JsonSerializable(
 
 @_deserializable
 class ExpertsHome {
-  final List<String> sections;
-  final List<Expert> our_top_experts;
-  final List<Expert> stock_market;
-  final List<Expert> mutual_funds;
-  final List<Expert> personal_finace;
+  List<String> list; 
+  Map<String, List<Expert>> values; 
 
   ExpertsHome({
-    required this.sections,
-    required this.our_top_experts,
-    required this.stock_market,
-    required this.mutual_funds,
-    required this.personal_finace,
+    required this.list,
+    required this.values,
   });
 
   factory ExpertsHome.fromJson(Map<String, dynamic> json) =>
@@ -29,13 +23,14 @@ class ExpertsHome {
 @_deserializable
 class Expert {
   final String name;
-  final String experience;
-  final double rating;
-  final List<String> expertise;
-  final List<String> qualifications;
+  final dynamic experience;
+  final num rating;
+  final String expertise;
+  final String qualifications;
+  final String rate;
   final String image;
   final bool isFree;
-  final String advisorID;
+  final String advisorId;
 
   Expert({
     required this.name,
@@ -43,9 +38,10 @@ class Expert {
     required this.rating,
     required this.expertise,
     required this.qualifications,
+    required this.rate,
     required this.image,
     required this.isFree,
-    required this.advisorID,
+    required this.advisorId,
   });
 
   factory Expert.fromJson(Map<String, dynamic> json) => _$ExpertFromJson(json);

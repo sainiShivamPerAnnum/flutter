@@ -226,6 +226,8 @@ class APIService implements API {
     switch (response?.statusCode) {
       case 200:
         return responseJson;
+      case 201:
+        return responseJson;
       case 400:
         throw BadRequestException(responseJson['message']);
       case 403:

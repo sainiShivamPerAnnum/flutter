@@ -58,22 +58,24 @@ class SectionContent {
 
 @_deserializable
 class LiveStream {
-  final String category;
+  final List<String> categories;
   final String title;
   final String subtitle;
   final String author;
   final String thumbnail;
   final int liveCount;
-  final String url;
+  final String advisorCode;
+  final String viewerCode;
 
   LiveStream({
-    required this.category,
+    required this.categories,
     required this.title,
     required this.subtitle,
     required this.author,
     required this.thumbnail,
     required this.liveCount,
-    required this.url,
+    required this.advisorCode,
+    required this.viewerCode,
   });
 
   factory LiveStream.fromJson(Map<String, dynamic> json) =>
@@ -82,22 +84,24 @@ class LiveStream {
 
 @_deserializable
 class UpcomingStream {
-  final String category;
+  final List<String> categories;
   final String title;
   final String subtitle;
   final String author;
   final String thumbnail;
   final String startTime;
-  final String url;
+  final String advisorCode;
+  final String viewerCode;
 
   UpcomingStream({
-    required this.category,
+    required this.categories,
     required this.title,
     required this.subtitle,
     required this.author,
     required this.thumbnail,
     required this.startTime,
-    required this.url,
+    required this.advisorCode,
+    required this.viewerCode,
   });
 
   factory UpcomingStream.fromJson(Map<String, dynamic> json) =>
@@ -106,23 +110,23 @@ class UpcomingStream {
 
 @_deserializable
 class RecentStream {
-  final String category;
+  final List<String> categories;
   final String title;
   final String subtitle;
   final String author;
   final String thumbnail;
   final int duration;
-  final String url;
+  // final String url;
   final int views;
 
   RecentStream({
-    required this.category,
+    required this.categories,
     required this.title,
     required this.subtitle,
     required this.author,
     required this.thumbnail,
     required this.duration,
-    required this.url,
+    // required this.url,
     required this.views,
   });
 

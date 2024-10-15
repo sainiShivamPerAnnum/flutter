@@ -1,4 +1,5 @@
 import 'package:design_system/design_system.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -10,22 +11,15 @@ class FelloBalanceScreen extends StatelessWidget {
     return AppScaffold(
       showBackgroundGrid: true,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: Text(
-          'Fello Balance',
-          style: TextStyles.rajdhaniSB.body1.colour(UiConstants.kTextColor),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: UiConstants.kTextColor,
+          backgroundColor: Colors.transparent,
+          title: Text(
+            'Fello Balance',
+            style: TextStyles.rajdhaniSB.body1.colour(UiConstants.kTextColor),
           ),
-          onPressed: () {
-            // Handle back navigation
-          },
-        ),
-      ),
+          centerTitle: true,
+          leading: const BackButton(
+            color: UiConstants.kTextColor,
+          )),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,7 +80,7 @@ class FelloBalanceScreen extends StatelessWidget {
             ),
             SizedBox(height: SizeConfig.padding20),
             buildInvestmentSection(
-              iconData: Icons.star,
+              iconData: Assets.floAsset,
               title: "Fello Flo",
               balance: "₹502",
               change: "₹2",
@@ -97,7 +91,7 @@ class FelloBalanceScreen extends StatelessWidget {
               },
             ),
             buildInvestmentSection(
-              iconData: Icons.circle,
+              iconData: Assets.goldAsset,
               title: "Digital Gold",
               balance: "₹502",
               change: "₹2",
@@ -108,7 +102,7 @@ class FelloBalanceScreen extends StatelessWidget {
               },
             ),
             buildInvestmentSection(
-              iconData: Icons.card_giftcard,
+              iconData: null,
               title: "Fello Rewards",
               balance: "₹502",
               change: "₹2",
@@ -128,7 +122,7 @@ class FelloBalanceScreen extends StatelessWidget {
   }
 
   Widget buildInvestmentSection({
-    required IconData iconData,
+    required String? iconData,
     required String title,
     required String balance,
     required String change,
@@ -153,12 +147,14 @@ class FelloBalanceScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(
-                        iconData,
-                        color: Colors.white,
-                        size: SizeConfig.body0,
-                      ), // Replace with Image if needed
-                      SizedBox(width: SizeConfig.padding10),
+                      if (iconData != null)
+                        AppImage(
+                          iconData,
+                          height: SizeConfig.padding30,
+                          fit: BoxFit.fill,
+                        ),
+                      if (iconData != null)
+                        SizedBox(width: SizeConfig.padding10),
                       Text(
                         title,
                         style: TextStyles.sourceSansSB.body1,

@@ -10,7 +10,7 @@ class LiveRepository extends BaseRepo {
   static const _live = 'live';
 
   final _baseUrl = FlavorConfig.isDevelopment()
-      ? 'https://d65113af-eecb-4123-ba2b-16cd3f277974.mock.pstmn.io/liveHome'
+      ? 'https://advisors.fello-dev.net/'
       : 'https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod';
 
   Future<ApiResponse<LiveHome>> getLiveHomeData() async {
@@ -18,12 +18,11 @@ class LiveRepository extends BaseRepo {
       final String? uid = userService.baseUser!.uid;
 
       final response = await APIService.instance.getData(
-        '',
+        'events/home',
         cBaseUrl: _baseUrl,
         apiName: '$_live/getLiveHomeData',
       );
-      // final responseData = response["data"];
-      final responseData = response;
+      final responseData = response["data"];
       log("Live data: $responseData");
       return ApiResponse<LiveHome>(
         model: LiveHome.fromJson(responseData),
