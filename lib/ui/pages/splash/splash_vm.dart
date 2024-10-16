@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
@@ -100,8 +98,7 @@ class LauncherViewModel extends BaseViewModel {
       //Initialize every time
       await _getterRepo.setUpAppConfigs();
       await userService.init();
-      // Show tracking authorization dialog and ask for permission
-      AppTrackingTransparency.requestTrackingAuthorization();
+
       //Initialize only if user is onboarded
       if (userService.isUserOnboarded) {
         await Future.wait([
