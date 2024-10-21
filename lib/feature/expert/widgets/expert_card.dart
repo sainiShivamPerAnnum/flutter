@@ -16,7 +16,7 @@ class ExpertCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String price = expert.isFree ? 'Free' : '₹${expert.rating}/min';
+    String price = '₹${expert.rating}/min';
 
     return GestureDetector(
       onTap: onTap,
@@ -70,7 +70,7 @@ class ExpertCard extends StatelessWidget {
                               width: SizeConfig.padding2,
                             ),
                             Text(
-                              expert.experience.toString(),
+                              " ${expert.experience} Years",
                               style: TextStyles.sourceSans.body6,
                             ),
                           ],
@@ -141,7 +141,7 @@ class ExpertCard extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: SizeConfig.padding4),
-      
+
                     // Expertise List
                     Row(
                       children: [
@@ -157,12 +157,14 @@ class ExpertCard extends StatelessWidget {
                             style: TextStyles.sourceSans.body4.colour(
                               UiConstants.kTextColor6,
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
                     ),
                     SizedBox(height: SizeConfig.padding4),
-      
+
                     // Qualifications List
                     Row(
                       children: [
@@ -178,6 +180,8 @@ class ExpertCard extends StatelessWidget {
                             style: TextStyles.sourceSans.body4.colour(
                               UiConstants.kTextColor6,
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
@@ -187,16 +191,40 @@ class ExpertCard extends StatelessWidget {
                       color: UiConstants.grey6,
                     ),
                     SizedBox(height: SizeConfig.padding8),
-      
+
                     // Price and Book Button
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          price,
-                          style: TextStyles.sourceSansSB.body3.colour(
-                            UiConstants.kTextColor,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              price,
+                              style: TextStyles.sourceSansSB.body3
+                                  .colour(
+                                    UiConstants.kTextColor,
+                                  )
+                                  .copyWith(
+                                    decoration: expert.isFree
+                                        ? TextDecoration.lineThrough
+                                        : TextDecoration.none,
+                                      decorationColor: UiConstants.kTextColor,
+                                  ),
+                            ),
+                            if (expert.isFree)
+                              SizedBox(
+                                width: SizeConfig.padding4,
+                              ),
+                            if (expert.isFree)
+                              Text(
+                                "Free",
+                                style: TextStyles.sourceSansSB.body3
+                                    .colour(
+                                      UiConstants.kTabBorderColor,
+                                    )
+                                    .copyWith(),
+                              ),
+                          ],
                         ),
                         GestureDetector(
                           onTap: onBookCall,

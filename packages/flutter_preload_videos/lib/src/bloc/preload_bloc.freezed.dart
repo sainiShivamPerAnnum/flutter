@@ -22,6 +22,8 @@ mixin _$PreloadEvent {
     required TResult Function() setLoading,
     required TResult Function(List<VideoData> videos) updateUrls,
     required TResult Function(int index) onVideoIndexChanged,
+    required TResult Function(int index) pauseVideoAtIndex,
+    required TResult Function(int index) playVideoAtIndex,
     required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
         updateConstants,
   }) =>
@@ -32,6 +34,8 @@ mixin _$PreloadEvent {
     TResult? Function()? setLoading,
     TResult? Function(List<VideoData> videos)? updateUrls,
     TResult? Function(int index)? onVideoIndexChanged,
+    TResult? Function(int index)? pauseVideoAtIndex,
+    TResult? Function(int index)? playVideoAtIndex,
     TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
   }) =>
@@ -42,6 +46,8 @@ mixin _$PreloadEvent {
     TResult Function()? setLoading,
     TResult Function(List<VideoData> videos)? updateUrls,
     TResult Function(int index)? onVideoIndexChanged,
+    TResult Function(int index)? pauseVideoAtIndex,
+    TResult Function(int index)? playVideoAtIndex,
     TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
     required TResult orElse(),
@@ -53,6 +59,8 @@ mixin _$PreloadEvent {
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
   }) =>
       throw _privateConstructorUsedError;
@@ -62,6 +70,8 @@ mixin _$PreloadEvent {
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
   }) =>
       throw _privateConstructorUsedError;
@@ -71,6 +81,8 @@ mixin _$PreloadEvent {
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     required TResult orElse(),
   }) =>
@@ -137,6 +149,8 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     required TResult Function() setLoading,
     required TResult Function(List<VideoData> videos) updateUrls,
     required TResult Function(int index) onVideoIndexChanged,
+    required TResult Function(int index) pauseVideoAtIndex,
+    required TResult Function(int index) playVideoAtIndex,
     required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
         updateConstants,
   }) {
@@ -150,6 +164,8 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult? Function()? setLoading,
     TResult? Function(List<VideoData> videos)? updateUrls,
     TResult? Function(int index)? onVideoIndexChanged,
+    TResult? Function(int index)? pauseVideoAtIndex,
+    TResult? Function(int index)? playVideoAtIndex,
     TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
   }) {
@@ -163,6 +179,8 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult Function()? setLoading,
     TResult Function(List<VideoData> videos)? updateUrls,
     TResult Function(int index)? onVideoIndexChanged,
+    TResult Function(int index)? pauseVideoAtIndex,
+    TResult Function(int index)? playVideoAtIndex,
     TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
     required TResult orElse(),
@@ -180,6 +198,8 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
   }) {
     return getVideosFromApi(this);
@@ -192,6 +212,8 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
   }) {
     return getVideosFromApi?.call(this);
@@ -204,6 +226,8 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     required TResult orElse(),
   }) {
@@ -260,6 +284,8 @@ class _$SetLoadingImpl implements _SetLoading {
     required TResult Function() setLoading,
     required TResult Function(List<VideoData> videos) updateUrls,
     required TResult Function(int index) onVideoIndexChanged,
+    required TResult Function(int index) pauseVideoAtIndex,
+    required TResult Function(int index) playVideoAtIndex,
     required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
         updateConstants,
   }) {
@@ -273,6 +299,8 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult? Function()? setLoading,
     TResult? Function(List<VideoData> videos)? updateUrls,
     TResult? Function(int index)? onVideoIndexChanged,
+    TResult? Function(int index)? pauseVideoAtIndex,
+    TResult? Function(int index)? playVideoAtIndex,
     TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
   }) {
@@ -286,6 +314,8 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult Function()? setLoading,
     TResult Function(List<VideoData> videos)? updateUrls,
     TResult Function(int index)? onVideoIndexChanged,
+    TResult Function(int index)? pauseVideoAtIndex,
+    TResult Function(int index)? playVideoAtIndex,
     TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
     required TResult orElse(),
@@ -303,6 +333,8 @@ class _$SetLoadingImpl implements _SetLoading {
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
   }) {
     return setLoading(this);
@@ -315,6 +347,8 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
   }) {
     return setLoading?.call(this);
@@ -327,6 +361,8 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     required TResult orElse(),
   }) {
@@ -415,6 +451,8 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     required TResult Function() setLoading,
     required TResult Function(List<VideoData> videos) updateUrls,
     required TResult Function(int index) onVideoIndexChanged,
+    required TResult Function(int index) pauseVideoAtIndex,
+    required TResult Function(int index) playVideoAtIndex,
     required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
         updateConstants,
   }) {
@@ -428,6 +466,8 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult? Function()? setLoading,
     TResult? Function(List<VideoData> videos)? updateUrls,
     TResult? Function(int index)? onVideoIndexChanged,
+    TResult? Function(int index)? pauseVideoAtIndex,
+    TResult? Function(int index)? playVideoAtIndex,
     TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
   }) {
@@ -441,6 +481,8 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult Function()? setLoading,
     TResult Function(List<VideoData> videos)? updateUrls,
     TResult Function(int index)? onVideoIndexChanged,
+    TResult Function(int index)? pauseVideoAtIndex,
+    TResult Function(int index)? playVideoAtIndex,
     TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
     required TResult orElse(),
@@ -458,6 +500,8 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
   }) {
     return updateUrls(this);
@@ -470,6 +514,8 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
   }) {
     return updateUrls?.call(this);
@@ -482,6 +528,8 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     required TResult orElse(),
   }) {
@@ -570,6 +618,8 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     required TResult Function() setLoading,
     required TResult Function(List<VideoData> videos) updateUrls,
     required TResult Function(int index) onVideoIndexChanged,
+    required TResult Function(int index) pauseVideoAtIndex,
+    required TResult Function(int index) playVideoAtIndex,
     required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
         updateConstants,
   }) {
@@ -583,6 +633,8 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult? Function()? setLoading,
     TResult? Function(List<VideoData> videos)? updateUrls,
     TResult? Function(int index)? onVideoIndexChanged,
+    TResult? Function(int index)? pauseVideoAtIndex,
+    TResult? Function(int index)? playVideoAtIndex,
     TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
   }) {
@@ -596,6 +648,8 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult Function()? setLoading,
     TResult Function(List<VideoData> videos)? updateUrls,
     TResult Function(int index)? onVideoIndexChanged,
+    TResult Function(int index)? pauseVideoAtIndex,
+    TResult Function(int index)? playVideoAtIndex,
     TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
     required TResult orElse(),
@@ -613,6 +667,8 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
   }) {
     return onVideoIndexChanged(this);
@@ -625,6 +681,8 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
   }) {
     return onVideoIndexChanged?.call(this);
@@ -637,6 +695,8 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     required TResult orElse(),
   }) {
@@ -654,6 +714,340 @@ abstract class _OnVideoIndexChanged implements PreloadEvent {
   int get index;
   @JsonKey(ignore: true)
   _$$OnVideoIndexChangedImplCopyWith<_$OnVideoIndexChangedImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$PauseVideoAtIndexImplCopyWith<$Res> {
+  factory _$$PauseVideoAtIndexImplCopyWith(_$PauseVideoAtIndexImpl value,
+          $Res Function(_$PauseVideoAtIndexImpl) then) =
+      __$$PauseVideoAtIndexImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int index});
+}
+
+/// @nodoc
+class __$$PauseVideoAtIndexImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$PauseVideoAtIndexImpl>
+    implements _$$PauseVideoAtIndexImplCopyWith<$Res> {
+  __$$PauseVideoAtIndexImplCopyWithImpl(_$PauseVideoAtIndexImpl _value,
+      $Res Function(_$PauseVideoAtIndexImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? index = null,
+  }) {
+    return _then(_$PauseVideoAtIndexImpl(
+      null == index
+          ? _value.index
+          : index // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
+  const _$PauseVideoAtIndexImpl(this.index);
+
+  @override
+  final int index;
+
+  @override
+  String toString() {
+    return 'PreloadEvent.pauseVideoAtIndex(index: $index)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PauseVideoAtIndexImpl &&
+            (identical(other.index, index) || other.index == index));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, index);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PauseVideoAtIndexImplCopyWith<_$PauseVideoAtIndexImpl> get copyWith =>
+      __$$PauseVideoAtIndexImplCopyWithImpl<_$PauseVideoAtIndexImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() getVideosFromApi,
+    required TResult Function() setLoading,
+    required TResult Function(List<VideoData> videos) updateUrls,
+    required TResult Function(int index) onVideoIndexChanged,
+    required TResult Function(int index) pauseVideoAtIndex,
+    required TResult Function(int index) playVideoAtIndex,
+    required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
+        updateConstants,
+  }) {
+    return pauseVideoAtIndex(index);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? getVideosFromApi,
+    TResult? Function()? setLoading,
+    TResult? Function(List<VideoData> videos)? updateUrls,
+    TResult? Function(int index)? onVideoIndexChanged,
+    TResult? Function(int index)? pauseVideoAtIndex,
+    TResult? Function(int index)? playVideoAtIndex,
+    TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
+        updateConstants,
+  }) {
+    return pauseVideoAtIndex?.call(index);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? getVideosFromApi,
+    TResult Function()? setLoading,
+    TResult Function(List<VideoData> videos)? updateUrls,
+    TResult Function(int index)? onVideoIndexChanged,
+    TResult Function(int index)? pauseVideoAtIndex,
+    TResult Function(int index)? playVideoAtIndex,
+    TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
+        updateConstants,
+    required TResult orElse(),
+  }) {
+    if (pauseVideoAtIndex != null) {
+      return pauseVideoAtIndex(index);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_GetVideosFromApi value) getVideosFromApi,
+    required TResult Function(_SetLoading value) setLoading,
+    required TResult Function(_UpdateUrls value) updateUrls,
+    required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateConstants value) updateConstants,
+  }) {
+    return pauseVideoAtIndex(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult? Function(_SetLoading value)? setLoading,
+    TResult? Function(_UpdateUrls value)? updateUrls,
+    TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateConstants value)? updateConstants,
+  }) {
+    return pauseVideoAtIndex?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult Function(_SetLoading value)? setLoading,
+    TResult Function(_UpdateUrls value)? updateUrls,
+    TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateConstants value)? updateConstants,
+    required TResult orElse(),
+  }) {
+    if (pauseVideoAtIndex != null) {
+      return pauseVideoAtIndex(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _PauseVideoAtIndex implements PreloadEvent {
+  const factory _PauseVideoAtIndex(final int index) = _$PauseVideoAtIndexImpl;
+
+  int get index;
+  @JsonKey(ignore: true)
+  _$$PauseVideoAtIndexImplCopyWith<_$PauseVideoAtIndexImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$PlayVideoAtIndexImplCopyWith<$Res> {
+  factory _$$PlayVideoAtIndexImplCopyWith(_$PlayVideoAtIndexImpl value,
+          $Res Function(_$PlayVideoAtIndexImpl) then) =
+      __$$PlayVideoAtIndexImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int index});
+}
+
+/// @nodoc
+class __$$PlayVideoAtIndexImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$PlayVideoAtIndexImpl>
+    implements _$$PlayVideoAtIndexImplCopyWith<$Res> {
+  __$$PlayVideoAtIndexImplCopyWithImpl(_$PlayVideoAtIndexImpl _value,
+      $Res Function(_$PlayVideoAtIndexImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? index = null,
+  }) {
+    return _then(_$PlayVideoAtIndexImpl(
+      null == index
+          ? _value.index
+          : index // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
+  const _$PlayVideoAtIndexImpl(this.index);
+
+  @override
+  final int index;
+
+  @override
+  String toString() {
+    return 'PreloadEvent.playVideoAtIndex(index: $index)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PlayVideoAtIndexImpl &&
+            (identical(other.index, index) || other.index == index));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, index);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PlayVideoAtIndexImplCopyWith<_$PlayVideoAtIndexImpl> get copyWith =>
+      __$$PlayVideoAtIndexImplCopyWithImpl<_$PlayVideoAtIndexImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() getVideosFromApi,
+    required TResult Function() setLoading,
+    required TResult Function(List<VideoData> videos) updateUrls,
+    required TResult Function(int index) onVideoIndexChanged,
+    required TResult Function(int index) pauseVideoAtIndex,
+    required TResult Function(int index) playVideoAtIndex,
+    required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
+        updateConstants,
+  }) {
+    return playVideoAtIndex(index);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? getVideosFromApi,
+    TResult? Function()? setLoading,
+    TResult? Function(List<VideoData> videos)? updateUrls,
+    TResult? Function(int index)? onVideoIndexChanged,
+    TResult? Function(int index)? pauseVideoAtIndex,
+    TResult? Function(int index)? playVideoAtIndex,
+    TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
+        updateConstants,
+  }) {
+    return playVideoAtIndex?.call(index);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? getVideosFromApi,
+    TResult Function()? setLoading,
+    TResult Function(List<VideoData> videos)? updateUrls,
+    TResult Function(int index)? onVideoIndexChanged,
+    TResult Function(int index)? pauseVideoAtIndex,
+    TResult Function(int index)? playVideoAtIndex,
+    TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
+        updateConstants,
+    required TResult orElse(),
+  }) {
+    if (playVideoAtIndex != null) {
+      return playVideoAtIndex(index);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_GetVideosFromApi value) getVideosFromApi,
+    required TResult Function(_SetLoading value) setLoading,
+    required TResult Function(_UpdateUrls value) updateUrls,
+    required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateConstants value) updateConstants,
+  }) {
+    return playVideoAtIndex(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult? Function(_SetLoading value)? setLoading,
+    TResult? Function(_UpdateUrls value)? updateUrls,
+    TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateConstants value)? updateConstants,
+  }) {
+    return playVideoAtIndex?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult Function(_SetLoading value)? setLoading,
+    TResult Function(_UpdateUrls value)? updateUrls,
+    TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateConstants value)? updateConstants,
+    required TResult orElse(),
+  }) {
+    if (playVideoAtIndex != null) {
+      return playVideoAtIndex(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _PlayVideoAtIndex implements PreloadEvent {
+  const factory _PlayVideoAtIndex(final int index) = _$PlayVideoAtIndexImpl;
+
+  int get index;
+  @JsonKey(ignore: true)
+  _$$PlayVideoAtIndexImplCopyWith<_$PlayVideoAtIndexImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -746,6 +1140,8 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     required TResult Function() setLoading,
     required TResult Function(List<VideoData> videos) updateUrls,
     required TResult Function(int index) onVideoIndexChanged,
+    required TResult Function(int index) pauseVideoAtIndex,
+    required TResult Function(int index) playVideoAtIndex,
     required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
         updateConstants,
   }) {
@@ -759,6 +1155,8 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult? Function()? setLoading,
     TResult? Function(List<VideoData> videos)? updateUrls,
     TResult? Function(int index)? onVideoIndexChanged,
+    TResult? Function(int index)? pauseVideoAtIndex,
+    TResult? Function(int index)? playVideoAtIndex,
     TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
   }) {
@@ -772,6 +1170,8 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult Function()? setLoading,
     TResult Function(List<VideoData> videos)? updateUrls,
     TResult Function(int index)? onVideoIndexChanged,
+    TResult Function(int index)? pauseVideoAtIndex,
+    TResult Function(int index)? playVideoAtIndex,
     TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
         updateConstants,
     required TResult orElse(),
@@ -789,6 +1189,8 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
   }) {
     return updateConstants(this);
@@ -801,6 +1203,8 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
   }) {
     return updateConstants?.call(this);
@@ -813,6 +1217,8 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     required TResult orElse(),
   }) {

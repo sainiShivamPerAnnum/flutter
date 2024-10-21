@@ -8,6 +8,8 @@ class PreloadEvent with _$PreloadEvent {
   const factory PreloadEvent.updateUrls(List<VideoData> videos) = _UpdateUrls;
   const factory PreloadEvent.onVideoIndexChanged(int index) =
       _OnVideoIndexChanged;
+  const factory PreloadEvent.pauseVideoAtIndex(int index) = _PauseVideoAtIndex;
+  const factory PreloadEvent.playVideoAtIndex(int index) = _PlayVideoAtIndex;
   const factory PreloadEvent.updateConstants({
     int? preloadLimit,
     int? nextLimit,

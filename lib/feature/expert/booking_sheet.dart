@@ -4,6 +4,7 @@ import 'package:felloapp/core/model/bookings/new_booking.dart';
 import 'package:felloapp/feature/expert/bloc/booking_bloc.dart';
 import 'package:felloapp/feature/expert/payment_sheet.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,9 @@ class BookCallSheetView extends StatelessWidget {
 }
 
 class _BookCallBottomSheet extends StatefulWidget {
-  const _BookCallBottomSheet({required this.advisorId,});
+  const _BookCallBottomSheet({
+    required this.advisorId,
+  });
   final String advisorId;
 
   @override
@@ -46,9 +49,12 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
     return BlocBuilder<BookingBloc, BookingState>(
       builder: (context, state) {
         if (state is LoadingBookingsData) {
-          return const Center(child: CircularProgressIndicator());
+          return const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [FullScreenLoader()],
+          );
         } else if (state is BookingsLoaded) {
-          return _buildContent(context, state.schedule,widget.advisorId);
+          return _buildContent(context, state.schedule, widget.advisorId);
         } else if (state is PricingData) {
           return _buildPaymentSummary(context, state);
         } else {
@@ -58,7 +64,8 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
     );
   }
 
-  Widget _buildContent(BuildContext context, Schedule? schedule,String advisorId) {
+  Widget _buildContent(
+      BuildContext context, Schedule? schedule, String advisorId,) {
     final state = context.read<BookingBloc>().state;
     final selectedDate = state is BookingsLoaded ? state.selectedDate : null;
     final selectedTime = state is BookingsLoaded ? state.selectedTime : null;

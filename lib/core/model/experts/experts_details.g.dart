@@ -56,9 +56,10 @@ RatingInfo _$RatingInfoFromJson(Map<String, dynamic> json) => RatingInfo(
     );
 
 UserRating _$UserRatingFromJson(Map<String, dynamic> json) => UserRating(
-      name: json['name'] as String,
-      image: json['image'] as String,
-      date: json['date'] as String,
-      rating: json['rating'] as int,
-      review: json['review'] as String,
+      userName: json['userName'] as String,
+      userId: json['userId'] as String,
+      createdAt: json['createdAt'] as String,
+      rating: json['rating'] as num,
+      comments: json['comments'] as String,
+      avatarId: json['avatarId'] as String? ?? 'AV1',
     );

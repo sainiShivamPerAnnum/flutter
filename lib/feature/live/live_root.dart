@@ -6,7 +6,6 @@ import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -75,6 +74,7 @@ class __LiveHomeState extends State<_LiveHome> {
                     ),
                   ),
                   _buildLiveSection(liveData.live),
+                  if(liveData.upcoming.isNotEmpty)
                   Padding(
                     padding: EdgeInsets.symmetric(
                       vertical: SizeConfig.padding24,
@@ -86,6 +86,7 @@ class __LiveHomeState extends State<_LiveHome> {
                     ),
                   ),
                   _buildUpcomingSection(liveData.upcoming),
+                   if(liveData.recent.isNotEmpty)
                   Padding(
                     padding: EdgeInsets.symmetric(
                       vertical: SizeConfig.padding24,
@@ -137,30 +138,92 @@ class __LiveHomeState extends State<_LiveHome> {
   }
 
   Widget _buildLiveSection(List<LiveStream> liveData) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          for (final live in liveData)
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding8,
-              ).copyWith(bottom: 8),
-              child: LiveCardWidget(
-                status: 'live',
-                title: live.title,
-                subTitle: live.subtitle,
-                author: live.author,
-                category: live.categories.join(', '),
-                bgImage: live.thumbnail,
-                liveCount: live.liveCount,
-                advisorCode: live.advisorCode,
-                viewerCode: live.viewerCode,
-              ),
+    return (liveData.isEmpty)
+        ? Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding18,
+              vertical: SizeConfig.padding12,
             ),
-        ],
-      ),
-    );
+            decoration: BoxDecoration(
+              color: UiConstants.greyVarient,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Currently offline',
+                        style: TextStyles.sourceSansSB.body6.colour(
+                          UiConstants.kTabBorderColor,
+                        ),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding4,
+                      ),
+                      SizedBox(
+                        child: Text(
+                          'Our advisors are away right now. Browse recent streams or book a one-on-one call.',
+                          style: TextStyles.sourceSansSB.body4.colour(
+                            UiConstants.kTextColor,
+                          ),
+                          maxLines: 3,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding8,
+                      vertical: SizeConfig.padding6,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness5),
+                    ),
+                  ),
+                  child: Text(
+                    'Book a Call',
+                    style: TextStyles.sourceSansSB.body4.colour(
+                      UiConstants.kTextColor4,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        : SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (final live in liveData)
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding8,
+                    ).copyWith(bottom: 8),
+                    child: LiveCardWidget(
+                      status: 'live',
+                      title: live.title,
+                      subTitle: live.subtitle,
+                      author: live.author,
+                      category: live.categories.join(', '),
+                      bgImage: live.thumbnail,
+                      liveCount: live.liveCount,
+                      advisorCode: live.advisorCode,
+                      viewerCode: live.viewerCode,
+                    ),
+                  ),
+              ],
+            ),
+          );
   }
 
   Widget _buildRecentSection(List<RecentStream> recentData) {
@@ -180,7 +243,7 @@ class __LiveHomeState extends State<_LiveHome> {
                 title: recent.title,
                 subTitle: recent.subtitle,
                 author: recent.author,
-                 category: recent.categories.join(', '),
+                category: recent.categories.join(', '),
                 bgImage: recent.thumbnail,
                 liveCount:
                     recent.views, // Number of views instead of live count

@@ -3,14 +3,20 @@ import 'dart:developer';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/blog_model.dart';
 import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
+import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/flavor_config.dart';
 
 class SaveRepo extends BaseRepo {
+  static const _experts = 'experts';
   final String _blogUrl =
       "https://felloblog815893968.wpcomstaging.com/wp-json/wp/v2";
   final String _bookingsUrl = "https://advisors.fello-dev.net/";
+  final _baseUrl = FlavorConfig.isDevelopment()
+      ? 'https://advisors.fello-dev.net/'
+      : 'https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod';
 
   Future<ApiResponse<List<BlogPostModel>>> getBlogs(int noOfBlogs) async {
     List<BlogPostModel> blogs = <BlogPostModel>[];
@@ -44,8 +50,11 @@ class SaveRepo extends BaseRepo {
       final responseData = response["data"];
       log("Upcoming booking data: $responseData");
       final List<Booking> upcomingBooking = (responseData as List)
-          .map((item) => Booking.fromJson(
-              item,),)
+          .map(
+            (item) => Booking.fromJson(
+              item,
+            ),
+          )
           .toList();
       return ApiResponse<List<Booking>>(
         model: upcomingBooking,
@@ -53,6 +62,58 @@ class SaveRepo extends BaseRepo {
       );
     } catch (e) {
       return const ApiResponse(code: 404, errorMessage: 'No Bookings Found');
+    }
+  }
+  Future<ApiResponse<List<Booking>>> getPastBookings() async {
+    final String? uid = userService.baseUser!.uid;
+    try {
+      final response = await APIService.instance.getData(
+        'booking/user/past/$uid',
+        cBaseUrl: _bookingsUrl,
+        apiName: 'bookings/getPastBookings',
+      );
+      final responseData = response["data"];
+      log("Past booking data: $responseData");
+      final List<Booking> pastBooking = (responseData as List)
+          .map(
+            (item) => Booking.fromJson(
+              item,
+            ),
+          )
+          .toList();
+      return ApiResponse<List<Booking>>(
+        model: pastBooking,
+        code: 200,
+      );
+    } catch (e) {
+      return const ApiResponse(code: 404, errorMessage: 'No Bookings Found');
+    }
+  }
+
+  Future<ApiResponse<List<Expert>>> getTopExpertsData() async {
+    try {
+      final response = await APIService.instance.getData(
+        'advisors/sections',
+        cBaseUrl: _baseUrl,
+        apiName: '$_experts/getTopExpertsData',
+      );
+      final responseData = response["data"];
+      log("Experts data: $responseData");
+      final allData = ExpertsHome.fromJson(responseData);
+      final List<Expert> topExperts = [];
+      allData.values.forEach((key, expertsList) {
+        if (key.toLowerCase() == 'top') {
+          topExperts.addAll(expertsList.take(3));
+        }
+      });
+
+      return ApiResponse<List<Expert>>(
+        model: topExperts,
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 

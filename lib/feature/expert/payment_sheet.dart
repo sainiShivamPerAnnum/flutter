@@ -8,6 +8,7 @@ import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PaymentSheet extends StatelessWidget {
@@ -99,24 +100,30 @@ class _BookingMandatePage extends StatelessWidget {
               MandateInitialState() ||
               ListingPSPApps() =>
                 const FullScreenLoader(),
-              ListedPSPApps(:final pspApps) => SelectUPIApplicationSection(
-                showHeading: false,
-                  upiApps: pspApps,
-                  onSelectApplication: (meta) {
-                    if (state case ListedPSPApps()) {
-                      final event = SubmitPaymentRequest(
-                        advisorId: advisorID,
-                        amount: amount,
-                        fromTime: fromTime,
-                        duration: duration,
-                        appuse: meta,
-                      );
-                      context.read<PaymentBloc>().add(event);
-                    }
-                  },
+              ListedPSPApps(:final pspApps) => Padding(
+                  padding: EdgeInsets.all(SizeConfig.padding16),
+                  child: SelectUPIApplicationSection(
+                    showHeading: false,
+                    upiApps: pspApps,
+                    onSelectApplication: (meta) {
+                      if (state case ListedPSPApps()) {
+                        final event = SubmitPaymentRequest(
+                          advisorId: advisorID,
+                          amount: amount,
+                          fromTime: fromTime,
+                          duration: duration,
+                          appuse: meta,
+                        );
+                        context.read<PaymentBloc>().add(event);
+                      }
+                    },
+                  ),
                 ),
-              SubmittingPayment() => Container(),//todo @Hirdesh2101
-              SubmittingPaymentFailed() => Container(),//todo @Hirdesh2101
+              SubmittingPayment() => const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [FullScreenLoader()],
+                ),
+              SubmittingPaymentFailed() => Container(),
               SubmittedPayment() => Container()
             };
           },

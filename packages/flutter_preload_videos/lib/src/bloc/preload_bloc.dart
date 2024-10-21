@@ -22,19 +22,22 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
 
   void _mapEventToState(PreloadEvent event, Emitter<PreloadState> emit) async {
     await event.map(
+      pauseVideoAtIndex: (e) {
+        _stopControllerAtIndex(e.index);
+      },
+      playVideoAtIndex: (e) {
+        _playControllerAtIndex(e.index);
+      },
       setLoading: (e) {
         emit(state.copyWith(isLoading: true));
       },
       getVideosFromApi: (e) async {
-        /// Fetch first 5 videos from api
+        /// Fetch videos from api
         final videos = await ApiService.getVideos(id: state.focusedIndex);
         state.videos.addAll(videos);
 
         /// Initialize 1st video
         await _initializeControllerAtIndex(0);
-
-        /// Play 1st video
-        _playControllerAtIndex(0);
 
         /// Initialize 2nd video
         await _initializeControllerAtIndex(1);

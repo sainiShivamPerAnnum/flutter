@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/feature/expert/expert_root.dart';
 import 'package:felloapp/feature/live/live_root.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/support-new/support_new.dart';
 import 'package:felloapp/util/assets.dart';
@@ -51,6 +52,8 @@ class RootController {
 
   void onChange(NavBarItemModel model) {
     log("onChange ${model.title}");
+    final currentContext = AppState.delegate!.navigatorKey.currentContext!;
+    final state = currentContext.read<PreloadBloc>().state;
     if (currentNavBarItemModel.title == model.title && controller.hasClients) {
       controller.animateTo(
         0,
@@ -59,6 +62,23 @@ class RootController {
       );
     }
     currentNavBarItemModel = model;
+    if (model.title == 'Shorts') {
+      // Video comes into view
+      if (state.controllers[state.focusedIndex]!.value.isInitialized) {
+        BlocProvider.of<PreloadBloc>(
+          currentContext,
+          listen: false,
+        ).add(PreloadEvent.playVideoAtIndex(state.focusedIndex));
+      }
+    } else {
+      // Video goes out of view
+      if (state.controllers[state.focusedIndex]!.value.isPlaying) {
+        BlocProvider.of<PreloadBloc>(
+          AppState.delegate!.navigatorKey.currentContext!,
+          listen: false,
+        ).add(PreloadEvent.pauseVideoAtIndex(state.focusedIndex));
+      }
+    }
   }
 
   void getNavItems(String navItem) {
@@ -89,11 +109,7 @@ class RootController {
         break;
       case "SH":
         navItems.putIfAbsent(
-          BlocProvider(
-            create: (_) =>
-                PreloadBloc()..add(const PreloadEvent.getVideosFromApi()),
-            child: const ShortsVideoPage(),
-          ),
+          const ShortsVideoPage(),
           () => RootController.shortsNavBarItem,
         );
         break;

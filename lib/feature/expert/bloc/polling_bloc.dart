@@ -28,8 +28,15 @@ class PollingBloc extends Bloc<PollingEvent, PollingState> {
         data != null &&
         data.data.paymentDetails!.status == BookingPaymentStatus.complete) {
       emitter(
-        CompletedPollingWithSuccessOrPending(data),
-      ); // either pending or success.
+        CompletedPollingWithSuccess(data),
+      );
+    }
+    else if (response.isSuccess() &&
+        data != null &&
+        data.data.paymentDetails!.status == BookingPaymentStatus.pending) {
+      emitter(
+        CompletedPollingWithPending(data),
+      );
     } else {
       emitter(
         CompletedPollingWithFailure(

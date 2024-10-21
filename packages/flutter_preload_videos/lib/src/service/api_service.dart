@@ -38,7 +38,7 @@ class ApiService {
     // Mock API data based on the given structure, including video details
     List<VideoData> videos = [
       VideoData(
-        url: 'https://ik.imagekit.io/9xfwtu0xm/Stories/safety.mp4',
+        url: 'https://d18gbwu7fwwwtf.cloudfront.net/fello-experts/Introduction.mp4',
         title: 'Lorem Ipsum is simply dummy text ',
         author: 'John Doe',
         subtitle: 'Exploring safety protocols',
@@ -79,7 +79,7 @@ class ApiService {
         categories: {'Health', 'Safety'},
       ),
       VideoData(
-        url: 'https://ik.imagekit.io/9xfwtu0xm/Stories/rewards.mp4',
+        url: 'https://d18gbwu7fwwwtf.cloudfront.net/fello-experts/annual-return-video.mp4',
         title: 'Safety First',
         author: 'John Doe2',
         subtitle: 'Exploring safety protocols',
@@ -89,7 +89,17 @@ class ApiService {
         categories: {'Health', 'Safety'},
       ),
       VideoData(
-        url: 'https://ik.imagekit.io/9xfwtu0xm/Stories/digital_gold.mp4',
+        url: 'https://d18gbwu7fwwwtf.cloudfront.net/fello-experts/expectations-from-webinar.mp4',
+        title: 'Safety First',
+        author: 'John Doe3',
+        subtitle: 'Exploring safety protocols',
+        views: 150,
+        duration: '5:00',
+        comments: [],
+        categories: {'Health', 'Safety'},
+      ),
+      VideoData(
+        url: 'https://d18gbwu7fwwwtf.cloudfront.net/fello-experts/personal-finance-fundamentals.mp4',
         title: 'Safety First',
         author: 'John Doe3',
         subtitle: 'Exploring safety protocols',

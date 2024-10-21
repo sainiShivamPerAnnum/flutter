@@ -507,4 +507,7 @@ class Assets {
        static const String video_share = "assets/svg/share_video.svg"; 
        static const String book_call = "assets/svg/calender.svg"; 
        static const String video_like = "assets/svg/like.svg";
+  static const String confirm_payment = "assets/vectors/gif/confirm.gif";
+  static const String pending_payment = "assets/vectors/gif/pending.gif";
+  static const String failed_payment = "assets/vectors/gif/failed.gif";
 }

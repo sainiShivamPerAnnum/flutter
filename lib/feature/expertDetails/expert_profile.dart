@@ -1,17 +1,20 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/experts/experts_details.dart';
 import 'package:felloapp/core/model/live/live_home.dart';
-import 'package:felloapp/feature/expert/booking_sheet.dart';
 import 'package:felloapp/feature/expertDetails/bloc/expert_bloc.dart';
-import 'package:felloapp/feature/expertDetails/widgets/ratingSheet.dart';
+import 'package:felloapp/feature/expertDetails/bloc/rating_bloc.dart';
+import 'package:felloapp/feature/expertDetails/widgets/rating_sheet.dart';
 import 'package:felloapp/feature/live/widgets/live_card.dart';
 import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 
 class ExpertsDetailsView extends StatelessWidget {
@@ -23,10 +26,19 @@ class ExpertsDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ExpertDetailsBloc(
-        locator(),
-      )..add(LoadExpertsDetails(advisorID)),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => ExpertDetailsBloc(
+            locator(),
+          )..add(LoadExpertsDetails(advisorID)),
+        ),
+        BlocProvider(
+          create: (context) => RatingBloc(
+            locator(),
+          )..add(LoadRatings(advisorID)),
+        ),
+      ],
       child: _ExpertProfilePage(
         advisorID: advisorID,
       ),
@@ -261,13 +273,12 @@ class _ExpertProfilePage extends StatelessWidget {
                                         SizeConfig.roundness8,
                                       ),
                                     ),
-                                    child: const Center(
-                                      child: Text(
-                                        "SEBI",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                    child: Center(
+                                      child: Image.network(
+                                        license.imageUrl,
+                                        width: SizeConfig.padding46,
+                                        height: SizeConfig.padding46,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
                                   ),
@@ -301,7 +312,9 @@ class _ExpertProfilePage extends StatelessWidget {
                                             ),
                                             GestureDetector(
                                               onTap: () {
-                                                // Handle the 'View Credentials' tap
+                                                BaseUtil.launchUrl(
+                                                  license.credentials,
+                                                );
                                               },
                                               child: Row(
                                                 children: [
@@ -348,7 +361,7 @@ class _ExpertProfilePage extends StatelessWidget {
                               children: expertDetails.social.map((social) {
                                 return GestureDetector(
                                   onTap: () {
-                                    // Handle social media tap
+                                    BaseUtil.launchUrl(social.url);
                                   },
                                   child: Container(
                                     padding:
@@ -376,6 +389,7 @@ class _ExpertProfilePage extends StatelessWidget {
                             ),
                             RatingReviewSection(
                               ratingInfo: expertDetails.ratingInfo,
+                              advisorId: advisorID,
                             ),
                           ],
                         )
@@ -407,7 +421,7 @@ class _ExpertProfilePage extends StatelessWidget {
 }
 
 Widget _buildTabOneData(List<RecentStream> shortsData) {
-  if (shortsData == null || shortsData.isEmpty) {
+  if (shortsData.isEmpty) {
     return const Center(child: ErrorPage());
   }
 
@@ -421,8 +435,7 @@ Widget _buildTabOneData(List<RecentStream> shortsData) {
       SizedBox(
         height: gridHeight,
         child: GridView.builder(
-          physics:
-              const NeverScrollableScrollPhysics(), // Disable scrolling inside GridView
+          physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
             crossAxisSpacing: 10,
@@ -610,93 +623,162 @@ class CustomCarouselState extends State<CustomCarousel> {
 
 class RatingReviewSection extends StatelessWidget {
   final RatingInfo ratingInfo;
+  final String advisorId;
 
-  const RatingReviewSection({required this.ratingInfo, super.key});
+  const RatingReviewSection({
+    required this.ratingInfo,
+    required this.advisorId,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Ratings & Reviews',
-          style: TextStyles.sourceSansSB.body2,
-        ),
-        SizedBox(
-          height: SizeConfig.padding18,
-        ),
-        Row(
-          children: [
-            Text(
-              ratingInfo.overallRating.toStringAsFixed(1),
-              style: TextStyles.sourceSansSB.title2,
-            ),
-            SizedBox(
-              width: SizeConfig.padding10,
-            ),
-            Column(
+    return BlocBuilder<RatingBloc, RatingState>(
+      builder: (context, state) {
+        return switch (state) {
+          LoadingRatingDetails() ||
+          UploadingRatingDetails() =>
+            const FullScreenLoader(),
+          RatingDetailsLoaded() => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: List.generate(5, (index) {
-                    return Icon(
-                      Icons.star_rounded,
-                      color: index < ratingInfo.overallRating
-                          ? Colors.amber
-                          : Colors.grey,
-                      size: SizeConfig.body6,
-                    );
-                  }),
-                ),
                 Text(
-                  '${ratingInfo.ratingCount} ratings',
-                  style: TextStyles.sourceSans.body4
-                      .colour(UiConstants.kTextColor.withOpacity(.7)),
+                  'Ratings & Reviews',
+                  style: TextStyles.sourceSansSB.body2,
                 ),
-              ],
-            ),
-            const Spacer(),
-            OutlinedButton(
-              onPressed: () {
-                BaseUtil.openModalBottomSheet(
-                  isBarrierDismissible: true,
-                  content: FeedbackBottomSheet(),
-                );
-              },
-              style: OutlinedButton.styleFrom(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding18,
-                  vertical: SizeConfig.padding4,
+                SizedBox(
+                  height: SizeConfig.padding18,
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(SizeConfig.roundness5),
+                Row(
+                  children: [
+                    Text(
+                      ratingInfo.overallRating.toStringAsFixed(1),
+                      style: TextStyles.sourceSansSB.title2,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding10,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: List.generate(5, (index) {
+                            return Icon(
+                              Icons.star_rounded,
+                              color: index < ratingInfo.overallRating
+                                  ? Colors.amber
+                                  : Colors.grey,
+                              size: SizeConfig.body6,
+                            );
+                          }),
+                        ),
+                        Text(
+                          '${ratingInfo.ratingCount} ratings',
+                          style: TextStyles.sourceSans.body4
+                              .colour(UiConstants.kTextColor.withOpacity(.7)),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    OutlinedButton(
+                      onPressed: () {
+                        AppState.screenStack.add(ScreenItem.modalsheet);
+                        BaseUtil.openModalBottomSheet(
+                          isBarrierDismissible: true,
+                          content: FeedbackBottomSheet(
+                            advisorId: advisorId,
+                            onSubmit: (rating, comment) {
+                              BlocProvider.of<RatingBloc>(
+                                context,
+                                listen: false,
+                              ).add(
+                                PostRating(
+                                  advisorId: advisorId,
+                                  rating: rating,
+                                  comments: comment,
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                      style: ButtonStyle(
+                        padding: WidgetStateProperty.all(
+                          EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding18,
+                            vertical: SizeConfig.padding4,
+                          ),
+                        ),
+                        side: WidgetStateProperty.all(
+                          const BorderSide(
+                            color: UiConstants.kTextColor,
+                            width: 1.0,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                        shape: WidgetStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(SizeConfig.roundness5),
+                            ),
+                            side: const BorderSide(
+                              color: UiConstants.kTextColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        'Rate',
+                        style: TextStyles.sourceSansSB.body4
+                            .colour(UiConstants.kTextColor),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: SizeConfig.padding32),
+                Column(
+                  children: (state.userRatings ?? [])
+                      .take(
+                    state.viewMore ? (state.userRatings ?? []).length : 2,
+                  )
+                      .map((userRating) {
+                    return ReviewCard(
+                      name: userRating.userName,
+                      date: userRating.createdAt,
+                      rating: userRating.rating,
+                      review: userRating.comments,
+                      image: userRating.avatarId,
+                    );
+                  }).toList(),
+                ),
+                if (state.userRatings != null && state.userRatings!.length > 2)
+                  GestureDetector(
+                    onTap: () {
+                      BlocProvider.of<RatingBloc>(
+                        context,
+                        listen: false,
+                      ).add(
+                        ViewMoreClicked(
+                          !state.viewMore,
+                        ),
+                      );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          state.viewMore?'View Less':'View All',
+                          style: TextStyles.sourceSansSB.body4,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ),
-              child: Text(
-                'Rate',
-                style:
-                    TextStyles.sourceSans.body4.colour(UiConstants.kTextColor),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: SizeConfig.padding32),
-
-        // Render the list of user reviews
-        Column(
-          children: ratingInfo.userRatings.map((userRating) {
-            return ReviewCard(
-              name: userRating.name,
-              date: userRating.date,
-              rating: userRating.rating,
-              review: userRating.review,
-              image: userRating.image,
-            );
-          }).toList(),
-        ),
-      ],
+                SizedBox(height: SizeConfig.padding20),
+              ],
+            )
+        };
+      },
     );
   }
 }
@@ -704,7 +786,7 @@ class RatingReviewSection extends StatelessWidget {
 class ReviewCard extends StatelessWidget {
   final String name;
   final String date;
-  final int rating;
+  final num rating;
   final String review;
   final String image;
 
@@ -725,9 +807,11 @@ class ReviewCard extends StatelessWidget {
         Row(
           children: [
             CircleAvatar(
-              backgroundImage:
-                  NetworkImage(image), // Use the image from UserRating
               radius: SizeConfig.padding16,
+              child: AppImage(
+                "assets/vectors/userAvatars/$image.svg",
+                fit: BoxFit.cover,
+              ),
             ),
             SizedBox(width: SizeConfig.padding8),
             Column(
@@ -752,14 +836,21 @@ class ReviewCard extends StatelessWidget {
         SizedBox(
           height: SizeConfig.padding10,
         ),
-        Row(
-          children: List.generate(rating, (index) {
-            return Icon(
-              Icons.star_rounded,
-              color: Colors.amber,
-              size: SizeConfig.body6,
-            );
-          }),
+        RatingBar.builder(
+          initialRating: rating.toDouble(),
+          direction: Axis.horizontal,
+          allowHalfRating: true,
+          itemCount: 5,
+          glow: false,
+          ignoreGestures: true,
+          itemSize: SizeConfig.body6,
+          itemPadding: EdgeInsets.symmetric(horizontal: SizeConfig.padding4),
+          itemBuilder: (context, _) => Icon(
+            Icons.star,
+            color: Colors.amber,
+            size: SizeConfig.body6,
+          ),
+          onRatingUpdate: (rating) {},
         ),
         SizedBox(
           height: SizeConfig.padding10,

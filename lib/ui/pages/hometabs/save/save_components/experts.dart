@@ -1,4 +1,9 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/feature/expert/widgets/expert_card.dart';
+import 'package:felloapp/feature/expertDetails/expert_profile.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 // import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -11,25 +16,26 @@ class Experts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // S locale = S.of(context);
-    return Column(
-      children: [
-        SizedBox(height: SizeConfig.padding14),
-        GestureDetector(
-          onTap: () {},
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
+    return model.topExperts.isNotEmpty
+        ? Column(
             children: [
-              TitleSubtitleContainer(
-                title: "Experts",
+              SizedBox(height: SizeConfig.padding14),
+              GestureDetector(
+                onTap: () {},
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TitleSubtitleContainer(
+                      title: "Experts",
+                    ),
+                  ],
+                ),
               ),
+              TopExperts(model: model),
             ],
-          ),
-        ),
-        TopExperts(model: model),
-      ],
-    );
+          )
+        : const SizedBox.shrink();
   }
 }
 
@@ -41,27 +47,31 @@ class TopExperts extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: SizeConfig.padding10),
-      child: SizedBox(
-        child: Column(
-          children: [
-            // for (int i = 0; i < model.topExperts!.length; i++)
-            //   Padding(
-            //     padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding18)
-            //         .copyWith(bottom: SizeConfig.padding16),
-            //     child: ExpertCard(
-            //       imageUrl: model.topExperts![i].bgImage,
-            //       name: model.topExperts![i].name,
-            //       experience: model.topExperts![i].exp.toString(),
-            //       expertise: model.topExperts![i].expertise.toString(),
-            //       qualifications:
-            //           model.topExperts![i].qualifications.toString(),
-            //       price: '₹10/min',
-            //       rating: model.topExperts![i].rating,
-            //       onBookCall: () {},
-            //     ),
-            //   ),
-          ],
-        ),
+      child: Column(
+        children: [
+          for (int i = 0; i < model.topExperts.length; i++)
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding18)
+                  .copyWith(bottom: SizeConfig.padding16),
+              child: ExpertCard(
+                expert: model.topExperts[i],
+                onBookCall: () {
+                  BaseUtil.openBookAdvisorSheet(
+                    advisorId: model.topExperts[i].advisorId,
+                  );
+                },
+                onTap: () {
+                  AppState.delegate!.appState.currentAction = PageAction(
+                    page: ExpertDetailsPageConfig,
+                    state: PageState.addWidget,
+                    widget: ExpertsDetailsView(
+                      advisorID: model.topExperts[i].advisorId,
+                    ),
+                  );
+                },
+              ),
+            ),
+        ],
       ),
     );
   }

@@ -146,6 +146,7 @@ flutter:
     - assets/images/icons/
     - assets/svg/
     - assets/vectors/
+    - assets/vectors/gif/
     - assets/vectors/psp/
     - assets/vectors/icons/
     - assets/vectors/userAvatars/

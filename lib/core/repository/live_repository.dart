@@ -15,8 +15,6 @@ class LiveRepository extends BaseRepo {
 
   Future<ApiResponse<LiveHome>> getLiveHomeData() async {
     try {
-      final String? uid = userService.baseUser!.uid;
-
       final response = await APIService.instance.getData(
         'events/home',
         cBaseUrl: _baseUrl,

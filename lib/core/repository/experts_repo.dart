@@ -14,6 +14,7 @@ import 'package:felloapp/util/flavor_config.dart';
 class ExpertsRepository extends BaseRepo {
   static const _experts = 'experts';
   static const _booking = 'booking';
+  static const _ratings = 'ratings';
 
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://advisors.fello-dev.net/'
@@ -51,6 +52,74 @@ class ExpertsRepository extends BaseRepo {
       log("Experts data: $responseData");
       return ApiResponse<ExpertDetails>(
         model: ExpertDetails.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<List<UserRating>>> getRatingByExpert({
+    required String advisorId,
+  }) async {
+    try {
+      final response = await APIService.instance.getData(
+        'ratings',
+        cBaseUrl: _baseUrl,
+        queryParams: {
+          'advisorId': advisorId,
+        },
+        apiName: '$_ratings/getRatingByExpert',
+      );
+      final responseData = response["data"];
+      log("Ratings data: $responseData");
+      final List<UserRating> ratings = (responseData as List)
+          .map(
+            (item) => UserRating.fromJson(
+              item,
+            ),
+          )
+          .toList();
+      return ApiResponse<List<UserRating>>(
+        model: ratings,
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<UserRating>> postRatingDetails({
+    required num rating,
+    required String comments,
+    required String advisorId,
+  }) async {
+    final String? uid = userService.baseUser!.uid;
+    final String userName = (userService.baseUser!.kycName != null &&
+                userService.baseUser!.kycName!.isNotEmpty
+            ? userService.baseUser!.kycName
+            : userService.baseUser!.name) ??
+        "N/A";
+    try {
+      final body = {
+        "rating": rating,
+        "comments": comments,
+        "userId": uid,
+        "userName": userName,
+        "advisorId": advisorId,
+      };
+      final response = await APIService.instance.postData(
+        'ratings',
+        cBaseUrl: _baseUrl,
+        body: body,
+        apiName: '$_ratings/postRatingDetails',
+      );
+      final responseData = response["data"];
+      log("Post Ratings data: $responseData");
+      return ApiResponse<UserRating>(
+        model: UserRating.fromJson(responseData),
         code: 200,
       );
     } catch (e) {
@@ -176,6 +245,7 @@ class ExpertsRepository extends BaseRepo {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
+
   String formatUpiAppName(String name) {
     switch (name) {
       case "Phonepe":
@@ -221,6 +291,31 @@ class ExpertsRepository extends BaseRepo {
       log("Booking data: $responseData");
       return ApiResponse<PaymentStatusResponse>(
         model: PaymentStatusResponse.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+   Future<ApiResponse<bool>> submitQNA({
+    required List<Map<String, String>>  detailsQA,
+    required String bookingID,
+  }) async {
+    try {
+      final body = {
+        "detailsQA": detailsQA,
+      };
+      final response = await APIService.instance.patchData(
+        'booking/$bookingID/details-qa',
+        body: body,
+        cBaseUrl: _baseUrl,
+        apiName: '$_booking/submitQNA',
+      );
+      final responseData = response;
+      log("Booking data: $responseData");
+      return const ApiResponse<bool>(
+        model: true,
         code: 200,
       );
     } catch (e) {

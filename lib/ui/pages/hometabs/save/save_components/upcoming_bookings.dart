@@ -18,23 +18,29 @@ class UpcomingBookingsComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: SizeConfig.screenWidth! * 0.69,
-      margin: EdgeInsets.only(
-        left: SizeConfig.padding24,
-        top: SizeConfig.padding10,
-        right: SizeConfig.padding10,
-      ),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: model.upcomingBookings.length,
-        itemBuilder: (ctx, index) {
-          return ScheduleCard(
-            booking: model.upcomingBookings[index],
-          );
-        },
-      ),
-    );
+    return model.upcomingBookings.isNotEmpty
+        ? Container(
+            padding: EdgeInsets.only(top: SizeConfig.padding10),
+            margin: EdgeInsets.only(
+              left: SizeConfig.padding24,
+              top: SizeConfig.padding10,
+              right: SizeConfig.padding10,
+            ),
+            child: Row(
+              children: [
+                for (int i = 0; i < model.upcomingBookings.length; i++)
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: SizeConfig.padding18)
+                            .copyWith(bottom: SizeConfig.padding16),
+                    child: ScheduleCard(
+                      booking: model.upcomingBookings[i],
+                    ),
+                  ),
+              ],
+            ),
+          )
+        : const SizedBox.shrink();
   }
 }
 
@@ -53,8 +59,8 @@ class ScheduleCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: UiConstants.greyVarient,
               borderRadius: BorderRadius.only(
-              topLeft:   Radius.circular(SizeConfig.roundness8),
-                topRight:   Radius.circular(SizeConfig.roundness8),
+                topLeft: Radius.circular(SizeConfig.roundness8),
+                topRight: Radius.circular(SizeConfig.roundness8),
               ),
             ),
             padding: EdgeInsets.only(

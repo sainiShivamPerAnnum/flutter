@@ -105,18 +105,20 @@ class RatingInfo {
 
 @_deserializable
 class UserRating {
-  final String name;
-  final String image;
-  final String date;
-  final int rating;
-  final String review;
+  final String userName;
+  final String avatarId;
+  final String userId;
+  final String createdAt;
+  final num rating;
+  final String comments;
 
   UserRating({
-    required this.name,
-    required this.image,
-    required this.date,
+    required this.userName,
+    required this.userId,
+    required this.createdAt,
     required this.rating,
-    required this.review,
+    required this.comments,
+    this.avatarId ='AV1',
   });
 
   factory UserRating.fromJson(Map<String, dynamic> json) =>

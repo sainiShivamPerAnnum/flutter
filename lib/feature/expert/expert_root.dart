@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
@@ -106,7 +107,9 @@ class __ExpertHomeState extends State<_ExpertHome>
                     ),
                   ),
                 ),
-                _buildExpertList(expertsData.values[topSectionKey] ?? []),
+                _buildExpertList(
+                  expertsData.values[topSectionKey]?.take(3).toList() ?? [],
+                ),
                 SliverPersistentHeader(
                   pinned: true,
                   delegate: _StickyHeaderDelegate(
@@ -114,10 +117,12 @@ class __ExpertHomeState extends State<_ExpertHome>
                     currentSection: state.currentSection,
                     scrollToSection: _scrollToSection,
                     sectionKeys: sectionKeys,
+                    context: context,
                   ),
                 ),
                 ...expertsData.list
                     .where((section) => !section.toLowerCase().contains('top'))
+                    .take(3)
                     .expand(
                       (section) => [
                         _buildSectionContent(section),
@@ -171,7 +176,9 @@ class __ExpertHomeState extends State<_ExpertHome>
             padding: EdgeInsets.only(bottom: SizeConfig.padding16),
             child: ExpertCard(
               expert: expert,
-              onBookCall: () {},
+              onBookCall: () {
+                BaseUtil.openBookAdvisorSheet(advisorId: expert.advisorId);
+              },
               onTap: () {
                 AppState.delegate!.appState.currentAction = PageAction(
                   page: ExpertDetailsPageConfig,
@@ -195,12 +202,14 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
   final List<String> sections;
   final Map<String, GlobalKey> sectionKeys;
   final Function(GlobalKey) scrollToSection;
+  final BuildContext context;
 
   _StickyHeaderDelegate({
     required this.currentSection,
     required this.sections,
     required this.sectionKeys,
     required this.scrollToSection,
+    required this.context,
   });
 
   @override
@@ -227,10 +236,14 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => 44.0;
+  double get maxExtent {
+    return 44;
+  }
 
   @override
-  double get minExtent => 44.0;
+  double get minExtent {
+    return 40;
+  }
 
   @override
   bool shouldRebuild(_StickyHeaderDelegate oldDelegate) {

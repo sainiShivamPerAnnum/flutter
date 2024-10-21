@@ -206,48 +206,35 @@ class _VideoWidgetState extends State<VideoWidget>
                 children: [
                   TextField(
                     controller: _commentController,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12
-                            .sp), // Set text color and reduce font size if needed
+                    style: TextStyle(color: Colors.white, fontSize: 12.sp),
                     decoration: InputDecoration(
                       hintText: 'Add a comment',
-                      hintStyle: const TextStyle(
-                          color: Colors
-                              .white70), // Lighter shade of white for the hint text
+                      hintStyle: const TextStyle(color: Colors.white70),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(
-                            10.r), // Rounded corners for the border
-                        borderSide: const BorderSide(
-                            color: Colors.white), // White border
+                        borderRadius: BorderRadius.circular(10.r),
+                        borderSide: const BorderSide(color: Colors.white),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(
-                            color: Colors
-                                .white), // White border when TextField is enabled
+                        borderSide: const BorderSide(color: Colors.white),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(
-                            color: Colors
-                                .white), // White border when TextField is focused
+                        borderSide: const BorderSide(color: Colors.white),
                       ),
                       suffixIcon: IconButton(
                         icon: Icon(
                           Icons.send,
                           color: Colors.white,
                           size: 14.sp,
-                        ), // Icon color set to white
+                        ),
                         onPressed: () {
                           print('Comment: ${_commentController.text}');
                           // Add logic to handle comment submission
                         },
                       ),
-                      contentPadding: EdgeInsets.symmetric(
-                          vertical: 4.h,
-                          horizontal: 12
-                              .w), // Reduce vertical padding to decrease height
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 4.h, horizontal: 12.w),
                     ),
                   ),
                   SizedBox(

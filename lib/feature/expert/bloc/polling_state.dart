@@ -17,8 +17,16 @@ class Polling extends PollingState {
   List<Object?> get props => const [];
 }
 
-class CompletedPollingWithSuccessOrPending extends PollingState {
-  const CompletedPollingWithSuccessOrPending(this.response);
+class CompletedPollingWithSuccess extends PollingState {
+  const CompletedPollingWithSuccess(this.response);
+  final PollingStatusResponse response;
+
+  @override
+  List<Object?> get props => [response];
+}
+
+class CompletedPollingWithPending extends PollingState {
+  const CompletedPollingWithPending(this.response);
   final PollingStatusResponse response;
 
   @override

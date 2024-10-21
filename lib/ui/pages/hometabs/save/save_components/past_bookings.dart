@@ -19,41 +19,46 @@ class PastBookingsComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const TitleSubtitleContainer(
-          title: "Past Scheduled Calls",
-        ),
-        SizedBox(
-          height: SizeConfig.padding8,
-        ),
-        Container(
-          height: SizeConfig.screenWidth! * 0.54,
-          margin: EdgeInsets.only(
-            left: SizeConfig.padding24,
-            top: SizeConfig.padding10,
-            right: SizeConfig.padding10,
-          ),
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: model.upcomingBookings.length,
-            itemBuilder: (ctx, index) {
-              return ScheduleCard(
-                booking: model.upcomingBookings[index],
-              );
-            },
-          ),
-        ),
-      ],
-    );
+    return model.upcomingBookings.isNotEmpty
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const TitleSubtitleContainer(
+                title: "Past Scheduled Calls",
+              ),
+              SizedBox(
+                height: SizeConfig.padding8,
+              ),
+              Container(
+                margin: EdgeInsets.only(
+                  left: SizeConfig.padding24,
+                  top: SizeConfig.padding10,
+                  right: SizeConfig.padding10,
+                ),
+                child: Row(
+                  children: [
+                    for (int i = 0; i < model.pastBookings.length; i++)
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.padding18)
+                            .copyWith(bottom: SizeConfig.padding16),
+                        child: PastScheduleCard(
+                          booking: model.pastBookings[i],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          )
+        : const SizedBox.shrink();
   }
 }
 
-class ScheduleCard extends StatelessWidget {
+class PastScheduleCard extends StatelessWidget {
   final Booking booking;
 
-  const ScheduleCard({required this.booking, super.key});
+  const PastScheduleCard({required this.booking, super.key});
 
   @override
   Widget build(BuildContext context) {
