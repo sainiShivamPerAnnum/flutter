@@ -35,7 +35,7 @@ class TextStyleV2 {
     height: 1.2,
   );
 
-  static final sub1 = GoogleFonts.sourceSansPro(
+  static final sub1 = GoogleFonts.sourceSans3(
     fontSize: 18.sp,
     fontWeight: FontWeight.w600,
     height: 1.27,
@@ -65,25 +65,25 @@ class TextStyleV2 {
     height: 1.25,
   );
 
-  static final caption1 = GoogleFonts.sourceSansPro(
+  static final caption1 = GoogleFonts.sourceSans3(
     fontSize: 16.sp,
     fontWeight: FontWeight.w600,
     height: 1.25,
   );
 
-  static final caption2 = GoogleFonts.sourceSansPro(
+  static final caption2 = GoogleFonts.sourceSans3(
     fontSize: 16.sp,
     fontWeight: FontWeight.w400,
     height: 1.25,
   );
 
-  static final body1 = GoogleFonts.sourceSansPro(
+  static final body1 = GoogleFonts.sourceSans3(
     fontSize: 14.sp,
     fontWeight: FontWeight.w400,
     height: 1.4,
   );
 
-  static final body2 = GoogleFonts.sourceSansPro(
+  static final body2 = GoogleFonts.sourceSans3(
     fontSize: 12.sp,
     fontWeight: FontWeight.w400,
     height: 1.25,

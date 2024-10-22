@@ -495,13 +495,21 @@ class Assets {
   static const String p2pNonInvest =
       "https://ik.imagekit.io/9xfwtu0xm/p2p_home_v2/empty_flov2.png";
 
-  static const String home_bottom_nav = "assets/vectors/home.png";
+  static const String home_bottom_nav = "assets/svg/home.svg";
 
-  static const String live_bottom_nav = "assets/vectors/live.png";
+  static const String live_bottom_nav = "assets/svg/live.svg";
 
-  static const String experts_bottom_nav = "assets/vectors/experts.png";
-  static const String support_bottom_nav = "assets/vectors/support.png";
   static const String advisor_bottom_nav = "assets/vectors/advisor.png";
+  static const String experts_bottom_nav = "assets/svg/expert.svg";
+  static const String support_bottom_nav = "assets/svg/support.svg";
+  static const String shorts_bottom_nav = "assets/svg/shorts.svg";
   static const String calender =
       "https://ik.imagekit.io/9xfwtu0xm/static/calender.png";
+
+  static const String video_share = "assets/svg/share_video.svg";
+  static const String book_call = "assets/svg/calender.svg";
+  static const String video_like = "assets/svg/like.svg";
+  static const String confirm_payment = "assets/vectors/gif/confirm.gif";
+  static const String pending_payment = "assets/vectors/gif/pending.gif";
+  static const String failed_payment = "assets/vectors/gif/failed.gif";
 }

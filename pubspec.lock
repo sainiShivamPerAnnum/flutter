@@ -138,7 +138,7 @@ packages:
     source: hosted
     version: "2.11.0"
   badges:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: badges
       sha256: a7b6bbd60dce418df0db3058b53f9d083c22cdb5132a052145dc267494df0b84
@@ -425,6 +425,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.8"
+  design_system:
+    dependency: "direct main"
+    description:
+      path: "_packages/design_system"
+      relative: true
+    source: path
+    version: "0.0.1"
   device_frame:
     dependency: transitive
     description:
@@ -474,7 +481,7 @@ packages:
     source: hosted
     version: "2.3.1+1"
   dots_indicator:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: dots_indicator
       sha256: "58b6a365744aa62aa1b70c4ea29e5106fbe064f5edaf7e9652e9b856edbfd9bb"
@@ -482,7 +489,7 @@ packages:
     source: hosted
     version: "3.0.0"
   draggable_widget:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: draggable_widget
       sha256: d7f6b1eb9cb79b724b02dc2ac699f82d1ab20b99920b8b1f25812054d72ca803
@@ -490,7 +497,7 @@ packages:
     source: hosted
     version: "2.0.0"
   dropdown_button2:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: dropdown_button2
       sha256: b0fe8d49a030315e9eef6c7ac84ca964250155a6224d491c1365061bc974a9e1
@@ -898,8 +905,16 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  flutter_isolate:
+    dependency: "direct main"
+    description:
+      name: flutter_isolate
+      sha256: "36a84e1a22371d8092ea2121145b330c24fb272acb951fb30c60ba44926b8fb3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   flutter_linkify:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_linkify
       sha256: "74669e06a8f358fee4512b4320c0b80e51cffc496607931de68d28f099254073"
@@ -935,6 +950,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.1"
+  flutter_screenutil:
+    dependency: "direct main"
+    description:
+      name: flutter_screenutil
+      sha256: "8239210dd68bee6b0577aa4a090890342d04a136ce1c81f98ee513fc0ce891de"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.9.3"
   flutter_spinkit:
     dependency: "direct main"
     description:
@@ -1005,10 +1028,10 @@ packages:
     dependency: "direct dev"
     description:
       name: freezed
-      sha256: "6c5031daae12c7072b3a87eff98983076434b4889ef2a44384d0cae3f82372ba"
+      sha256: a434911f643466d78462625df76fd9eb13e57348ff43fe1f77bbe909522c67a1
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.6"
+    version: "2.5.2"
   freezed_annotation:
     dependency: "direct main"
     description:
@@ -1102,13 +1125,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
-  hms_room_kit:
-    dependency: "direct main"
-    description:
-      path: "packages/hms_room_kit"
-      relative: true
-    source: path
-    version: "1.1.6"
   hmssdk_flutter:
     dependency: "direct main"
     description:
@@ -1245,6 +1261,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.2.3"
+  injectable:
+    dependency: transitive
+    description:
+      name: injectable
+      sha256: f71eb879124ed286cbd2210337b91ff5f345f146187c1f1891c172e0ac06443a
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.4"
+  injectable_generator:
+    dependency: "direct main"
+    description:
+      name: injectable_generator
+      sha256: "1f5bbe44f06cf15dc55b9797a8df8b4d22b0471f6a7d7f79f4c651393b130a9d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.5"
   integration_test:
     dependency: "direct dev"
     description: flutter
@@ -1258,6 +1290,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.19.0"
+  inview_notifier_list:
+    dependency: "direct main"
+    description:
+      name: inview_notifier_list
+      sha256: "1ca80ee39aa585e84a4b9dc1fe7211c5f64614ce3064b0007d9396073e852e14"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   io:
     dependency: transitive
     description:
@@ -1675,7 +1715,7 @@ packages:
     source: hosted
     version: "2.1.8"
   pointer_interceptor:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: pointer_interceptor
       sha256: "57210410680379aea8b1b7ed6ae0c3ad349bfd56fe845b8ea934a53344b9d523"
@@ -1818,6 +1858,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.0"
+  shared:
+    dependency: transitive
+    description:
+      path: "_packages/shared"
+      relative: true
+    source: path
+    version: "0.0.1"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -2079,6 +2126,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.3"
+  timeago:
+    dependency: "direct main"
+    description:
+      name: timeago
+      sha256: "054cedf68706bb142839ba0ae6b135f6b68039f0b8301cbe8784ae653d5ff8de"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.7.0"
   timing:
     dependency: transitive
     description:
@@ -2271,7 +2326,7 @@ packages:
     source: hosted
     version: "2.3.2"
   visibility_detector:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: visibility_detector
       sha256: dd5cc11e13494f432d15939c3aa8ae76844c42b723398643ce9addb88a5ed420

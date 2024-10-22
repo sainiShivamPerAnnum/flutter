@@ -1,17 +1,24 @@
-import 'dart:convert';
+import 'dart:developer';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/blog_model.dart';
-import 'package:felloapp/core/model/top_expert_model.dart';
+import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
+import 'package:felloapp/core/model/experts/experts_home.dart';
+import 'package:felloapp/core/model/live/live_home.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/flavor_config.dart';
 
 class SaveRepo extends BaseRepo {
+  static const _experts = 'experts';
+  static const _live = 'live';
   final String _blogUrl =
       "https://felloblog815893968.wpcomstaging.com/wp-json/wp/v2";
-  final String _topExpertUrl =
-      "https://95b913c3-495b-42fd-b3c6-bb4e3d72bef8.mock.pstmn.io/dev/static/advisor";
+  final String _bookingsUrl = "https://advisors.fello-dev.net/";
+  final _baseUrl = FlavorConfig.isDevelopment()
+      ? 'https://advisors.fello-dev.net/'
+      : 'https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod';
 
   Future<ApiResponse<List<BlogPostModel>>> getBlogs(int noOfBlogs) async {
     List<BlogPostModel> blogs = <BlogPostModel>[];
@@ -33,21 +40,100 @@ class SaveRepo extends BaseRepo {
       return ApiResponse(code: 404, errorMessage: 'No Blogs Found');
     }
   }
-  Future<ApiResponse<List<TopExpertModel>>> getTopExperts() async {
-    List<TopExpertModel> topExperts = <TopExpertModel>[];
-    try { 
-      final responseData = await APIService.instance.getData(
-        '',
-        cBaseUrl: _topExpertUrl,
-        apiName: 'experts/getTopExperts',
+
+  Future<ApiResponse<List<Booking>>> getUpcomingBookings() async {
+    try {
+      final response = await APIService.instance.getData(
+        'booking/user/upcoming',
+        cBaseUrl: _bookingsUrl,
+        apiName: 'bookings/getUpcomingBookings',
       );
-      responseData['data'].forEach((e) {
-        topExperts.add(TopExpertModel.fromJson(e));
-      });
-      print(topExperts.length);
-      return ApiResponse(code: 200, model: topExperts);
+      final responseData = response["data"];
+      log("Upcoming booking data: $responseData");
+      final List<Booking> upcomingBooking = (responseData as List)
+          .map(
+            (item) => Booking.fromJson(
+              item,
+            ),
+          )
+          .toList();
+      return ApiResponse<List<Booking>>(
+        model: upcomingBooking,
+        code: 200,
+      );
     } catch (e) {
-      return const ApiResponse(code: 404, errorMessage: 'No Blogs Found');
+      return const ApiResponse(code: 404, errorMessage: 'No Bookings Found');
+    }
+  }
+
+  Future<ApiResponse<List<Booking>>> getPastBookings() async {
+    try {
+      final response = await APIService.instance.getData(
+        'booking/user/past',
+        cBaseUrl: _bookingsUrl,
+        apiName: 'bookings/getPastBookings',
+      );
+      final responseData = response["data"];
+      log("Past booking data: $responseData");
+      final List<Booking> pastBooking = (responseData as List)
+          .map(
+            (item) => Booking.fromJson(
+              item,
+            ),
+          )
+          .toList();
+      return ApiResponse<List<Booking>>(
+        model: pastBooking,
+        code: 200,
+      );
+    } catch (e) {
+      return const ApiResponse(code: 404, errorMessage: 'No Bookings Found');
+    }
+  }
+
+  Future<ApiResponse<(List<Expert>,bool)>> getTopExpertsData() async {
+    try {
+      final response = await APIService.instance.getData(
+        'advisors/sections',
+        cBaseUrl: _baseUrl,
+        apiName: '$_experts/getTopExpertsData',
+      );
+      final responseData = response["data"];
+      log("Experts data: $responseData");
+      final allData = ExpertsHome.fromJson(responseData);
+      final List<Expert> topExperts = [];
+      allData.values.forEach((key, expertsList) {
+        if (key.toLowerCase() == 'top') {
+          topExperts.addAll(expertsList.take(3));
+        }
+      });
+
+      return ApiResponse<(List<Expert>,bool)>(
+        model: (topExperts,allData.isAnyFreeCallAvailable),
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<LiveHome>> getLiveHomeData() async {
+    try {
+      final response = await APIService.instance.getData(
+        'events/home',
+        cBaseUrl: _baseUrl,
+        apiName: '$_live/getLiveHomeData',
+      );
+      final responseData = response["data"];
+      log("Live data: $responseData");
+      return ApiResponse<LiveHome>(
+        model: LiveHome.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 

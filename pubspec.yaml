@@ -105,8 +105,20 @@ dependencies:
   super_tooltip: ^2.0.7
   focus_detector_v2: ^3.1.0+1
   flutter_widget_from_html_core: ^0.15.2
-  hms_room_kit: 
-    path: packages/hms_room_kit/
+  dropdown_button2: ^2.3.9
+  badges: ^3.1.2
+  flutter_linkify: ^6.0.0
+  dots_indicator: ^3.0.0
+  draggable_widget: ^2.0.0
+  pointer_interceptor: ^0.10.1+2
+  inview_notifier_list: ^3.0.0
+  design_system:
+    path: _packages/design_system/
+  flutter_isolate: ^2.0.2
+  injectable_generator: ^1.4.1
+  flutter_screenutil: ^5.9.0
+  visibility_detector: ^0.4.0+2
+  timeago: ^3.7.0
 
 
 
@@ -137,11 +149,13 @@ flutter:
     - assets/images/icons/
     - assets/svg/
     - assets/vectors/
+    - assets/vectors/gif/
     - assets/vectors/psp/
     - assets/vectors/icons/
     - assets/vectors/userAvatars/
     - assets/lotties/
     - assets/lotties/nav/
+    - lib/feature/hms_room_kit/lib/src/assets/
     - shorebird.yaml
 
 flutter_intl:

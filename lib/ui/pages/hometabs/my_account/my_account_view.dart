@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
+import 'package:felloapp/ui/pages/hometabs/home/cards_new.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/current_winnings_info.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/fello_badge_profile_widget.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/news_component.dart';
@@ -58,6 +59,7 @@ class MyAccount extends StatelessWidget {
                     onPickImage: model.showCustomAvatarsDialog,
                     superFelloLevel: model.superFelloLevel,
                   ),
+                  const PortfolioCard(),
 
                   AccountInfoTiles(
                     key: const Key('userProfileEntry'),
@@ -78,10 +80,6 @@ class MyAccount extends StatelessWidget {
                   const AccountInfoTiles(
                     title: "Tickets",
                     uri: "/tambolaHome",
-                  ),
-                  const AccountInfoTiles(
-                    title: "Live Section",
-                    uri: "/live",
                   ),
                   AccountInfoTiles(
                     title: 'Last Week on Fello',

@@ -24,6 +24,8 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
+import 'package:felloapp/feature/live/bloc/live_bloc.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
@@ -48,6 +50,7 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:firebase_instance_id/firebase_instance_id.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_app_update/in_app_update.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
@@ -70,6 +73,7 @@ class RootViewModel extends BaseViewModel {
   final SIPTransactionBloc _sipTransactionBloc = locator<SIPTransactionBloc>();
   final AppState appState = locator<AppState>();
   final SubService _subscriptionService = locator<SubService>();
+  final currentContext = AppState.delegate!.navigatorKey.currentContext!;
   final S locale;
   static bool canExecuteStartupNotification = true;
   bool showHappyHourBanner = false;
@@ -83,31 +87,11 @@ class RootViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final ReferralService _referralService = locator<ReferralService>();
   final MarketingEventHandlerService _marketingService =
       locator<MarketingEventHandlerService>();
   final RootController _rootController = locator<RootController>();
-
-  Future<void> pullToRefresh() async {
-    // if (_rootController.currentNavBarItemModel ==
-    //     RootController.tambolaNavBar) {
-    //   await Future.wait([
-    //     // _tambolaService.getTambolaTickets(limit: 1),
-    //     _tambolaService.getBestTambolaTickets(forced: true)
-    //   ]);
-    //   return;
-    // }
-
-    await Future.wait([
-      _userCoinService.getUserCoinBalance(),
-      _userService.getUserFundWalletData(),
-      _gtService.updateUnscratchedGTCount(),
-    ]);
-
-    _txnHistoryService.signOut();
-  }
 
   Future<void> onInit() async {
     log("onInit called");

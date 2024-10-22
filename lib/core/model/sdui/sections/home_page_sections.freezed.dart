@@ -12,7 +12,7 @@ part of 'home_page_sections.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 HomePageSection _$HomePageSectionFromJson(Map<String, dynamic> json) {
   switch (json['type']) {
@@ -34,7 +34,85 @@ HomePageSection _$HomePageSectionFromJson(Map<String, dynamic> json) {
 }
 
 /// @nodoc
-mixin _$HomePageSection {}
+mixin _$HomePageSection {
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(StoriesSection value) stories,
+    required TResult Function(StepsSection value) steps,
+    required TResult Function(QuickActions value) quickActions,
+    required TResult Function(ImageSection value) image,
+    required TResult Function(NudgeSection value) nudge,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(StoriesSection value)? stories,
+    TResult? Function(StepsSection value)? steps,
+    TResult? Function(QuickActions value)? quickActions,
+    TResult? Function(ImageSection value)? image,
+    TResult? Function(NudgeSection value)? nudge,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(StoriesSection value)? stories,
+    TResult Function(StepsSection value)? steps,
+    TResult Function(QuickActions value)? quickActions,
+    TResult Function(ImageSection value)? image,
+    TResult Function(NudgeSection value)? nudge,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $HomePageSectionCopyWith<$Res> {
+  factory $HomePageSectionCopyWith(
+          HomePageSection value, $Res Function(HomePageSection) then) =
+      _$HomePageSectionCopyWithImpl<$Res, HomePageSection>;
+}
+
+/// @nodoc
+class _$HomePageSectionCopyWithImpl<$Res, $Val extends HomePageSection>
+    implements $HomePageSectionCopyWith<$Res> {
+  _$HomePageSectionCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+}
+
+/// @nodoc
+abstract class _$$StoriesSectionImplCopyWith<$Res> {
+  factory _$$StoriesSectionImplCopyWith(_$StoriesSectionImpl value,
+          $Res Function(_$StoriesSectionImpl) then) =
+      __$$StoriesSectionImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({StoriesData data});
+}
+
+/// @nodoc
+class __$$StoriesSectionImplCopyWithImpl<$Res>
+    extends _$HomePageSectionCopyWithImpl<$Res, _$StoriesSectionImpl>
+    implements _$$StoriesSectionImplCopyWith<$Res> {
+  __$$StoriesSectionImplCopyWithImpl(
+      _$StoriesSectionImpl _value, $Res Function(_$StoriesSectionImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? data = null,
+  }) {
+    return _then(_$StoriesSectionImpl(
+      null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as StoriesData,
+    ));
+  }
+}
 
 /// @nodoc
 @JsonSerializable(createToJson: false)
@@ -67,6 +145,53 @@ class _$StoriesSectionImpl implements StoriesSection {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, data);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$StoriesSectionImplCopyWith<_$StoriesSectionImpl> get copyWith =>
+      __$$StoriesSectionImplCopyWithImpl<_$StoriesSectionImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(StoriesSection value) stories,
+    required TResult Function(StepsSection value) steps,
+    required TResult Function(QuickActions value) quickActions,
+    required TResult Function(ImageSection value) image,
+    required TResult Function(NudgeSection value) nudge,
+  }) {
+    return stories(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(StoriesSection value)? stories,
+    TResult? Function(StepsSection value)? steps,
+    TResult? Function(QuickActions value)? quickActions,
+    TResult? Function(ImageSection value)? image,
+    TResult? Function(NudgeSection value)? nudge,
+  }) {
+    return stories?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(StoriesSection value)? stories,
+    TResult Function(StepsSection value)? steps,
+    TResult Function(QuickActions value)? quickActions,
+    TResult Function(ImageSection value)? image,
+    TResult Function(NudgeSection value)? nudge,
+    required TResult orElse(),
+  }) {
+    if (stories != null) {
+      return stories(this);
+    }
+    return orElse();
+  }
 }
 
 abstract class StoriesSection implements HomePageSection {
@@ -76,6 +201,40 @@ abstract class StoriesSection implements HomePageSection {
       _$StoriesSectionImpl.fromJson;
 
   StoriesData get data;
+  @JsonKey(ignore: true)
+  _$$StoriesSectionImplCopyWith<_$StoriesSectionImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$StepsSectionImplCopyWith<$Res> {
+  factory _$$StepsSectionImplCopyWith(
+          _$StepsSectionImpl value, $Res Function(_$StepsSectionImpl) then) =
+      __$$StepsSectionImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({StepsData data});
+}
+
+/// @nodoc
+class __$$StepsSectionImplCopyWithImpl<$Res>
+    extends _$HomePageSectionCopyWithImpl<$Res, _$StepsSectionImpl>
+    implements _$$StepsSectionImplCopyWith<$Res> {
+  __$$StepsSectionImplCopyWithImpl(
+      _$StepsSectionImpl _value, $Res Function(_$StepsSectionImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? data = null,
+  }) {
+    return _then(_$StepsSectionImpl(
+      null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as StepsData,
+    ));
+  }
 }
 
 /// @nodoc
@@ -109,6 +268,52 @@ class _$StepsSectionImpl implements StepsSection {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, data);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$StepsSectionImplCopyWith<_$StepsSectionImpl> get copyWith =>
+      __$$StepsSectionImplCopyWithImpl<_$StepsSectionImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(StoriesSection value) stories,
+    required TResult Function(StepsSection value) steps,
+    required TResult Function(QuickActions value) quickActions,
+    required TResult Function(ImageSection value) image,
+    required TResult Function(NudgeSection value) nudge,
+  }) {
+    return steps(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(StoriesSection value)? stories,
+    TResult? Function(StepsSection value)? steps,
+    TResult? Function(QuickActions value)? quickActions,
+    TResult? Function(ImageSection value)? image,
+    TResult? Function(NudgeSection value)? nudge,
+  }) {
+    return steps?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(StoriesSection value)? stories,
+    TResult Function(StepsSection value)? steps,
+    TResult Function(QuickActions value)? quickActions,
+    TResult Function(ImageSection value)? image,
+    TResult Function(NudgeSection value)? nudge,
+    required TResult orElse(),
+  }) {
+    if (steps != null) {
+      return steps(this);
+    }
+    return orElse();
+  }
 }
 
 abstract class StepsSection implements HomePageSection {
@@ -118,6 +323,40 @@ abstract class StepsSection implements HomePageSection {
       _$StepsSectionImpl.fromJson;
 
   StepsData get data;
+  @JsonKey(ignore: true)
+  _$$StepsSectionImplCopyWith<_$StepsSectionImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$QuickActionsImplCopyWith<$Res> {
+  factory _$$QuickActionsImplCopyWith(
+          _$QuickActionsImpl value, $Res Function(_$QuickActionsImpl) then) =
+      __$$QuickActionsImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({QuickActionsCardsData data});
+}
+
+/// @nodoc
+class __$$QuickActionsImplCopyWithImpl<$Res>
+    extends _$HomePageSectionCopyWithImpl<$Res, _$QuickActionsImpl>
+    implements _$$QuickActionsImplCopyWith<$Res> {
+  __$$QuickActionsImplCopyWithImpl(
+      _$QuickActionsImpl _value, $Res Function(_$QuickActionsImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? data = null,
+  }) {
+    return _then(_$QuickActionsImpl(
+      null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as QuickActionsCardsData,
+    ));
+  }
 }
 
 /// @nodoc
@@ -151,6 +390,52 @@ class _$QuickActionsImpl implements QuickActions {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, data);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$QuickActionsImplCopyWith<_$QuickActionsImpl> get copyWith =>
+      __$$QuickActionsImplCopyWithImpl<_$QuickActionsImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(StoriesSection value) stories,
+    required TResult Function(StepsSection value) steps,
+    required TResult Function(QuickActions value) quickActions,
+    required TResult Function(ImageSection value) image,
+    required TResult Function(NudgeSection value) nudge,
+  }) {
+    return quickActions(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(StoriesSection value)? stories,
+    TResult? Function(StepsSection value)? steps,
+    TResult? Function(QuickActions value)? quickActions,
+    TResult? Function(ImageSection value)? image,
+    TResult? Function(NudgeSection value)? nudge,
+  }) {
+    return quickActions?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(StoriesSection value)? stories,
+    TResult Function(StepsSection value)? steps,
+    TResult Function(QuickActions value)? quickActions,
+    TResult Function(ImageSection value)? image,
+    TResult Function(NudgeSection value)? nudge,
+    required TResult orElse(),
+  }) {
+    if (quickActions != null) {
+      return quickActions(this);
+    }
+    return orElse();
+  }
 }
 
 abstract class QuickActions implements HomePageSection {
@@ -161,6 +446,40 @@ abstract class QuickActions implements HomePageSection {
       _$QuickActionsImpl.fromJson;
 
   QuickActionsCardsData get data;
+  @JsonKey(ignore: true)
+  _$$QuickActionsImplCopyWith<_$QuickActionsImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$ImageSectionImplCopyWith<$Res> {
+  factory _$$ImageSectionImplCopyWith(
+          _$ImageSectionImpl value, $Res Function(_$ImageSectionImpl) then) =
+      __$$ImageSectionImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({ImageSectionData data});
+}
+
+/// @nodoc
+class __$$ImageSectionImplCopyWithImpl<$Res>
+    extends _$HomePageSectionCopyWithImpl<$Res, _$ImageSectionImpl>
+    implements _$$ImageSectionImplCopyWith<$Res> {
+  __$$ImageSectionImplCopyWithImpl(
+      _$ImageSectionImpl _value, $Res Function(_$ImageSectionImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? data = null,
+  }) {
+    return _then(_$ImageSectionImpl(
+      null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as ImageSectionData,
+    ));
+  }
 }
 
 /// @nodoc
@@ -194,6 +513,52 @@ class _$ImageSectionImpl implements ImageSection {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, data);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ImageSectionImplCopyWith<_$ImageSectionImpl> get copyWith =>
+      __$$ImageSectionImplCopyWithImpl<_$ImageSectionImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(StoriesSection value) stories,
+    required TResult Function(StepsSection value) steps,
+    required TResult Function(QuickActions value) quickActions,
+    required TResult Function(ImageSection value) image,
+    required TResult Function(NudgeSection value) nudge,
+  }) {
+    return image(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(StoriesSection value)? stories,
+    TResult? Function(StepsSection value)? steps,
+    TResult? Function(QuickActions value)? quickActions,
+    TResult? Function(ImageSection value)? image,
+    TResult? Function(NudgeSection value)? nudge,
+  }) {
+    return image?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(StoriesSection value)? stories,
+    TResult Function(StepsSection value)? steps,
+    TResult Function(QuickActions value)? quickActions,
+    TResult Function(ImageSection value)? image,
+    TResult Function(NudgeSection value)? nudge,
+    required TResult orElse(),
+  }) {
+    if (image != null) {
+      return image(this);
+    }
+    return orElse();
+  }
 }
 
 abstract class ImageSection implements HomePageSection {
@@ -203,6 +568,25 @@ abstract class ImageSection implements HomePageSection {
       _$ImageSectionImpl.fromJson;
 
   ImageSectionData get data;
+  @JsonKey(ignore: true)
+  _$$ImageSectionImplCopyWith<_$ImageSectionImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$NudgeSectionImplCopyWith<$Res> {
+  factory _$$NudgeSectionImplCopyWith(
+          _$NudgeSectionImpl value, $Res Function(_$NudgeSectionImpl) then) =
+      __$$NudgeSectionImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$NudgeSectionImplCopyWithImpl<$Res>
+    extends _$HomePageSectionCopyWithImpl<$Res, _$NudgeSectionImpl>
+    implements _$$NudgeSectionImplCopyWith<$Res> {
+  __$$NudgeSectionImplCopyWithImpl(
+      _$NudgeSectionImpl _value, $Res Function(_$NudgeSectionImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
@@ -231,6 +615,46 @@ class _$NudgeSectionImpl implements NudgeSection {
   @JsonKey(ignore: true)
   @override
   int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(StoriesSection value) stories,
+    required TResult Function(StepsSection value) steps,
+    required TResult Function(QuickActions value) quickActions,
+    required TResult Function(ImageSection value) image,
+    required TResult Function(NudgeSection value) nudge,
+  }) {
+    return nudge(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(StoriesSection value)? stories,
+    TResult? Function(StepsSection value)? steps,
+    TResult? Function(QuickActions value)? quickActions,
+    TResult? Function(ImageSection value)? image,
+    TResult? Function(NudgeSection value)? nudge,
+  }) {
+    return nudge?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(StoriesSection value)? stories,
+    TResult Function(StepsSection value)? steps,
+    TResult Function(QuickActions value)? quickActions,
+    TResult Function(ImageSection value)? image,
+    TResult Function(NudgeSection value)? nudge,
+    required TResult orElse(),
+  }) {
+    if (nudge != null) {
+      return nudge(this);
+    }
+    return orElse();
+  }
 }
 
 abstract class NudgeSection implements HomePageSection {

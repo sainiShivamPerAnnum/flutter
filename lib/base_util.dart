@@ -31,6 +31,7 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/expert/booking_sheet.dart';
 import 'package:felloapp/feature/referrals/ui/referral_rating_sheet.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
@@ -455,6 +456,23 @@ class BaseUtil extends ChangeNotifier {
         entryPoint: entryPoint,
         quickCheckout: quickCheckout,
       ),
+    );
+  }
+
+  static dynamic openBookAdvisorSheet({
+    required String advisorId,
+  }) {
+    AppState.screenStack.add(ScreenItem.modalsheet);
+    return openModalBottomSheet(
+      isScrollControlled: true,
+      enableDrag: true,
+      isBarrierDismissible: true,
+      addToScreenStack: false,
+      content: BookCallSheetView(
+        advisorID: advisorId,
+      ),
+      backgroundColor: UiConstants.kBackgroundColor,
+      hapticVibrate: true,
     );
   }
 

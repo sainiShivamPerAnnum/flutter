@@ -47,7 +47,7 @@ class AppTextField extends StatelessWidget {
       ),
     );
 
-    final inputStyle = GoogleFonts.sourceSansPro(
+    final inputStyle = GoogleFonts.sourceSans3(
       color: AppColors.textGray70,
       fontWeight: FontWeight.w600,
       height: 1.2,

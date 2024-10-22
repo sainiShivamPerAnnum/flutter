@@ -7,8 +7,11 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/blog_model.dart';
+import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
 import 'package:felloapp/core/model/event_model.dart';
-import 'package:felloapp/core/model/top_expert_model.dart';
+import 'package:felloapp/core/model/experts/experts_home.dart';
+import 'package:felloapp/core/model/live/live_home.dart';
+// import 'package:felloapp/core/model/top_expert_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
@@ -20,7 +23,7 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
-import 'package:felloapp/feature/expert/consultant_card.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/consultant_card.dart';
 import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/tambola_mini_info_card.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -35,7 +38,10 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_secti
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/experts.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/first_free_call.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/live.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/past_bookings.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/upcoming_bookings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/ticket_components.dart/ticket_pendingAction.dart';
 import 'package:felloapp/ui/pages/power_play/root_card.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -48,6 +54,7 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/model/quick_links_model.dart';
@@ -95,7 +102,11 @@ class SaveViewModel extends BaseViewModel {
   late final PageController offersController = PageController(initialPage: 0);
   List<EventModel>? _ongoingEvents;
   List<BlogPostModel>? _blogPosts;
-  List<TopExpertModel>? _topExperts;
+  List<Booking> _upcomingBookings = [];
+  List<Booking> _pastBookings = [];
+  List<Expert> _topExperts = [];
+  LiveHome? _liveData;
+  bool _freeCallAvailable = false;
   List<BlogPostModelByCategory>? _blogPostsByCategory;
   bool _isLoading = true;
   bool _isChallenegsLoading = true;
@@ -136,7 +147,11 @@ class SaveViewModel extends BaseViewModel {
 
   List<BlogPostModel>? get blogPosts => _blogPosts;
 
-  List<TopExpertModel>? get topExperts => _topExperts;
+  List<Booking> get upcomingBookings => _upcomingBookings;
+  List<Booking> get pastBookings => _pastBookings;
+  List<Expert> get topExperts => _topExperts;
+  LiveHome? get liveData => _liveData;
+  bool get freeCallAvailable => _freeCallAvailable;
 
   List<BlogPostModelByCategory>? get blogPostsByCategory =>
       _blogPostsByCategory;
@@ -174,8 +189,28 @@ class SaveViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  set topExperts(List<TopExpertModel>? value) {
+  set upcomingBookings(List<Booking> value) {
+    _upcomingBookings = value;
+    notifyListeners();
+  }
+
+  set pastBookings(List<Booking> value) {
+    _pastBookings = value;
+    notifyListeners();
+  }
+
+  set topExperts(List<Expert> value) {
     _topExperts = value;
+    notifyListeners();
+  }
+
+  set liveData(LiveHome? value) {
+    _liveData = value;
+    notifyListeners();
+  }
+
+  set freeCallAvailable(bool value) {
+    _freeCallAvailable = value;
     notifyListeners();
   }
 
@@ -199,12 +234,27 @@ class SaveViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> pullRefresh() async {
+    await Future.wait([
+      _userCoinService.getUserCoinBalance(),
+      _userService.getUserFundWalletData(),
+      getUpcomingBooking(),
+      getPastBooking(),
+      getTopExperts(),
+      getLiveData(),
+    ]);
+    _txnHistoryService.signOut();
+  }
+
   Future<void> init() async {
     // _baseUtil.fetchUserAugmontDetail();
     // baseProvider = BaseUtil();
     await _userService.getUserFundWalletData();
     await _userCoinService.getUserCoinBalance();
+    await getUpcomingBooking();
+    await getPastBooking();
     await getTopExperts();
+    await getLiveData();
     await locator<SubService>().init();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -255,7 +305,7 @@ class SaveViewModel extends BaseViewModel {
     for (final key in DynamicUiUtils.saveViewOrder[1]) {
       switch (key) {
         case 'PBL':
-          saveViewItems.add(PortfolioCard());
+          saveViewItems.add(const PortfolioCard());
           break;
         case "QL":
           saveViewItems.add(const QuickLinks());
@@ -264,9 +314,11 @@ class SaveViewModel extends BaseViewModel {
           saveViewItems.add(const TambolaMiniInfoCard());
           break;
         case "LV":
-          saveViewItems.add(Live(
-            model: smodel,
-          ));
+          saveViewItems.add(
+            TopLive(
+              model: smodel,
+            ),
+          );
           break;
         case "EXP":
           saveViewItems.add(
@@ -276,7 +328,7 @@ class SaveViewModel extends BaseViewModel {
           );
           break;
         case "SN":
-          saveViewItems.add(ConsultationWidget());
+          saveViewItems.add(const ConsultationWidget());
           break;
         case "PP":
           saveViewItems.add(const PowerPlayCard());
@@ -301,12 +353,18 @@ class SaveViewModel extends BaseViewModel {
           break;
       }
     }
-
-    saveViewItems.addAll([
-      SizedBox(
-        height: SizeConfig.navBarHeight * 0.5,
-      )
-    ]);
+    saveViewItems.add(UpcomingBookingsComponent(model: smodel));
+    if (smodel.freeCallAvailable) {
+      saveViewItems.add(const FirstFreeCall());
+    }
+    saveViewItems.add(PastBookingsComponent(model: smodel));
+    saveViewItems.addAll(
+      [
+        SizedBox(
+          height: SizeConfig.navBarHeight * 0.5,
+        ),
+      ],
+    );
     return saveViewItems;
   }
 
@@ -322,10 +380,38 @@ class SaveViewModel extends BaseViewModel {
     isChallengesLoading = false;
   }
 
-  Future<void> getTopExperts() async {
-    final response = await _saveRepo.getTopExperts();
+  Future<void> getUpcomingBooking() async {
+    final response = await _saveRepo.getUpcomingBookings();
     if (response.isSuccess()) {
-      topExperts = response.model;
+      upcomingBookings = response.model ?? [];
+    } else {
+      print(response.errorMessage);
+    }
+  }
+
+  Future<void> getPastBooking() async {
+    final response = await _saveRepo.getPastBookings();
+    if (response.isSuccess()) {
+      upcomingBookings = response.model ?? [];
+    } else {
+      print(response.errorMessage);
+    }
+  }
+
+  Future<void> getTopExperts() async {
+    final response = await _saveRepo.getTopExpertsData();
+    if (response.isSuccess()) {
+      topExperts = response.model?.$1 ?? [];
+      freeCallAvailable = response.model?.$2 ?? false;
+    } else {
+      print(response.errorMessage);
+    }
+  }
+
+  Future<void> getLiveData() async {
+    final response = await _saveRepo.getLiveHomeData();
+    if (response.isSuccess()) {
+      liveData = response.model;
     } else {
       print(response.errorMessage);
     }
@@ -507,65 +593,61 @@ class QuickLinks extends StatelessWidget {
       AppConfig.getValue(AppConfigKey.quickActions),
     );
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          margin: EdgeInsets.only(
-            top: SizeConfig.padding24,
-            bottom: SizeConfig.padding8,
-          ),
-          width: SizeConfig.screenWidth,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: List.generate(
-              quickLinks.length,
-              (index) => GestureDetector(
-                onTap: () {
-                  Haptic.vibrate();
-                  AppState.delegate!
-                      .parseRoute(Uri.parse(quickLinks[index].deeplink));
-                  locator<AnalyticsService>().track(
-                    eventName: AnalyticsEvents.iconTrayTapped,
-                    properties: {'icon': quickLinks[index].name},
-                  );
-                },
-                child: Container(
-                  width: SizeConfig.padding86,
-                  padding: EdgeInsets.all(SizeConfig.padding10),
-                  decoration: BoxDecoration(
-                      color: UiConstants.greyVarient,
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(SizeConfig.padding8))),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        width: quickLinks[index].asset == Assets.goldAsset ||
-                                quickLinks[index].asset == Assets.floAsset
-                            ? SizeConfig.padding56
-                            : SizeConfig.padding36,
-                        height: quickLinks[index].asset == Assets.goldAsset ||
-                                quickLinks[index].asset == Assets.floAsset
-                            ? SizeConfig.padding56
-                            : SizeConfig.padding36,
-                        child: AppImage(
-                          quickLinks[index].asset,
-                        ),
-                      ),
-                      SizedBox(height: SizeConfig.padding8),
-                      Text(
-                        quickLinks[index].name,
-                        style:
-                            TextStyles.sourceSansSB.body4.colour(Colors.white),
-                      )
-                    ],
+    return Container(
+      margin: EdgeInsets.only(
+        top: SizeConfig.padding24,
+        bottom: SizeConfig.padding8,
+      ),
+      width: SizeConfig.screenWidth,
+      child: Wrap(
+        alignment: WrapAlignment.spaceEvenly,
+        children: List.generate(
+          quickLinks.length,
+          (index) => GestureDetector(
+            onTap: () {
+              //todo block logic here @Hirdesh2101
+              Haptic.vibrate();
+              AppState.delegate!
+                  .parseRoute(Uri.parse(quickLinks[index].deeplink));
+              locator<AnalyticsService>().track(
+                eventName: AnalyticsEvents.iconTrayTapped,
+                properties: {'icon': quickLinks[index].name},
+              );
+            },
+            child: Container(
+              padding: EdgeInsets.all(SizeConfig.padding8),
+              decoration: BoxDecoration(
+                color: UiConstants.greyVarient,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(
+                    SizeConfig.padding8,
                   ),
                 ),
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: SizeConfig.padding36,
+                    height: SizeConfig.padding36,
+                    child: AppImage(
+                      quickLinks[index].asset,
+                    ),
+                  ),
+                  SizedBox(height: SizeConfig.padding8),
+                  SizedBox(
+                    width: SizeConfig.padding70,
+                    child: Text(
+                      quickLinks[index].name,
+                      style: TextStyles.sourceSansSB.body4.colour(Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 }
