@@ -182,6 +182,12 @@ class ApiPath {
 
   // lendbox
   static String createLbWithdrawal(String? uid) => "/user/$uid/withdrawal";
+  static String createEvent() => "/events";
+  static String getUpcomingAdvisorBooking(String? uid) =>
+      "/booking/advisor/upcoming/$uid";
+
+  static String getPastAdvisorBooking(String? uid) =>
+      "/booking/advisor/past/$uid";
 
   static String lbWithdrawableQuantity(String? uid) =>
       "/user/$uid/lb/withdrawable";

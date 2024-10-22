@@ -62,6 +62,7 @@ const String CampaignViewPath = '/campaignViewPath';
 const String SaveAssetViewPath = '/saveAssetViewPath';
 const String SellConfirmationViewPath = '/sellConfirmationViewPath';
 const String ViewAllBlogsViewPath = '/viewAllBlogsViewPath';
+const String ScheduleCallViewPath = '/scheduleCallViewPath';
 const String AllParticipantsWinnersTopReferersPath =
     "/allParticipantsWinnersTopReferersPath";
 const String RedeemSucessfulScreenPath = "/RedeemSucessfulScreenPath";
@@ -186,6 +187,7 @@ enum Pages {
   SaveAssetView,
   SellConfirmationView,
   ViewAllBlogsView,
+  ScheduleCallView,
   AllParticipantsWinnersTopReferrersView,
   RedeemSuccessfulScreenView,
   SharePriceScreenView,
@@ -685,6 +687,13 @@ PageConfiguration ViewAllBlogsViewConfig = PageConfiguration(
   path: ViewAllBlogsViewPath,
   uiPage: Pages.ViewAllBlogsView,
   name: "View All Blogs View",
+);
+
+PageConfiguration ScheduleCallViewConfig = PageConfiguration(
+  key: 'ScheduleCallView',
+  path: ScheduleCallViewPath,
+  uiPage: Pages.ScheduleCallView,
+  name: "Schedule Call View",
 );
 
 PageConfiguration AllParticipantsWinnersTopReferrersConfig = PageConfiguration(

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
+import 'package:felloapp/ui/pages/advisor/advisor.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/support-new/support_new.dart';
 import 'package:felloapp/util/assets.dart';
@@ -19,6 +20,9 @@ class RootController {
 
   static final supportNavBarItem = NavBarItemModel(
       "Support", Assets.support_bottom_nav, ShowCaseKeys.AccountKey);
+  static final advisortNavBarItem = NavBarItemModel(
+      "Advisor", Assets.advisor_bottom_nav, ShowCaseKeys.AccountKey);
+
   static final saveNavBarItem =
       NavBarItemModel("Home", Assets.home_bottom_nav, ShowCaseKeys.SaveKey);
 
@@ -42,6 +46,7 @@ class RootController {
   }
 
   void getNavItems(String navItem) {
+    print("eiuhdfihafi ofhjosidf oisjdfoijosdfj osdfj oj foij $navItem");
     switch (navItem) {
       case "SV":
         navItems.putIfAbsent(const Save(), () => RootController.saveNavBarItem);
@@ -61,6 +66,10 @@ class RootController {
       case "SP":
         navItems.putIfAbsent(
             const SupportNewPage(), () => RootController.supportNavBarItem);
+        break;
+      case "SH":
+        navItems.putIfAbsent(
+            const AdvisorPage(), () => RootController.advisortNavBarItem);
         break;
       default:
     }

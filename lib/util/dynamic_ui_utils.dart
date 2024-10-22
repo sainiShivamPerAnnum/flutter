@@ -17,9 +17,10 @@ class DynamicUiUtils {
   static String goldTag = "";
   static String lbTag = "";
   static List<String> support = ["LV", "QL", "BL", "SN"];
+  static List<String> advisor = ["LV", "UC", "PC"];
 
   // static Text trendingTag=
-  static List<String> navBar = ["SV", "LV", "EP", "SP", "TM"];
+  static List<String> navBar = ["SV", "LV", "EP", "SP", "TM", "AD"];
   static List<String> playViewOrder = ['TA', 'AG', 'HTP', 'GOW', 'ST'];
   static SingleInfo helpFab =
       SingleInfo(iconUri: '', actionUri: '', title: 'Help', isCollapse: true);

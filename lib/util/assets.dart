@@ -185,6 +185,7 @@ class Assets {
   static const String live = "assets/images/live.png";
   static const String cal = "assets/images/calender.png";
   static const String help = "assets/images/help.png";
+  static const String user = "assets/images/user.png";
 
   //GT ASSETS
 
@@ -500,6 +501,7 @@ class Assets {
 
   static const String experts_bottom_nav = "assets/vectors/experts.png";
   static const String support_bottom_nav = "assets/vectors/support.png";
+  static const String advisor_bottom_nav = "assets/vectors/advisor.png";
   static const String calender =
       "https://ik.imagekit.io/9xfwtu0xm/static/calender.png";
 }
