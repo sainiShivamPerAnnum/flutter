@@ -10,6 +10,7 @@ import 'package:felloapp/core/model/blog_model.dart';
 import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
+import 'package:felloapp/core/model/live/live_home.dart';
 // import 'package:felloapp/core/model/top_expert_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
@@ -104,6 +105,8 @@ class SaveViewModel extends BaseViewModel {
   List<Booking> _upcomingBookings = [];
   List<Booking> _pastBookings = [];
   List<Expert> _topExperts = [];
+  LiveHome? _liveData;
+  bool _freeCallAvailable = false;
   List<BlogPostModelByCategory>? _blogPostsByCategory;
   bool _isLoading = true;
   bool _isChallenegsLoading = true;
@@ -147,6 +150,8 @@ class SaveViewModel extends BaseViewModel {
   List<Booking> get upcomingBookings => _upcomingBookings;
   List<Booking> get pastBookings => _pastBookings;
   List<Expert> get topExperts => _topExperts;
+  LiveHome? get liveData => _liveData;
+  bool get freeCallAvailable => _freeCallAvailable;
 
   List<BlogPostModelByCategory>? get blogPostsByCategory =>
       _blogPostsByCategory;
@@ -188,6 +193,7 @@ class SaveViewModel extends BaseViewModel {
     _upcomingBookings = value;
     notifyListeners();
   }
+
   set pastBookings(List<Booking> value) {
     _pastBookings = value;
     notifyListeners();
@@ -195,6 +201,16 @@ class SaveViewModel extends BaseViewModel {
 
   set topExperts(List<Expert> value) {
     _topExperts = value;
+    notifyListeners();
+  }
+
+  set liveData(LiveHome? value) {
+    _liveData = value;
+    notifyListeners();
+  }
+
+  set freeCallAvailable(bool value) {
+    _freeCallAvailable = value;
     notifyListeners();
   }
 
@@ -218,6 +234,18 @@ class SaveViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> pullRefresh() async {
+    await Future.wait([
+      _userCoinService.getUserCoinBalance(),
+      _userService.getUserFundWalletData(),
+      getUpcomingBooking(),
+      getPastBooking(),
+      getTopExperts(),
+      getLiveData(),
+    ]);
+    _txnHistoryService.signOut();
+  }
+
   Future<void> init() async {
     // _baseUtil.fetchUserAugmontDetail();
     // baseProvider = BaseUtil();
@@ -226,6 +254,7 @@ class SaveViewModel extends BaseViewModel {
     await getUpcomingBooking();
     await getPastBooking();
     await getTopExperts();
+    await getLiveData();
     await locator<SubService>().init();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -286,7 +315,7 @@ class SaveViewModel extends BaseViewModel {
           break;
         case "LV":
           saveViewItems.add(
-            Live(
+            TopLive(
               model: smodel,
             ),
           );
@@ -325,13 +354,17 @@ class SaveViewModel extends BaseViewModel {
       }
     }
     saveViewItems.add(UpcomingBookingsComponent(model: smodel));
-    saveViewItems.add(const FirstFreeCall());
+    if (smodel.freeCallAvailable) {
+      saveViewItems.add(const FirstFreeCall());
+    }
     saveViewItems.add(PastBookingsComponent(model: smodel));
-    saveViewItems.addAll([
-      SizedBox(
-        height: SizeConfig.navBarHeight * 0.5,
-      )
-    ]);
+    saveViewItems.addAll(
+      [
+        SizedBox(
+          height: SizeConfig.navBarHeight * 0.5,
+        ),
+      ],
+    );
     return saveViewItems;
   }
 
@@ -355,6 +388,7 @@ class SaveViewModel extends BaseViewModel {
       print(response.errorMessage);
     }
   }
+
   Future<void> getPastBooking() async {
     final response = await _saveRepo.getPastBookings();
     if (response.isSuccess()) {
@@ -367,7 +401,17 @@ class SaveViewModel extends BaseViewModel {
   Future<void> getTopExperts() async {
     final response = await _saveRepo.getTopExpertsData();
     if (response.isSuccess()) {
-      topExperts = response.model ?? [];
+      topExperts = response.model?.$1 ?? [];
+      freeCallAvailable = response.model?.$2 ?? false;
+    } else {
+      print(response.errorMessage);
+    }
+  }
+
+  Future<void> getLiveData() async {
+    final response = await _saveRepo.getLiveHomeData();
+    if (response.isSuccess()) {
+      liveData = response.model;
     } else {
       print(response.errorMessage);
     }
@@ -561,7 +605,7 @@ class QuickLinks extends StatelessWidget {
           quickLinks.length,
           (index) => GestureDetector(
             onTap: () {
-             //todo block logic here @Hirdesh2101
+              //todo block logic here @Hirdesh2101
               Haptic.vibrate();
               AppState.delegate!
                   .parseRoute(Uri.parse(quickLinks[index].deeplink));

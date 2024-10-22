@@ -10,10 +10,12 @@ const _deserializable = JsonSerializable(
 class ExpertsHome {
   List<String> list; 
   Map<String, List<Expert>> values; 
+  bool isAnyFreeCallAvailable;
 
   ExpertsHome({
     required this.list,
     required this.values,
+    this.isAnyFreeCallAvailable = false,
   });
 
   factory ExpertsHome.fromJson(Map<String, dynamic> json) =>

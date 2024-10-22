@@ -64,6 +64,7 @@ import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
+import 'package:felloapp/feature/shorts/flutter_preload_videos.dart';
 import 'package:felloapp/feature/tambola/src/repos/tambola_repo.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_vm.dart';
@@ -231,6 +232,9 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton<StoriesRepository>(
     () => StoriesRepository(locator()),
   );
+  locator.registerLazySingleton(LiveRepository.new);
+  locator.registerLazySingleton(ExpertsRepository.new);
+  locator.registerLazySingleton(ShortsRepo.new);
 
   //ROOT
   locator.registerLazySingleton(CardActionsNotifier.new);
@@ -294,9 +298,5 @@ Future<void> setupLocator() async {
   locator.registerFactory(FAQCardViewModel.new);
   locator.registerFactory(SourceAdaptiveAssetViewModel.new);
   locator.registerFactory(AssetPreferenceViewModel.new);
-
-  locator.registerFactory(LiveRepository.new);
-  locator.registerFactory(ExpertsRepository.new);
-
   await locator.allReady();
 }

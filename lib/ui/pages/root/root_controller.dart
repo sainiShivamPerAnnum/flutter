@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/feature/expert/expert_root.dart';
 import 'package:felloapp/feature/live/live_root.dart';
+import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
+import 'package:felloapp/feature/shorts/video_page.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/support-new/support_new.dart';
@@ -10,7 +12,6 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/show_case_key.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_preload_videos/flutter_preload_videos.dart';
 
 class RootController {
   static final liveNavBarItem = NavBarItemModel(
@@ -72,7 +73,8 @@ class RootController {
       }
     } else {
       // Video goes out of view
-      if (state.controllers[state.focusedIndex]!.value.isPlaying) {
+      if (state.controllers[state.focusedIndex] != null &&
+          state.controllers[state.focusedIndex]!.value.isPlaying) {
         BlocProvider.of<PreloadBloc>(
           AppState.delegate!.navigatorKey.currentContext!,
           listen: false,

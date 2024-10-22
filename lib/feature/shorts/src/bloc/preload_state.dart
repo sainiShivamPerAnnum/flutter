@@ -8,6 +8,7 @@ class PreloadState with _$PreloadState {
     required int focusedIndex,
     required int reloadCounter,
     required bool isLoading,
+    required Map<String, List<CommentData>> videoComments,
   }) = _PreloadState;
 
   factory PreloadState.initial() => PreloadState(
@@ -16,5 +17,6 @@ class PreloadState with _$PreloadState {
         focusedIndex: 0,
         reloadCounter: 0,
         isLoading: false,
+        videoComments: {}
       );
 }

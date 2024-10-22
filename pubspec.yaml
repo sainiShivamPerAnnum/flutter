@@ -112,10 +112,13 @@ dependencies:
   draggable_widget: ^2.0.0
   pointer_interceptor: ^0.10.1+2
   inview_notifier_list: ^3.0.0
-  flutter_preload_videos:
-    path: packages/flutter_preload_videos/
   design_system:
     path: _packages/design_system/
+  flutter_isolate: ^2.0.2
+  injectable_generator: ^1.4.1
+  flutter_screenutil: ^5.9.0
+  visibility_detector: ^0.4.0+2
+  timeago: ^3.7.0
 
 
 

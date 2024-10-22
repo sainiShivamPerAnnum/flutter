@@ -906,7 +906,7 @@ packages:
     source: hosted
     version: "1.0.8"
   flutter_isolate:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_isolate
       sha256: "36a84e1a22371d8092ea2121145b330c24fb272acb951fb30c60ba44926b8fb3"
@@ -942,13 +942,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.9"
-  flutter_preload_videos:
-    dependency: "direct main"
-    description:
-      path: "packages/flutter_preload_videos"
-      relative: true
-    source: path
-    version: "0.0.1"
   flutter_rating_bar:
     dependency: "direct main"
     description:
@@ -958,7 +951,7 @@ packages:
     source: hosted
     version: "4.0.1"
   flutter_screenutil:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_screenutil
       sha256: "8239210dd68bee6b0577aa4a090890342d04a136ce1c81f98ee513fc0ce891de"
@@ -1277,7 +1270,7 @@ packages:
     source: hosted
     version: "1.5.4"
   injectable_generator:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: injectable_generator
       sha256: "1f5bbe44f06cf15dc55b9797a8df8b4d22b0471f6a7d7f79f4c651393b130a9d"
@@ -2133,6 +2126,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.3"
+  timeago:
+    dependency: "direct main"
+    description:
+      name: timeago
+      sha256: "054cedf68706bb142839ba0ae6b135f6b68039f0b8301cbe8784ae653d5ff8de"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.7.0"
   timing:
     dependency: transitive
     description:
@@ -2325,7 +2326,7 @@ packages:
     source: hosted
     version: "2.3.2"
   visibility_detector:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: visibility_detector
       sha256: dd5cc11e13494f432d15939c3aa8ae76844c42b723398643ce9addb88a5ed420
@@ -2469,5 +2470,5 @@ packages:
     source: hosted
     version: "2.0.2"
 sdks:
-  dart: ">=3.4.1 <4.0.0"
+  dart: ">=3.4.0 <4.0.0"
   flutter: ">=3.22.0"

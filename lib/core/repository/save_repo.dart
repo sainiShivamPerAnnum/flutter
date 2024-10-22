@@ -4,6 +4,7 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/blog_model.dart';
 import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
+import 'package:felloapp/core/model/live/live_home.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -11,6 +12,7 @@ import 'package:felloapp/util/flavor_config.dart';
 
 class SaveRepo extends BaseRepo {
   static const _experts = 'experts';
+  static const _live = 'live';
   final String _blogUrl =
       "https://felloblog815893968.wpcomstaging.com/wp-json/wp/v2";
   final String _bookingsUrl = "https://advisors.fello-dev.net/";
@@ -40,10 +42,9 @@ class SaveRepo extends BaseRepo {
   }
 
   Future<ApiResponse<List<Booking>>> getUpcomingBookings() async {
-    final String? uid = userService.baseUser!.uid;
     try {
       final response = await APIService.instance.getData(
-        'booking/user/upcoming/$uid',
+        'booking/user/upcoming',
         cBaseUrl: _bookingsUrl,
         apiName: 'bookings/getUpcomingBookings',
       );
@@ -64,11 +65,11 @@ class SaveRepo extends BaseRepo {
       return const ApiResponse(code: 404, errorMessage: 'No Bookings Found');
     }
   }
+
   Future<ApiResponse<List<Booking>>> getPastBookings() async {
-    final String? uid = userService.baseUser!.uid;
     try {
       final response = await APIService.instance.getData(
-        'booking/user/past/$uid',
+        'booking/user/past',
         cBaseUrl: _bookingsUrl,
         apiName: 'bookings/getPastBookings',
       );
@@ -90,7 +91,7 @@ class SaveRepo extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<Expert>>> getTopExpertsData() async {
+  Future<ApiResponse<(List<Expert>,bool)>> getTopExpertsData() async {
     try {
       final response = await APIService.instance.getData(
         'advisors/sections',
@@ -107,8 +108,27 @@ class SaveRepo extends BaseRepo {
         }
       });
 
-      return ApiResponse<List<Expert>>(
-        model: topExperts,
+      return ApiResponse<(List<Expert>,bool)>(
+        model: (topExperts,allData.isAnyFreeCallAvailable),
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<LiveHome>> getLiveHomeData() async {
+    try {
+      final response = await APIService.instance.getData(
+        'events/home',
+        cBaseUrl: _baseUrl,
+        apiName: '$_live/getLiveHomeData',
+      );
+      final responseData = response["data"];
+      log("Live data: $responseData");
+      return ApiResponse<LiveHome>(
+        model: LiveHome.fromJson(responseData),
         code: 200,
       );
     } catch (e) {

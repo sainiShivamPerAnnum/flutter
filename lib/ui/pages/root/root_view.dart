@@ -1,6 +1,4 @@
-import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
@@ -44,14 +42,12 @@ class _RootState extends State<Root> {
 
   @override
   Widget build(BuildContext context) {
-    final locale = locator<S>();
     return BaseView<RootViewModel>(
       onModelReady: (model) {
         model.onInit();
       },
       onModelDispose: (model) => model.onDispose(),
       builder: (ctx, model, child) {
-        RootController rootController = locator<RootController>();
 
         return Stack(
           children: [
@@ -66,19 +62,13 @@ class _RootState extends State<Root> {
                       const RootAppBar(),
                       const HeadAlerts(),
                       Expanded(
-                        child: RefreshIndicator(
-                          triggerMode: RefreshIndicatorTriggerMode.onEdge,
-                          color: UiConstants.primaryColor,
-                          backgroundColor: Colors.black,
-                          onRefresh: model.pullToRefresh,
-                          child: Consumer<AppState>(
-                            builder: (ctx, m, child) {
-                              return LazyLoadIndexedStack(
-                                index: m.getCurrentTabIndex,
-                                children: model.navBarItems.keys.toList(),
-                              );
-                            },
-                          ),
+                        child: Consumer<AppState>(
+                          builder: (ctx, m, child) {
+                            return LazyLoadIndexedStack(
+                              index: m.getCurrentTabIndex,
+                              children: model.navBarItems.keys.toList(),
+                            );
+                          },
                         ),
                       ),
                     ],

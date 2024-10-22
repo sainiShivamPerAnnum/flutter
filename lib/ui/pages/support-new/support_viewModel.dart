@@ -256,7 +256,6 @@ class SupportViewModel extends BaseViewModel {
   List<Widget> getSaveViewItems(SupportViewModel smodel) {
     List<Widget> saveViewItems = [];
     for (final key in DynamicUiUtils.support) {
-      print(key);
       switch (key) {
         case "LV":
           saveViewItems.add(

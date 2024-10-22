@@ -72,73 +72,84 @@ class __ExpertHomeState extends State<_ExpertHome>
             (section) => section.toLowerCase().contains('top'),
           );
 
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
-            child: InViewNotifierCustomScrollView(
-              controller: _scrollController,
-              isInViewPortCondition: (deltaTop, deltaBottom, vpHeight) {
-                return deltaTop < (0.5 * vpHeight) &&
-                    deltaBottom > (0.5 * vpHeight);
-              },
-              slivers: [
-                SliverToBoxAdapter(
-                  child: SizedBox(height: SizeConfig.padding14),
-                ),
-                const SliverToBoxAdapter(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      TitleSubtitleContainer(
-                        title: "Experts",
-                        zeroPadding: true,
-                      ),
-                    ],
+          return RefreshIndicator(
+            triggerMode: RefreshIndicatorTriggerMode.onEdge,
+            color: UiConstants.primaryColor,
+            backgroundColor: Colors.black,
+            onRefresh: () async {
+              BlocProvider.of<ExpertBloc>(
+                context,
+                listen: false,
+              ).add(const LoadExpertsData());
+              return;
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+              child: InViewNotifierCustomScrollView(
+                controller: _scrollController,
+                isInViewPortCondition: (deltaTop, deltaBottom, vpHeight) {
+                  return deltaTop < (0.5 * vpHeight) &&
+                      deltaBottom > (0.5 * vpHeight);
+                },
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: SizedBox(height: SizeConfig.padding14),
                   ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.padding22,
-                    ),
-                    child: Text(
-                      'Our top experts',
-                      style: TextStyles.sourceSansSB.body1,
-                    ),
-                  ),
-                ),
-                _buildExpertList(
-                  expertsData.values[topSectionKey]?.take(3).toList() ?? [],
-                ),
-                SliverPersistentHeader(
-                  pinned: true,
-                  delegate: _StickyHeaderDelegate(
-                    sections: expertsData.list,
-                    currentSection: state.currentSection,
-                    scrollToSection: _scrollToSection,
-                    sectionKeys: sectionKeys,
-                    context: context,
-                  ),
-                ),
-                ...expertsData.list
-                    .where((section) => !section.toLowerCase().contains('top'))
-                    .take(3)
-                    .expand(
-                      (section) => [
-                        _buildSectionContent(section),
-                        _buildExpertList(
-                          expertsData.values[section] ?? [],
+                  const SliverToBoxAdapter(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        TitleSubtitleContainer(
+                          title: "Experts",
+                          zeroPadding: true,
                         ),
                       ],
-                    )
-                    .toList(),
-              ],
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.padding22,
+                      ),
+                      child: Text(
+                        'Our top experts',
+                        style: TextStyles.sourceSansSB.body1,
+                      ),
+                    ),
+                  ),
+                  _buildExpertList(
+                    expertsData.values[topSectionKey]?.take(3).toList() ?? [],
+                  ),
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: _StickyHeaderDelegate(
+                      sections: expertsData.list,
+                      currentSection: state.currentSection,
+                      scrollToSection: _scrollToSection,
+                      sectionKeys: sectionKeys,
+                      context: context,
+                    ),
+                  ),
+                  ...expertsData.list
+                      .where(
+                          (section) => !section.toLowerCase().contains('top'))
+                      .take(3)
+                      .expand(
+                        (section) => [
+                          _buildSectionContent(section),
+                          _buildExpertList(
+                            expertsData.values[section] ?? [],
+                          ),
+                        ],
+                      )
+                      .toList(),
+                ],
+              ),
             ),
           );
         } else {
-          return const Center(
-            child: Text('Failed to load experts data'),
-          );
+          return const ErrorPage();
         }
       },
     );
@@ -237,12 +248,12 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   double get maxExtent {
-    return 44;
+    return 42;
   }
 
   @override
   double get minExtent {
-    return 40;
+    return 42;
   }
 
   @override

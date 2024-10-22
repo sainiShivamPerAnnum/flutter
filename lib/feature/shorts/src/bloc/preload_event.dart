@@ -15,4 +15,18 @@ class PreloadEvent with _$PreloadEvent {
     int? nextLimit,
     int? latency,
   }) = _UpdateConstants;
+
+  const factory PreloadEvent.addComment({
+    required String videoId,
+    required String comment,
+  }) = _AddComment;
+
+  const factory PreloadEvent.likeVideo({
+    required String videoId,
+  }) = _LikeVideo;
+
+  const factory PreloadEvent.addCommentToState({
+    required String videoId,
+    required List<CommentData> comment,
+  }) = _AddCommentToState;
 }

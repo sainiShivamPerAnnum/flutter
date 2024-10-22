@@ -17,43 +17,6 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$PreloadEvent {
   @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() getVideosFromApi,
-    required TResult Function() setLoading,
-    required TResult Function(List<VideoData> videos) updateUrls,
-    required TResult Function(int index) onVideoIndexChanged,
-    required TResult Function(int index) pauseVideoAtIndex,
-    required TResult Function(int index) playVideoAtIndex,
-    required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
-        updateConstants,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? getVideosFromApi,
-    TResult? Function()? setLoading,
-    TResult? Function(List<VideoData> videos)? updateUrls,
-    TResult? Function(int index)? onVideoIndexChanged,
-    TResult? Function(int index)? pauseVideoAtIndex,
-    TResult? Function(int index)? playVideoAtIndex,
-    TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
-        updateConstants,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? getVideosFromApi,
-    TResult Function()? setLoading,
-    TResult Function(List<VideoData> videos)? updateUrls,
-    TResult Function(int index)? onVideoIndexChanged,
-    TResult Function(int index)? pauseVideoAtIndex,
-    TResult Function(int index)? playVideoAtIndex,
-    TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
-        updateConstants,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
@@ -62,6 +25,9 @@ mixin _$PreloadEvent {
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_AddCommentToState value) addCommentToState,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -73,6 +39,9 @@ mixin _$PreloadEvent {
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -84,6 +53,9 @@ mixin _$PreloadEvent {
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_AddCommentToState value)? addCommentToState,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -144,55 +116,6 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
 
   @override
   @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() getVideosFromApi,
-    required TResult Function() setLoading,
-    required TResult Function(List<VideoData> videos) updateUrls,
-    required TResult Function(int index) onVideoIndexChanged,
-    required TResult Function(int index) pauseVideoAtIndex,
-    required TResult Function(int index) playVideoAtIndex,
-    required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
-        updateConstants,
-  }) {
-    return getVideosFromApi();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? getVideosFromApi,
-    TResult? Function()? setLoading,
-    TResult? Function(List<VideoData> videos)? updateUrls,
-    TResult? Function(int index)? onVideoIndexChanged,
-    TResult? Function(int index)? pauseVideoAtIndex,
-    TResult? Function(int index)? playVideoAtIndex,
-    TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
-        updateConstants,
-  }) {
-    return getVideosFromApi?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? getVideosFromApi,
-    TResult Function()? setLoading,
-    TResult Function(List<VideoData> videos)? updateUrls,
-    TResult Function(int index)? onVideoIndexChanged,
-    TResult Function(int index)? pauseVideoAtIndex,
-    TResult Function(int index)? playVideoAtIndex,
-    TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
-        updateConstants,
-    required TResult orElse(),
-  }) {
-    if (getVideosFromApi != null) {
-      return getVideosFromApi();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
@@ -201,6 +124,9 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_AddCommentToState value) addCommentToState,
   }) {
     return getVideosFromApi(this);
   }
@@ -215,6 +141,9 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
   }) {
     return getVideosFromApi?.call(this);
   }
@@ -229,6 +158,9 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_AddCommentToState value)? addCommentToState,
     required TResult orElse(),
   }) {
     if (getVideosFromApi != null) {
@@ -279,55 +211,6 @@ class _$SetLoadingImpl implements _SetLoading {
 
   @override
   @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() getVideosFromApi,
-    required TResult Function() setLoading,
-    required TResult Function(List<VideoData> videos) updateUrls,
-    required TResult Function(int index) onVideoIndexChanged,
-    required TResult Function(int index) pauseVideoAtIndex,
-    required TResult Function(int index) playVideoAtIndex,
-    required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
-        updateConstants,
-  }) {
-    return setLoading();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? getVideosFromApi,
-    TResult? Function()? setLoading,
-    TResult? Function(List<VideoData> videos)? updateUrls,
-    TResult? Function(int index)? onVideoIndexChanged,
-    TResult? Function(int index)? pauseVideoAtIndex,
-    TResult? Function(int index)? playVideoAtIndex,
-    TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
-        updateConstants,
-  }) {
-    return setLoading?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? getVideosFromApi,
-    TResult Function()? setLoading,
-    TResult Function(List<VideoData> videos)? updateUrls,
-    TResult Function(int index)? onVideoIndexChanged,
-    TResult Function(int index)? pauseVideoAtIndex,
-    TResult Function(int index)? playVideoAtIndex,
-    TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
-        updateConstants,
-    required TResult orElse(),
-  }) {
-    if (setLoading != null) {
-      return setLoading();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
@@ -336,6 +219,9 @@ class _$SetLoadingImpl implements _SetLoading {
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_AddCommentToState value) addCommentToState,
   }) {
     return setLoading(this);
   }
@@ -350,6 +236,9 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
   }) {
     return setLoading?.call(this);
   }
@@ -364,6 +253,9 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_AddCommentToState value)? addCommentToState,
     required TResult orElse(),
   }) {
     if (setLoading != null) {
@@ -446,55 +338,6 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
 
   @override
   @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() getVideosFromApi,
-    required TResult Function() setLoading,
-    required TResult Function(List<VideoData> videos) updateUrls,
-    required TResult Function(int index) onVideoIndexChanged,
-    required TResult Function(int index) pauseVideoAtIndex,
-    required TResult Function(int index) playVideoAtIndex,
-    required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
-        updateConstants,
-  }) {
-    return updateUrls(videos);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? getVideosFromApi,
-    TResult? Function()? setLoading,
-    TResult? Function(List<VideoData> videos)? updateUrls,
-    TResult? Function(int index)? onVideoIndexChanged,
-    TResult? Function(int index)? pauseVideoAtIndex,
-    TResult? Function(int index)? playVideoAtIndex,
-    TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
-        updateConstants,
-  }) {
-    return updateUrls?.call(videos);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? getVideosFromApi,
-    TResult Function()? setLoading,
-    TResult Function(List<VideoData> videos)? updateUrls,
-    TResult Function(int index)? onVideoIndexChanged,
-    TResult Function(int index)? pauseVideoAtIndex,
-    TResult Function(int index)? playVideoAtIndex,
-    TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
-        updateConstants,
-    required TResult orElse(),
-  }) {
-    if (updateUrls != null) {
-      return updateUrls(videos);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
@@ -503,6 +346,9 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_AddCommentToState value) addCommentToState,
   }) {
     return updateUrls(this);
   }
@@ -517,6 +363,9 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
   }) {
     return updateUrls?.call(this);
   }
@@ -531,6 +380,9 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_AddCommentToState value)? addCommentToState,
     required TResult orElse(),
   }) {
     if (updateUrls != null) {
@@ -613,55 +465,6 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
 
   @override
   @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() getVideosFromApi,
-    required TResult Function() setLoading,
-    required TResult Function(List<VideoData> videos) updateUrls,
-    required TResult Function(int index) onVideoIndexChanged,
-    required TResult Function(int index) pauseVideoAtIndex,
-    required TResult Function(int index) playVideoAtIndex,
-    required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
-        updateConstants,
-  }) {
-    return onVideoIndexChanged(index);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? getVideosFromApi,
-    TResult? Function()? setLoading,
-    TResult? Function(List<VideoData> videos)? updateUrls,
-    TResult? Function(int index)? onVideoIndexChanged,
-    TResult? Function(int index)? pauseVideoAtIndex,
-    TResult? Function(int index)? playVideoAtIndex,
-    TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
-        updateConstants,
-  }) {
-    return onVideoIndexChanged?.call(index);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? getVideosFromApi,
-    TResult Function()? setLoading,
-    TResult Function(List<VideoData> videos)? updateUrls,
-    TResult Function(int index)? onVideoIndexChanged,
-    TResult Function(int index)? pauseVideoAtIndex,
-    TResult Function(int index)? playVideoAtIndex,
-    TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
-        updateConstants,
-    required TResult orElse(),
-  }) {
-    if (onVideoIndexChanged != null) {
-      return onVideoIndexChanged(index);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
@@ -670,6 +473,9 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_AddCommentToState value) addCommentToState,
   }) {
     return onVideoIndexChanged(this);
   }
@@ -684,6 +490,9 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
   }) {
     return onVideoIndexChanged?.call(this);
   }
@@ -698,6 +507,9 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_AddCommentToState value)? addCommentToState,
     required TResult orElse(),
   }) {
     if (onVideoIndexChanged != null) {
@@ -781,55 +593,6 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
 
   @override
   @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() getVideosFromApi,
-    required TResult Function() setLoading,
-    required TResult Function(List<VideoData> videos) updateUrls,
-    required TResult Function(int index) onVideoIndexChanged,
-    required TResult Function(int index) pauseVideoAtIndex,
-    required TResult Function(int index) playVideoAtIndex,
-    required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
-        updateConstants,
-  }) {
-    return pauseVideoAtIndex(index);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? getVideosFromApi,
-    TResult? Function()? setLoading,
-    TResult? Function(List<VideoData> videos)? updateUrls,
-    TResult? Function(int index)? onVideoIndexChanged,
-    TResult? Function(int index)? pauseVideoAtIndex,
-    TResult? Function(int index)? playVideoAtIndex,
-    TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
-        updateConstants,
-  }) {
-    return pauseVideoAtIndex?.call(index);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? getVideosFromApi,
-    TResult Function()? setLoading,
-    TResult Function(List<VideoData> videos)? updateUrls,
-    TResult Function(int index)? onVideoIndexChanged,
-    TResult Function(int index)? pauseVideoAtIndex,
-    TResult Function(int index)? playVideoAtIndex,
-    TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
-        updateConstants,
-    required TResult orElse(),
-  }) {
-    if (pauseVideoAtIndex != null) {
-      return pauseVideoAtIndex(index);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
@@ -838,6 +601,9 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_AddCommentToState value) addCommentToState,
   }) {
     return pauseVideoAtIndex(this);
   }
@@ -852,6 +618,9 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
   }) {
     return pauseVideoAtIndex?.call(this);
   }
@@ -866,6 +635,9 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_AddCommentToState value)? addCommentToState,
     required TResult orElse(),
   }) {
     if (pauseVideoAtIndex != null) {
@@ -948,55 +720,6 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
 
   @override
   @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() getVideosFromApi,
-    required TResult Function() setLoading,
-    required TResult Function(List<VideoData> videos) updateUrls,
-    required TResult Function(int index) onVideoIndexChanged,
-    required TResult Function(int index) pauseVideoAtIndex,
-    required TResult Function(int index) playVideoAtIndex,
-    required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
-        updateConstants,
-  }) {
-    return playVideoAtIndex(index);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? getVideosFromApi,
-    TResult? Function()? setLoading,
-    TResult? Function(List<VideoData> videos)? updateUrls,
-    TResult? Function(int index)? onVideoIndexChanged,
-    TResult? Function(int index)? pauseVideoAtIndex,
-    TResult? Function(int index)? playVideoAtIndex,
-    TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
-        updateConstants,
-  }) {
-    return playVideoAtIndex?.call(index);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? getVideosFromApi,
-    TResult Function()? setLoading,
-    TResult Function(List<VideoData> videos)? updateUrls,
-    TResult Function(int index)? onVideoIndexChanged,
-    TResult Function(int index)? pauseVideoAtIndex,
-    TResult Function(int index)? playVideoAtIndex,
-    TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
-        updateConstants,
-    required TResult orElse(),
-  }) {
-    if (playVideoAtIndex != null) {
-      return playVideoAtIndex(index);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
@@ -1005,6 +728,9 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_AddCommentToState value) addCommentToState,
   }) {
     return playVideoAtIndex(this);
   }
@@ -1019,6 +745,9 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
   }) {
     return playVideoAtIndex?.call(this);
   }
@@ -1033,6 +762,9 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_AddCommentToState value)? addCommentToState,
     required TResult orElse(),
   }) {
     if (playVideoAtIndex != null) {
@@ -1135,55 +867,6 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
 
   @override
   @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() getVideosFromApi,
-    required TResult Function() setLoading,
-    required TResult Function(List<VideoData> videos) updateUrls,
-    required TResult Function(int index) onVideoIndexChanged,
-    required TResult Function(int index) pauseVideoAtIndex,
-    required TResult Function(int index) playVideoAtIndex,
-    required TResult Function(int? preloadLimit, int? nextLimit, int? latency)
-        updateConstants,
-  }) {
-    return updateConstants(preloadLimit, nextLimit, latency);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? getVideosFromApi,
-    TResult? Function()? setLoading,
-    TResult? Function(List<VideoData> videos)? updateUrls,
-    TResult? Function(int index)? onVideoIndexChanged,
-    TResult? Function(int index)? pauseVideoAtIndex,
-    TResult? Function(int index)? playVideoAtIndex,
-    TResult? Function(int? preloadLimit, int? nextLimit, int? latency)?
-        updateConstants,
-  }) {
-    return updateConstants?.call(preloadLimit, nextLimit, latency);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? getVideosFromApi,
-    TResult Function()? setLoading,
-    TResult Function(List<VideoData> videos)? updateUrls,
-    TResult Function(int index)? onVideoIndexChanged,
-    TResult Function(int index)? pauseVideoAtIndex,
-    TResult Function(int index)? playVideoAtIndex,
-    TResult Function(int? preloadLimit, int? nextLimit, int? latency)?
-        updateConstants,
-    required TResult orElse(),
-  }) {
-    if (updateConstants != null) {
-      return updateConstants(preloadLimit, nextLimit, latency);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
@@ -1192,6 +875,9 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_AddCommentToState value) addCommentToState,
   }) {
     return updateConstants(this);
   }
@@ -1206,6 +892,9 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
   }) {
     return updateConstants?.call(this);
   }
@@ -1220,6 +909,9 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_AddCommentToState value)? addCommentToState,
     required TResult orElse(),
   }) {
     if (updateConstants != null) {
@@ -1244,6 +936,415 @@ abstract class _UpdateConstants implements PreloadEvent {
 }
 
 /// @nodoc
+abstract class _$$AddCommentImplCopyWith<$Res> {
+  factory _$$AddCommentImplCopyWith(
+          _$AddCommentImpl value, $Res Function(_$AddCommentImpl) then) =
+      __$$AddCommentImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String videoId, String comment});
+}
+
+/// @nodoc
+class __$$AddCommentImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$AddCommentImpl>
+    implements _$$AddCommentImplCopyWith<$Res> {
+  __$$AddCommentImplCopyWithImpl(
+      _$AddCommentImpl _value, $Res Function(_$AddCommentImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? videoId = null,
+    Object? comment = null,
+  }) {
+    return _then(_$AddCommentImpl(
+      videoId: null == videoId
+          ? _value.videoId
+          : videoId // ignore: cast_nullable_to_non_nullable
+              as String,
+      comment: null == comment
+          ? _value.comment
+          : comment // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$AddCommentImpl implements _AddComment {
+  const _$AddCommentImpl({required this.videoId, required this.comment});
+
+  @override
+  final String videoId;
+  @override
+  final String comment;
+
+  @override
+  String toString() {
+    return 'PreloadEvent.addComment(videoId: $videoId, comment: $comment)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AddCommentImpl &&
+            (identical(other.videoId, videoId) || other.videoId == videoId) &&
+            (identical(other.comment, comment) || other.comment == comment));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, videoId, comment);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AddCommentImplCopyWith<_$AddCommentImpl> get copyWith =>
+      __$$AddCommentImplCopyWithImpl<_$AddCommentImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_GetVideosFromApi value) getVideosFromApi,
+    required TResult Function(_SetLoading value) setLoading,
+    required TResult Function(_UpdateUrls value) updateUrls,
+    required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_AddCommentToState value) addCommentToState,
+  }) {
+    return addComment(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult? Function(_SetLoading value)? setLoading,
+    TResult? Function(_UpdateUrls value)? updateUrls,
+    TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
+  }) {
+    return addComment?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult Function(_SetLoading value)? setLoading,
+    TResult Function(_UpdateUrls value)? updateUrls,
+    TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_AddCommentToState value)? addCommentToState,
+    required TResult orElse(),
+  }) {
+    if (addComment != null) {
+      return addComment(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _AddComment implements PreloadEvent {
+  const factory _AddComment(
+      {required final String videoId,
+      required final String comment}) = _$AddCommentImpl;
+
+  String get videoId;
+  String get comment;
+  @JsonKey(ignore: true)
+  _$$AddCommentImplCopyWith<_$AddCommentImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$LikeVideoImplCopyWith<$Res> {
+  factory _$$LikeVideoImplCopyWith(
+          _$LikeVideoImpl value, $Res Function(_$LikeVideoImpl) then) =
+      __$$LikeVideoImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String videoId});
+}
+
+/// @nodoc
+class __$$LikeVideoImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$LikeVideoImpl>
+    implements _$$LikeVideoImplCopyWith<$Res> {
+  __$$LikeVideoImplCopyWithImpl(
+      _$LikeVideoImpl _value, $Res Function(_$LikeVideoImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? videoId = null,
+  }) {
+    return _then(_$LikeVideoImpl(
+      videoId: null == videoId
+          ? _value.videoId
+          : videoId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$LikeVideoImpl implements _LikeVideo {
+  const _$LikeVideoImpl({required this.videoId});
+
+  @override
+  final String videoId;
+
+  @override
+  String toString() {
+    return 'PreloadEvent.likeVideo(videoId: $videoId)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LikeVideoImpl &&
+            (identical(other.videoId, videoId) || other.videoId == videoId));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, videoId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LikeVideoImplCopyWith<_$LikeVideoImpl> get copyWith =>
+      __$$LikeVideoImplCopyWithImpl<_$LikeVideoImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_GetVideosFromApi value) getVideosFromApi,
+    required TResult Function(_SetLoading value) setLoading,
+    required TResult Function(_UpdateUrls value) updateUrls,
+    required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_AddCommentToState value) addCommentToState,
+  }) {
+    return likeVideo(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult? Function(_SetLoading value)? setLoading,
+    TResult? Function(_UpdateUrls value)? updateUrls,
+    TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
+  }) {
+    return likeVideo?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult Function(_SetLoading value)? setLoading,
+    TResult Function(_UpdateUrls value)? updateUrls,
+    TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_AddCommentToState value)? addCommentToState,
+    required TResult orElse(),
+  }) {
+    if (likeVideo != null) {
+      return likeVideo(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _LikeVideo implements PreloadEvent {
+  const factory _LikeVideo({required final String videoId}) = _$LikeVideoImpl;
+
+  String get videoId;
+  @JsonKey(ignore: true)
+  _$$LikeVideoImplCopyWith<_$LikeVideoImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$AddCommentToStateImplCopyWith<$Res> {
+  factory _$$AddCommentToStateImplCopyWith(_$AddCommentToStateImpl value,
+          $Res Function(_$AddCommentToStateImpl) then) =
+      __$$AddCommentToStateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String videoId, List<CommentData> comment});
+}
+
+/// @nodoc
+class __$$AddCommentToStateImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$AddCommentToStateImpl>
+    implements _$$AddCommentToStateImplCopyWith<$Res> {
+  __$$AddCommentToStateImplCopyWithImpl(_$AddCommentToStateImpl _value,
+      $Res Function(_$AddCommentToStateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? videoId = null,
+    Object? comment = null,
+  }) {
+    return _then(_$AddCommentToStateImpl(
+      videoId: null == videoId
+          ? _value.videoId
+          : videoId // ignore: cast_nullable_to_non_nullable
+              as String,
+      comment: null == comment
+          ? _value._comment
+          : comment // ignore: cast_nullable_to_non_nullable
+              as List<CommentData>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$AddCommentToStateImpl implements _AddCommentToState {
+  const _$AddCommentToStateImpl(
+      {required this.videoId, required final List<CommentData> comment})
+      : _comment = comment;
+
+  @override
+  final String videoId;
+  final List<CommentData> _comment;
+  @override
+  List<CommentData> get comment {
+    if (_comment is EqualUnmodifiableListView) return _comment;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_comment);
+  }
+
+  @override
+  String toString() {
+    return 'PreloadEvent.addCommentToState(videoId: $videoId, comment: $comment)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AddCommentToStateImpl &&
+            (identical(other.videoId, videoId) || other.videoId == videoId) &&
+            const DeepCollectionEquality().equals(other._comment, _comment));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, videoId, const DeepCollectionEquality().hash(_comment));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AddCommentToStateImplCopyWith<_$AddCommentToStateImpl> get copyWith =>
+      __$$AddCommentToStateImplCopyWithImpl<_$AddCommentToStateImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_GetVideosFromApi value) getVideosFromApi,
+    required TResult Function(_SetLoading value) setLoading,
+    required TResult Function(_UpdateUrls value) updateUrls,
+    required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_AddCommentToState value) addCommentToState,
+  }) {
+    return addCommentToState(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult? Function(_SetLoading value)? setLoading,
+    TResult? Function(_UpdateUrls value)? updateUrls,
+    TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
+  }) {
+    return addCommentToState?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult Function(_SetLoading value)? setLoading,
+    TResult Function(_UpdateUrls value)? updateUrls,
+    TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_AddCommentToState value)? addCommentToState,
+    required TResult orElse(),
+  }) {
+    if (addCommentToState != null) {
+      return addCommentToState(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _AddCommentToState implements PreloadEvent {
+  const factory _AddCommentToState(
+      {required final String videoId,
+      required final List<CommentData> comment}) = _$AddCommentToStateImpl;
+
+  String get videoId;
+  List<CommentData> get comment;
+  @JsonKey(ignore: true)
+  _$$AddCommentToStateImplCopyWith<_$AddCommentToStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$PreloadState {
   List<VideoData> get videos => throw _privateConstructorUsedError;
   Map<int, VideoPlayerController> get controllers =>
@@ -1251,6 +1352,25 @@ mixin _$PreloadState {
   int get focusedIndex => throw _privateConstructorUsedError;
   int get reloadCounter => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
+  Map<String, List<CommentData>> get videoComments =>
+      throw _privateConstructorUsedError;
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_PreloadState value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_PreloadState value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_PreloadState value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $PreloadStateCopyWith<PreloadState> get copyWith =>
@@ -1268,7 +1388,8 @@ abstract class $PreloadStateCopyWith<$Res> {
       Map<int, VideoPlayerController> controllers,
       int focusedIndex,
       int reloadCounter,
-      bool isLoading});
+      bool isLoading,
+      Map<String, List<CommentData>> videoComments});
 }
 
 /// @nodoc
@@ -1289,6 +1410,7 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
     Object? focusedIndex = null,
     Object? reloadCounter = null,
     Object? isLoading = null,
+    Object? videoComments = null,
   }) {
     return _then(_value.copyWith(
       videos: null == videos
@@ -1311,6 +1433,10 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
+      videoComments: null == videoComments
+          ? _value.videoComments
+          : videoComments // ignore: cast_nullable_to_non_nullable
+              as Map<String, List<CommentData>>,
     ) as $Val);
   }
 }
@@ -1328,7 +1454,8 @@ abstract class _$$PreloadStateImplCopyWith<$Res>
       Map<int, VideoPlayerController> controllers,
       int focusedIndex,
       int reloadCounter,
-      bool isLoading});
+      bool isLoading,
+      Map<String, List<CommentData>> videoComments});
 }
 
 /// @nodoc
@@ -1347,6 +1474,7 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
     Object? focusedIndex = null,
     Object? reloadCounter = null,
     Object? isLoading = null,
+    Object? videoComments = null,
   }) {
     return _then(_$PreloadStateImpl(
       videos: null == videos
@@ -1369,6 +1497,10 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
+      videoComments: null == videoComments
+          ? _value.videoComments
+          : videoComments // ignore: cast_nullable_to_non_nullable
+              as Map<String, List<CommentData>>,
     ));
   }
 }
@@ -1381,7 +1513,8 @@ class _$PreloadStateImpl implements _PreloadState {
       required this.controllers,
       required this.focusedIndex,
       required this.reloadCounter,
-      required this.isLoading});
+      required this.isLoading,
+      required this.videoComments});
 
   @override
   final List<VideoData> videos;
@@ -1393,10 +1526,12 @@ class _$PreloadStateImpl implements _PreloadState {
   final int reloadCounter;
   @override
   final bool isLoading;
+  @override
+  final Map<String, List<CommentData>> videoComments;
 
   @override
   String toString() {
-    return 'PreloadState(videos: $videos, controllers: $controllers, focusedIndex: $focusedIndex, reloadCounter: $reloadCounter, isLoading: $isLoading)';
+    return 'PreloadState(videos: $videos, controllers: $controllers, focusedIndex: $focusedIndex, reloadCounter: $reloadCounter, isLoading: $isLoading, videoComments: $videoComments)';
   }
 
   @override
@@ -1412,7 +1547,9 @@ class _$PreloadStateImpl implements _PreloadState {
             (identical(other.reloadCounter, reloadCounter) ||
                 other.reloadCounter == reloadCounter) &&
             (identical(other.isLoading, isLoading) ||
-                other.isLoading == isLoading));
+                other.isLoading == isLoading) &&
+            const DeepCollectionEquality()
+                .equals(other.videoComments, videoComments));
   }
 
   @override
@@ -1422,22 +1559,53 @@ class _$PreloadStateImpl implements _PreloadState {
       const DeepCollectionEquality().hash(controllers),
       focusedIndex,
       reloadCounter,
-      isLoading);
+      isLoading,
+      const DeepCollectionEquality().hash(videoComments));
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$PreloadStateImplCopyWith<_$PreloadStateImpl> get copyWith =>
       __$$PreloadStateImplCopyWithImpl<_$PreloadStateImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_PreloadState value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_PreloadState value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_PreloadState value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 }
 
 abstract class _PreloadState implements PreloadState {
   factory _PreloadState(
-      {required final List<VideoData> videos,
-      required final Map<int, VideoPlayerController> controllers,
-      required final int focusedIndex,
-      required final int reloadCounter,
-      required final bool isLoading}) = _$PreloadStateImpl;
+          {required final List<VideoData> videos,
+          required final Map<int, VideoPlayerController> controllers,
+          required final int focusedIndex,
+          required final int reloadCounter,
+          required final bool isLoading,
+          required final Map<String, List<CommentData>> videoComments}) =
+      _$PreloadStateImpl;
 
   @override
   List<VideoData> get videos;
@@ -1449,6 +1617,8 @@ abstract class _PreloadState implements PreloadState {
   int get reloadCounter;
   @override
   bool get isLoading;
+  @override
+  Map<String, List<CommentData>> get videoComments;
   @override
   @JsonKey(ignore: true)
   _$$PreloadStateImplCopyWith<_$PreloadStateImpl> get copyWith =>

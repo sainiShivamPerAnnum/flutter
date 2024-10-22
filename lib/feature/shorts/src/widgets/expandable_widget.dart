@@ -10,13 +10,13 @@ class ExpandableWidget extends StatefulWidget {
   final void Function() onExpansionChanged; // Callback to notify about the expansion state change
 
   const ExpandableWidget({
-    super.key,
     required this.title,
     required this.leadingIcon,
     required this.expandedText,
+    required this.onExpansionChanged, 
     this.backgroundColor = Colors.black87,
     this.textColor = Colors.white,
-    required this.onExpansionChanged, // Optional parameter for expansion callback
+    super.key,
   });
 
   @override

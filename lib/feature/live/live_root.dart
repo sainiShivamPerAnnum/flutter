@@ -36,79 +36,90 @@ class _LiveHome extends StatefulWidget {
 class __LiveHomeState extends State<_LiveHome> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LiveBloc, LiveState>(
-      builder: (context, state) {
-        if (state is LoadingHomeData) {
-          return const Center(
-            child: FullScreenLoader(),
-          );
-        } else if (state is LiveHomeData) {
-          final liveData = state.homeData;
-          if (liveData == null) {
+    return RefreshIndicator(
+      triggerMode: RefreshIndicatorTriggerMode.onEdge,
+      color: UiConstants.primaryColor,
+      backgroundColor: Colors.black,
+      onRefresh: () async {
+        BlocProvider.of<LiveBloc>(
+          context,
+          listen: false,
+        ).add(const LoadHomeData());
+        return;
+      },
+      child: BlocBuilder<LiveBloc, LiveState>(
+        builder: (context, state) {
+          if (state is LoadingHomeData) {
+            return const Center(
+              child: FullScreenLoader(),
+            );
+          } else if (state is LiveHomeData) {
+            final liveData = state.homeData;
+            if (liveData == null) {
+              return const ErrorPage();
+            }
+            return SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+                child: Column(
+                  children: [
+                    SizedBox(height: SizeConfig.padding14),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        TitleSubtitleContainer(
+                          title: "Live",
+                          zeroPadding: true,
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.padding24,
+                      ),
+                      child: LiveHeader(
+                        title: liveData.sections.live.title,
+                        subtitle: liveData.sections.live.subtitle,
+                        onViewAllPressed: () {},
+                      ),
+                    ),
+                    buildLiveSection(liveData.live),
+                    if (liveData.upcoming.isNotEmpty)
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: SizeConfig.padding24,
+                        ),
+                        child: LiveHeader(
+                          title: liveData.sections.upcoming.title,
+                          subtitle: liveData.sections.upcoming.subtitle,
+                          onViewAllPressed: () {},
+                        ),
+                      ),
+                    _buildUpcomingSection(liveData.upcoming),
+                    if (liveData.recent.isNotEmpty)
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: SizeConfig.padding24,
+                        ),
+                        child: LiveHeader(
+                          title: liveData.sections.recent.title,
+                          subtitle: liveData.sections.recent.subtitle,
+                          onViewAllPressed: () {},
+                        ),
+                      ),
+                    buildRecentSection(liveData.recent),
+                    SizedBox(height: SizeConfig.padding14),
+                  ],
+                ),
+              ),
+            );
+          } else {
             return const ErrorPage();
           }
-          return SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
-              child: Column(
-                children: [
-                  SizedBox(height: SizeConfig.padding14),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      TitleSubtitleContainer(
-                        title: "Live",
-                        zeroPadding: true,
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.padding24,
-                    ),
-                    child: LiveHeader(
-                      title: liveData.sections.live.title,
-                      subtitle: liveData.sections.live.subtitle,
-                      onViewAllPressed: () {},
-                    ),
-                  ),
-                  _buildLiveSection(liveData.live),
-                  if(liveData.upcoming.isNotEmpty)
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.padding24,
-                    ),
-                    child: LiveHeader(
-                      title: liveData.sections.upcoming.title,
-                      subtitle: liveData.sections.upcoming.subtitle,
-                      onViewAllPressed: () {},
-                    ),
-                  ),
-                  _buildUpcomingSection(liveData.upcoming),
-                   if(liveData.recent.isNotEmpty)
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.padding24,
-                    ),
-                    child: LiveHeader(
-                      title: liveData.sections.recent.title,
-                      subtitle: liveData.sections.recent.subtitle,
-                      onViewAllPressed: () {},
-                    ),
-                  ),
-                  _buildRecentSection(liveData.recent),
-                  SizedBox(height: SizeConfig.padding14),
-                ],
-              ),
-            ),
-          );
-        } else {
-          return const Center(
-            child: Text('Failed to load live data'),
-          );
-        }
-      },
+        },
+      ),
     );
   }
 
@@ -136,122 +147,120 @@ class __LiveHomeState extends State<_LiveHome> {
       ),
     );
   }
+}
 
-  Widget _buildLiveSection(List<LiveStream> liveData) {
-    return (liveData.isEmpty)
-        ? Container(
+Widget buildLiveSection(List<LiveStream> liveData) {
+  return (liveData.isEmpty)
+      ? Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding18,
+            vertical: SizeConfig.padding12,
+          ),
+          decoration: BoxDecoration(
+            color: UiConstants.greyVarient,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Currently offline',
+                      style: TextStyles.sourceSansSB.body6.colour(
+                        UiConstants.kTabBorderColor,
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding4,
+                    ),
+                    SizedBox(
+                      child: Text(
+                        'Our advisors are away right now. Browse recent streams or book a one-on-one call.',
+                        style: TextStyles.sourceSansSB.body4.colour(
+                          UiConstants.kTextColor,
+                        ),
+                        maxLines: 3,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding8,
+                    vertical: SizeConfig.padding6,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  ),
+                ),
+                child: Text(
+                  'Book a Call',
+                  style: TextStyles.sourceSansSB.body4.colour(
+                    UiConstants.kTextColor4,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )
+      : SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              for (final live in liveData)
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding8,
+                  ).copyWith(bottom: 8),
+                  child: LiveCardWidget(
+                    status: 'live',
+                    title: live.title,
+                    subTitle: live.subtitle,
+                    author: live.author,
+                    category: live.categories.join(', '),
+                    bgImage: live.thumbnail,
+                    liveCount: live.liveCount,
+                    advisorCode: live.advisorCode,
+                    viewerCode: live.viewerCode,
+                  ),
+                ),
+            ],
+          ),
+        );
+}
+
+Widget buildRecentSection(List<RecentStream> recentData) {
+  return SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: Row(
+      children: [
+        for (final recent in recentData)
+          Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.padding18,
-              vertical: SizeConfig.padding12,
+              horizontal: SizeConfig.padding8,
+            ).copyWith(
+              bottom: SizeConfig.padding8,
             ),
-            decoration: BoxDecoration(
-              color: UiConstants.greyVarient,
-              borderRadius: BorderRadius.circular(12),
+            child: LiveCardWidget(
+              status: 'recent',
+              title: recent.title,
+              subTitle: recent.subtitle,
+              author: recent.author,
+              category: recent.categories.join(', '),
+              bgImage: recent.thumbnail,
+              liveCount: recent.views, // Number of views instead of live count
+              duration: recent.duration.toString(),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Currently offline',
-                        style: TextStyles.sourceSansSB.body6.colour(
-                          UiConstants.kTabBorderColor,
-                        ),
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding4,
-                      ),
-                      SizedBox(
-                        child: Text(
-                          'Our advisors are away right now. Browse recent streams or book a one-on-one call.',
-                          style: TextStyles.sourceSansSB.body4.colour(
-                            UiConstants.kTextColor,
-                          ),
-                          maxLines: 3,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.padding8,
-                      vertical: SizeConfig.padding6,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness5),
-                    ),
-                  ),
-                  child: Text(
-                    'Book a Call',
-                    style: TextStyles.sourceSansSB.body4.colour(
-                      UiConstants.kTextColor4,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
-        : SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                for (final live in liveData)
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.padding8,
-                    ).copyWith(bottom: 8),
-                    child: LiveCardWidget(
-                      status: 'live',
-                      title: live.title,
-                      subTitle: live.subtitle,
-                      author: live.author,
-                      category: live.categories.join(', '),
-                      bgImage: live.thumbnail,
-                      liveCount: live.liveCount,
-                      advisorCode: live.advisorCode,
-                      viewerCode: live.viewerCode,
-                    ),
-                  ),
-              ],
-            ),
-          );
-  }
-
-  Widget _buildRecentSection(List<RecentStream> recentData) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          for (final recent in recentData)
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding8,
-              ).copyWith(
-                bottom: SizeConfig.padding8,
-              ),
-              child: LiveCardWidget(
-                status: 'recent',
-                title: recent.title,
-                subTitle: recent.subtitle,
-                author: recent.author,
-                category: recent.categories.join(', '),
-                bgImage: recent.thumbnail,
-                liveCount:
-                    recent.views, // Number of views instead of live count
-                duration: recent.duration.toString(),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
+          ),
+      ],
+    ),
+  );
 }
