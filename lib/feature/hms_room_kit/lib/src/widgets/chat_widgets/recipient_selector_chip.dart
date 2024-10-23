@@ -96,7 +96,7 @@ class _ReceipientSelectorChipState extends State<ReceipientSelectorChip> {
                       Padding(
                         padding: const EdgeInsets.only(right: 4.0),
                         child: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
+                          "assets/hms/icons/participants.svg",
                           height: 16,
                           width: 16,
                           colorFilter: ColorFilter.mode(

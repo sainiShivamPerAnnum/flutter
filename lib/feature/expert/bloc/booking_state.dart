@@ -20,33 +20,43 @@ class BookingError extends BookingState {
 }
 
 final class BookingsLoaded extends BookingState {
+  final String advisorId;
   final Schedule? schedule;
   final String? selectedDate;
+  final int selectedDuration;
   final String? selectedTime;
 
   const BookingsLoaded({
+    required this.advisorId,
     required this.schedule,
     this.selectedDate,
     this.selectedTime,
+    this.selectedDuration = 30,
   });
 
   BookingState copyWith({
+    String? advisorId,
     Schedule? schedule,
     String? selectedDate,
     String? selectedTime,
+    int? selectedDuration,
   }) {
     return BookingsLoaded(
+      advisorId: advisorId ?? this.advisorId,
       schedule: schedule ?? this.schedule,
       selectedDate: selectedDate ?? this.selectedDate,
       selectedTime: selectedTime ?? this.selectedTime,
+      selectedDuration: selectedDuration ?? this.selectedDuration,
     );
   }
 
   @override
   List<Object?> get props => [
+        advisorId,
         schedule,
         selectedDate,
         selectedTime,
+        selectedDuration,
       ];
 }
 
@@ -55,10 +65,10 @@ class PricingData extends BookingState {
   final String advisorName;
   final String time;
   final String date;
-  final int price;
+  final num price;
   final num duration;
-  final int gst;
-  final int totalPayable;
+  final num gst;
+  final num totalPayable;
 
   const PricingData({
     required this.advisorId,
@@ -73,7 +83,7 @@ class PricingData extends BookingState {
 
   @override
   List<Object?> get props =>
-      [advisorId,advisorName, time, date, price, duration, gst, totalPayable];
+      [advisorId, advisorName, time, date, price, duration, gst, totalPayable];
 }
 
 sealed class PaymentState extends Equatable {

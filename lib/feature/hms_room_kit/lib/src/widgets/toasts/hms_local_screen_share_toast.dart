@@ -31,7 +31,7 @@ class HMSLocalScreenShareToast extends StatelessWidget {
       toastColor: toastColor,
       toastPosition: toastPosition,
       leading: SvgPicture.asset(
-        "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
+        "assets/hms/icons/screen_share.svg",
         height: 24,
         width: 24,
         colorFilter: ColorFilter.mode(

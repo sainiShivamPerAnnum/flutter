@@ -258,7 +258,7 @@ class _QuizLeaderboardState extends State<QuizLeaderboard> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 4.0),
                                 child: SvgPicture.asset(
-                                    "packages/hms_room_kit/lib/src/assets/icons/right_arrow.svg",
+                                    "assets/hms/icons/right_arrow.svg",
                                     width: 24,
                                     height: 24,
                                     colorFilter: ColorFilter.mode(

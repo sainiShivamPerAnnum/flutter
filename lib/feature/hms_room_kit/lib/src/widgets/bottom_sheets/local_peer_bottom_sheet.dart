@@ -117,7 +117,7 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                     //     },
                     //     contentPadding: EdgeInsets.zero,
                     //     leading: SvgPicture.asset(
-                    //       "packages/hms_room_kit/lib/src/assets/icons/pin.svg",
+                    //       "assets/hms/icons/pin.svg",
                     //       semanticsLabel: "fl_local_pin_tile",
                     //       height: 20,
                     //       width: 20,
@@ -153,7 +153,7 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                     //     },
                     //     contentPadding: EdgeInsets.zero,
                     //     leading: SvgPicture.asset(
-                    //       "packages/hms_room_kit/lib/src/assets/icons/spotlight.svg",
+                    //       "assets/hms/icons/spotlight.svg",
                     //       semanticsLabel: "fl_spotlight_local_tile",
                     //       height: 20,
                     //       width: 20,
@@ -192,7 +192,7 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                           },
                           contentPadding: EdgeInsets.zero,
                           leading: SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/pencil.svg",
+                            "assets/hms/icons/pencil.svg",
                             semanticsLabel: "fl_local_pin_tile",
                             height: 20,
                             width: 20,
@@ -214,7 +214,7 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                           },
                           contentPadding: EdgeInsets.zero,
                           leading: SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/minimize.svg",
+                            "assets/hms/icons/minimize.svg",
                             semanticsLabel: "fl_minimize_local_tile",
                             height: 20,
                             width: 20,
@@ -244,7 +244,7 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                           },
                           contentPadding: EdgeInsets.zero,
                           leading: SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/maximize.svg",
+                            "assets/hms/icons/maximize.svg",
                             semanticsLabel: "fl_local_pin_tile",
                             height: 20,
                             width: 20,
@@ -266,7 +266,7 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                           },
                           contentPadding: EdgeInsets.zero,
                           leading: SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/minimize.svg",
+                            "assets/hms/icons/minimize.svg",
                             semanticsLabel: "fl_local_pin_tile",
                             height: 20,
                             width: 20,

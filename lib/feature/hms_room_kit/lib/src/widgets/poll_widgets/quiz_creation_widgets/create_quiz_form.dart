@@ -423,7 +423,7 @@ class _CreatePollFormState extends State<CreateQuizForm> {
                                 setState(() {});
                               },
                               icon: SvgPicture.asset(
-                                  "packages/hms_room_kit/lib/src/assets/icons/delete_poll.svg",
+                                  "assets/hms/icons/delete_poll.svg",
                                   width: 24,
                                   height: 24,
                                   colorFilter: ColorFilter.mode(
@@ -443,7 +443,7 @@ class _CreatePollFormState extends State<CreateQuizForm> {
                   child: Row(
                     children: [
                       SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/add_option.svg",
+                          "assets/hms/icons/add_option.svg",
                           width: 24,
                           height: 24,
                           colorFilter: ColorFilter.mode(
@@ -531,7 +531,7 @@ class _CreatePollFormState extends State<CreateQuizForm> {
                 //     isActive: true,
                 //     onColor: HMSThemeColors.surfaceDefault,
                 //     child: SvgPicture.asset(
-                //       "packages/hms_room_kit/lib/src/assets/icons/delete_poll.svg",
+                //       "assets/hms/icons/delete_poll.svg",
                 //       colorFilter: ColorFilter.mode(
                 //           HMSThemeColors.onSurfaceHighEmphasis,
                 //           BlendMode.srcIn),

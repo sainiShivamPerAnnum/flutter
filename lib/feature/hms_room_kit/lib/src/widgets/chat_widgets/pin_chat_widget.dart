@@ -194,7 +194,7 @@ class _PinChatWidgetState extends State<PinChatWidget> {
                                 .read<MeetingStore>()
                                 .unpinMessage(data.item1[currentPage]["id"]),
                             child: SvgPicture.asset(
-                              "packages/hms_room_kit/lib/src/assets/icons/unpin.svg",
+                              "assets/hms/icons/unpin.svg",
                               height: 20,
                               width: 20,
                               colorFilter: ColorFilter.mode(

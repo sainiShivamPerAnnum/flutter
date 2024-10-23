@@ -34,7 +34,7 @@ class PreviewNetworkIndicator extends StatelessWidget {
                     if (previewStore.networkQuality != null &&
                         previewStore.networkQuality != -1)
                       SvgPicture.asset(
-                        'packages/hms_room_kit/lib/src/assets/icons/network_${previewStore.networkQuality}.svg',
+                        'assets/hms/icons/network_${previewStore.networkQuality}.svg',
                         fit: BoxFit.contain,
                         semanticsLabel: "fl_network_icon_label",
                       ),

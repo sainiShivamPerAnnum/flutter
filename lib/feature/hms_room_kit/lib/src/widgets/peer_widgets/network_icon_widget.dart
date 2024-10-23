@@ -27,13 +27,13 @@ class NetworkIconWidget extends StatelessWidget {
           return context.read<PeerTrackNode>().peer.type == HMSPeerType.regular
               ? networkQuality.item2
                   ? SvgPicture.asset(
-                      'packages/hms_room_kit/lib/src/assets/icons/degraded_network.svg',
+                      'assets/hms/icons/degraded_network.svg',
                       height: 20,
                       semanticsLabel: "fl_network_icon_label",
                     )
                   : (networkQuality.item1 != null && networkQuality.item1 != -1)
                       ? SvgPicture.asset(
-                          'packages/hms_room_kit/lib/src/assets/icons/network_${networkQuality.item1}.svg',
+                          'assets/hms/icons/network_${networkQuality.item1}.svg',
                           height: 20,
                           semanticsLabel: "fl_network_icon_label",
                         )

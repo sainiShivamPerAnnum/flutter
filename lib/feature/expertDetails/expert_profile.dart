@@ -75,6 +75,7 @@ class _ExpertProfilePage extends StatelessWidget {
                 onTap: () {
                   BaseUtil.openBookAdvisorSheet(
                     advisorId: advisorID,
+                    advisorName: state.expertDetails?.name ?? '',
                   );
                 },
                 child: Container(
@@ -767,7 +768,7 @@ class RatingReviewSection extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          state.viewMore?'View Less':'View All',
+                          state.viewMore ? 'View Less' : 'View All',
                           style: TextStyles.sourceSansSB.body4,
                           textAlign: TextAlign.center,
                         ),

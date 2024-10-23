@@ -461,6 +461,7 @@ class BaseUtil extends ChangeNotifier {
 
   static dynamic openBookAdvisorSheet({
     required String advisorId,
+    required String advisorName,
   }) {
     AppState.screenStack.add(ScreenItem.modalsheet);
     return openModalBottomSheet(
@@ -470,6 +471,7 @@ class BaseUtil extends ChangeNotifier {
       addToScreenStack: false,
       content: BookCallSheetView(
         advisorID: advisorId,
+        advisorName: advisorName,
       ),
       backgroundColor: UiConstants.kBackgroundColor,
       hapticVibrate: true,

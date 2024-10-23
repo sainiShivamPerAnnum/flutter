@@ -113,7 +113,7 @@ class _HLSViewerQualitySelectorBottomSheetState
                                           height: 24,
                                           width: 24,
                                           child: SvgPicture.asset(
-                                            "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
+                                            "assets/hms/icons/tick.svg",
                                             fit: BoxFit.scaleDown,
                                             colorFilter: ColorFilter.mode(
                                                 HMSThemeColors

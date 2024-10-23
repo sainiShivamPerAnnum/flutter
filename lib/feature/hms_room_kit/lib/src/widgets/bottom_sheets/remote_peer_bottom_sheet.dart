@@ -109,7 +109,7 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                   //     },
                   //     contentPadding: EdgeInsets.zero,
                   //     leading: SvgPicture.asset(
-                  //       "packages/hms_room_kit/lib/src/assets/icons/pin.svg",
+                  //       "assets/hms/icons/pin.svg",
                   //       semanticsLabel: "fl_local_pin_tile",
                   //       height: 20,
                   //       width: 20,
@@ -145,7 +145,7 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                   //     },
                   //     contentPadding: EdgeInsets.zero,
                   //     leading: SvgPicture.asset(
-                  //       "packages/hms_room_kit/lib/src/assets/icons/spotlight.svg",
+                  //       "assets/hms/icons/spotlight.svg",
                   //       semanticsLabel: "fl_spotlight_local_tile",
                   //       height: 20,
                   //       width: 20,
@@ -171,7 +171,7 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                         },
                         contentPadding: EdgeInsets.zero,
                         leading: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/${(widget.peerTrackNode.audioTrack?.isMute ?? true) ? "mic_state_on" : "mic_state_off"}.svg",
+                          "assets/hms/icons/${(widget.peerTrackNode.audioTrack?.isMute ?? true) ? "mic_state_on" : "mic_state_off"}.svg",
                           semanticsLabel: "fl_mic_toggle",
                           height: 20,
                           width: 20,
@@ -203,7 +203,7 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                         },
                         contentPadding: EdgeInsets.zero,
                         leading: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/${(widget.peerTrackNode.track?.isMute ?? true) ? "cam_state_on" : "cam_state_off"}.svg",
+                          "assets/hms/icons/${(widget.peerTrackNode.track?.isMute ?? true) ? "cam_state_on" : "cam_state_off"}.svg",
                           semanticsLabel: "fl_camera_toggle",
                           height: 20,
                           width: 20,
@@ -260,7 +260,7 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                         },
                         contentPadding: EdgeInsets.zero,
                         leading: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/peer_settings.svg",
+                          "assets/hms/icons/peer_settings.svg",
                           semanticsLabel: "fl_change_role",
                           colorFilter: ColorFilter.mode(
                               HMSThemeColors.onSurfaceHighEmphasis,
@@ -276,7 +276,7 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                   //     },
                   //     contentPadding: EdgeInsets.zero,
                   //     leading: SvgPicture.asset(
-                  //       "packages/hms_room_kit/lib/src/assets/icons/speaker_state_on.svg",
+                  //       "assets/hms/icons/speaker_state_on.svg",
                   //       semanticsLabel: "fl_change_volume",
                   //       height: 20,
                   //       width: 20,
@@ -299,7 +299,7 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                         },
                         contentPadding: EdgeInsets.zero,
                         leading: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/peer_remove.svg",
+                          "assets/hms/icons/peer_remove.svg",
                           semanticsLabel: "fl_remove_peer",
                           height: 20,
                           width: 20,

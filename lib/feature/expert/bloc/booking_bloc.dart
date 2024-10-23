@@ -28,6 +28,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     on<SelectDate>(_onSelectDate);
     on<SelectTime>(_onSelectTime);
     on<GetPricing>(_getPricing);
+    on<SelectDuration>(_onSelectDuration);
   }
   FutureOr<void> _onLoadBookingDates(
     LoadBookingDates event,
@@ -37,22 +38,22 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
 
     final data = await _expertsRepository.getExpertAvailableSlots(
       advisorId: event.advisorId,
+      duration: event.duration,
     );
-    final availableDates = data.model?.data?.keys.toList() ?? [];
+    final availableDates = data.model?.slots?.keys.toList() ?? [];
 
     if (availableDates.isNotEmpty) {
       final selectedDate = availableDates.first;
-      // final availableTimes =
-      //     data.model?.data?[selectedDate]?.map((e) => e.fromTime).toList() ??
-      //         [];
       emitter(
         BookingsLoaded(
+          advisorId: event.advisorId,
           schedule: data.model,
           selectedDate: selectedDate,
+          selectedDuration: event.duration,
         ),
       );
     } else {
-      emitter(BookingsLoaded(schedule: data.model));
+      emitter(BookingsLoaded(schedule: data.model, advisorId: event.advisorId));
     }
   }
 
@@ -65,6 +66,13 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           selectedTime: null,
         ),
       );
+    }
+  }
+
+  void _onSelectDuration(SelectDuration event, Emitter<BookingState> emitter) {
+    final state = this.state;
+    if (state is BookingsLoaded) {
+      add(LoadBookingDates(state.advisorId, event.selectDuration));
     }
   }
 
@@ -82,22 +90,22 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     emitter(const LoadingBookingsData());
 
     // Make your API call here
-    // final success = await _expertsRepository.getPricing(
-    //   date: event.selectedDate,
-    //   time: event.selectedTime,
-    // );
+    final response = await _expertsRepository.getPricing(
+      advisorId: event.advisorId,
+      duration: event.duration,
+    );
 
-    if (true) {
+    if (response.isSuccess()) {
       emitter(
         PricingData(
           advisorId: event.advisorId,
-          advisorName: "Mr Rajesh Kumar", // Example data
+          advisorName: event.advisorName,
           time: event.selectedTime,
           date: event.selectedDate,
-          price: 300, // Example data
-          duration: 30, // Example data
-          gst: 90, // Example data
-          totalPayable: 390, // Example data
+          price: response.model?.price ?? 0,
+          duration: event.duration,
+          gst: response.model?.price ?? 0,
+          totalPayable: response.model?.price ?? 0,
         ),
       );
     } else {

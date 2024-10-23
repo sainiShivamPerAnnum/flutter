@@ -57,6 +57,7 @@ class TopExperts extends StatelessWidget {
                 onBookCall: () {
                   BaseUtil.openBookAdvisorSheet(
                     advisorId: model.topExperts[i].advisorId,
+                    advisorName: model.topExperts[i].name,
                   );
                 },
                 onTap: () {

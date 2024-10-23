@@ -85,7 +85,7 @@ class ShortsVideoPage extends StatelessWidget {
                         comments: state.videoComments[state.videos[index].id],
                         isLikedByUser: state.videos[index].isVideoLikedByUser,
                       )
-                    :const  SizedBox();
+                    : const SizedBox();
               },
             );
           },
@@ -139,7 +139,9 @@ class VideoWidgetState extends State<VideoWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _iconPositionAnimation;
+  final FocusNode _focusNode = FocusNode();
   final TextEditingController _commentController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   double _videoProgress = 0;
 
   @override
@@ -167,6 +169,9 @@ class VideoWidgetState extends State<VideoWidget>
   @override
   void dispose() {
     _animationController.dispose();
+    _commentController.dispose();
+    _scrollController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -180,6 +185,7 @@ class VideoWidgetState extends State<VideoWidget>
 
   @override
   Widget build(BuildContext context) {
+    // final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -216,6 +222,7 @@ class VideoWidgetState extends State<VideoWidget>
               ),
             ),
           ),
+        // if (!isKeyboardOpen)
         Positioned(
           bottom: _iconPositionAnimation.value,
           right: 10.w,
@@ -226,12 +233,14 @@ class VideoWidgetState extends State<VideoWidget>
             widget.isLikedByUser,
           ),
         ),
+        // if (!isKeyboardOpen)
         AnimatedPositioned(
           duration: const Duration(milliseconds: 100),
           bottom: _iconPositionAnimation.value,
           left: 15.w,
-          child: _buildComments(),
+          child: _buildComments(_scrollController),
         ),
+        // if (!isKeyboardOpen)
         Positioned(
           bottom: 70.h,
           child: ExpandableWidget(
@@ -276,17 +285,26 @@ class VideoWidgetState extends State<VideoWidget>
                         size: 14.sp,
                       ),
                       onPressed: () {
-                        widget.onCommented(_commentController.text.trim());
-                        _commentController.clear();
+                        if (_commentController.text.trim() != '') {
+                          widget.onCommented(_commentController.text.trim());
+                          _commentController.clear();
+                        }
                       },
                     ),
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 4.h, horizontal: 12.w),
                   ),
+                  onSubmitted: (val) {
+                    // if (_commentController.text.trim() != '') {
+                    //   widget.onCommented(_commentController.text.trim());
+                    //   _commentController.clear();
+                    // }
+                  },
                 ),
                 SizedBox(
                   height: 10.h,
                 ),
+                // if (!isKeyboardOpen)
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(10.r)),
                   child: LinearProgressIndicator(
@@ -400,16 +418,28 @@ class VideoWidgetState extends State<VideoWidget>
     );
   }
 
-  Widget _buildComments() {
+  Widget _buildComments(ScrollController scrollController) {
+    void scrollToEnd() {
+      if (scrollController.hasClients) {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) => scrollController.jumpTo(
+            scrollController.position.maxScrollExtent,
+          ),
+        );
+      }
+    }
+
     return SizedBox(
       width: 240.w,
       height: (widget.comments == null || widget.comments!.isEmpty) ? 0 : 130.h,
       child: (widget.comments == null || widget.comments!.isEmpty)
           ? const SizedBox.shrink()
           : ListView.builder(
+              controller: scrollController,
               physics: const BouncingScrollPhysics(),
               itemCount: widget.comments!.length,
               itemBuilder: (context, index) {
+                scrollToEnd();
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

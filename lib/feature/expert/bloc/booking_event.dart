@@ -5,13 +5,19 @@ sealed class BookingEvent {
 }
 
 class LoadBookingDates extends BookingEvent {
-  const LoadBookingDates(this.advisorId);
+  const LoadBookingDates(this.advisorId, this.duration);
   final String advisorId;
+  final int duration;
 }
 
 class SelectDate extends BookingEvent {
   final String selectedDate;
   const SelectDate(this.selectedDate);
+}
+
+class SelectDuration extends BookingEvent {
+  final int selectDuration;
+  const SelectDuration(this.selectDuration);
 }
 
 class SelectTime extends BookingEvent {
@@ -20,11 +26,18 @@ class SelectTime extends BookingEvent {
 }
 
 class GetPricing extends BookingEvent {
+  final int duration;
+  final String advisorId;
   final String selectedDate;
   final String selectedTime;
-  final String advisorId;
-
-  const GetPricing(this.selectedDate, this.selectedTime,this.advisorId);
+  final String advisorName;
+  const GetPricing(
+    this.duration,
+    this.advisorId,
+    this.selectedDate,
+    this.selectedTime,
+    this.advisorName,
+  );
 }
 
 class LoadPSPApps extends BookingEvent {

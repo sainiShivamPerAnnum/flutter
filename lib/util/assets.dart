@@ -510,4 +510,5 @@ class Assets {
   static const String confirm_payment = "assets/vectors/gif/confirm.gif";
   static const String pending_payment = "assets/vectors/gif/pending.gif";
   static const String failed_payment = "assets/vectors/gif/failed.gif";
+  static const String exit_logo = "assets/svg/exit.svg";
 }

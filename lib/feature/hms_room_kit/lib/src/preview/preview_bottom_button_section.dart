@@ -37,8 +37,8 @@ class PreviewBottomButtonSection extends StatelessWidget {
                       isActive: previewStore.isAudioOn,
                       child: SvgPicture.asset(
                         previewStore.isAudioOn
-                            ? "packages/hms_room_kit/lib/src/assets/icons/mic_state_on.svg"
-                            : "packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg",
+                            ? "assets/hms/icons/mic_state_on.svg"
+                            : "assets/hms/icons/mic_state_off.svg",
                         colorFilter: ColorFilter.mode(
                             HMSThemeColors.onSurfaceHighEmphasis,
                             BlendMode.srcIn),
@@ -63,8 +63,8 @@ class PreviewBottomButtonSection extends StatelessWidget {
                       isActive: previewStore.isVideoOn,
                       child: SvgPicture.asset(
                         previewStore.isVideoOn
-                            ? "packages/hms_room_kit/lib/src/assets/icons/cam_state_on.svg"
-                            : "packages/hms_room_kit/lib/src/assets/icons/cam_state_off.svg",
+                            ? "assets/hms/icons/cam_state_on.svg"
+                            : "assets/hms/icons/cam_state_off.svg",
                         colorFilter: ColorFilter.mode(
                             HMSThemeColors.onSurfaceHighEmphasis,
                             BlendMode.srcIn),
@@ -86,7 +86,7 @@ class PreviewBottomButtonSection extends StatelessWidget {
                       onTap: () async => previewStore.switchCamera(),
                       isActive: true,
                       child: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/camera.svg",
+                        "assets/hms/icons/camera.svg",
                         colorFilter: ColorFilter.mode(
                             previewStore.isVideoOn
                                 ? HMSThemeColors.onSurfaceHighEmphasis
@@ -118,7 +118,7 @@ class PreviewBottomButtonSection extends StatelessWidget {
                           },
                           isActive: !previewStore.isNoiseCancellationEnabled,
                           child: SvgPicture.asset(
-                            'packages/hms_room_kit/lib/src/assets/icons/music_wave.svg',
+                            'assets/hms/icons/music_wave.svg',
                             colorFilter: ColorFilter.mode(
                                 HMSThemeColors.onSurfaceHighEmphasis,
                                 BlendMode.srcIn),
@@ -145,7 +145,7 @@ class PreviewBottomButtonSection extends StatelessWidget {
                         },
                         isActive: true,
                         child: SvgPicture.asset(
-                          'packages/hms_room_kit/lib/src/assets/icons/${previewStore.isRoomMute ? "speaker_state_off" : Utilities.getAudioDeviceIconName(previewStore.currentAudioOutputDevice)}.svg',
+                          'assets/hms/icons/${previewStore.isRoomMute ? "speaker_state_off" : Utilities.getAudioDeviceIconName(previewStore.currentAudioOutputDevice)}.svg',
                           colorFilter: ColorFilter.mode(
                               HMSThemeColors.onSurfaceHighEmphasis,
                               BlendMode.srcIn),

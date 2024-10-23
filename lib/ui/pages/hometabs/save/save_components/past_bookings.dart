@@ -178,7 +178,7 @@ class PastScheduleCard extends StatelessWidget {
                                 : locator<UserService>().baseUser!.username;
                         AppState.delegate!.appState.currentAction = PageAction(
                           page: LivePreviewPageConfig,
-                          state: PageState.addWidget,
+                         state: PageState.addWidget,
                           widget: HMSPrebuilt(
                             roomCode: booking.guestCode,
                             options: HMSPrebuiltOptions(

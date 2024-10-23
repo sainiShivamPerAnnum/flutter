@@ -155,7 +155,8 @@ flutter:
     - assets/vectors/userAvatars/
     - assets/lotties/
     - assets/lotties/nav/
-    - lib/feature/hms_room_kit/lib/src/assets/
+    - assets/hms/
+    - assets/hms/icons/
     - shorebird.yaml
 
 flutter_intl:

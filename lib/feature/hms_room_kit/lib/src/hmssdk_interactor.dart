@@ -29,7 +29,7 @@ class HMSSDKInteractor {
   /// [joinWithMutedAudio] & [joinWithMutedVideo] are required to set the initial audio/video state i.e what should be camera and mic
   /// state while room is joined. By default both audio and video are kept as unmute.
   /// [isNoiseCancellationEnabled] - By default it's false and is used to enable noise cancellation in the call
-  HMSSDKInteractor({
+  void configure({
     HMSIOSScreenshareConfig? iOSScreenshareConfig,
     bool joinWithMutedAudio = false,
     bool joinWithMutedVideo = false,

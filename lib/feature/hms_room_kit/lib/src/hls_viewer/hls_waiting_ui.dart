@@ -20,7 +20,7 @@ class HLSWaitingUI extends StatelessWidget {
             radius: 50,
             backgroundColor: HMSThemeColors.surfaceDefault,
             child: SvgPicture.asset(
-              "packages/hms_room_kit/lib/src/assets/icons/live.svg",
+              "assets/hms/icons/live.svg",
               height: 56,
               width: 56,
               colorFilter: ColorFilter.mode(

@@ -28,7 +28,7 @@ class HMSChatPauseResumeToast extends StatelessWidget {
   Widget build(BuildContext context) {
     return HMSToast(
       leading: SvgPicture.asset(
-        "packages/hms_room_kit/lib/src/assets/icons/${isChatEnabled ? "message_badge_on" : "message_badge_off"}.svg",
+        "assets/hms/icons/${isChatEnabled ? "message_badge_on" : "message_badge_off"}.svg",
         height: 24,
         width: 24,
       ),

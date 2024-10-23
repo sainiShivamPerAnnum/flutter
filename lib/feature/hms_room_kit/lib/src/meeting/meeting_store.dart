@@ -287,7 +287,7 @@ class MeetingStore extends ChangeNotifier
 
   List<TranscriptStore> captions = [];
 
-  Future<HMSException?> join(String userName, String? tokenData) async {
+  Future<HMSException?> join(String userName, String? tokenData,String? metadata) async {
     late HMSConfig joinConfig;
 
     ///Here we create the config using tokenData and userName
@@ -295,6 +295,7 @@ class MeetingStore extends ChangeNotifier
       joinConfig = HMSConfig(
           authToken: tokenData,
           userName: userName,
+          metaData: metadata,
           // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
           //This is only for 100ms internal testing, endPoint can be safely removed from
           //the HMSConfig for external usage
@@ -1448,7 +1449,7 @@ class MeetingStore extends ChangeNotifier
     if (currentAudioDevice != null &&
         currentAudioOutputDevice != currentAudioDevice) {
       Utilities.showToast(
-          "Output Device changed to ${currentAudioDevice.name}");
+          "Output Device changed to ${currentAudioDevice.name}",'Success!');
       currentAudioOutputDevice = currentAudioDevice;
     }
 
@@ -1737,7 +1738,7 @@ class MeetingStore extends ChangeNotifier
         //   }
         // }
 
-        Utilities.showToast("${peer.name}'s role changed to ${peer.role.name}");
+        Utilities.showToast("${peer.name}'s role changed to ${peer.role.name}",'Role Changed!');
         int index = peers.indexOf(peer);
         HMSRole? oldRole;
         if (index != -1) {
@@ -2066,7 +2067,7 @@ class MeetingStore extends ChangeNotifier
             node.audioTrack?.trackId == (value) ||
             node.track?.trackId == (value)));
         if (index != -1) {
-          Utilities.showToast("${peerTracks[index].peer.name} is in spotlight");
+          Utilities.showToast("${peerTracks[index].peer.name} is in spotlight",'Spotlight!');
           spotLightPeer = peerTracks[index];
           changePinTileStatus(peerTracks[index]);
         } else {
@@ -2177,7 +2178,7 @@ class MeetingStore extends ChangeNotifier
   void playAudioIos(String url) async {
     HMSException? exception = await audioFilePlayerNode.play(fileUrl: url);
     if (exception != null) {
-      Utilities.showToast(exception.description, time: 5);
+      Utilities.showToast(exception.description,'Try Again!', time: 5);
     }
     isPlayerRunningIos();
   }
@@ -2274,7 +2275,7 @@ class MeetingStore extends ChangeNotifier
     dynamic result = await _hmsSessionStore?.getSessionMetadataForKey(key: key);
     if (result is HMSException) {
       Utilities.showToast(
-          "Error Occured: code: ${result.code?.errorCode}, description: ${result.description}, message: ${result.message}",
+          "Error Occured: code: ${result.code?.errorCode}, description: ${result.description}, message: ${result.message}",'Try Again!',
           time: 5);
       return;
     }
@@ -2384,7 +2385,7 @@ class MeetingStore extends ChangeNotifier
     dynamic result = await HMSCameraControls.toggleFlash();
     if (result is HMSException) {
       Utilities.showToast(
-          "Error Occured: code: ${result.code?.errorCode}, description: ${result.description}, message: ${result.message}",
+          "Error Occured: code: ${result.code?.errorCode}, description: ${result.description}, message: ${result.message}",'Try Again!',
           time: 5);
       return;
     }
@@ -2859,7 +2860,7 @@ class MeetingStore extends ChangeNotifier
         clearRoomState();
         break;
       case HMSActionResultListenerMethod.changeTrackState:
-        Utilities.showToast("Track State Changed");
+        Utilities.showToast("Track State Changed",'Success!',);
         break;
       case HMSActionResultListenerMethod.changeMetadata:
         notifyListeners();
@@ -2869,41 +2870,41 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.removePeer:
         HMSPeer peer = arguments!['peer'];
-        Utilities.showToast("Removed ${peer.name} from room");
+        Utilities.showToast("Removed ${peer.name} from room",'Success!',);
         break;
       case HMSActionResultListenerMethod.acceptChangeRole:
-        Utilities.showToast("Accept role change successful");
+        Utilities.showToast("Accept role change successful",'Success!',);
         break;
       case HMSActionResultListenerMethod.changeRoleOfPeer:
-        Utilities.showToast("Change role successful");
+        Utilities.showToast("Change role successful",'Success!',);
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
         message = arguments!['roles'] == null
             ? "Successfully Muted All"
             : "Successfully Muted Role";
-        Utilities.showToast(message);
+        Utilities.showToast(message,'Success!',);
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
         if (arguments != null) {
           if (arguments["rtmp_urls"] != null &&
               arguments["rtmp_urls"].length == 0 &&
               arguments["to_record"]) {
-            Utilities.showToast("Recording Started");
+            Utilities.showToast("Recording Started",'Success!',);
           } else if (arguments["rtmp_urls"] != null &&
               arguments["rtmp_urls"].length != 0 &&
               arguments["to_record"] == false) {
-            Utilities.showToast("RTMP Started");
+            Utilities.showToast("RTMP Started",'Success!',);
           }
           notifyListeners();
         }
         break;
       case HMSActionResultListenerMethod.stopRtmpAndRecording:
-        Utilities.showToast("Stopped successfully");
+        Utilities.showToast("Stopped successfully",'Success!',);
         break;
       case HMSActionResultListenerMethod.unknown:
         break;
       case HMSActionResultListenerMethod.changeName:
-        Utilities.showToast("Change name successful");
+        Utilities.showToast("Change name successful",'Success!',);
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
         if (arguments != null) {
@@ -2938,34 +2939,34 @@ class MeetingStore extends ChangeNotifier
         break;
 
       case HMSActionResultListenerMethod.startScreenShare:
-        Utilities.showToast("Screen Share Started");
+        Utilities.showToast("Screen Share Started",'Success!');
         isScreenShareActive();
         break;
 
       case HMSActionResultListenerMethod.stopScreenShare:
-        Utilities.showToast("Screen Share Stopped");
+        Utilities.showToast("Screen Share Stopped",'Success!');
         isScreenShareActive();
         break;
       case HMSActionResultListenerMethod.startAudioShare:
-        Utilities.showToast("Audio Share Started");
+        Utilities.showToast("Audio Share Started",'Success!');
         isAudioShareStarted = true;
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.stopAudioShare:
-        Utilities.showToast("Audio Share Stopped");
+        Utilities.showToast("Audio Share Stopped",'Success!');
         isAudioShareStarted = false;
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.switchCamera:
-        Utilities.showToast("Camera switched successfully");
+        Utilities.showToast("Camera switched successfully",'Success!');
         break;
       case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
-        Utilities.showToast("Change Role successful");
+        Utilities.showToast("Change Role successful",'Success!');
         break;
       case HMSActionResultListenerMethod.setSessionMetadataForKey:
         break;
       case HMSActionResultListenerMethod.sendHLSTimedMetadata:
-        Utilities.showToast("Metadata sent successfully");
+        Utilities.showToast("Metadata sent successfully",'Success!');
         break;
       case HMSActionResultListenerMethod.lowerLocalPeerHand:
         isRaisedHand = false;
@@ -3053,10 +3054,10 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.stopAudioShare:
         break;
       case HMSActionResultListenerMethod.switchCamera:
-        Utilities.showToast("Camera switching failed");
+        Utilities.showToast("Camera switching failed",'Try Again!');
         break;
       case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
-        Utilities.showToast("Change role failed");
+        Utilities.showToast("Change role failed",'Try Again!');
         break;
       case HMSActionResultListenerMethod.setSessionMetadataForKey:
         toasts.add(HMSToastModel(hmsException,

@@ -6,6 +6,11 @@ part of 'payment_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+PricingResponse _$PricingResponseFromJson(Map<String, dynamic> json) =>
+    PricingResponse(
+      price: json['price'] as num,
+    );
+
 PaymentStatusResponse _$PaymentStatusResponseFromJson(
         Map<String, dynamic> json) =>
     PaymentStatusResponse(

@@ -15,6 +15,7 @@ ExpertsHome _$ExpertsHomeFromJson(Map<String, dynamic> json) => ExpertsHome(
                 .map((e) => Expert.fromJson(e as Map<String, dynamic>))
                 .toList()),
       ),
+      isAnyFreeCallAvailable: json['isAnyFreeCallAvailable'] as bool? ?? false,
     );
 
 Expert _$ExpertFromJson(Map<String, dynamic> json) => Expert(

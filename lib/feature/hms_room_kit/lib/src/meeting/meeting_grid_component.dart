@@ -37,7 +37,7 @@ class MeetingGridComponent extends StatelessWidget {
           ///If there are no peerTracks or the view controllers are empty we show an empty tapable container
           if (data.item3 == 0 || data.item6 == 0) {
             return GestureDetector(
-                onTap: () => visibilityController?.toggleControlsVisibility(),
+                // onTap: () => visibilityController?.toggleControlsVisibility(),
                 child: Container(
                   color: Colors.transparent,
                   height: double.infinity,
@@ -76,8 +76,8 @@ class MeetingGridComponent extends StatelessWidget {
                                   MediaQuery.of(context).padding.bottom -
                                   20,
                           child: GestureDetector(
-                            onTap: () => visibilityController
-                                ?.toggleControlsVisibility(),
+                            // onTap: () => visibilityController
+                            //     ?.toggleControlsVisibility(),
                             child: (modeData.item1 ==
                                         MeetingMode.activeSpeakerWithInset &&
                                     (context

@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 // ignore: depend_on_referenced_packages
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/enums/meeting_mode.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_store.dart';
@@ -12,6 +13,7 @@ import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/bottom_sheets/leav
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/common_widgets/hms_dropdown.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/toasts/hms_disconnected_toast.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/toasts/hms_reconnection_toast.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -23,21 +25,13 @@ import 'package:provider/provider.dart';
 class UtilityComponents {
   static Future<dynamic> onBackPressed(BuildContext context) {
     MeetingStore meetingStore = context.read<MeetingStore>();
-    return showModalBottomSheet(
+    return BaseUtil.openModalBottomSheet(
       isScrollControlled: true,
-      backgroundColor: HMSThemeColors.surfaceDim,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
-        ),
-      ),
-      context: context,
-      builder: (ctx) => ChangeNotifierProvider.value(
+      isBarrierDismissible: true,
+      backgroundColor: UiConstants.bg,
+      content: ChangeNotifierProvider.value(
         value: meetingStore,
-        child: LeaveSessionBottomSheet(
-          meetingStore: meetingStore,
-        ),
+        child: const LeaveSessionBottomSheet(),
       ),
     );
 
@@ -54,7 +48,7 @@ class UtilityComponents {
     //         mainAxisSize: MainAxisSize.min,
     //         children: [
     //           SvgPicture.asset(
-    //             "packages/hms_room_kit/lib/src/assets/icons/end.svg",
+    //             "assets/hms/icons/end.svg",
     //             width: 24,
     //           ),
     //           const SizedBox(
@@ -162,7 +156,7 @@ class UtilityComponents {
             mainAxisSize: MainAxisSize.min,
             children: [
               SvgPicture.asset(
-                "packages/hms_room_kit/lib/src/assets/icons/leave_hls.svg",
+                "assets/hms/icons/leave_hls.svg",
                 height: 24,
               ),
               const SizedBox(
@@ -803,8 +797,7 @@ class UtilityComponents {
                           onPressed: () {
                             if (selectedRoles.isEmpty) {
                               Utilities.showToast(
-                                "Please select a role",
-                              );
+                                  "Please select a role", 'Try Again!');
                             } else {
                               meetingStore.changeRoleOfPeersWithRoles(
                                 toRole,
@@ -958,8 +951,8 @@ class UtilityComponents {
                       else
                         {
                           Utilities.showToast(
-                            "Please enter RTMP URLs or enable recording",
-                          ),
+                              "Please enter RTMP URLs or enable recording",
+                              'Try Again!'),
                         },
                     },
                     child: Padding(
@@ -1004,7 +997,7 @@ class UtilityComponents {
             mainAxisSize: MainAxisSize.min,
             children: [
               SvgPicture.asset(
-                "packages/hms_room_kit/lib/src/assets/icons/end_warning.svg",
+                "assets/hms/icons/end_warning.svg",
                 width: 24,
               ),
               const SizedBox(
@@ -1129,7 +1122,7 @@ class UtilityComponents {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SvgPicture.asset(
-          "packages/hms_room_kit/lib/src/assets/icons/rotate.svg",
+          "assets/hms/icons/rotate.svg",
           colorFilter: ColorFilter.mode(
             meetingStore.isScreenRotationAllowed ? Colors.blue : iconColor,
             BlendMode.srcIn,
@@ -1249,7 +1242,7 @@ class UtilityComponents {
             mainAxisSize: MainAxisSize.min,
             children: [
               SvgPicture.asset(
-                "packages/hms_room_kit/lib/src/assets/icons/end_warning.svg",
+                "assets/hms/icons/end_warning.svg",
                 width: 24,
               ),
               const SizedBox(
@@ -1399,7 +1392,7 @@ class UtilityComponents {
               textCapitalization: TextCapitalization.words,
               textInputAction: TextInputAction.done,
               onSubmitted: (value) => (textController.text == "")
-                  ? Utilities.showToast("Name can't be empty")
+                  ? Utilities.showToast("Name can't be empty", 'Try Again!')
                   : Navigator.pop(context, textController.text.trim()),
               autofocus: true,
               controller: textController,
@@ -1470,7 +1463,7 @@ class UtilityComponents {
                 onPressed: () => {
                   if (textController.text == "")
                     {
-                      Utilities.showToast("Name can't be empty"),
+                      Utilities.showToast("Name can't be empty", 'Try Again!'),
                     }
                   else
                     {Navigator.pop(context, textController.text.trim())},
@@ -1646,7 +1639,8 @@ class UtilityComponents {
                       if (meetingStore.isAudioShareStarted)
                         meetingStore.setAudioMixingMode(valueChoose)
                       else
-                        Utilities.showToast("Audio Share not enabled"),
+                        Utilities.showToast(
+                            "Audio Share not enabled", 'Try Again Later!'),
                       Navigator.pop(context),
                       Navigator.pop(context),
                     },

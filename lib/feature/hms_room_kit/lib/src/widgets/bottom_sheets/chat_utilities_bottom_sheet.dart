@@ -113,7 +113,7 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
                   },
                   contentPadding: EdgeInsets.zero,
                   leading: SvgPicture.asset(
-                    "packages/hms_room_kit/lib/src/assets/icons/pin.svg",
+                    "assets/hms/icons/pin.svg",
                     semanticsLabel: "fl_pin_message_icon",
                     height: 20,
                     width: 20,
@@ -135,7 +135,7 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
                 },
                 contentPadding: EdgeInsets.zero,
                 leading: SvgPicture.asset(
-                  "packages/hms_room_kit/lib/src/assets/icons/copy.svg",
+                  "assets/hms/icons/copy.svg",
                   semanticsLabel: "fl_copy_message_icon",
                   height: 20,
                   width: 20,
@@ -158,7 +158,7 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
                   },
                   contentPadding: EdgeInsets.zero,
                   leading: SvgPicture.asset(
-                    "packages/hms_room_kit/lib/src/assets/icons/hide.svg",
+                    "assets/hms/icons/hide.svg",
                     semanticsLabel: "fl_copy_message_icon",
                     height: 20,
                     width: 20,
@@ -187,7 +187,7 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
                   },
                   contentPadding: EdgeInsets.zero,
                   leading: SvgPicture.asset(
-                    "packages/hms_room_kit/lib/src/assets/icons/block.svg",
+                    "assets/hms/icons/block.svg",
                     semanticsLabel: "fl_block_peer_icon",
                     height: 20,
                     width: 20,
@@ -220,7 +220,7 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
                   },
                   contentPadding: EdgeInsets.zero,
                   leading: SvgPicture.asset(
-                    "packages/hms_room_kit/lib/src/assets/icons/peer_remove.svg",
+                    "assets/hms/icons/peer_remove.svg",
                     semanticsLabel: "fl_remove_peer",
                     height: 20,
                     width: 20,

@@ -134,7 +134,6 @@ class __ExpertHomeState extends State<_ExpertHome>
                   ...expertsData.list
                       .where(
                           (section) => !section.toLowerCase().contains('top'))
-                      .take(3)
                       .expand(
                         (section) => [
                           _buildSectionContent(section),
@@ -188,7 +187,10 @@ class __ExpertHomeState extends State<_ExpertHome>
             child: ExpertCard(
               expert: expert,
               onBookCall: () {
-                BaseUtil.openBookAdvisorSheet(advisorId: expert.advisorId);
+                BaseUtil.openBookAdvisorSheet(
+                  advisorId: expert.advisorId,
+                  advisorName: expert.name,
+                );
               },
               onTap: () {
                 AppState.delegate!.appState.currentAction = PageAction(
@@ -230,18 +232,29 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
     bool overlapsContent,
   ) {
     return Container(
-      color: UiConstants.bg,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: sections
-            .where((section) => !section.toLowerCase().contains('top'))
-            .map((section) {
-          return buildTabItem(
-            section,
-            sectionKeys[section],
-            () => scrollToSection(sectionKeys[section]!),
-          );
-        }).toList(),
+      decoration: BoxDecoration(
+        color: UiConstants.bg,
+        border: Border(
+          bottom: BorderSide(
+            color: UiConstants.kTextColor.withOpacity(0.6),
+            width: 2.0,
+          ),
+        ),
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: sections
+              .where((section) => !section.toLowerCase().contains('top'))
+              .map((section) {
+            return buildTabItem(
+              section,
+              sectionKeys[section],
+              () => scrollToSection(sectionKeys[section]!),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
@@ -270,18 +283,19 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
     return GestureDetector(
       onTap: onSectionTap,
       child: Container(
+        margin: EdgeInsets.only(right: SizeConfig.padding10),
         padding: const EdgeInsets.symmetric(
           vertical: 10.0,
         ),
         decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: isSelected
-                  ? UiConstants.kTextColor
-                  : UiConstants.kTextColor.withOpacity(0.6),
-              width: 2.0,
-            ),
-          ),
+          border: isSelected
+              ? const Border(
+                  bottom: BorderSide(
+                    color: UiConstants.kTextColor,
+                    width: 2.0,
+                  ),
+                )
+              : null,
         ),
         child: Text(
           title,

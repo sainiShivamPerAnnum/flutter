@@ -122,7 +122,7 @@ class MessageContainer extends StatelessWidget {
                           );
                         },
                         child: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/more.svg",
+                          "assets/hms/icons/more.svg",
                           height: 20,
                           width: 20,
                           colorFilter: ColorFilter.mode(

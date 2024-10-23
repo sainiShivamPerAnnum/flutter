@@ -31,7 +31,7 @@ class BRBTag extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8),
                         child: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/brb.svg",
+                          "assets/hms/icons/brb.svg",
                           width: 19.25,
                           height: 11,
                           semanticsLabel: "brb_label",

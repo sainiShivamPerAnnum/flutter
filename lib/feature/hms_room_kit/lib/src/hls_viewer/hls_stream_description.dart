@@ -147,7 +147,7 @@ class HLSStreamDescription extends StatelessWidget {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 8.0),
                               child: SvgPicture.asset(
-                                "packages/hms_room_kit/lib/src/assets/icons/red_dot.svg",
+                                "assets/hms/icons/red_dot.svg",
                                 colorFilter: ColorFilter.mode(
                                   HMSThemeColors.onSurfaceHighEmphasis,
                                   BlendMode.srcIn,
@@ -231,7 +231,7 @@ class HLSStreamDescription extends StatelessWidget {
                                                   horizontal: 8.0,
                                                 ),
                                                 child: SvgPicture.asset(
-                                                  "packages/hms_room_kit/lib/src/assets/icons/red_dot.svg",
+                                                  "assets/hms/icons/red_dot.svg",
                                                   colorFilter: ColorFilter.mode(
                                                     HMSThemeColors
                                                         .onSurfaceHighEmphasis,

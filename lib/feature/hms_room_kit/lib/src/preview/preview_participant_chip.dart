@@ -45,7 +45,7 @@ class PreviewParticipantChip extends StatelessWidget {
                     child: Row(
                       children: [
                         SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/white_dot.svg",
+                          "assets/hms/icons/white_dot.svg",
                           width: 20,
                           height: 20,
                         ),

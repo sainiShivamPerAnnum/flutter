@@ -6,6 +6,17 @@ part 'payment_response.g.dart';
 const _deserializable = JsonSerializable(
   createToJson: false,
 );
+@_deserializable
+class PricingResponse {
+  final num price;
+
+  const PricingResponse({
+    required this.price,
+  });
+
+  factory PricingResponse.fromJson(Map<String, dynamic> json) =>
+      _$PricingResponseFromJson(json);
+}
 
 @_deserializable
 class PaymentStatusResponse {

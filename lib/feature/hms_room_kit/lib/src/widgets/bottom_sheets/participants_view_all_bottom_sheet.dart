@@ -185,7 +185,7 @@ class _ParticipantsViewAllBottomSheetState
                       value: 1,
                       child: Row(children: [
                         SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/change_role.svg",
+                            "assets/hms/icons/change_role.svg",
                             width: 20,
                             height: 20,
                             colorFilter: ColorFilter.mode(
@@ -210,7 +210,7 @@ class _ParticipantsViewAllBottomSheetState
                       value: 2,
                       child: Row(children: [
                         SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/lower_hand.svg",
+                            "assets/hms/icons/lower_hand.svg",
                             width: 18,
                             height: 18,
                             colorFilter: ColorFilter.mode(
@@ -236,8 +236,8 @@ class _ParticipantsViewAllBottomSheetState
                       child: Row(children: [
                         SvgPicture.asset(
                           peerTrackNode.track?.isMute ?? false
-                              ? "packages/hms_room_kit/lib/src/assets/icons/cam_state_on.svg"
-                              : "packages/hms_room_kit/lib/src/assets/icons/cam_state_off.svg",
+                              ? "assets/hms/icons/cam_state_on.svg"
+                              : "assets/hms/icons/cam_state_off.svg",
                           colorFilter: ColorFilter.mode(
                               HMSThemeColors.onSurfaceHighEmphasis,
                               BlendMode.srcIn),
@@ -265,8 +265,8 @@ class _ParticipantsViewAllBottomSheetState
                       child: Row(children: [
                         SvgPicture.asset(
                           peerTrackNode.audioTrack?.isMute ?? false
-                              ? "packages/hms_room_kit/lib/src/assets/icons/mic_state_on.svg"
-                              : "packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg",
+                              ? "assets/hms/icons/mic_state_on.svg"
+                              : "assets/hms/icons/mic_state_off.svg",
                           colorFilter: ColorFilter.mode(
                               HMSThemeColors.onSurfaceHighEmphasis,
                               BlendMode.srcIn),
@@ -291,7 +291,7 @@ class _ParticipantsViewAllBottomSheetState
                       value: 5,
                       child: Row(children: [
                         SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/peer_remove.svg",
+                            "assets/hms/icons/peer_remove.svg",
                             width: 20,
                             height: 20,
                             colorFilter: ColorFilter.mode(
@@ -342,7 +342,7 @@ class _ParticipantsViewAllBottomSheetState
                           Navigator.pop(context);
                         },
                         child: SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/left_arrow.svg",
+                            "assets/hms/icons/left_arrow.svg",
                             width: 24,
                             height: 24,
                             colorFilter: ColorFilter.mode(
@@ -516,7 +516,7 @@ class _ParticipantsViewAllBottomSheetState
                                                                                 HMSThemeColors.surfaceDefault,
                                                                             child:
                                                                                 SvgPicture.asset(
-                                                                              "packages/hms_room_kit/lib/src/assets/icons/network_$networkQuality.svg",
+                                                                              "assets/hms/icons/network_$networkQuality.svg",
                                                                               height: 16,
                                                                               width: 16,
                                                                             ),
@@ -548,7 +548,7 @@ class _ParticipantsViewAllBottomSheetState
                                                                                 HMSThemeColors.surfaceDefault,
                                                                             child:
                                                                                 SvgPicture.asset(
-                                                                              "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
+                                                                              "assets/hms/icons/hand_outline.svg",
                                                                               height: 16,
                                                                               width: 16,
                                                                               colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),

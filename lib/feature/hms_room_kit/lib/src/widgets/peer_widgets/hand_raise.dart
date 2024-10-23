@@ -30,7 +30,7 @@ class HandRaise extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8),
                         child: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
+                          "assets/hms/icons/hand_outline.svg",
                           height: 25,
                           width: 25,
                           colorFilter: ColorFilter.mode(

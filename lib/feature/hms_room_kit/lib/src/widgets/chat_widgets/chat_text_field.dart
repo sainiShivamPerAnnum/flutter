@@ -138,7 +138,7 @@ class _ChatTextFieldState extends State<ChatTextField> {
                                                         .trim()
                                                         .isEmpty) {
                                                       Utilities.showToast(
-                                                          "Message can't be empty");
+                                                          "Message can't be empty",'Try Again!');
                                                     }
                                                     widget.sendMessage(
                                                         messageTextController);
@@ -146,7 +146,7 @@ class _ChatTextFieldState extends State<ChatTextField> {
                                                         .clear();
                                                   },
                                                   child: SvgPicture.asset(
-                                                    "packages/hms_room_kit/lib/src/assets/icons/send_message.svg",
+                                                    "assets/hms/icons/send_message.svg",
                                                     fit: BoxFit.scaleDown,
                                                     colorFilter: ColorFilter.mode(
                                                         messageTextController

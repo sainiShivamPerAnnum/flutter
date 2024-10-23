@@ -1,12 +1,18 @@
 ///Dart imports
 
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_store.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/bottom_sheets/audio_settings_bottom_sheet.dart';
+import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/bottom_sheets/leave_session_bottom_sheet.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/common_widgets/hms_embedded_button.dart';
 
 ///Project imports
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/common_widgets/live_badge.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/styles.dart';
 
 ///Package imports
 import 'package:flutter/material.dart';
@@ -43,35 +49,41 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                     ///This renders the audio device selection button
                     ///If the role is allowed to publish audio, we render the audio device selection button
                     ///else we render an empty SizedBox
-                    Selector<MeetingStore, Tuple2<String?, bool>>(
-                      selector: (_, meetingStore) => Tuple2(
-                          meetingStore.peerTracks.first.peer.name,
-                          meetingStore.isSpeakerOn),
+                    Selector<MeetingStore, String?>(
+                      selector: (_, meetingStore) => meetingStore
+                                  .peerTracks.isNotEmpty &&
+                              meetingStore.peerTracks.first.peer.name != null
+                          ? meetingStore.peerTracks.first.peer.name
+                          : 'Waiting...',
                       builder: (_, data, __) {
                         return Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8),
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
-                              border: Border.all(
-                                  color: HMSThemeColors.borderBright, width: 1),
-                              color: (HMSThemeColors.backgroundDefault),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding8,
+                            vertical: SizeConfig.padding2,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(SizeConfig.roundness5),
                             ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.person,
-                                  size: 12,
-                                ),
-                                const SizedBox(
-                                  width: 2,
-                                ),
-                                Text(
-                                  data.item1 ?? '',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ],
-                            ));
+                            color: Colors.black45,
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.person,
+                                size: SizeConfig.body4,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: SizeConfig.padding4,
+                              ),
+                              Text(
+                                data ?? '',
+                                style: TextStyles.sourceSans.body4,
+                              ),
+                            ],
+                          ),
+                        );
                       },
                     ),
 
@@ -128,7 +140,7 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                     //               data.item3 == HMSRecordingState.started ||
                     //               data.item3 == HMSRecordingState.resumed)
                     //           ? SvgPicture.asset(
-                    //               "packages/hms_room_kit/lib/src/assets/icons/record.svg",
+                    //               "assets/hms/icons/record.svg",
                     //               height: 24,
                     //               width: 24,
                     //               colorFilter: ColorFilter.mode(
@@ -153,7 +165,7 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                     //                       data.item3 ==
                     //                           HMSRecordingState.paused)
                     //                   ? SvgPicture.asset(
-                    //                       "packages/hms_room_kit/lib/src/assets/icons/recording_paused.svg",
+                    //                       "assets/hms/icons/recording_paused.svg",
                     //                       height: 24,
                     //                       width: 24,
                     //                       colorFilter: ColorFilter.mode(
@@ -179,10 +191,10 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                     ///If recording initialising state is true we show the loader
                     Selector<MeetingStore, bool>(
                         selector: (_, meetingStore) =>
-                            (meetingStore.streamingType['hls'] ==
-                                    HMSStreamingState.started ||
-                                meetingStore.streamingType['rtmp'] ==
-                                    HMSStreamingState.started),
+                            meetingStore.streamingType['hls'] ==
+                                HMSStreamingState.started ||
+                            meetingStore.streamingType['rtmp'] ==
+                                HMSStreamingState.started,
                         builder: (_, isHLSStarted, __) {
                           return isHLSStarted ? const LiveBadge() : Container();
                         }),
@@ -195,10 +207,10 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                     ///else we render an empty Container
                     Selector<MeetingStore, Tuple2<bool, int>>(
                         selector: (_, meetingStore) => Tuple2(
-                            ((meetingStore.streamingType['hls'] ==
+                            (meetingStore.streamingType['hls'] ==
                                     HMSStreamingState.started) ||
                                 (meetingStore.streamingType['rtmp'] ==
-                                    HMSStreamingState.started)),
+                                    HMSStreamingState.started),
                             meetingStore.peersInRoom),
                         builder: (_, data, __) {
                           return data.item1
@@ -219,7 +231,7 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       SvgPicture.asset(
-                                        "packages/hms_room_kit/lib/src/assets/icons/watching.svg",
+                                        "assets/hms/icons/watching.svg",
                                         width: 16,
                                         height: 16,
                                         colorFilter: ColorFilter.mode(
@@ -269,7 +281,7 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                                   isActive: true,
                                   onColor: HMSThemeColors.backgroundDim,
                                   child: SvgPicture.asset(
-                                    "packages/hms_room_kit/lib/src/assets/icons/camera.svg",
+                                    "assets/hms/icons/camera.svg",
                                     colorFilter: ColorFilter.mode(
                                         data.item1
                                             ? HMSThemeColors
@@ -309,7 +321,7 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                     //           onColor: HMSThemeColors.backgroundDim,
                     //           isActive: true,
                     //           child: SvgPicture.asset(
-                    //             'packages/hms_room_kit/lib/src/assets/icons/${!data.item2 ? "speaker_state_off" : Utilities.getAudioDeviceIconName(data.item1)}.svg',
+                    //             'assets/hms/icons/${!data.item2 ? "speaker_state_off" : Utilities.getAudioDeviceIconName(data.item1)}.svg',
                     //             colorFilter: ColorFilter.mode(
                     //                 HMSThemeColors.onSurfaceHighEmphasis,
                     //                 BlendMode.srcIn),
@@ -320,26 +332,22 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                     // const SizedBox(
                     //   width: 16,
                     // ),
-                    Selector<MeetingStore, Tuple2<HMSAudioDevice?, bool>>(
-                        selector: (_, meetingStore) => Tuple2(
-                            meetingStore.currentAudioOutputDevice,
-                            meetingStore.isSpeakerOn),
-                        builder: (_, data, __) {
-                          return GestureDetector(
-                              onTap: () {
-                                showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    backgroundColor: Colors.transparent,
-                                    context: context,
-                                    builder: (ctx) => ChangeNotifierProvider.value(
-                                        value: context.read<MeetingStore>(),
-                                        child:
-                                            const AudioSettingsBottomSheet()));
-                              },
-                              // onColor: HMSThemeColors.backgroundDim,
-                              // isActive: true,
-                              child: Icon(Icons.close));
-                        }),
+
+                    GestureDetector(
+                      onTap: () {
+                        BaseUtil.openModalBottomSheet(
+                          isScrollControlled: true,
+                          isBarrierDismissible: true,
+                          backgroundColor: UiConstants.bg,
+                          content: ChangeNotifierProvider.value(
+                              value: context.read<MeetingStore>(),
+                            child: const LeaveSessionBottomSheet()),
+                        );
+                      },
+                      // onColor: HMSThemeColors.backgroundDim,
+                      // isActive: true,
+                      child: const Icon(Icons.close),
+                    ),
                   ],
                 )
               ],

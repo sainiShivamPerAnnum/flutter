@@ -97,8 +97,8 @@ class _PreviewForRoleBottomSheetState extends State<PreviewForRoleBottomSheet> {
                               onColor: HMSThemeColors.surfaceDim,
                               child: SvgPicture.asset(
                                 isMicOn
-                                    ? "packages/hms_room_kit/lib/src/assets/icons/mic_state_on.svg"
-                                    : "packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg",
+                                    ? "assets/hms/icons/mic_state_on.svg"
+                                    : "assets/hms/icons/mic_state_off.svg",
                                 colorFilter: ColorFilter.mode(
                                   HMSThemeColors.onSurfaceHighEmphasis,
                                   BlendMode.srcIn,
@@ -126,8 +126,8 @@ class _PreviewForRoleBottomSheetState extends State<PreviewForRoleBottomSheet> {
                               onColor: HMSThemeColors.surfaceDim,
                               child: SvgPicture.asset(
                                 isVideoOn
-                                    ? "packages/hms_room_kit/lib/src/assets/icons/cam_state_on.svg"
-                                    : "packages/hms_room_kit/lib/src/assets/icons/cam_state_off.svg",
+                                    ? "assets/hms/icons/cam_state_on.svg"
+                                    : "assets/hms/icons/cam_state_off.svg",
                                 colorFilter: ColorFilter.mode(
                                   HMSThemeColors.onSurfaceHighEmphasis,
                                   BlendMode.srcIn,
@@ -154,7 +154,7 @@ class _PreviewForRoleBottomSheetState extends State<PreviewForRoleBottomSheet> {
                               isActive: true,
                               onColor: HMSThemeColors.surfaceDim,
                               child: SvgPicture.asset(
-                                "packages/hms_room_kit/lib/src/assets/icons/camera.svg",
+                                "assets/hms/icons/camera.svg",
                                 colorFilter: ColorFilter.mode(
                                   isVideoOn
                                       ? HMSThemeColors.onSurfaceHighEmphasis
