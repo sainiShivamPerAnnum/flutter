@@ -89,7 +89,6 @@ class RootController {
   }
 
   void getNavItems(String navItem) {
-    print("eiuhdfihafi ofhjosidf oisjdfoijosdfj osdfj oj foij $navItem");
     switch (navItem) {
       case "SV":
         navItems.putIfAbsent(
@@ -115,12 +114,12 @@ class RootController {
           () => RootController.supportNavBarItem,
         );
         break;
-      case "SH":
-        navItems.putIfAbsent(
-          const ShortsVideoPage(),
-          () => RootController.shortsNavBarItem,
-        );
-        break;
+      // case "SH":
+      //   navItems.putIfAbsent(
+      //     const ShortsVideoPage(),
+      //     () => RootController.shortsNavBarItem,
+      //   );
+      //   break;
       case "SH":
         navItems.putIfAbsent(
             const AdvisorPage(), () => RootController.advisortNavBarItem);

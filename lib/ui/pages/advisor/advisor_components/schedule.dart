@@ -25,6 +25,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ScheduleCall extends StatefulWidget {
@@ -46,7 +47,6 @@ class ScheduleCallWrapper extends State<ScheduleCall> {
 
   String selectedCategory = 'Personal Finance';
   final AdvisorRepo _advisorRepo = locator<AdvisorRepo>();
-
   final categories = [
     "Personal Finance",
     "Mutual Funds",
@@ -57,21 +57,16 @@ class ScheduleCallWrapper extends State<ScheduleCall> {
     "Savings and Planning",
     "Alternate Assets"
   ];
+  final List<Map<String, String>> dates = generateDates(5);
   int _selectedDateIndex = 2; // Initially selected date
   int _selectedTimeIndex = 2; // Initially selected date
   bool _inProgress = false;
   get inProgress => _inProgress;
-  final List<Map<String, String>> dates = [
-    {'day': 'Thu', 'date': '12'},
-    {'day': 'Fri', 'date': '13'},
-    {'day': 'Sat', 'date': '14'},
-    {'day': 'Sun', 'date': '15'},
-  ];
 
   final List<Map<String, String>> time = [
     {'TimeUI': '10:00 AM'},
     {'TimeUI': '11:00 AM'},
-    {'TimeUI': '12:00 AM'},
+    {'TimeUI': '12:00 PM'},
     {'TimeUI': '1:00 PM'},
     {'TimeUI': '2:00 PM'},
     {'TimeUI': '3:00 PM'},
@@ -433,6 +428,9 @@ class ScheduleCallWrapper extends State<ScheduleCall> {
                           SizedBox(
                             height: 48,
                           ),
+                          SizedBox(
+                            height: 48,
+                          ),
                           ElevatedButton(
                             onPressed: () => {
                               postEvent()
@@ -472,13 +470,37 @@ class ScheduleCallWrapper extends State<ScheduleCall> {
   Future<void> postEvent() async {
     _inProgress = true;
 
+    String dateString =
+        dates[_selectedDateIndex]['dateTime'] ?? '2024-10-2314:00:00.000';
+    String timeString =
+        time[_selectedTimeIndex]['TimeUI'] ?? '2024-10-2314:00:00.000';
+
+    // Define the date format to parse the input date and time
+    DateFormat dateFormat = DateFormat("MMMM d, yyyy h:mm:ss a");
+    DateFormat timeFormat = DateFormat("h:mm a");
+
+    // Parse the date
+    DateTime parsedDate = dateFormat.parse(dateString);
+
+    // Parse the time separately (for the new time: 2:00 PM)
+    DateTime parsedTime = timeFormat.parse(timeString);
+
+    // Combine the parsed date and the new time (2:00 PM)
+    DateTime finalDateTime = DateTime(
+      parsedDate.year,
+      parsedDate.month,
+      parsedDate.day,
+      parsedTime.hour,
+      parsedTime.minute,
+    );
+    String isoDateTime = finalDateTime.toIso8601String();
     final payload = {
       "id": "event-123",
       "topic": topicController.text,
       "description": descriptionController.text,
       "categories": [selectedCategory],
-      "coverImage": selectedProfilePicture!.path,
-      "eventTimeSlot": "2024-09-30T12:00:00.000Z",
+      "coverImage": selectedProfilePicture?.path ?? 'example.jpg',
+      "eventTimeSlot": isoDateTime,
       "duration": 90,
       "advisorId": "advisor-123",
       "status": "live",
@@ -491,6 +513,7 @@ class ScheduleCallWrapper extends State<ScheduleCall> {
     print('payloadpayloadpayload $payload');
     AppState.blockNavigation();
     final resp = await _advisorRepo.saveEvent(payload);
+    print("respppppp=====> $resp");
     if (resp.isSuccess()) {
     } else {
       // _logger.e(withdrawalTxn.errorMessage);
@@ -583,4 +606,23 @@ class ScheduleCallWrapper extends State<ScheduleCall> {
       // notifyListeners();
     }
   }
+}
+
+List<Map<String, String>> generateDates(int numberOfDays) {
+  final List<Map<String, String>> dates = [];
+  final DateFormat dayFormat =
+      DateFormat('E'); // Format for day (e.g., Mon, Tue)
+  final DateFormat dateFormat =
+      DateFormat('d'); // Format for day of the month (e.g., 12, 13)
+  final DateFormat dateTimeFormat = DateFormat();
+  for (int i = 0; i < numberOfDays; i++) {
+    DateTime currentDate = DateTime.now().add(Duration(days: i));
+    dates.add({
+      'day': dayFormat.format(currentDate), // 'Thu', 'Fri', etc.
+      'date': dateFormat.format(currentDate),
+      'dateTime': dateTimeFormat.format(currentDate) // '12', '13', etc.
+    });
+  }
+
+  return dates;
 }

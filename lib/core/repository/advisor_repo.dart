@@ -47,8 +47,8 @@ class AdvisorRepo extends BaseRepo {
         apiName: '$_advisor/event',
       );
 
-      // final data = response['data'];
-      return ApiResponse(model: response, code: 200);
+      final data = response['data'];
+      return ApiResponse(model: data, code: 200);
     } catch (e) {
       logger.e(e);
       return ApiResponse.withError(e.toString(), 400);

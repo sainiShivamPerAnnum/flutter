@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/blog_model.dart';
 import 'package:felloapp/core/model/event_model.dart';
-import 'package:felloapp/core/model/top_expert_model.dart';
+// import 'package:felloapp/core/model/top_expert_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -53,7 +53,7 @@ class AdvisorViewModel extends BaseViewModel {
   late final PageController offersController = PageController(initialPage: 0);
   List<EventModel>? _ongoingEvents;
   List<BlogPostModel>? _blogPosts;
-  List<TopExpertModel>? _topExperts;
+  // List<TopExpertModel>? _topExperts;
   List<BlogPostModelByCategory>? _blogPostsByCategory;
   bool _isLoading = true;
   bool _isChallenegsLoading = true;
@@ -95,7 +95,7 @@ class AdvisorViewModel extends BaseViewModel {
 
   List<BlogPostModel>? get blogPosts => _blogPosts;
 
-  List<TopExpertModel>? get topExperts => _topExperts;
+  // List<TopExpertModel>? get topExperts => _topExperts;
 
   List<BlogPostModelByCategory>? get blogPostsByCategory =>
       _blogPostsByCategory;
@@ -133,10 +133,10 @@ class AdvisorViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  set topExperts(List<TopExpertModel>? value) {
-    _topExperts = value;
-    notifyListeners();
-  }
+  // set topExperts(List<TopExpertModel>? value) {
+  //   _topExperts = value;
+  //   notifyListeners();
+  // }
 
   set blogPosts(List<BlogPostModel>? value) {
     _blogPosts = value;
