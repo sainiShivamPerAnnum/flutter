@@ -18,7 +18,7 @@ class HMSEmptyChatWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SvgPicture.asset(
-          "packages/hms_room_kit/lib/src/assets/icons/empty_chat.svg",
+          "assets/hms/icons/empty_chat.svg",
           fit: BoxFit.scaleDown,
         ),
         const SizedBox(

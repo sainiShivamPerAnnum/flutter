@@ -23,6 +23,7 @@ class PollingSheet extends StatelessWidget {
     return BlocProvider(
       create: (_) => PollingBloc(
         locator(),
+        locator(),
       )..add(StartPolling(paymentID)),
       child: const _BookingStatusSheet(),
     );

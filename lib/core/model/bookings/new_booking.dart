@@ -4,9 +4,10 @@ part 'new_booking.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Schedule {
-  Map<String, List<TimeSlot>>? data;
+  Map<String, List<TimeSlot>>? slots;
+  bool? hasFreeCall;
 
-  Schedule({this.data});
+  Schedule({this.slots, this.hasFreeCall});
 
   factory Schedule.fromJson(Map<String, dynamic> json) =>
       _$ScheduleFromJson(json);

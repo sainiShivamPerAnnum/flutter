@@ -58,7 +58,7 @@ class HMSBringOnStageToast extends StatelessWidget {
       toastColor: toastColor,
       toastPosition: toastPosition,
       leading: SvgPicture.asset(
-        "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
+        "assets/hms/icons/hand_outline.svg",
         height: 24,
         width: 24,
         colorFilter: ColorFilter.mode(

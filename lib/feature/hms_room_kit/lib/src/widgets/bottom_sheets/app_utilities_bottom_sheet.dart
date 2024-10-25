@@ -164,7 +164,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                       ? 20
                                       : 30),
                           child: SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
+                            "assets/hms/icons/participants.svg",
                             height: 20,
                             width: 20,
                             colorFilter: ColorFilter.mode(
@@ -190,7 +190,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                     },
                     isActive: meetingStore.isScreenShareOn,
                     optionIcon: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
+                      "assets/hms/icons/screen_share.svg",
                       height: 20,
                       width: 20,
                       colorFilter: ColorFilter.mode(
@@ -213,7 +213,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       optionIcon: Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/brb.svg",
+                          "assets/hms/icons/brb.svg",
                           colorFilter: ColorFilter.mode(
                               HMSThemeColors.onSurfaceHighEmphasis,
                               BlendMode.srcIn),
@@ -231,7 +231,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       },
                       isActive: meetingStore.isRaisedHand,
                       optionIcon: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
+                        "assets/hms/icons/hand_outline.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
@@ -266,7 +266,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                         );
                       },
                       optionIcon: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/polls.svg",
+                        "assets/hms/icons/polls.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
@@ -296,7 +296,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                           onTap: () {},
                           isActive: false,
                           optionIcon: SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/record.svg",
+                            "assets/hms/icons/record.svg",
                             height: 20,
                             width: 20,
                             colorFilter: ColorFilter.mode(
@@ -341,7 +341,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                       fontSize: 20,
                                     ),
                                     bottomSheetTitleIcon: SvgPicture.asset(
-                                      "packages/hms_room_kit/lib/src/assets/icons/alert.svg",
+                                      "assets/hms/icons/alert.svg",
                                       height: 20,
                                       width: 20,
                                       colorFilter: ColorFilter.mode(
@@ -369,7 +369,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                           },
                           isActive: false,
                           optionIcon: SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/${meetingStore.recordingType["browser"] == HMSRecordingState.paused ? "recording_paused" : "record"}.svg",
+                            "assets/hms/icons/${meetingStore.recordingType["browser"] == HMSRecordingState.paused ? "recording_paused" : "record"}.svg",
                             height: 20,
                             width: 20,
                             colorFilter: ColorFilter.mode(
@@ -399,7 +399,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       },
                       isActive: meetingStore.isNoiseCancellationEnabled,
                       optionIcon: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/music_wave.svg",
+                        "assets/hms/icons/music_wave.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
@@ -420,7 +420,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       },
                       isActive: false,
                       optionIcon: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/pencil.svg",
+                        "assets/hms/icons/pencil.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
@@ -490,7 +490,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       ///The button is active if the transcription is enabled and getting displayed
                       isActive: meetingStore.isTranscriptionDisplayed,
                       optionIcon: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/${meetingStore.isTranscriptionDisplayed ? "cc-filled" : "cc"}.svg",
+                        "assets/hms/icons/${meetingStore.isTranscriptionDisplayed ? "cc-filled" : "cc"}.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
@@ -536,7 +536,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                 //       },
                 //       isActive: false,
                 //       optionIcon: SvgPicture.asset(
-                //         "packages/hms_room_kit/lib/src/assets/icons/video_effects.svg",
+                //         "assets/hms/icons/video_effects.svg",
                 //         height: 20,
                 //         width: 20,
                 //         colorFilter: ColorFilter.mode(

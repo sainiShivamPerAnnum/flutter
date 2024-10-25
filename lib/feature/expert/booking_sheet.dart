@@ -3,6 +3,8 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/bookings/new_booking.dart';
 import 'package:felloapp/feature/expert/bloc/booking_bloc.dart';
 import 'package:felloapp/feature/expert/payment_sheet.dart';
+import 'package:felloapp/feature/expert/polling_sheet.dart';
+import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
@@ -13,19 +15,31 @@ import 'package:intl/intl.dart';
 
 class BookCallSheetView extends StatelessWidget {
   final String advisorID;
+  final String advisorName;
   const BookCallSheetView({
     required this.advisorID,
+    required this.advisorName,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => BookingBloc(
-        locator(),
-        locator(),
-      )..add(LoadBookingDates(advisorID)),
-      child: _BookCallBottomSheet(advisorId: advisorID),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => BookingBloc(
+            locator(),
+            locator(),
+          )..add(LoadBookingDates(advisorID, 30)),
+        ),
+        BlocProvider(
+          create: (context) => PaymentBloc(locator(), locator(), locator()),
+        ),
+      ],
+      child: _BookCallBottomSheet(
+        advisorId: advisorID,
+        advisorName: advisorName,
+      ),
     );
   }
 }
@@ -33,8 +47,10 @@ class BookCallSheetView extends StatelessWidget {
 class _BookCallBottomSheet extends StatefulWidget {
   const _BookCallBottomSheet({
     required this.advisorId,
+    required this.advisorName,
   });
   final String advisorId;
+  final String advisorName;
 
   @override
   State<_BookCallBottomSheet> createState() => _BookCallBottomSheetState();
@@ -46,33 +62,62 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BookingBloc, BookingState>(
-      builder: (context, state) {
-        if (state is LoadingBookingsData) {
-          return const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [FullScreenLoader()],
+    return BlocListener<PaymentBloc, PaymentState>(
+      listener: (context, state) {
+        if (state is SubmittedPayment) {
+          AppState.backButtonDispatcher!.didPopRoute();
+          AppState.screenStack.add(ScreenItem.modalsheet);
+          BaseUtil.openModalBottomSheet(
+            isScrollControlled: true,
+            enableDrag: true,
+            isBarrierDismissible: false,
+            content: PollingSheet(
+              paymentID: state.data.data.paymentId,
+            ),
+            backgroundColor: UiConstants.kBackgroundColor,
+            hapticVibrate: true,
           );
-        } else if (state is BookingsLoaded) {
-          return _buildContent(context, state.schedule, widget.advisorId);
-        } else if (state is PricingData) {
-          return _buildPaymentSummary(context, state);
-        } else {
-          return const Center(child: Text('Something went wrong.'));
         }
       },
+      child: BlocBuilder<BookingBloc, BookingState>(
+        builder: (context, state) {
+          if (state is LoadingBookingsData) {
+            return const Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [FullScreenLoader()],
+            );
+          } else if (state is BookingsLoaded) {
+            return _buildContent(context, state.schedule, widget.advisorId);
+          } else if (state is PricingData) {
+            return _buildPaymentSummary(context, state);
+          } else {
+            return const ErrorPage();
+          }
+        },
+      ),
     );
   }
 
   Widget _buildContent(
-      BuildContext context, Schedule? schedule, String advisorId,) {
+    BuildContext context,
+    Schedule? schedule,
+    String advisorId,
+  ) {
     final state = context.read<BookingBloc>().state;
     final selectedDate = state is BookingsLoaded ? state.selectedDate : null;
+    final selectedDuration =
+        state is BookingsLoaded ? state.selectedDuration : null;
     final selectedTime = state is BookingsLoaded ? state.selectedTime : null;
+    final duration = [
+      {"name": '15 Mins', "value": 15},
+      {"name": '30 Mins', "value": 30},
+      {"name": '45 Mins', "value": 45},
+      {"name": '1 hour', "value": 60},
+    ];
+    final dates = schedule?.slots?.keys.toList() ?? [];
 
-    final dates = schedule?.data?.keys.toList() ?? [];
     final currentTimes = selectedDate != null
-        ? schedule!.data![selectedDate]!.map((e) => e.fromTime).toList()
+        ? schedule!.slots![selectedDate]!.map((e) => e.fromTime).toList()
         : [];
 
     return Column(
@@ -126,32 +171,61 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
               Divider(
                 color: UiConstants.kTextColor5.withOpacity(.3),
               ),
+              Text(
+                'Select Duration',
+                style: TextStyles.sourceSansSB.body2,
+              ),
               SizedBox(height: SizeConfig.padding16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: duration.take(4).map((e) {
+                  return Padding(
+                    padding: EdgeInsets.only(right: SizeConfig.padding12),
+                    child: DateButton(
+                      date: e['name'].toString(),
+                      requireFormat: false,
+                      isSelected: e['value'] == selectedDuration,
+                      onTap: () {
+                        context
+                            .read<BookingBloc>()
+                            .add(SelectDuration(e['value'] as int));
+                      },
+                    ),
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: SizeConfig.padding16),
+              Divider(
+                color: UiConstants.kTextColor5.withOpacity(.3),
+              ),
               Text(
                 'Select Time',
                 style: TextStyles.sourceSansSB.body2,
               ),
               SizedBox(height: SizeConfig.padding16),
-              GridView.builder(
-                shrinkWrap: true,
-                itemCount: currentTimes.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: SizeConfig.padding12,
-                  mainAxisSpacing: SizeConfig.padding16,
-                  childAspectRatio: 3,
+              Container(
+                constraints: BoxConstraints(maxHeight: SizeConfig.padding252),
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  itemCount: currentTimes.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: SizeConfig.padding12,
+                    mainAxisSpacing: SizeConfig.padding16,
+                    childAspectRatio: 3,
+                  ),
+                  itemBuilder: (context, index) {
+                    final time = currentTimes[index];
+                    final displayTime = time?.split(' ')[0];
+                    return TimeButton(
+                      time: displayTime!,
+                      isSelected: time == selectedTime,
+                      onTap: () {
+                        context.read<BookingBloc>().add(SelectTime(time));
+                      },
+                    );
+                  },
                 ),
-                itemBuilder: (context, index) {
-                  final time = currentTimes[index];
-                  final displayTime = time?.split(' ')[0];
-                  return TimeButton(
-                    time: displayTime!,
-                    isSelected: time == selectedTime,
-                    onTap: () {
-                      context.read<BookingBloc>().add(SelectTime(time));
-                    },
-                  );
-                },
               ),
             ],
           ),
@@ -194,13 +268,27 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                     if (state is BookingsLoaded &&
                         state.selectedDate != null &&
                         state.selectedTime != null) {
-                      context.read<BookingBloc>().add(
-                            GetPricing(
-                              state.selectedDate!,
-                              state.selectedTime!,
-                              widget.advisorId,
-                            ),
-                          );
+                      if (state.isFree) {
+                        final event = SubmitPaymentRequest(
+                          advisorId: widget.advisorId,
+                          amount: 0,
+                          fromTime: state.selectedTime!,
+                          duration: state.selectedDuration,
+                          appuse: null,
+                          isFree: true,
+                        );
+                        context.read<PaymentBloc>().add(event);
+                      } else {
+                        context.read<BookingBloc>().add(
+                              GetPricing(
+                                state.selectedDuration,
+                                widget.advisorId,
+                                state.selectedDate!,
+                                state.selectedTime!,
+                                widget.advisorName,
+                              ),
+                            );
+                      }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -210,7 +298,12 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: UiConstants.kTextColor,
+                    backgroundColor: (state is BookingsLoaded &&
+                                state.selectedDate == null) ||
+                            (state is BookingsLoaded &&
+                                state.selectedTime == null)
+                        ? UiConstants.kTextColor.withOpacity(0.3)
+                        : UiConstants.kTextColor,
                     padding: EdgeInsets.symmetric(
                       vertical: SizeConfig.padding16,
                     ),
@@ -221,8 +314,9 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                   ),
                   child: Text(
                     'Confirm',
-                    style: TextStyles.sourceSans.body3
-                        .colour(UiConstants.kTextColor4),
+                    style: TextStyles.sourceSans.body3.colour(
+                      UiConstants.kTextColor4,
+                    ),
                   ),
                 ),
               ),
@@ -239,11 +333,13 @@ class DateButton extends StatelessWidget {
   final String date;
   final bool isSelected;
   final VoidCallback onTap;
+  final bool requireFormat;
 
   const DateButton({
     required this.date,
     required this.isSelected,
     required this.onTap,
+    this.requireFormat = true,
     super.key,
   });
 
@@ -267,7 +363,7 @@ class DateButton extends StatelessWidget {
         ),
       ),
       child: Text(
-        getDayAndDate(date),
+        requireFormat ? getDayAndDate(date) : date,
         textAlign: TextAlign.center,
         style: TextStyles.sourceSansSB.body3,
       ),
@@ -450,13 +546,12 @@ Widget _buildPaymentSummary(BuildContext context, PricingData state) {
               AppState.backButtonDispatcher!.didPopRoute();
               AppState.screenStack.add(ScreenItem.modalsheet);
               BaseUtil.openModalBottomSheet(
-                isScrollControlled: true,
-                enableDrag: true,
-                isBarrierDismissible: true,
-                addToScreenStack: false,
+            isScrollControlled: true,
+            enableDrag: true,
+            isBarrierDismissible: true,
                 content: PaymentSheet(
                   advisorID: state.advisorId,
-                  amount: state.price,
+                  amount: state.totalPayable,
                   fromTime: state.time,
                   duration: state.duration,
                 ),

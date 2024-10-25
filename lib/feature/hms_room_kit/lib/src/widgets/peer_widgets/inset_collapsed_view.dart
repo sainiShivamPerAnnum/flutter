@@ -58,8 +58,8 @@ class _InsetCollapsedViewState extends State<InsetCollapsedView> {
                           disabledBorderColor: HMSThemeColors.surfaceBright,
                           child: SvgPicture.asset(
                             isMicOn
-                                ? "packages/hms_room_kit/lib/src/assets/icons/mic_state_on.svg"
-                                : "packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg",
+                                ? "assets/hms/icons/mic_state_on.svg"
+                                : "assets/hms/icons/mic_state_off.svg",
                             height: 16,
                             width: 16,
                             colorFilter: ColorFilter.mode(
@@ -92,8 +92,8 @@ class _InsetCollapsedViewState extends State<InsetCollapsedView> {
                           disabledBorderColor: HMSThemeColors.surfaceBright,
                           child: SvgPicture.asset(
                             isMicOn
-                                ? "packages/hms_room_kit/lib/src/assets/icons/cam_state_on.svg"
-                                : "packages/hms_room_kit/lib/src/assets/icons/cam_state_off.svg",
+                                ? "assets/hms/icons/cam_state_on.svg"
+                                : "assets/hms/icons/cam_state_off.svg",
                             height: 16,
                             width: 16,
                             colorFilter: ColorFilter.mode(
@@ -120,7 +120,7 @@ class _InsetCollapsedViewState extends State<InsetCollapsedView> {
                     }
                   },
                   child: SvgPicture.asset(
-                    "packages/hms_room_kit/lib/src/assets/icons/maximize.svg",
+                    "assets/hms/icons/maximize.svg",
                     height: 20,
                     width: 20,
                     colorFilter: ColorFilter.mode(

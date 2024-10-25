@@ -3,7 +3,9 @@ import 'dart:io';
 import 'dart:math' as math;
 
 // import 'package:bot_toast/bot_toast.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
+import 'package:felloapp/util/app_toasts_utils.dart';
 
 ///Package imports
 import 'package:flutter/material.dart';
@@ -277,7 +279,14 @@ class Utilities {
     return true;
   }
 
-  static void showToast(String message, {int time = 1}) {
+  static void showToast(String message, String? subtitle, {int time = 1}) {
+    // if (subtitle == 'Success!') {
+    //   BaseUtil.showPositiveAlert(message, subtitle);
+    // } else {
+    //    BaseUtil.showPositiveAlert(
+    //        message, subtitle ?? 'Try Again!');
+    // }
+    //todoooooooooooooooo
     // BotToast.showText(
     //     textStyle: HMSTextStyle.setTextStyle(fontSize: 14),
     //     text: message,
@@ -366,36 +375,36 @@ class Utilities {
 
   static Future<void> showNotification(String message, String type) async {
     bool toShowNotif = false;
-    switch (type) {
-      case "peer-joined":
-        toShowNotif =
-            await Utilities.getBoolData(key: "peer-join-notif") ?? true;
-        if (toShowNotif) showToast(message);
-        break;
+    // switch (type) {
+    //   case "peer-joined":
+    //     toShowNotif =
+    //         await Utilities.getBoolData(key: "peer-join-notif") ?? true;
+    //     if (toShowNotif) showToast(message,'');
+    //     break;
 
-      case "peer-left":
-        toShowNotif =
-            await Utilities.getBoolData(key: "peer-leave-notif") ?? true;
-        if (toShowNotif) showToast(message);
-        break;
+    //   case "peer-left":
+    //     toShowNotif =
+    //         await Utilities.getBoolData(key: "peer-leave-notif") ?? true;
+    //     if (toShowNotif) showToast(message,'');
+    //     break;
 
-      case "message":
-        toShowNotif =
-            await Utilities.getBoolData(key: "new-message-notif") ?? true;
-        if (toShowNotif) showToast(message);
-        break;
+    //   case "message":
+    //     toShowNotif =
+    //         await Utilities.getBoolData(key: "new-message-notif") ?? true;
+    //     if (toShowNotif) showToast(message,'');
+    //     break;
 
-      case "hand-raise":
-        toShowNotif =
-            await Utilities.getBoolData(key: "hand-raise-notif") ?? true;
-        if (toShowNotif) showToast(message);
-        break;
+    //   case "hand-raise":
+    //     toShowNotif =
+    //         await Utilities.getBoolData(key: "hand-raise-notif") ?? true;
+    //     if (toShowNotif) showToast(message,'');
+    //     break;
 
-      case "error":
-        toShowNotif = await Utilities.getBoolData(key: "error-notif") ?? true;
-        if (toShowNotif) showToast(message);
-        break;
-    }
+    //   case "error":
+    //     toShowNotif = await Utilities.getBoolData(key: "error-notif") ?? true;
+    //     if (toShowNotif) showToast(message,'');
+    //     break;
+    // }
   }
 
   static HMSTrackSetting getTrackSetting({

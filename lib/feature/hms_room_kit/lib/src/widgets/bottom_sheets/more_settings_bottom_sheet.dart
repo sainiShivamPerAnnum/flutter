@@ -69,7 +69,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                   children: [
                     IconButton(
                       icon: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/close_button.svg",
+                        "assets/hms/icons/close_button.svg",
                         width: 40,
                       ),
                       onPressed: () {
@@ -133,7 +133,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: SvgPicture.asset(
-                                    "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
+                                    "assets/hms/icons/participants.svg",
                                     colorFilter: ColorFilter.mode(
                                         themeDefaultColor, BlendMode.srcIn),
                                   ),
@@ -179,7 +179,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SvgPicture.asset(
-                                "packages/hms_room_kit/lib/src/assets/icons/settings.svg",
+                                "assets/hms/icons/settings.svg",
                                 colorFilter: ColorFilter.mode(
                                     themeDefaultColor, BlendMode.srcIn),
                               ),
@@ -223,7 +223,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                             },
                             contentPadding: EdgeInsets.zero,
                             leading: SvgPicture.asset(
-                              "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
+                              "assets/hms/icons/screen_share.svg",
                               height: 20,
                               width: 20,
                               colorFilter: ColorFilter.mode(
@@ -260,7 +260,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                     },
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/src/assets/icons/pencil.svg",
+                      "assets/hms/icons/pencil.svg",
                       height: 20,
                       width: 20,
                       colorFilter: ColorFilter.mode(
@@ -283,8 +283,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
                       meetingStore.isSpeakerOn
-                          ? "packages/hms_room_kit/lib/src/assets/icons/speaker_state_on.svg"
-                          : "packages/hms_room_kit/lib/src/assets/icons/speaker_state_off.svg",
+                          ? "assets/hms/icons/speaker_state_on.svg"
+                          : "assets/hms/icons/speaker_state_off.svg",
                       height: 20,
                       width: 20,
                       colorFilter: ColorFilter.mode(
@@ -308,7 +308,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
+                        "assets/hms/icons/hand_outline.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
@@ -330,7 +330,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                     },
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/src/assets/icons/brb.svg",
+                      "assets/hms/icons/brb.svg",
                       colorFilter: ColorFilter.mode(
                           HMSThemeColors.onSurfaceHighEmphasis,
                           BlendMode.srcIn),
@@ -360,7 +360,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/stats.svg",
+                        "assets/hms/icons/stats.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
@@ -389,7 +389,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         },
                         contentPadding: EdgeInsets.zero,
                         leading: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg",
+                          "assets/hms/icons/mic_state_off.svg",
                           height: 20,
                           width: 20,
                           colorFilter: ColorFilter.mode(
@@ -416,7 +416,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         },
                         contentPadding: EdgeInsets.zero,
                         leading: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/role_change.svg",
+                          "assets/hms/icons/role_change.svg",
                           height: 20,
                           width: 20,
                           colorFilter: ColorFilter.mode(
@@ -474,7 +474,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               },
                               contentPadding: EdgeInsets.zero,
                               leading: SvgPicture.asset(
-                                "packages/hms_room_kit/lib/src/assets/icons/stream.svg",
+                                "assets/hms/icons/stream.svg",
                                 height: 20,
                                 width: 20,
                                 colorFilter: ColorFilter.mode(
@@ -518,7 +518,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               },
                               contentPadding: EdgeInsets.zero,
                               leading: SvgPicture.asset(
-                                "packages/hms_room_kit/lib/src/assets/icons/record.svg",
+                                "assets/hms/icons/record.svg",
                                 height: 20,
                                 width: 20,
                                 colorFilter: ColorFilter.mode(
@@ -570,7 +570,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               },
                               contentPadding: EdgeInsets.zero,
                               leading: SvgPicture.asset(
-                                  "packages/hms_room_kit/lib/src/assets/icons/hls.svg",
+                                  "assets/hms/icons/hls.svg",
                                   height: 20,
                                   width: 20,
                                   colorFilter: ColorFilter.mode(
@@ -598,7 +598,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
+                        "assets/hms/icons/screen_share.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
@@ -624,7 +624,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/share.svg",
+                        "assets/hms/icons/share.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
@@ -658,7 +658,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                   //     },
                   //     contentPadding: EdgeInsets.zero,
                   //     leading: SvgPicture.asset(
-                  //       "packages/hms_room_kit/lib/src/assets/icons/notification.svg",
+                  //       "assets/hms/icons/notification.svg",
                   //       height: 20,
                   //       width: 20,
                   //       color: HMSThemeColors.onSurfaceHighEmphasis,
@@ -680,7 +680,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/end_room.svg",
+                        "assets/hms/icons/end_room.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(

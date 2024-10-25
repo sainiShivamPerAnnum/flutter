@@ -328,7 +328,7 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
                         child: Row(
                           children: [
                             SvgPicture.asset(
-                                "packages/hms_room_kit/lib/src/assets/icons/add_option.svg",
+                                "assets/hms/icons/add_option.svg",
                                 width: 24,
                                 height: 24,
                                 colorFilter: ColorFilter.mode(

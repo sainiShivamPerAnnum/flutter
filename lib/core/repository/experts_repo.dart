@@ -130,17 +130,19 @@ class ExpertsRepository extends BaseRepo {
 
   Future<ApiResponse<Schedule>> getExpertAvailableSlots({
     required String advisorId,
+    required int duration,
   }) async {
     try {
       final response = await APIService.instance.getData(
         'booking/available-slots',
         queryParams: {
+          "duration": duration,
           "advisorId": advisorId,
         },
         cBaseUrl: _baseUrl,
         apiName: '$_experts/getExpertAvailableSlots',
       );
-      final responseData = response;
+      final responseData = response['data'];
       log("Slot data: $responseData");
       return ApiResponse<Schedule>(
         model: Schedule.fromJson(responseData),
@@ -216,28 +218,26 @@ class ExpertsRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<PaymentStatusResponse>> getPricing({
-    required String date,
-    required String time,
+  Future<ApiResponse<PricingResponse>> getPricing({
+    required String advisorId,
+    required int duration,
   }) async {
     try {
-      final String? uid = userService.baseUser!.uid;
       final body = {
-        "date": date,
-        "time": time,
-        "userId": uid,
+        "duration": duration,
+        "service": 'generic',
       };
 
-      // final response = await APIService.instance.postData(
-      //   'booking',
-      //   body: body,
-      //   cBaseUrl: _baseUrl,
-      //   apiName: '$_booking/submitBooking',
-      // );
-      // final responseData = response;
-      // log("Pricing data: $responseData");
-      return ApiResponse<PaymentStatusResponse>(
-        model: PaymentStatusResponse.fromJson({}),
+      final response = await APIService.instance.postData(
+        'advisors/$advisorId/pricing',
+        body: body,
+        cBaseUrl: _baseUrl,
+        apiName: '$_booking/getPricing',
+      );
+      final responseData = response['data'];
+      log("Pricing data: $responseData");
+      return ApiResponse<PricingResponse>(
+        model: PricingResponse.fromJson(responseData),
         code: 200,
       );
     } catch (e) {
@@ -265,6 +265,7 @@ class ExpertsRepository extends BaseRepo {
     required String fromTime,
     required num duration,
     required String appuse,
+    required bool isFree,
   }) async {
     try {
       final String? uid = userService.baseUser!.uid;
@@ -274,6 +275,7 @@ class ExpertsRepository extends BaseRepo {
         "userId": uid,
         "fromTime": fromTime,
         "duration": duration,
+        "isFree": isFree,
       };
       final headers = {
         "appuse": formatUpiAppName(appuse),

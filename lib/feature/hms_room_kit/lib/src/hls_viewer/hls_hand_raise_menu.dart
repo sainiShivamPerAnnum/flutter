@@ -35,8 +35,8 @@ class HLSHandRaiseMenu extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: SvgPicture.asset(
                     isRaisedHand
-                        ? "packages/hms_room_kit/lib/src/assets/icons/hand_off.svg"
-                        : "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
+                        ? "assets/hms/icons/hand_off.svg"
+                        : "assets/hms/icons/hand_outline.svg",
                     colorFilter: ColorFilter.mode(
                       HMSThemeColors.onSurfaceHighEmphasis,
                       BlendMode.srcIn,
@@ -76,7 +76,7 @@ class HLSHandRaiseMenu extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: SvgPicture.asset(
-                "packages/hms_room_kit/lib/src/assets/icons/menu.svg",
+                "assets/hms/icons/menu.svg",
                 colorFilter: ColorFilter.mode(
                   HMSThemeColors.onSurfaceHighEmphasis,
                   BlendMode.srcIn,

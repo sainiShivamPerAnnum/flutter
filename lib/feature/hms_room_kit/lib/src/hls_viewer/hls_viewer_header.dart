@@ -76,7 +76,7 @@ class HLSViewerHeader extends StatelessWidget {
                                               .toggleCaptions();
                                         },
                                         child: SvgPicture.asset(
-                                          "packages/hms_room_kit/lib/src/assets/icons/caption_${captionsData.item1 ? "on" : "off"}.svg",
+                                          "assets/hms/icons/caption_${captionsData.item1 ? "on" : "off"}.svg",
                                           colorFilter: ColorFilter.mode(
                                             HMSThemeColors
                                                 .onSurfaceHighEmphasis,
@@ -117,7 +117,7 @@ class HLSViewerHeader extends StatelessWidget {
                                 );
                               },
                               child: SvgPicture.asset(
-                                "packages/hms_room_kit/lib/src/assets/icons/settings.svg",
+                                "assets/hms/icons/settings.svg",
                                 colorFilter: ColorFilter.mode(
                                   HMSThemeColors.onSurfaceHighEmphasis,
                                   BlendMode.srcIn,

@@ -173,7 +173,7 @@ class PollResultCard extends StatelessWidget {
                                     height: 20,
                                     width: 20,
                                     child: SvgPicture.asset(
-                                      "packages/hms_room_kit/lib/src/assets/icons/tick_circle.svg",
+                                      "assets/hms/icons/tick_circle.svg",
                                       semanticsLabel: "tick",
                                     ),
                                   ),
@@ -193,7 +193,7 @@ class PollResultCard extends StatelessWidget {
                                       question.options[index].index))
                                 isPoll
                                     ? SvgPicture.asset(
-                                        "packages/hms_room_kit/lib/src/assets/icons/tick_circle.svg",
+                                        "assets/hms/icons/tick_circle.svg",
                                         semanticsLabel: "tick",
                                       )
                                     : HMSSubheadingText(

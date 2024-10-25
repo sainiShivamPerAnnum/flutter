@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/expert/widgets/expert_card.dart';
@@ -7,13 +8,17 @@ import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/upcoming_bookings.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inview_notifier_list/inview_notifier_list.dart';
+import 'package:provider/provider.dart';
 
 class ExpertsHomeView extends StatelessWidget {
   const ExpertsHomeView({
@@ -108,6 +113,43 @@ class __ExpertHomeState extends State<_ExpertHome>
                     ),
                   ),
                   SliverToBoxAdapter(
+                    child: ChangeNotifierProvider.value(
+                      value: locator<SaveViewModel>(),
+                      builder: (context, child) {
+                        return Selector<SaveViewModel, List<Booking>>(
+                          selector: (_, model) => model.upcomingBookings,
+                          builder: (_, upcomingBookings, __) {
+                            return upcomingBookings.isNotEmpty
+                                ? Container(
+                                    height: SizeConfig.screenHeight! * 0.3465,
+                                    padding: EdgeInsets.only(
+                                      top: SizeConfig.padding10,
+                                    ),
+                                    margin: EdgeInsets.only(
+                                      top: SizeConfig.padding10,
+                                    ),
+                                    child: ListView.builder(
+                                      itemCount: upcomingBookings.length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, index) => Padding(
+                                        padding: EdgeInsets.only(
+                                          right: SizeConfig.padding10,
+                                        ).copyWith(
+                                          bottom: SizeConfig.padding16,
+                                        ),
+                                        child: ScheduleCard(
+                                          booking: upcomingBookings[index],
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox.shrink();
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  SliverToBoxAdapter(
                     child: Padding(
                       padding: EdgeInsets.symmetric(
                         vertical: SizeConfig.padding22,
@@ -134,7 +176,6 @@ class __ExpertHomeState extends State<_ExpertHome>
                   ...expertsData.list
                       .where(
                           (section) => !section.toLowerCase().contains('top'))
-                      .take(3)
                       .expand(
                         (section) => [
                           _buildSectionContent(section),
@@ -188,7 +229,10 @@ class __ExpertHomeState extends State<_ExpertHome>
             child: ExpertCard(
               expert: expert,
               onBookCall: () {
-                BaseUtil.openBookAdvisorSheet(advisorId: expert.advisorId);
+                BaseUtil.openBookAdvisorSheet(
+                  advisorId: expert.advisorId,
+                  advisorName: expert.name,
+                );
               },
               onTap: () {
                 AppState.delegate!.appState.currentAction = PageAction(
@@ -230,18 +274,29 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
     bool overlapsContent,
   ) {
     return Container(
-      color: UiConstants.bg,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: sections
-            .where((section) => !section.toLowerCase().contains('top'))
-            .map((section) {
-          return buildTabItem(
-            section,
-            sectionKeys[section],
-            () => scrollToSection(sectionKeys[section]!),
-          );
-        }).toList(),
+      decoration: BoxDecoration(
+        color: UiConstants.bg,
+        border: Border(
+          bottom: BorderSide(
+            color: UiConstants.kTextColor.withOpacity(0.6),
+            width: 2.0,
+          ),
+        ),
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: sections
+              .where((section) => !section.toLowerCase().contains('top'))
+              .map((section) {
+            return buildTabItem(
+              section,
+              sectionKeys[section],
+              () => scrollToSection(sectionKeys[section]!),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
@@ -269,26 +324,30 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
     bool isSelected = currentSection == title;
     return GestureDetector(
       onTap: onSectionTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          vertical: 10.0,
-        ),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: isSelected
+      child: Transform.translate(
+        offset: const Offset(0, 2),
+        child: Container(
+          margin: EdgeInsets.only(right: SizeConfig.padding10),
+          padding: const EdgeInsets.symmetric(
+            vertical: 10.0,
+          ),
+          decoration: BoxDecoration(
+            border: isSelected
+                ? const Border(
+                    bottom: BorderSide(
+                      color: UiConstants.kTextColor,
+                      width: 2.0,
+                    ),
+                  )
+                : null,
+          ),
+          child: Text(
+            title,
+            style: TextStyles.sourceSansSB.body3.colour(
+              isSelected
                   ? UiConstants.kTextColor
                   : UiConstants.kTextColor.withOpacity(0.6),
-              width: 2.0,
             ),
-          ),
-        ),
-        child: Text(
-          title,
-          style: TextStyles.sourceSansSB.body3.colour(
-            isSelected
-                ? UiConstants.kTextColor
-                : UiConstants.kTextColor.withOpacity(0.6),
           ),
         ),
       ),

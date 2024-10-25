@@ -33,6 +33,7 @@ class NotificationsPage extends StatelessWidget {
           ),
           elevation: 0.0,
           backgroundColor: UiConstants.kBackgroundColor,
+        surfaceTintColor: UiConstants.kBackgroundColor,
           leading: IconButton(
             onPressed: () {
               AppState.backButtonDispatcher!.didPopRoute();

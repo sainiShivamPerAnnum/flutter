@@ -74,13 +74,13 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                     children: [
                       if (widget.isVideoMuted)
                         SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/cam_state_on.svg",
+                          "assets/hms/icons/cam_state_on.svg",
                           colorFilter:
                               ColorFilter.mode(iconColor, BlendMode.srcIn),
                         )
                       else
                         SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/cam_state_off.svg",
+                          "assets/hms/icons/cam_state_off.svg",
                           colorFilter:
                               ColorFilter.mode(iconColor, BlendMode.srcIn),
                         ),
@@ -110,13 +110,13 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                     children: [
                       if (widget.isAudioMuted)
                         SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/mic_state_on.svg",
+                          "assets/hms/icons/mic_state_on.svg",
                           colorFilter:
                               ColorFilter.mode(iconColor, BlendMode.srcIn),
                         )
                       else
                         SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg",
+                          "assets/hms/icons/mic_state_off.svg",
                           colorFilter:
                               ColorFilter.mode(iconColor, BlendMode.srcIn),
                         ),
@@ -144,7 +144,7 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                   child: Row(
                     children: [
                       SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/peer_remove.svg",
+                        "assets/hms/icons/peer_remove.svg",
                         colorFilter:
                             ColorFilter.mode(iconColor, BlendMode.srcIn),
                       ),
@@ -169,7 +169,7 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                   child: Row(
                     children: [
                       SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/role_change.svg",
+                        "assets/hms/icons/role_change.svg",
                         colorFilter:
                             ColorFilter.mode(iconColor, BlendMode.srcIn),
                       ),
@@ -195,7 +195,7 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                     child: Row(
                       children: [
                         SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/layers.svg",
+                          "assets/hms/icons/layers.svg",
                           colorFilter:
                               ColorFilter.mode(iconColor, BlendMode.srcIn),
                         ),
@@ -220,7 +220,7 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                   child: Row(
                     children: [
                       SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/pin.svg",
+                        "assets/hms/icons/pin.svg",
                         colorFilter:
                             ColorFilter.mode(iconColor, BlendMode.srcIn),
                       ),
@@ -246,7 +246,7 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                   child: Row(
                     children: [
                       SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/spotlight.svg",
+                        "assets/hms/icons/spotlight.svg",
                         colorFilter:
                             ColorFilter.mode(iconColor, BlendMode.srcIn),
                       ),

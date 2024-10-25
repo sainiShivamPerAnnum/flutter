@@ -17,6 +17,7 @@ class GoldProTxnsView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: UiConstants.kBackgroundColor,
+                surfaceTintColor: UiConstants.kBackgroundColor,
         elevation: 0,
         leading: const FelloAppBarBackButton(),
         centerTitle: true,

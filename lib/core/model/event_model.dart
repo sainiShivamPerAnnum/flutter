@@ -17,6 +17,8 @@ class EventModel {
   String formUrl;
   String? todayMatch; //Only for FPL
   List<dynamic> winners; //only for bug_Bounty and new_Fello
+  String ctaText;
+  Map<String, String> misc;
 
   EventModel({
     required this.title,
@@ -34,6 +36,8 @@ class EventModel {
     required this.formUrl,
     required this.instructions,
     required this.winners,
+    required this.ctaText,
+    required this.misc,
     this.todayMatch,
   });
 
@@ -51,6 +55,8 @@ class EventModel {
     String? image,
     List<dynamic>? instructions,
     List<dynamic>? winners,
+    String? ctaText,
+    Map<String, String>? misc,
   }) {
     return EventModel(
       title: title ?? this.title,
@@ -69,6 +75,8 @@ class EventModel {
       url: url ?? url,
       todayMatch: todayMatch ?? todayMatch,
       winners: winners ?? this.winners,
+      misc: misc ?? this.misc,
+      ctaText: ctaText ?? this.ctaText,
     );
   }
 
@@ -90,6 +98,8 @@ class EventModel {
       'formUrl': formUrl,
       'todayMatch': todayMatch,
       'winners': winners,
+      'ctaText': ctaText,
+      'misc': misc,
     };
   }
 
@@ -111,6 +121,8 @@ class EventModel {
       instructions: map['info'] ?? ["Fello Event Instructions"],
       todayMatch: map['todayMatch'] ?? "",
       winners: map['winners'] ?? ["ritika won ₹4000"],
+      misc: map['misc'] ?? {},
+      ctaText: map['ctaText'] ?? '',
     );
   }
 

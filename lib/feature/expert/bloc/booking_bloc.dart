@@ -28,6 +28,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     on<SelectDate>(_onSelectDate);
     on<SelectTime>(_onSelectTime);
     on<GetPricing>(_getPricing);
+    on<SelectDuration>(_onSelectDuration);
   }
   FutureOr<void> _onLoadBookingDates(
     LoadBookingDates event,
@@ -37,30 +38,36 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
 
     final data = await _expertsRepository.getExpertAvailableSlots(
       advisorId: event.advisorId,
+      duration: event.duration,
     );
-    final availableDates = data.model?.data?.keys.toList() ?? [];
+    final availableDates = data.model?.slots?.keys.toList() ?? [];
 
     if (availableDates.isNotEmpty) {
       final selectedDate = availableDates.first;
-      // final availableTimes =
-      //     data.model?.data?[selectedDate]?.map((e) => e.fromTime).toList() ??
-      //         [];
       emitter(
         BookingsLoaded(
+          advisorId: event.advisorId,
           schedule: data.model,
           selectedDate: selectedDate,
+          selectedDuration: event.duration,
+          isFree: data.model?.hasFreeCall ?? false,
         ),
       );
     } else {
-      emitter(BookingsLoaded(schedule: data.model));
+      emitter(
+        BookingsLoaded(
+          schedule: data.model,
+          advisorId: event.advisorId,
+          isFree: data.model?.hasFreeCall ?? false,
+        ),
+      );
     }
   }
 
   void _onSelectDate(SelectDate event, Emitter<BookingState> emitter) {
-    final state = this.state;
     if (state is BookingsLoaded) {
       emitter(
-        state.copyWith(
+        (state as BookingsLoaded).copyWith(
           selectedDate: event.selectedDate,
           selectedTime: null,
         ),
@@ -68,10 +75,24 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     }
   }
 
-  void _onSelectTime(SelectTime event, Emitter<BookingState> emitter) {
-    final state = this.state;
+  void _onSelectDuration(SelectDuration event, Emitter<BookingState> emitter) {
     if (state is BookingsLoaded) {
-      emitter(state.copyWith(selectedTime: event.selectedTime));
+      add(
+        LoadBookingDates(
+          (state as BookingsLoaded).advisorId,
+          event.selectDuration,
+        ),
+      );
+    }
+  }
+
+  void _onSelectTime(SelectTime event, Emitter<BookingState> emitter) {
+    if (state is BookingsLoaded) {
+      emitter(
+        (state as BookingsLoaded).copyWith(
+          selectedTime: event.selectedTime,
+        ),
+      );
     }
   }
 
@@ -82,22 +103,22 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     emitter(const LoadingBookingsData());
 
     // Make your API call here
-    // final success = await _expertsRepository.getPricing(
-    //   date: event.selectedDate,
-    //   time: event.selectedTime,
-    // );
+    final response = await _expertsRepository.getPricing(
+      advisorId: event.advisorId,
+      duration: event.duration,
+    );
 
-    if (true) {
+    if (response.isSuccess()) {
       emitter(
         PricingData(
           advisorId: event.advisorId,
-          advisorName: "Mr Rajesh Kumar", // Example data
+          advisorName: event.advisorName,
           time: event.selectedTime,
           date: event.selectedDate,
-          price: 300, // Example data
-          duration: 30, // Example data
-          gst: 90, // Example data
-          totalPayable: 390, // Example data
+          price: response.model?.price ?? 0,
+          duration: event.duration,
+          gst: response.model?.gst ?? 0,
+          totalPayable: response.model?.totalPrice ?? 0,
         ),
       );
     } else {
@@ -139,14 +160,19 @@ class PaymentBloc extends Bloc<BookingEvent, PaymentState> {
       amount: event.amount,
       fromTime: event.fromTime,
       duration: event.duration,
-      appuse: event.appuse.upiApplication.appName,
+      appuse: event.appuse?.upiApplication.appName ?? '',
+      isFree: event.isFree,
     );
     final data = response.model?.data;
     final paymentId = data?.paymentId;
     final intentData = data?.intent;
-    if (response.isSuccess() && intentData != null && paymentId != null) {
+    if (response.isSuccess() && event.isFree) {
+      emitter(SubmittedPayment(data: response.model!));
+    } else if (response.isSuccess() &&
+        intentData != null &&
+        paymentId != null) {
       if (intentData.isNotEmpty) {
-        await _openPSPApp(intentData, event.appuse.packageName);
+        await _openPSPApp(intentData, event.appuse!.packageName);
       }
       emitter(SubmittedPayment(data: response.model!));
     } else {

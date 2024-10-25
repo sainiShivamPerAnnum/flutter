@@ -143,6 +143,7 @@ class AssetSelectionPage extends StatelessWidget {
                     : AppBar(
                         elevation: 0,
                         backgroundColor: Colors.transparent,
+                           surfaceTintColor: Colors.transparent,
                         leading: IconButton(
                           icon: const Icon(
                             Icons.arrow_back_ios,

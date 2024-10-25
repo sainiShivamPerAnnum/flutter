@@ -97,7 +97,7 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                                                   right: 8.0,
                                                 ),
                                                 child: SvgPicture.asset(
-                                                  "packages/hms_room_kit/lib/src/assets/icons/red_dot.svg",
+                                                  "assets/hms/icons/red_dot.svg",
                                                   height: 8,
                                                   width: 8,
                                                 ),
@@ -116,7 +116,7 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                                                   right: 8.0,
                                                 ),
                                                 child: SvgPicture.asset(
-                                                  "packages/hms_room_kit/lib/src/assets/icons/red_dot.svg",
+                                                  "assets/hms/icons/red_dot.svg",
                                                   height: 8,
                                                   width: 8,
                                                   colorFilter: ColorFilter.mode(
@@ -179,7 +179,7 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                                         .read<HLSPlayerStore>()
                                         .toggleFullScreen(),
                                     child: SvgPicture.asset(
-                                      "packages/hms_room_kit/lib/src/assets/icons/${isFullScreen ? "minimize" : "maximize"}.svg",
+                                      "assets/hms/icons/${isFullScreen ? "minimize" : "maximize"}.svg",
                                     ),
                                   );
                                 },

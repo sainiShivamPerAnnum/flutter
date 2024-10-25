@@ -41,7 +41,7 @@ class _AudioMuteStatusState extends State<AudioMuteStatus> {
                         child: Padding(
                             padding: const EdgeInsets.all(8),
                             child: SvgPicture.asset(
-                              'packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg',
+                              'assets/hms/icons/mic_state_off.svg',
                               width: 16,
                               height: 16,
                               semanticsLabel: "audio_mute_label",
@@ -61,11 +61,11 @@ class _AudioMuteStatusState extends State<AudioMuteStatus> {
                             color: HMSThemeColors.secondaryDim),
                         child: data.item2 > 0
                             ? Lottie.asset(
-                                "packages/hms_room_kit/lib/src/assets/icons/audio-level.json",
+                                "assets/hms/icons/audio-level.json",
                                 height: 24,
                                 width: 24)
                             : SvgPicture.asset(
-                                'packages/hms_room_kit/lib/src/assets/icons/zero_audio_level.svg',
+                                'assets/hms/icons/zero_audio_level.svg',
                                 fit: BoxFit.scaleDown,
                                 semanticsLabel: "audio_mute_label",
                                 colorFilter: ColorFilter.mode(

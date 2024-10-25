@@ -21,7 +21,7 @@ class HMSDisconnectedToast extends StatelessWidget {
   Widget build(BuildContext context) {
     return HMSToast(
       leading: SvgPicture.asset(
-        "packages/hms_room_kit/lib/src/assets/icons/end_warning.svg",
+        "assets/hms/icons/end_warning.svg",
         height: 24,
         width: 24,
         colorFilter: ColorFilter.mode(

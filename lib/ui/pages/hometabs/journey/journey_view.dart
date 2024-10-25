@@ -69,6 +69,7 @@ class _JourneyViewState extends State<JourneyView>
               key: const ValueKey(Constants.JOURNEY_SCREEN_TAG),
               appBar: AppBar(
                 backgroundColor: UiConstants.kBackgroundColor,
+                surfaceTintColor: UiConstants.kBackgroundColor,
                 leading: IconButton(
                   onPressed: AppState.backButtonDispatcher!.didPopRoute,
                   icon: const Icon(

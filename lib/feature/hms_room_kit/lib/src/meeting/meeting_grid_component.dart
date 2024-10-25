@@ -9,6 +9,7 @@ import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/waiting_room_scree
 import 'package:felloapp/feature/hms_room_kit/lib/src/model/peer_track_node.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/meeting_modes/custom_one_to_one_grid.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/meeting_modes/one_to_one_mode.dart';
+import 'package:felloapp/util/styles/styles.dart';
 
 ///Package imports
 import 'package:flutter/material.dart';
@@ -37,13 +38,13 @@ class MeetingGridComponent extends StatelessWidget {
           ///If there are no peerTracks or the view controllers are empty we show an empty tapable container
           if (data.item3 == 0 || data.item6 == 0) {
             return GestureDetector(
-                onTap: () => visibilityController?.toggleControlsVisibility(),
+                // onTap: () => visibilityController?.toggleControlsVisibility(),
                 child: Container(
-                  color: Colors.transparent,
-                  height: double.infinity,
-                  width: double.infinity,
-                  child: WaitingRoomScreen(),
-                ));
+              color: Colors.transparent,
+              height: double.infinity,
+              width: double.infinity,
+              child: WaitingRoomScreen(),
+            ));
           }
           return Selector<MeetingStore, Tuple2<MeetingMode, HMSPeer?>>(
               selector: (_, meetingStore) =>
@@ -76,8 +77,8 @@ class MeetingGridComponent extends StatelessWidget {
                                   MediaQuery.of(context).padding.bottom -
                                   20,
                           child: GestureDetector(
-                            onTap: () => visibilityController
-                                ?.toggleControlsVisibility(),
+                            // onTap: () => visibilityController
+                            //     ?.toggleControlsVisibility(),
                             child: (modeData.item1 ==
                                         MeetingMode.activeSpeakerWithInset &&
                                     (context
@@ -93,7 +94,9 @@ class MeetingGridComponent extends StatelessWidget {
                                 ? OneToOneMode(
                                     ///This is done to keep the inset tile
                                     ///at correct position when controls are hidden
-                                    bottomMargin: showControls ? 250 : 130,
+                                    bottomMargin: showControls
+                                        ? SizeConfig.padding200
+                                        : SizeConfig.padding152,
                                     peerTracks: data.item1,
                                     screenShareCount: data.item4,
                                     context: context,

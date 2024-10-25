@@ -351,13 +351,19 @@ class SaveViewModel extends BaseViewModel {
         case 'BL':
           saveViewItems.add(Blogs(model: smodel));
           break;
+        case 'UPB':
+          saveViewItems.add(UpcomingBookingsComponent(model: smodel));
+          break;
+        case 'PB':
+          saveViewItems.add(PastBookingsComponent(model: smodel));
+          break;
+        case 'FC':
+          if (smodel.freeCallAvailable) {
+            saveViewItems.add(const FirstFreeCall());
+          }
+          break;
       }
     }
-    saveViewItems.add(UpcomingBookingsComponent(model: smodel));
-    if (smodel.freeCallAvailable) {
-      saveViewItems.add(const FirstFreeCall());
-    }
-    saveViewItems.add(PastBookingsComponent(model: smodel));
     saveViewItems.addAll(
       [
         SizedBox(
@@ -392,7 +398,7 @@ class SaveViewModel extends BaseViewModel {
   Future<void> getPastBooking() async {
     final response = await _saveRepo.getPastBookings();
     if (response.isSuccess()) {
-      upcomingBookings = response.model ?? [];
+      pastBookings = response.model ?? [];
     } else {
       print(response.errorMessage);
     }
@@ -605,7 +611,7 @@ class QuickLinks extends StatelessWidget {
           quickLinks.length,
           (index) => GestureDetector(
             onTap: () {
-              //todo block logic here @Hirdesh2101
+              //todo block logic here @Hirdesh2101cdfvdc 
               Haptic.vibrate();
               AppState.delegate!
                   .parseRoute(Uri.parse(quickLinks[index].deeplink));

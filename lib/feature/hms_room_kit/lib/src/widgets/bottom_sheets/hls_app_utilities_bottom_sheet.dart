@@ -125,7 +125,7 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                                       ? 20
                                       : 30),
                           child: SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
+                            "assets/hms/icons/participants.svg",
                             height: 20,
                             width: 20,
                             colorFilter: ColorFilter.mode(
@@ -159,7 +159,7 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                         );
                       },
                       optionIcon: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/pencil.svg",
+                        "assets/hms/icons/pencil.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
@@ -202,7 +202,7 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                         );
                       },
                       optionIcon: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/polls.svg",
+                        "assets/hms/icons/polls.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(

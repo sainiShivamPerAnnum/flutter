@@ -6,6 +6,13 @@ part of 'payment_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+PricingResponse _$PricingResponseFromJson(Map<String, dynamic> json) =>
+    PricingResponse(
+      price: json['price'] as num,
+      gst: json['gst'] as num,
+      totalPrice: json['totalPrice'] as num,
+    );
+
 PaymentStatusResponse _$PaymentStatusResponseFromJson(
         Map<String, dynamic> json) =>
     PaymentStatusResponse(
@@ -23,7 +30,7 @@ BookingTransactionData _$BookingTransactionDataFromJson(
       slotTime: TimeSlot.fromJson(json['slotTime'] as Map<String, dynamic>),
       status: json['status'] as String,
       userId: json['userId'] as String,
-      intent: json['intent'] as String,
       createdAt: json['createdAt'] as String,
       paymentId: json['paymentId'] as String,
+      intent: json['intent'] as String?,
     );

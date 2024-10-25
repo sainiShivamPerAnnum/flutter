@@ -27,7 +27,7 @@ class HLSViewerMidSection extends StatelessWidget {
                       onTap: () =>
                           {HMSHLSPlayerController.seekBackward(seconds: 10)},
                       child: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/seek_backward.svg",
+                        "assets/hms/icons/seek_backward.svg",
                         colorFilter: ColorFilter.mode(
                           HMSThemeColors.baseWhite,
                           BlendMode.srcIn,
@@ -50,7 +50,7 @@ class HLSViewerMidSection extends StatelessWidget {
                                 hlsPlayerStore.isStreamPlaying,
                             builder: (_, isStreamPlaying, __) {
                               return SvgPicture.asset(
-                                "packages/hms_room_kit/lib/src/assets/icons/${isStreamPlaying ? "pause" : "play"}.svg",
+                                "assets/hms/icons/${isStreamPlaying ? "pause" : "play"}.svg",
                                 colorFilter: ColorFilter.mode(
                                   HMSThemeColors.baseWhite,
                                   BlendMode.srcIn,
@@ -68,7 +68,7 @@ class HLSViewerMidSection extends StatelessWidget {
                       onTap: () =>
                           {HMSHLSPlayerController.seekForward(seconds: 10)},
                       child: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/seek_forward.svg",
+                        "assets/hms/icons/seek_forward.svg",
                         colorFilter: ColorFilter.mode(
                           HMSThemeColors.baseWhite,
                           BlendMode.srcIn,

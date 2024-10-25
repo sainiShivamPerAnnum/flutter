@@ -105,7 +105,7 @@ class SavedQuestionWidget extends StatelessWidget {
                 //   isActive: true,
                 //   onColor: HMSThemeColors.surfaceDefault,
                 //   child: SvgPicture.asset(
-                //     "packages/hms_room_kit/lib/src/assets/icons/delete_poll.svg",
+                //     "assets/hms/icons/delete_poll.svg",
                 //     colorFilter: ColorFilter.mode(
                 //         HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                 //     fit: BoxFit.scaleDown,

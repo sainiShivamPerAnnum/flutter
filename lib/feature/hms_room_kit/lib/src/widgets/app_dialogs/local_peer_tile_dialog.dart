@@ -59,7 +59,7 @@ class LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                 child: Row(
                   children: [
                     SvgPicture.asset(
-                      "packages/hms_room_kit/lib/src/assets/icons/pencil.svg",
+                      "assets/hms/icons/pencil.svg",
                       colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
                     ),
                     const SizedBox(
@@ -83,7 +83,7 @@ class LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                   child: Row(
                     children: [
                       SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/role_change.svg",
+                        "assets/hms/icons/role_change.svg",
                         colorFilter:
                             ColorFilter.mode(iconColor, BlendMode.srcIn),
                       ),
@@ -131,7 +131,7 @@ class LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                   child: Row(
                     children: [
                       SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/spotlight.svg",
+                        "assets/hms/icons/spotlight.svg",
                         colorFilter:
                             ColorFilter.mode(iconColor, BlendMode.srcIn),
                       ),

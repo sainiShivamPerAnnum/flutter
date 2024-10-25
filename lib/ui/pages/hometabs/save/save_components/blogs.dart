@@ -20,7 +20,6 @@ class Blogs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
     return Column(
       children: [
         SizedBox(height: SizeConfig.padding14),
@@ -32,27 +31,24 @@ class Blogs extends StatelessWidget {
             children: [
               const TitleSubtitleContainer(
                 title: "Fin-gyan",
+                // zeroPadding: true,
+                leadingPadding: true,
               ),
               Padding(
                 padding: EdgeInsets.only(
                   right: SizeConfig.padding12,
-                  bottom: SizeConfig.padding12,
                 ),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: SizeConfig.padding2),
-                      child: Text(
-                        locale.saveViewAll,
-                        style: TextStyles.rajdhaniSB.body2,
-                      ),
+                    Text(
+                      'VIEW ALL',
+                      style: TextStyles.sourceSansSB.body3,
                     ),
-                    SvgPicture.asset(
-                      Assets.chevRonRightArrow,
-                      height: SizeConfig.padding24,
-                      width: SizeConfig.padding24,
-                    )
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white,
+                      size: SizeConfig.body3,
+                    ),
                   ],
                 ),
               )
@@ -71,12 +67,13 @@ class SaveBlogSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("BUILD: blog build method called");
     return Padding(
       padding: EdgeInsets.only(
-          left: SizeConfig.padding24, top: SizeConfig.padding10),
+        left: SizeConfig.padding24,
+        top: SizeConfig.padding10,
+      ),
       child: SizedBox(
-        height: SizeConfig.screenWidth! * 0.4,
+        height: SizeConfig.padding252,
         child: model.isLoading
             ? ListView.builder(
                 itemCount: 2,
@@ -128,8 +125,9 @@ class SaveBlogSection extends StatelessWidget {
                             model.trackBannerClickEvent(index);
 
                             model.navigateToBlogWebView(
-                                model.blogPosts![index].slug,
-                                model.blogPosts![index].acf!.categories);
+                              model.blogPosts![index].slug,
+                              model.blogPosts![index].acf!.categories,
+                            );
                           },
                           title: model.blogPosts![index].acf!.categories!,
                           description: model.blogPosts![index].title!.rendered!,
@@ -170,6 +168,7 @@ class _BlogWebViewState extends State<BlogWebView> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: UiConstants.kBackgroundColor3,
+        surfaceTintColor: UiConstants.kBackgroundColor3,
         leading: const FelloAppBarBackButton(),
         centerTitle: true,
         title:
@@ -202,16 +201,83 @@ class SaveBlogTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: SizeConfig.screenWidth! * 0.4,
         width: SizeConfig.screenWidth! - SizeConfig.padding54,
         decoration: BoxDecoration(
-          image: DecorationImage(
-              image: CachedNetworkImageProvider(imageUrl!),
-              fit: BoxFit.cover,
-              alignment: Alignment.centerLeft),
-          borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+          borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+          color: UiConstants.greyVarient,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              alignment: AlignmentDirectional.center,
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: SizeConfig.padding152,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.roundness8),
+                      topRight: Radius.circular(SizeConfig.roundness8),
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.roundness8),
+                      topRight: Radius.circular(SizeConfig.roundness8),
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: imageUrl!,
+                      fit: BoxFit.fill,
+                      fadeInCurve: Curves.easeIn,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.all(SizeConfig.padding16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: SizeConfig.padding4),
+                  // Title
+                  Text(
+                    title ?? '',
+                    style: TextStyles.sourceSansSB.body2.colour(
+                      UiConstants.kTextColor,
+                    ),
+                  ),
+                  SizedBox(height: SizeConfig.padding4),
+
+                  // Subtitle
+                  Text(
+                    description ?? '',
+                    style: TextStyles.sourceSans.body4.colour(
+                      UiConstants.kTextColor5,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
+
+    //    Container(
+    //     height: SizeConfig.screenWidth! * 0.4,
+    //     width: SizeConfig.screenWidth! - SizeConfig.padding54,
+    //     decoration: BoxDecoration(
+    //       image: DecorationImage(
+    //           image: CachedNetworkImageProvider(imageUrl!),
+    //           fit: BoxFit.cover,
+    //           alignment: Alignment.centerLeft),
+    //       borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+    //     ),
+    //   ),
+    // );
   }
 }

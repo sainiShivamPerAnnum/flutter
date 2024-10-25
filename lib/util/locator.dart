@@ -62,6 +62,8 @@ import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/hms_room_kit/lib/src/hmssdk_interactor.dart';
+import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_store.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
@@ -238,6 +240,10 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(LiveRepository.new);
   locator.registerLazySingleton(ExpertsRepository.new);
   locator.registerLazySingleton(ShortsRepo.new);
+  locator.registerLazySingleton(HMSSDKInteractor.new);
+  locator.registerLazySingleton<MeetingStore>(
+    () => MeetingStore(hmsSDKInteractor: locator()),
+  );
 
   //ROOT
   locator.registerLazySingleton(CardActionsNotifier.new);
@@ -248,7 +254,7 @@ Future<void> setupLocator() async {
 
   /// Hometabs
   locator.registerFactory(PlayViewModel.new);
-  locator.registerFactory(SaveViewModel.new);
+  locator.registerLazySingleton(SaveViewModel.new);
   locator.registerFactory(MyAccountVM.new);
   locator.registerFactory(JourneyPageViewModel.new);
 
