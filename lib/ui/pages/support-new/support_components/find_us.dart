@@ -1,3 +1,5 @@
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -11,14 +13,7 @@ class FindUs extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'You can also find us on',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-            ),
-          ),
+          Text('You can also find us on', style: TextStyles.sourceSansSB.body2),
           // SizedBox(height: 16), // Add space between text and grid
           Expanded(
             child: GridView.count(
@@ -44,33 +39,29 @@ class FindUs extends StatelessWidget {
 
 Widget buildSocialMediaButton(String title, String iconPath) {
   return Container(
-    padding: EdgeInsets.all(16),
+    padding: EdgeInsets.all(SizeConfig.padding16),
     decoration: BoxDecoration(
       color: Color(0xFF2D3135), // Button background color
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(SizeConfig.roundness12),
     ),
     child: Row(
       children: [
         SvgPicture.asset(
           iconPath,
-          width: 16,
-          height: 16,
+          width: SizeConfig.body2,
+          height: SizeConfig.body2,
         ),
         SizedBox(width: 8),
         Expanded(
           child: Text(
             title,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-            ),
+            style: TextStyles.sourceSansSB.body2,
           ),
         ),
         Icon(
           Icons.arrow_forward_ios_rounded,
           color: Colors.white,
-          size: 16,
+          size: SizeConfig.body2,
         ),
       ],
     ),

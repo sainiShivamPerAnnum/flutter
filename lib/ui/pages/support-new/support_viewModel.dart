@@ -202,38 +202,6 @@ class SupportViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> init() async {
-    // _baseUtil.fetchUserAugmontDetail();
-    // baseProvider = BaseUtil();
-    await _userService.getUserFundWalletData();
-    await _userCoinService.getUserCoinBalance();
-    // await getTopExperts();
-    await locator<SubService>().init();
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _sellService.init();
-      getCampaignEvents().then((val) {
-        if ((ongoingEvents?.length ?? 0) > 1) {
-          _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-            if (currentPage < ongoingEvents!.length - 1) {
-              currentPage++;
-            } else {
-              currentPage = 0;
-            }
-            if (offersController.hasClients) {
-              offersController.animateToPage(
-                currentPage,
-                duration: const Duration(milliseconds: 350),
-                curve: Curves.easeIn,
-              );
-            }
-          });
-        }
-      });
-      getSaveViewBlogs();
-    });
-  }
-
   void dump() {
     _timer?.cancel();
   }

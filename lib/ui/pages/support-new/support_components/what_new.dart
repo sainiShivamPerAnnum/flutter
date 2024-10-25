@@ -26,8 +26,6 @@ class WhatNew extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TitleSubtitleContainer(
-                titleStyle:
-                    TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 title: "What is new in Fello",
                 leadingPadding: true,
               ),
@@ -35,7 +33,8 @@ class WhatNew extends StatelessWidget {
           ),
         ),
         Container(
-          padding: EdgeInsets.only(left: 12, right: 12),
+          padding: EdgeInsets.only(
+              left: SizeConfig.padding12, right: SizeConfig.padding12),
           child: WhatIsNew(model: model),
         )
       ],
@@ -77,7 +76,7 @@ class WhatIsNew extends StatelessWidget {
           children: [
             for (int i = 0; i < data.length; i++)
               Padding(
-                  padding: EdgeInsets.only(bottom: 24),
+                  padding: EdgeInsets.only(bottom: SizeConfig.padding24),
                   child: Row(
                     // verticalDirection: VerticalDirection.up,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,30 +86,21 @@ class WhatIsNew extends StatelessWidget {
                         height: 50,
                       ),
 
-                      SizedBox(width: 18), // Space between icon and text
+                      const SizedBox(width: 18), // Space between icon and text
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               data[i]['title'],
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: TextStyles.sourceSansSB.body1,
                             ),
-                            SizedBox(
+                            const SizedBox(
                                 height:
                                     5), // Space between title and description
-                            Text(
-                              data[i]['subTitle'],
-                              style: TextStyle(
-                                color: Colors.grey[
-                                    400], // Light grey color for the description text
-                                fontSize: 14,
-                              ),
-                            ),
+                            Text(data[i]['subTitle'],
+                                style: TextStyles.sourceSans.body3
+                                    .colour(UiConstants.customSubtitle)),
                           ],
                         ),
                       ),

@@ -66,7 +66,7 @@ class LiveFello extends StatelessWidget {
         }
         // If the data is available, use it
         final List<dynamic> data = snapshot.data ?? [];
-
+        print("aiushdihd i hdihasiudhiuahd iuhaiud iu ad iuhad $data");
         return Padding(
           padding: EdgeInsets.only(top: SizeConfig.padding20),
           child: SizedBox(
@@ -88,6 +88,7 @@ class LiveFello extends StatelessWidget {
                             bgImage: data[i]['coverImage'],
                             liveCount: data[i]["totalLiveCount"],
                             duration: data[i]["duration"],
+                            timeSlot: data[i]['eventTimeSlot'],
                           ),
                         )),
                 ],

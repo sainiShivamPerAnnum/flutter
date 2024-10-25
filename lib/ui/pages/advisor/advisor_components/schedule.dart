@@ -1,6 +1,7 @@
 //Project Imports
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
@@ -29,6 +30,26 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ScheduleCall extends StatefulWidget {
+  final String? status;
+  final String? title;
+  final String? subTitle;
+  final String? author;
+  final String? category;
+  final String? bgImage;
+  final int? liveCount;
+  final int? duration;
+  final String? timeSlot;
+
+  ScheduleCall(
+      {this.status,
+      this.title,
+      this.subTitle,
+      this.author,
+      this.category,
+      this.bgImage,
+      this.liveCount,
+      this.duration,
+      this.timeSlot});
   @override
   ScheduleCallWrapper createState() => ScheduleCallWrapper();
 
@@ -77,8 +98,21 @@ class ScheduleCallWrapper extends State<ScheduleCall> {
     {'TimeUI': '8:00 PM'},
   ];
 
-  final topicController = TextEditingController();
-  final descriptionController = TextEditingController();
+  late TextEditingController topicController;
+  late TextEditingController descriptionController;
+  @override
+  void initState() {
+    super.initState();
+    print("widgetwidgetwidgetwidget ${widget.category}");
+    // Initialize the controllers with values from widget
+    topicController = TextEditingController(text: widget.title);
+    descriptionController = TextEditingController(text: widget.subTitle);
+    selectedCategory = widget.category!;
+    selectedProfilePicture = widget.bgImage;
+    // setState(() {
+    //   selectedCategory = widget.category;
+    // });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -305,7 +339,9 @@ class ScheduleCallWrapper extends State<ScheduleCall> {
                                   ),
                                 ),
                                 child: Text(
-                                  "Upload Image",
+                                  selectedProfilePicture != null
+                                      ? "Re Upload Image"
+                                      : 'Upload Image',
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
@@ -513,8 +549,9 @@ class ScheduleCallWrapper extends State<ScheduleCall> {
     print('payloadpayloadpayload $payload');
     AppState.blockNavigation();
     final resp = await _advisorRepo.saveEvent(payload);
-    print("respppppp=====> $resp");
+    log("respppppp=====> $resp");
     if (resp.isSuccess()) {
+      BaseUtil.showPositiveAlert(locale.eventSuccess, 'Success');
     } else {
       // _logger.e(withdrawalTxn.errorMessage);
       BaseUtil.showNegativeAlert(

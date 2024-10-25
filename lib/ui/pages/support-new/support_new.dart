@@ -32,7 +32,7 @@ class SupportNewPage extends StatelessWidget {
         BankAndPanServiceProperties>(
       value: locator<BankAndPanService>(),
       child: BaseView<SupportViewModel>(
-        onModelReady: (model) => model.init(),
+        // onModelReady: (model) => model.init(),
         onModelDispose: (model) => model.dump(),
         builder: (ctx, model, child) {
           return SupportViewWrapper(model: model);

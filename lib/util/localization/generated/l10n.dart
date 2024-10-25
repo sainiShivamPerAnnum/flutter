@@ -7136,6 +7136,16 @@ class S {
     );
   }
 
+  /// `Event Added Successfully`
+  String get eventSuccess {
+    return Intl.message(
+      'Event Added Successfully',
+      name: 'eventSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `1-2 business working days`
   String get businessDays {
     return Intl.message(

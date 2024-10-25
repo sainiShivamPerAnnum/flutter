@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/model/advisor/advisor_details.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -11,7 +14,7 @@ class AdvisorRepo extends BaseRepo {
 
   static const _advisor = 'advisor';
 
-  Future<ApiResponse<String>> saveEvent(
+  Future<ApiResponse<AdvisorDetails>> saveEvent(
     Object payload,
   ) async {
     try {
@@ -48,7 +51,12 @@ class AdvisorRepo extends BaseRepo {
       );
 
       final data = response['data'];
-      return ApiResponse(model: data, code: 200);
+      log("Experts data: $data");
+      return ApiResponse<AdvisorDetails>(
+        model: AdvisorDetails.fromJson(data),
+        code: 200,
+      );
+      // return ApiResponse(model: data, code: 200);
     } catch (e) {
       logger.e(e);
       return ApiResponse.withError(e.toString(), 400);

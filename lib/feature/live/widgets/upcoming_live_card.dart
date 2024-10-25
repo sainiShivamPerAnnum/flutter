@@ -17,6 +17,7 @@ class UpcomingLiveCardWidget extends StatelessWidget {
   final String bgImage;
   final int? liveCount;
   final int? duration;
+  final String? timeSlot;
 
   UpcomingLiveCardWidget({
     required this.status,
@@ -27,6 +28,7 @@ class UpcomingLiveCardWidget extends StatelessWidget {
     required this.bgImage,
     this.liveCount,
     this.duration,
+    this.timeSlot,
   });
 
   @override
@@ -219,7 +221,17 @@ class UpcomingLiveCardWidget extends StatelessWidget {
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: ScheduleCallViewConfig,
-      widget: ScheduleCall(),
+      widget: ScheduleCall(
+          status: status, // "live"
+          title: title, // "Investment Webinar"
+          subTitle:
+              subTitle, // "A comprehensive webinar on investment strategies."
+          author: author, // "Not coming from backend"
+          category: category, // "Finance"
+          bgImage: bgImage, // "https://example.com/image.jpg"
+          liveCount: liveCount, // 3
+          duration: duration,
+          timeSlot: timeSlot),
     );
   }
 }
