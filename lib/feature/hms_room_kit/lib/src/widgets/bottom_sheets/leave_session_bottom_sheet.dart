@@ -1,5 +1,8 @@
 ///Project imports
+import 'dart:developer';
+
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
+import 'package:felloapp/feature/hms_room_kit/lib/src/enums/meeting_mode.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/layout_api/hms_room_layout.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_store.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/bottom_sheets/end_service_bottom_sheet.dart';
@@ -29,11 +32,10 @@ class _LeaveSessionBottomSheetState extends State<LeaveSessionBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final meetingStore = context.read<MeetingStore>();
-    return PopScope(
-      onPopInvoked: (v) {
-        if(v){
-        // AppState.removeOverlay();
-        }
+    return WillPopScope(
+      onWillPop: () async {
+        AppState.removeOverlay();
+        return Future.value(true);
       },
       child: ((meetingStore.localPeer?.role.permissions.endRoom ?? false) ||
               ((meetingStore.localPeer?.role.permissions.hlsStreaming ??
@@ -71,36 +73,33 @@ class _LeaveSessionBottomSheetState extends State<LeaveSessionBottomSheet> {
                               topRight: Radius.circular(16)),
                         ),
                         context: context,
-                        builder: (ctx) => ChangeNotifierProvider.value(
-                          value: meetingStore,
-                          child: EndServiceBottomSheet(
-                            onButtonPressed: () => {
-                              meetingStore.leave(),
-                            },
-                            title: HMSTitleText(
-                              text:
-                                  "Leave ${HMSRoomLayout.peerType == PeerRoleType.conferencing ? "Session" : "Stream"}",
-                              textColor: HMSThemeColors.alertErrorDefault,
-                              letterSpacing: 0.15,
-                              fontSize: 20,
-                            ),
-                            bottomSheetTitleIcon: SvgPicture.asset(
-                              "assets/hms/icons/end_warning.svg",
-                              height: 20,
-                              width: 20,
-                              colorFilter: ColorFilter.mode(
-                                  HMSThemeColors.alertErrorDefault,
-                                  BlendMode.srcIn),
-                            ),
-                            subTitle: HMSSubheadingText(
-                              text:
-                                  "Others will continue after you leave. You can join the session again.",
-                              maxLines: 2,
-                              textColor: HMSThemeColors.onSurfaceMediumEmphasis,
-                            ),
-                            buttonText:
+                        builder: (ctx) => EndServiceBottomSheet(
+                          onButtonPressed: () => {
+                            meetingStore.leave(),
+                          },
+                          title: HMSTitleText(
+                            text:
                                 "Leave ${HMSRoomLayout.peerType == PeerRoleType.conferencing ? "Session" : "Stream"}",
+                            textColor: HMSThemeColors.alertErrorDefault,
+                            letterSpacing: 0.15,
+                            fontSize: 20,
                           ),
+                          bottomSheetTitleIcon: SvgPicture.asset(
+                            "assets/hms/icons/end_warning.svg",
+                            height: 20,
+                            width: 20,
+                            colorFilter: ColorFilter.mode(
+                                HMSThemeColors.alertErrorDefault,
+                                BlendMode.srcIn),
+                          ),
+                          subTitle: HMSSubheadingText(
+                            text:
+                                "Others will continue after you leave. You can join the session again.",
+                            maxLines: 2,
+                            textColor: HMSThemeColors.onSurfaceMediumEmphasis,
+                          ),
+                          buttonText:
+                              "Leave ${HMSRoomLayout.peerType == PeerRoleType.conferencing ? "Session" : "Stream"}",
                         ),
                       )
                     },
@@ -201,108 +200,115 @@ class _LeaveSessionBottomSheetState extends State<LeaveSessionBottomSheet> {
             )
           : ChangeNotifierProvider.value(
               value: meetingStore,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.padding14,
-                      horizontal: SizeConfig.padding20,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Leave ${HMSRoomLayout.peerType == PeerRoleType.conferencing ? "Live Streaming" : "Stream"}",
-                          style: TextStyles.sourceSansSB.body1,
+              child: Selector<MeetingStore, MeetingMode>(
+                selector: (p0, meetingStore) => meetingStore.meetingMode,
+                builder: (context, meetingMode, state) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: SizeConfig.padding14,
+                          horizontal: SizeConfig.padding20,
                         ),
-                      ],
-                    ),
-                  ),
-                  const Divider(
-                    color: UiConstants.greyVarient,
-                  ),
-                  SizedBox(height: SizeConfig.padding18),
-                  AppImage(Assets.exit_logo, height: SizeConfig.padding100),
-                  Text(
-                    'End Streaming',
-                    style: TextStyles.sourceSansSB.title4,
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding12,
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding40),
-                    child: Text(
-                      'Leaving this session will end your current live stream and may cause you to miss out on valuable insights.',
-                      style: TextStyles.sourceSans.body3
-                          .colour(UiConstants.kTextColor5),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding18,
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding18),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // AppState.removeOverlay();
-                              Navigator.of(context).pop();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: UiConstants.greyVarient,
-                              padding: EdgeInsets.symmetric(
-                                vertical: SizeConfig.padding16,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    SizeConfig.roundness8),
-                              ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Leave ${(meetingMode != MeetingMode.activeSpeakerWithInset) ? "Live Streaming" : "Call"}",
+                              style: TextStyles.sourceSansSB.body1,
                             ),
-                            child: Text(
-                              'Cancel',
-                              style: TextStyles.sourceSans.body3,
-                            ),
-                          ),
+                          ],
                         ),
-                        SizedBox(width: SizeConfig.padding12),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              meetingStore.leave();
-                              // AppState.removeOverlay();
-                              AppState.isInLiveStream = false;
-                              AppState.backButtonDispatcher!.didPopRoute();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: UiConstants.kTextColor,
-                              padding: EdgeInsets.symmetric(
-                                vertical: SizeConfig.padding16,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    SizeConfig.roundness8),
-                              ),
-                            ),
-                            child: Text(
-                              'Confirm',
-                              style: TextStyles.sourceSans.body3.colour(
-                                UiConstants.kTextColor4,
-                              ),
-                            ),
-                          ),
+                      ),
+                      const Divider(
+                        color: UiConstants.greyVarient,
+                      ),
+                      SizedBox(height: SizeConfig.padding18),
+                      AppImage(Assets.exit_logo, height: SizeConfig.padding100),
+                      Text(
+                        "End ${(meetingMode != MeetingMode.activeSpeakerWithInset) ? 'Streaming' : "Call"}",
+                        style: TextStyles.sourceSansSB.title4,
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding12,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding40),
+                        child: Text(
+                          'Leaving this session will end your current ${(meetingMode != MeetingMode.activeSpeakerWithInset) ? 'live stream' : "call"} and may cause you to miss out on valuable insights.',
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor5),
+                          textAlign: TextAlign.center,
                         ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: SizeConfig.padding40),
-                ],
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding18,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding18),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  AppState.backButtonDispatcher!.didPopRoute();
+                                 
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: UiConstants.greyVarient,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: SizeConfig.padding16,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness8),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyles.sourceSans.body3,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: SizeConfig.padding12),
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  meetingStore.leave();
+                                  AppState.isInLiveStream = false;
+                                  await AppState.backButtonDispatcher!
+                                      .didPopRoute();
+                                  await AppState.backButtonDispatcher!
+                                      .didPopRoute();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: UiConstants.kTextColor,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: SizeConfig.padding16,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness8),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Confirm',
+                                  style: TextStyles.sourceSans.body3.colour(
+                                    UiConstants.kTextColor4,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: SizeConfig.padding40),
+                    ],
+                  );
+                },
               ),
             ),
     );

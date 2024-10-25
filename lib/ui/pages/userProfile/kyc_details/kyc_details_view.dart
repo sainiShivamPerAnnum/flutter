@@ -47,6 +47,7 @@ class KYCDetailsView extends StatelessWidget {
                   color: Colors.white,
                 ),
                 backgroundColor: UiConstants.kTambolaMidTextColor,
+        surfaceTintColor:UiConstants.kTambolaMidTextColor,
                 title: Text(
                   locale.kycTitle.toUpperCase(),
                   style: TextStyles.sourceSansSB.title5,

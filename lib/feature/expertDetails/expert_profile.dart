@@ -8,6 +8,7 @@ import 'package:felloapp/feature/expertDetails/widgets/rating_sheet.dart';
 import 'package:felloapp/feature/live/widgets/live_card.dart';
 import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
@@ -111,13 +112,16 @@ class _ExpertProfilePage extends StatelessWidget {
                   ),
                 ),
               ),
-              appBar: AppBar(
+              appBar: FAppBar(
                 backgroundColor: Colors.transparent,
                 centerTitle: true,
-                title: Text('Profile', style: TextStyles.rajdhaniSB.body1),
+                titleWidget:
+                    Text('Profile', style: TextStyles.rajdhaniSB.body1),
                 leading: const BackButton(
                   color: Colors.white,
                 ),
+                showAvatar: false,
+                showCoinBar: false,
               ),
               body: SingleChildScrollView(
                 child: Padding(
@@ -685,6 +689,8 @@ class RatingReviewSection extends StatelessWidget {
                       onPressed: () {
                         AppState.screenStack.add(ScreenItem.modalsheet);
                         BaseUtil.openModalBottomSheet(
+                          isScrollControlled: true,
+                          enableDrag: true,
                           isBarrierDismissible: true,
                           content: FeedbackBottomSheet(
                             advisorId: advisorId,

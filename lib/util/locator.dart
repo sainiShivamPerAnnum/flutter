@@ -251,7 +251,7 @@ Future<void> setupLocator() async {
 
   /// Hometabs
   locator.registerFactory(PlayViewModel.new);
-  locator.registerFactory(SaveViewModel.new);
+  locator.registerLazySingleton(SaveViewModel.new);
   locator.registerFactory(MyAccountVM.new);
   locator.registerFactory(JourneyPageViewModel.new);
 

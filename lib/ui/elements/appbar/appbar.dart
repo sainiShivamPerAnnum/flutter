@@ -77,6 +77,8 @@ class FAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: centerTitle ?? false,
       elevation: 0,
       backgroundColor: backgroundColor ?? Colors.transparent,
+      foregroundColor: backgroundColor ?? Colors.transparent,
+      surfaceTintColor: backgroundColor ?? Colors.transparent,
       actions: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,

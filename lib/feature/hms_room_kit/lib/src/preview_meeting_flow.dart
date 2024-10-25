@@ -1,5 +1,7 @@
 ///Package imports
 
+import 'dart:convert';
+
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/hmssdk_interactor.dart';
@@ -45,8 +47,14 @@ class _PreviewMeetingFlowState extends State<PreviewMeetingFlow> {
           widget.prebuiltOptions?.userId ??
           "",
       config: HMSConfig(
-          metaData: _userService.baseUser!.avatarId,
-          authToken: widget.tokenData,),
+        metaData: jsonEncode(
+          {
+            'avatar': _userService.baseUser!.avatarId,
+            'dpurl': _userService.myUserDpUrl
+          },
+        ),
+        authToken: widget.tokenData,
+      ),
       localPeerNetworkQuality: null,
       options: widget.prebuiltOptions,
       tokenData: widget.tokenData,

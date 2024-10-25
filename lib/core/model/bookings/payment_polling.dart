@@ -48,7 +48,7 @@ class BookingPollingData {
 
 @_deserializable
 class PaymentDetails {
-  final int amount;
+  final num amount;
   final String? type;
   @JsonKey(unknownEnumValue: BookingPaymentStatus.pending)
   final BookingPaymentStatus? status;

@@ -28,6 +28,7 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
           //     ? Colors.transparent
           //     :
           UiConstants.kSecondaryBackgroundColor,
+      surfaceTintColor: UiConstants.kSecondaryBackgroundColor,
       elevation: 0.0,
       title: Text(
         locale.abMyProfile,

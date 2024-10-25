@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -9,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:keyboard_detection/keyboard_detection.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:video_player/video_player.dart';
 
@@ -24,7 +27,7 @@ class ShortsVideoPage extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(360, 690),
       minTextAdapt: true,
-      splitScreenMode: true,
+      splitScreenMode: false,
       builder: (_, child) {
         return BlocBuilder<PreloadBloc, PreloadState>(
           builder: (context, state) {
@@ -39,53 +42,50 @@ class ShortsVideoPage extends StatelessWidget {
                 final bool isLoading =
                     state.isLoading && index == state.videos.length - 1;
 
-                return state.focusedIndex == index
-                    ? VideoWidget(
-                        isLoading: isLoading,
-                        controller: state.controllers[index]!,
-                        userName: state.videos[index].author,
-                        videoTitle: state.videos[index].title,
-                        onShare: () => print('Share clicked'),
-                        onLike: () {
-                          BlocProvider.of<PreloadBloc>(
-                            context,
-                            listen: false,
-                          ).add(
-                            PreloadEvent.likeVideo(
-                              videoId: state.videos[index].id,
-                            ),
-                          );
-                        },
-                        onCommented: (comment) {
-                          BlocProvider.of<PreloadBloc>(
-                            context,
-                            listen: false,
-                          ).add(
-                            PreloadEvent.addComment(
-                              videoId: state.videos[index].id,
-                              comment: comment,
-                            ),
-                          );
-                        },
-                        onBook: () {
-                          AppState.delegate!.appState.currentAction =
-                              PageAction(
-                            page: ExpertDetailsPageConfig,
-                            state: PageState.addWidget,
-                            widget: ExpertsDetailsView(
-                              advisorID: state.videos[index].author,
-                            ),
-                          );
-                        },
-                        showUserName: true,
-                        showVideoTitle: true,
-                        showShareButton: true,
-                        showLikeButton: true,
-                        showBookButton: true,
-                        comments: state.videoComments[state.videos[index].id],
-                        isLikedByUser: state.videos[index].isVideoLikedByUser,
-                      )
-                    : const SizedBox();
+                return VideoWidget(
+                  isLoading: isLoading,
+                  controller: state.controllers[index]!,
+                  userName: state.videos[index].author,
+                  videoTitle: state.videos[index].title,
+                  onShare: () => print('Share clicked'),
+                  onLike: () {
+                    BlocProvider.of<PreloadBloc>(
+                      context,
+                      listen: false,
+                    ).add(
+                      PreloadEvent.likeVideo(
+                        videoId: state.videos[index].id,
+                      ),
+                    );
+                  },
+                  onCommented: (comment) {
+                    BlocProvider.of<PreloadBloc>(
+                      context,
+                      listen: false,
+                    ).add(
+                      PreloadEvent.addComment(
+                        videoId: state.videos[index].id,
+                        comment: comment,
+                      ),
+                    );
+                  },
+                  onBook: () {
+                    AppState.delegate!.appState.currentAction = PageAction(
+                      page: ExpertDetailsPageConfig,
+                      state: PageState.addWidget,
+                      widget: ExpertsDetailsView(
+                        advisorID: state.videos[index].author,
+                      ),
+                    );
+                  },
+                  showUserName: true,
+                  showVideoTitle: true,
+                  showShareButton: true,
+                  showLikeButton: true,
+                  showBookButton: true,
+                  comments: state.videoComments[state.videos[index].id],
+                  isLikedByUser: state.videos[index].isVideoLikedByUser,
+                );
               },
             );
           },
@@ -143,6 +143,7 @@ class VideoWidgetState extends State<VideoWidget>
   final TextEditingController _commentController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   double _videoProgress = 0;
+  bool _isKeyboardVisible = false;
 
   @override
   void initState() {
@@ -154,14 +155,14 @@ class VideoWidgetState extends State<VideoWidget>
     _iconPositionAnimation =
         Tween<double>(begin: 120.h, end: 210.h).animate(_animationController)
           ..addListener(() {
-            setState(() {});
+            // setState(() {});
           });
     widget.controller.addListener(() {
       if (mounted) {
-        setState(() {
+        // setState(() {
           _videoProgress = widget.controller.value.position.inSeconds /
               widget.controller.value.duration.inSeconds;
-        });
+        // });
       }
     });
   }
@@ -185,7 +186,6 @@ class VideoWidgetState extends State<VideoWidget>
 
   @override
   Widget build(BuildContext context) {
-    // final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -222,39 +222,41 @@ class VideoWidgetState extends State<VideoWidget>
               ),
             ),
           ),
-        // if (!isKeyboardOpen)
-        Positioned(
-          bottom: _iconPositionAnimation.value,
-          right: 10.w,
-          child: _buildIconColumn(
-            widget.onShare,
-            widget.onLike,
-            widget.onBook,
-            widget.isLikedByUser,
+        if (!_isKeyboardVisible)
+          Positioned(
+            bottom: _iconPositionAnimation.value,
+            right: 10.w,
+            child: _buildIconColumn(
+              widget.onShare,
+              widget.onLike,
+              widget.onBook,
+              widget.isLikedByUser,
+            ),
           ),
-        ),
-        // if (!isKeyboardOpen)
-        AnimatedPositioned(
-          duration: const Duration(milliseconds: 100),
-          bottom: _iconPositionAnimation.value,
-          left: 15.w,
-          child: _buildComments(_scrollController),
-        ),
-        // if (!isKeyboardOpen)
-        Positioned(
-          bottom: 70.h,
-          child: ExpandableWidget(
-            title: widget.videoTitle,
-            leadingIcon: Icons.info,
-            expandedText:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ",
-            backgroundColor: Colors.black45,
-            textColor: Colors.white,
-            onExpansionChanged: _toggleExpansion,
+        if (!_isKeyboardVisible)
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 100),
+            bottom: _iconPositionAnimation.value,
+            left: 15.w,
+            child: _buildComments(_scrollController),
           ),
-        ),
+        if (!_isKeyboardVisible)
+          Positioned(
+            bottom: 70.h,
+            child: ExpandableWidget(
+              title: widget.videoTitle,
+              leadingIcon: Icons.info,
+              expandedText:
+                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ",
+              backgroundColor: Colors.black45,
+              textColor: Colors.white,
+              onExpansionChanged: _toggleExpansion,
+            ),
+          ),
         Positioned(
-          bottom: 10.h,
+          bottom: _isKeyboardVisible
+              ? MediaQuery.of(context).viewInsets.bottom
+              : 10.h,
           child: SizedBox(
             width: .95.sw,
             child: Column(
@@ -304,16 +306,16 @@ class VideoWidgetState extends State<VideoWidget>
                 SizedBox(
                   height: 10.h,
                 ),
-                // if (!isKeyboardOpen)
-                ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(10.r)),
-                  child: LinearProgressIndicator(
-                    value: _videoProgress,
-                    backgroundColor: Colors.grey[800],
-                    valueColor:
-                        const AlwaysStoppedAnimation<Color>(Colors.white),
+                if (!_isKeyboardVisible)
+                  ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(10.r)),
+                    child: LinearProgressIndicator(
+                      value: _videoProgress,
+                      backgroundColor: Colors.grey[800],
+                      valueColor:
+                          const AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
                   ),
-                ),
               ],
             ),
           ),
@@ -429,17 +431,18 @@ class VideoWidgetState extends State<VideoWidget>
       }
     }
 
+    scrollToEnd();
     return SizedBox(
       width: 240.w,
       height: (widget.comments == null || widget.comments!.isEmpty) ? 0 : 130.h,
       child: (widget.comments == null || widget.comments!.isEmpty)
           ? const SizedBox.shrink()
           : ListView.builder(
+              // reverse: true,
               controller: scrollController,
               physics: const BouncingScrollPhysics(),
               itemCount: widget.comments!.length,
               itemBuilder: (context, index) {
-                scrollToEnd();
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

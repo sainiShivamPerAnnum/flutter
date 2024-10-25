@@ -90,16 +90,6 @@ class _MeetingPageState extends State<MeetingPage> {
             meetingStore.isEndRoomCalled,
             meetingStore.localPeer?.role.permissions.hlsStreaming ?? false),
         builder: (_, failureErrors, __) {
-          if (failureErrors.item1) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              context.read<MeetingStore>().removeAllBottomSheets();
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => HMSLeftRoomScreen(
-                        isEndRoomCalled: failureErrors.item3,
-                        doesRoleHasStreamPermission: failureErrors.item4,
-                      )));
-            });
-          }
           return Selector<MeetingStore, bool>(
               selector: (_, meetingStore) => meetingStore.isPipActive,
               builder: (_, isPipActive, __) {

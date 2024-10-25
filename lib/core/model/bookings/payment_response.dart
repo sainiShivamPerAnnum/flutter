@@ -9,9 +9,13 @@ const _deserializable = JsonSerializable(
 @_deserializable
 class PricingResponse {
   final num price;
+  final num gst;
+  final num totalPrice;
 
   const PricingResponse({
     required this.price,
+    required this.gst,
+    required this.totalPrice,
   });
 
   factory PricingResponse.fromJson(Map<String, dynamic> json) =>
@@ -40,7 +44,7 @@ class BookingTransactionData {
   final String advisorId;
   final TimeSlot slotTime;
   final String userId;
-  final String intent;
+  final String? intent;
   final String createdAt;
   final String status;
   final String paymentId;
@@ -51,9 +55,9 @@ class BookingTransactionData {
     required this.slotTime,
     required this.status,
     required this.userId,
-    required this.intent,
     required this.createdAt,
     required this.paymentId,
+    this.intent,
   });
 
   factory BookingTransactionData.fromJson(Map<String, dynamic> json) =>

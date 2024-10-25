@@ -165,6 +165,7 @@ class GoldCouponPage extends StatelessWidget {
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
           leading: Container(
             margin: EdgeInsets.only(left: SizeConfig.padding16),
             child: IconButton(

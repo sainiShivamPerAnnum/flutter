@@ -36,55 +36,58 @@ class ExpandableWidgetState extends State<ExpandableWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      width: 0.95.sw,
-      padding: EdgeInsets.symmetric(horizontal: 12.w),
-      height: _isExpanded ? 120.h : 39.h,
-      decoration: BoxDecoration(
-        color: widget.backgroundColor,
-        borderRadius: BorderRadius.circular(4.r),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(
-                widget.leadingIcon,
-                color: widget.textColor,
-                size: 12.sp,
-              ),
-              SizedBox(width: 8.w),
-              Expanded(
-                child: Text(
-                  widget.title,
-                  style: TextStyle(color: widget.textColor, fontSize: 12.sp),
-                ),
-              ),
-              IconButton(
-                icon: Icon(
-                  _isExpanded ? Icons.expand_less : Icons.expand_more,
+    return GestureDetector(
+      onTap: _toggleExpanded,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        width: 0.95.sw,
+        padding: EdgeInsets.symmetric(horizontal: 12.w),
+        height: _isExpanded ? 120.h : 42.h,
+        decoration: BoxDecoration(
+          color: widget.backgroundColor,
+          borderRadius: BorderRadius.circular(4.r),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  widget.leadingIcon,
                   color: widget.textColor,
-                  size: 16.sp,
+                  size: 12.sp,
                 ),
-                onPressed: _toggleExpanded,
-              ),
-            ],
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Text(
-                widget.expandedText,
-                style: TextStyle(color: widget.textColor),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Text(
+                    widget.title,
+                    style: TextStyle(color: widget.textColor, fontSize: 12.sp),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(
+                    _isExpanded ? Icons.expand_less : Icons.expand_more,
+                    color: widget.textColor,
+                    size: 16.sp,
+                  ),
+                  onPressed: _toggleExpanded,
+                ),
+              ],
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Text(
+                  widget.expandedText,
+                  style: TextStyle(color: widget.textColor),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

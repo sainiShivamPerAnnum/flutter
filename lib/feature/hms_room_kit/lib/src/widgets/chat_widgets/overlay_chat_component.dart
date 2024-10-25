@@ -1,8 +1,12 @@
+import 'dart:convert';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/layout_api/hms_room_layout.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_store.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/chat_widgets/action_buttons.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/chat_widgets/pin_chat_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 
 ///Package imports
@@ -51,25 +55,6 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
     );
     super.initState();
     // setRecipientChipValue();
-  }
-
-  ///This function scrolls to the end of the list
-  void _scrollToEnd() {
-    if (_scrollController.hasClients) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-        ),
-      );
-    }
-  }
-
-  ///This function updates the selected value
-  void _updateValueChoose(String newValue, String? peerId) {
-    currentlySelectedValue = newValue;
-    currentlySelectedpeerId = peerId;
   }
 
   ///This function returns the message type text for public, group and private messages
@@ -348,31 +333,55 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
               itemCount: comments.length,
               itemBuilder: (context, index) {
                 scrollToEnd();
+                 var metaData = jsonDecode(
+                  comments[index].sender?.metadata != ''
+                      ? comments[index].sender?.metadata ??
+                          '{"avatar": "","dpurl":""}'
+                      : '{"avatar": "","dpurl":""}',
+                );
                 return Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CircleAvatar(
                       radius: SizeConfig.padding10,
                       backgroundColor: Colors.black,
-                      // backgroundImage:
-                      // (comments[index].sender?.metadata !=
-                      //             null &&
-                      //         comments[index].sender?.metadata == 'CUSTOM' &&
-                      //         model.myUserDpUrl != null &&
-                      //         model.myUserDpUrl!.isNotEmpty)
-                      //     ? CachedNetworkImageProvider(
-                      //         model.myUserDpUrl!,
-                      //       )
-                      //     : const AssetImage(
-                      //         Assets.profilePic,
-                      //       ) as ImageProvider<Object>?,
-                      child: comments[index].sender?.metadata != null &&
-                              comments[index].sender?.metadata != 'CUSTOM'
-                          ? SvgPicture.asset(
-                              "assets/vectors/userAvatars/${comments[index].sender?.metadata}.svg",
-                              fit: BoxFit.cover,
+                      child: metaData != null &&
+                                metaData['avatar'] != '' &&
+                                metaData['avatar'] != 'CUSTOM'
+                            ? ClipOval(
+                              child: SizedBox(
+                                width: 2 * SizeConfig.padding10,
+                                height: 2 * SizeConfig.padding10,
+                                child: SvgPicture.asset(
+                                  "assets/vectors/userAvatars/${metaData['avatar']}.svg",
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             )
-                          : const SizedBox(),
+                          : (metaData != null &&
+                                    metaData['avatar'] != '' &&
+                                    metaData!['avatar'] == 'CUSTOM' &&
+                                    metaData!['dpurl'] != '')
+                                ?ClipOval(
+                                  child: SizedBox(
+                                    width: 2 * SizeConfig.padding10,
+                                    height: 2 * SizeConfig.padding10,
+                                    child: CachedNetworkImage(
+                                      imageUrl: metaData['dpurl'],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                )
+                              : ClipOval(
+                                  child: SizedBox(
+                                    width: 2 * SizeConfig.padding10,
+                                    height: 2 * SizeConfig.padding10,
+                                    child: Image.asset(
+                                      Assets.profilePic,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
                     ),
                     SizedBox(
                       width: SizeConfig.padding6,

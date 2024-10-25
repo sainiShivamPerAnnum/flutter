@@ -16,7 +16,7 @@ class ExpertCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String price = '₹${expert.rating}/min';
+    String price = '₹${expert.rate}/min';
 
     return GestureDetector(
       onTap: onTap,

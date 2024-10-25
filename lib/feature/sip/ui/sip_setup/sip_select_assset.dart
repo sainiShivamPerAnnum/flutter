@@ -73,7 +73,7 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
             size: 32,
           ),
         ),
-        backgroundColor: UiConstants.bg,
+        backgroundColor: UiConstants.bg, surfaceTintColor: UiConstants.bg,
         title: Text(locale.siptitle),
         titleTextStyle: TextStyles.rajdhaniSB.title4.setHeight(1.3),
         centerTitle: true,

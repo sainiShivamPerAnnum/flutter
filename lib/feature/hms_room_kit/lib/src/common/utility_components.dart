@@ -28,6 +28,7 @@ class UtilityComponents {
     return BaseUtil.openModalBottomSheet(
       isScrollControlled: true,
       isBarrierDismissible: true,
+      addToScreenStack: true,
       backgroundColor: UiConstants.bg,
       content: ChangeNotifierProvider.value(
         value: meetingStore,

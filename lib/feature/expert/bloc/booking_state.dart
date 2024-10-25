@@ -25,6 +25,7 @@ final class BookingsLoaded extends BookingState {
   final String? selectedDate;
   final int selectedDuration;
   final String? selectedTime;
+  final bool isFree;
 
   const BookingsLoaded({
     required this.advisorId,
@@ -32,6 +33,7 @@ final class BookingsLoaded extends BookingState {
     this.selectedDate,
     this.selectedTime,
     this.selectedDuration = 30,
+    required this.isFree,
   });
 
   BookingState copyWith({
@@ -40,6 +42,7 @@ final class BookingsLoaded extends BookingState {
     String? selectedDate,
     String? selectedTime,
     int? selectedDuration,
+    bool? isFree,
   }) {
     return BookingsLoaded(
       advisorId: advisorId ?? this.advisorId,
@@ -47,6 +50,7 @@ final class BookingsLoaded extends BookingState {
       selectedDate: selectedDate ?? this.selectedDate,
       selectedTime: selectedTime ?? this.selectedTime,
       selectedDuration: selectedDuration ?? this.selectedDuration,
+      isFree: isFree ?? this.isFree,
     );
   }
 
@@ -57,6 +61,7 @@ final class BookingsLoaded extends BookingState {
         selectedDate,
         selectedTime,
         selectedDuration,
+        isFree,
       ];
 }
 

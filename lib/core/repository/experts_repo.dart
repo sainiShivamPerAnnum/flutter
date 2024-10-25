@@ -265,6 +265,7 @@ class ExpertsRepository extends BaseRepo {
     required String fromTime,
     required num duration,
     required String appuse,
+    required bool isFree,
   }) async {
     try {
       final String? uid = userService.baseUser!.uid;
@@ -274,6 +275,7 @@ class ExpertsRepository extends BaseRepo {
         "userId": uid,
         "fromTime": fromTime,
         "duration": duration,
+        "isFree": isFree,
       };
       final headers = {
         "appuse": formatUpiAppName(appuse),

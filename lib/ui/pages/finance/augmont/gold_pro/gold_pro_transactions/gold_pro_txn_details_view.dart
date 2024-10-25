@@ -60,6 +60,7 @@ class GoldProTransactionsDetailsView extends StatelessWidget {
       backgroundColor: const Color(0xff151D22),
       appBar: AppBar(
         backgroundColor: const Color(0xff151D22),
+                surfaceTintColor: const Color(0xff151D22),
         elevation: 0,
         actions: [
           Row(

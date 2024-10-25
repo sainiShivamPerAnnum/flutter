@@ -50,18 +50,24 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           schedule: data.model,
           selectedDate: selectedDate,
           selectedDuration: event.duration,
+          isFree: data.model?.hasFreeCall ?? false,
         ),
       );
     } else {
-      emitter(BookingsLoaded(schedule: data.model, advisorId: event.advisorId));
+      emitter(
+        BookingsLoaded(
+          schedule: data.model,
+          advisorId: event.advisorId,
+          isFree: data.model?.hasFreeCall ?? false,
+        ),
+      );
     }
   }
 
   void _onSelectDate(SelectDate event, Emitter<BookingState> emitter) {
-    final state = this.state;
     if (state is BookingsLoaded) {
       emitter(
-        state.copyWith(
+        (state as BookingsLoaded).copyWith(
           selectedDate: event.selectedDate,
           selectedTime: null,
         ),
@@ -70,16 +76,23 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
   }
 
   void _onSelectDuration(SelectDuration event, Emitter<BookingState> emitter) {
-    final state = this.state;
     if (state is BookingsLoaded) {
-      add(LoadBookingDates(state.advisorId, event.selectDuration));
+      add(
+        LoadBookingDates(
+          (state as BookingsLoaded).advisorId,
+          event.selectDuration,
+        ),
+      );
     }
   }
 
   void _onSelectTime(SelectTime event, Emitter<BookingState> emitter) {
-    final state = this.state;
     if (state is BookingsLoaded) {
-      emitter(state.copyWith(selectedTime: event.selectedTime));
+      emitter(
+        (state as BookingsLoaded).copyWith(
+          selectedTime: event.selectedTime,
+        ),
+      );
     }
   }
 
@@ -104,8 +117,8 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           date: event.selectedDate,
           price: response.model?.price ?? 0,
           duration: event.duration,
-          gst: response.model?.price ?? 0,
-          totalPayable: response.model?.price ?? 0,
+          gst: response.model?.gst ?? 0,
+          totalPayable: response.model?.totalPrice ?? 0,
         ),
       );
     } else {
@@ -147,14 +160,19 @@ class PaymentBloc extends Bloc<BookingEvent, PaymentState> {
       amount: event.amount,
       fromTime: event.fromTime,
       duration: event.duration,
-      appuse: event.appuse.upiApplication.appName,
+      appuse: event.appuse?.upiApplication.appName ?? '',
+      isFree: event.isFree,
     );
     final data = response.model?.data;
     final paymentId = data?.paymentId;
     final intentData = data?.intent;
-    if (response.isSuccess() && intentData != null && paymentId != null) {
+    if (response.isSuccess() && event.isFree) {
+      emitter(SubmittedPayment(data: response.model!));
+    } else if (response.isSuccess() &&
+        intentData != null &&
+        paymentId != null) {
       if (intentData.isNotEmpty) {
-        await _openPSPApp(intentData, event.appuse.packageName);
+        await _openPSPApp(intentData, event.appuse!.packageName);
       }
       emitter(SubmittedPayment(data: response.model!));
     } else {

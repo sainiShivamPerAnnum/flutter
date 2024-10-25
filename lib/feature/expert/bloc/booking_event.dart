@@ -51,10 +51,12 @@ class SubmitPaymentRequest extends BookingEvent {
     required this.fromTime,
     required this.duration,
     required this.appuse,
+    required this.isFree,
   });
   final String advisorId;
   final num amount;
   final String fromTime;
   final num duration;
-  final ApplicationMeta appuse;
+  final ApplicationMeta? appuse;
+  final bool isFree;
 }

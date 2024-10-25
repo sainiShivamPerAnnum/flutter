@@ -124,6 +124,7 @@ const String liveSectionViewPath = "/live";
 const String livePreviewSectionViewPath = "/livePreview";
 const String expertDetailsViewPath = "/expertDetails";
 const String tellUsAboutYourselfViewPath = "/tellUsAboutYourself";
+const String meettingChatViewPath = "/meetingChat";
 
 enum Pages {
   Splash,
@@ -243,7 +244,8 @@ enum Pages {
   Live,
   LivePreview,
   ExpertDetails,
-  TellUsAboutYourself
+  TellUsAboutYourself,
+  meettingChat,
 }
 
 class PageConfiguration {
@@ -979,4 +981,10 @@ PageConfiguration TellUsAboutYourselfPageConfig = PageConfiguration(
   path: tellUsAboutYourselfViewPath,
   uiPage: Pages.TellUsAboutYourself,
   name: "Tell us about yourself.",
+);
+PageConfiguration MeetingChatPageConfig = PageConfiguration(
+  key: 'meettingChatViewPath',
+  path: meettingChatViewPath,
+  uiPage: Pages.meettingChat,
+  name: "Meeting chat.",
 );

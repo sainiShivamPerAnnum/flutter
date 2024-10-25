@@ -30,7 +30,7 @@ BookingPollingData _$BookingPollingDataFromJson(Map<String, dynamic> json) =>
 
 PaymentDetails _$PaymentDetailsFromJson(Map<String, dynamic> json) =>
     PaymentDetails(
-      amount: json['amount'] as int,
+      amount: json['amount'] as num,
       status: $enumDecodeNullable(_$BookingPaymentStatusEnumMap, json['status'],
               unknownValue: BookingPaymentStatus.pending) ??
           BookingPaymentStatus.pending,

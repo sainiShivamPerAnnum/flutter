@@ -467,7 +467,7 @@ class BaseUtil extends ChangeNotifier {
     return openModalBottomSheet(
       isScrollControlled: true,
       enableDrag: true,
-      isBarrierDismissible: true,
+      isBarrierDismissible: false,
       addToScreenStack: false,
       content: BookCallSheetView(
         advisorID: advisorId,

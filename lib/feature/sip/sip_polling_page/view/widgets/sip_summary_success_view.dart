@@ -36,6 +36,7 @@ class SipSummaryView extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.black,
+          surfaceTintColor: Colors.black,
         automaticallyImplyLeading: false,
         actions: [
           InkWell(

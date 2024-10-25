@@ -336,6 +336,7 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                     GestureDetector(
                       onTap: () {
                         BaseUtil.openModalBottomSheet(
+                          addToScreenStack: true,
                           isScrollControlled: true,
                           isBarrierDismissible: true,
                           backgroundColor: UiConstants.bg,

@@ -84,8 +84,7 @@ class _BookingMandatePage extends StatelessWidget {
               BaseUtil.openModalBottomSheet(
                 isScrollControlled: true,
                 enableDrag: true,
-                isBarrierDismissible: true,
-                addToScreenStack: false,
+                isBarrierDismissible: false,
                 content: PollingSheet(
                   paymentID: state.data.data.paymentId,
                 ),
@@ -112,6 +111,7 @@ class _BookingMandatePage extends StatelessWidget {
                           fromTime: fromTime,
                           duration: duration,
                           appuse: meta,
+                          isFree: false,
                         );
                         context.read<PaymentBloc>().add(event);
                       }

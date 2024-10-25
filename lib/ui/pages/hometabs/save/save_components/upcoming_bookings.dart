@@ -1,15 +1,19 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class UpcomingBookingsComponent extends StatelessWidget {
   final SaveViewModel model;
@@ -18,29 +22,40 @@ class UpcomingBookingsComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return model.upcomingBookings.isNotEmpty
-        ? Container(
-            padding: EdgeInsets.only(top: SizeConfig.padding10),
-            margin: EdgeInsets.only(
-              left: SizeConfig.padding24,
-              top: SizeConfig.padding10,
-              right: SizeConfig.padding10,
-            ),
-            child: Row(
+    return Selector<SaveViewModel, List<Booking>>(
+      selector: (_, model) => model.upcomingBookings,
+      builder: (_, upcomingBookings, __) {
+        return upcomingBookings.isNotEmpty
+            ? Column(
               children: [
-                for (int i = 0; i < model.upcomingBookings.length; i++)
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding18)
-                            .copyWith(bottom: SizeConfig.padding16),
-                    child: ScheduleCard(
-                      booking: model.upcomingBookings[i],
+                 const TitleSubtitleContainer(
+                    title: "Your upcoming calls",
+                    leadingPadding: true,
+                  ),
+                Container(
+                    height: SizeConfig.screenHeight! * 0.3465,
+                    padding: EdgeInsets.only(top: SizeConfig.padding10),
+                    margin: EdgeInsets.only(
+                      top: SizeConfig.padding10,
+                    ),
+                    child: ListView.builder(
+                      itemCount: upcomingBookings.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) => Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding18,
+                        ).copyWith(bottom: SizeConfig.padding16),
+                        child: ScheduleCard(
+                          booking: upcomingBookings[index],
+                        ),
+                      ),
                     ),
                   ),
               ],
-            ),
-          )
-        : const SizedBox.shrink();
+            )
+            : const SizedBox.shrink();
+      },
+    );
   }
 }
 

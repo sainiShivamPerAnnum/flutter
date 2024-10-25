@@ -78,14 +78,19 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     if (AppState.screenStack.last == ScreenItem.loader) {
       return Future.value(true);
     }
-    if (AppState.isInLiveStream) {
+    if (AppState.isInLiveStream &&
+        AppState.screenStack.last != ScreenItem.dialog &&
+        (AppState.delegate!.currentConfiguration?.path ?? '') ==
+            '/livePreview') {
       BaseUtil.openModalBottomSheet(
+        addToScreenStack: true,
         isScrollControlled: true,
-                          isBarrierDismissible: true,
-                          backgroundColor: UiConstants.bg,
+        isBarrierDismissible: true,
+        backgroundColor: UiConstants.bg,
         content: ChangeNotifierProvider.value(
-            value: locator<MeetingStore>(),
-            child: const LeaveSessionBottomSheet(),),
+          value: locator<MeetingStore>(),
+          child: const LeaveSessionBottomSheet(),
+        ),
       );
       return Future.value(true);
     }

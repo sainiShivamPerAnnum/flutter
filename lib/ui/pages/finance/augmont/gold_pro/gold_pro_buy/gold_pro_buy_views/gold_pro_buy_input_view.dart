@@ -98,6 +98,7 @@ class GoldProBuyInputView extends StatelessWidget {
                 onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
               ),
               backgroundColor: Colors.transparent,
+                surfaceTintColor: Colors.transparent,
               elevation: 0,
               centerTitle: true,
               title: Row(

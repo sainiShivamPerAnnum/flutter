@@ -1,6 +1,7 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -11,6 +12,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PastBookingsComponent extends StatelessWidget {
   final SaveViewModel model;
@@ -19,39 +21,40 @@ class PastBookingsComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return model.upcomingBookings.isNotEmpty
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const TitleSubtitleContainer(
-                title: "Past Scheduled Calls",
-              ),
-              SizedBox(
-                height: SizeConfig.padding8,
-              ),
-              Container(
-                margin: EdgeInsets.only(
-                  left: SizeConfig.padding24,
-                  top: SizeConfig.padding10,
-                  right: SizeConfig.padding10,
-                ),
-                child: Row(
-                  children: [
-                    for (int i = 0; i < model.pastBookings.length; i++)
-                      Padding(
+    return Selector<SaveViewModel, List<Booking>>(
+      selector: (_, model) => model.pastBookings,
+      builder: (_, pastBookings, __) {
+        return pastBookings.isNotEmpty
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const TitleSubtitleContainer(
+                    title: "Past Scheduled Calls",
+                    leadingPadding: true,
+                  ),
+                  Container(
+                    height: SizeConfig.screenHeight! * 0.277,
+                    margin: EdgeInsets.only(
+                      top: SizeConfig.padding10,
+                    ),
+                    child: ListView.builder(
+                      itemCount: pastBookings.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) => Padding(
                         padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.padding18)
-                            .copyWith(bottom: SizeConfig.padding16),
+                          horizontal: SizeConfig.padding18,
+                        ).copyWith(bottom: SizeConfig.padding16),
                         child: PastScheduleCard(
-                          booking: model.pastBookings[i],
+                          booking: model.pastBookings[index],
                         ),
                       ),
-                  ],
-                ),
-              ),
-            ],
-          )
-        : const SizedBox.shrink();
+                    ),
+                  ),
+                ],
+              )
+            : const SizedBox.shrink();
+      },
+    );
   }
 }
 
@@ -168,22 +171,11 @@ class PastScheduleCard extends StatelessWidget {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        final String? name = locator<UserService>()
-                                .baseUser!
-                                .kycName!
-                                .isNotEmpty
-                            ? locator<UserService>().baseUser!.kycName!
-                            : locator<UserService>().baseUser!.name!.isNotEmpty
-                                ? locator<UserService>().baseUser!.name
-                                : locator<UserService>().baseUser!.username;
                         AppState.delegate!.appState.currentAction = PageAction(
-                          page: LivePreviewPageConfig,
-                         state: PageState.addWidget,
-                          widget: HMSPrebuilt(
-                            roomCode: booking.guestCode,
-                            options: HMSPrebuiltOptions(
-                              userName: name,
-                            ),
+                          page: ExpertDetailsPageConfig,
+                          state: PageState.addWidget,
+                          widget: ExpertsDetailsView(
+                            advisorID: booking.advisorId,
                           ),
                         );
                       },
