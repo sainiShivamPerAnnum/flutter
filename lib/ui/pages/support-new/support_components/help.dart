@@ -1,22 +1,22 @@
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class HelpWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(20),
-      padding: EdgeInsets.only(top: 14, bottom: 14, left: 18, right: 18),
+      margin: EdgeInsets.all(SizeConfig.padding20),
+      padding: EdgeInsets.only(
+          top: SizeConfig.padding14,
+          bottom: SizeConfig.padding14,
+          left: SizeConfig.padding18,
+          right: SizeConfig.padding18),
       decoration: BoxDecoration(
         color: Color(0xff2D3135),
-        borderRadius: BorderRadius.circular(15),
-        // boxShadow: [
-        //   BoxShadow(
-        // color: Color(0xff2D3135),
-        //     blurRadius: 5,
-        //     spreadRadius: 2,
-        //   ),
-        // ],
+        borderRadius: BorderRadius.circular(SizeConfig.roundness16),
       ),
       child: Row(
         children: [
@@ -27,42 +27,26 @@ class HelpWidget extends StatelessWidget {
               children: [
                 Text(
                   'Need help?',
-                  style: TextStyle(
-                    color: Color(0xFF62E3C4),
-                    fontSize: 10,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyles.sourceSans.body6
+                      .colour(UiConstants.primaryColor),
                 ),
                 // SizedBox(height: 8),
-                Text(
-                  'For more help contact us at: 1800-123-123455',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                Text('For more help contact us at: 1800-123-123455',
+                    style: TextStyles.sourceSans.body2),
                 SizedBox(height: 12),
                 ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    // primary: Colors.white,
-                    // onPrimary: Colors.black,
-                    // padding: const EdgeInsets.all(0),
-                    padding:
-                        EdgeInsets.only(top: 0, bottom: 0, left: 12, right: 12),
+                    padding: EdgeInsets.only(
+                        left: SizeConfig.padding12,
+                        right: SizeConfig.padding12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
                     ),
                   ),
-                  child: Text(
-                    'Call Us Now',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  child: Text('Call Us Now',
+                      style: TextStyles.sourceSansM.body4
+                          .colour(UiConstants.textColor)),
                 ),
               ],
             ),

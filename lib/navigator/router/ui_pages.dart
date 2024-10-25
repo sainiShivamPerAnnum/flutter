@@ -62,6 +62,7 @@ const String CampaignViewPath = '/campaignViewPath';
 const String SaveAssetViewPath = '/saveAssetViewPath';
 const String SellConfirmationViewPath = '/sellConfirmationViewPath';
 const String ViewAllBlogsViewPath = '/viewAllBlogsViewPath';
+const String ScheduleCallViewPath = '/scheduleCallViewPath';
 const String AllParticipantsWinnersTopReferersPath =
     "/allParticipantsWinnersTopReferersPath";
 const String RedeemSucessfulScreenPath = "/RedeemSucessfulScreenPath";
@@ -189,6 +190,7 @@ enum Pages {
   SaveAssetView,
   SellConfirmationView,
   ViewAllBlogsView,
+  ScheduleCallView,
   AllParticipantsWinnersTopReferrersView,
   RedeemSuccessfulScreenView,
   SharePriceScreenView,
@@ -693,6 +695,13 @@ PageConfiguration ViewAllBlogsViewConfig = PageConfiguration(
   name: "View All Blogs View",
 );
 
+PageConfiguration ScheduleCallViewConfig = PageConfiguration(
+  key: 'ScheduleCallView',
+  path: ScheduleCallViewPath,
+  uiPage: Pages.ScheduleCallView,
+  name: "Schedule Call View",
+);
+
 PageConfiguration AllParticipantsWinnersTopReferrersConfig = PageConfiguration(
   key: 'AllParticipantsWinnersTopReferersView',
   path: AllParticipantsWinnersTopReferersPath,
@@ -982,9 +991,11 @@ PageConfiguration TellUsAboutYourselfPageConfig = PageConfiguration(
   uiPage: Pages.TellUsAboutYourself,
   name: "Tell us about yourself.",
 );
+
 PageConfiguration MeetingChatPageConfig = PageConfiguration(
   key: 'meettingChatViewPath',
   path: meettingChatViewPath,
   uiPage: Pages.meettingChat,
   name: "Meeting chat.",
 );
+

@@ -90,10 +90,14 @@ class LearnFello extends StatelessWidget {
                 Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 8).copyWith(bottom: 8),
-                    child: VideoCardWidget(
-                      title: data[i]['title'],
-                      bgImage: data[i]['bgImage'],
-                      duration: data[i]["metadata"]['duration'],
+                    child: SizedBox(
+                      // height: 300,
+                      // width: SizeConfig.screenWidth,
+                      child: VideoCardWidget(
+                        title: data[i]['title'],
+                        bgImage: data[i]['bgImage'],
+                        duration: data[i]["metadata"]['duration'],
+                      ),
                     )),
             ],
           ),

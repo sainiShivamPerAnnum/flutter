@@ -185,6 +185,7 @@ class Assets {
   static const String live = "assets/images/live.png";
   static const String cal = "assets/images/calender.png";
   static const String help = "assets/images/help.png";
+  static const String user = "assets/images/user.png";
 
   //GT ASSETS
 
@@ -498,15 +499,16 @@ class Assets {
 
   static const String live_bottom_nav = "assets/svg/live.svg";
 
+  static const String advisor_bottom_nav = "assets/vectors/advisor.png";
   static const String experts_bottom_nav = "assets/svg/expert.svg";
   static const String support_bottom_nav = "assets/svg/support.svg";
   static const String shorts_bottom_nav = "assets/svg/shorts.svg";
   static const String calender =
       "https://ik.imagekit.io/9xfwtu0xm/static/calender.png";
 
-       static const String video_share = "assets/svg/share_video.svg"; 
-       static const String book_call = "assets/svg/calender.svg"; 
-       static const String video_like = "assets/svg/like.svg";
+  static const String video_share = "assets/svg/share_video.svg";
+  static const String book_call = "assets/svg/calender.svg";
+  static const String video_like = "assets/svg/like.svg";
   static const String confirm_payment = "assets/vectors/gif/confirm.gif";
   static const String pending_payment = "assets/vectors/gif/pending.gif";
   static const String failed_payment = "assets/vectors/gif/failed.gif";

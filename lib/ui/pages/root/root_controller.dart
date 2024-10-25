@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
+import 'package:felloapp/feature/tambola/tambola.dart';
+import 'package:felloapp/ui/pages/advisor/advisor.dart';
 import 'package:felloapp/feature/expert/expert_root.dart';
 import 'package:felloapp/feature/live/live_root.dart';
 import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
@@ -29,6 +31,9 @@ class RootController {
     Assets.support_bottom_nav,
     ShowCaseKeys.SupportKey,
   );
+  static final advisortNavBarItem = NavBarItemModel(
+      "Advisor", Assets.advisor_bottom_nav, ShowCaseKeys.AccountKey);
+
   static final saveNavBarItem = NavBarItemModel(
     "Home",
     Assets.home_bottom_nav,
@@ -109,11 +114,15 @@ class RootController {
           () => RootController.supportNavBarItem,
         );
         break;
+      // case "SH":
+      //   navItems.putIfAbsent(
+      //     const ShortsVideoPage(),
+      //     () => RootController.shortsNavBarItem,
+      //   );
+      //   break;
       case "SH":
         navItems.putIfAbsent(
-          const ShortsVideoPage(),
-          () => RootController.shortsNavBarItem,
-        );
+            const AdvisorPage(), () => RootController.advisortNavBarItem);
         break;
       default:
     }

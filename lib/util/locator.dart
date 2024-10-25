@@ -3,6 +3,7 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/advisor_repo.dart';
 import 'package:felloapp/core/repository/analytics_repo.dart';
 import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
@@ -75,6 +76,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/elements/faq_card/faq_card_vm.dart';
+import 'package:felloapp/ui/pages/advisor/advisor_viewModel.dart';
 import 'package:felloapp/ui/pages/asset_prefs/asset_pref_vm.dart';
 import 'package:felloapp/ui/pages/campaigns/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
@@ -224,6 +226,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(SipRepository.new);
   locator.registerLazySingleton(SaveRepo.new);
   locator.registerLazySingleton(LendboxRepo.new);
+  locator.registerLazySingleton(AdvisorRepo.new);
   locator.registerLazySingleton(PrizingRepo.new);
   locator.registerLazySingleton(UserStatsRepo.new);
   locator.registerLazySingleton(RootController.new);
@@ -257,6 +260,9 @@ Future<void> setupLocator() async {
 
   ///Support Tab
   locator.registerFactory(SupportViewModel.new);
+
+  ///Advisor Tab
+  locator.registerFactory(AdvisorViewModel.new);
 
   /// VIEW MODELS
   locator.registerFactory(TransactionsHistoryViewModel.new);
