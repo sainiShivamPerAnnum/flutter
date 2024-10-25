@@ -14,6 +14,54 @@ class AdvisorRepo extends BaseRepo {
 
   static const _advisor = 'advisor';
 
+  Future<ApiResponse<AdvisorDetails>> putEvent(
+    Object payload,
+  ) async {
+    try {
+      final uid = userService.baseUser!.uid;
+      final Map<String, dynamic> eventPayload = payload as Map<String, dynamic>;
+
+      final response = await APIService.instance.putData(
+        ApiPath.updateEvent(eventPayload['id']),
+        body: {
+          "topic": eventPayload['topic'],
+          "description": eventPayload['description'] ?? "Default description",
+          "categories": eventPayload['categories'] ?? ["General"],
+          "coverImage": eventPayload['coverImage'] ??
+              "https://example.com/default-image.jpg",
+          "eventTimeSlot":
+              eventPayload['eventTimeSlot'] ?? "2024-09-30T12:00:00.000Z",
+          "duration": eventPayload['duration'] ??
+              60, // Default to 60 minutes if duration is not provided
+          "advisorId": eventPayload['advisorId'] ?? "advisor-123",
+          "status":
+              eventPayload['status'] ?? "draft", // Default to draft status
+          "totalLiveCount": eventPayload['totalLiveCount'] ?? 100,
+          "broadcasterLive": eventPayload['broadcasterLive'] ??
+              "https://example.com/live/default",
+          "viewerLink": eventPayload['viewerLink'] ??
+              "https://example.com/default-viewerLink",
+          "100msEventId":
+              eventPayload['100msEventId'] ?? "100ms-default-event-id",
+          "token": eventPayload['token'] ?? "default-token"
+        },
+        cBaseUrl: baseUrl,
+        apiName: '$_advisor/event',
+      );
+
+      final data = response['data'];
+      log("UpdateUpdateUpdateUpdateUpdate data: $data");
+      return ApiResponse<AdvisorDetails>(
+        model: AdvisorDetails.fromJson(data),
+        code: 200,
+      );
+      // return ApiResponse(model: data, code: 200);
+    } catch (e) {
+      logger.e(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
   Future<ApiResponse<AdvisorDetails>> saveEvent(
     Object payload,
   ) async {

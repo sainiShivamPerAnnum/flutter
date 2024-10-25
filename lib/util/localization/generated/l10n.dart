@@ -7146,6 +7146,15 @@ class S {
     );
   }
 
+  String get eventUpdateSuccess {
+    return Intl.message(
+      'Event Updated Successfully',
+      name: 'eventSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `1-2 business working days`
   String get businessDays {
     return Intl.message(
