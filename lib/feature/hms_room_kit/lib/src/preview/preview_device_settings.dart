@@ -108,7 +108,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                       enabled: false,
                                       contentPadding: EdgeInsets.zero,
                                       leading: SvgPicture.asset(
-                                        "packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(data.item3)}.svg",
+                                        "assets/hms/icons/${Utilities.getAudioDeviceIconName(data.item3)}.svg",
                                         fit: BoxFit.scaleDown,
                                         colorFilter: ColorFilter.mode(
                                             HMSThemeColors
@@ -131,7 +131,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                               height: 24,
                                               width: 24,
                                               child: SvgPicture.asset(
-                                                "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
+                                                "assets/hms/icons/tick.svg",
                                                 fit: BoxFit.scaleDown,
                                                 colorFilter: ColorFilter.mode(
                                                     HMSThemeColors
@@ -157,7 +157,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                       enabled: false,
                                       contentPadding: EdgeInsets.zero,
                                       leading: SvgPicture.asset(
-                                        "packages/hms_room_kit/lib/src/assets/icons/speaker_state_off.svg",
+                                        "assets/hms/icons/speaker_state_off.svg",
                                         fit: BoxFit.scaleDown,
                                         colorFilter: ColorFilter.mode(
                                             HMSThemeColors
@@ -180,7 +180,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                               height: 24,
                                               width: 24,
                                               child: SvgPicture.asset(
-                                                "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
+                                                "assets/hms/icons/tick.svg",
                                                 fit: BoxFit.scaleDown,
                                                 colorFilter: ColorFilter.mode(
                                                     HMSThemeColors
@@ -214,7 +214,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                             enabled: false,
                                             contentPadding: EdgeInsets.zero,
                                             leading: SvgPicture.asset(
-                                              "packages/hms_room_kit/lib/src/assets/icons/speaker_state_off.svg",
+                                              "assets/hms/icons/speaker_state_off.svg",
                                               fit: BoxFit.scaleDown,
                                               colorFilter: ColorFilter.mode(
                                                   HMSThemeColors
@@ -237,7 +237,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                                     height: 24,
                                                     width: 24,
                                                     child: SvgPicture.asset(
-                                                      "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
+                                                      "assets/hms/icons/tick.svg",
                                                       fit: BoxFit.scaleDown,
                                                       colorFilter: ColorFilter.mode(
                                                           HMSThemeColors
@@ -278,7 +278,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                                     contentPadding:
                                                         EdgeInsets.zero,
                                                     leading: SvgPicture.asset(
-                                                      "packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(data.item3)}.svg",
+                                                      "assets/hms/icons/${Utilities.getAudioDeviceIconName(data.item3)}.svg",
                                                       fit: BoxFit.scaleDown,
                                                       colorFilter: ColorFilter.mode(
                                                           HMSThemeColors
@@ -311,7 +311,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                                             width: 24,
                                                             child: SvgPicture
                                                                 .asset(
-                                                              "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
+                                                              "assets/hms/icons/tick.svg",
                                                               fit: BoxFit
                                                                   .scaleDown,
                                                               colorFilter: ColorFilter.mode(
@@ -332,7 +332,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                                     contentPadding:
                                                         EdgeInsets.zero,
                                                     leading: SvgPicture.asset(
-                                                      "packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(data.item1[index])}.svg",
+                                                      "assets/hms/icons/${Utilities.getAudioDeviceIconName(data.item1[index])}.svg",
                                                       fit: BoxFit.scaleDown,
                                                       colorFilter: ColorFilter.mode(
                                                           HMSThemeColors
@@ -367,7 +367,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                                             width: 24,
                                                             child: SvgPicture
                                                                 .asset(
-                                                              "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
+                                                              "assets/hms/icons/tick.svg",
                                                               fit: BoxFit
                                                                   .scaleDown,
                                                               colorFilter: ColorFilter.mode(

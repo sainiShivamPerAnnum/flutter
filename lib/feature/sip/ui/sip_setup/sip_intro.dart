@@ -60,6 +60,7 @@ class _SipIntroViewState extends State<SipIntroView> {
             ),
           ),
           backgroundColor: UiConstants.kTextColor4,
+          surfaceTintColor: UiConstants.kTextColor4,
           title: Text(locale.siptitle),
           titleTextStyle: TextStyles.rajdhaniSB.title4.setHeight(1.3),
           centerTitle: true,

@@ -112,7 +112,7 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
                               position: PopupMenuPosition.under,
                               color: HMSThemeColors.surfaceDefault,
                               child: SvgPicture.asset(
-                                  "packages/hms_room_kit/lib/src/assets/icons/settings.svg",
+                                  "assets/hms/icons/settings.svg",
                                   width: 24,
                                   height: 24,
                                   colorFilter: ColorFilter.mode(
@@ -123,7 +123,7 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
                                         value: 1,
                                         child: Row(children: [
                                           SvgPicture.asset(
-                                              "packages/hms_room_kit/lib/src/assets/icons/${context.read<MeetingStore>().chatControls["enabled"] ? "recording_paused" : "resume"}.svg",
+                                              "assets/hms/icons/${context.read<MeetingStore>().chatControls["enabled"] ? "recording_paused" : "resume"}.svg",
                                               width: 20,
                                               height: 20,
                                               colorFilter: ColorFilter.mode(

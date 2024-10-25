@@ -39,7 +39,7 @@ class HMSRoleChangeDeclineToast extends StatelessWidget {
       toastColor: toastColor,
       toastPosition: toastPosition,
       leading: SvgPicture.asset(
-        "packages/hms_room_kit/lib/src/assets/icons/role_change_decline.svg",
+        "assets/hms/icons/role_change_decline.svg",
         height: 17,
         width: 15,
         colorFilter: ColorFilter.mode(

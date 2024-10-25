@@ -1,34 +1,81 @@
+import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ChatActionButtons extends StatelessWidget {
   const ChatActionButtons({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
-          SideButton(icon: Icon(Icons.send,size: 30,),name: 'Share',),
-          SideButton(icon: Icon(Icons.heart_broken,size: 30,),name: 'Like',),
-          SideButton(icon: Icon(Icons.calendar_month,size: 30,),name: 'Book a call',),
-          // SideButton(icon: Icon(Icons.back_hand_rounded,size: 30,),name: 'Stage',)
+          Column(
+            children: [
+              IconButton(
+                icon: AppImage(
+                  Assets.video_share,
+                  color: Colors.white,
+                  height: SizeConfig.padding20,
+                  width: SizeConfig.padding20,
+                ),
+                onPressed: (){},
+              ),
+              Text(
+                'Share',
+                style: GoogleFonts.sourceSans3(
+                  fontSize: SizeConfig.body4,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+       
+          Column(
+            children: [
+              IconButton(
+                icon: AppImage(
+                  Assets.video_like,
+                  color: true ? Colors.red : Colors.white,
+                  height: SizeConfig.padding20,
+                  width: SizeConfig.padding20,
+                ),
+                onPressed: (){},
+              ),
+              Text(
+                'Like',
+                style: GoogleFonts.sourceSans3(
+                  fontSize: SizeConfig.body4,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+          Column(
+            children: [
+              IconButton(
+                icon: AppImage(
+                  Assets.book_call,
+                  color: Colors.white,
+                  height: SizeConfig.padding20,
+                  width:  SizeConfig.padding20,
+                ),
+                onPressed: (){},
+              ),
+              Text(
+                'Book a call',
+                style: GoogleFonts.sourceSans3(
+                  fontSize: SizeConfig.body4,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
       ],
     );
-  }
-}
-
-class SideButton extends StatelessWidget {
-  const SideButton({super.key,required this.name,required this.icon});
-  final String name;
-  final Icon icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return  Column(children: [
-      icon,
-      SizedBox(height: 4,),
-      Text(name,style: TextStyle(fontSize: 16,color: Colors.white),),
-      SizedBox(height: 2,),
-
-    ],);
   }
 }

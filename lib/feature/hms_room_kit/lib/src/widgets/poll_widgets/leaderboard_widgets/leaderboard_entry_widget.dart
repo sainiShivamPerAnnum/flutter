@@ -97,7 +97,7 @@ class LeaderBoardEntryWidget extends StatelessWidget {
                 width: 12,
               ),
             SvgPicture.asset(
-              "packages/hms_room_kit/lib/src/assets/icons/tick_circle.svg",
+              "assets/hms/icons/tick_circle.svg",
               semanticsLabel: "tick",
             ),
             const SizedBox(
@@ -115,7 +115,7 @@ class LeaderBoardEntryWidget extends StatelessWidget {
               ),
             if (_showTime())
               SvgPicture.asset(
-                "packages/hms_room_kit/lib/src/assets/icons/clock.svg",
+                "assets/hms/icons/clock.svg",
                 semanticsLabel: "clock",
                 width: 12,
                 height: 12,

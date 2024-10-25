@@ -54,7 +54,7 @@ class _RefreshStreamBottomSheetState extends State<RefreshStreamBottomSheet> {
                   Row(
                     children: [
                       SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/end_warning.svg",
+                        "assets/hms/icons/end_warning.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(

@@ -27,7 +27,7 @@ class HMSPollStartToast extends StatelessWidget {
   Widget build(BuildContext context) {
     return HMSToast(
       leading: SvgPicture.asset(
-        "packages/hms_room_kit/lib/src/assets/icons/polls.svg",
+        "assets/hms/icons/polls.svg",
         height: 24,
         width: 24,
         colorFilter: ColorFilter.mode(

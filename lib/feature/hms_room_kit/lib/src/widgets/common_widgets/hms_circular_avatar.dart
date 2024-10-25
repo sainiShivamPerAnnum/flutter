@@ -34,7 +34,7 @@ class HMSCircularAvatar extends StatelessWidget {
         radius: avatarRadius,
         child: name.isEmpty
             ? SvgPicture.asset(
-                'packages/hms_room_kit/lib/src/assets/icons/user.svg',
+                'assets/hms/icons/user.svg',
                 fit: BoxFit.contain,
                 semanticsLabel: "fl_user_icon_label",
               )

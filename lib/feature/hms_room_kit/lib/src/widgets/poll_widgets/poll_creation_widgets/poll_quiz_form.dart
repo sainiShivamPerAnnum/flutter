@@ -155,7 +155,7 @@ class _PollQuizFormState extends State<PollQuizForm> {
         //       //   width: 8,
         //       // ),
         //       // SvgPicture.asset(
-        //       //   "packages/hms_room_kit/lib/src/assets/icons/info.svg",
+        //       //   "assets/hms/icons/info.svg",
         //       //   height: 16,
         //       //   width: 16,
         //       //   colorFilter: ColorFilter.mode(

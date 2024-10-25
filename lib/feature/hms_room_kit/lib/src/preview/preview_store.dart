@@ -323,7 +323,7 @@ class PreviewStore extends ChangeNotifier
     if (currentAudioDevice != null &&
         currentAudioOutputDevice != currentAudioDevice) {
       Utilities.showToast(
-        "Output Device changed to ${currentAudioDevice.name}",
+        "Output Device changed to ${currentAudioDevice.name}",'Try Again!'
       );
       currentAudioOutputDevice = currentAudioDevice;
     }

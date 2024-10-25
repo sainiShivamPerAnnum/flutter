@@ -11,6 +11,7 @@ import 'package:felloapp/ui/elements/dev_rel/flavor_banners.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/win_helpers.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/util/constants.dart';
@@ -48,15 +49,13 @@ class _RootState extends State<Root> {
       },
       onModelDispose: (model) => model.onDispose(),
       builder: (ctx, model, child) {
-
         return Stack(
           children: [
-            Scaffold(
+            BaseScaffold(
               resizeToAvoidBottomInset: false,
-              backgroundColor: UiConstants.bg,
+              showBackgroundGrid: true,
               body: Stack(
                 children: [
-                  const NewSquareBackground(),
                   Column(
                     children: [
                       const RootAppBar(),
@@ -142,123 +141,38 @@ class RootAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = locator<S>();
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
       properties: const [UserServiceProperties.mySegments],
       builder: (_, userservice, ___) {
         return Consumer<AppState>(
           builder: (ctx, appState, child) {
-            return Selector<TambolaService, int>(
-              selector: (_, tambolaService) =>
-                  tambolaService.tambolaTicketCount,
-              builder: (_, ticketCount, child) {
-                // final enableJourney = AppConfig.getValue(
-                //   AppConfigKey.enableJourney,
-                // );
-                return Consumer<AppState>(
-                  builder: (ctx, m, child) {
-                    if (m.rootIndex == 0) {
-                      return Container(
-                        width: SizeConfig.screenWidth,
-                        height: kToolbarHeight + SizeConfig.viewInsets.top,
-                        alignment: Alignment.bottomCenter,
-                        child: FAppBar(
-                          showAvatar: true,
-                          leadingPadding: false,
-                          titleWidget: Expanded(
-                            child: Salutation(
-                              leftMargin: SizeConfig.padding8,
-                              textStyle: TextStyles.rajdhaniSB.body0
-                                  .colour(Colors.white),
-                            ),
-                          ),
-                          backgroundColor: UiConstants.kBackgroundColor,
-                          showCoinBar: false,
-                          action: const Row(
-                            children: [
-                              // Selector2<UserService, ScratchCardService,
-                              //     Tuple2<Portfolio?, int>>(
-                              //   builder: (context, value, child) =>
-                              //       FelloInfoBar(
-                              //     svgAsset: Assets.scratchCard,
-                              //     size: SizeConfig.padding16,
-                              //     child:
-                              //         "₹${value.item1?.rewards.toInt() ?? 0}",
-                              //     onPressed: () {
-                              //       Haptic.vibrate();
-                              //       AppState.delegate!.parseRoute(
-                              //         Uri.parse("myWinnings"),
-                              //       );
-                              //     },
-                              //     mark: value.item2 > 0,
-                              //   ),
-                              //   selector:
-                              //       (p0, userService, scratchCardService) =>
-                              //           Tuple2(
-                              //     userService.userPortfolio,
-                              //     scratchCardService.unscratchedTicketsCount,
-                              //   ),
-                              // ),
-                              // Selector2<UserService, TambolaService,
-                              //     Tuple2<TambolaBestTicketsModel?, int>>(
-                              //   selector: (p0, userService, tambolaService) =>
-                              //       Tuple2(
-                              //     tambolaService.bestTickets,
-                              //     tambolaService.expiringTicketsCount,
-                              //   ),
-                              //   builder: (context, value, child) =>
-                              //       FelloInfoBar(
-                              //     svgAsset: Assets.tambolaTicket,
-                              //     size: SizeConfig.padding12,
-                              //     child:
-                              //         "${value.item1?.data?.totalTicketCount ?? '0'}",
-                              //     onPressed: () {
-                              //       Haptic.vibrate();
-                              //       AppState.delegate!
-                              //           .parseRoute(Uri.parse("tambolaHome"));
-                              //     },
-                              //     mark: false,
-                              //   ),
-                              // ),
-                              // if (enableJourney)
-                              //   Selector2<UserService, ScratchCardService,
-                              //       Tuple2<UserJourneyStatsModel?, int>>(
-                              //     builder: (context, value, child) =>
-                              //         FelloInfoBar(
-                              //       lottieAsset: Assets.navJourneyLottie,
-                              //       size: SizeConfig.padding24 -
-                              //           SizeConfig.padding1,
-                              //       child: "Level ${value.item1?.level ?? 0}",
-                              //       onPressed: () {
-                              //         Haptic.vibrate();
-                              //         AppState.delegate!
-                              //             .parseRoute(Uri.parse("journey"));
-                              //       },
-                              //       mark: value.item2 > 0,
-                              //     ),
-                              //     selector: (
-                              //       p0,
-                              //       userService,
-                              //       scratchCardService,
-                              //     ) =>
-                              //         Tuple2(
-                              //       userService.userJourneyStats,
-                              //       scratchCardService
-                              //           .unscratchedMilestoneScratchCardCount,
-                              //     ),
-                              //   )
-                            ],
-                          ),
+            return Consumer<AppState>(
+              builder: (ctx, m, child) {
+                if (m.rootIndex == 0) {
+                  return Container(
+                    width: SizeConfig.screenWidth,
+                    height: kToolbarHeight + SizeConfig.viewInsets.top,
+                    alignment: Alignment.bottomCenter,
+                    child: FAppBar(
+                      showAvatar: true,
+                      leadingPadding: false,
+                      titleWidget: Expanded(
+                        child: Salutation(
+                          leftMargin: SizeConfig.padding8,
+                          textStyle: TextStyles.sourceSansSB.body1
+                              .colour(Colors.white),
                         ),
-                      );
-                    }
-                    return Container(
-                      width: SizeConfig.screenWidth,
-                      height: SizeConfig.viewInsets.top,
-                      alignment: Alignment.bottomCenter,
-                      child: const SizedBox.shrink(),
-                    );
-                  },
+                      ),
+                      backgroundColor: UiConstants.kBackgroundColor,
+                      showCoinBar: false,
+                    ),
+                  );
+                }
+                return Container(
+                  width: SizeConfig.screenWidth,
+                  height: SizeConfig.viewInsets.top,
+                  alignment: Alignment.bottomCenter,
+                  child: const SizedBox.shrink(),
                 );
               },
             );

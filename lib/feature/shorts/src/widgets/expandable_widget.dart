@@ -7,25 +7,26 @@ class ExpandableWidget extends StatefulWidget {
   final String expandedText;
   final Color backgroundColor;
   final Color textColor;
-  final void Function() onExpansionChanged; // Callback to notify about the expansion state change
+  final void Function()
+      onExpansionChanged; // Callback to notify about the expansion state change
 
   const ExpandableWidget({
     required this.title,
     required this.leadingIcon,
     required this.expandedText,
-    required this.onExpansionChanged, 
+    required this.onExpansionChanged,
     this.backgroundColor = Colors.black87,
     this.textColor = Colors.white,
     super.key,
   });
 
   @override
-  _ExpandableWidgetState createState() => _ExpandableWidgetState();
+  ExpandableWidgetState createState() => ExpandableWidgetState();
 }
 
-class _ExpandableWidgetState extends State<ExpandableWidget> {
+class ExpandableWidgetState extends State<ExpandableWidget> {
   bool _isExpanded = false;
-
+  
   void _toggleExpanded() {
     setState(() {
       _isExpanded = !_isExpanded;
@@ -35,22 +36,24 @@ class _ExpandableWidgetState extends State<ExpandableWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      width: 0.95.sw,
-      padding: EdgeInsets.symmetric(horizontal: 12.w),
-      height: _isExpanded ? 120.h : 39.h,
-      decoration: BoxDecoration(
-        color: widget.backgroundColor,
-        borderRadius: BorderRadius.circular(4.r),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-           Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+    return GestureDetector(
+      onTap: _toggleExpanded,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        width: 0.95.sw,
+        padding: EdgeInsets.symmetric(horizontal: 12.w),
+        height: _isExpanded ? 120.h : 42.h,
+        decoration: BoxDecoration(
+          color: widget.backgroundColor,
+          borderRadius: BorderRadius.circular(4.r),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Icon(
                   widget.leadingIcon,
@@ -74,17 +77,17 @@ class _ExpandableWidgetState extends State<ExpandableWidget> {
                 ),
               ],
             ),
-          
-          Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Text(
-                widget.expandedText,
-                style: TextStyle(color: widget.textColor),
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Text(
+                  widget.expandedText,
+                  style: TextStyle(color: widget.textColor),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -8,6 +8,7 @@ import 'package:felloapp/feature/hms_room_kit/lib/src/layout_api/hms_room_layout
 import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_page.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_store.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/common_widgets/hms_loader.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
@@ -86,7 +87,7 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
     super.initState();
 
     ///Here we create an instance of meeting store, set initial settings and join meeting.
-    _meetingStore = MeetingStore(hmsSDKInteractor: widget.hmsSDKInteractor);
+    _meetingStore = locator();
     _setInitValues();
     _joinMeeting();
     _setHLSPlayerStore();
@@ -102,7 +103,11 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
     }
 
     ///We join the room here
-    await _meetingStore.join(widget.user, widget.tokenData);
+    await _meetingStore.join(
+      widget.user,
+      widget.tokenData,
+      widget.config?.metaData,
+    );
     setState(() {
       showLoader = false;
     });

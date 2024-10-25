@@ -50,7 +50,7 @@ class PollQuizSelectionButton extends StatelessWidget {
                 ),
                 child: Center(
                   child: SvgPicture.asset(
-                    "packages/hms_room_kit/lib/src/assets/icons/$iconName.svg",
+                    "assets/hms/icons/$iconName.svg",
                     fit: BoxFit.scaleDown,
                   ),
                 )),

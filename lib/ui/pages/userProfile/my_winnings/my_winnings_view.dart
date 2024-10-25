@@ -39,6 +39,7 @@ class MyWinningsView extends StatelessWidget {
                 ? Scaffold(
                     appBar: AppBar(
                       backgroundColor: UiConstants.kTambolaMidTextColor,
+        surfaceTintColor:UiConstants.kTambolaMidTextColor,
                       centerTitle: false,
                       title: Text(
                         locale.scratchCardText,
@@ -77,6 +78,8 @@ class MyWinningsView extends StatelessWidget {
                                       toolbarHeight: 54,
                                       backgroundColor:
                                           UiConstants.kTambolaMidTextColor,
+
+        surfaceTintColor: UiConstants.kTambolaMidTextColor,
                                       centerTitle: false,
                                       title: Text(
                                         locale.scratchCardText,
@@ -102,6 +105,8 @@ class MyWinningsView extends StatelessWidget {
                                         toolbarHeight: 0,
                                         backgroundColor:
                                             UiConstants.kBackgroundColor,
+
+        surfaceTintColor: UiConstants.kBackgroundColor,
                                         bottom: TabBar(
                                           indicatorColor: Colors.white,
                                           indicatorSize:

@@ -119,6 +119,7 @@ dependencies:
   flutter_screenutil: ^5.9.0
   visibility_detector: ^0.4.0+2
   timeago: ^3.7.0
+  keyboard_detection: ^0.7.3
 
 
 
@@ -155,7 +156,8 @@ flutter:
     - assets/vectors/userAvatars/
     - assets/lotties/
     - assets/lotties/nav/
-    - lib/feature/hms_room_kit/lib/src/assets/
+    - assets/hms/
+    - assets/hms/icons/
     - shorebird.yaml
 
 flutter_intl:

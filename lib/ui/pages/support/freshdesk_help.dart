@@ -98,6 +98,7 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
         toolbarHeight: 0,
         elevation: 0,
         backgroundColor: const Color(0xff227c74),
+        surfaceTintColor:const Color(0xff227c74),
       ),
       body: SafeArea(
         child: Stack(

@@ -44,7 +44,7 @@ class ScreenshareTile extends StatelessWidget {
                           whiteboardScreenshareStore.isFullScreen,
                       builder: (_, isFullScreen, __) {
                         return SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/${isFullScreen ? "minimize" : "maximize"}.svg",
+                          "assets/hms/icons/${isFullScreen ? "minimize" : "maximize"}.svg",
                           height: 16,
                           width: 16,
                           semanticsLabel: "maximize_label",
@@ -74,7 +74,7 @@ class ScreenshareTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SvgPicture.asset(
-                      "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
+                      "assets/hms/icons/screen_share.svg",
                       height: 20,
                       width: 20,
                       colorFilter: ColorFilter.mode(

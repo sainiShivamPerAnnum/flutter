@@ -9,8 +9,8 @@ import 'package:injectable/injectable.dart';
 import 'package:video_player/video_player.dart';
 
 import '../core/constants.dart';
-import '../service/shorts_repo.dart';
 import '../service/comment_data.dart';
+import '../service/shorts_repo.dart';
 import '../service/video_data.dart';
 
 part 'preload_bloc.freezed.dart';

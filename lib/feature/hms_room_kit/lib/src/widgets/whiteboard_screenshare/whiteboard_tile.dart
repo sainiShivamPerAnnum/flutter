@@ -44,7 +44,7 @@ class _WhiteboardTileState extends State<WhiteboardTile> {
                             whiteboardScreenshareStore.isFullScreen,
                         builder: (_, isFullScreen, __) {
                           return SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/${isFullScreen ? "minimize" : "maximize"}.svg",
+                            "assets/hms/icons/${isFullScreen ? "minimize" : "maximize"}.svg",
                             height: 16,
                             width: 16,
                             semanticsLabel: "maximize_label",

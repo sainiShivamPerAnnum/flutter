@@ -61,7 +61,7 @@ class _PreviewPermissionsState extends State<PreviewPermissions> {
                       radius: 50,
                       backgroundColor: HMSThemeColors.surfaceDefault,
                       child: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/permission_lock.svg",
+                        "assets/hms/icons/permission_lock.svg",
                         height: 56,
                         width: 56,
                         colorFilter: ColorFilter.mode(

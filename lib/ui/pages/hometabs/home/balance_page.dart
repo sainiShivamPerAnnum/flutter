@@ -48,6 +48,7 @@ class FelloBalanceScreen extends StatelessWidget {
       showBackgroundGrid: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+                surfaceTintColor: Colors.transparent,
         title: Text(
           'Fello Balance',
           style: TextStyles.rajdhaniSB.body1.colour(UiConstants.kTextColor),

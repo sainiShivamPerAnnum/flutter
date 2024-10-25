@@ -42,7 +42,7 @@ class HMSLeftRoomScreen extends StatelessWidget {
                       radius: 24,
                       backgroundColor: HMSThemeColors.surfaceDefault,
                       child: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/close.svg",
+                        "assets/hms/icons/close.svg",
                         height: 24,
                         width: 24,
                         colorFilter: ColorFilter.mode(
@@ -58,7 +58,7 @@ class HMSLeftRoomScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SvgPicture.asset(
-                    "packages/hms_room_kit/lib/src/assets/icons/wave_hand.svg",
+                    "assets/hms/icons/wave_hand.svg",
                     height: 64,
                     width: 64,
                   ),
@@ -121,15 +121,15 @@ class HMSLeftRoomScreen extends StatelessWidget {
                           ))),
                       onPressed: () => {
                             HMSThemeColors.resetLayoutColors(),
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => HMSPrebuilt(
-                                          roomCode: Constant.roomCode,
-                                          authToken: Constant.authToken,
-                                          options: Constant.prebuiltOptions,
-                                          onLeave: Constant.onLeave,
-                                        ))),
+                            // Navigator.pushReplacement(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (_) => HMSPrebuilt(
+                            //               roomCode: Constant.roomCode,
+                            //               authToken: Constant.authToken,
+                            //               options: Constant.prebuiltOptions,
+                            //               onLeave: Constant.onLeave,
+                            //             ))),
                           },
                       child: SizedBox(
                         height: 48,
@@ -141,7 +141,7 @@ class HMSLeftRoomScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SvgPicture.asset(
-                              "packages/hms_room_kit/lib/src/assets/icons/login.svg",
+                              "assets/hms/icons/login.svg",
                               height: 24,
                               width: 24,
                               colorFilter: ColorFilter.mode(

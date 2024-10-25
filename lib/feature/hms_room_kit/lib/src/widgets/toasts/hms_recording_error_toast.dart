@@ -30,7 +30,7 @@ class HMSRecordingErrorToast extends StatelessWidget {
       toastColor: toastColor,
       toastPosition: toastPosition,
       leading: SvgPicture.asset(
-        "packages/hms_room_kit/lib/src/assets/icons/recording_error.svg",
+        "assets/hms/icons/recording_error.svg",
         height: 24,
         width: 24,
         colorFilter: ColorFilter.mode(

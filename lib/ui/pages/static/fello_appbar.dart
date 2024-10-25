@@ -55,6 +55,9 @@ class FelloAppBar extends StatelessWidget {
           backgroundColor: showAppBar
               ? UiConstants.kSecondaryBackgroundColor
               : Colors.transparent,
+              surfaceTintColor: showAppBar
+              ? UiConstants.kSecondaryBackgroundColor
+              : Colors.transparent,
           actions: actions ?? [Container()],
         ));
   }

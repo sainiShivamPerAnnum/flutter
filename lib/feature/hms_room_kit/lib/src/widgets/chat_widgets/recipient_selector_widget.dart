@@ -101,7 +101,7 @@ class _RecipientSelectorWidgetState extends State<RecipientSelectorWidget> {
                               contentPadding: EdgeInsets.zero,
                               titleAlignment: ListTileTitleAlignment.center,
                               leading: SvgPicture.asset(
-                                "packages/hms_room_kit/lib/src/assets/icons/everyone.svg",
+                                "assets/hms/icons/everyone.svg",
                                 colorFilter: ColorFilter.mode(
                                     HMSThemeColors.onSurfaceMediumEmphasis,
                                     BlendMode.srcIn),
@@ -117,7 +117,7 @@ class _RecipientSelectorWidgetState extends State<RecipientSelectorWidget> {
                               ),
                               trailing: currentlySelectedValue == "Everyone"
                                   ? SvgPicture.asset(
-                                      "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
+                                      "assets/hms/icons/tick.svg",
                                       fit: BoxFit.scaleDown,
                                       height: 20,
                                       width: 20,
@@ -151,7 +151,7 @@ class _RecipientSelectorWidgetState extends State<RecipientSelectorWidget> {
                               contentPadding: EdgeInsets.zero,
                               titleAlignment: ListTileTitleAlignment.center,
                               leading: SvgPicture.asset(
-                                "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
+                                "assets/hms/icons/participants.svg",
                                 colorFilter: ColorFilter.mode(
                                     HMSThemeColors.onSurfaceMediumEmphasis,
                                     BlendMode.srcIn),
@@ -204,7 +204,7 @@ class _RecipientSelectorWidgetState extends State<RecipientSelectorWidget> {
                                         trailing:
                                             currentlySelectedValue == roleName
                                                 ? SvgPicture.asset(
-                                                    "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
+                                                    "assets/hms/icons/tick.svg",
                                                     fit: BoxFit.scaleDown,
                                                     height: 20,
                                                     width: 20,
@@ -250,7 +250,7 @@ class _RecipientSelectorWidgetState extends State<RecipientSelectorWidget> {
                                           titleAlignment:
                                               ListTileTitleAlignment.center,
                                           leading: SvgPicture.asset(
-                                            "packages/hms_room_kit/lib/src/assets/icons/person.svg",
+                                            "assets/hms/icons/person.svg",
                                             colorFilter: ColorFilter.mode(
                                                 HMSThemeColors
                                                     .onSurfaceMediumEmphasis,
@@ -336,7 +336,7 @@ class _RecipientSelectorWidgetState extends State<RecipientSelectorWidget> {
                                                         currentlySelectedValue ==
                                                                 peer.peerId
                                                             ? SvgPicture.asset(
-                                                                "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
+                                                                "assets/hms/icons/tick.svg",
                                                                 fit: BoxFit
                                                                     .scaleDown,
                                                                 height: 20,

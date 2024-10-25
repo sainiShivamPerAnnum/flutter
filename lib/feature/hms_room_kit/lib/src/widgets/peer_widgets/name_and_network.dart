@@ -42,7 +42,7 @@ class NameAndNetwork extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(right: 2.0),
                     child: SvgPicture.asset(
-                      'packages/hms_room_kit/lib/src/assets/icons/sip_call.svg',
+                      'assets/hms/icons/sip_call.svg',
                       height: 12,
                       semanticsLabel: "fl_sip_call_icon_label",
                     ),

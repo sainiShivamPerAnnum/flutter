@@ -45,6 +45,7 @@ class AllParticipantsWinnersTopReferrers extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: UiConstants.kBackgroundColor,
+        surfaceTintColor: UiConstants.kBackgroundColor,
         elevation: 0.0,
         title: Text(
           appBarTitle ??

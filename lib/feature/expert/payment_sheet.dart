@@ -8,7 +8,6 @@ import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PaymentSheet extends StatelessWidget {
@@ -85,8 +84,7 @@ class _BookingMandatePage extends StatelessWidget {
               BaseUtil.openModalBottomSheet(
                 isScrollControlled: true,
                 enableDrag: true,
-                isBarrierDismissible: true,
-                addToScreenStack: false,
+                isBarrierDismissible: false,
                 content: PollingSheet(
                   paymentID: state.data.data.paymentId,
                 ),
@@ -113,6 +111,7 @@ class _BookingMandatePage extends StatelessWidget {
                           fromTime: fromTime,
                           duration: duration,
                           appuse: meta,
+                          isFree: false,
                         );
                         context.read<PaymentBloc>().add(event);
                       }

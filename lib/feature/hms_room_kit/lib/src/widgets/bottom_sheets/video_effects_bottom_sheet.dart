@@ -134,7 +134,7 @@
 //                         setEffect("");
 //                       },
 //                       optionIcon: SvgPicture.asset(
-//                         "packages/hms_room_kit/lib/src/assets/icons/remove_effects.svg",
+//                         "assets/hms/icons/remove_effects.svg",
 //                         height: 20,
 //                         width: 20,
 //                         colorFilter: ColorFilter.mode(
@@ -155,7 +155,7 @@
 //                         changeBlur(100);
 //                       },
 //                       optionIcon: SvgPicture.asset(
-//                         "packages/hms_room_kit/lib/src/assets/icons/max_blur.svg",
+//                         "assets/hms/icons/max_blur.svg",
 //                         height: 20,
 //                         width: 20,
 //                         colorFilter: ColorFilter.mode(
@@ -189,7 +189,7 @@
 //                         }
 //                       },
 //                       optionIcon: SvgPicture.asset(
-//                         "packages/hms_room_kit/lib/src/assets/icons/video_effects.svg",
+//                         "assets/hms/icons/video_effects.svg",
 //                         height: 20,
 //                         width: 20,
 //                         colorFilter: ColorFilter.mode(
@@ -209,7 +209,7 @@
 //             //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //             //     children: [
 //             //       SvgPicture.asset(
-//             //         "packages/hms_room_kit/lib/src/assets/icons/min_blur.svg",
+//             //         "assets/hms/icons/min_blur.svg",
 //             //         height: 18,
 //             //         width: 18,
 //             //         colorFilter: ColorFilter.mode(
@@ -238,7 +238,7 @@
 //             //         ),
 //             //       )),
 //             //       SvgPicture.asset(
-//             //         "packages/hms_room_kit/lib/src/assets/icons/max_blur.svg",
+//             //         "assets/hms/icons/max_blur.svg",
 //             //         height: 18,
 //             //         width: 18,
 //             //         colorFilter: ColorFilter.mode(

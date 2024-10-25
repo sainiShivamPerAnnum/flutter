@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/feature/expert/bloc/tell_us_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -53,6 +54,7 @@ class _TellUsAboutYourselfScreenState
       showBackgroundGrid: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         leading: const BackButton(
           color: UiConstants.kTextColor,
@@ -65,29 +67,31 @@ class _TellUsAboutYourselfScreenState
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: SizeConfig.padding18),
-            _buildHeading('What is your Annual Personal Income?'),
-            SizedBox(height: SizeConfig.padding12),
-            _buildDropdownButton(),
-            SizedBox(height: SizeConfig.padding24),
-            _buildHeading('Where all have you already invested?'),
-            SizedBox(height: SizeConfig.padding12),
-            _buildTextField("Start typing here", investmentController),
-            SizedBox(height: SizeConfig.padding24),
-            _buildHeading('What are your Financial Goals?'),
-            SizedBox(height: SizeConfig.padding12),
-            _buildTextField("Start typing here", financialGoalsController),
-            SizedBox(height: SizeConfig.padding24),
-            _buildHeading('What are your Expectations from this Call?'),
-            SizedBox(height: SizeConfig.padding12),
-            _buildTextField("Start typing here", expectationsController),
-            const Spacer(),
-            _buildBottomButtons(context),
-            SizedBox(height: SizeConfig.padding24),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: SizeConfig.padding18),
+              _buildHeading('What is your Annual Personal Income?'),
+              SizedBox(height: SizeConfig.padding12),
+              _buildDropdownButton(),
+              SizedBox(height: SizeConfig.padding24),
+              _buildHeading('Where all have you already invested?'),
+              SizedBox(height: SizeConfig.padding12),
+              _buildTextField("Start typing here", investmentController),
+              SizedBox(height: SizeConfig.padding24),
+              _buildHeading('What are your Financial Goals?'),
+              SizedBox(height: SizeConfig.padding12),
+              _buildTextField("Start typing here", financialGoalsController),
+              SizedBox(height: SizeConfig.padding24),
+              _buildHeading('What are your Expectations from this Call?'),
+              SizedBox(height: SizeConfig.padding12),
+              _buildTextField("Start typing here", expectationsController),
+              const Spacer(),
+              _buildBottomButtons(context),
+              SizedBox(height: SizeConfig.padding24),
+            ],
+          ),
         ),
       ),
     );
@@ -231,16 +235,20 @@ class _TellUsAboutYourselfScreenState
   }
 
   void _submitForm(BuildContext context) {
+    if (selectedIncome == null ||
+        investmentController.text.isEmpty ||
+        financialGoalsController.text.isEmpty ||
+        expectationsController.text.isEmpty) {
+      BaseUtil.showNegativeAlert(
+        'Form Submit failed',
+        'Please fill in all the fields.',
+      );
+      return;
+    }
     final income = selectedIncome ?? 'N/A';
-    final investments = investmentController.text.isNotEmpty
-        ? investmentController.text
-        : 'N/A';
-    final financialGoals = financialGoalsController.text.isNotEmpty
-        ? financialGoalsController.text
-        : 'N/A';
-    final expectations = expectationsController.text.isNotEmpty
-        ? expectationsController.text
-        : 'N/A';
+    final investments = investmentController.text;
+    final financialGoals = financialGoalsController.text;
+    final expectations = expectationsController.text;
 
     List<Map<String, String>> questionAnswerArray = [
       {
@@ -260,6 +268,8 @@ class _TellUsAboutYourselfScreenState
         "answer": expectations,
       },
     ];
+
+    // Dispatch the event to submit the form
     BlocProvider.of<TellUsBloc>(context).add(
       SubmitQNA(questionAnswerArray, widget.bookingId),
     );

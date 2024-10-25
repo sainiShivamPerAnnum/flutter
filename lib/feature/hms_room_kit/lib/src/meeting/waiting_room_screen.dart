@@ -37,7 +37,7 @@ class WaitingRoomScreen extends StatelessWidget {
                 backgroundColor: HMSThemeColors.surfaceDefault,
                 radius: 40,
                 child: SvgPicture.asset(
-                  "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
+                  "assets/hms/icons/screen_share.svg",
                   height: 37,
                   width: 37,
                   colorFilter: ColorFilter.mode(
@@ -71,7 +71,7 @@ class WaitingRoomScreen extends StatelessWidget {
                 backgroundColor: HMSThemeColors.surfaceDefault,
                 radius: 40,
                 child: SvgPicture.asset(
-                  "packages/hms_room_kit/lib/src/assets/icons/add_peer.svg",
+                  "assets/hms/icons/add_peer.svg",
                   height: 37,
                   width: 37,
                   colorFilter: ColorFilter.mode(

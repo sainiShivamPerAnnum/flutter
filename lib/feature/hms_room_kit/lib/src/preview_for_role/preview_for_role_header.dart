@@ -27,34 +27,34 @@ class _PreviewForRoleHeaderState extends State<PreviewForRoleHeader> {
   Widget build(BuildContext context) {
     return Positioned(
       top: 16,
-      left: 24,
+      left: 10,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
               ///We render the logo as set in the dashboard
-              HMSRoomLayout.roleLayoutData?.logo?.url == null
-                  ? Container()
-                  : HMSRoomLayout.roleLayoutData!.logo!.url!.contains("svg")
-                      ? SvgPicture.network(
-                          HMSRoomLayout.roleLayoutData!.logo!.url!,
-                        )
-                      : Image.network(
-                          HMSRoomLayout.roleLayoutData!.logo!.url!,
-                          errorBuilder: (context, exception, _) {
-                            log('Error is $exception');
-                            return const SizedBox(
-                              width: 30,
-                              height: 30,
-                            );
-                          },
-                          height: 30,
-                          width: 30,
-                        ),
-              const SizedBox(
-                width: 12,
-              ),
+              // HMSRoomLayout.roleLayoutData?.logo?.url == null
+              //     ? Container()
+              //     : HMSRoomLayout.roleLayoutData!.logo!.url!.contains("svg")
+              //         ? SvgPicture.network(
+              //             HMSRoomLayout.roleLayoutData!.logo!.url!,
+              //           )
+              //         : Image.network(
+              //             HMSRoomLayout.roleLayoutData!.logo!.url!,
+              //             errorBuilder: (context, exception, _) {
+              //               log('Error is $exception');
+              //               return const SizedBox(
+              //                 width: 30,
+              //                 height: 30,
+              //               );
+              //             },
+              //             height: 30,
+              //             width: 30,
+              //           ),
+              // const SizedBox(
+              //   width: 12,
+              // ),
 
               ///We render the LIVE icon based on the HLS streaming status
               ///If the HLS streaming is started we show the LIVE icon
@@ -111,7 +111,7 @@ class _PreviewForRoleHeaderState extends State<PreviewForRoleHeader> {
                           data.item3 == HMSRecordingState.started ||
                           data.item3 == HMSRecordingState.resumed)
                       ? SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/record.svg",
+                          "assets/hms/icons/record.svg",
                           height: 24,
                           width: 24,
                           colorFilter: ColorFilter.mode(
@@ -156,7 +156,7 @@ class _PreviewForRoleHeaderState extends State<PreviewForRoleHeader> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SvgPicture.asset(
-                                "packages/hms_room_kit/lib/src/assets/icons/watching.svg",
+                                "assets/hms/icons/watching.svg",
                                 width: 16,
                                 height: 16,
                                 colorFilter: ColorFilter.mode(

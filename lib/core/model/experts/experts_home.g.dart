@@ -24,7 +24,7 @@ Expert _$ExpertFromJson(Map<String, dynamic> json) => Expert(
       rating: json['rating'] as num,
       expertise: json['expertise'] as String,
       qualifications: json['qualifications'] as String,
-      rate: json['rate'] as String,
+      rate: json['rate'] as num,
       image: json['image'] as String,
       isFree: json['isFree'] as bool,
       advisorId: json['advisorId'] as String,
