@@ -1,13 +1,17 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/repository/advisor_repo.dart';
 import 'package:felloapp/feature/live/widgets/live_card.dart';
 import 'package:felloapp/feature/live/widgets/upcoming_live_card.dart';
 import 'package:felloapp/feature/live/widgets/video_card.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
+import 'package:felloapp/ui/pages/advisor/advisor_components/schedule.dart';
 import 'package:felloapp/ui/pages/advisor/advisor_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/support-new/support_viewModel.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 // import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -23,6 +27,56 @@ class Live extends StatelessWidget {
     return Column(
       children: [
         SizedBox(height: SizeConfig.padding14),
+        Container(
+          margin: EdgeInsets.all(20),
+          padding: EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Color(0xFF2C2C2E), // Dark gray background color
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'SCHEDULE LIVE',
+                    style: TextStyle(
+                      color: Colors
+                          .tealAccent[200], // Light teal color for the header
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  SizedBox(height: 4), // Spacing between the text lines
+                  Text(
+                    'Plan your next live stream.',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  navigateToViewAllBlogs();
+                  // Add your button press functionality here
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white, // White button color
+                  foregroundColor: Colors.black, // Text color inside the button
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8), // Rounded button
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                ),
+                child: Text('Create New'),
+              ),
+            ],
+          ),
+        ),
         GestureDetector(
           onTap: () {},
           child: const Row(
@@ -32,7 +86,7 @@ class Live extends StatelessWidget {
               TitleSubtitleContainer(
                 titleStyle:
                     TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                title: "Learn about Fello",
+                title: "Advisor Section",
                 leadingPadding: true,
               ),
             ],
@@ -43,6 +97,15 @@ class Live extends StatelessWidget {
           child: LiveFello(model: model),
         )
       ],
+    );
+  }
+
+  void navigateToViewAllBlogs() {
+    Haptic.vibrate();
+    AppState.delegate!.appState.currentAction = PageAction(
+      state: PageState.addWidget,
+      page: ScheduleCallViewConfig,
+      widget: ScheduleCall(),
     );
   }
 }
@@ -80,6 +143,7 @@ class LiveFello extends StatelessWidget {
                             .copyWith(bottom: 8),
                         child: SizedBox(
                           child: UpcomingLiveCardWidget(
+                            id: data[i]['id'],
                             status: data[i]['status'],
                             title: data[i]['topic'],
                             subTitle: data[i]['description'],

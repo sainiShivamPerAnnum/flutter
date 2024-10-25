@@ -9,6 +9,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
 class UpcomingLiveCardWidget extends StatelessWidget {
+  final String? id;
   final String status;
   final String title;
   final String subTitle;
@@ -20,6 +21,7 @@ class UpcomingLiveCardWidget extends StatelessWidget {
   final String? timeSlot;
 
   UpcomingLiveCardWidget({
+    this.id,
     required this.status,
     required this.title,
     required this.subTitle,
@@ -222,6 +224,7 @@ class UpcomingLiveCardWidget extends StatelessWidget {
       state: PageState.addWidget,
       page: ScheduleCallViewConfig,
       widget: ScheduleCall(
+          id: id,
           status: status, // "live"
           title: title, // "Investment Webinar"
           subTitle:

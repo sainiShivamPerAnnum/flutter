@@ -30,6 +30,7 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ScheduleCall extends StatefulWidget {
+  final String? id;
   final String? status;
   final String? title;
   final String? subTitle;
@@ -41,7 +42,8 @@ class ScheduleCall extends StatefulWidget {
   final String? timeSlot;
 
   ScheduleCall(
-      {this.status,
+      {this.id,
+      this.status,
       this.title,
       this.subTitle,
       this.author,
@@ -79,8 +81,8 @@ class ScheduleCallWrapper extends State<ScheduleCall> {
     "Alternate Assets"
   ];
   final List<Map<String, String>> dates = generateDates(5);
-  int _selectedDateIndex = 2; // Initially selected date
-  int _selectedTimeIndex = 2; // Initially selected date
+  int _selectedDateIndex = 0; // Initially selected date
+  int _selectedTimeIndex = 0; // Initially selected date
   bool _inProgress = false;
   get inProgress => _inProgress;
 
@@ -103,15 +105,18 @@ class ScheduleCallWrapper extends State<ScheduleCall> {
   @override
   void initState() {
     super.initState();
-    print("widgetwidgetwidgetwidget ${widget.category}");
     // Initialize the controllers with values from widget
-    topicController = TextEditingController(text: widget.title);
-    descriptionController = TextEditingController(text: widget.subTitle);
-    selectedCategory = widget.category!;
-    // selectedProfilePicture = widget.bgImage;
-    // setState(() {
-    //   selectedCategory = widget.category;
-    // });
+    // Initialize the controllers first
+    topicController = TextEditingController();
+    descriptionController = TextEditingController();
+    if (widget.id != null) {
+      topicController = TextEditingController(text: widget.title);
+      descriptionController = TextEditingController(text: widget.subTitle);
+      selectedCategory = widget.category!;
+      DateTime dateTime = DateTime.parse(widget.timeSlot!);
+      _selectedDateIndex = dates
+          .indexWhere((element) => element['date'] == dateTime.day.toString());
+    }
   }
 
   @override
@@ -469,7 +474,10 @@ class ScheduleCallWrapper extends State<ScheduleCall> {
                           ),
                           ElevatedButton(
                             onPressed: () => {
-                              postEvent()
+                              if (widget.id != null)
+                                updateEvent()
+                              else
+                                postEvent()
                             }, // `null` to make the button disabled
                             style: ElevatedButton.styleFrom(
                               // disabledBackgroundColor: Colors.pink,
@@ -501,6 +509,68 @@ class ScheduleCallWrapper extends State<ScheduleCall> {
         ],
       ),
     );
+  }
+
+  Future<void> updateEvent() async {
+    _inProgress = true;
+
+    String dateString =
+        dates[_selectedDateIndex]['dateTime'] ?? '2024-10-2314:00:00.000';
+    String timeString =
+        time[_selectedTimeIndex]['TimeUI'] ?? '2024-10-2314:00:00.000';
+
+    // Define the date format to parse the input date and time
+    DateFormat dateFormat = DateFormat("MMMM d, yyyy h:mm:ss a");
+    DateFormat timeFormat = DateFormat("h:mm a");
+
+    // Parse the date
+    DateTime parsedDate = dateFormat.parse(dateString);
+
+    // Parse the time separately (for the new time: 2:00 PM)
+    DateTime parsedTime = timeFormat.parse(timeString);
+
+    // Combine the parsed date and the new time (2:00 PM)
+    DateTime finalDateTime = DateTime(
+      parsedDate.year,
+      parsedDate.month,
+      parsedDate.day,
+      parsedTime.hour,
+      parsedTime.minute,
+    );
+    String isoDateTime = finalDateTime.toIso8601String();
+    final payload = {
+      'id': widget.id,
+      "topic": topicController.text,
+      "description": descriptionController.text,
+      "categories": [selectedCategory],
+      "coverImage": selectedProfilePicture?.path ?? 'example.jpg',
+      "eventTimeSlot": isoDateTime,
+      "duration": 90,
+      "advisorId": "advisor-123",
+      "status": "live",
+      "totalLiveCount": 100,
+      "broadcasterLive": "https://example.com/live/broadcast",
+      "viewerLink": "https://example.com/viewerLink",
+      "100msEventId": "100ms-event-123",
+      "token": "token-123"
+    };
+    print('UpdateUpdateUpdateUpdateUpdateUpdate $payload');
+    AppState.blockNavigation();
+    final resp = await _advisorRepo.putEvent(payload);
+    log("respppppp=====> $resp");
+    if (resp.isSuccess()) {
+      BaseUtil.showPositiveAlert(locale.eventUpdateSuccess, 'Success');
+    } else {
+      // _logger.e(withdrawalTxn.errorMessage);
+      BaseUtil.showNegativeAlert(
+        locale.withDrawalFailed,
+        resp.errorMessage,
+      );
+    }
+
+    AppState.unblockNavigation();
+    _inProgress = false;
+    // notifyListeners();
   }
 
   Future<void> postEvent() async {
