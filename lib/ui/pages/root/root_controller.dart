@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/ui/pages/advisor/advisor.dart';
 import 'package:felloapp/feature/expert/expert_root.dart';
@@ -11,6 +12,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/support-new/support_new.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -114,15 +116,17 @@ class RootController {
           () => RootController.supportNavBarItem,
         );
         break;
-      // case "SH":
-      //   navItems.putIfAbsent(
-      //     const ShortsVideoPage(),
-      //     () => RootController.shortsNavBarItem,
-      //   );
-      //   break;
       case "SH":
-        navItems.putIfAbsent(
-            const AdvisorPage(), () => RootController.advisortNavBarItem);
+        final UserService _userService = locator<UserService>();
+        if (_userService.baseUser?.isAdvisor ?? false) {
+          navItems.putIfAbsent(
+              const AdvisorPage(), () => RootController.advisortNavBarItem);
+        } else {
+          navItems.putIfAbsent(
+            const ShortsVideoPage(),
+            () => RootController.shortsNavBarItem,
+          );
+        }
         break;
       default:
     }

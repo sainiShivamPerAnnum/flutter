@@ -108,7 +108,7 @@ class ScheduleCallWrapper extends State<ScheduleCall> {
     topicController = TextEditingController(text: widget.title);
     descriptionController = TextEditingController(text: widget.subTitle);
     selectedCategory = widget.category!;
-    selectedProfilePicture = widget.bgImage;
+    // selectedProfilePicture = widget.bgImage;
     // setState(() {
     //   selectedCategory = widget.category;
     // });
