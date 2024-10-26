@@ -1,0 +1,46 @@
+import 'dart:async';
+
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:felloapp/feature/support-new/support_components/find_us.dart';
+import 'package:felloapp/feature/support-new/support_components/help.dart';
+import 'package:felloapp/feature/support-new/support_components/learn.dart';
+import 'package:felloapp/feature/support-new/support_components/what_new.dart';
+import 'package:felloapp/util/dynamic_ui_utils.dart';
+import 'package:flutter/material.dart';
+
+part 'support_event.dart';
+part 'support_state.dart';
+
+class SupportBloc extends Bloc<SupportEvent, SupportState> {
+  SupportBloc() : super(const LoadingSupportData()) {
+    on<LoadSupportData>(_onLoadHomeData);
+  }
+  FutureOr<void> _onLoadHomeData(
+    LoadSupportData event,
+    Emitter<SupportState> emitter,
+  ) async {
+    emitter(const LoadingSupportData());
+    List<Widget> saveViewItems = [];
+    for (final key in DynamicUiUtils.support) {
+      switch (key) {
+        case "LV":
+          saveViewItems.add(
+            const Learn(),
+          );
+          break;
+        case "QL":
+          saveViewItems.add(const WhatNew());
+          break;
+
+        case "BL":
+          saveViewItems.add(const HelpWidget());
+          break;
+        case "SN":
+          saveViewItems.add(const FindUs());
+          break;
+      }
+    }
+    emitter(SupportData(supportItems: saveViewItems));
+  }
+}

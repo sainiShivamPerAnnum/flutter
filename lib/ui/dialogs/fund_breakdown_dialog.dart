@@ -38,7 +38,9 @@ class FundBreakdownDialog extends StatelessWidget {
                 title:
                     Text("Fello Balance", style: TextStyles.rajdhaniSB.body1),
                 trailing: Text(
-                  "₹ ${BaseUtil.digitPrecision(portfolio.absolute.balance, 2, false).toString()}",
+                  BaseUtil.formatIndianRupees(num.parse(BaseUtil.digitPrecision(
+                          portfolio.absolute.balance, 2, false)
+                      .toString())),
                   style: TextStyles.sourceSansB.body1,
                 ),
               ),
@@ -47,7 +49,7 @@ class FundBreakdownDialog extends StatelessWidget {
                 title: Text("Invested Balance",
                     style: TextStyles.rajdhaniSB.body1),
                 trailing: Text(
-                  "₹ ${BaseUtil.digitPrecision(portfolio.absolute.principle, 2, false).toString()}",
+                  "₹ ${BaseUtil.formatIndianRupees(num.parse(BaseUtil.digitPrecision(portfolio.absolute.principle, 2, false).toString()))}",
                   style: TextStyles.sourceSansB.body1,
                 ),
               ),
@@ -81,7 +83,10 @@ class FundBreakdownDialog extends StatelessWidget {
                                   : Colors.red),
                         ),
                         Text(
-                          "₹ ${BaseUtil.digitPrecision(portfolio.absolute.absGains, 2, false).toString()}",
+                          BaseUtil.formatIndianRupees(num.parse(
+                              BaseUtil.digitPrecision(
+                                      portfolio.absolute.absGains, 2, false)
+                                  .toString())),
                           style: TextStyles.sourceSansSB.body2,
                         )
                       ],
@@ -92,23 +97,29 @@ class FundBreakdownDialog extends StatelessWidget {
                   ),
                   BreakdownInfoTile(
                     title: "Returns in Fello Flo",
-                    value:
-                        "₹ ${BaseUtil.digitPrecision(portfolio.flo.absGain, 2, false).toString()}",
+                    value: BaseUtil.formatIndianRupees(num.parse(
+                        BaseUtil.digitPrecision(portfolio.flo.absGain, 2, false)
+                            .toString())),
                   ),
                   BreakdownInfoTile(
                     title: "Returns in Digital Gold",
-                    value:
-                        "₹ ${BaseUtil.digitPrecision(portfolio.augmont.absGains, 2, false).toString()}",
+                    value: BaseUtil.formatIndianRupees(num.parse(
+                        BaseUtil.digitPrecision(
+                                portfolio.augmont.absGains, 2, false)
+                            .toString())),
                   ),
                   BreakdownInfoTile(
                     title: "Current Rewards",
-                    value:
-                        "₹ ${BaseUtil.digitPrecision(portfolio.rewards, 2, false).toString()}",
+                    value: BaseUtil.formatIndianRupees(num.parse(
+                        BaseUtil.digitPrecision(portfolio.rewards, 2, false)
+                            .toString())),
                   ),
                   BreakdownInfoTile(
                     title: "Total Rewards",
-                    value:
-                        "₹ ${BaseUtil.digitPrecision(portfolio.lifeTimeRewards, 2, false).toString()}",
+                    value: BaseUtil.formatIndianRupees(num.parse(
+                        BaseUtil.digitPrecision(
+                                portfolio.lifeTimeRewards, 2, false)
+                            .toString())),
                   ),
                 ]),
               )

@@ -8,7 +8,6 @@ import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/upcoming_bookings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';

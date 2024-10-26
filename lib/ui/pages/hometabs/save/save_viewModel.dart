@@ -61,7 +61,7 @@ import '../../../../core/model/quick_links_model.dart';
 import 'save_components/instant_save_card.dart';
 import 'save_components/quiz_section.dart';
 
-class SaveViewModel extends BaseViewModel {
+class SaveViewModel extends ChangeNotifier {
   S? locale;
 
   SaveViewModel({this.locale}) {

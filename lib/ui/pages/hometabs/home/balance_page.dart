@@ -48,7 +48,7 @@ class FelloBalanceScreen extends StatelessWidget {
       showBackgroundGrid: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-                surfaceTintColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         title: Text(
           'Fello Balance',
           style: TextStyles.rajdhaniSB.body1.colour(UiConstants.kTextColor),
@@ -118,7 +118,7 @@ class FelloBalanceScreen extends StatelessWidget {
                 children: [
                   Selector<UserService, Portfolio>(
                     builder: (_, portfolio, child) => Text(
-                      "₹${getTotalBalance(portfolio)}",
+                      BaseUtil.formatIndianRupees(getTotalBalance(portfolio)),
                       style: TextStyles.sourceSansSB.title3.colour(
                         UiConstants.kTextColor,
                       ),
@@ -413,7 +413,15 @@ class FelloBalanceScreen extends StatelessWidget {
                             Selector<UserService,
                                 Tuple2<Portfolio, UserFundWallet?>>(
                               builder: (_, value, child) => Text(
-                                getFirstValue(value.item1, value.item2, title),
+                                BaseUtil.formatIndianRupees(
+                                  num.parse(
+                                    getFirstValue(
+                                      value.item1,
+                                      value.item2,
+                                      title,
+                                    ),
+                                  ),
+                                ),
                                 style: TextStyles.sourceSansB.body0
                                     .colour(Colors.white),
                               ),
@@ -551,11 +559,11 @@ class FelloBalanceScreen extends StatelessWidget {
   ) {
     switch (title) {
       case "Fello Flo":
-        return "₹${BaseUtil.digitPrecision(portfolio?.flo.balance ?? 0.0, 2)}";
+        return "${BaseUtil.digitPrecision(portfolio?.flo.balance ?? 0.0, 2)}";
       case "Digital Gold":
-        return "₹${BaseUtil.digitPrecision(portfolio?.augmont.balance ?? 0, 2)}";
+        return "${BaseUtil.digitPrecision(portfolio?.augmont.balance ?? 0, 2)}";
       case "Fello Rewards":
-        return "₹${wallet?.unclaimedBalance ?? 0}";
+        return "${wallet?.unclaimedBalance ?? 0}";
       default:
         return "-";
     }

@@ -1,11 +1,12 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/feature/advisor/advisor_components/schedule.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/advisor/advisor_components/schedule.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 class UpcomingLiveCardWidget extends StatelessWidget {
@@ -21,40 +22,41 @@ class UpcomingLiveCardWidget extends StatelessWidget {
   final String? timeSlot;
 
   UpcomingLiveCardWidget({
-    this.id,
     required this.status,
     required this.title,
     required this.subTitle,
     required this.author,
     required this.category,
     required this.bgImage,
+    this.id,
     this.liveCount,
     this.duration,
     this.timeSlot,
+    super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
+      width: SizeConfig.padding300,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Color(0xff2D3135),
+        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+        color: UiConstants.greyVarient,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Image with play button overlay
           Stack(
             alignment: AlignmentDirectional.center,
             children: [
               Container(
                 width: double.infinity,
-                height: 150,
+                height: SizeConfig.padding152,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10)),
+                    topLeft: Radius.circular(SizeConfig.roundness8),
+                    topRight: Radius.circular(SizeConfig.roundness8),
+                  ),
                   image: DecorationImage(
                     image: NetworkImage(bgImage),
                     fit: BoxFit.cover,
@@ -63,143 +65,159 @@ class UpcomingLiveCardWidget extends StatelessWidget {
               ),
               if (status == 'live')
                 Positioned(
-                  bottom: 10,
-                  left: 10,
+                  bottom: SizeConfig.padding10,
+                  left: SizeConfig.padding10,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding8,
+                      vertical: SizeConfig.padding4,
+                    ),
                     decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(4),
+                      color: UiConstants.kred1,
+                      borderRadius: BorderRadius.circular(
+                        SizeConfig.roundness5,
+                      ),
                     ),
                     child: Text(
                       'LIVE',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
+                      style: TextStyles.sourceSansSB.body4.colour(
+                        UiConstants.titleTextColor,
+                      ),
                     ),
                   ),
                 ),
               if (status == 'upcoming')
                 Positioned(
-                  bottom: 10,
-                  left: 10,
+                  bottom: SizeConfig.padding10,
+                  left: SizeConfig.padding10,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding8,
+                      vertical: SizeConfig.padding4,
+                    ),
                     decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(4),
+                      color: UiConstants.kTextColor4,
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness5),
                     ),
                     child: Text(
-                      'STARTS IN 03:59',
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600),
+                      'STARTS IN ${_calculateStartTimeDifference()}',
+                      style: TextStyles.sourceSansSB.body4.colour(
+                        UiConstants.titleTextColor,
+                      ),
                     ),
                   ),
                 ),
               Positioned(
-                bottom: 10,
-                right: 10,
+                bottom: SizeConfig.padding10,
+                right: SizeConfig.padding10,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding8,
+                    vertical: SizeConfig.padding4,
+                  ),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(4),
+                    color: UiConstants.kTextColor,
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                   ),
                   child: Text(
                     'Join Live',
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600),
+                    style: TextStyles.sourceSansSB.body4
+                        .colour(UiConstants.kTextColor4),
                   ),
                 ),
               ),
-              if (status == 'live')
-                Align(
-                  alignment: Alignment.center,
-                  child: Icon(Icons.play_circle_filled,
-                      color: Colors.white, size: 50),
-                ),
             ],
           ),
           Padding(
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.all(SizeConfig.padding16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: EdgeInsets.all(4),
+                  padding: EdgeInsets.all(SizeConfig.padding4),
                   decoration: BoxDecoration(
-                    color: Color(0x6601656B),
+                    color: UiConstants.kblue2.withOpacity(.4),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     category.toUpperCase(),
-                    style: TextStyle(
-                        color: Color(0xFF1ABCC5),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12),
+                    style: TextStyles.sourceSansSB.body4.colour(
+                      UiConstants.kblue1,
+                    ),
                   ),
                 ),
-                SizedBox(height: 5),
-
+                SizedBox(height: SizeConfig.padding4),
                 // Title
                 Text(
                   title,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
+                  style: TextStyles.sourceSansSB.body2.colour(
+                    UiConstants.kTextColor,
+                  ),
                 ),
-                SizedBox(height: 5),
+                SizedBox(height: SizeConfig.padding4),
 
-                // Subtitle (time started or duration)
                 Text(
                   subTitle,
-                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                  style: TextStyles.sourceSans.body4.colour(
+                    UiConstants.kTextColor5,
+                  ),
                 ),
-                SizedBox(height: 5),
+                SizedBox(height: SizeConfig.padding20),
+
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
-                      child: Text(
-                        author,
-                        style: TextStyle(color: Colors.white, fontSize: 12),
+                    Text(
+                      author,
+                      style: TextStyles.sourceSans.body4.colour(
+                        UiConstants.kTextColor,
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () => {navigateToViewAllBlogs()},
+                      onPressed: navigateToEdit,
                       style: ElevatedButton.styleFrom(
                         // primary: Colors.white,
-                        backgroundColor: Color(0xFF232326),
+                        backgroundColor: UiConstants.kBackgroundColor,
                         minimumSize: Size.zero,
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding8,
+                          vertical: SizeConfig.padding6,
+                        ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness5),
                         ),
                       ),
                       child: Text(
                         'Edit',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: TextStyles.sourceSansSB.body4,
                       ),
                     ),
                   ],
-                )
-                // Author's name
+                ),
               ],
             ),
-          )
-          // Category tag
+          ),
         ],
       ),
     );
+  }
+
+  String _calculateStartTimeDifference() {
+    if ('startTime' == null) return '';
+    final now = DateTime.now();
+    final start = DateTime.parse('3:15');
+    final difference = start.difference(now);
+    return formatDuration(difference);
+  }
+
+  String formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
   Color getCategoryColor(String category) {
@@ -217,24 +235,25 @@ class UpcomingLiveCardWidget extends StatelessWidget {
 
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
-  void navigateToViewAllBlogs() {
+  void navigateToEdit() {
     Haptic.vibrate();
     _analyticsService.track(eventName: AnalyticsEvents.allblogsview);
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: ScheduleCallViewConfig,
-      widget: ScheduleCall(
-          id: id,
-          status: status, // "live"
-          title: title, // "Investment Webinar"
-          subTitle:
-              subTitle, // "A comprehensive webinar on investment strategies."
-          author: author, // "Not coming from backend"
-          category: category, // "Finance"
-          bgImage: bgImage, // "https://example.com/image.jpg"
-          liveCount: liveCount, // 3
-          duration: duration,
-          timeSlot: timeSlot),
+      widget: ScheduleCallWrapper(
+        id: id,
+        status: status, // "live"
+        title: title, // "Investment Webinar"
+        subTitle:
+            subTitle, // "A comprehensive webinar on investment strategies."
+        author: author, // "Not coming from backend"
+        category: category, // "Finance"
+        bgImage: bgImage, // "https://example.com/image.jpg"
+        liveCount: liveCount, // 3
+        duration: duration,
+        timeSlot: timeSlot,
+      ),
     );
   }
 }

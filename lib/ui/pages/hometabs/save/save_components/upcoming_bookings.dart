@@ -27,6 +27,7 @@ class UpcomingBookingsComponent extends StatelessWidget {
       builder: (_, upcomingBookings, __) {
         return upcomingBookings.isNotEmpty
             ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                  const TitleSubtitleContainer(
                     title: "Your upcoming calls",

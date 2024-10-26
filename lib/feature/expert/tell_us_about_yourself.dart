@@ -3,6 +3,7 @@ import 'package:felloapp/feature/expert/bloc/tell_us_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -87,13 +88,11 @@ class _TellUsAboutYourselfScreenState
               _buildHeading('What are your Expectations from this Call?'),
               SizedBox(height: SizeConfig.padding12),
               _buildTextField("Start typing here", expectationsController),
-              const Spacer(),
-              _buildBottomButtons(context),
-              SizedBox(height: SizeConfig.padding24),
             ],
           ),
         ),
       ),
+      bottomNavigationBar: _buildBottomButtons(context),
     );
   }
 
@@ -186,51 +185,58 @@ class _TellUsAboutYourselfScreenState
   }
 
   Widget _buildBottomButtons(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: ElevatedButton(
-            onPressed: () {
-              AppState.backButtonDispatcher!.didPopRoute();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: UiConstants.greyVarient,
-              padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.padding16,
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.padding20,
+      ).copyWith(
+        bottom: SizeConfig.padding20,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                AppState.backButtonDispatcher!.didPopRoute();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: UiConstants.greyVarient,
+                padding: EdgeInsets.symmetric(
+                  vertical: SizeConfig.padding16,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+                ),
               ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+              child: Text(
+                'Skip',
+                style: TextStyles.sourceSans.body3,
               ),
-            ),
-            child: Text(
-              'Skip',
-              style: TextStyles.sourceSans.body3,
             ),
           ),
-        ),
-        SizedBox(width: SizeConfig.padding12),
-        Expanded(
-          child: ElevatedButton(
-            onPressed: () {
-              _submitForm(context);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: UiConstants.kTextColor,
-              padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.padding16,
+          SizedBox(width: SizeConfig.padding12),
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                _submitForm(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: UiConstants.kTextColor,
+                padding: EdgeInsets.symmetric(
+                  vertical: SizeConfig.padding16,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+                ),
               ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+              child: Text(
+                'Confirm',
+                style:
+                    TextStyles.sourceSans.body3.colour(UiConstants.kTextColor4),
               ),
-            ),
-            child: Text(
-              'Confirm',
-              style:
-                  TextStyles.sourceSans.body3.colour(UiConstants.kTextColor4),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

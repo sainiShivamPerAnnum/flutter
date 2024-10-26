@@ -76,7 +76,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/elements/faq_card/faq_card_vm.dart';
-import 'package:felloapp/ui/pages/advisor/advisor_viewModel.dart';
 import 'package:felloapp/ui/pages/asset_prefs/asset_pref_vm.dart';
 import 'package:felloapp/ui/pages/campaigns/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
@@ -113,7 +112,6 @@ import 'package:felloapp/ui/pages/rewards/multiple_scratch_cards/multiple_scratc
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
-import 'package:felloapp/ui/pages/support-new/support_viewModel.dart';
 import 'package:felloapp/ui/pages/support/faq/faq_page_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/bank_details/bank_details_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_vm.dart';
@@ -257,12 +255,6 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(SaveViewModel.new);
   locator.registerFactory(MyAccountVM.new);
   locator.registerFactory(JourneyPageViewModel.new);
-
-  ///Support Tab
-  locator.registerFactory(SupportViewModel.new);
-
-  ///Advisor Tab
-  locator.registerFactory(AdvisorViewModel.new);
 
   /// VIEW MODELS
   locator.registerFactory(TransactionsHistoryViewModel.new);

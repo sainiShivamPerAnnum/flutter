@@ -69,7 +69,7 @@ class PortfolioCard extends StatelessWidget {
               children: [
                 Selector<UserService, Portfolio>(
                   builder: (_, portfolio, child) => Text(
-                    "₹${getTotalBalance(portfolio)}",
+                    BaseUtil.formatIndianRupees(getTotalBalance(portfolio)),
                     style: TextStyles.sourceSansSB.title3,
                   ),
                   selector: (_, userService) => userService.userPortfolio,

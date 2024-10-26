@@ -14,6 +14,7 @@ import 'package:felloapp/ui/elements/dev_rel/flavor_banners.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/constants.dart';
@@ -52,55 +53,46 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BaseScaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: UiConstants.bg,
-      body: Stack(
-        children: [
-          const NewSquareBackground(),
-          Column(
-            children: [
-              const FAppBar(
-                 title: "Tambola",
-                showHelpButton: true,
-                type: FaqsType.tambola,
-                showCoinBar: false,
-                showAvatar: false,
-                leadingPadding: false,
-              ),
-              BaseView<TambolaHomeTicketsViewModel>(
-                  onModelReady: (model) => model.init(),
-                  onModelDispose: (model) => model.dispose(),
-                  builder: (context, model, child) {
-                    return model.state == ViewState.Busy
-                        ? const Center(
-                            child: FullScreenLoader(),
-                          )
-                        : Expanded(
-                            child: ListView(
-                              padding: EdgeInsets.only(
-                                top: SizeConfig.padding16,
-                                bottom: SizeConfig.navBarHeight,
-                              ),
-                              controller: RootController.controller,
-                              children: const [
-                                TambolaRewardLottieStrip(),
-                                TicketsPicksWidget(),
-                                TicketSection(),
-                                NextWeekTicketInfo(),
-                                TicketsOffersSection(),
-                                TicketMultiplierOptionsWidget(),
-                                TicketsRewardSection(),
-                                TambolaLeaderboardView(),
-                                TermsAndConditions(url: Constants.tambolatnc),
-                              ],
-                            ),
-                          );
-                  }),
-            ],
-          ),
-        ],
+      showBackgroundGrid: true,
+      appBar: const FAppBar(
+        title: "Tambola",
+        showHelpButton: true,
+        type: FaqsType.tambola,
+        showCoinBar: false,
+        showAvatar: false,
+        leadingPadding: false,
       ),
+      body: BaseView<TambolaHomeTicketsViewModel>(
+          onModelReady: (model) => model.init(),
+          onModelDispose: (model) => model.dispose(),
+          builder: (context, model, child) {
+            return model.state == ViewState.Busy
+                ? const Center(
+                    child: FullScreenLoader(),
+                  )
+                : Expanded(
+                    child: ListView(
+                      padding: EdgeInsets.only(
+                        top: SizeConfig.padding16,
+                        bottom: SizeConfig.navBarHeight,
+                      ),
+                      controller: RootController.controller,
+                      children: const [
+                        TambolaRewardLottieStrip(),
+                        TicketsPicksWidget(),
+                        TicketSection(),
+                        NextWeekTicketInfo(),
+                        TicketsOffersSection(),
+                        TicketMultiplierOptionsWidget(),
+                        TicketsRewardSection(),
+                        TambolaLeaderboardView(),
+                        TermsAndConditions(url: Constants.tambolatnc),
+                      ],
+                    ),
+                  );
+          }),
     );
   }
 }

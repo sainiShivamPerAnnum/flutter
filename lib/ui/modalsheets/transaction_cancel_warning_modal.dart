@@ -34,6 +34,7 @@ class TransactionCancelBottomSheet extends StatelessWidget {
         return AppState.backButtonDispatcher!.didPopRoute();
       },
       child: Container(
+        width: SizeConfig.screenWidth,
         padding: EdgeInsets.symmetric(vertical: SizeConfig.padding24),
         height: SizeConfig.screenHeight! * 0.55,
         child: Column(

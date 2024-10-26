@@ -22,6 +22,7 @@ import 'package:felloapp/navigator/router/route_parser.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -78,6 +79,8 @@ class MyApp extends HookWidget {
           Provider(create: (_) => locator<TransactionBloc>()),
           Provider(create: (_) => locator<MyFundsBloc>()),
           Provider(create: (_) => locator<SIPTransactionBloc>()),
+          ChangeNotifierProvider(
+              create: (_) => locator<SaveViewModel>(),),
           ChangeNotifierProvider(create: (_) => locator<ConnectivityService>()),
           ChangeNotifierProvider(create: (_) => locator<DBModel>()),
           ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),

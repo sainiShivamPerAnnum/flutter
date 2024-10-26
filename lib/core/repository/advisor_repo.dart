@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/advisor/advisor_details.dart';
+import 'package:felloapp/core/model/advisor/advisor_events.dart';
+import 'package:felloapp/core/model/advisor/advisor_upcoming_call.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -18,7 +20,6 @@ class AdvisorRepo extends BaseRepo {
     Object payload,
   ) async {
     try {
-      final uid = userService.baseUser!.uid;
       final Map<String, dynamic> eventPayload = payload as Map<String, dynamic>;
 
       final response = await APIService.instance.putData(
@@ -43,7 +44,7 @@ class AdvisorRepo extends BaseRepo {
               "https://example.com/default-viewerLink",
           "100msEventId":
               eventPayload['100msEventId'] ?? "100ms-default-event-id",
-          "token": eventPayload['token'] ?? "default-token"
+          "token": eventPayload['token'] ?? "default-token",
         },
         cBaseUrl: baseUrl,
         apiName: '$_advisor/event',
@@ -66,11 +67,10 @@ class AdvisorRepo extends BaseRepo {
     Object payload,
   ) async {
     try {
-      final uid = userService.baseUser!.uid;
       final Map<String, dynamic> eventPayload = payload as Map<String, dynamic>;
 
       final response = await APIService.instance.postData(
-        ApiPath.createEvent(),
+        ApiPath.events,
         body: {
           "id": "event-123",
           "topic": eventPayload['topic'],
@@ -111,66 +111,71 @@ class AdvisorRepo extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<dynamic>> getEvents(
-    Object payload,
-  ) async {
+  Future<ApiResponse<List<AdvisorEvents>>> getEvents() async {
     try {
-      final uid = userService.baseUser!.uid;
-      final Map<String, dynamic> eventPayload = payload as Map<String, dynamic>;
-
+      final uid = userService.baseUser!.advisorId;
+      final params = {"advisorId": uid};
       final response = await APIService.instance.getData(
-        ApiPath.createEvent(),
-        queryParams: eventPayload,
+        ApiPath.events,
+        queryParams: params,
         cBaseUrl: baseUrl,
-        apiName: '$_advisor/event',
+        apiName: '$_advisor/getEvents',
       );
-
-      final data = response['data'];
-      return ApiResponse(model: data, code: 200);
+      final responseData = response['data'];
+      final List<AdvisorEvents> eventsData = (responseData as List)
+          .map(
+            (item) => AdvisorEvents.fromJson(
+              item,
+            ),
+          )
+          .toList();
+      return ApiResponse(model: eventsData, code: 200);
     } catch (e) {
       logger.e(e);
       return ApiResponse.withError(e.toString(), 400);
     }
   }
 
-  Future<ApiResponse<dynamic>> getUpcomingCalls(
-    Object payload,
-  ) async {
+  Future<ApiResponse<List<AdvisorCall>>> getUpcomingCalls() async {
     try {
-      final uid = userService.baseUser!.uid;
-      final Map<String, dynamic> eventPayload = payload as Map<String, dynamic>;
-
+      final uid = userService.baseUser!.advisorId;
       final response = await APIService.instance.getData(
-        ApiPath.getUpcomingAdvisorBooking(eventPayload['advisorId']),
-        // queryParams: eventPayload,
+        ApiPath.getUpcomingAdvisorBooking(uid),
         cBaseUrl: baseUrl,
-        apiName: '$_advisor/event',
+        apiName: '$_advisor/getUpcomingCalls',
       );
-
       final data = response['data'];
-      return ApiResponse(model: data, code: 200);
+      final List<AdvisorCall> responseData = (data as List)
+          .map(
+            (item) => AdvisorCall.fromJson(
+              item,
+            ),
+          )
+          .toList();
+      return ApiResponse(model: responseData, code: 200);
     } catch (e) {
       logger.e(e);
       return ApiResponse.withError(e.toString(), 400);
     }
   }
 
-  Future<ApiResponse<dynamic>> getPastCalls(
-    Object payload,
-  ) async {
+  Future<ApiResponse<List<AdvisorCall>>> getPastCalls() async {
     try {
-      final uid = userService.baseUser!.uid;
-      final Map<String, dynamic> eventPayload = payload as Map<String, dynamic>;
-
+      final uid = userService.baseUser!.advisorId;
       final response = await APIService.instance.getData(
-        ApiPath.getPastAdvisorBooking(eventPayload['advisorId']),
-        // queryParams: eventPayload,
+        ApiPath.getPastAdvisorBooking(uid),
         cBaseUrl: baseUrl,
-        apiName: '$_advisor/event',
+        apiName: '$_advisor/getPastCalls',
       );
-
       final data = response['data'];
-      return ApiResponse(model: data, code: 200);
+      final List<AdvisorCall> responseData = (data as List)
+          .map(
+            (item) => AdvisorCall.fromJson(
+              item,
+            ),
+          )
+          .toList();
+      return ApiResponse(model: responseData, code: 200);
     } catch (e) {
       logger.e(e);
       return ApiResponse.withError(e.toString(), 400);
