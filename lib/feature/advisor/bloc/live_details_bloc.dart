@@ -119,52 +119,102 @@ class ScheduleLiveBloc extends Bloc<ScheduleCallEvent, ScheduleCallState> {
     event,
     Emitter<ScheduleCallState> emit,
   ) async {
-    emit(ScheduleCallLoading());
     final currentState = state as ScheduleCallLoaded;
-
+    emit(ScheduleCallLoading());
     try {
-      DateTime selectedDate = DateTime.parse(
-        currentState.dates[currentState.selectedDateIndex]['dateTime']!,
-      );
-      DateTime selectedTime = DateFormat("h:mm a")
-          .parse(currentState.times[currentState.selectedTimeIndex]['TimeUI']!);
-      DateTime eventDateTime = DateTime(
-        selectedDate.year,
-        selectedDate.month,
-        selectedDate.day,
-        selectedTime.hour,
-        selectedTime.minute,
-      );
+      String date =
+          currentState.dates[currentState.selectedDateIndex]['dateTime']!;
+      DateTime parsedDateTime =
+          DateFormat("MMMM d, yyyy hh:mm:ss a").parse(date);
+      String dateOnlyString = DateFormat("MMMM d, yyyy").format(parsedDateTime);
+      String time =
+          currentState.times[currentState.selectedTimeIndex]['TimeUI']!;
+      String dateTimeString = "$dateOnlyString $time";
+      DateTime dateTime =
+          DateFormat("MMMM d, yyyy hh:mm a").parse(dateTimeString);
+      if (event is UpdateEvent) {
+        String? predignedUrl;
+        String? uploadUrl;
+        if (currentState.profilePicture != null) {
+          final res = await _advisorRepo.getPresignedUrl(
+            format: currentState.profilePicture!.name.split('.').last,
+          );
+          predignedUrl = res.model!;
+        }
+        if (predignedUrl != null) {
+          uploadUrl = predignedUrl.split('?')[0];
+          await _advisorRepo.putToPresignedUrl(
+            url: predignedUrl,
+            file: currentState.profilePicture!,
+          );
+        }
+        final payload = {};
 
-      final payload = {
-        "id": event is UpdateEvent ? event.id : "event-123",
-        "topic": event.topic,
-        "description": event.description,
-        "categories": [currentState.selectedCategory],
-        "coverImage": currentState.profilePicture?.path ?? 'example.jpg',
-        "eventTimeSlot": eventDateTime.toIso8601String(),
-        "duration": 90,
-        "advisorId": "advisor-123",
-        "status": "live",
-        "totalLiveCount": 100,
-        "broadcasterLive": "https://example.com/live/broadcast",
-        "viewerLink": "https://example.com/viewerLink",
-        "100msEventId": "100ms-event-123",
-        "token": "token-123",
-      };
-
-      final response = event is UpdateEvent
-          ? await _advisorRepo.putEvent(payload)
-          : await _advisorRepo.saveEvent(payload);
-
-      if (response.isSuccess()) {
-        emit(const ScheduleCallSuccess('Event scheduled successfully!'));
+        if (event.topic.isNotEmpty) {
+          payload["topic"] = event.topic;
+        }
+        if (event.description.isNotEmpty) {
+          payload["description"] = event.description;
+        }
+        if (currentState.selectedCategory != null) {
+          payload["categories"] = [currentState.selectedCategory];
+        }
+        if (uploadUrl != null && uploadUrl.isNotEmpty) {
+          payload["coverImage"] = uploadUrl;
+        }
+        if (dateTime != null) {
+          payload["eventTimeSlot"] = dateTime.toString();
+        }
+        payload["duration"] = 60;
+        final response = await _advisorRepo.putEvent(payload, event.id);
+        if (response.isSuccess()) {
+          emit(
+            ScheduleCallSuccess(
+              'Event scheduled successfully!',
+              dateTime.toString(),
+            ),
+          );
+        } else {
+          emit(
+            ScheduleCallFailure(
+              response.errorMessage ?? 'Failed to schedule event',
+            ),
+          );
+        }
       } else {
-        emit(
-          ScheduleCallFailure(
-            response.errorMessage ?? 'Failed to schedule event',
-          ),
+        final predignedUrl = await _advisorRepo.getPresignedUrl(
+          format: currentState.profilePicture!.name.split('.').last,
         );
+        if (predignedUrl.model != null) {
+          final uploadUrl = predignedUrl.model!.split('?')[0];
+          await _advisorRepo.putToPresignedUrl(
+            url: predignedUrl.model!,
+            file: currentState.profilePicture!,
+          );
+          final payload = {
+            "topic": event.topic,
+            "description": event.description,
+            "categories": [currentState.selectedCategory],
+            "coverImage": uploadUrl,
+            "eventTimeSlot": dateTime.toString(),
+            "duration": 60,
+          };
+          final response = await _advisorRepo.saveEvent(payload);
+          if (response.isSuccess()) {
+            emit(
+              ScheduleCallSuccess(
+                'Event scheduled successfully!',
+                dateTime.toString(),
+              ),
+            );
+          } else {
+            emit(
+              ScheduleCallFailure(
+                response.errorMessage ?? 'Failed to schedule event',
+              ),
+            );
+          }
+        }
       }
     } catch (error) {
       emit(ScheduleCallFailure(error.toString()));
@@ -178,7 +228,7 @@ class ScheduleLiveBloc extends Bloc<ScheduleCallEvent, ScheduleCallState> {
     final DateFormat dateFormat =
         DateFormat('d'); // Format for day of the month (e.g., 12, 13)
     final DateFormat dateTimeFormat = DateFormat();
-    for (int i = 0; i < numberOfDays; i++) {
+    for (int i = 1; i < numberOfDays + 1; i++) {
       DateTime currentDate = DateTime.now().add(Duration(days: i));
       dates.add({
         'day': dayFormat.format(currentDate), // 'Thu', 'Fri', etc.

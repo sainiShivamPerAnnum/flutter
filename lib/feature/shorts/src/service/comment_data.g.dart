@@ -13,6 +13,8 @@ CommentData _$CommentDataFromJson(Map<String, dynamic> json) => CommentData(
       userId: json['userId'] as String,
       comment: json['comment'] as String,
       createdAt: json['createdAt'] as String,
+      avatarId: json['avatarId'] as String? ?? "AV1",
+      dpUrl: json['dpUrl'] as String? ?? "",
     );
 
 Map<String, dynamic> _$CommentDataToJson(CommentData instance) =>
@@ -23,4 +25,6 @@ Map<String, dynamic> _$CommentDataToJson(CommentData instance) =>
       'userId': instance.userId,
       'comment': instance.comment,
       'createdAt': instance.createdAt,
+      'avatarId': instance.avatarId,
+      'dpUrl': instance.dpUrl,
     };

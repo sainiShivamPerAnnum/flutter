@@ -11,6 +11,8 @@ class CommentData {
   final String userId; // The user ID of the commenter
   final String comment; // The actual comment text
   final String createdAt; // Timestamp of when the comment was created
+  final String avatarId;
+  final String dpUrl;
 
   CommentData({
     required this.id,
@@ -19,6 +21,8 @@ class CommentData {
     required this.userId,
     required this.comment,
     required this.createdAt,
+    this.avatarId = "AV1",
+    this.dpUrl = "",
   });
 
   // Factory method to generate CommentData instance from JSON

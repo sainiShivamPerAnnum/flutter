@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/feature/expert/widgets/expert_card.dart';
 import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -8,39 +9,44 @@ import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Experts extends StatelessWidget {
-  final SaveViewModel model;
-  const Experts({required this.model, Key? key}) : super(key: key);
+  const Experts({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return model.topExperts.isNotEmpty
-        ? Column(
-            children: [
-              SizedBox(height: SizeConfig.padding14),
-              GestureDetector(
-                onTap: () {},
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    TitleSubtitleContainer(
-                      title: "Experts",
+    return Selector<SaveViewModel, List<Expert>>(
+      selector: (_, model) => model.topExperts,
+      builder: (_, topExperts, __) {
+        return topExperts.isNotEmpty
+            ? Column(
+                children: [
+                  SizedBox(height: SizeConfig.padding14),
+                  GestureDetector(
+                    onTap: () {},
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        TitleSubtitleContainer(
+                          title: "Experts",
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              TopExperts(model: model),
-            ],
-          )
-        : const SizedBox.shrink();
+                  ),
+                  TopExperts(topExperts: topExperts),
+                ],
+              )
+            : const SizedBox.shrink();
+      },
+    );
   }
 }
 
 class TopExperts extends StatelessWidget {
-  final SaveViewModel model;
-  const TopExperts({required this.model, Key? key}) : super(key: key);
+  final List<Expert> topExperts;
+  const TopExperts({required this.topExperts, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,16 +54,17 @@ class TopExperts extends StatelessWidget {
       padding: EdgeInsets.only(top: SizeConfig.padding10),
       child: Column(
         children: [
-          for (int i = 0; i < model.topExperts.length; i++)
+          for (int i = 0; i < topExperts.length; i++)
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding18)
                   .copyWith(bottom: SizeConfig.padding16),
               child: ExpertCard(
-                expert: model.topExperts[i],
+                expert: topExperts[i],
                 onBookCall: () {
                   BaseUtil.openBookAdvisorSheet(
-                    advisorId: model.topExperts[i].advisorId,
-                    advisorName: model.topExperts[i].name,
+                    advisorId: topExperts[i].advisorId,
+                    advisorName: topExperts[i].name,
+                    isEdit: false,
                   );
                 },
                 onTap: () {
@@ -65,7 +72,7 @@ class TopExperts extends StatelessWidget {
                     page: ExpertDetailsPageConfig,
                     state: PageState.addWidget,
                     widget: ExpertsDetailsView(
-                      advisorID: model.topExperts[i].advisorId,
+                      advisorID: topExperts[i].advisorId,
                     ),
                   );
                 },

@@ -239,7 +239,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(ExpertsRepository.new);
   locator.registerLazySingleton(ShortsRepo.new);
   locator.registerLazySingleton(HMSSDKInteractor.new);
-  locator.registerLazySingleton<MeetingStore>(
+  locator.registerFactory<MeetingStore>(
     () => MeetingStore(hmsSDKInteractor: locator()),
   );
 

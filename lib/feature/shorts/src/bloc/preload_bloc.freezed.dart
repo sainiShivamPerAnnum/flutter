@@ -28,6 +28,10 @@ mixin _$PreloadEvent {
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -42,6 +46,10 @@ mixin _$PreloadEvent {
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -56,6 +64,10 @@ mixin _$PreloadEvent {
     TResult Function(_AddComment value)? addComment,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -127,6 +139,10 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
   }) {
     return getVideosFromApi(this);
   }
@@ -144,6 +160,10 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
   }) {
     return getVideosFromApi?.call(this);
   }
@@ -161,6 +181,10 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult Function(_AddComment value)? addComment,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
     required TResult orElse(),
   }) {
     if (getVideosFromApi != null) {
@@ -222,6 +246,10 @@ class _$SetLoadingImpl implements _SetLoading {
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
   }) {
     return setLoading(this);
   }
@@ -239,6 +267,10 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
   }) {
     return setLoading?.call(this);
   }
@@ -256,6 +288,10 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult Function(_AddComment value)? addComment,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
     required TResult orElse(),
   }) {
     if (setLoading != null) {
@@ -349,6 +385,10 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
   }) {
     return updateUrls(this);
   }
@@ -366,6 +406,10 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
   }) {
     return updateUrls?.call(this);
   }
@@ -383,6 +427,10 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult Function(_AddComment value)? addComment,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
     required TResult orElse(),
   }) {
     if (updateUrls != null) {
@@ -476,6 +524,10 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
   }) {
     return onVideoIndexChanged(this);
   }
@@ -493,6 +545,10 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
   }) {
     return onVideoIndexChanged?.call(this);
   }
@@ -510,6 +566,10 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult Function(_AddComment value)? addComment,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
     required TResult orElse(),
   }) {
     if (onVideoIndexChanged != null) {
@@ -604,6 +664,10 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
   }) {
     return pauseVideoAtIndex(this);
   }
@@ -621,6 +685,10 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
   }) {
     return pauseVideoAtIndex?.call(this);
   }
@@ -638,6 +706,10 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult Function(_AddComment value)? addComment,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
     required TResult orElse(),
   }) {
     if (pauseVideoAtIndex != null) {
@@ -731,6 +803,10 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
   }) {
     return playVideoAtIndex(this);
   }
@@ -748,6 +824,10 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
   }) {
     return playVideoAtIndex?.call(this);
   }
@@ -765,6 +845,10 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult Function(_AddComment value)? addComment,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
     required TResult orElse(),
   }) {
     if (playVideoAtIndex != null) {
@@ -878,6 +962,10 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
   }) {
     return updateConstants(this);
   }
@@ -895,6 +983,10 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
   }) {
     return updateConstants?.call(this);
   }
@@ -912,6 +1004,10 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult Function(_AddComment value)? addComment,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
     required TResult orElse(),
   }) {
     if (updateConstants != null) {
@@ -1017,6 +1113,10 @@ class _$AddCommentImpl implements _AddComment {
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
   }) {
     return addComment(this);
   }
@@ -1034,6 +1134,10 @@ class _$AddCommentImpl implements _AddComment {
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
   }) {
     return addComment?.call(this);
   }
@@ -1051,6 +1155,10 @@ class _$AddCommentImpl implements _AddComment {
     TResult Function(_AddComment value)? addComment,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
     required TResult orElse(),
   }) {
     if (addComment != null) {
@@ -1146,6 +1254,10 @@ class _$LikeVideoImpl implements _LikeVideo {
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
   }) {
     return likeVideo(this);
   }
@@ -1163,6 +1275,10 @@ class _$LikeVideoImpl implements _LikeVideo {
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
   }) {
     return likeVideo?.call(this);
   }
@@ -1180,6 +1296,10 @@ class _$LikeVideoImpl implements _LikeVideo {
     TResult Function(_AddComment value)? addComment,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
     required TResult orElse(),
   }) {
     if (likeVideo != null) {
@@ -1289,6 +1409,10 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
   }) {
     return addCommentToState(this);
   }
@@ -1306,6 +1430,10 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
   }) {
     return addCommentToState?.call(this);
   }
@@ -1323,6 +1451,10 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     TResult Function(_AddComment value)? addComment,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
     required TResult orElse(),
   }) {
     if (addCommentToState != null) {
@@ -1345,8 +1477,504 @@ abstract class _AddCommentToState implements PreloadEvent {
 }
 
 /// @nodoc
+abstract class _$$SwitchToMainReelsImplCopyWith<$Res> {
+  factory _$$SwitchToMainReelsImplCopyWith(_$SwitchToMainReelsImpl value,
+          $Res Function(_$SwitchToMainReelsImpl) then) =
+      __$$SwitchToMainReelsImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$SwitchToMainReelsImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$SwitchToMainReelsImpl>
+    implements _$$SwitchToMainReelsImplCopyWith<$Res> {
+  __$$SwitchToMainReelsImplCopyWithImpl(_$SwitchToMainReelsImpl _value,
+      $Res Function(_$SwitchToMainReelsImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
+  const _$SwitchToMainReelsImpl();
+
+  @override
+  String toString() {
+    return 'PreloadEvent.switchToMainReels()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$SwitchToMainReelsImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_GetVideosFromApi value) getVideosFromApi,
+    required TResult Function(_SetLoading value) setLoading,
+    required TResult Function(_UpdateUrls value) updateUrls,
+    required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
+  }) {
+    return switchToMainReels(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult? Function(_SetLoading value)? setLoading,
+    TResult? Function(_UpdateUrls value)? updateUrls,
+    TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
+  }) {
+    return switchToMainReels?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult Function(_SetLoading value)? setLoading,
+    TResult Function(_UpdateUrls value)? updateUrls,
+    TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
+    required TResult orElse(),
+  }) {
+    if (switchToMainReels != null) {
+      return switchToMainReels(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _SwitchToMainReels implements PreloadEvent {
+  const factory _SwitchToMainReels() = _$SwitchToMainReelsImpl;
+}
+
+/// @nodoc
+abstract class _$$SwitchToProfileReelsImplCopyWith<$Res> {
+  factory _$$SwitchToProfileReelsImplCopyWith(_$SwitchToProfileReelsImpl value,
+          $Res Function(_$SwitchToProfileReelsImpl) then) =
+      __$$SwitchToProfileReelsImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$SwitchToProfileReelsImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$SwitchToProfileReelsImpl>
+    implements _$$SwitchToProfileReelsImplCopyWith<$Res> {
+  __$$SwitchToProfileReelsImplCopyWithImpl(_$SwitchToProfileReelsImpl _value,
+      $Res Function(_$SwitchToProfileReelsImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
+  const _$SwitchToProfileReelsImpl();
+
+  @override
+  String toString() {
+    return 'PreloadEvent.switchToProfileReels()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SwitchToProfileReelsImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_GetVideosFromApi value) getVideosFromApi,
+    required TResult Function(_SetLoading value) setLoading,
+    required TResult Function(_UpdateUrls value) updateUrls,
+    required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
+  }) {
+    return switchToProfileReels(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult? Function(_SetLoading value)? setLoading,
+    TResult? Function(_UpdateUrls value)? updateUrls,
+    TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
+  }) {
+    return switchToProfileReels?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult Function(_SetLoading value)? setLoading,
+    TResult Function(_UpdateUrls value)? updateUrls,
+    TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
+    required TResult orElse(),
+  }) {
+    if (switchToProfileReels != null) {
+      return switchToProfileReels(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _SwitchToProfileReels implements PreloadEvent {
+  const factory _SwitchToProfileReels() = _$SwitchToProfileReelsImpl;
+}
+
+/// @nodoc
+abstract class _$$InitializeAtIndexImplCopyWith<$Res> {
+  factory _$$InitializeAtIndexImplCopyWith(_$InitializeAtIndexImpl value,
+          $Res Function(_$InitializeAtIndexImpl) then) =
+      __$$InitializeAtIndexImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int index});
+}
+
+/// @nodoc
+class __$$InitializeAtIndexImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$InitializeAtIndexImpl>
+    implements _$$InitializeAtIndexImplCopyWith<$Res> {
+  __$$InitializeAtIndexImplCopyWithImpl(_$InitializeAtIndexImpl _value,
+      $Res Function(_$InitializeAtIndexImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? index = null,
+  }) {
+    return _then(_$InitializeAtIndexImpl(
+      index: null == index
+          ? _value.index
+          : index // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$InitializeAtIndexImpl implements _InitializeAtIndex {
+  const _$InitializeAtIndexImpl({required this.index});
+
+  @override
+  final int index;
+
+  @override
+  String toString() {
+    return 'PreloadEvent.initializeAtIndex(index: $index)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$InitializeAtIndexImpl &&
+            (identical(other.index, index) || other.index == index));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, index);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$InitializeAtIndexImplCopyWith<_$InitializeAtIndexImpl> get copyWith =>
+      __$$InitializeAtIndexImplCopyWithImpl<_$InitializeAtIndexImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_GetVideosFromApi value) getVideosFromApi,
+    required TResult Function(_SetLoading value) setLoading,
+    required TResult Function(_UpdateUrls value) updateUrls,
+    required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
+  }) {
+    return initializeAtIndex(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult? Function(_SetLoading value)? setLoading,
+    TResult? Function(_UpdateUrls value)? updateUrls,
+    TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
+  }) {
+    return initializeAtIndex?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult Function(_SetLoading value)? setLoading,
+    TResult Function(_UpdateUrls value)? updateUrls,
+    TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
+    required TResult orElse(),
+  }) {
+    if (initializeAtIndex != null) {
+      return initializeAtIndex(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _InitializeAtIndex implements PreloadEvent {
+  const factory _InitializeAtIndex({required final int index}) =
+      _$InitializeAtIndexImpl;
+
+  int get index;
+  @JsonKey(ignore: true)
+  _$$InitializeAtIndexImplCopyWith<_$InitializeAtIndexImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$UpdateKeyboardStateImplCopyWith<$Res> {
+  factory _$$UpdateKeyboardStateImplCopyWith(_$UpdateKeyboardStateImpl value,
+          $Res Function(_$UpdateKeyboardStateImpl) then) =
+      __$$UpdateKeyboardStateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({bool state});
+}
+
+/// @nodoc
+class __$$UpdateKeyboardStateImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$UpdateKeyboardStateImpl>
+    implements _$$UpdateKeyboardStateImplCopyWith<$Res> {
+  __$$UpdateKeyboardStateImplCopyWithImpl(_$UpdateKeyboardStateImpl _value,
+      $Res Function(_$UpdateKeyboardStateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? state = null,
+  }) {
+    return _then(_$UpdateKeyboardStateImpl(
+      state: null == state
+          ? _value.state
+          : state // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
+  const _$UpdateKeyboardStateImpl({required this.state});
+
+  @override
+  final bool state;
+
+  @override
+  String toString() {
+    return 'PreloadEvent.updateKeyboardState(state: $state)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UpdateKeyboardStateImpl &&
+            (identical(other.state, state) || other.state == state));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, state);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UpdateKeyboardStateImplCopyWith<_$UpdateKeyboardStateImpl> get copyWith =>
+      __$$UpdateKeyboardStateImplCopyWithImpl<_$UpdateKeyboardStateImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_GetVideosFromApi value) getVideosFromApi,
+    required TResult Function(_SetLoading value) setLoading,
+    required TResult Function(_UpdateUrls value) updateUrls,
+    required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
+  }) {
+    return updateKeyboardState(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult? Function(_SetLoading value)? setLoading,
+    TResult? Function(_UpdateUrls value)? updateUrls,
+    TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
+  }) {
+    return updateKeyboardState?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult Function(_SetLoading value)? setLoading,
+    TResult Function(_UpdateUrls value)? updateUrls,
+    TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
+    required TResult orElse(),
+  }) {
+    if (updateKeyboardState != null) {
+      return updateKeyboardState(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _UpdateKeyboardState implements PreloadEvent {
+  const factory _UpdateKeyboardState({required final bool state}) =
+      _$UpdateKeyboardStateImpl;
+
+  bool get state;
+  @JsonKey(ignore: true)
+  _$$UpdateKeyboardStateImplCopyWith<_$UpdateKeyboardStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$PreloadState {
-  List<VideoData> get videos => throw _privateConstructorUsedError;
+  List<VideoData> get mainVideos => throw _privateConstructorUsedError;
+  List<VideoData> get profileVideos => throw _privateConstructorUsedError;
   Map<int, VideoPlayerController> get controllers =>
       throw _privateConstructorUsedError;
   int get focusedIndex => throw _privateConstructorUsedError;
@@ -1354,6 +1982,8 @@ mixin _$PreloadState {
   bool get isLoading => throw _privateConstructorUsedError;
   Map<String, List<CommentData>> get videoComments =>
       throw _privateConstructorUsedError;
+  ReelContext get currentContext => throw _privateConstructorUsedError;
+  bool get keyboardVisible => throw _privateConstructorUsedError;
 
   @optionalTypeArgs
   TResult map<TResult extends Object?>(
@@ -1384,12 +2014,15 @@ abstract class $PreloadStateCopyWith<$Res> {
       _$PreloadStateCopyWithImpl<$Res, PreloadState>;
   @useResult
   $Res call(
-      {List<VideoData> videos,
+      {List<VideoData> mainVideos,
+      List<VideoData> profileVideos,
       Map<int, VideoPlayerController> controllers,
       int focusedIndex,
       int reloadCounter,
       bool isLoading,
-      Map<String, List<CommentData>> videoComments});
+      Map<String, List<CommentData>> videoComments,
+      ReelContext currentContext,
+      bool keyboardVisible});
 }
 
 /// @nodoc
@@ -1405,17 +2038,24 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? videos = null,
+    Object? mainVideos = null,
+    Object? profileVideos = null,
     Object? controllers = null,
     Object? focusedIndex = null,
     Object? reloadCounter = null,
     Object? isLoading = null,
     Object? videoComments = null,
+    Object? currentContext = null,
+    Object? keyboardVisible = null,
   }) {
     return _then(_value.copyWith(
-      videos: null == videos
-          ? _value.videos
-          : videos // ignore: cast_nullable_to_non_nullable
+      mainVideos: null == mainVideos
+          ? _value.mainVideos
+          : mainVideos // ignore: cast_nullable_to_non_nullable
+              as List<VideoData>,
+      profileVideos: null == profileVideos
+          ? _value.profileVideos
+          : profileVideos // ignore: cast_nullable_to_non_nullable
               as List<VideoData>,
       controllers: null == controllers
           ? _value.controllers
@@ -1437,6 +2077,14 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
           ? _value.videoComments
           : videoComments // ignore: cast_nullable_to_non_nullable
               as Map<String, List<CommentData>>,
+      currentContext: null == currentContext
+          ? _value.currentContext
+          : currentContext // ignore: cast_nullable_to_non_nullable
+              as ReelContext,
+      keyboardVisible: null == keyboardVisible
+          ? _value.keyboardVisible
+          : keyboardVisible // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -1450,12 +2098,15 @@ abstract class _$$PreloadStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<VideoData> videos,
+      {List<VideoData> mainVideos,
+      List<VideoData> profileVideos,
       Map<int, VideoPlayerController> controllers,
       int focusedIndex,
       int reloadCounter,
       bool isLoading,
-      Map<String, List<CommentData>> videoComments});
+      Map<String, List<CommentData>> videoComments,
+      ReelContext currentContext,
+      bool keyboardVisible});
 }
 
 /// @nodoc
@@ -1469,17 +2120,24 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? videos = null,
+    Object? mainVideos = null,
+    Object? profileVideos = null,
     Object? controllers = null,
     Object? focusedIndex = null,
     Object? reloadCounter = null,
     Object? isLoading = null,
     Object? videoComments = null,
+    Object? currentContext = null,
+    Object? keyboardVisible = null,
   }) {
     return _then(_$PreloadStateImpl(
-      videos: null == videos
-          ? _value.videos
-          : videos // ignore: cast_nullable_to_non_nullable
+      mainVideos: null == mainVideos
+          ? _value.mainVideos
+          : mainVideos // ignore: cast_nullable_to_non_nullable
+              as List<VideoData>,
+      profileVideos: null == profileVideos
+          ? _value.profileVideos
+          : profileVideos // ignore: cast_nullable_to_non_nullable
               as List<VideoData>,
       controllers: null == controllers
           ? _value.controllers
@@ -1501,6 +2159,14 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
           ? _value.videoComments
           : videoComments // ignore: cast_nullable_to_non_nullable
               as Map<String, List<CommentData>>,
+      currentContext: null == currentContext
+          ? _value.currentContext
+          : currentContext // ignore: cast_nullable_to_non_nullable
+              as ReelContext,
+      keyboardVisible: null == keyboardVisible
+          ? _value.keyboardVisible
+          : keyboardVisible // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -1509,15 +2175,20 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
 
 class _$PreloadStateImpl implements _PreloadState {
   _$PreloadStateImpl(
-      {required this.videos,
+      {required this.mainVideos,
+      required this.profileVideos,
       required this.controllers,
       required this.focusedIndex,
       required this.reloadCounter,
       required this.isLoading,
-      required this.videoComments});
+      required this.videoComments,
+      required this.currentContext,
+      required this.keyboardVisible});
 
   @override
-  final List<VideoData> videos;
+  final List<VideoData> mainVideos;
+  @override
+  final List<VideoData> profileVideos;
   @override
   final Map<int, VideoPlayerController> controllers;
   @override
@@ -1528,10 +2199,14 @@ class _$PreloadStateImpl implements _PreloadState {
   final bool isLoading;
   @override
   final Map<String, List<CommentData>> videoComments;
+  @override
+  final ReelContext currentContext;
+  @override
+  final bool keyboardVisible;
 
   @override
   String toString() {
-    return 'PreloadState(videos: $videos, controllers: $controllers, focusedIndex: $focusedIndex, reloadCounter: $reloadCounter, isLoading: $isLoading, videoComments: $videoComments)';
+    return 'PreloadState(mainVideos: $mainVideos, profileVideos: $profileVideos, controllers: $controllers, focusedIndex: $focusedIndex, reloadCounter: $reloadCounter, isLoading: $isLoading, videoComments: $videoComments, currentContext: $currentContext, keyboardVisible: $keyboardVisible)';
   }
 
   @override
@@ -1539,7 +2214,10 @@ class _$PreloadStateImpl implements _PreloadState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PreloadStateImpl &&
-            const DeepCollectionEquality().equals(other.videos, videos) &&
+            const DeepCollectionEquality()
+                .equals(other.mainVideos, mainVideos) &&
+            const DeepCollectionEquality()
+                .equals(other.profileVideos, profileVideos) &&
             const DeepCollectionEquality()
                 .equals(other.controllers, controllers) &&
             (identical(other.focusedIndex, focusedIndex) ||
@@ -1549,18 +2227,25 @@ class _$PreloadStateImpl implements _PreloadState {
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             const DeepCollectionEquality()
-                .equals(other.videoComments, videoComments));
+                .equals(other.videoComments, videoComments) &&
+            (identical(other.currentContext, currentContext) ||
+                other.currentContext == currentContext) &&
+            (identical(other.keyboardVisible, keyboardVisible) ||
+                other.keyboardVisible == keyboardVisible));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(videos),
+      const DeepCollectionEquality().hash(mainVideos),
+      const DeepCollectionEquality().hash(profileVideos),
       const DeepCollectionEquality().hash(controllers),
       focusedIndex,
       reloadCounter,
       isLoading,
-      const DeepCollectionEquality().hash(videoComments));
+      const DeepCollectionEquality().hash(videoComments),
+      currentContext,
+      keyboardVisible);
 
   @JsonKey(ignore: true)
   @override
@@ -1599,16 +2284,20 @@ class _$PreloadStateImpl implements _PreloadState {
 
 abstract class _PreloadState implements PreloadState {
   factory _PreloadState(
-          {required final List<VideoData> videos,
-          required final Map<int, VideoPlayerController> controllers,
-          required final int focusedIndex,
-          required final int reloadCounter,
-          required final bool isLoading,
-          required final Map<String, List<CommentData>> videoComments}) =
-      _$PreloadStateImpl;
+      {required final List<VideoData> mainVideos,
+      required final List<VideoData> profileVideos,
+      required final Map<int, VideoPlayerController> controllers,
+      required final int focusedIndex,
+      required final int reloadCounter,
+      required final bool isLoading,
+      required final Map<String, List<CommentData>> videoComments,
+      required final ReelContext currentContext,
+      required final bool keyboardVisible}) = _$PreloadStateImpl;
 
   @override
-  List<VideoData> get videos;
+  List<VideoData> get mainVideos;
+  @override
+  List<VideoData> get profileVideos;
   @override
   Map<int, VideoPlayerController> get controllers;
   @override
@@ -1619,6 +2308,10 @@ abstract class _PreloadState implements PreloadState {
   bool get isLoading;
   @override
   Map<String, List<CommentData>> get videoComments;
+  @override
+  ReelContext get currentContext;
+  @override
+  bool get keyboardVisible;
   @override
   @JsonKey(ignore: true)
   _$$PreloadStateImplCopyWith<_$PreloadStateImpl> get copyWith =>

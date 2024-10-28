@@ -4,13 +4,11 @@ part 'advisor_events.g.dart';
 
 @JsonSerializable()
 class AdvisorEvents {
-  @JsonKey(name: '_id')
   final String id;
   final String advisorId;
   final String type;
   final String? topic;
   final String? description;
-  final String? bookingId;
   final String? eventTimeSlot;
   final int? duration;
   final String status;
@@ -23,6 +21,7 @@ class AdvisorEvents {
   final DateTime createdAt;
   final DateTime updatedAt;
   final List<String> categories;
+  final String? coverImage;
 
   AdvisorEvents({
     required this.id,
@@ -31,7 +30,6 @@ class AdvisorEvents {
     required this.status,
     required this.createdAt,
     required this.updatedAt,
-    this.bookingId,
     this.eventTimeSlot,
     this.duration,
     this.broadcasterCode,
@@ -43,6 +41,7 @@ class AdvisorEvents {
     this.categories = const [],
     this.totalLiveCount = 0,
     this.currentLiveCount = 0,
+    this.coverImage,
   });
 
   factory AdvisorEvents.fromJson(Map<String, dynamic> json) =>

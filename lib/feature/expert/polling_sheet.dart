@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/feature/expert/bloc/polling_bloc.dart';
 import 'package:felloapp/feature/expert/tell_us_about_yourself.dart';
@@ -13,8 +14,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PollingSheet extends StatelessWidget {
   final String paymentID;
+  final String fromTime;
+  final String advisorName;
   const PollingSheet({
     required this.paymentID,
+    required this.fromTime,
+    required this.advisorName,
     super.key,
   });
 
@@ -24,14 +29,25 @@ class PollingSheet extends StatelessWidget {
       create: (_) => PollingBloc(
         locator(),
         locator(),
-      )..add(StartPolling(paymentID)),
-      child: const _BookingStatusSheet(),
+      )..add(StartPolling(paymentID, fromTime, advisorName)),
+      child: _BookingStatusSheet(
+        paymentID: paymentID,
+        fromTime: fromTime,
+        advisorName: advisorName,
+      ),
     );
   }
 }
 
 class _BookingStatusSheet extends StatelessWidget {
-  const _BookingStatusSheet();
+  final String paymentID;
+  final String fromTime;
+  final String advisorName;
+  const _BookingStatusSheet({
+    required this.paymentID,
+    required this.fromTime,
+    required this.advisorName,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -186,14 +202,14 @@ class _BookingStatusSheet extends StatelessWidget {
                 ),
                 AppImage(Assets.confirm_payment, height: SizeConfig.padding112),
                 Text(
-                  state.response.data.bookingId ?? '',
+                  BaseUtil.formatDateTime(DateTime.parse(fromTime)),
                   style: TextStyles.sourceSansSB.title4,
                 ),
                 SizedBox(
                   height: SizeConfig.padding12,
                 ),
                 Text(
-                  'Your slot has been booked with ${state.response.data.advisorId ?? ''}',
+                  'Your slot has been booked with $advisorName',
                   style: TextStyles.sourceSans.body3
                       .colour(UiConstants.kTextColor5),
                 ),

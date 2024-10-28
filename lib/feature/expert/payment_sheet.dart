@@ -12,11 +12,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PaymentSheet extends StatelessWidget {
   final String advisorID;
+  final String advisorName;
   final num amount;
   final String fromTime;
   final num duration;
   const PaymentSheet({
     required this.advisorID,
+    required this.advisorName,
     required this.amount,
     required this.fromTime,
     required this.duration,
@@ -36,6 +38,7 @@ class PaymentSheet extends StatelessWidget {
         amount: amount,
         fromTime: fromTime,
         duration: duration,
+        advisorName: advisorName,
       ),
     );
   }
@@ -44,11 +47,13 @@ class PaymentSheet extends StatelessWidget {
 class _BookingMandatePage extends StatelessWidget {
   const _BookingMandatePage({
     required this.advisorID,
+    required this.advisorName,
     required this.amount,
     required this.fromTime,
     required this.duration,
   });
   final String advisorID;
+  final String advisorName;
   final num amount;
   final String fromTime;
   final num duration;
@@ -85,8 +90,11 @@ class _BookingMandatePage extends StatelessWidget {
                 isScrollControlled: true,
                 enableDrag: true,
                 isBarrierDismissible: false,
+                addToScreenStack: false,
                 content: PollingSheet(
                   paymentID: state.data.data.paymentId,
+                  fromTime: fromTime,
+                  advisorName: advisorName,
                 ),
                 backgroundColor: UiConstants.kBackgroundColor,
                 hapticVibrate: true,

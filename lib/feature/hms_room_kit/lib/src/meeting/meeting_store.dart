@@ -2255,19 +2255,20 @@ class MeetingStore extends ChangeNotifier
 
   ///[setReipientSelectorValue] method is used to set the value of recipient selector
   void setRecipientSelectorValue() {
-    if (HMSRoomLayout.chatData?.isPublicChatEnabled ?? false) {
-      recipientSelectorValue = "Everyone";
-      return;
-    } else if (HMSRoomLayout.chatData?.rolesWhitelist.isNotEmpty ?? false) {
-      recipientSelectorValue = HMSRoomLayout.chatData?.rolesWhitelist
-              .firstWhere(
-                  (role) => role != HMSRoomLayout.roleLayoutData?.role) ??
-          "Choose a Recipient";
-    } else if (HMSRoomLayout.chatData?.isPrivateChatEnabled ?? false) {
-      if (peers.length > 1) {
-        recipientSelectorValue = peers[1];
-      }
-    }
+     recipientSelectorValue = "Everyone";
+    // if (HMSRoomLayout.chatData?.isPublicChatEnabled ?? false) {
+    //   recipientSelectorValue = "Everyone";
+    //   return;
+    // } else if (HMSRoomLayout.chatData?.rolesWhitelist.isNotEmpty ?? false) {
+    //   recipientSelectorValue = HMSRoomLayout.chatData?.rolesWhitelist
+    //           .firstWhere(
+    //               (role) => role != HMSRoomLayout.roleLayoutData?.role) ??
+    //       "Choose a Recipient";
+    // } else if (HMSRoomLayout.chatData?.isPrivateChatEnabled ?? false) {
+    //   if (peers.length > 1) {
+    //     recipientSelectorValue = peers[1];
+    //   }
+    // }
     notifyListeners();
   }
 

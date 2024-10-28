@@ -1,118 +1,120 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Campaigns extends StatelessWidget {
-  final SaveViewModel model;
-  const Campaigns({required this.model, Key? key}) : super(key: key);
+  const Campaigns({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return CampaignCardSection(saveVm: model);
+    return const CampaignCardSection();
   }
 }
 
 class CampaignCardSection extends StatelessWidget {
-  final SaveViewModel saveVm;
   const CampaignCardSection({
-    required this.saveVm,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return saveVm.isChallengesLoading
-        ? const SizedBox()
-        : Container(
-            width: SizeConfig.screenWidth,
-            margin: EdgeInsets.symmetric(
-              vertical: SizeConfig.padding14,
-              horizontal: SizeConfig.padding18,
-            ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                SizeConfig.padding16 + SizeConfig.padding2,
-              ),
-            ),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: SizeConfig.padding164,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(SizeConfig.padding16),
-                    child: PageView.builder(
-                      controller: saveVm.offersController,
-                      itemCount: saveVm.ongoingEvents!.length,
-                      onPageChanged: (page) {
-                        saveVm.currentPage = page;
-                      },
-                      itemBuilder: (context, index) {
-                        final event = saveVm.ongoingEvents![index];
-                        return event.bgImage != ''
-                            ? GestureDetector(
-                                onTap: () {
-                                  saveVm.trackChallengeTapped(
-                                    event.bgImage,
-                                    event.type,
-                                    index,
-                                  );
-                                  AppState.delegate!
-                                      .parseRoute(Uri.parse(event.type));
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness16,
-                                    ),
-                                    image: DecorationImage(
-                                      image: CachedNetworkImageProvider(
-                                        event.bgImage,
-                                      ),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : CustomCampaignCard(
-                                ontap: () {
-                                  AppState.delegate!.parseRoute(
-                                    Uri.parse(
-                                      event.type + (event.misc['id'] ?? ''),
-                                    ),
-                                  );
-                                },
-                                title: event.title,
-                                description: event.subtitle,
-                                buttonText: event.ctaText,
-                                imageUrl: event.thumbnail,
-                              );
-                      },
-                    ),
+    return Consumer<SaveViewModel>(
+      builder: (_, model, __) {
+        return model.isChallengesLoading
+            ? const SizedBox()
+            : Container(
+                width: SizeConfig.screenWidth,
+                margin: EdgeInsets.symmetric(
+                  vertical: SizeConfig.padding14,
+                  horizontal: SizeConfig.padding18,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                    SizeConfig.padding16 + SizeConfig.padding2,
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: SizeConfig.padding14),
-                  child: Wrap(
-                    children: List.generate(
-                      saveVm.ongoingEvents!.length,
-                      (index) => Padding(
-                        padding: EdgeInsets.all(SizeConfig.padding2),
-                        child: CircleAvatar(
-                          backgroundColor: saveVm.currentPage == index
-                              ? Colors.white
-                              : Colors.grey,
-                          radius: SizeConfig.padding3,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: SizeConfig.padding164,
+                      child: ClipRRect(
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.padding16),
+                        child: PageView.builder(
+                          controller: model.offersController,
+                          itemCount: model.ongoingEvents!.length,
+                          onPageChanged: (page) {
+                            model.currentPage = page;
+                          },
+                          itemBuilder: (context, index) {
+                            final event = model.ongoingEvents![index];
+                            return event.bgImage != ''
+                                ? GestureDetector(
+                                    onTap: () {
+                                      model.trackChallengeTapped(
+                                        event.bgImage,
+                                        event.type,
+                                        index,
+                                      );
+                                      AppState.delegate!
+                                          .parseRoute(Uri.parse(event.type));
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness16,
+                                        ),
+                                        image: DecorationImage(
+                                          image: CachedNetworkImageProvider(
+                                            event.bgImage,
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : CustomCampaignCard(
+                                    ontap: () {
+                                      AppState.delegate!.parseRoute(
+                                        Uri.parse(
+                                          event.type + (event.misc['id'] ?? ''),
+                                        ),
+                                      );
+                                    },
+                                    title: event.title,
+                                    description: event.subtitle,
+                                    buttonText: event.ctaText,
+                                    imageUrl: event.thumbnail,
+                                  );
+                          },
                         ),
                       ),
                     ),
-                  ),
+                    Padding(
+                      padding: EdgeInsets.only(top: SizeConfig.padding14),
+                      child: Wrap(
+                        children: List.generate(
+                          model.ongoingEvents!.length,
+                          (index) => Padding(
+                            padding: EdgeInsets.all(SizeConfig.padding2),
+                            child: CircleAvatar(
+                              backgroundColor: model.currentPage == index
+                                  ? Colors.white
+                                  : Colors.grey,
+                              radius: SizeConfig.padding3,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          );
+              );
+      },
+    );
   }
 }
 

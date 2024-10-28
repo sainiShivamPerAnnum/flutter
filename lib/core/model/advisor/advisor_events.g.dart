@@ -8,13 +8,12 @@ part of 'advisor_events.dart';
 
 AdvisorEvents _$AdvisorEventsFromJson(Map<String, dynamic> json) =>
     AdvisorEvents(
-      id: json['_id'] as String,
+      id: json['id'] as String,
       advisorId: json['advisorId'] as String,
       type: json['type'] as String,
       status: json['status'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
-      bookingId: json['bookingId'] as String?,
       eventTimeSlot: json['eventTimeSlot'] as String?,
       duration: json['duration'] as int?,
       broadcasterCode: json['broadcasterCode'] as String?,
@@ -29,16 +28,16 @@ AdvisorEvents _$AdvisorEventsFromJson(Map<String, dynamic> json) =>
           const [],
       totalLiveCount: json['totalLiveCount'] as int? ?? 0,
       currentLiveCount: json['currentLiveCount'] as int? ?? 0,
+      coverImage: json['coverImage'] as String?,
     );
 
 Map<String, dynamic> _$AdvisorEventsToJson(AdvisorEvents instance) =>
     <String, dynamic>{
-      '_id': instance.id,
+      'id': instance.id,
       'advisorId': instance.advisorId,
       'type': instance.type,
       'topic': instance.topic,
       'description': instance.description,
-      'bookingId': instance.bookingId,
       'eventTimeSlot': instance.eventTimeSlot,
       'duration': instance.duration,
       'status': instance.status,
@@ -51,4 +50,5 @@ Map<String, dynamic> _$AdvisorEventsToJson(AdvisorEvents instance) =>
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
       'categories': instance.categories,
+      'coverImage': instance.coverImage,
     };

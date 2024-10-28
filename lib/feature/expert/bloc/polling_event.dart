@@ -6,5 +6,7 @@ sealed class PollingEvent {
 
 class StartPolling extends PollingEvent {
   final String paymentId;
-  const StartPolling(this.paymentId);
+  final String fromTime;
+  final String advisorName;
+  const StartPolling(this.paymentId, this.fromTime, this.advisorName);
 }

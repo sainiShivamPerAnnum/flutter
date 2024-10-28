@@ -1,7 +1,9 @@
 import 'dart:developer';
 import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/locator.dart';
 import 'comment_data.dart';
 import 'video_data.dart';
 
@@ -75,7 +77,9 @@ class ShortsRepo {
       String videoId, String userId, String name, String commentText) async {
     final String addCommentUrl = 'videos/comment/$videoId';
     try {
-      final response = await APIService.instance.postData(
+      final String? avatarId = locator<UserService>().baseUser!.avatarId;
+      final String? dpUrl = locator<UserService>().myUserDpUrl;
+      await APIService.instance.postData(
         addCommentUrl,
         cBaseUrl: _baseUrl,
         apiName: 'ShortsRepo/addComment',
@@ -84,14 +88,11 @@ class ShortsRepo {
           'userId': userId,
           'name': name,
           'comment': commentText,
+          'avatarId': avatarId,
+          'dpUrl': dpUrl,
         },
       );
-
-      if (response.statusCode == 201) {
-        return const ApiResponse<void>(code: 201);
-      } else {
-        throw Exception('Failed to add comment');
-      }
+      return const ApiResponse<void>(code: 201);
     } catch (e) {
       log("Error adding comment: ${e.toString()}");
       return ApiResponse.withError(e.toString(), 400);
@@ -103,7 +104,7 @@ class ShortsRepo {
       bool isLiked, String videoId, String name) async {
     final String likeUrl = 'videos/like/$videoId';
     try {
-      final response = await APIService.instance.postData(
+      await APIService.instance.postData(
         likeUrl,
         cBaseUrl: _baseUrl,
         apiName: 'ShortsRepo/addLike',
@@ -113,12 +114,7 @@ class ShortsRepo {
           'isLiked': isLiked,
         },
       );
-
-      if (response.statusCode == 200) {
-        return const ApiResponse<void>(code: 200);
-      } else {
-        throw Exception('Failed to add like');
-      }
+      return const ApiResponse<void>(code: 200);
     } catch (e) {
       log("Error adding like: ${e.toString()}");
       return ApiResponse.withError(e.toString(), 400);

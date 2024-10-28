@@ -12,13 +12,17 @@ VideoData _$VideoDataFromJson(Map<String, dynamic> json) => VideoData(
       url: json['url'] as String,
       viewCount: json['viewCount'] as int,
       timeStamp: json['timeStamp'] as String,
-      category:
-          (json['category'] as List<dynamic>).map((e) => e as String).toList(),
       title: json['title'] as String,
       author: json['author'] as String,
       subtitle: json['subtitle'] as String,
       views: json['views'] as num,
       duration: json['duration'] as String,
+      description: json['description'] as String,
+      advisorId: json['advisorId'] as String,
+      category: (json['category'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       isVideoLikedByUser: json['isVideoLikedByUser'] as bool? ?? false,
     );
 
@@ -32,6 +36,8 @@ Map<String, dynamic> _$VideoDataToJson(VideoData instance) => <String, dynamic>{
       'title': instance.title,
       'author': instance.author,
       'subtitle': instance.subtitle,
+      'description': instance.description,
+      'advisorId': instance.advisorId,
       'views': instance.views,
       'duration': instance.duration,
       'isVideoLikedByUser': instance.isVideoLikedByUser,

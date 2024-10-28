@@ -1,62 +1,61 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/ui/elements/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class Blogs extends StatelessWidget {
-  final SaveViewModel model;
-  const Blogs({required this.model, Key? key}) : super(key: key);
+  const Blogs({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(height: SizeConfig.padding14),
-        GestureDetector(
-          onTap: model.navigateToViewAllBlogs,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const TitleSubtitleContainer(
-                title: "Fin-gyan",
-                // zeroPadding: true,
-                leadingPadding: true,
+    return Consumer<SaveViewModel>(
+      builder: (_, model, __) {
+        return Column(
+          children: [
+            SizedBox(height: SizeConfig.padding14),
+            GestureDetector(
+              onTap: model.navigateToViewAllBlogs,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const TitleSubtitleContainer(
+                    title: "Fin-gyan",
+                    // zeroPadding: true,
+                    leadingPadding: true,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      right: SizeConfig.padding12,
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          'VIEW ALL',
+                          style: TextStyles.sourceSansSB.body3,
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                          size: SizeConfig.body3,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: EdgeInsets.only(
-                  right: SizeConfig.padding12,
-                ),
-                child: Row(
-                  children: [
-                    Text(
-                      'VIEW ALL',
-                      style: TextStyles.sourceSansSB.body3,
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.white,
-                      size: SizeConfig.body3,
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-        SaveBlogSection(model: model),
-      ],
+            ),
+            SaveBlogSection(model: model),
+          ],
+        );
+      },
     );
   }
 }

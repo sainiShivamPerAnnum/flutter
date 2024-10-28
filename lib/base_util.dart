@@ -462,6 +462,8 @@ class BaseUtil extends ChangeNotifier {
   static dynamic openBookAdvisorSheet({
     required String advisorId,
     required String advisorName,
+    required bool isEdit,
+    String? bookingId,
   }) {
     AppState.screenStack.add(ScreenItem.modalsheet);
     return openModalBottomSheet(
@@ -472,6 +474,8 @@ class BaseUtil extends ChangeNotifier {
       content: BookCallSheetView(
         advisorID: advisorId,
         advisorName: advisorName,
+        isEdit: isEdit,
+        bookingId: bookingId,
       ),
       backgroundColor: UiConstants.kBackgroundColor,
       hapticVibrate: true,
@@ -1008,6 +1012,11 @@ class BaseUtil extends ChangeNotifier {
         : NumberFormat.compactCurrency(decimalDigits: 0, symbol: '');
 
     return formatter.format(value);
+  }
+
+  static String formatDateTime(DateTime dateTime) {
+    final DateFormat formatter = DateFormat('dd MMM yyyy, hh:mm a');
+    return formatter.format(dateTime);
   }
 
   static Future<bool> isFirstTimeThisWeek() async {

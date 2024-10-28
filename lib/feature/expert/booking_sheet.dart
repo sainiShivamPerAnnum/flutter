@@ -16,9 +16,13 @@ import 'package:intl/intl.dart';
 class BookCallSheetView extends StatelessWidget {
   final String advisorID;
   final String advisorName;
+  final bool isEdit;
+  final String? bookingId;
   const BookCallSheetView({
     required this.advisorID,
     required this.advisorName,
+    required this.isEdit,
+    this.bookingId,
     super.key,
   });
 
@@ -39,6 +43,7 @@ class BookCallSheetView extends StatelessWidget {
       child: _BookCallBottomSheet(
         advisorId: advisorID,
         advisorName: advisorName,
+        isEdit: isEdit,
       ),
     );
   }
@@ -48,9 +53,13 @@ class _BookCallBottomSheet extends StatefulWidget {
   const _BookCallBottomSheet({
     required this.advisorId,
     required this.advisorName,
+    required this.isEdit,
+    this.bookingId,
   });
   final String advisorId;
   final String advisorName;
+  final bool isEdit;
+  final String? bookingId;
 
   @override
   State<_BookCallBottomSheet> createState() => _BookCallBottomSheetState();
@@ -71,8 +80,11 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
             isScrollControlled: true,
             enableDrag: true,
             isBarrierDismissible: false,
+            addToScreenStack: false,
             content: PollingSheet(
               paymentID: state.data.data.paymentId,
+              advisorName: widget.advisorName,
+              fromTime: selectedTime ?? DateTime.now().toString(),
             ),
             backgroundColor: UiConstants.kBackgroundColor,
             hapticVibrate: true,
@@ -268,7 +280,14 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                     if (state is BookingsLoaded &&
                         state.selectedDate != null &&
                         state.selectedTime != null) {
-                      if (state.isFree) {
+                      if (widget.isEdit && widget.bookingId != null) {
+                        final event = EditBooking(
+                          bookingId: widget.bookingId!,
+                          selectedDate: state.selectedTime!,
+                          duration: state.selectedDuration,
+                        );
+                        context.read<BookingBloc>().add(event);
+                      } else if (state.isFree) {
                         final event = SubmitPaymentRequest(
                           advisorId: widget.advisorId,
                           amount: 0,
@@ -546,14 +565,16 @@ Widget _buildPaymentSummary(BuildContext context, PricingData state) {
               AppState.backButtonDispatcher!.didPopRoute();
               AppState.screenStack.add(ScreenItem.modalsheet);
               BaseUtil.openModalBottomSheet(
-            isScrollControlled: true,
-            enableDrag: true,
-            isBarrierDismissible: true,
+                isScrollControlled: true,
+                enableDrag: true,
+                isBarrierDismissible: false,
+                addToScreenStack: false,
                 content: PaymentSheet(
                   advisorID: state.advisorId,
                   amount: state.totalPayable,
                   fromTime: state.time,
                   duration: state.duration,
+                  advisorName: state.advisorName,
                 ),
                 backgroundColor: UiConstants.kBackgroundColor,
                 hapticVibrate: true,

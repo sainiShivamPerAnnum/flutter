@@ -21,68 +21,19 @@ part 'preload_state.dart';
 @prod
 class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
   final repository = locator<ShortsRepo>();
+
   PreloadBloc() : super(PreloadState.initial()) {
     on(_mapEventToState);
   }
+  List<VideoData> get currentVideos => state.currentContext == ReelContext.main
+      ? state.mainVideos
+      : state.profileVideos;
 
   Future<void> _mapEventToState(
     PreloadEvent event,
     Emitter<PreloadState> emit,
   ) async {
     await event.map(
-      pauseVideoAtIndex: (e) {
-        _stopControllerAtIndex(e.index);
-      },
-      playVideoAtIndex: (e) {
-        _playControllerAtIndex(e.index);
-      },
-      setLoading: (e) {
-        emit(state.copyWith(isLoading: true));
-      },
-      getVideosFromApi: (e) async {
-        /// Fetch videos from api
-        final data = await repository.getVideos(
-          page: 1,
-        );
-        final List<VideoData> urls = data.model ?? [];
-
-        state.videos.addAll(urls);
-
-        /// Initialize 1st video
-        await _initializeControllerAtIndex(0, urls[0].id);
-
-        /// Initialize 2nd video
-        await _initializeControllerAtIndex(1, urls[1].id);
-
-        emit(state.copyWith(reloadCounter: state.reloadCounter + 1));
-      },
-      // initialize: (e) async* {},
-      onVideoIndexChanged: (e) async {
-        /// Condition to fetch new videos
-        final bool shouldFetch =
-            (e.index + VideoPreloadConstants.kPreloadLimit) %
-                        VideoPreloadConstants.kNextLimit ==
-                    0 &&
-                state.videos.length ==
-                    e.index + VideoPreloadConstants.kPreloadLimit;
-
-        if (shouldFetch) {
-          final response = await repository.getVideos(
-            page:(e.index + VideoPreloadConstants.preloadLimit) ~/ 10+1,
-          );
-          final List<VideoData> urls = response.model ?? [];
-          add(PreloadEvent.updateUrls(urls));
-        }
-
-        /// Next / Prev video decider
-        if (e.index > state.focusedIndex) {
-          _playNext(e.index, state.videos[e.index].id);
-        } else {
-          _playPrevious(e.index, state.videos[e.index].id);
-        }
-
-        emit(state.copyWith(focusedIndex: e.index));
-      },
       updateConstants: (e) {
         VideoPreloadConstants.updateConstants(
           preloadLimit: e.preloadLimit,
@@ -90,16 +41,85 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           latency: e.latency,
         );
       },
-      updateUrls: (e) {
-        /// Add new urls to current urls
-        state.videos.addAll(e.videos);
+      pauseVideoAtIndex: (e) {
+        _stopControllerAtIndex(e.index);
+      },
+      playVideoAtIndex: (e) {
+        _playControllerAtIndex(e.index);
+      },
+      switchToMainReels: (e) {
+        emit(state.copyWith(currentContext: ReelContext.main));
+      },
+      switchToProfileReels: (e) {
+        emit(state.copyWith(currentContext: ReelContext.profile));
+      },
+      setLoading: (e) {
+        emit(state.copyWith(isLoading: true));
+      },
+      updateKeyboardState: (e) {
+        emit(state.copyWith(keyboardVisible: e.state));
+      },
+      initializeAtIndex: (e) async {
+        await _initializeControllerAtIndex(e.index);
+        emit(state.copyWith(focusedIndex: e.index));
+        final currentLength = state.currentContext == ReelContext.main
+            ? state.mainVideos.length
+            : state.profileVideos.length;
+        if (e.index + 1 < currentLength) {
+          await _initializeControllerAtIndex(e.index + 1);
+        }
+        if (e.index - 1 >= 0) {
+          await _initializeControllerAtIndex(e.index - 1);
+        }
+      },
+      getVideosFromApi: (e) async {
+        final data = await repository.getVideos(page: 1);
+        final List<VideoData> urls = data.model ?? [];
 
-        /// Initialize new url
-        // _initializeControllerAtIndex(
-        //   state.focusedIndex + 1,
-        //   state.videos[state.focusedIndex].id,
-        // );
+        if (state.currentContext == ReelContext.main) {
+          state.mainVideos.addAll(urls);
+        } else {
+          state.profileVideos.addAll(urls);
+        }
 
+        /// Initialize 1st video
+        await _initializeControllerAtIndex(0);
+
+        /// Initialize 2nd video
+        await _initializeControllerAtIndex(1);
+        emit(state.copyWith(reloadCounter: state.reloadCounter + 1));
+      },
+      onVideoIndexChanged: (e) async {
+        final bool shouldFetch =
+            (e.index + VideoPreloadConstants.kPreloadLimit) %
+                        VideoPreloadConstants.kNextLimit ==
+                    0 &&
+                currentVideos.length ==
+                    e.index + VideoPreloadConstants.kPreloadLimit;
+
+        if (shouldFetch) {
+          final response = await repository.getVideos(
+            page: (e.index + VideoPreloadConstants.preloadLimit) ~/ 10 + 1,
+          );
+          final List<VideoData> urls = response.model ?? [];
+          add(PreloadEvent.updateUrls(urls));
+        }
+
+        if (e.index > state.focusedIndex) {
+          _playNext(e.index);
+        } else {
+          _playPrevious(e.index);
+        }
+
+        emit(state.copyWith(focusedIndex: e.index));
+      },
+      updateUrls: (e) async {
+        if (state.currentContext == ReelContext.main) {
+          state.mainVideos.addAll(e.videos);
+        } else {
+          state.profileVideos.clear();
+          state.profileVideos.addAll(e.videos);
+        }
         emit(
           state.copyWith(
             reloadCounter: state.reloadCounter + 1,
@@ -117,6 +137,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                 : userService.baseUser!.name) ??
             "N/A";
         unawaited(repository.addComment(e.videoId, uid, userName, e.comment));
+
         List<CommentData> currentComments =
             state.videoComments[e.videoId] ?? [];
         final newComment = CommentData(
@@ -149,7 +170,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
 
         emit(
           state.copyWith(
-            videos: state.videos.map((video) {
+            mainVideos: state.mainVideos.map((video) {
               if (video.id == e.videoId) {
                 unawaited(
                   repository.addLike(
@@ -183,51 +204,35 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
     );
   }
 
-  void _playNext(int index, String videoId) {
-    /// Stop [index - 1] controller
+  void _playNext(int index) {
     _stopControllerAtIndex(index - 1);
-
-    /// Dispose [index - 2] controller
     _disposeControllerAtIndex(index - 2);
-
-    /// Play current video (already initialized)
     _playControllerAtIndex(index);
-
-    /// Initialize [index + 1] controller
-    _initializeControllerAtIndex(index + 1, videoId);
+    _initializeControllerAtIndex(index + 1);
   }
 
-  void _playPrevious(int index, String videoId) {
-    /// Stop [index + 1] controller
+  void _playPrevious(int index) {
     _stopControllerAtIndex(index + 1);
-
-    /// Dispose [index + 2] controller
     _disposeControllerAtIndex(index + 2);
-
-    /// Play current video (already initialized)
     _playControllerAtIndex(index);
-
-    /// Initialize [index - 1] controller
-    _initializeControllerAtIndex(index - 1, videoId);
+    _initializeControllerAtIndex(index - 1);
   }
 
-  Future _initializeControllerAtIndex(int index, String videoId) async {
-    if (state.videos.length > index && index >= 0) {
-      /// Create new controller
-      final VideoPlayerController controller =
-          VideoPlayerController.networkUrl(Uri.parse(state.videos[index].url));
+  Future _initializeControllerAtIndex(int index) async {
+    if (currentVideos.length > index && index >= 0) {
+      final VideoPlayerController controller = VideoPlayerController.networkUrl(
+        Uri.parse(currentVideos[index].url),
+      );
 
-      /// Add to [controllers] list
       state.controllers[index] = controller;
 
-      /// Initialize
       await controller.initialize();
       await controller.setLooping(true);
       await controller.setVolume(1);
-      final comments = await repository.getComments(videoId);
+      final comments = await repository.getComments(currentVideos[index].id);
       add(
         PreloadEvent.addCommentToState(
-          videoId: videoId,
+          videoId: currentVideos[index].id,
           comment: comments.model ?? [],
         ),
       );
@@ -236,44 +241,29 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
   }
 
   void _playControllerAtIndex(int index) {
-    if (state.videos.length > index && index >= 0) {
-      /// Get controller at [index]
+    if (currentVideos.length > index && index >= 0) {
       final VideoPlayerController controller = state.controllers[index]!;
-
-      /// Play controller
       controller.play();
-
       log('🚀🚀🚀 PLAYING $index');
     }
   }
 
   void _stopControllerAtIndex(int index) {
-    if (state.videos.length > index && index >= 0) {
-      /// Get controller at [index]
+    if (currentVideos.length > index && index >= 0) {
       final VideoPlayerController controller = state.controllers[index]!;
-
-      /// Pause
       controller.pause();
-
-      /// Reset postiton to beginning
       controller.seekTo(const Duration());
-
       log('🚀🚀🚀 STOPPED $index');
     }
   }
 
   void _disposeControllerAtIndex(int index) {
-    if (state.videos.length > index && index >= 0) {
-      /// Get controller at [index]
+    if (currentVideos.length > index && index >= 0) {
       final VideoPlayerController? controller = state.controllers[index];
-
-      /// Dispose controller
       controller?.dispose();
-
       if (controller != null) {
-        state.controllers.remove(controller);
+        state.controllers.remove(index);
       }
-
       log('🚀🚀🚀 DISPOSED $index');
     }
   }

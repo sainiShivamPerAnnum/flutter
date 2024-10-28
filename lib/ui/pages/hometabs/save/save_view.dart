@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
-import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/locator.dart';
@@ -35,9 +34,22 @@ class Save extends StatelessWidget {
   }
 }
 
-class SaveViewWrapper extends StatelessWidget {
+class SaveViewWrapper extends StatefulWidget {
   const SaveViewWrapper({required this.model, Key? key}) : super(key: key);
   final SaveViewModel model;
+
+  @override
+  State<SaveViewWrapper> createState() => _SaveViewWrapperState();
+}
+
+class _SaveViewWrapperState extends State<SaveViewWrapper> {
+  
+  @override
+  void dispose() {
+    widget.model.dump();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -45,13 +57,13 @@ class SaveViewWrapper extends StatelessWidget {
       color: UiConstants.primaryColor,
       backgroundColor: Colors.black,
       onRefresh: () async {
-        await model.pullRefresh();
+        await widget.model.pullRefresh();
       },
       child: SingleChildScrollView(
         controller: RootController.controller,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: model.getSaveViewItems(model),
+          children: widget.model.getSaveViewItems(widget.model),
         ),
       ),
     );

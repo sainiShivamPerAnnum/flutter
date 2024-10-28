@@ -231,6 +231,7 @@ class __ExpertHomeState extends State<_ExpertHome>
                 BaseUtil.openBookAdvisorSheet(
                   advisorId: expert.advisorId,
                   advisorName: expert.name,
+                  isEdit: false,
                 );
               },
               onTap: () {

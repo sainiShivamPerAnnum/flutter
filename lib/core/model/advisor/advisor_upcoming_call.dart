@@ -7,14 +7,14 @@ class AdvisorCall {
   final String? userName;
   final DateTime scheduledOn;
   final String duration;
-  final String? callLink;
+  final String? hostCode;
   final List<Map<String, String>> detailsQA;
 
   AdvisorCall({
     required this.scheduledOn,
     required this.duration,
     this.userName,
-    this.callLink,
+    this.hostCode,
     this.detailsQA = const [],
   });
 

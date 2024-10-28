@@ -19,6 +19,7 @@ class UpcomingBooking {
 
 @_deserializable
 class Booking {
+  // final String 
   final String advisorName;
   final String image;
   final DateTime scheduledOn;

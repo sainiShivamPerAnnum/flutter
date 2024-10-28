@@ -29,4 +29,8 @@ class PreloadEvent with _$PreloadEvent {
     required String videoId,
     required List<CommentData> comment,
   }) = _AddCommentToState;
+  const factory PreloadEvent.switchToMainReels() = _SwitchToMainReels;
+  const factory PreloadEvent.switchToProfileReels() = _SwitchToProfileReels;
+  const factory PreloadEvent.initializeAtIndex({required int index}) = _InitializeAtIndex;
+  const factory PreloadEvent.updateKeyboardState({required bool state}) = _UpdateKeyboardState;
 }

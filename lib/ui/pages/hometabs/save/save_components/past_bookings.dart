@@ -1,8 +1,4 @@
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
-import 'package:felloapp/feature/expertDetails/expert_profile.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -12,9 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PastBookingsComponent extends StatelessWidget {
-  final SaveViewModel model;
-  const PastBookingsComponent({required this.model, Key? key})
-      : super(key: key);
+  const PastBookingsComponent({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +36,7 @@ class PastBookingsComponent extends StatelessWidget {
                           horizontal: SizeConfig.padding18,
                         ).copyWith(bottom: SizeConfig.padding16),
                         child: PastScheduleCard(
-                          booking: model.pastBookings[index],
+                          booking: pastBookings[index],
                         ),
                       ),
                     ),
@@ -164,34 +158,6 @@ class PastScheduleCard extends StatelessWidget {
                       child: Text(
                         'View Recording',
                         style: TextStyles.sourceSansSB.body3,
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        AppState.delegate!.appState.currentAction = PageAction(
-                          page: ExpertDetailsPageConfig,
-                          state: PageState.addWidget,
-                          widget: ExpertsDetailsView(
-                            advisorID: booking.advisorId,
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: UiConstants.kTextColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(SizeConfig.roundness5),
-                          ),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding16,
-                          vertical: SizeConfig.padding8,
-                        ),
-                      ),
-                      child: Text(
-                        'Reschedule',
-                        style: TextStyles.sourceSansSB.body3
-                            .colour(UiConstants.kTextColor4),
                       ),
                     ),
                   ],

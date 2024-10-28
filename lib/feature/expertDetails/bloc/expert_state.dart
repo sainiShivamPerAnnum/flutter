@@ -14,7 +14,7 @@ class LoadingExpertsDetails extends ExpertDetailsState {
 final class ExpertDetailsLoaded extends ExpertDetailsState {
   final ExpertDetails? expertDetails;
   final List<RecentStream> recentLive;
-  final List<RecentStream> shortsData;
+  final List<VideoData> shortsData;
   final int currentTab;
   const ExpertDetailsLoaded({
     required this.expertDetails,
@@ -26,7 +26,7 @@ final class ExpertDetailsLoaded extends ExpertDetailsState {
     ExpertDetails? expertDetails,
     int? currentTab,
   final List<RecentStream>? recentLive,
-  final List<RecentStream>? shortsData,
+  final List<VideoData>? shortsData,
   }) {
     return ExpertDetailsLoaded(
       expertDetails: expertDetails ?? this.expertDetails,

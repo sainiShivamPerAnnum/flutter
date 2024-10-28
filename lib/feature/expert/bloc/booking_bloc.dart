@@ -29,6 +29,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     on<SelectTime>(_onSelectTime);
     on<GetPricing>(_getPricing);
     on<SelectDuration>(_onSelectDuration);
+    on<EditBooking>(_editBooking);
   }
   FutureOr<void> _onLoadBookingDates(
     LoadBookingDates event,
@@ -125,6 +126,31 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       // Handle failure case, if necessary
       emitter(const BookingError("Failed to submit booking"));
       _logger.d('Failed to submit booking');
+    }
+  }
+
+  Future<void> _editBooking(
+    EditBooking event,
+    Emitter<BookingState> emitter,
+  ) async {
+    emitter(const LoadingBookingsData());
+    final response = await _expertsRepository.updateBooking(
+      bookingId: event.bookingId,
+      duration: event.duration,
+      selectedDate: event.selectedDate,
+    );
+
+    if (response.isSuccess()) {
+      BaseUtil.showPositiveAlert(
+        'Booking updated Successfully!',
+        "New date is ${event.selectedDate}",
+      );
+    } else {
+      _logger.d('Failed to submit booking');
+      BaseUtil.showNegativeAlert(
+        'Updating booking Failed!',
+        response.errorMessage ?? 'Error',
+      );
     }
   }
 }

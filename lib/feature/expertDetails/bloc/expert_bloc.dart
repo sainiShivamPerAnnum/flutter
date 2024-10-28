@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:felloapp/core/model/experts/experts_details.dart';
 import 'package:felloapp/core/model/live/live_home.dart';
 import 'package:felloapp/core/repository/experts_repo.dart';
+import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 
 part 'expert_event.dart';
 part 'expert_state.dart';

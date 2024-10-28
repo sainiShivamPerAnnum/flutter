@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -16,8 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class UpcomingBookingsComponent extends StatelessWidget {
-  final SaveViewModel model;
-  const UpcomingBookingsComponent({required this.model, Key? key})
+  const UpcomingBookingsComponent({Key? key})
       : super(key: key);
 
   @override
@@ -27,13 +25,13 @@ class UpcomingBookingsComponent extends StatelessWidget {
       builder: (_, upcomingBookings, __) {
         return upcomingBookings.isNotEmpty
             ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                 const TitleSubtitleContainer(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const TitleSubtitleContainer(
                     title: "Your upcoming calls",
                     leadingPadding: true,
                   ),
-                Container(
+                  Container(
                     height: SizeConfig.screenHeight! * 0.3465,
                     padding: EdgeInsets.only(top: SizeConfig.padding10),
                     margin: EdgeInsets.only(
@@ -52,8 +50,8 @@ class UpcomingBookingsComponent extends StatelessWidget {
                       ),
                     ),
                   ),
-              ],
-            )
+                ],
+              )
             : const SizedBox.shrink();
       },
     );
@@ -165,7 +163,12 @@ class ScheduleCard extends StatelessWidget {
                   children: [
                     TextButton(
                       onPressed: () {
-                        // Handle edit action
+                        BaseUtil.openBookAdvisorSheet(
+                          advisorId: booking.advisorId,
+                          isEdit: true,
+                          bookingId: '',
+                          advisorName: booking.advisorName,
+                        );
                       },
                       child: Text(
                         'Edit',
@@ -182,6 +185,7 @@ class ScheduleCard extends StatelessWidget {
                             : locator<UserService>().baseUser!.name!.isNotEmpty
                                 ? locator<UserService>().baseUser!.name
                                 : locator<UserService>().baseUser!.username;
+                                 final userId = locator<UserService>().baseUser!.uid;
                         AppState.delegate!.appState.currentAction = PageAction(
                           page: LivePreviewPageConfig,
                           state: PageState.addWidget,
@@ -189,6 +193,7 @@ class ScheduleCard extends StatelessWidget {
                             roomCode: booking.guestCode,
                             options: HMSPrebuiltOptions(
                               userName: name,
+                              userId:userId,
                             ),
                           ),
                         );
@@ -220,7 +225,7 @@ class ScheduleCard extends StatelessWidget {
           const Spacer(),
           Container(
             padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.padding18,
+              horizontal: SizeConfig.padding14,
               vertical: SizeConfig.padding12,
             ),
             decoration: BoxDecoration(
@@ -232,18 +237,22 @@ class ScheduleCard extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(
-                  Icons.info,
-                  size: SizeConfig.body4,
-                  color: UiConstants.kTextColor,
+                Transform.translate(
+                  offset: Offset(0, -SizeConfig.padding6),
+                  child: Icon(
+                    Icons.info,
+                    size: SizeConfig.body4,
+                    color: UiConstants.kTextColor,
+                  ),
                 ),
-                SizedBox(width: SizeConfig.padding4),
+                SizedBox(width: SizeConfig.padding8),
                 Expanded(
                   child: Text(
                     'You can edit your schedule up to 24 hours before your scheduled time.',
                     maxLines: 2,
                     style: TextStyles.sourceSans.body4
                         .colour(UiConstants.kTextColor.withOpacity(.75)),
+                    textAlign: TextAlign.start,
                   ),
                 ),
               ],

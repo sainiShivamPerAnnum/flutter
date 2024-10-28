@@ -9,10 +9,12 @@ class VideoData {
   final String url;
   final int viewCount;
   final String timeStamp;
-  final List<String> category;
+  final List<String>? category;
   final String title;
   final String author;
   final String subtitle;
+  final String description;
+  final String advisorId;
   final num views;
   final String duration;
   final bool isVideoLikedByUser;
@@ -23,21 +25,24 @@ class VideoData {
     required this.url,
     required this.viewCount,
     required this.timeStamp,
-    required this.category,
     required this.title,
     required this.author,
     required this.subtitle,
     required this.views,
     required this.duration,
+    required this.description,
+    required this.advisorId,
+    this.category =const [],
     this.isVideoLikedByUser = false,
   });
 
   // Method to generate VideoData instance from JSON
-  factory VideoData.fromJson(Map<String, dynamic> json) => _$VideoDataFromJson(json);
+  factory VideoData.fromJson(Map<String, dynamic> json) =>
+      _$VideoDataFromJson(json);
 
   // Method to convert VideoData instance to JSON
   Map<String, dynamic> toJson() => _$VideoDataToJson(this);
-   VideoData copyWith({
+  VideoData copyWith({
     String? id,
     String? thumbnail,
     String? url,
@@ -50,6 +55,8 @@ class VideoData {
     num? views,
     String? duration,
     bool? isVideoLikedByUser,
+    String? description,
+    String? advisorId,
   }) {
     return VideoData(
       id: id ?? this.id,
@@ -63,6 +70,8 @@ class VideoData {
       subtitle: subtitle ?? this.subtitle,
       views: views ?? this.views,
       duration: duration ?? this.duration,
+      description: description ?? this.description,
+      advisorId: advisorId ?? this.advisorId,
       isVideoLikedByUser: isVideoLikedByUser ?? this.isVideoLikedByUser,
     );
   }

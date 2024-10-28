@@ -1,6 +1,5 @@
-//Project Imports
-// ignore_for_file: prefer_const_constructors
-
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/feature/advisor/advisor_components/booking_confirm_sheet.dart';
 import 'package:felloapp/feature/advisor/bloc/live_details_bloc.dart';
 import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -12,7 +11,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ScheduleCallWrapper extends StatelessWidget {
+class ScheduleCallWrapper extends StatefulWidget {
   final String? id;
   final String? status;
   final String? title;
@@ -39,6 +38,28 @@ class ScheduleCallWrapper extends StatelessWidget {
   });
 
   @override
+  State<ScheduleCallWrapper> createState() => _ScheduleCallWrapperState();
+}
+
+class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
+  final topicController = TextEditingController();
+  final descriptionController = TextEditingController();
+
+  @override
+  void initState() {
+    topicController.text = widget.title ?? '';
+    descriptionController.text = widget.subTitle ?? '';
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    topicController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BaseScaffold(
       showBackgroundGrid: true,
@@ -48,24 +69,33 @@ class ScheduleCallWrapper extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
-        leading: BackButton(
+        leading: const BackButton(
           color: UiConstants.kTextColor,
         ),
       ),
       body: BlocProvider(
         create: (context) => ScheduleLiveBloc(locator())..add(LoadCategories()),
-        child: BlocBuilder<ScheduleLiveBloc, ScheduleCallState>(
-          builder: (context, state) {
-            if (state is ScheduleCallLoading) {
-              return FullScreenLoader();
-            } else if (state is ScheduleCallLoaded) {
-              return _buildScheduleCallContent(context, state);
-            } else if (state is ScheduleCallFailure) {
-              return ErrorPage();
-            } else if (state is ScheduleCallSuccess) {
-              return Center(child: Text(state.message));
+        child: BlocConsumer<ScheduleLiveBloc, ScheduleCallState>(
+          listener: (context, state) {
+            if (state is ScheduleCallSuccess) {
+              BaseUtil.openModalBottomSheet(
+                isBarrierDismissible: false,
+                content: BookingConfirmSheet(
+                  name: topicController.text.trim(),
+                  date: state.date,
+                ),
+              );
             }
-            return FullScreenLoader();
+          },
+          builder: (context, state) {
+            return switch (state) {
+              ScheduleCallInitial() ||
+              ScheduleCallLoading() =>
+                const FullScreenLoader(),
+              ScheduleCallLoaded() => _buildScheduleCallContent(context, state),
+              ScheduleCallFailure() => const ErrorPage(),
+              ScheduleCallSuccess() => const SizedBox.shrink(),
+            };
           },
         ),
       ),
@@ -74,13 +104,10 @@ class ScheduleCallWrapper extends StatelessWidget {
 
   Widget _buildScheduleCallContent(
     BuildContext context,
-    ScheduleCallLoaded state,
+    ScheduleCallState state,
   ) {
-    final topicController = TextEditingController(text: title ?? '');
-    final descriptionController = TextEditingController(text: subTitle ?? '');
-
     return Padding(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(SizeConfig.padding16),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,7 +152,7 @@ class ScheduleCallWrapper extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            _buildCategorySelection(context, state),
+            _buildCategorySelection(context, state as ScheduleCallLoaded),
             const SizedBox(height: 24),
             const Text(
               "Upload Cover Image",
@@ -212,7 +239,7 @@ class ScheduleCallWrapper extends StatelessWidget {
           onTap: () =>
               context.read<ScheduleLiveBloc>().add(SelectCategory(category)),
           child: Container(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(SizeConfig.padding10),
             decoration: BoxDecoration(
               color: const Color(0xff1A1A1A),
               borderRadius: BorderRadius.circular(8),
@@ -237,17 +264,16 @@ class ScheduleCallWrapper extends StatelessWidget {
   ) {
     final profilePictureText =
         state.profilePicture != null ? "Re-upload Image" : "Upload Image";
+
+    final description = state.profilePicture != null
+        ? "Image Uploaded"
+        : "Upload and resize image to be used as cover for your upcoming live";
     return Row(
       children: [
-        const Expanded(
-          child: Text(
-            "Upload and resize image to be used as cover for your upcoming live",
-            style: TextStyle(
-              color: Color(0xffA2A0A2),
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
+        Expanded(
+          child: Text(description,
+              style:
+                  TextStyles.sourceSans.body3.colour(UiConstants.kTextColor5)),
         ),
         ElevatedButton(
           onPressed: () =>
@@ -346,8 +372,8 @@ class ScheduleCallWrapper extends StatelessWidget {
       onPressed: () {
         final topic = topicController.text;
         final description = descriptionController.text;
-        if (id != null) {
-          bloc.add(UpdateEvent(id!, topic, description));
+        if (widget.id != null) {
+          bloc.add(UpdateEvent(widget.id!, topic, description));
         } else {
           bloc.add(ScheduleEvent(topic, description));
         }

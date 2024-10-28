@@ -69,6 +69,7 @@ class LiveCardWidget extends StatelessWidget {
                     : locator<UserService>().baseUser!.name!.isNotEmpty
                         ? locator<UserService>().baseUser!.name
                         : locator<UserService>().baseUser!.username;
+                        final userId =  locator<UserService>().baseUser!.uid;
             bool res = await getPermissions();
             if (res) {
               AppState.delegate!.appState.currentAction = PageAction(
@@ -78,6 +79,7 @@ class LiveCardWidget extends StatelessWidget {
                   roomCode: viewerCode,
                   options: HMSPrebuiltOptions(
                     userName: name,
+                    userId: userId,
                   ),
                 ),
               );

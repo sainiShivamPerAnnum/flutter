@@ -1,13 +1,15 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/experts/experts_details.dart';
-import 'package:felloapp/core/model/live/live_home.dart';
 import 'package:felloapp/feature/expertDetails/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/expertDetails/bloc/rating_bloc.dart';
 import 'package:felloapp/feature/expertDetails/widgets/rating_sheet.dart';
 import 'package:felloapp/feature/live/widgets/live_card.dart';
-import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
+import 'package:felloapp/feature/shorts/flutter_preload_videos.dart';
+import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -67,6 +69,7 @@ class _ExpertProfilePage extends StatelessWidget {
           final expertDetails = state.expertDetails;
           final tab = state.currentTab;
           final recentlive = state.recentLive;
+          final shortsData = state.shortsData;
           return DefaultTabController(
             length: 3,
             initialIndex: 0,
@@ -77,6 +80,7 @@ class _ExpertProfilePage extends StatelessWidget {
                   BaseUtil.openBookAdvisorSheet(
                     advisorId: advisorID,
                     advisorName: state.expertDetails?.name ?? '',
+                    isEdit: false,
                   );
                 },
                 child: Container(
@@ -270,7 +274,7 @@ class _ExpertProfilePage extends StatelessWidget {
                                     width: SizeConfig.padding46,
                                     height: SizeConfig.padding46,
                                     margin: EdgeInsets.only(
-                                      bottom: SizeConfig.padding4,
+                                      bottom: SizeConfig.padding8,
                                     ),
                                     decoration: BoxDecoration(
                                       color: UiConstants.greyVarient,
@@ -411,7 +415,7 @@ class _ExpertProfilePage extends StatelessWidget {
                             duration: recentlive[i].duration.toString(),
                           ),
                       ] else
-                        _buildTabOneData(recentlive),
+                        _buildTabOneData(shortsData),
                     ],
                   ),
                 ),
@@ -425,73 +429,80 @@ class _ExpertProfilePage extends StatelessWidget {
   }
 }
 
-Widget _buildTabOneData(List<RecentStream> shortsData) {
+Widget _buildTabOneData(List<VideoData> shortsData) {
   if (shortsData.isEmpty) {
-    return const Center(child: ErrorPage());
+    return const SizedBox.shrink();
   }
-
-  // Define the height for the GridView
-  final double gridHeight = (shortsData.length / 2).ceil() * 250.0;
-
+  final double gridHeight =
+      (shortsData.length / 2).ceil() * SizeConfig.padding300;
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      SizedBox(height: 16),
+      SizedBox(height: SizeConfig.padding16),
       SizedBox(
         height: gridHeight,
         child: GridView.builder(
           physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            childAspectRatio: 0.7,
+            crossAxisSpacing: SizeConfig.padding4,
+            mainAxisSpacing: SizeConfig.padding4,
+            childAspectRatio: 0.6,
           ),
           itemCount: shortsData.length,
           itemBuilder: (context, index) {
             final video = shortsData[index];
-
-            return Stack(
-              children: [
-                // Video Thumbnail
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: NetworkImage(
-                        video.thumbnail,
+            return GestureDetector(
+              onTap: () {
+                BlocProvider.of<PreloadBloc>(context)
+                    .add(const PreloadEvent.switchToProfileReels());
+                BlocProvider.of<PreloadBloc>(context)
+                    .add(PreloadEvent.updateUrls(shortsData));
+                BlocProvider.of<PreloadBloc>(context)
+                    .add(PreloadEvent.initializeAtIndex(index: index));
+                BlocProvider.of<PreloadBloc>(context)
+                    .add(PreloadEvent.playVideoAtIndex(index));
+                AppState.delegate!.appState.currentAction = PageAction(
+                  page: ShortsPageConfig,
+                  state: PageState.addWidget,
+                  widget: const BaseScaffold(body: ShortsVideoPage()),
+                );
+              },
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: UiConstants.greyVarient,
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness2),
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          video.thumbnail,
+                        ),
+                        fit: BoxFit.cover,
                       ),
-                      fit: BoxFit.cover,
                     ),
                   ),
-                ),
-
-                // Overlay with view count at the bottom left
-                Positioned(
-                  bottom: 8,
-                  left: 8,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
+                  Positioned(
+                    bottom: SizeConfig.padding8,
+                    left: SizeConfig.padding4,
                     child: Row(
                       children: [
-                        Icon(Icons.play_arrow, color: Colors.white, size: 16),
-                        SizedBox(width: 4),
+                        Icon(
+                          Icons.play_arrow,
+                          color: UiConstants.kTextColor,
+                          size: SizeConfig.body2,
+                        ),
+                        SizedBox(width: SizeConfig.padding4),
                         Text(
-                          '${video.views} views',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                          ),
+                          '${video.views}',
+                          style: TextStyles.sourceSansSB.body4,
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           },
         ),
@@ -692,6 +703,7 @@ class RatingReviewSection extends StatelessWidget {
                           isScrollControlled: true,
                           enableDrag: true,
                           isBarrierDismissible: true,
+                          addToScreenStack: false,
                           content: FeedbackBottomSheet(
                             advisorId: advisorId,
                             onSubmit: (rating, comment) {

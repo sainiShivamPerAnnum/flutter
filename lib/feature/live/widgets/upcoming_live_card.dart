@@ -1,7 +1,9 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/advisor/advisor_components/schedule.dart';
+import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -20,6 +22,7 @@ class UpcomingLiveCardWidget extends StatelessWidget {
   final int? liveCount;
   final int? duration;
   final String? timeSlot;
+  final String? broadcasterCode;
 
   UpcomingLiveCardWidget({
     required this.status,
@@ -32,6 +35,7 @@ class UpcomingLiveCardWidget extends StatelessWidget {
     this.liveCount,
     this.duration,
     this.timeSlot,
+    this.broadcasterCode,
     super.key,
   });
 
@@ -101,32 +105,58 @@ class UpcomingLiveCardWidget extends StatelessWidget {
                           BorderRadius.circular(SizeConfig.roundness5),
                     ),
                     child: Text(
-                      'STARTS IN ${_calculateStartTimeDifference()}',
+                      '',
+                      // 'STARTS IN ${_calculateStartTimeDifference()}',
                       style: TextStyles.sourceSansSB.body4.colour(
                         UiConstants.titleTextColor,
                       ),
                     ),
                   ),
                 ),
-              Positioned(
-                bottom: SizeConfig.padding10,
-                right: SizeConfig.padding10,
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding8,
-                    vertical: SizeConfig.padding4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: UiConstants.kTextColor,
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  ),
-                  child: Text(
-                    'Join Live',
-                    style: TextStyles.sourceSansSB.body4
-                        .colour(UiConstants.kTextColor4),
+              if (broadcasterCode != null)
+                Positioned(
+                  bottom: SizeConfig.padding10,
+                  right: SizeConfig.padding10,
+                  child: GestureDetector(
+                    onTap: () {
+                      final userService = locator<UserService>();
+                      final userId = userService.baseUser!.uid;
+                      final String userName =
+                          (userService.baseUser!.kycName != null &&
+                                      userService.baseUser!.kycName!.isNotEmpty
+                                  ? userService.baseUser!.kycName
+                                  : userService.baseUser!.name) ??
+                              "N/A";
+                      AppState.delegate!.appState.currentAction = PageAction(
+                        page: LivePreviewPageConfig,
+                        state: PageState.addWidget,
+                        widget: HMSPrebuilt(
+                          roomCode: broadcasterCode,
+                          options: HMSPrebuiltOptions(
+                            userName: userName,
+                            userId: userId,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.padding8,
+                        vertical: SizeConfig.padding4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: UiConstants.kTextColor,
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness5),
+                      ),
+                      child: Text(
+                        'Join Live',
+                        style: TextStyles.sourceSansSB.body4
+                            .colour(UiConstants.kTextColor4),
+                      ),
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
           Padding(

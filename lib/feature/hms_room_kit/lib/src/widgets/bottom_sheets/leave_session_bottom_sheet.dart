@@ -148,11 +148,15 @@ class _LeaveSessionBottomSheetState extends State<LeaveSessionBottomSheet> {
                                 {
                                   meetingStore.stopHLSStreaming(),
                                   meetingStore.leave(),
+                                  AppState.isInLiveStream = false,
+                                  AppState.backButtonDispatcher!.didPopRoute(),
                                 }
                               else
                                 {
                                   meetingStore.endRoom(
                                       false, "Room Ended From Flutter"),
+                                  AppState.isInLiveStream = false,
+                                  AppState.backButtonDispatcher!.didPopRoute(),
                                 },
                             },
                             title: HMSTitleText(
@@ -255,7 +259,6 @@ class _LeaveSessionBottomSheetState extends State<LeaveSessionBottomSheet> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   AppState.backButtonDispatcher!.didPopRoute();
-                                 
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: UiConstants.greyVarient,

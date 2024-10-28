@@ -8,6 +8,7 @@ import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/core/model/live/live_home.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
 
@@ -186,30 +187,61 @@ class ExpertsRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<RecentStream>>> getShortsByAdvisor({
+  Future<ApiResponse<List<VideoData>>> getShortsByAdvisor({
     required String advisorId,
   }) async {
     try {
       final response = await APIService.instance.getData(
-        'videos/$advisorId',
+        'videos/list',
         queryParams: {
           'type': "shorts",
+          'advisorId': advisorId,
         },
         cBaseUrl: _baseUrl,
         apiName: '$_experts/getShortsByAdvisor',
       );
       final responseData = response["data"];
       log("Experts shorts data: $responseData");
-      final List<RecentStream> recentStreams = (responseData as List)
+      final List<VideoData> recentStreams = (responseData as List)
           .map(
-            (item) => RecentStream.fromJson(
+            (item) => VideoData.fromJson(
               item,
             ),
           )
           .toList();
 
-      return ApiResponse<List<RecentStream>>(
+      return ApiResponse<List<VideoData>>(
         model: recentStreams,
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<PricingResponse>> updateBooking({
+    required int duration,
+    required String bookingId,
+    required String selectedDate,
+  }) async {
+    try {
+      final body = {
+        "duration": duration,
+        "bookingId": bookingId,
+        "selectedDate": selectedDate,
+      };
+
+      final response = await APIService.instance.patchData(
+        'booking/reschedule',
+        body: body,
+        cBaseUrl: _baseUrl,
+        apiName: '$_booking/updateBooking',
+      );
+      final responseData = response['data'];
+      log("Update booking data: $responseData");
+      return ApiResponse<PricingResponse>(
+        model: PricingResponse.fromJson(responseData),
         code: 200,
       );
     } catch (e) {
@@ -300,8 +332,9 @@ class ExpertsRepository extends BaseRepo {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
-   Future<ApiResponse<bool>> submitQNA({
-    required List<Map<String, String>>  detailsQA,
+
+  Future<ApiResponse<bool>> submitQNA({
+    required List<Map<String, String>> detailsQA,
     required String bookingID,
   }) async {
     try {

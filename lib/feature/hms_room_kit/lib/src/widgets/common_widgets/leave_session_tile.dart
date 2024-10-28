@@ -1,6 +1,7 @@
 import 'package:felloapp/feature/hms_room_kit/lib/src/layout_api/hms_theme_colors.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/common_widgets/hms_title_text.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class LeaveSessionTile extends StatelessWidget {
@@ -32,7 +33,7 @@ class LeaveSessionTile extends StatelessWidget {
       },
       child: Container(
         height: 116,
-        color: tileColor ?? HMSThemeColors.surfaceDim,
+        color: UiConstants.bg,
         child: Padding(
           padding: tilePadding ??
               const EdgeInsets.only(top: 24.0, left: 18, right: 18),

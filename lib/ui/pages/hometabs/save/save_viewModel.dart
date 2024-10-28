@@ -315,16 +315,12 @@ class SaveViewModel extends ChangeNotifier {
           break;
         case "LV":
           saveViewItems.add(
-            TopLive(
-              model: smodel,
-            ),
+            const TopLive(),
           );
           break;
         case "EXP":
           saveViewItems.add(
-            Experts(
-              model: smodel,
-            ),
+            const Experts(),
           );
           break;
         case "SN":
@@ -346,21 +342,19 @@ class SaveViewModel extends ChangeNotifier {
           saveViewItems.add(const AutosaveCard());
           break;
         case 'CH':
-          saveViewItems.add(Campaigns(model: smodel));
+          saveViewItems.add(const Campaigns());
           break;
         case 'BL':
-          saveViewItems.add(Blogs(model: smodel));
+          saveViewItems.add(const Blogs());
           break;
         case 'UPB':
-          saveViewItems.add(UpcomingBookingsComponent(model: smodel));
+          saveViewItems.add(const UpcomingBookingsComponent());
           break;
         case 'PB':
-          saveViewItems.add(PastBookingsComponent(model: smodel));
+          saveViewItems.add(const PastBookingsComponent());
           break;
         case 'FC':
-          if (smodel.freeCallAvailable) {
-            saveViewItems.add(const FirstFreeCall());
-          }
+          saveViewItems.add(const FirstFreeCall());
           break;
       }
     }
@@ -439,7 +433,6 @@ class SaveViewModel extends ChangeNotifier {
     blogPosts = response.model;
     blogPosts!.sort((a, b) => a.acf!.categories!.compareTo(b.acf!.categories!));
     _blogPostsByCategory = getAllBlogsByCategory();
-    print(blogPosts!.length);
     updateIsLoading(false);
     notifyListeners();
   }
@@ -611,7 +604,7 @@ class QuickLinks extends StatelessWidget {
           quickLinks.length,
           (index) => GestureDetector(
             onTap: () {
-              //todo block logic here @Hirdesh2101cdfvdc 
+              //todo block logic here @Hirdesh2101cdfvdc
               Haptic.vibrate();
               AppState.delegate!
                   .parseRoute(Uri.parse(quickLinks[index].deeplink));

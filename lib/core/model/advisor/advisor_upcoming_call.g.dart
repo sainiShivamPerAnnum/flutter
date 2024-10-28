@@ -10,7 +10,7 @@ AdvisorCall _$AdvisorCallFromJson(Map<String, dynamic> json) => AdvisorCall(
       scheduledOn: DateTime.parse(json['scheduledOn'] as String),
       duration: json['duration'] as String,
       userName: json['userName'] as String?,
-      callLink: json['callLink'] as String?,
+      hostCode: json['hostCode'] as String?,
       detailsQA: (json['detailsQA'] as List<dynamic>?)
               ?.map((e) => Map<String, String>.from(e as Map))
               .toList() ??
@@ -22,6 +22,6 @@ Map<String, dynamic> _$AdvisorCallToJson(AdvisorCall instance) =>
       'userName': instance.userName,
       'scheduledOn': instance.scheduledOn.toIso8601String(),
       'duration': instance.duration,
-      'callLink': instance.callLink,
+      'hostCode': instance.hostCode,
       'detailsQA': instance.detailsQA,
     };

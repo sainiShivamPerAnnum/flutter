@@ -60,3 +60,14 @@ class SubmitPaymentRequest extends BookingEvent {
   final ApplicationMeta? appuse;
   final bool isFree;
 }
+
+class EditBooking extends BookingEvent{
+  const EditBooking({
+    required this.duration,
+    required this.bookingId,
+    required this.selectedDate,
+  });
+  final String bookingId;
+  final String selectedDate;
+  final int duration;
+}

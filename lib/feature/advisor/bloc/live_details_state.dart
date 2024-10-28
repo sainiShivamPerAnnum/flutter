@@ -66,9 +66,10 @@ class ScheduleCallLoaded extends ScheduleCallState {
 
 class ScheduleCallSuccess extends ScheduleCallState {
   final String message;
-  const ScheduleCallSuccess(this.message);
+  final String date;
+  const ScheduleCallSuccess(this.message,this.date);
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message,date];
 }
 
 class ScheduleCallFailure extends ScheduleCallState {
