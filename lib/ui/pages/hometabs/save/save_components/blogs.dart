@@ -28,8 +28,6 @@ class Blogs extends StatelessWidget {
                 children: [
                   const TitleSubtitleContainer(
                     title: "Fin-gyan",
-                    // zeroPadding: true,
-                    leadingPadding: true,
                   ),
                   Padding(
                     padding: EdgeInsets.only(
@@ -68,7 +66,7 @@ class SaveBlogSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        left: SizeConfig.padding24,
+        left: SizeConfig.padding20,
         top: SizeConfig.padding10,
       ),
       child: SizedBox(

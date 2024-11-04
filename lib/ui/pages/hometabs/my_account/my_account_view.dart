@@ -59,8 +59,13 @@ class MyAccount extends StatelessWidget {
                     onPickImage: model.showCustomAvatarsDialog,
                     superFelloLevel: model.superFelloLevel,
                   ),
+                  SizedBox(
+                    height: SizeConfig.padding20,
+                  ),
                   const PortfolioCard(),
-
+                  SizedBox(
+                    height: SizeConfig.padding10,
+                  ),
                   AccountInfoTiles(
                     key: const Key('userProfileEntry'),
                     //key: K.userProfileEntryCTAKey,

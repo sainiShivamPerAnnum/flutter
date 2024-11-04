@@ -13,6 +13,7 @@ import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/bottom_sheets/leav
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/common_widgets/hms_dropdown.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/toasts/hms_disconnected_toast.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/toasts/hms_reconnection_toast.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -142,120 +143,120 @@ class UtilityComponents {
     // );
   }
 
-  static Future<dynamic> onLeaveStudio(BuildContext context) {
-    MeetingStore meetingStore = context.read<MeetingStore>();
-    return showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        actionsPadding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-        backgroundColor: themeBottomSheetColor,
-        title: SizedBox(
-          width: 300,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SvgPicture.asset(
-                "assets/hms/icons/leave_hls.svg",
-                height: 24,
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              Text(
-                'Leave Studio',
-                style: HMSTextStyle.setTextStyle(
-                  color: themeDefaultColor,
-                  fontSize: 20,
-                  height: 24 / 20,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.15,
-                ),
-              ),
-            ],
-          ),
-        ),
-        content: Text(
-          "Others will continue after you leave. You can join the studio again.",
-          style: HMSTextStyle.setTextStyle(
-            color: themeHintColor,
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            height: 20 / 14,
-            letterSpacing: 0.25,
-          ),
-        ),
-        actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    shadowColor: WidgetStateProperty.all(themeSurfaceColor),
-                    backgroundColor:
-                        WidgetStateProperty.all(themeBottomSheetColor),
-                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        side: BorderSide(
-                          width: 1,
-                          color: popupButtonBorderColor,
-                        ),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  ),
-                  onPressed: () => Navigator.pop(context, false),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0,
-                      vertical: 12,
-                    ),
-                    child: HMSTitleText(
-                      text: 'Don’t Leave',
-                      textColor: themeDefaultColor,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    shadowColor: WidgetStateProperty.all(themeSurfaceColor),
-                    backgroundColor: WidgetStateProperty.all(errorColor),
-                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        side: BorderSide(width: 1, color: errorColor),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  ),
-                  onPressed: () => {
-                    meetingStore.leave(),
-                    Navigator.popUntil(context, (route) => route.isFirst),
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 25.0,
-                      vertical: 12,
-                    ),
-                    child: HMSTitleText(
-                      text: 'Leave',
-                      textColor: hmsWhiteColor,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+  // static Future<dynamic> onLeaveStudio(BuildContext context) {
+  //   MeetingStore meetingStore = context.read<MeetingStore>();
+  //   return showDialog(
+  //     context: context,
+  //     builder: (ctx) => AlertDialog(
+  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  //       insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+  //       actionsPadding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+  //       backgroundColor: themeBottomSheetColor,
+  //       title: SizedBox(
+  //         width: 300,
+  //         child: Row(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             SvgPicture.asset(
+  //               "assets/hms/icons/leave_hls.svg",
+  //               height: 24,
+  //             ),
+  //             const SizedBox(
+  //               width: 5,
+  //             ),
+  //             Text(
+  //               'Leave Studio',
+  //               style: HMSTextStyle.setTextStyle(
+  //                 color: themeDefaultColor,
+  //                 fontSize: 20,
+  //                 height: 24 / 20,
+  //                 fontWeight: FontWeight.w600,
+  //                 letterSpacing: 0.15,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //       content: Text(
+  //         "Others will continue after you leave. You can join the studio again.",
+  //         style: HMSTextStyle.setTextStyle(
+  //           color: themeHintColor,
+  //           fontSize: 14,
+  //           fontWeight: FontWeight.w400,
+  //           height: 20 / 14,
+  //           letterSpacing: 0.25,
+  //         ),
+  //       ),
+  //       actions: [
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Expanded(
+  //               child: ElevatedButton(
+  //                 style: ButtonStyle(
+  //                   shadowColor: WidgetStateProperty.all(themeSurfaceColor),
+  //                   backgroundColor:
+  //                       WidgetStateProperty.all(themeBottomSheetColor),
+  //                   shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+  //                     RoundedRectangleBorder(
+  //                       side: BorderSide(
+  //                         width: 1,
+  //                         color: popupButtonBorderColor,
+  //                       ),
+  //                       borderRadius: BorderRadius.circular(8.0),
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 onPressed: () => Navigator.pop(context, false),
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.symmetric(
+  //                     horizontal: 8.0,
+  //                     vertical: 12,
+  //                   ),
+  //                   child: HMSTitleText(
+  //                     text: 'Don’t Leave',
+  //                     textColor: themeDefaultColor,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //             const SizedBox(
+  //               width: 10,
+  //             ),
+  //             Expanded(
+  //               child: ElevatedButton(
+  //                 style: ButtonStyle(
+  //                   shadowColor: WidgetStateProperty.all(themeSurfaceColor),
+  //                   backgroundColor: WidgetStateProperty.all(errorColor),
+  //                   shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+  //                     RoundedRectangleBorder(
+  //                       side: BorderSide(width: 1, color: errorColor),
+  //                       borderRadius: BorderRadius.circular(8.0),
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 onPressed: () => {
+  //                   meetingStore.leave(),
+  //                   AppState.backButtonDispatcher!.didPopRoute(),
+  //                 },
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.symmetric(
+  //                     horizontal: 25.0,
+  //                     vertical: 12,
+  //                   ),
+  //                   child: HMSTitleText(
+  //                     text: 'Leave',
+  //                     textColor: hmsWhiteColor,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   static Future<void> showRoleChangeDialog(
     HMSRoleChangeRequest event,
@@ -287,193 +288,193 @@ class UtilityComponents {
     );
   }
 
-  static showonExceptionDialog(event, BuildContext context) {
-    event = event as HMSException;
-    var message =
-        "${event.message} ${event.id ?? ""} ${event.code?.errorCode ?? ""} ${event.description} ${event.action} ${event.params ?? "".toString()}";
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          backgroundColor: themeBottomSheetColor,
-          content: Text(
-            message,
-            style: HMSTextStyle.setTextStyle(
-              color: iconColor,
-            ),
-          ),
-          actions: [
-            ElevatedButton(
-              child: Text(
-                'OK',
-                style: HMSTextStyle.setTextStyle(),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // static showonExceptionDialog(event, BuildContext context) {
+  //   event = event as HMSException;
+  //   var message =
+  //       "${event.message} ${event.id ?? ""} ${event.code?.errorCode ?? ""} ${event.description} ${event.action} ${event.params ?? "".toString()}";
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  //         backgroundColor: themeBottomSheetColor,
+  //         content: Text(
+  //           message,
+  //           style: HMSTextStyle.setTextStyle(
+  //             color: iconColor,
+  //           ),
+  //         ),
+  //         actions: [
+  //           ElevatedButton(
+  //             child: Text(
+  //               'OK',
+  //               style: HMSTextStyle.setTextStyle(),
+  //             ),
+  //             onPressed: () {
+  //               Navigator.pop(context);
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
-  static Future<String> showInputDialog({
-    context,
-    String placeholder = "",
-    String prefilledValue = "",
-  }) async {
-    TextEditingController textController = TextEditingController();
-    if (prefilledValue.isNotEmpty) {
-      textController.text = prefilledValue;
-    }
-    String answer = await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        backgroundColor: themeBottomSheetColor,
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              autofocus: true,
-              controller: textController,
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(16)),
-                ),
-                hintText: placeholder,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          ElevatedButton(
-            child: Text(
-              'Cancel',
-              style: HMSTextStyle.setTextStyle(),
-            ),
-            onPressed: () {
-              Navigator.pop(context, '');
-            },
-          ),
-          ElevatedButton(
-            child: Text(
-              'OK',
-              style: HMSTextStyle.setTextStyle(),
-            ),
-            onPressed: () {
-              if (textController.text == "") {
-              } else {
-                Navigator.pop(context, textController.text);
-              }
-            },
-          ),
-        ],
-      ),
-    );
+  // static Future<String> showInputDialog({
+  //   context,
+  //   String placeholder = "",
+  //   String prefilledValue = "",
+  // }) async {
+  //   TextEditingController textController = TextEditingController();
+  //   if (prefilledValue.isNotEmpty) {
+  //     textController.text = prefilledValue;
+  //   }
+  //   String answer = await showDialog(
+  //     context: context,
+  //     builder: (context) => AlertDialog(
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(12),
+  //       ),
+  //       backgroundColor: themeBottomSheetColor,
+  //       content: Column(
+  //         mainAxisSize: MainAxisSize.min,
+  //         children: [
+  //           TextField(
+  //             autofocus: true,
+  //             controller: textController,
+  //             decoration: InputDecoration(
+  //               border: const OutlineInputBorder(
+  //                 borderRadius: BorderRadius.all(Radius.circular(16)),
+  //               ),
+  //               hintText: placeholder,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //       actions: [
+  //         ElevatedButton(
+  //           child: Text(
+  //             'Cancel',
+  //             style: HMSTextStyle.setTextStyle(),
+  //           ),
+  //           onPressed: () {
+  //             Navigator.pop(context, '');
+  //           },
+  //         ),
+  //         ElevatedButton(
+  //           child: Text(
+  //             'OK',
+  //             style: HMSTextStyle.setTextStyle(),
+  //           ),
+  //           onPressed: () {
+  //             if (textController.text == "") {
+  //             } else {
+  //               Navigator.pop(context, textController.text);
+  //             }
+  //           },
+  //         ),
+  //       ],
+  //     ),
+  //   );
 
-    return answer;
-  }
+  //   return answer;
+  // }
 
-  static showHLSDialog({required BuildContext context}) async {
-    TextEditingController textController = TextEditingController();
-    textController.text = Constant.streamingUrl;
-    bool isSingleFileChecked = false, isVODChecked = false;
-    MeetingStore meetingStore = context.read<MeetingStore>();
-    await showDialog(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            backgroundColor: themeBottomSheetColor,
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text("Recording"),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Single file per layer",
-                      style: HMSTextStyle.setTextStyle(
-                        color: iconColor,
-                      ),
-                    ),
-                    Checkbox(
-                      value: isSingleFileChecked,
-                      activeColor: Colors.blue,
-                      onChanged: (value) {
-                        if (value != null) {
-                          isSingleFileChecked = value;
-                          setState(() {});
-                        }
-                      },
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Video on Demand",
-                      style: HMSTextStyle.setTextStyle(
-                        color: iconColor,
-                      ),
-                    ),
-                    Checkbox(
-                      value: isVODChecked,
-                      activeColor: Colors.blue,
-                      onChanged: (value) {
-                        if (value != null) {
-                          isVODChecked = value;
-                          setState(() {});
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            actions: [
-              ElevatedButton(
-                child: Text(
-                  'Cancel',
-                  style: HMSTextStyle.setTextStyle(),
-                ),
-                onPressed: () {
-                  Navigator.pop(context, '');
-                },
-              ),
-              ElevatedButton(
-                child: Text(
-                  'OK',
-                  style: HMSTextStyle.setTextStyle(),
-                ),
-                onPressed: () {
-                  if (textController.text == "") {
-                  } else {
-                    meetingStore.startHLSStreaming(
-                      isSingleFileChecked,
-                      isVODChecked,
-                    );
-                    Navigator.pop(context);
-                  }
-                },
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
+  // static showHLSDialog({required BuildContext context}) async {
+  //   TextEditingController textController = TextEditingController();
+  //   textController.text = Constant.streamingUrl;
+  //   bool isSingleFileChecked = false, isVODChecked = false;
+  //   MeetingStore meetingStore = context.read<MeetingStore>();
+  //   await showDialog(
+  //     context: context,
+  //     builder: (context) => StatefulBuilder(
+  //       builder: (context, setState) {
+  //         return AlertDialog(
+  //           shape: RoundedRectangleBorder(
+  //             borderRadius: BorderRadius.circular(12),
+  //           ),
+  //           backgroundColor: themeBottomSheetColor,
+  //           content: Column(
+  //             mainAxisSize: MainAxisSize.min,
+  //             children: [
+  //               const Text("Recording"),
+  //               Row(
+  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                 children: [
+  //                   Text(
+  //                     "Single file per layer",
+  //                     style: HMSTextStyle.setTextStyle(
+  //                       color: iconColor,
+  //                     ),
+  //                   ),
+  //                   Checkbox(
+  //                     value: isSingleFileChecked,
+  //                     activeColor: Colors.blue,
+  //                     onChanged: (value) {
+  //                       if (value != null) {
+  //                         isSingleFileChecked = value;
+  //                         setState(() {});
+  //                       }
+  //                     },
+  //                   ),
+  //                 ],
+  //               ),
+  //               Row(
+  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                 children: [
+  //                   Text(
+  //                     "Video on Demand",
+  //                     style: HMSTextStyle.setTextStyle(
+  //                       color: iconColor,
+  //                     ),
+  //                   ),
+  //                   Checkbox(
+  //                     value: isVODChecked,
+  //                     activeColor: Colors.blue,
+  //                     onChanged: (value) {
+  //                       if (value != null) {
+  //                         isVODChecked = value;
+  //                         setState(() {});
+  //                       }
+  //                     },
+  //                   ),
+  //                 ],
+  //               ),
+  //             ],
+  //           ),
+  //           actions: [
+  //             ElevatedButton(
+  //               child: Text(
+  //                 'Cancel',
+  //                 style: HMSTextStyle.setTextStyle(),
+  //               ),
+  //               onPressed: () {
+  //                 Navigator.pop(context, '');
+  //               },
+  //             ),
+  //             ElevatedButton(
+  //               child: Text(
+  //                 'OK',
+  //                 style: HMSTextStyle.setTextStyle(),
+  //               ),
+  //               onPressed: () {
+  //                 if (textController.text == "") {
+  //                 } else {
+  //                   meetingStore.startHLSStreaming(
+  //                     isSingleFileChecked,
+  //                     isVODChecked,
+  //                   );
+  //                   Navigator.pop(context);
+  //                 }
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   static showRoleListForMute(
     BuildContext context,
@@ -482,7 +483,7 @@ class UtilityComponents {
   ) async {
     List<HMSRole> selectedRoles = [];
     bool muteAll = false;
-    showDialog(
+    await showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {
@@ -645,7 +646,7 @@ class UtilityComponents {
       toRole = newValue;
     }
 
-    showDialog(
+    await showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {

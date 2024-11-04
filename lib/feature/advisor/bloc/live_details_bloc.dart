@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:felloapp/core/repository/advisor_repo.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -214,6 +215,7 @@ class ScheduleLiveBloc extends Bloc<ScheduleCallEvent, ScheduleCallState> {
               ),
             );
           }
+          unawaited(_advisorRepo.getEvents());
         }
       }
     } catch (error) {

@@ -19,7 +19,7 @@ class UpcomingBooking {
 
 @_deserializable
 class Booking {
-  // final String 
+  final String bookingId;
   final String advisorName;
   final String image;
   final DateTime scheduledOn;
@@ -29,13 +29,14 @@ class Booking {
   final String guestCode;
 
   Booking({
+    required this.bookingId,
     required this.advisorName,
     required this.image,
     required this.scheduledOn,
     required this.duration,
-    this.recordingLink,
     required this.advisorId,
     required this.guestCode,
+    this.recordingLink,
   });
 
   factory Booking.fromJson(Map<String, dynamic> json) =>

@@ -176,7 +176,8 @@ class _ScreenControllerState extends State<ScreenController> {
           return UtilityComponents.showFailureError(
             ans,
             context,
-            () => Navigator.of(context).popUntil((route) => route.isFirst),
+            
+            () => AppState.backButtonDispatcher!.didPopRoute(),
           );
         },
       );

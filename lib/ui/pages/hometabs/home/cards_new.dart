@@ -30,7 +30,7 @@ class PortfolioCard extends StatelessWidget {
           vertical: SizeConfig.padding14,
           horizontal: SizeConfig.padding18,
         ),
-        margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding18),
+        margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
         decoration: BoxDecoration(
           color: UiConstants.greyVarient,
           borderRadius: BorderRadius.circular(SizeConfig.roundness12),

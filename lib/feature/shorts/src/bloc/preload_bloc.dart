@@ -136,6 +136,8 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                 ? userService.baseUser!.kycName
                 : userService.baseUser!.name) ??
             "N/A";
+        final String? avatarId = locator<UserService>().baseUser!.avatarId;
+        final String? dpUrl = locator<UserService>().myUserDpUrl;
         unawaited(repository.addComment(e.videoId, uid, userName, e.comment));
 
         List<CommentData> currentComments =
@@ -147,6 +149,8 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           name: userName,
           comment: e.comment,
           createdAt: DateTime.now().toString(),
+          avatarId: avatarId ?? 'AV1',
+          dpUrl: dpUrl ?? '',
         );
         List<CommentData> updatedComments = List.from(currentComments)
           ..add(newComment);

@@ -5,11 +5,13 @@ class LiveHeader extends StatelessWidget {
   final String title;
   final String subtitle;
   final VoidCallback onViewAllPressed;
+  final bool showViewAll;
 
   const LiveHeader({
     required this.title,
     required this.subtitle,
     required this.onViewAllPressed,
+    required this.showViewAll,
     Key? key,
   }) : super(key: key);
 
@@ -36,22 +38,23 @@ class LiveHeader extends StatelessWidget {
             ],
           ),
         ),
-        TextButton(
-          onPressed: onViewAllPressed,
-          child: Row(
-            children: [
-              Text(
-                'VIEW ALL',
-                 style: TextStyles.sourceSansSB.body3,
-              ),
-              Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.white,
-                size: SizeConfig.body3,
-              ),
-            ],
+        if (showViewAll)
+          TextButton(
+            onPressed: onViewAllPressed,
+            child: Row(
+              children: [
+                Text(
+                  'VIEW ALL',
+                  style: TextStyles.sourceSansSB.body3,
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.white,
+                  size: SizeConfig.body3,
+                ),
+              ],
+            ),
           ),
-        ),
       ],
     );
   }

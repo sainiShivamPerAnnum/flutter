@@ -29,7 +29,7 @@ class CampaignCardSection extends StatelessWidget {
                 width: SizeConfig.screenWidth,
                 margin: EdgeInsets.symmetric(
                   vertical: SizeConfig.padding14,
-                  horizontal: SizeConfig.padding18,
+                  horizontal: SizeConfig.padding20,
                 ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(

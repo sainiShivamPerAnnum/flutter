@@ -56,7 +56,7 @@ class TopExperts extends StatelessWidget {
         children: [
           for (int i = 0; i < topExperts.length; i++)
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding18)
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20)
                   .copyWith(bottom: SizeConfig.padding16),
               child: ExpertCard(
                 expert: topExperts[i],

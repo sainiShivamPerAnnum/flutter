@@ -1,4 +1,6 @@
 import 'package:felloapp/core/model/experts/experts_home.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -45,68 +47,71 @@ class ExpertCard extends StatelessWidget {
                 ),
                 Positioned(
                   bottom: SizeConfig.padding8,
-                  left: SizeConfig.padding10,
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(
-                          SizeConfig.padding4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: UiConstants.kTextColor4.withOpacity(0.3),
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness5),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.badge,
-                              color: UiConstants.kTabBorderColor,
-                              size: SizeConfig.body6,
-                            ),
-                            SizedBox(
-                              width: SizeConfig.padding2,
-                            ),
-                            Text(
-                              " ${expert.experience} Years",
-                              style: TextStyles.sourceSans.body6,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(
-                          SizeConfig.padding4,
-                        ),
-                        margin: EdgeInsets.only(left: SizeConfig.padding12),
-                        decoration: BoxDecoration(
-                          color: UiConstants.kTextColor4.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(
-                            SizeConfig.roundness5,
+                  child: SizedBox(
+                    width: SizeConfig.padding140,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(
+                            SizeConfig.padding4,
+                          ),
+                          margin: EdgeInsets.only(left: SizeConfig.padding10),
+                          decoration: BoxDecoration(
+                            color: UiConstants.kTextColor4.withOpacity(0.3),
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness5),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              AppImage(
+                                Assets.experience,
+                                height: SizeConfig.body6,
+                              ),
+                              SizedBox(
+                                width: SizeConfig.padding2,
+                              ),
+                              Text(
+                                " ${expert.experience} Years",
+                                style: TextStyles.sourceSans.body6,
+                              ),
+                            ],
                           ),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.star,
-                              color: UiConstants.kamber,
-                              size: SizeConfig.body6,
+                        Container(
+                          padding: EdgeInsets.all(
+                            SizeConfig.padding4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: UiConstants.kTextColor4.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(
+                              SizeConfig.roundness5,
                             ),
-                            SizedBox(
-                              width: SizeConfig.padding2,
-                            ),
-                            Text(
-                              '${expert.rating}',
-                              style: TextStyles.sourceSans.body6,
-                            ),
-                          ],
+                          ),
+                          margin: EdgeInsets.only(right: SizeConfig.padding10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.star,
+                                color: UiConstants.kamber,
+                                size: SizeConfig.body6,
+                              ),
+                              SizedBox(
+                                width: SizeConfig.padding2,
+                              ),
+                              Text(
+                                '${expert.rating}',
+                                style: TextStyles.sourceSans.body6,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -208,7 +213,7 @@ class ExpertCard extends StatelessWidget {
                                     decoration: expert.isFree
                                         ? TextDecoration.lineThrough
                                         : TextDecoration.none,
-                                      decorationColor: UiConstants.kTextColor,
+                                    decorationColor: UiConstants.kTextColor,
                                   ),
                             ),
                             if (expert.isFree)

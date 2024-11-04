@@ -29,13 +29,12 @@ class UpcomingBookingsComponent extends StatelessWidget {
                 children: [
                   const TitleSubtitleContainer(
                     title: "Your upcoming calls",
-                    leadingPadding: true,
                   ),
                   Container(
                     height: SizeConfig.screenHeight! * 0.3465,
                     padding: EdgeInsets.only(top: SizeConfig.padding10),
                     margin: EdgeInsets.only(
-                      top: SizeConfig.padding10,
+                      top: SizeConfig.padding10,  
                     ),
                     child: ListView.builder(
                       itemCount: upcomingBookings.length,
@@ -166,7 +165,7 @@ class ScheduleCard extends StatelessWidget {
                         BaseUtil.openBookAdvisorSheet(
                           advisorId: booking.advisorId,
                           isEdit: true,
-                          bookingId: '',
+                          bookingId: booking.bookingId,
                           advisorName: booking.advisorName,
                         );
                       },
@@ -222,7 +221,6 @@ class ScheduleCard extends StatelessWidget {
               ],
             ),
           ),
-          const Spacer(),
           Container(
             padding: EdgeInsets.symmetric(
               horizontal: SizeConfig.padding14,

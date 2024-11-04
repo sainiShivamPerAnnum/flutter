@@ -26,8 +26,8 @@ class ConsultationWidget extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(
             top: SizeConfig.padding10,
-            left: SizeConfig.padding18,
-            right: SizeConfig.padding18,
+            left: SizeConfig.padding20,
+            right: SizeConfig.padding20,
           ),
           padding: EdgeInsets.all(SizeConfig.padding16),
           decoration: BoxDecoration(

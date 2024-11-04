@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/feature/advisor/advisor_components/booking_confirm_sheet.dart';
+import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
 import 'package:felloapp/feature/advisor/bloc/live_details_bloc.dart';
 import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -73,8 +74,16 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
           color: UiConstants.kTextColor,
         ),
       ),
-      body: BlocProvider(
-        create: (context) => ScheduleLiveBloc(locator())..add(LoadCategories()),
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) =>
+                ScheduleLiveBloc(locator())..add(LoadCategories()),
+          ),
+          BlocProvider(
+            create: (context) => AdvisorBloc(locator()),
+          ),
+        ],
         child: BlocConsumer<ScheduleLiveBloc, ScheduleCallState>(
           listener: (context, state) {
             if (state is ScheduleCallSuccess) {
@@ -85,6 +94,12 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
                   date: state.date,
                 ),
               );
+              Future.delayed(const Duration(seconds: 2), () {
+                BlocProvider.of<AdvisorBloc>(
+                  context,
+                  listen: false,
+                ).add(const LoadAdvisorData());
+              });
             }
           },
           builder: (context, state) {
@@ -368,29 +383,47 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
   ) {
     final bloc = context.read<ScheduleLiveBloc>();
 
-    return ElevatedButton(
-      onPressed: () {
-        final topic = topicController.text;
-        final description = descriptionController.text;
-        if (widget.id != null) {
-          bloc.add(UpdateEvent(widget.id!, topic, description));
-        } else {
-          bloc.add(ScheduleEvent(topic, description));
-        }
+    bool isButtonEnabled(ScheduleCallLoaded state) {
+      return topicController.text.isNotEmpty &&
+          descriptionController.text.isNotEmpty &&
+          state.selectedCategory.isNotEmpty &&
+          state.selectedDateIndex != -1 &&
+          state.selectedTimeIndex != -1 &&
+          state.profilePicture != null;
+    }
+
+    return BlocBuilder<ScheduleLiveBloc, ScheduleCallState>(
+      builder: (context, state) {
+        bool isEnabled = state is ScheduleCallLoaded && isButtonEnabled(state);
+        return ElevatedButton(
+          onPressed: isEnabled
+              ? () {
+                  final topic = topicController.text;
+                  final description = descriptionController.text;
+                  if (widget.id != null) {
+                    bloc.add(UpdateEvent(widget.id!, topic, description));
+                  } else {
+                    bloc.add(ScheduleEvent(topic, description));
+                  }
+                }
+              : null,
+          style: ElevatedButton.styleFrom(
+            disabledBackgroundColor: Colors.white38,
+            backgroundColor: Colors.white,
+            minimumSize: const Size(double.infinity, 50),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+          child: const Text(
+            'Schedule Live',
+            style: TextStyle(
+              color: Color(0xff3F4748),
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        );
       },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        minimumSize: Size(double.infinity, 50),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      ),
-      child: const Text(
-        'Schedule Live',
-        style: TextStyle(
-          color: Color(0xff3F4748),
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
     );
   }
 }

@@ -83,6 +83,7 @@ class __LiveHomeState extends State<_LiveHome> {
                         title: liveData.sections.live.title,
                         subtitle: liveData.sections.live.subtitle,
                         onViewAllPressed: () {},
+                        showViewAll: liveData.live.length > 1,
                       ),
                     ),
                     buildLiveSection(liveData.live),
@@ -95,6 +96,7 @@ class __LiveHomeState extends State<_LiveHome> {
                           title: liveData.sections.upcoming.title,
                           subtitle: liveData.sections.upcoming.subtitle,
                           onViewAllPressed: () {},
+                          showViewAll: liveData.upcoming.length > 1,
                         ),
                       ),
                     _buildUpcomingSection(liveData.upcoming),
@@ -107,6 +109,7 @@ class __LiveHomeState extends State<_LiveHome> {
                           title: liveData.sections.recent.title,
                           subtitle: liveData.sections.recent.subtitle,
                           onViewAllPressed: () {},
+                          showViewAll: liveData.recent.length > 1,
                         ),
                       ),
                     buildRecentSection(liveData.recent),
@@ -130,9 +133,11 @@ class __LiveHomeState extends State<_LiveHome> {
         children: [
           for (final live in liveData)
             Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding8,
-              ).copyWith(bottom: 8),
+              padding: EdgeInsets.only(
+                right: SizeConfig.padding8,
+              ).copyWith(
+                bottom: SizeConfig.padding8,
+              ),
               child: LiveCardWidget(
                 status: 'upcoming',
                 title: live.title,
@@ -217,9 +222,11 @@ Widget buildLiveSection(List<LiveStream> liveData) {
             children: [
               for (final live in liveData)
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding8,
-                  ).copyWith(bottom: 8),
+                  padding: EdgeInsets.only(
+                    right: SizeConfig.padding8,
+                  ).copyWith(
+                    bottom: SizeConfig.padding8,
+                  ),
                   child: LiveCardWidget(
                     status: 'live',
                     title: live.title,
@@ -244,10 +251,9 @@ Widget buildRecentSection(List<RecentStream> recentData) {
       children: [
         for (final recent in recentData)
           Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.padding8,
-            ).copyWith(
+            padding: EdgeInsets.only(
               bottom: SizeConfig.padding8,
+              right: SizeConfig.padding8,
             ),
             child: LiveCardWidget(
               status: 'recent',

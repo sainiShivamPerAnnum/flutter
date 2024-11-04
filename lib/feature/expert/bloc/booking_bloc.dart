@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/bookings/payment_response.dart';
 import 'package:felloapp/core/repository/experts_repo.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,10 +20,12 @@ part 'booking_state.dart';
 
 class BookingBloc extends Bloc<BookingEvent, BookingState> {
   final ExpertsRepository _expertsRepository;
+  final SaveViewModel _saveViewModel;
   final CustomLogger _logger;
   BookingBloc(
     this._expertsRepository,
     this._logger,
+    this._saveViewModel,
   ) : super(const LoadingBookingsData()) {
     on<LoadBookingDates>(_onLoadBookingDates);
     on<SelectDate>(_onSelectDate);
@@ -141,12 +144,17 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     );
 
     if (response.isSuccess()) {
+      await AppState.backButtonDispatcher!.didPopRoute();
       BaseUtil.showPositiveAlert(
         'Booking updated Successfully!',
-        "New date is ${event.selectedDate}",
+        "New date is ${BaseUtil.formatDateTime(
+          DateTime.parse(event.selectedDate),
+        )}",
       );
+      unawaited(_saveViewModel.getUpcomingBooking());
     } else {
       _logger.d('Failed to submit booking');
+      await AppState.backButtonDispatcher!.didPopRoute();
       BaseUtil.showNegativeAlert(
         'Updating booking Failed!',
         response.errorMessage ?? 'Error',

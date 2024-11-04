@@ -61,7 +61,6 @@ class BottomNavBar extends StatelessWidget {
                                 superModel.onItemTapped(index);
                               },
                               child: Container(
-                                height: kBottomNavigationBarHeight,
                                 key: ValueKey(navbarItems.title),
                                 alignment: Alignment.center,
                                 color: Colors.transparent,
@@ -102,8 +101,8 @@ class NavBarIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-         SizedBox(height: SizeConfig.navBarHeight * 0.1),
         SizedBox(
           height: SizeConfig.body1,
           width: SizeConfig.body1,
@@ -113,7 +112,6 @@ class NavBarIcon extends StatelessWidget {
           ),
         ),
         Text(item.title, style: style),
-        // SizedBox(height: SizeConfig.navBarHeight * 0.1)
       ],
     );
   }

@@ -3034,8 +3034,8 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
         isHLSStarting = false;
-        toasts.add(HMSToastModel(hmsException,
-            hmsToastType: HMSToastsType.streamingErrorToast));
+        // toasts.add(HMSToastModel(hmsException,
+        //     hmsToastType: HMSToastsType.streamingErrorToast));
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:

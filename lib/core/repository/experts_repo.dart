@@ -220,7 +220,7 @@ class ExpertsRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<PricingResponse>> updateBooking({
+  Future<ApiResponse<bool>> updateBooking({
     required int duration,
     required String bookingId,
     required String selectedDate,
@@ -229,7 +229,7 @@ class ExpertsRepository extends BaseRepo {
       final body = {
         "duration": duration,
         "bookingId": bookingId,
-        "selectedDate": selectedDate,
+        "newFromTime": selectedDate,
       };
 
       final response = await APIService.instance.patchData(
@@ -240,8 +240,8 @@ class ExpertsRepository extends BaseRepo {
       );
       final responseData = response['data'];
       log("Update booking data: $responseData");
-      return ApiResponse<PricingResponse>(
-        model: PricingResponse.fromJson(responseData),
+      return const ApiResponse<bool>(
+        model: true,
         code: 200,
       );
     } catch (e) {

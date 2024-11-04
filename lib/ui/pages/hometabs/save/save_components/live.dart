@@ -30,19 +30,17 @@ class TopLive extends StatelessWidget {
                       SizedBox(height: SizeConfig.padding14),
                       Padding(
                         padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding16,
+                          horizontal: SizeConfig.padding20,
                         ),
-                        child: SizedBox(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                if (liveData.live.isNotEmpty)
-                                  buildLiveSection(liveData.live),
-                                if (liveData.live.isEmpty)
-                                  buildRecentSection(liveData.recent),
-                              ],
-                            ),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              if (liveData.live.isNotEmpty)
+                                buildLiveSection(liveData.live),
+                              if (liveData.live.isEmpty)
+                                buildRecentSection(liveData.recent),
+                            ],
                           ),
                         ),
                       ),

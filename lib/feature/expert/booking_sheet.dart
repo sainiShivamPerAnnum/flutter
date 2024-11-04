@@ -34,6 +34,7 @@ class BookCallSheetView extends StatelessWidget {
           create: (_) => BookingBloc(
             locator(),
             locator(),
+            locator(),
           )..add(LoadBookingDates(advisorID, 30)),
         ),
         BlocProvider(
@@ -44,6 +45,7 @@ class BookCallSheetView extends StatelessWidget {
         advisorId: advisorID,
         advisorName: advisorName,
         isEdit: isEdit,
+        bookingId: bookingId,
       ),
     );
   }

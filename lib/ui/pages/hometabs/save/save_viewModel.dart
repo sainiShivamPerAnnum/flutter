@@ -596,10 +596,12 @@ class QuickLinks extends StatelessWidget {
       margin: EdgeInsets.only(
         top: SizeConfig.padding24,
         bottom: SizeConfig.padding8,
+        left: SizeConfig.padding20,
+        right: SizeConfig.padding20,
       ),
       width: SizeConfig.screenWidth,
       child: Wrap(
-        alignment: WrapAlignment.spaceEvenly,
+        alignment: WrapAlignment.spaceBetween,
         children: List.generate(
           quickLinks.length,
           (index) => GestureDetector(
@@ -614,7 +616,10 @@ class QuickLinks extends StatelessWidget {
               );
             },
             child: Container(
-              padding: EdgeInsets.all(SizeConfig.padding8),
+              padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.padding12,
+              ),
+              width: SizeConfig.padding76,
               decoration: BoxDecoration(
                 color: UiConstants.greyVarient,
                 borderRadius: BorderRadius.all(
@@ -626,20 +631,17 @@ class QuickLinks extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(
-                    width: SizeConfig.padding36,
-                    height: SizeConfig.padding36,
+                    width: SizeConfig.padding32,
+                    height: SizeConfig.padding32,
                     child: AppImage(
                       quickLinks[index].asset,
                     ),
                   ),
-                  SizedBox(height: SizeConfig.padding8),
-                  SizedBox(
-                    width: SizeConfig.padding70,
-                    child: Text(
-                      quickLinks[index].name,
-                      style: TextStyles.sourceSansSB.body4.colour(Colors.white),
-                      textAlign: TextAlign.center,
-                    ),
+                  SizedBox(height: SizeConfig.padding10),
+                  Text(
+                    quickLinks[index].name,
+                    style: TextStyles.sourceSansSB.body4.colour(Colors.white),
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
