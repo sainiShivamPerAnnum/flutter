@@ -155,29 +155,30 @@ class ExpertsRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<RecentStream>>> getLiveByAdvisor({
+  Future<ApiResponse<List<VideoData>>> getLiveByAdvisor({
     required String advisorId,
   }) async {
     try {
       final response = await APIService.instance.getData(
-        'videos/$advisorId',
+        'videos/list',
         queryParams: {
-          'type': "live",
+          'type': "shorts",
+          'advisorId': advisorId,
         },
         cBaseUrl: _baseUrl,
         apiName: '$_experts/getLiveByAdvisor',
       );
       final responseData = response["data"];
       log("Experts live data: $responseData");
-      final List<RecentStream> recentStreams = (responseData as List)
+      final List<VideoData> recentStreams = (responseData as List)
           .map(
-            (item) => RecentStream.fromJson(
+            (item) => VideoData.fromJson(
               item,
             ),
           )
           .toList();
 
-      return ApiResponse<List<RecentStream>>(
+      return ApiResponse<List<VideoData>>(
         model: recentStreams,
         code: 200,
       );

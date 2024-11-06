@@ -10,13 +10,10 @@ import 'package:felloapp/feature/tambola/src/ui/widgets/past_week_winners_sectio
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/ticket_section.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
-import 'package:felloapp/ui/elements/dev_rel/flavor_banners.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
-import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
-import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -72,26 +69,24 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
                 ? const Center(
                     child: FullScreenLoader(),
                   )
-                : Expanded(
-                    child: ListView(
-                      padding: EdgeInsets.only(
-                        top: SizeConfig.padding16,
-                        bottom: SizeConfig.navBarHeight,
-                      ),
-                      controller: RootController.controller,
-                      children: const [
-                        TambolaRewardLottieStrip(),
-                        TicketsPicksWidget(),
-                        TicketSection(),
-                        NextWeekTicketInfo(),
-                        TicketsOffersSection(),
-                        TicketMultiplierOptionsWidget(),
-                        TicketsRewardSection(),
-                        TambolaLeaderboardView(),
-                        TermsAndConditions(url: Constants.tambolatnc),
-                      ],
-                    ),
-                  );
+                : ListView(
+                  padding: EdgeInsets.only(
+                    top: SizeConfig.padding16,
+                    bottom: SizeConfig.navBarHeight,
+                  ),
+                  controller: RootController.controller,
+                  children: const [
+                    TambolaRewardLottieStrip(),
+                    TicketsPicksWidget(),
+                    TicketSection(),
+                    NextWeekTicketInfo(),
+                    TicketsOffersSection(),
+                    TicketMultiplierOptionsWidget(),
+                    TicketsRewardSection(),
+                    TambolaLeaderboardView(),
+                    TermsAndConditions(url: Constants.tambolatnc),
+                  ],
+                );
           }),
     );
   }

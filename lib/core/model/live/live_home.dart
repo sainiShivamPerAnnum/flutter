@@ -120,7 +120,6 @@ class RecentStream {
   final int views;
 
   RecentStream({
-    required this.categories,
     required this.title,
     required this.subtitle,
     required this.author,
@@ -128,6 +127,7 @@ class RecentStream {
     required this.duration,
     // required this.url,
     required this.views,
+    this.categories = const [],
   });
 
   factory RecentStream.fromJson(Map<String, dynamic> json) =>

@@ -6,7 +6,7 @@ import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -38,27 +38,48 @@ class _ShortsVideoPageState extends State<ShortsVideoPage> {
           builder: (context, state) {
             final List<VideoData> videos =
                 BlocProvider.of<PreloadBloc>(context).currentVideos;
+
+            final Map<int, VideoPlayerController> activeControllers =
+                state.currentContext == ReelContext.main
+                    ? state.controllers
+                    : state.profileControllers;
+
+            final int initialIndex = state.currentContext == ReelContext.main
+                ? state.focusedIndex
+                : state.profileVideoIndex;
+
+            final PageController pageController = PageController(
+              initialPage: initialIndex,
+            );
             return PageView.builder(
+              controller: pageController,
               itemCount: videos.length,
               scrollDirection: Axis.vertical,
               onPageChanged: (index) =>
                   BlocProvider.of<PreloadBloc>(context, listen: false)
                       .add(PreloadEvent.onVideoIndexChanged(index)),
               itemBuilder: (context, index) {
-                // Is at end and isLoading
                 final bool isLoading =
                     state.isLoading && index == videos.length - 1;
-
-                return state.controllers[index] == null
+                return activeControllers[index] == null
                     ? const FullScreenLoader()
                     : VideoWidget(
                         isLoading: isLoading,
-                        controller: state.controllers[index]!,
+                        controller: activeControllers[index]!,
                         userName: videos[index].author,
                         videoTitle: videos[index].title,
                         description: videos[index].description,
                         advisorId: videos[index].advisorId,
                         isKeyBoardOpen: state.keyboardVisible,
+                        commentsVisibility: state.showComments,
+                        onCommentToggle: () {
+                          BlocProvider.of<PreloadBloc>(
+                            context,
+                            listen: false,
+                          ).add(
+                            const PreloadEvent.toggleComments(),
+                          );
+                        },
                         updateKeyboardState: (isKeyBoardOpen) {
                           BlocProvider.of<PreloadBloc>(
                             context,
@@ -128,9 +149,11 @@ class VideoWidget extends StatefulWidget {
   final bool showShareButton;
   final bool showLikeButton;
   final bool showBookButton;
+  final bool commentsVisibility;
   final VoidCallback onShare;
   final VoidCallback onLike;
   final VoidCallback onBook;
+  final VoidCallback onCommentToggle;
   final Function(String comment) onCommented;
   final Function(bool isKeyBoardOpen) updateKeyboardState;
   final bool isLikedByUser;
@@ -149,6 +172,8 @@ class VideoWidget extends StatefulWidget {
     required this.advisorId,
     required this.onBook,
     required this.updateKeyboardState,
+    required this.commentsVisibility,
+    required this.onCommentToggle,
     this.comments = const [],
     this.showUserName = true,
     this.showVideoTitle = true,
@@ -170,7 +195,6 @@ class VideoWidgetState extends State<VideoWidget>
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _commentController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  double _videoProgress = 0;
 
   @override
   void initState() {
@@ -184,15 +208,9 @@ class VideoWidgetState extends State<VideoWidget>
           ..addListener(() {
             setState(() {});
           });
-    widget.controller.addListener(() {
-      if (mounted) {
-        setState(() {
-          _videoProgress = widget.controller.value.position.inSeconds /
-              widget.controller.value.duration.inSeconds;
-        });
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollToEnd();
     });
-    scrollToEnd();
   }
 
   @override
@@ -233,11 +251,23 @@ class VideoWidgetState extends State<VideoWidget>
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Positioned.fill(child: VideoPlayer(widget.controller)),
+          Positioned.fill(
+            child: AspectRatio(
+              aspectRatio: widget.controller.value.aspectRatio,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: SizedBox(
+                  width: widget.controller.value.size.width,
+                  height: widget.controller.value.size.height,
+                  child: VideoPlayer(widget.controller),
+                ),
+              ),
+            ),
+          ),
           if (widget.showUserName)
             Positioned(
-              top: 15.h,
-              left: 20.w,
+              top: 5.h,
+              left: 15.w,
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
                 decoration: BoxDecoration(
@@ -276,20 +306,24 @@ class VideoWidgetState extends State<VideoWidget>
                 widget.onShare,
                 widget.onLike,
                 widget.onBook,
+                widget.onCommentToggle,
                 widget.isLikedByUser,
+                widget.commentsVisibility,
               ),
             ),
           ),
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 100),
-            bottom: _iconPositionAnimation.value,
-            left: 15.w,
-            child: AnimatedOpacity(
-              duration: const Duration(milliseconds: 200),
-              opacity: widget.isKeyBoardOpen ? 0 : 1,
-              child: _buildComments(_scrollController),
+          if (widget.commentsVisibility)
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 100),
+              bottom: _iconPositionAnimation.value,
+              left: 15.w,
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 200),
+                opacity:
+                    !widget.isKeyBoardOpen && widget.commentsVisibility ? 1 : 0,
+                child: _buildComments(_scrollController),
+              ),
             ),
-          ),
           Positioned(
             bottom: 70.h,
             child: ExpandableWidget(
@@ -354,11 +388,14 @@ class VideoWidgetState extends State<VideoWidget>
                   if (!widget.isKeyBoardOpen)
                     ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(10.r)),
-                      child: LinearProgressIndicator(
-                        value: widget.controller.value.position.inSeconds / ~30,
-                        backgroundColor: Colors.grey[800],
-                        valueColor:
-                            const AlwaysStoppedAnimation<Color>(Colors.white),
+                      child: VideoProgressIndicator(
+                        widget.controller,
+                        padding: EdgeInsets.zero,
+                        colors: const VideoProgressColors(
+                          playedColor: UiConstants.kTextColor,
+                          backgroundColor: Colors.grey,
+                        ),
+                        allowScrubbing: false,
                       ),
                     ),
                 ],
@@ -374,7 +411,9 @@ class VideoWidgetState extends State<VideoWidget>
     final VoidCallback onShare,
     final VoidCallback onLike,
     final VoidCallback onBook,
+    final VoidCallback onToggleComment,
     final bool isLiked,
+    final bool commentVisibility,
   ) {
     return Column(
       children: [
@@ -444,6 +483,30 @@ class VideoWidgetState extends State<VideoWidget>
               ),
             ],
           ),
+        Column(
+          children: [
+            IconButton(
+              icon: AppImage(
+                commentVisibility ? Assets.remove_comment : Assets.add_comment,
+                color: Colors.white,
+                height: 20.r,
+                width: 20.r,
+              ),
+              onPressed: () {
+                onToggleComment();
+                scrollToEnd();
+              },
+            ),
+            Text(
+              commentVisibility ? "Hide Comments" : 'Show Comments',
+              style: GoogleFonts.sourceSans3(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w400,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -536,7 +599,8 @@ class VideoWidgetState extends State<VideoWidget>
                                     Text(
                                       timeago.format(
                                         DateTime.parse(
-                                            widget.comments![index].createdAt),
+                                          widget.comments![index].createdAt,
+                                        ),
                                       ),
                                       style: TextStyles.sourceSans.body4,
                                     ),

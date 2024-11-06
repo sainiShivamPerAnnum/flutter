@@ -94,11 +94,14 @@ class GoldProBuyInputView extends StatelessWidget {
           children: [
             AppBar(
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios),
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white.withOpacity(0.4),
+                ),
                 onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
               ),
               backgroundColor: Colors.transparent,
-                surfaceTintColor: Colors.transparent,
+              surfaceTintColor: Colors.transparent,
               elevation: 0,
               centerTitle: true,
               title: Row(
@@ -348,6 +351,7 @@ class GoldProBuyInputView extends StatelessWidget {
                                       "Alert!",
                                       style: TextStyles.rajdhaniB.body0
                                           .colour(Colors.white),
+                                      textAlign: TextAlign.center,
                                     ),
                                     SizedBox(height: SizeConfig.padding10),
                                     model.unavailabilityText.beautify(

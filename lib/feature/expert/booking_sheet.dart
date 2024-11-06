@@ -311,10 +311,9 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                             );
                       }
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Please select both date and time'),
-                        ),
+                      BaseUtil.showNegativeAlert(
+                        'Try Again',
+                        "Please select both date and time",
                       );
                     }
                   },

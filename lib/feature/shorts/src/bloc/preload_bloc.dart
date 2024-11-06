@@ -52,6 +52,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       },
       switchToProfileReels: (e) {
         emit(state.copyWith(currentContext: ReelContext.profile));
+        e.completer?.complete();
       },
       setLoading: (e) {
         emit(state.copyWith(isLoading: true));
@@ -59,9 +60,17 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       updateKeyboardState: (e) {
         emit(state.copyWith(keyboardVisible: e.state));
       },
+      toggleComments: (e) {
+        emit(state.copyWith(showComments: !state.showComments));
+      },
       initializeAtIndex: (e) async {
+        if (state.currentContext == ReelContext.main) {
+          emit(state.copyWith(focusedIndex: e.index));
+        } else {
+          emit(state.copyWith(profileVideoIndex: e.index));
+        }
+        e.completer?.complete();
         await _initializeControllerAtIndex(e.index);
-        emit(state.copyWith(focusedIndex: e.index));
         final currentLength = state.currentContext == ReelContext.main
             ? state.mainVideos.length
             : state.profileVideos.length;
@@ -95,7 +104,8 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                         VideoPreloadConstants.kNextLimit ==
                     0 &&
                 currentVideos.length ==
-                    e.index + VideoPreloadConstants.kPreloadLimit;
+                    e.index + VideoPreloadConstants.kPreloadLimit &&
+                state.currentContext == ReelContext.main;
 
         if (shouldFetch) {
           final response = await repository.getVideos(
@@ -104,14 +114,19 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           final List<VideoData> urls = response.model ?? [];
           add(PreloadEvent.updateUrls(urls));
         }
-
-        if (e.index > state.focusedIndex) {
+        final index = state.currentContext == ReelContext.main
+            ? state.focusedIndex
+            : state.profileVideoIndex;
+        if (e.index > index) {
           _playNext(e.index);
         } else {
           _playPrevious(e.index);
         }
-
-        emit(state.copyWith(focusedIndex: e.index));
+        if (state.currentContext == ReelContext.main) {
+          emit(state.copyWith(focusedIndex: e.index));
+        } else {
+          emit(state.copyWith(profileVideoIndex: e.index));
+        }
       },
       updateUrls: (e) async {
         if (state.currentContext == ReelContext.main) {
@@ -126,6 +141,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             isLoading: false,
           ),
         );
+        e.completer?.complete();
         log('🚀🚀🚀 NEW VIDEOS ADDED');
       },
       addComment: (e) async {
@@ -163,6 +179,9 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           ),
         );
         log('🚀🚀🚀 Comment posted');
+      },
+      disposeProfileControllers: (e) {
+        _stopAndDisposeAllControllers();
       },
       likeVideo: (e) async {
         final UserService userService = locator<UserService>();
@@ -222,14 +241,16 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
     _initializeControllerAtIndex(index - 1);
   }
 
-  Future _initializeControllerAtIndex(int index) async {
+  Future<void> _initializeControllerAtIndex(int index) async {
     if (currentVideos.length > index && index >= 0) {
       final VideoPlayerController controller = VideoPlayerController.networkUrl(
         Uri.parse(currentVideos[index].url),
       );
-
-      state.controllers[index] = controller;
-
+      if (state.currentContext == ReelContext.main) {
+        state.controllers[index] = controller;
+      } else {
+        state.profileControllers[index] = controller;
+      }
       await controller.initialize();
       await controller.setLooping(true);
       await controller.setVolume(1);
@@ -240,35 +261,67 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           comment: comments.model ?? [],
         ),
       );
-      log('🚀🚀🚀 INITIALIZED $index');
+      log('🚀🚀🚀 INITIALIZED $index for context ${state.currentContext}');
     }
   }
 
   void _playControllerAtIndex(int index) {
     if (currentVideos.length > index && index >= 0) {
-      final VideoPlayerController controller = state.controllers[index]!;
-      controller.play();
-      log('🚀🚀🚀 PLAYING $index');
+      final controller = state.currentContext == ReelContext.main
+          ? state.controllers[index]
+          : state.profileControllers[index];
+
+      controller?.play();
+      log('🚀🚀🚀 PLAYING $index for context ${state.currentContext}');
     }
   }
 
   void _stopControllerAtIndex(int index) {
     if (currentVideos.length > index && index >= 0) {
-      final VideoPlayerController controller = state.controllers[index]!;
-      controller.pause();
-      controller.seekTo(const Duration());
-      log('🚀🚀🚀 STOPPED $index');
+      final controller = state.currentContext == ReelContext.main
+          ? state.controllers[index]
+          : state.profileControllers[index];
+
+      controller?.pause();
+      controller?.seekTo(const Duration());
+      log('🚀🚀🚀 STOPPED $index for context ${state.currentContext}');
     }
   }
 
   void _disposeControllerAtIndex(int index) {
     if (currentVideos.length > index && index >= 0) {
-      final VideoPlayerController? controller = state.controllers[index];
+      final controllersMap = state.currentContext == ReelContext.main
+          ? state.controllers
+          : state.profileControllers;
+
+      final controller = controllersMap[index];
       controller?.dispose();
       if (controller != null) {
-        state.controllers.remove(index);
+        controllersMap.remove(index);
       }
-      log('🚀🚀🚀 DISPOSED $index');
+      log('🚀🚀🚀 DISPOSED $index for context ${state.currentContext}');
     }
+  }
+
+  Future<void> _stopAndDisposeAllControllers() async {
+    // Stop and dispose all controllers in the main feed
+    // for (final entry in state.controllers.entries) {
+    //   final controller = entry.value;
+    //   controller.pause();
+    //   controller.seekTo(const Duration()); // Reset to the beginning
+    //   controller.dispose();
+    // }
+    // state.controllers.clear(); // Clear the map after disposing all controllers
+
+    // Stop and dispose all controllers in the profile feed
+    for (final entry in state.profileControllers.entries) {
+      final controller = entry.value;
+      await controller.pause();
+      await controller.seekTo(const Duration());
+      await controller.dispose();
+    }
+    state.profileControllers
+        .clear(); // Clear the map after disposing all controllers
+    log('🚀🚀🚀 All controllers stopped and disposed');
   }
 }

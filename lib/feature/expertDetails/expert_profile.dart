@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
@@ -403,16 +405,24 @@ class _ExpertProfilePage extends StatelessWidget {
                           ],
                         )
                       else if (tab == 2) ...[
+                        SizedBox(
+                          height: SizeConfig.padding18,
+                        ),
                         for (int i = 0; i < recentlive.length; i++)
-                          LiveCardWidget(
-                            status: 'recent',
-                            title: recentlive[i].title,
-                            subTitle: recentlive[i].subtitle,
-                            author: recentlive[i].author,
-                            category: recentlive[i].categories.join(', '),
-                            bgImage: recentlive[i].thumbnail,
-                            liveCount: recentlive[i].views,
-                            duration: recentlive[i].duration.toString(),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(bottom: SizeConfig.padding16),
+                            child: LiveCardWidget(
+                              status: 'recent',
+                              title: recentlive[i].title,
+                              subTitle: recentlive[i].subtitle,
+                              author: recentlive[i].author,
+                              category:
+                                  recentlive[i].category?.join(', ') ?? '',
+                              bgImage: recentlive[i].thumbnail,
+                              liveCount: recentlive[i].viewCount,
+                              duration: recentlive[i].duration.toString(),
+                            ),
                           ),
                       ] else
                         _buildTabOneData(shortsData),
@@ -453,19 +463,55 @@ Widget _buildTabOneData(List<VideoData> shortsData) {
           itemBuilder: (context, index) {
             final video = shortsData[index];
             return GestureDetector(
-              onTap: () {
-                BlocProvider.of<PreloadBloc>(context)
-                    .add(const PreloadEvent.switchToProfileReels());
-                BlocProvider.of<PreloadBloc>(context)
-                    .add(PreloadEvent.updateUrls(shortsData));
-                BlocProvider.of<PreloadBloc>(context)
-                    .add(PreloadEvent.initializeAtIndex(index: index));
-                BlocProvider.of<PreloadBloc>(context)
-                    .add(PreloadEvent.playVideoAtIndex(index));
+              onTap: () async {
+                final preloadBloc = BlocProvider.of<PreloadBloc>(context);
+                final switchCompleter = Completer<void>();
+                final updateUrlsCompleter = Completer<void>();
+                final initializeCompleter = Completer<void>();
+
+                preloadBloc.add(
+                  PreloadEvent.switchToProfileReels(completer: switchCompleter),
+                );
+                await switchCompleter.future;
+                preloadBloc.add(
+                  PreloadEvent.updateUrls(
+                    shortsData,
+                    completer: updateUrlsCompleter,
+                  ),
+                );
+                await updateUrlsCompleter.future;
+                preloadBloc.add(
+                  PreloadEvent.initializeAtIndex(
+                    index: index,
+                    completer: initializeCompleter,
+                  ),
+                );
+                await initializeCompleter.future;
+                preloadBloc.add(PreloadEvent.playVideoAtIndex(index));
+
                 AppState.delegate!.appState.currentAction = PageAction(
                   page: ShortsPageConfig,
                   state: PageState.addWidget,
-                  widget: const BaseScaffold(body: ShortsVideoPage()),
+                  widget: BaseScaffold(
+                    appBar: FAppBar(
+                      backgroundColor: Colors.transparent,
+                      centerTitle: true,
+                      titleWidget:
+                          Text('Profile', style: TextStyles.rajdhaniSB.body1),
+                      leading: const BackButton(
+                        color: Colors.white,
+                      ),
+                      showAvatar: false,
+                      showCoinBar: false,
+                    ),
+                    body: WillPopScope(
+                      onWillPop: () async {
+                        await AppState.backButtonDispatcher!.didPopRoute();
+                        return false;
+                      },
+                      child: const ShortsVideoPage(),
+                    ),
+                  ),
                 );
               },
               child: Stack(

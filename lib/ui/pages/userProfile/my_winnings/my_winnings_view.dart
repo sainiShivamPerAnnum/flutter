@@ -39,8 +39,9 @@ class MyWinningsView extends StatelessWidget {
                 ? Scaffold(
                     appBar: AppBar(
                       backgroundColor: UiConstants.kTambolaMidTextColor,
-        surfaceTintColor:UiConstants.kTambolaMidTextColor,
+                      surfaceTintColor: UiConstants.kTambolaMidTextColor,
                       centerTitle: false,
+                      leading: const BackButton(color: UiConstants.kTextColor),
                       title: Text(
                         locale.scratchCardText,
                         maxLines: 1,
@@ -78,9 +79,11 @@ class MyWinningsView extends StatelessWidget {
                                       toolbarHeight: 54,
                                       backgroundColor:
                                           UiConstants.kTambolaMidTextColor,
-
-        surfaceTintColor: UiConstants.kTambolaMidTextColor,
+                                      surfaceTintColor:
+                                          UiConstants.kTambolaMidTextColor,
                                       centerTitle: false,
+                                      leading: const BackButton(
+                                          color: UiConstants.kTextColor,),
                                       title: Text(
                                         locale.scratchCardText,
                                         maxLines: 1,
@@ -105,8 +108,8 @@ class MyWinningsView extends StatelessWidget {
                                         toolbarHeight: 0,
                                         backgroundColor:
                                             UiConstants.kBackgroundColor,
-
-        surfaceTintColor: UiConstants.kBackgroundColor,
+                                        surfaceTintColor:
+                                            UiConstants.kBackgroundColor,
                                         bottom: TabBar(
                                           indicatorColor: Colors.white,
                                           indicatorSize:
@@ -153,7 +156,8 @@ class MyWinningsView extends StatelessWidget {
                                           return false;
                                         },
                                         child: CustomScrollView(
-                                          physics: const ClampingScrollPhysics(),
+                                          physics:
+                                              const ClampingScrollPhysics(),
                                           slivers: [
                                             SliverOverlapInjector(
                                               handle: NestedScrollView

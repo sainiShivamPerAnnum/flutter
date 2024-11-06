@@ -61,13 +61,14 @@ UpcomingStream _$UpcomingStreamFromJson(Map<String, dynamic> json) =>
     );
 
 RecentStream _$RecentStreamFromJson(Map<String, dynamic> json) => RecentStream(
-      categories: (json['categories'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
       title: json['title'] as String,
       subtitle: json['subtitle'] as String,
       author: json['author'] as String,
       thumbnail: json['thumbnail'] as String,
       duration: json['duration'] as int,
       views: json['views'] as int,
+      categories: (json['categories'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
     );

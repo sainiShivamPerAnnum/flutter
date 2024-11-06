@@ -13,7 +13,7 @@ class LoadingExpertsDetails extends ExpertDetailsState {
 
 final class ExpertDetailsLoaded extends ExpertDetailsState {
   final ExpertDetails? expertDetails;
-  final List<RecentStream> recentLive;
+  final List<VideoData> recentLive;
   final List<VideoData> shortsData;
   final int currentTab;
   const ExpertDetailsLoaded({
@@ -25,7 +25,7 @@ final class ExpertDetailsLoaded extends ExpertDetailsState {
   ExpertDetailsState copyWith({
     ExpertDetails? expertDetails,
     int? currentTab,
-  final List<RecentStream>? recentLive,
+  final List<VideoData>? recentLive,
   final List<VideoData>? shortsData,
   }) {
     return ExpertDetailsLoaded(

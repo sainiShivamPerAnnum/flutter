@@ -514,4 +514,6 @@ class Assets {
   static const String failed_payment = "assets/vectors/gif/failed.gif";
   static const String exit_logo = "assets/svg/exit.svg";
   static const String experience = "assets/svg/experience.svg";
+  static const String add_comment = "assets/svg/add_comment.svg";
+  static const String remove_comment = "assets/svg/remove_comment.svg";
 }

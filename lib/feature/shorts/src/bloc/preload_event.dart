@@ -5,7 +5,10 @@ class PreloadEvent with _$PreloadEvent {
   // const factory PreloadEvent.initialize() = _Initialize;
   const factory PreloadEvent.getVideosFromApi() = _GetVideosFromApi;
   const factory PreloadEvent.setLoading() = _SetLoading;
-  const factory PreloadEvent.updateUrls(List<VideoData> videos) = _UpdateUrls;
+  const factory PreloadEvent.updateUrls(
+    List<VideoData> videos, {
+    Completer<void>? completer,
+  }) = _UpdateUrls;
   const factory PreloadEvent.onVideoIndexChanged(int index) =
       _OnVideoIndexChanged;
   const factory PreloadEvent.pauseVideoAtIndex(int index) = _PauseVideoAtIndex;
@@ -24,13 +27,21 @@ class PreloadEvent with _$PreloadEvent {
   const factory PreloadEvent.likeVideo({
     required String videoId,
   }) = _LikeVideo;
-
+  const factory PreloadEvent.toggleComments() = _ToggleComments;
   const factory PreloadEvent.addCommentToState({
     required String videoId,
     required List<CommentData> comment,
   }) = _AddCommentToState;
   const factory PreloadEvent.switchToMainReels() = _SwitchToMainReels;
-  const factory PreloadEvent.switchToProfileReels() = _SwitchToProfileReels;
-  const factory PreloadEvent.initializeAtIndex({required int index}) = _InitializeAtIndex;
-  const factory PreloadEvent.updateKeyboardState({required bool state}) = _UpdateKeyboardState;
+  const factory PreloadEvent.switchToProfileReels({
+    Completer<void>? completer,
+  }) = _SwitchToProfileReels;
+  const factory PreloadEvent.initializeAtIndex({
+    required int index,
+    Completer<void>? completer,
+  }) = _InitializeAtIndex;
+  const factory PreloadEvent.updateKeyboardState({required bool state}) =
+      _UpdateKeyboardState;
+  const factory PreloadEvent.disposeProfileControllers() =
+      _DisposeProfileControllers;
 }
