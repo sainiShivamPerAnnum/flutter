@@ -132,7 +132,11 @@ class _BookingStatusSheet extends StatelessWidget {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
-                            AppState.backButtonDispatcher!.didPopRoute();
+                            AppState.delegate!.appState.currentAction =
+                                PageAction(
+                              state: PageState.addPage,
+                              page: FreshDeskHelpPageConfig,
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: UiConstants.greyVarient,

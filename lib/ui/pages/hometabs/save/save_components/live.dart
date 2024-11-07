@@ -39,7 +39,7 @@ class TopLive extends StatelessWidget {
                               if (liveData.live.isNotEmpty)
                                 buildLiveSection(liveData.live),
                               if (liveData.live.isEmpty)
-                                buildRecentSection(liveData.recent),
+                                buildRecentSection(liveData.recent, context),
                             ],
                           ),
                         ),

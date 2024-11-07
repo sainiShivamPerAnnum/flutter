@@ -120,4 +120,21 @@ class ShortsRepo {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
+
+  Future<ApiResponse<void>> updateViewCount(
+    String videoId,
+  ) async {
+    final String countUrl = 'videos/$videoId/view-count';
+    try {
+      await APIService.instance.patchData(
+        countUrl,
+        cBaseUrl: _baseUrl,
+        apiName: 'ShortsRepo/updateViewCount',
+      );
+      return const ApiResponse<void>(code: 200);
+    } catch (e) {
+      log("Error adding like: ${e.toString()}");
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
 }

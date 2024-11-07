@@ -1,9 +1,19 @@
+import 'dart:async';
+
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/live/live_home.dart';
 import 'package:felloapp/feature/live/bloc/live_bloc.dart';
 import 'package:felloapp/feature/live/widgets/header.dart';
 import 'package:felloapp/feature/live/widgets/live_card.dart';
 import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
+import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
+import 'package:felloapp/feature/shorts/src/service/video_data.dart';
+import 'package:felloapp/feature/shorts/video_page.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -112,7 +122,7 @@ class __LiveHomeState extends State<_LiveHome> {
                           showViewAll: liveData.recent.length > 1,
                         ),
                       ),
-                    buildRecentSection(liveData.recent),
+                    buildRecentSection(liveData.recent,context),
                     SizedBox(height: SizeConfig.padding14),
                   ],
                 ),
@@ -244,7 +254,7 @@ Widget buildLiveSection(List<LiveStream> liveData) {
         );
 }
 
-Widget buildRecentSection(List<RecentStream> recentData) {
+Widget buildRecentSection(List<RecentStream> recentData, BuildContext context) {
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal,
     child: Row(
@@ -256,6 +266,44 @@ Widget buildRecentSection(List<RecentStream> recentData) {
               right: SizeConfig.padding8,
             ),
             child: LiveCardWidget(
+              onTap: () async {
+                final preloadBloc = BlocProvider.of<PreloadBloc>(context);
+                final switchCompleter = Completer<void>();
+                //todo @vamshifello model same krna hao
+                // preloadBloc.add(
+                //   PreloadEvent.initializeLiveStream(
+                //     VideoData(id: recent.,),
+                //     completer: switchCompleter,
+                //   ),
+                // );
+                await switchCompleter.future;
+                AppState.delegate!.appState.currentAction = PageAction(
+                  page: ShortsPageConfig,
+                  state: PageState.addWidget,
+                  widget: BaseScaffold(
+                    appBar: FAppBar(
+                      backgroundColor: Colors.transparent,
+                      centerTitle: true,
+                      titleWidget: Text(
+                        recent.title,
+                        style: TextStyles.rajdhaniSB.body1,
+                      ),
+                      leading: const BackButton(
+                        color: Colors.white,
+                      ),
+                      showAvatar: false,
+                      showCoinBar: false,
+                    ),
+                    body: WillPopScope(
+                      onWillPop: () async {
+                        await AppState.backButtonDispatcher!.didPopRoute();
+                        return false;
+                      },
+                      child: const ShortsVideoPage(),
+                    ),
+                  ),
+                );
+              },
               status: 'recent',
               title: recent.title,
               subTitle: recent.subtitle,

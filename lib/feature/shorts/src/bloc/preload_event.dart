@@ -3,6 +3,12 @@ part of 'preload_bloc.dart';
 @freezed
 class PreloadEvent with _$PreloadEvent {
   // const factory PreloadEvent.initialize() = _Initialize;
+  const factory PreloadEvent.initializeLiveStream(
+    VideoData video, {
+    Completer<void>? completer,
+  }) = _InitializeLiveStream;
+  const factory PreloadEvent.disposeLiveStreamController() =
+      _DisposeLiveStreamController;
   const factory PreloadEvent.getVideosFromApi() = _GetVideosFromApi;
   const factory PreloadEvent.setLoading() = _SetLoading;
   const factory PreloadEvent.updateUrls(
@@ -23,6 +29,10 @@ class PreloadEvent with _$PreloadEvent {
     required String videoId,
     required String comment,
   }) = _AddComment;
+
+  const factory PreloadEvent.updateViewCount({
+    required String videoId,
+  }) = _UpdateViewCount;
 
   const factory PreloadEvent.likeVideo({
     required String videoId,

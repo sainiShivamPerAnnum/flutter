@@ -414,6 +414,47 @@ class _ExpertProfilePage extends StatelessWidget {
                                 EdgeInsets.only(bottom: SizeConfig.padding16),
                             child: LiveCardWidget(
                               status: 'recent',
+                              onTap: () async {
+                                final preloadBloc =
+                                    BlocProvider.of<PreloadBloc>(context);
+                                final switchCompleter = Completer<void>();
+
+                                preloadBloc.add(
+                                  PreloadEvent.initializeLiveStream(
+                                    recentlive[i],
+                                    completer: switchCompleter,
+                                  ),
+                                );
+                                await switchCompleter.future;
+                                AppState.delegate!.appState.currentAction =
+                                    PageAction(
+                                  page: ShortsPageConfig,
+                                  state: PageState.addWidget,
+                                  widget: BaseScaffold(
+                                    appBar: FAppBar(
+                                      backgroundColor: Colors.transparent,
+                                      centerTitle: true,
+                                      titleWidget: Text(
+                                        'Profile',
+                                        style: TextStyles.rajdhaniSB.body1,
+                                      ),
+                                      leading: const BackButton(
+                                        color: Colors.white,
+                                      ),
+                                      showAvatar: false,
+                                      showCoinBar: false,
+                                    ),
+                                    body: WillPopScope(
+                                      onWillPop: () async {
+                                        await AppState.backButtonDispatcher!
+                                            .didPopRoute();
+                                        return false;
+                                      },
+                                      child: const ShortsVideoPage(),
+                                    ),
+                                  ),
+                                );
+                              },
                               title: recentlive[i].title,
                               subTitle: recentlive[i].subtitle,
                               author: recentlive[i].author,
@@ -920,14 +961,17 @@ class ReviewCard extends StatelessWidget {
         SizedBox(
           height: SizeConfig.padding10,
         ),
-        Text(
-          review,
-          style: TextStyles.sourceSans.body4.colour(
-            UiConstants.kTextColor.withOpacity(.7),
+        if (review != '')
+          Text(
+            review,
+            style: TextStyles.sourceSans.body4.colour(
+              UiConstants.kTextColor.withOpacity(.7),
+            ),
           ),
-        ),
         Padding(
-          padding: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
+          padding: EdgeInsets.symmetric(
+            vertical: review != '' ? SizeConfig.padding16 : SizeConfig.padding4,
+          ),
           child: Divider(
             color: UiConstants.kTextColor.withOpacity(.11),
           ),

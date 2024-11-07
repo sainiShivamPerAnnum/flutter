@@ -45,8 +45,8 @@ class RatingBloc extends Bloc<RatingEvent, RatingState> {
       await AppState.backButtonDispatcher!.didPopRoute();
     } else {
       add(LoadRatings(event.advisorId));
-      BaseUtil.showNegativeAlert('Failed to upload rating!', data.errorMessage);
       await AppState.backButtonDispatcher!.didPopRoute();
+      BaseUtil.showNegativeAlert('Failed to upload rating!', data.errorMessage);
     }
   }
 

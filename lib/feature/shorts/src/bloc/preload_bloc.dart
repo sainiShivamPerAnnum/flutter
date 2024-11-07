@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -25,9 +26,18 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
   PreloadBloc() : super(PreloadState.initial()) {
     on(_mapEventToState);
   }
-  List<VideoData> get currentVideos => state.currentContext == ReelContext.main
-      ? state.mainVideos
-      : state.profileVideos;
+  List<VideoData> get currentVideos {
+    switch (state.currentContext) {
+      case ReelContext.main:
+        return state.mainVideos;
+      case ReelContext.profile:
+        return state.profileVideos;
+      case ReelContext.liveStream:
+        return state.liveVideo;
+      default:
+        return [];
+    }
+  }
 
   Future<void> _mapEventToState(
     PreloadEvent event,
@@ -49,6 +59,13 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       },
       switchToMainReels: (e) {
         emit(state.copyWith(currentContext: ReelContext.main));
+      },
+      updateViewCount: (e) {
+        unawaited(
+          repository.updateViewCount(
+            e.videoId,
+          ),
+        );
       },
       switchToProfileReels: (e) {
         emit(state.copyWith(currentContext: ReelContext.profile));
@@ -224,6 +241,36 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         );
         log('🚀🚀🚀 Comment added to state for video: ${e.videoId}');
       },
+      initializeLiveStream: (e) async {
+        emit(
+          state.copyWith(
+            currentContext: ReelContext.liveStream,
+            liveVideo: [e.video],
+          ),
+        );
+        e.completer?.complete();
+        final VideoPlayerController controller =
+            VideoPlayerController.networkUrl(
+          Uri.parse(e.video.url),
+        );
+        emit(state.copyWith(liveStreamController: controller));
+        await controller.initialize();
+        await controller.setLooping(true);
+        await controller.setVolume(1);
+        await controller.play();
+        final comments = await repository.getComments(e.video.id);
+        add(
+          PreloadEvent.addCommentToState(
+            videoId: e.video.id,
+            comment: comments.model ?? [],
+          ),
+        );
+      },
+      disposeLiveStreamController: (e) async {
+        if (state.liveStreamController != null) {
+          await state.liveStreamController!.dispose();
+        }
+      },
     );
   }
 
@@ -261,8 +308,30 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           comment: comments.model ?? [],
         ),
       );
+      _addProgressListener(controller, currentVideos[index].id);
       log('🚀🚀🚀 INITIALIZED $index for context ${state.currentContext}');
     }
+  }
+
+  void _addProgressListener(VideoPlayerController controller, String videoId) {
+    late VoidCallback listener;
+
+    listener = () {
+      final duration = controller.value.duration;
+      final position = controller.value.position;
+
+      if (duration.inMilliseconds > 0 &&
+          position.inMilliseconds >= duration.inMilliseconds * 0.25) {
+        // Remove this specific listener to prevent repeated events
+        controller.removeListener(listener);
+
+        // Dispatch the event that 25% has been watched
+        add(PreloadEvent.updateViewCount(videoId: videoId));
+      }
+    };
+
+    // Add the listener to the controller
+    controller.addListener(listener);
   }
 
   void _playControllerAtIndex(int index) {
@@ -295,6 +364,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           : state.profileControllers;
 
       final controller = controllersMap[index];
+      controller?.removeListener(() {});
       controller?.dispose();
       if (controller != null) {
         controllersMap.remove(index);

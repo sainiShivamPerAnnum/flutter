@@ -22,6 +22,7 @@ class LiveCardWidget extends StatelessWidget {
   final String? startTime;
   final String? advisorCode;
   final String? viewerCode;
+  final VoidCallback? onTap;
 
   const LiveCardWidget({
     required this.status,
@@ -36,6 +37,7 @@ class LiveCardWidget extends StatelessWidget {
     this.startTime,
     this.advisorCode,
     this.viewerCode,
+    this.onTap,
   });
   Future<bool> getPermissions() async {
     if (Platform.isIOS) return true;
@@ -60,33 +62,34 @@ class LiveCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () async {
-        if (status == 'live') {
-          if (viewerCode != null) {
-            final String? name =
-                locator<UserService>().baseUser!.kycName!.isNotEmpty
-                    ? locator<UserService>().baseUser!.kycName!
-                    : locator<UserService>().baseUser!.name!.isNotEmpty
-                        ? locator<UserService>().baseUser!.name
-                        : locator<UserService>().baseUser!.username;
-                        final userId =  locator<UserService>().baseUser!.uid;
-            bool res = await getPermissions();
-            if (res) {
-              AppState.delegate!.appState.currentAction = PageAction(
-                page: LivePreviewPageConfig,
-                state: PageState.addWidget,
-                widget: HMSPrebuilt(
-                  roomCode: viewerCode,
-                  options: HMSPrebuiltOptions(
-                    userName: name,
-                    userId: userId,
-                  ),
-                ),
-              );
+      onTap: onTap ??
+          () async {
+            if (status == 'live') {
+              if (viewerCode != null) {
+                final String? name =
+                    locator<UserService>().baseUser!.kycName!.isNotEmpty
+                        ? locator<UserService>().baseUser!.kycName!
+                        : locator<UserService>().baseUser!.name!.isNotEmpty
+                            ? locator<UserService>().baseUser!.name
+                            : locator<UserService>().baseUser!.username;
+                final userId = locator<UserService>().baseUser!.uid;
+                bool res = await getPermissions();
+                if (res) {
+                  AppState.delegate!.appState.currentAction = PageAction(
+                    page: LivePreviewPageConfig,
+                    state: PageState.addWidget,
+                    widget: HMSPrebuilt(
+                      roomCode: viewerCode,
+                      options: HMSPrebuiltOptions(
+                        userName: name,
+                        userId: userId,
+                      ),
+                    ),
+                  );
+                }
+              }
             }
-          }
-        }
-      },
+          },
       child: Container(
         constraints: BoxConstraints(maxWidth: SizeConfig.padding300),
         decoration: BoxDecoration(

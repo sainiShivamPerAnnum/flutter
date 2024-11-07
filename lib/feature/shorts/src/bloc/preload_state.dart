@@ -11,6 +11,7 @@ class PreloadState with _$PreloadState {
   factory PreloadState({
     required List<VideoData> mainVideos,
     required List<VideoData> profileVideos,
+    required List<VideoData> liveVideo,
     required Map<int, VideoPlayerController> controllers,
     required Map<int, VideoPlayerController> profileControllers,
     required int focusedIndex,
@@ -21,11 +22,13 @@ class PreloadState with _$PreloadState {
     required ReelContext currentContext,
     required bool keyboardVisible,
     required bool showComments,
+    VideoPlayerController? liveStreamController,
   }) = _PreloadState;
 
   factory PreloadState.initial() => PreloadState(
         mainVideos: [],
         profileVideos: [],
+        liveVideo:[],
         controllers: {},
         profileControllers: {},
         focusedIndex: 0,
@@ -36,5 +39,6 @@ class PreloadState with _$PreloadState {
         currentContext: ReelContext.main,
         keyboardVisible: false,
         showComments: true,
+        liveStreamController: null, 
       );
 }

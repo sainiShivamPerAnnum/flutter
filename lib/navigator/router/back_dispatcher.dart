@@ -103,6 +103,12 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       ).add(
         const PreloadEvent.disposeProfileControllers(),
       );
+      BlocProvider.of<PreloadBloc>(
+        _routerDelegate!.navigatorKey.currentContext!,
+        listen: false,
+      ).add(
+        const PreloadEvent.disposeLiveStreamController(),
+      );
     }
     // _journeyService.checkForMilestoneLevelChange();
     if (locator<BackButtonActions>().isTransactionCancelled) {

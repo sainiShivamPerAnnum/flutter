@@ -18,6 +18,9 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$PreloadEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
@@ -26,6 +29,7 @@ mixin _$PreloadEvent {
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
@@ -39,6 +43,9 @@ mixin _$PreloadEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
@@ -47,6 +54,7 @@ mixin _$PreloadEvent {
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
@@ -60,6 +68,9 @@ mixin _$PreloadEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
@@ -68,6 +79,7 @@ mixin _$PreloadEvent {
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
@@ -98,6 +110,311 @@ class _$PreloadEventCopyWithImpl<$Res, $Val extends PreloadEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+}
+
+/// @nodoc
+abstract class _$$InitializeLiveStreamImplCopyWith<$Res> {
+  factory _$$InitializeLiveStreamImplCopyWith(_$InitializeLiveStreamImpl value,
+          $Res Function(_$InitializeLiveStreamImpl) then) =
+      __$$InitializeLiveStreamImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({VideoData video, Completer<void>? completer});
+}
+
+/// @nodoc
+class __$$InitializeLiveStreamImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$InitializeLiveStreamImpl>
+    implements _$$InitializeLiveStreamImplCopyWith<$Res> {
+  __$$InitializeLiveStreamImplCopyWithImpl(_$InitializeLiveStreamImpl _value,
+      $Res Function(_$InitializeLiveStreamImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? video = null,
+    Object? completer = freezed,
+  }) {
+    return _then(_$InitializeLiveStreamImpl(
+      null == video
+          ? _value.video
+          : video // ignore: cast_nullable_to_non_nullable
+              as VideoData,
+      completer: freezed == completer
+          ? _value.completer
+          : completer // ignore: cast_nullable_to_non_nullable
+              as Completer<void>?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
+  const _$InitializeLiveStreamImpl(this.video, {this.completer});
+
+  @override
+  final VideoData video;
+  @override
+  final Completer<void>? completer;
+
+  @override
+  String toString() {
+    return 'PreloadEvent.initializeLiveStream(video: $video, completer: $completer)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$InitializeLiveStreamImpl &&
+            (identical(other.video, video) || other.video == video) &&
+            (identical(other.completer, completer) ||
+                other.completer == completer));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, video, completer);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$InitializeLiveStreamImplCopyWith<_$InitializeLiveStreamImpl>
+      get copyWith =>
+          __$$InitializeLiveStreamImplCopyWithImpl<_$InitializeLiveStreamImpl>(
+              this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
+    required TResult Function(_GetVideosFromApi value) getVideosFromApi,
+    required TResult Function(_SetLoading value) setLoading,
+    required TResult Function(_UpdateUrls value) updateUrls,
+    required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_ToggleComments value) toggleComments,
+    required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
+    required TResult Function(_DisposeProfileControllers value)
+        disposeProfileControllers,
+  }) {
+    return initializeLiveStream(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult? Function(_SetLoading value)? setLoading,
+    TResult? Function(_UpdateUrls value)? updateUrls,
+    TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_ToggleComments value)? toggleComments,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult? Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+  }) {
+    return initializeLiveStream?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult Function(_SetLoading value)? setLoading,
+    TResult Function(_UpdateUrls value)? updateUrls,
+    TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_ToggleComments value)? toggleComments,
+    TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+    required TResult orElse(),
+  }) {
+    if (initializeLiveStream != null) {
+      return initializeLiveStream(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _InitializeLiveStream implements PreloadEvent {
+  const factory _InitializeLiveStream(final VideoData video,
+      {final Completer<void>? completer}) = _$InitializeLiveStreamImpl;
+
+  VideoData get video;
+  Completer<void>? get completer;
+  @JsonKey(ignore: true)
+  _$$InitializeLiveStreamImplCopyWith<_$InitializeLiveStreamImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$DisposeLiveStreamControllerImplCopyWith<$Res> {
+  factory _$$DisposeLiveStreamControllerImplCopyWith(
+          _$DisposeLiveStreamControllerImpl value,
+          $Res Function(_$DisposeLiveStreamControllerImpl) then) =
+      __$$DisposeLiveStreamControllerImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$DisposeLiveStreamControllerImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$DisposeLiveStreamControllerImpl>
+    implements _$$DisposeLiveStreamControllerImplCopyWith<$Res> {
+  __$$DisposeLiveStreamControllerImplCopyWithImpl(
+      _$DisposeLiveStreamControllerImpl _value,
+      $Res Function(_$DisposeLiveStreamControllerImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$DisposeLiveStreamControllerImpl
+    implements _DisposeLiveStreamController {
+  const _$DisposeLiveStreamControllerImpl();
+
+  @override
+  String toString() {
+    return 'PreloadEvent.disposeLiveStreamController()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DisposeLiveStreamControllerImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
+    required TResult Function(_GetVideosFromApi value) getVideosFromApi,
+    required TResult Function(_SetLoading value) setLoading,
+    required TResult Function(_UpdateUrls value) updateUrls,
+    required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_ToggleComments value) toggleComments,
+    required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
+    required TResult Function(_DisposeProfileControllers value)
+        disposeProfileControllers,
+  }) {
+    return disposeLiveStreamController(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult? Function(_SetLoading value)? setLoading,
+    TResult? Function(_UpdateUrls value)? updateUrls,
+    TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_ToggleComments value)? toggleComments,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult? Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+  }) {
+    return disposeLiveStreamController?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult Function(_SetLoading value)? setLoading,
+    TResult Function(_UpdateUrls value)? updateUrls,
+    TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_ToggleComments value)? toggleComments,
+    TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+    required TResult orElse(),
+  }) {
+    if (disposeLiveStreamController != null) {
+      return disposeLiveStreamController(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _DisposeLiveStreamController implements PreloadEvent {
+  const factory _DisposeLiveStreamController() =
+      _$DisposeLiveStreamControllerImpl;
 }
 
 /// @nodoc
@@ -138,6 +455,9 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
@@ -146,6 +466,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
@@ -162,6 +483,9 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
@@ -170,6 +494,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
@@ -186,6 +511,9 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
@@ -194,6 +522,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
@@ -254,6 +583,9 @@ class _$SetLoadingImpl implements _SetLoading {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
@@ -262,6 +594,7 @@ class _$SetLoadingImpl implements _SetLoading {
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
@@ -278,6 +611,9 @@ class _$SetLoadingImpl implements _SetLoading {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
@@ -286,6 +622,7 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
@@ -302,6 +639,9 @@ class _$SetLoadingImpl implements _SetLoading {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
@@ -310,6 +650,7 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
@@ -413,6 +754,9 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
@@ -421,6 +765,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
@@ -437,6 +782,9 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
@@ -445,6 +793,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
@@ -461,6 +810,9 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
@@ -469,6 +821,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
@@ -563,6 +916,9 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
@@ -571,6 +927,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
@@ -587,6 +944,9 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
@@ -595,6 +955,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
@@ -611,6 +972,9 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
@@ -619,6 +983,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
@@ -712,6 +1077,9 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
@@ -720,6 +1088,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
@@ -736,6 +1105,9 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
@@ -744,6 +1116,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
@@ -760,6 +1133,9 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
@@ -768,6 +1144,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
@@ -860,6 +1237,9 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
@@ -868,6 +1248,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
@@ -884,6 +1265,9 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
@@ -892,6 +1276,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
@@ -908,6 +1293,9 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
@@ -916,6 +1304,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
@@ -1028,6 +1417,9 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
@@ -1036,6 +1428,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
@@ -1052,6 +1445,9 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
@@ -1060,6 +1456,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
@@ -1076,6 +1473,9 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
@@ -1084,6 +1484,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
@@ -1188,6 +1589,9 @@ class _$AddCommentImpl implements _AddComment {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
@@ -1196,6 +1600,7 @@ class _$AddCommentImpl implements _AddComment {
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
@@ -1212,6 +1617,9 @@ class _$AddCommentImpl implements _AddComment {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
@@ -1220,6 +1628,7 @@ class _$AddCommentImpl implements _AddComment {
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
@@ -1236,6 +1645,9 @@ class _$AddCommentImpl implements _AddComment {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
@@ -1244,6 +1656,7 @@ class _$AddCommentImpl implements _AddComment {
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
@@ -1271,6 +1684,167 @@ abstract class _AddComment implements PreloadEvent {
   String get comment;
   @JsonKey(ignore: true)
   _$$AddCommentImplCopyWith<_$AddCommentImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$UpdateViewCountImplCopyWith<$Res> {
+  factory _$$UpdateViewCountImplCopyWith(_$UpdateViewCountImpl value,
+          $Res Function(_$UpdateViewCountImpl) then) =
+      __$$UpdateViewCountImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String videoId});
+}
+
+/// @nodoc
+class __$$UpdateViewCountImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$UpdateViewCountImpl>
+    implements _$$UpdateViewCountImplCopyWith<$Res> {
+  __$$UpdateViewCountImplCopyWithImpl(
+      _$UpdateViewCountImpl _value, $Res Function(_$UpdateViewCountImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? videoId = null,
+  }) {
+    return _then(_$UpdateViewCountImpl(
+      videoId: null == videoId
+          ? _value.videoId
+          : videoId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$UpdateViewCountImpl implements _UpdateViewCount {
+  const _$UpdateViewCountImpl({required this.videoId});
+
+  @override
+  final String videoId;
+
+  @override
+  String toString() {
+    return 'PreloadEvent.updateViewCount(videoId: $videoId)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UpdateViewCountImpl &&
+            (identical(other.videoId, videoId) || other.videoId == videoId));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, videoId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UpdateViewCountImplCopyWith<_$UpdateViewCountImpl> get copyWith =>
+      __$$UpdateViewCountImplCopyWithImpl<_$UpdateViewCountImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
+    required TResult Function(_GetVideosFromApi value) getVideosFromApi,
+    required TResult Function(_SetLoading value) setLoading,
+    required TResult Function(_UpdateUrls value) updateUrls,
+    required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_ToggleComments value) toggleComments,
+    required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
+    required TResult Function(_DisposeProfileControllers value)
+        disposeProfileControllers,
+  }) {
+    return updateViewCount(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult? Function(_SetLoading value)? setLoading,
+    TResult? Function(_UpdateUrls value)? updateUrls,
+    TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_ToggleComments value)? toggleComments,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult? Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+  }) {
+    return updateViewCount?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult Function(_SetLoading value)? setLoading,
+    TResult Function(_UpdateUrls value)? updateUrls,
+    TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_ToggleComments value)? toggleComments,
+    TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+    required TResult orElse(),
+  }) {
+    if (updateViewCount != null) {
+      return updateViewCount(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _UpdateViewCount implements PreloadEvent {
+  const factory _UpdateViewCount({required final String videoId}) =
+      _$UpdateViewCountImpl;
+
+  String get videoId;
+  @JsonKey(ignore: true)
+  _$$UpdateViewCountImplCopyWith<_$UpdateViewCountImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1338,6 +1912,9 @@ class _$LikeVideoImpl implements _LikeVideo {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
@@ -1346,6 +1923,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
@@ -1362,6 +1940,9 @@ class _$LikeVideoImpl implements _LikeVideo {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
@@ -1370,6 +1951,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
@@ -1386,6 +1968,9 @@ class _$LikeVideoImpl implements _LikeVideo {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
@@ -1394,6 +1979,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
@@ -1459,6 +2045,9 @@ class _$ToggleCommentsImpl implements _ToggleComments {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
@@ -1467,6 +2056,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
@@ -1483,6 +2073,9 @@ class _$ToggleCommentsImpl implements _ToggleComments {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
@@ -1491,6 +2084,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
@@ -1507,6 +2101,9 @@ class _$ToggleCommentsImpl implements _ToggleComments {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
@@ -1515,6 +2112,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
@@ -1618,6 +2216,9 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
@@ -1626,6 +2227,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
@@ -1642,6 +2244,9 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
@@ -1650,6 +2255,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
@@ -1666,6 +2272,9 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
@@ -1674,6 +2283,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
@@ -1742,6 +2352,9 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
@@ -1750,6 +2363,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
@@ -1766,6 +2380,9 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
@@ -1774,6 +2391,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
@@ -1790,6 +2408,9 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
@@ -1798,6 +2419,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
@@ -1887,6 +2509,9 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
@@ -1895,6 +2520,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
@@ -1911,6 +2537,9 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
@@ -1919,6 +2548,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
@@ -1935,6 +2565,9 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
@@ -1943,6 +2576,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
@@ -2045,6 +2679,9 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
@@ -2053,6 +2690,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
@@ -2069,6 +2707,9 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
@@ -2077,6 +2718,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
@@ -2093,6 +2735,9 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
@@ -2101,6 +2746,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
@@ -2196,6 +2842,9 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
@@ -2204,6 +2853,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
@@ -2220,6 +2870,9 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
@@ -2228,6 +2881,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
@@ -2244,6 +2898,9 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
@@ -2252,6 +2909,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
@@ -2321,6 +2979,9 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
@@ -2329,6 +2990,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
@@ -2345,6 +3007,9 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
@@ -2353,6 +3018,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
@@ -2369,6 +3035,9 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
@@ -2377,6 +3046,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
@@ -2403,6 +3073,7 @@ abstract class _DisposeProfileControllers implements PreloadEvent {
 mixin _$PreloadState {
   List<VideoData> get mainVideos => throw _privateConstructorUsedError;
   List<VideoData> get profileVideos => throw _privateConstructorUsedError;
+  List<VideoData> get liveVideo => throw _privateConstructorUsedError;
   Map<int, VideoPlayerController> get controllers =>
       throw _privateConstructorUsedError;
   Map<int, VideoPlayerController> get profileControllers =>
@@ -2416,6 +3087,8 @@ mixin _$PreloadState {
   ReelContext get currentContext => throw _privateConstructorUsedError;
   bool get keyboardVisible => throw _privateConstructorUsedError;
   bool get showComments => throw _privateConstructorUsedError;
+  VideoPlayerController? get liveStreamController =>
+      throw _privateConstructorUsedError;
 
   @optionalTypeArgs
   TResult map<TResult extends Object?>(
@@ -2448,6 +3121,7 @@ abstract class $PreloadStateCopyWith<$Res> {
   $Res call(
       {List<VideoData> mainVideos,
       List<VideoData> profileVideos,
+      List<VideoData> liveVideo,
       Map<int, VideoPlayerController> controllers,
       Map<int, VideoPlayerController> profileControllers,
       int focusedIndex,
@@ -2457,7 +3131,8 @@ abstract class $PreloadStateCopyWith<$Res> {
       Map<String, List<CommentData>> videoComments,
       ReelContext currentContext,
       bool keyboardVisible,
-      bool showComments});
+      bool showComments,
+      VideoPlayerController? liveStreamController});
 }
 
 /// @nodoc
@@ -2475,6 +3150,7 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
   $Res call({
     Object? mainVideos = null,
     Object? profileVideos = null,
+    Object? liveVideo = null,
     Object? controllers = null,
     Object? profileControllers = null,
     Object? focusedIndex = null,
@@ -2485,6 +3161,7 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
     Object? currentContext = null,
     Object? keyboardVisible = null,
     Object? showComments = null,
+    Object? liveStreamController = freezed,
   }) {
     return _then(_value.copyWith(
       mainVideos: null == mainVideos
@@ -2494,6 +3171,10 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
       profileVideos: null == profileVideos
           ? _value.profileVideos
           : profileVideos // ignore: cast_nullable_to_non_nullable
+              as List<VideoData>,
+      liveVideo: null == liveVideo
+          ? _value.liveVideo
+          : liveVideo // ignore: cast_nullable_to_non_nullable
               as List<VideoData>,
       controllers: null == controllers
           ? _value.controllers
@@ -2535,6 +3216,10 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
           ? _value.showComments
           : showComments // ignore: cast_nullable_to_non_nullable
               as bool,
+      liveStreamController: freezed == liveStreamController
+          ? _value.liveStreamController
+          : liveStreamController // ignore: cast_nullable_to_non_nullable
+              as VideoPlayerController?,
     ) as $Val);
   }
 }
@@ -2550,6 +3235,7 @@ abstract class _$$PreloadStateImplCopyWith<$Res>
   $Res call(
       {List<VideoData> mainVideos,
       List<VideoData> profileVideos,
+      List<VideoData> liveVideo,
       Map<int, VideoPlayerController> controllers,
       Map<int, VideoPlayerController> profileControllers,
       int focusedIndex,
@@ -2559,7 +3245,8 @@ abstract class _$$PreloadStateImplCopyWith<$Res>
       Map<String, List<CommentData>> videoComments,
       ReelContext currentContext,
       bool keyboardVisible,
-      bool showComments});
+      bool showComments,
+      VideoPlayerController? liveStreamController});
 }
 
 /// @nodoc
@@ -2575,6 +3262,7 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
   $Res call({
     Object? mainVideos = null,
     Object? profileVideos = null,
+    Object? liveVideo = null,
     Object? controllers = null,
     Object? profileControllers = null,
     Object? focusedIndex = null,
@@ -2585,6 +3273,7 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
     Object? currentContext = null,
     Object? keyboardVisible = null,
     Object? showComments = null,
+    Object? liveStreamController = freezed,
   }) {
     return _then(_$PreloadStateImpl(
       mainVideos: null == mainVideos
@@ -2594,6 +3283,10 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
       profileVideos: null == profileVideos
           ? _value.profileVideos
           : profileVideos // ignore: cast_nullable_to_non_nullable
+              as List<VideoData>,
+      liveVideo: null == liveVideo
+          ? _value.liveVideo
+          : liveVideo // ignore: cast_nullable_to_non_nullable
               as List<VideoData>,
       controllers: null == controllers
           ? _value.controllers
@@ -2635,6 +3328,10 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
           ? _value.showComments
           : showComments // ignore: cast_nullable_to_non_nullable
               as bool,
+      liveStreamController: freezed == liveStreamController
+          ? _value.liveStreamController
+          : liveStreamController // ignore: cast_nullable_to_non_nullable
+              as VideoPlayerController?,
     ));
   }
 }
@@ -2645,6 +3342,7 @@ class _$PreloadStateImpl implements _PreloadState {
   _$PreloadStateImpl(
       {required this.mainVideos,
       required this.profileVideos,
+      required this.liveVideo,
       required this.controllers,
       required this.profileControllers,
       required this.focusedIndex,
@@ -2654,12 +3352,15 @@ class _$PreloadStateImpl implements _PreloadState {
       required this.videoComments,
       required this.currentContext,
       required this.keyboardVisible,
-      required this.showComments});
+      required this.showComments,
+      this.liveStreamController});
 
   @override
   final List<VideoData> mainVideos;
   @override
   final List<VideoData> profileVideos;
+  @override
+  final List<VideoData> liveVideo;
   @override
   final Map<int, VideoPlayerController> controllers;
   @override
@@ -2680,10 +3381,12 @@ class _$PreloadStateImpl implements _PreloadState {
   final bool keyboardVisible;
   @override
   final bool showComments;
+  @override
+  final VideoPlayerController? liveStreamController;
 
   @override
   String toString() {
-    return 'PreloadState(mainVideos: $mainVideos, profileVideos: $profileVideos, controllers: $controllers, profileControllers: $profileControllers, focusedIndex: $focusedIndex, profileVideoIndex: $profileVideoIndex, reloadCounter: $reloadCounter, isLoading: $isLoading, videoComments: $videoComments, currentContext: $currentContext, keyboardVisible: $keyboardVisible, showComments: $showComments)';
+    return 'PreloadState(mainVideos: $mainVideos, profileVideos: $profileVideos, liveVideo: $liveVideo, controllers: $controllers, profileControllers: $profileControllers, focusedIndex: $focusedIndex, profileVideoIndex: $profileVideoIndex, reloadCounter: $reloadCounter, isLoading: $isLoading, videoComments: $videoComments, currentContext: $currentContext, keyboardVisible: $keyboardVisible, showComments: $showComments, liveStreamController: $liveStreamController)';
   }
 
   @override
@@ -2695,6 +3398,7 @@ class _$PreloadStateImpl implements _PreloadState {
                 .equals(other.mainVideos, mainVideos) &&
             const DeepCollectionEquality()
                 .equals(other.profileVideos, profileVideos) &&
+            const DeepCollectionEquality().equals(other.liveVideo, liveVideo) &&
             const DeepCollectionEquality()
                 .equals(other.controllers, controllers) &&
             const DeepCollectionEquality()
@@ -2714,7 +3418,9 @@ class _$PreloadStateImpl implements _PreloadState {
             (identical(other.keyboardVisible, keyboardVisible) ||
                 other.keyboardVisible == keyboardVisible) &&
             (identical(other.showComments, showComments) ||
-                other.showComments == showComments));
+                other.showComments == showComments) &&
+            (identical(other.liveStreamController, liveStreamController) ||
+                other.liveStreamController == liveStreamController));
   }
 
   @override
@@ -2722,6 +3428,7 @@ class _$PreloadStateImpl implements _PreloadState {
       runtimeType,
       const DeepCollectionEquality().hash(mainVideos),
       const DeepCollectionEquality().hash(profileVideos),
+      const DeepCollectionEquality().hash(liveVideo),
       const DeepCollectionEquality().hash(controllers),
       const DeepCollectionEquality().hash(profileControllers),
       focusedIndex,
@@ -2731,7 +3438,8 @@ class _$PreloadStateImpl implements _PreloadState {
       const DeepCollectionEquality().hash(videoComments),
       currentContext,
       keyboardVisible,
-      showComments);
+      showComments,
+      liveStreamController);
 
   @JsonKey(ignore: true)
   @override
@@ -2772,6 +3480,7 @@ abstract class _PreloadState implements PreloadState {
   factory _PreloadState(
       {required final List<VideoData> mainVideos,
       required final List<VideoData> profileVideos,
+      required final List<VideoData> liveVideo,
       required final Map<int, VideoPlayerController> controllers,
       required final Map<int, VideoPlayerController> profileControllers,
       required final int focusedIndex,
@@ -2781,12 +3490,15 @@ abstract class _PreloadState implements PreloadState {
       required final Map<String, List<CommentData>> videoComments,
       required final ReelContext currentContext,
       required final bool keyboardVisible,
-      required final bool showComments}) = _$PreloadStateImpl;
+      required final bool showComments,
+      final VideoPlayerController? liveStreamController}) = _$PreloadStateImpl;
 
   @override
   List<VideoData> get mainVideos;
   @override
   List<VideoData> get profileVideos;
+  @override
+  List<VideoData> get liveVideo;
   @override
   Map<int, VideoPlayerController> get controllers;
   @override
@@ -2807,6 +3519,8 @@ abstract class _PreloadState implements PreloadState {
   bool get keyboardVisible;
   @override
   bool get showComments;
+  @override
+  VideoPlayerController? get liveStreamController;
   @override
   @JsonKey(ignore: true)
   _$$PreloadStateImplCopyWith<_$PreloadStateImpl> get copyWith =>
