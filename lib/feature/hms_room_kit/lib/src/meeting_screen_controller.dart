@@ -81,13 +81,26 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
   HLSPlayerStore? _hlsPlayerStore;
   bool showLoader = false;
   late MeetingStore _meetingStore;
+  
+  void _recreateMeetingStore() {
+    // Unregister the existing MeetingStore instance
+    if (locator.isRegistered<MeetingStore>()) {
+      locator.unregister<MeetingStore>();
+    }
+    // Register a new MeetingStore instance
+    locator.registerLazySingleton<MeetingStore>(
+      () => MeetingStore(hmsSDKInteractor: locator<HMSSDKInteractor>()),
+    );
+    // Access the new instance
+    _meetingStore = locator<MeetingStore>();
+  }
 
   @override
   void initState() {
     super.initState();
 
     ///Here we create an instance of meeting store, set initial settings and join meeting.
-    _meetingStore = locator();
+    _recreateMeetingStore();
     _setInitValues();
     _joinMeeting();
     _setHLSPlayerStore();

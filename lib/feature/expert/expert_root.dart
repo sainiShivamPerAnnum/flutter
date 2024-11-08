@@ -7,7 +7,6 @@ import 'package:felloapp/feature/expert/widgets/expert_card.dart';
 import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/upcoming_bookings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
@@ -19,17 +18,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inview_notifier_list/inview_notifier_list.dart';
 import 'package:provider/provider.dart';
 
+import '../../navigator/router/ui_pages.dart';
+
 class ExpertsHomeView extends StatelessWidget {
-  const ExpertsHomeView({
-    super.key,
-  });
+  const ExpertsHomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ExpertBloc(
-        locator(),
-      )..add(const LoadExpertsData()),
+      create: (_) => ExpertBloc(locator())..add(const LoadExpertsData()),
       child: const _ExpertHome(),
     );
   }
@@ -45,7 +42,6 @@ class _ExpertHome extends StatefulWidget {
 class __ExpertHomeState extends State<_ExpertHome>
     with SingleTickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
-  final double tabBarHeight = 50.0;
   Map<String, GlobalKey> sectionKeys = {};
 
   void _scrollToSection(GlobalKey key) {
@@ -57,112 +53,80 @@ class __ExpertHomeState extends State<_ExpertHome>
     return BlocBuilder<ExpertBloc, ExpertState>(
       builder: (context, state) {
         if (state is LoadingExpertsData) {
-          return const Center(
-            child: FullScreenLoader(),
-          );
+          return const Center(child: FullScreenLoader());
         } else if (state is ExpertHomeLoaded) {
           final expertsData = state.expertsHome;
 
           if (expertsData == null || expertsData.list.isEmpty) {
-            return const Center(
-              child: ErrorPage(),
-            );
+            return const Center(child: ErrorPage());
           }
           sectionKeys = {
             for (final section in expertsData.list)
               if (!section.toLowerCase().contains('top')) section: GlobalKey(),
           };
-          final topSectionKey = expertsData.list.firstWhere(
-            (section) => section.toLowerCase().contains('top'),
-          );
+          final topSectionKey = expertsData.list
+              .firstWhere((section) => section.toLowerCase().contains('top'));
 
           return RefreshIndicator(
             triggerMode: RefreshIndicatorTriggerMode.onEdge,
             color: UiConstants.primaryColor,
             backgroundColor: Colors.black,
             onRefresh: () async {
-              BlocProvider.of<ExpertBloc>(
-                context,
-                listen: false,
-              ).add(const LoadExpertsData());
-              return;
+              BlocProvider.of<ExpertBloc>(context, listen: false)
+                  .add(const LoadExpertsData());
             },
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
-              child: InViewNotifierCustomScrollView(
-                controller: _scrollController,
-                isInViewPortCondition: (deltaTop, deltaBottom, vpHeight) {
-                  return deltaTop < (0.5 * vpHeight) &&
-                      deltaBottom > (0.5 * vpHeight);
-                },
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: SizedBox(height: SizeConfig.padding14),
-                  ),
-                  const SliverToBoxAdapter(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        TitleSubtitleContainer(
-                          title: "Experts",
-                          zeroPadding: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: ChangeNotifierProvider.value(
-                      value: locator<SaveViewModel>(),
-                      builder: (context, child) {
-                        return Selector<SaveViewModel, List<Booking>>(
-                          selector: (_, model) => model.upcomingBookings,
-                          builder: (_, upcomingBookings, __) {
-                            return upcomingBookings.isNotEmpty
-                                ? Container(
-                                    height: SizeConfig.screenHeight! * 0.3465,
-                                    padding: EdgeInsets.only(
-                                      top: SizeConfig.padding10,
-                                    ),
-                                    margin: EdgeInsets.only(
-                                      top: SizeConfig.padding10,
-                                    ),
-                                    child: ListView.builder(
-                                      itemCount: upcomingBookings.length,
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: (context, index) => Padding(
-                                        padding: EdgeInsets.only(
-                                          right: SizeConfig.padding10,
-                                        ).copyWith(
-                                          bottom: SizeConfig.padding16,
-                                        ),
-                                        child: ScheduleCard(
-                                          booking: upcomingBookings[index],
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : const SizedBox.shrink();
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: SizeConfig.padding22,
+            child: InViewNotifierCustomScrollView(
+              controller: _scrollController,
+              isInViewPortCondition: (deltaTop, deltaBottom, vpHeight) {
+                return deltaTop < (0.5 * vpHeight) &&
+                    deltaBottom > (0.5 * vpHeight);
+              },
+              slivers: [
+                SliverToBoxAdapter(
+                  child: SizedBox(height: SizeConfig.padding14),
+                ),
+                const SliverToBoxAdapter(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TitleSubtitleContainer(
+                        title: "Experts",
+                        zeroPadding: false,
+                        largeFont: true,
                       ),
+                    ],
+                  ),
+                ),
+                SliverPadding(
+                  padding: EdgeInsets.only(left: SizeConfig.padding20),
+                  sliver: _buildUpcomingBookings(),
+                ),
+                SliverPadding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+                  sliver: SliverToBoxAdapter(
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: SizeConfig.padding22),
                       child: Text(
                         'Our top experts',
                         style: TextStyles.sourceSansSB.body1,
                       ),
                     ),
                   ),
-                  _buildExpertList(
+                ),
+                SliverPadding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+                  sliver: _buildTopExpertList(
                     expertsData.values[topSectionKey]?.take(3).toList() ?? [],
                   ),
-                  SliverPersistentHeader(
+                ),
+                SliverPadding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+                  sliver: SliverPersistentHeader(
                     pinned: true,
                     delegate: _StickyHeaderDelegate(
                       sections: expertsData.list,
@@ -172,20 +136,27 @@ class __ExpertHomeState extends State<_ExpertHome>
                       context: context,
                     ),
                   ),
-                  ...expertsData.list
-                      .where(
-                          (section) => !section.toLowerCase().contains('top'))
-                      .expand(
-                        (section) => [
-                          _buildSectionContent(section),
-                          _buildExpertList(
-                            expertsData.values[section] ?? [],
-                          ),
-                        ],
-                      )
-                      .toList(),
-                ],
-              ),
+                ),
+                SliverPadding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate(
+                      expertsData.list
+                          .where(
+                            (section) => !section.toLowerCase().contains('top'),
+                          )
+                          .map(
+                            (section) => _buildInViewSection(
+                              section,
+                              expertsData.values[section] ?? [],
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
+              ],
             ),
           );
         } else {
@@ -195,30 +166,74 @@ class __ExpertHomeState extends State<_ExpertHome>
     );
   }
 
-  Widget _buildSectionContent(String section) {
+  Widget _buildUpcomingBookings() {
     return SliverToBoxAdapter(
-      key: sectionKeys[section],
-      child: InViewNotifierWidget(
-        id: section,
-        builder: (context, isInView, child) {
-          if (isInView) {
-            BlocProvider.of<ExpertBloc>(context).add(SectionChanged(section));
-          }
-          return Container(
-            padding: EdgeInsets.symmetric(
-              vertical: SizeConfig.padding22,
-            ),
-            child: Text(
-              section,
-              style: TextStyles.sourceSansSB.body1,
-            ),
+      child: ChangeNotifierProvider.value(
+        value: locator<SaveViewModel>(),
+        builder: (context, child) {
+          return Selector<SaveViewModel, List<Booking>>(
+            selector: (_, model) => model.upcomingBookings,
+            builder: (_, upcomingBookings, __) {
+              return upcomingBookings.isNotEmpty
+                  ? Container(
+                      height: SizeConfig.screenHeight! * 0.3465,
+                      padding: EdgeInsets.only(top: SizeConfig.padding10),
+                      margin: EdgeInsets.only(top: SizeConfig.padding10),
+                      child: ListView.builder(
+                        itemCount: upcomingBookings.length,
+                        scrollDirection: Axis.horizontal,
+                        physics: upcomingBookings.length > 1
+                            ? const AlwaysScrollableScrollPhysics()
+                            : const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) => Padding(
+                          padding: EdgeInsets.only(right: SizeConfig.padding10)
+                              .copyWith(bottom: SizeConfig.padding16),
+                          child: ScheduleCard(
+                            booking: upcomingBookings[index],
+                            width: upcomingBookings.length > 1
+                                ? SizeConfig.padding325
+                                : SizeConfig.padding350,
+                          ),
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink();
+            },
           );
         },
       ),
     );
   }
 
-  Widget _buildExpertList(List<Expert> experts) {
+  Widget _buildInViewSection(String section, List<Expert> experts) {
+    final sectionKey = sectionKeys[section];
+    return InViewNotifierWidget(
+      id: sectionKey.toString(),
+      builder: (context, isInView, child) {
+        if (isInView) {
+          BlocProvider.of<ExpertBloc>(context).add(SectionChanged(section));
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildSectionContent(section),
+            _buildExpertList(experts),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildSectionContent(String section) {
+    return Container(
+      key: sectionKeys[section],
+      padding: EdgeInsets.symmetric(vertical: SizeConfig.padding22),
+      child: Text(section, style: TextStyles.sourceSansSB.body1),
+    );
+  }
+
+  Widget _buildTopExpertList(List<Expert> experts) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
@@ -248,6 +263,37 @@ class __ExpertHomeState extends State<_ExpertHome>
         },
         childCount: experts.length,
       ),
+    );
+  }
+
+  Widget _buildExpertList(List<Expert> experts) {
+    return ListView.builder(
+      shrinkWrap: true,
+      padding: EdgeInsets.zero,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: SizeConfig.padding16),
+          child: ExpertCard(
+            expert: experts[index],
+            onBookCall: () {
+              BaseUtil.openBookAdvisorSheet(
+                advisorId: experts[index].advisorId,
+                advisorName: experts[index].name,
+                isEdit: false,
+              );
+            },
+            onTap: () {
+              AppState.delegate!.appState.currentAction = PageAction(
+                page: ExpertDetailsPageConfig,
+                state: PageState.addWidget,
+                widget: ExpertsDetailsView(advisorID: experts[index].advisorId),
+              );
+            },
+          ),
+        );
+      },
+      itemCount: experts.length,
     );
   }
 }
@@ -302,25 +348,18 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent {
-    return 42;
-  }
+  double get maxExtent =>
+      TextStyles.sourceSansSB.body3.fontSize! + SizeConfig.padding26;
 
   @override
-  double get minExtent {
-    return 42;
-  }
+  double get minExtent => maxExtent;
 
   @override
   bool shouldRebuild(_StickyHeaderDelegate oldDelegate) {
     return oldDelegate.currentSection != currentSection;
   }
 
-  Widget buildTabItem(
-    String title,
-    GlobalKey? key,
-    VoidCallback onSectionTap,
-  ) {
+  Widget buildTabItem(String title, GlobalKey? key, VoidCallback onSectionTap) {
     bool isSelected = currentSection == title;
     return GestureDetector(
       onTap: onSectionTap,
@@ -328,16 +367,12 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
         offset: const Offset(0, 2),
         child: Container(
           margin: EdgeInsets.only(right: SizeConfig.padding10),
-          padding: const EdgeInsets.symmetric(
-            vertical: 10.0,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
           decoration: BoxDecoration(
             border: isSelected
                 ? const Border(
-                    bottom: BorderSide(
-                      color: UiConstants.kTextColor,
-                      width: 2.0,
-                    ),
+                    bottom:
+                        BorderSide(color: UiConstants.kTextColor, width: 2.0),
                   )
                 : null,
           ),

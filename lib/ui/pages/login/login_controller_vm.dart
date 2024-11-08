@@ -608,25 +608,25 @@ class LoginControllerViewModel extends BaseViewModel {
       page: RootPageConfig,
     );
 
-    final ff = locator<FeatureFlagService>();
+    // final ff = locator<FeatureFlagService>();
 
-    final variant = ff.evaluateFeature(
-      FeatureFlagService.newUserVariant,
-      defaultValue: 'b',
-    );
+    // final variant = ff.evaluateFeature(
+    //   FeatureFlagService.newUserVariant,
+    //   defaultValue: 'b',
+    // );
 
-    if (_isSignup && variant == 'a') {
-      await Future.delayed(const Duration(milliseconds: 10));
-      appStateProvider.currentAction = PageAction(
-        state: PageState.addPage,
-        page: AssetPrefPageConfig,
-      );
-    }
+    // if (_isSignup && variant == 'a') {
+    //   await Future.delayed(const Duration(milliseconds: 10));
+    //   appStateProvider.currentAction = PageAction(
+    //     state: PageState.addPage,
+    //     page: AssetPrefPageConfig,
+    //   );
+    // }
 
-    if (_isSignup && variant == 'b') {
-      await Future.delayed(const Duration(milliseconds: 10));
-      AppState.delegate!.screenCheck('stories');
-    }
+    // if (_isSignup && variant == 'b') {
+    //   await Future.delayed(const Duration(milliseconds: 10));
+    //   AppState.delegate!.screenCheck('stories');
+    // }
 
     BaseUtil.showPositiveAlert(
       'Sign In Complete',

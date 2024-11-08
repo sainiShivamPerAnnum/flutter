@@ -6,7 +6,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 
 class MeetingNavigationVisibilityController extends ChangeNotifier {
-  bool showControls = true;
+  bool showControls = false;
 
   ///This variable stores whether the timer is active or not
   ///

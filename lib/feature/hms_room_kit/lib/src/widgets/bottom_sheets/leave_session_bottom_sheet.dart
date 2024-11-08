@@ -1,9 +1,6 @@
 ///Project imports
-import 'dart:developer';
-
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/enums/meeting_mode.dart';
-import 'package:felloapp/feature/hms_room_kit/lib/src/layout_api/hms_room_layout.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_store.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/bottom_sheets/end_service_bottom_sheet.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/common_widgets/hms_subheading_text.dart';
@@ -38,72 +35,70 @@ class _LeaveSessionBottomSheetState extends State<LeaveSessionBottomSheet> {
         return Future.value(true);
       },
       child: ((meetingStore.localPeer?.role.permissions.endRoom ?? false) ||
-              ((meetingStore.localPeer?.role.permissions.hlsStreaming ??
-                      false) &&
-                  meetingStore.hasHlsStarted))
+              (meetingStore.localPeer?.role.permissions.hlsStreaming ?? false))
           ? Padding(
               padding: const EdgeInsets.only(top: 12.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  LeaveSessionTile(
-                    tilePadding:
-                        const EdgeInsets.only(top: 12.0, left: 18, right: 18),
-                    leading: SvgPicture.asset(
-                      "assets/hms/icons/exit_room.svg",
-                      colorFilter: ColorFilter.mode(
-                          HMSThemeColors.onSurfaceHighEmphasis,
-                          BlendMode.srcIn),
-                      semanticsLabel: "leave_room_button",
-                    ),
-                    title: "Leave",
-                    titleColor: HMSThemeColors.onSurfaceHighEmphasis,
-                    subTitle:
-                        "Others will continue after you leave. You can join the session again.",
-                    subTitleColor: HMSThemeColors.onSurfaceMediumEmphasis,
-                    onTap: () => {
-                      Navigator.pop(context),
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        backgroundColor: HMSThemeColors.surfaceDim,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(16),
-                              topRight: Radius.circular(16)),
-                        ),
-                        context: context,
-                        builder: (ctx) => EndServiceBottomSheet(
-                          onButtonPressed: () => {
-                            meetingStore.leave(),
-                          },
-                          title: HMSTitleText(
-                            text:
-                                "Leave ${HMSRoomLayout.peerType == PeerRoleType.conferencing ? "Session" : "Stream"}",
-                            textColor: HMSThemeColors.alertErrorDefault,
-                            letterSpacing: 0.15,
-                            fontSize: 20,
-                          ),
-                          bottomSheetTitleIcon: SvgPicture.asset(
-                            "assets/hms/icons/end_warning.svg",
-                            height: 20,
-                            width: 20,
-                            colorFilter: ColorFilter.mode(
-                                HMSThemeColors.alertErrorDefault,
-                                BlendMode.srcIn),
-                          ),
-                          subTitle: HMSSubheadingText(
-                            text:
-                                "Others will continue after you leave. You can join the session again.",
-                            maxLines: 2,
-                            textColor: HMSThemeColors.onSurfaceMediumEmphasis,
-                          ),
-                          buttonText:
-                              "Leave ${HMSRoomLayout.peerType == PeerRoleType.conferencing ? "Session" : "Stream"}",
-                        ),
-                      )
-                    },
-                  ),
+                  // LeaveSessionTile(
+                  //   tilePadding:
+                  //       const EdgeInsets.only(top: 12.0, left: 18, right: 18),
+                  //   leading: SvgPicture.asset(
+                  //     "assets/hms/icons/exit_room.svg",
+                  //     colorFilter: ColorFilter.mode(
+                  //         HMSThemeColors.onSurfaceHighEmphasis,
+                  //         BlendMode.srcIn),
+                  //     semanticsLabel: "leave_room_button",
+                  //   ),
+                  //   title: "Leave",
+                  //   titleColor: HMSThemeColors.onSurfaceHighEmphasis,
+                  //   subTitle:
+                  //       "Others will continue after you leave. You can join the session again.",
+                  //   subTitleColor: HMSThemeColors.onSurfaceMediumEmphasis,
+                  //   onTap: () => {
+                  //     Navigator.pop(context),
+                  //     showModalBottomSheet(
+                  //       isScrollControlled: true,
+                  //       backgroundColor: HMSThemeColors.surfaceDim,
+                  //       shape: const RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.only(
+                  //             topLeft: Radius.circular(16),
+                  //             topRight: Radius.circular(16)),
+                  //       ),
+                  //       context: context,
+                  //       builder: (ctx) => EndServiceBottomSheet(
+                  //         onButtonPressed: () => {
+                  //           meetingStore.leave(),
+                  //         },
+                  //         title: HMSTitleText(
+                  //           text:
+                  //               "Leave ${HMSRoomLayout.peerType == PeerRoleType.conferencing ? "Session" : "Stream"}",
+                  //           textColor: HMSThemeColors.alertErrorDefault,
+                  //           letterSpacing: 0.15,
+                  //           fontSize: 20,
+                  //         ),
+                  //         bottomSheetTitleIcon: SvgPicture.asset(
+                  //           "assets/hms/icons/end_warning.svg",
+                  //           height: 20,
+                  //           width: 20,
+                  //           colorFilter: ColorFilter.mode(
+                  //               HMSThemeColors.alertErrorDefault,
+                  //               BlendMode.srcIn),
+                  //         ),
+                  //         subTitle: HMSSubheadingText(
+                  //           text:
+                  //               "Others will continue after you leave. You can join the session again.",
+                  //           maxLines: 2,
+                  //           textColor: HMSThemeColors.onSurfaceMediumEmphasis,
+                  //         ),
+                  //         buttonText:
+                  //             "Leave ${HMSRoomLayout.peerType == PeerRoleType.conferencing ? "Session" : "Stream"}",
+                  //       ),
+                  //     )
+                  //   },
+                  // ),
                   LeaveSessionTile(
                     tileColor: HMSThemeColors.alertErrorDim,
                     leading: SvgPicture.asset(

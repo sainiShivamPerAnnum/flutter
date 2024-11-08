@@ -15,7 +15,7 @@ import 'package:image_picker/image_picker.dart';
 class AdvisorRepo extends BaseRepo {
   String baseUrl = FlavorConfig.isDevelopment()
       ? "https://advisors.fello-dev.net"
-      : "https://advisors.fello-dev.net";
+      : "https://advisors.fello-prod.net";
 
   static const _advisor = 'advisor';
 

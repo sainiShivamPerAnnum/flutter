@@ -18,10 +18,10 @@ class CommentData {
     required this.id,
     required this.videoId,
     required this.name,
-    required this.userId,
     required this.comment,
     required this.createdAt,
     this.avatarId = "AV1",
+    this.userId='',
     this.dpUrl = "",
   });
 

@@ -58,6 +58,9 @@ class _ShortsVideoPageState extends State<ShortsVideoPage> {
             return PageView.builder(
               controller: pageController,
               itemCount: videos.length,
+              physics: state.keyboardVisible
+                  ? const NeverScrollableScrollPhysics()
+                  : const AlwaysScrollableScrollPhysics(),
               scrollDirection: Axis.vertical,
               onPageChanged: (index) =>
                   BlocProvider.of<PreloadBloc>(context, listen: false)
@@ -128,7 +131,9 @@ class _ShortsVideoPageState extends State<ShortsVideoPage> {
                         showShareButton: true,
                         showLikeButton: true,
                         showBookButton: true,
-                        comments: state.videoComments[videos[index].id],
+                        comments: state
+                            .videoComments[videos[index].id]?.reversed
+                            .toList(),
                         isLikedByUser: videos[index].isVideoLikedByUser,
                       );
               },
@@ -325,7 +330,8 @@ class VideoWidgetState extends State<VideoWidget>
               width: 240.w,
               height: (widget.comments == null ||
                       widget.comments!.isEmpty ||
-                      !widget.commentsVisibility)
+                      !widget.commentsVisibility ||
+                      widget.isKeyBoardOpen)
                   ? 0
                   : 130.h,
               child: _buildComments(_scrollController),

@@ -48,6 +48,7 @@ class SupportViewWrapper extends StatelessWidget {
                       const TitleSubtitleContainer(
                         title: "Support",
                         zeroPadding: true,
+                        largeFont: true,
                       ),
                       ...state.supportItems,
                     ],

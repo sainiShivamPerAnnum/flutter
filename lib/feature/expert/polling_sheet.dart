@@ -83,8 +83,9 @@ class _BookingStatusSheet extends StatelessWidget {
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.padding14,
                     horizontal: SizeConfig.padding20,
+                  ).copyWith(
+                    top: SizeConfig.padding14,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -188,17 +189,13 @@ class _BookingStatusSheet extends StatelessWidget {
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.padding14,
                     horizontal: SizeConfig.padding20,
+                  ).copyWith(
+                    top: SizeConfig.padding14,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Call Confirmed',
-                        style: TextStyles.sourceSansSB.body1,
-                      ),
-                    ],
+                  child: Text(
+                    'Call Confirmed',
+                    style: TextStyles.sourceSansSB.body1,
                   ),
                 ),
                 const Divider(
@@ -263,8 +260,9 @@ class _BookingStatusSheet extends StatelessWidget {
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.padding14,
                     horizontal: SizeConfig.padding20,
+                  ).copyWith(
+                    top: SizeConfig.padding14,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -312,7 +310,11 @@ class _BookingStatusSheet extends StatelessWidget {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
-                            AppState.backButtonDispatcher!.didPopRoute();
+                            AppState.delegate!.appState.currentAction =
+                                PageAction(
+                              state: PageState.addPage,
+                              page: FreshDeskHelpPageConfig,
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: UiConstants.greyVarient,

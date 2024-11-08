@@ -67,9 +67,19 @@ class FelloBalanceScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Fello Balance",
-                    style: TextStyles.sourceSansSB.body2,
+                  Row(
+                    children: [
+                      Text(
+                        "Fello Balance",
+                        style: TextStyles.sourceSansSB.body2,
+                      ),
+                      SizedBox(width: SizeConfig.padding4),
+                      Icon(
+                        Icons.chevron_right,
+                        size: SizeConfig.body1,
+                        color: UiConstants.kTextColor,
+                      ),
+                    ],
                   ),
                   TextButton(
                     onPressed: () {
@@ -365,6 +375,14 @@ class FelloBalanceScreen extends StatelessWidget {
                         title,
                         style: TextStyles.sourceSansSB.body1,
                       ),
+                      if (title != "Fello Rewards")
+                        SizedBox(width: SizeConfig.padding4),
+                      if (title != "Fello Rewards")
+                        Icon(
+                          Icons.chevron_right,
+                          size: SizeConfig.body1,
+                          color: UiConstants.kTextColor,
+                        ),
                     ],
                   ),
                   TextButton(

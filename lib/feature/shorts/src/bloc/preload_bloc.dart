@@ -207,27 +207,70 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                 ? userService.baseUser!.kycName
                 : userService.baseUser!.name) ??
             "N/A";
-
-        emit(
-          state.copyWith(
-            mainVideos: state.mainVideos.map((video) {
-              if (video.id == e.videoId) {
-                unawaited(
-                  repository.addLike(
-                    !video.isVideoLikedByUser,
-                    e.videoId,
-                    userName,
-                  ),
-                );
-                return video.copyWith(
-                  isVideoLikedByUser: !video.isVideoLikedByUser,
-                );
-              } else {
-                return video;
-              }
-            }).toList(),
-          ),
-        );
+        if (state.currentContext == ReelContext.main) {
+          emit(
+            state.copyWith(
+              mainVideos: state.mainVideos.map((video) {
+                if (video.id == e.videoId) {
+                  unawaited(
+                    repository.addLike(
+                      !video.isVideoLikedByUser,
+                      e.videoId,
+                      userName,
+                    ),
+                  );
+                  return video.copyWith(
+                    isVideoLikedByUser: !video.isVideoLikedByUser,
+                  );
+                } else {
+                  return video;
+                }
+              }).toList(),
+            ),
+          );
+        } else if (state.currentContext == ReelContext.profile) {
+          emit(
+            state.copyWith(
+              profileVideos: state.profileVideos.map((video) {
+                if (video.id == e.videoId) {
+                  unawaited(
+                    repository.addLike(
+                      !video.isVideoLikedByUser,
+                      e.videoId,
+                      userName,
+                    ),
+                  );
+                  return video.copyWith(
+                    isVideoLikedByUser: !video.isVideoLikedByUser,
+                  );
+                } else {
+                  return video;
+                }
+              }).toList(),
+            ),
+          );
+        } else if (state.currentContext == ReelContext.liveStream ) {
+          emit(
+            state.copyWith(
+              liveVideo: state.liveVideo.map((video) {
+                if (video.id == e.videoId) {
+                  unawaited(
+                    repository.addLike(
+                      !video.isVideoLikedByUser,
+                      e.videoId,
+                      userName,
+                    ),
+                  );
+                  return video.copyWith(
+                    isVideoLikedByUser: !video.isVideoLikedByUser,
+                  );
+                } else {
+                  return video;
+                }
+              }).toList(),
+            ),
+          );
+        }
         log('🚀🚀🚀 Video liked');
       },
       addCommentToState: (e) {

@@ -15,8 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class UpcomingBookingsComponent extends StatelessWidget {
-  const UpcomingBookingsComponent({Key? key})
-      : super(key: key);
+  const UpcomingBookingsComponent({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,21 +29,30 @@ class UpcomingBookingsComponent extends StatelessWidget {
                   const TitleSubtitleContainer(
                     title: "Your upcoming calls",
                   ),
-                  Container(
-                    height: SizeConfig.screenHeight! * 0.3465,
-                    padding: EdgeInsets.only(top: SizeConfig.padding10),
-                    margin: EdgeInsets.only(
-                      top: SizeConfig.padding10,  
-                    ),
-                    child: ListView.builder(
-                      itemCount: upcomingBookings.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) => Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding18,
-                        ).copyWith(bottom: SizeConfig.padding16),
-                        child: ScheduleCard(
-                          booking: upcomingBookings[index],
+                  Padding(
+                    padding: EdgeInsets.only(left: SizeConfig.padding18),
+                    child: Container(
+                      height: SizeConfig.screenHeight! * 0.3465,
+                      margin: EdgeInsets.only(
+                        top: SizeConfig.padding10,
+                      ),
+                      child: ListView.builder(
+                        itemCount: upcomingBookings.length,
+                        scrollDirection: Axis.horizontal,
+                        physics: upcomingBookings.length > 1
+                            ? const AlwaysScrollableScrollPhysics()
+                            : const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) => Padding(
+                          padding: EdgeInsets.only(
+                            bottom: SizeConfig.padding16,
+                            right: SizeConfig.padding18,
+                          ),
+                          child: ScheduleCard(
+                            booking: upcomingBookings[index],
+                            width: upcomingBookings.length > 1
+                                ? SizeConfig.padding325
+                                : SizeConfig.padding350,
+                          ),
                         ),
                       ),
                     ),
@@ -59,13 +67,14 @@ class UpcomingBookingsComponent extends StatelessWidget {
 
 class ScheduleCard extends StatelessWidget {
   final Booking booking;
+  final double width;
 
-  const ScheduleCard({required this.booking, super.key});
+  const ScheduleCard({required this.booking, required this.width, super.key});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: SizeConfig.padding350,
+      width: width,
       child: Column(
         children: [
           Container(
@@ -184,7 +193,7 @@ class ScheduleCard extends StatelessWidget {
                             : locator<UserService>().baseUser!.name!.isNotEmpty
                                 ? locator<UserService>().baseUser!.name
                                 : locator<UserService>().baseUser!.username;
-                                 final userId = locator<UserService>().baseUser!.uid;
+                        final userId = locator<UserService>().baseUser!.uid;
                         AppState.delegate!.appState.currentAction = PageAction(
                           page: LivePreviewPageConfig,
                           state: PageState.addWidget,
@@ -192,7 +201,7 @@ class ScheduleCard extends StatelessWidget {
                             roomCode: booking.guestCode,
                             options: HMSPrebuiltOptions(
                               userName: name,
-                              userId:userId,
+                              userId: userId,
                             ),
                           ),
                         );

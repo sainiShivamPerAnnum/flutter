@@ -23,20 +23,30 @@ class PastBookingsComponent extends StatelessWidget {
                     title: "Past Scheduled Calls",
                     leadingPadding: true,
                   ),
-                  Container(
-                    height: SizeConfig.screenHeight! * 0.277,
-                    margin: EdgeInsets.only(
-                      top: SizeConfig.padding10,
-                    ),
-                    child: ListView.builder(
-                      itemCount: pastBookings.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) => Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding18,
-                        ).copyWith(bottom: SizeConfig.padding16),
-                        child: PastScheduleCard(
-                          booking: pastBookings[index],
+                  Padding(
+                    padding: EdgeInsets.only(left: SizeConfig.padding18),
+                    child: Container(
+                      height: SizeConfig.screenHeight! * 0.277,
+                      margin: EdgeInsets.only(
+                        top: SizeConfig.padding10,
+                      ),
+                      child: ListView.builder(
+                        itemCount: pastBookings.length,
+                        scrollDirection: Axis.horizontal,
+                        physics: pastBookings.length > 1
+                            ? const AlwaysScrollableScrollPhysics()
+                            : const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) => Padding(
+                          padding: EdgeInsets.only(
+                            bottom: SizeConfig.padding16,
+                            right: SizeConfig.padding18,
+                          ),
+                          child: PastScheduleCard(
+                            booking: pastBookings[index],
+                            width: pastBookings.length > 1
+                                ? SizeConfig.padding325
+                                : SizeConfig.padding350,
+                          ),
                         ),
                       ),
                     ),
@@ -51,13 +61,18 @@ class PastBookingsComponent extends StatelessWidget {
 
 class PastScheduleCard extends StatelessWidget {
   final Booking booking;
+  final double width;
 
-  const PastScheduleCard({required this.booking, super.key});
+  const PastScheduleCard({
+    required this.booking,
+    required this.width,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: SizeConfig.padding350,
+      width: width,
       child: Column(
         children: [
           Container(

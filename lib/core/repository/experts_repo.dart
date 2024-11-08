@@ -19,7 +19,7 @@ class ExpertsRepository extends BaseRepo {
 
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://advisors.fello-dev.net/'
-      : 'https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod';
+      : 'https://advisors.fello-prod.net/';
 
   Future<ApiResponse<ExpertsHome>> getExpertsHomeData() async {
     try {

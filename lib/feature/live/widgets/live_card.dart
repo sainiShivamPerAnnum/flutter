@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -10,7 +11,7 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class LiveCardWidget extends StatelessWidget {
+class LiveCardWidget extends StatefulWidget {
   final String status;
   final String title;
   final String subTitle;
@@ -23,6 +24,7 @@ class LiveCardWidget extends StatelessWidget {
   final String? advisorCode;
   final String? viewerCode;
   final VoidCallback? onTap;
+  final double? maxWidth;
 
   const LiveCardWidget({
     required this.status,
@@ -38,7 +40,63 @@ class LiveCardWidget extends StatelessWidget {
     this.advisorCode,
     this.viewerCode,
     this.onTap,
+    this.maxWidth,
   });
+
+  @override
+  State<LiveCardWidget> createState() => _LiveCardWidgetState();
+}
+
+class _LiveCardWidgetState extends State<LiveCardWidget> {
+  Timer? _timer;
+  String _remainingTime = '';
+  @override
+  void initState() {
+    super.initState();
+    if (widget.status == 'upcoming' && widget.startTime != null) {
+      _startCountdown();
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _startCountdown() {
+    _updateRemainingTime(); // Initial update
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      _updateRemainingTime();
+    });
+  }
+
+  void _updateRemainingTime() {
+    final now = DateTime.now();
+    final start = DateTime.parse(widget.startTime!);
+    final difference = start.difference(now);
+
+    if (difference.isNegative) {
+      // Stop the timer if the start time has passed
+      _timer?.cancel();
+      setState(() {
+        _remainingTime =  'SOON';
+      });
+    } else {
+      setState(() {
+        _remainingTime = "IN ${_formatDuration(difference)}";
+      });
+    }
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String hours = twoDigits(duration.inHours);
+    String minutes = twoDigits(duration.inMinutes.remainder(60));
+    String seconds = twoDigits(duration.inSeconds.remainder(60));
+    return "$hours:$minutes:$seconds";
+  }
+
   Future<bool> getPermissions() async {
     if (Platform.isIOS) return true;
     await Permission.bluetoothConnect.request();
@@ -62,10 +120,10 @@ class LiveCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap ??
+      onTap: widget.onTap ??
           () async {
-            if (status == 'live') {
-              if (viewerCode != null) {
+            if (widget.status == 'live') {
+              if (widget.viewerCode != null) {
                 final String? name =
                     locator<UserService>().baseUser!.kycName!.isNotEmpty
                         ? locator<UserService>().baseUser!.kycName!
@@ -79,7 +137,7 @@ class LiveCardWidget extends StatelessWidget {
                     page: LivePreviewPageConfig,
                     state: PageState.addWidget,
                     widget: HMSPrebuilt(
-                      roomCode: viewerCode,
+                      roomCode: widget.viewerCode,
                       options: HMSPrebuiltOptions(
                         userName: name,
                         userId: userId,
@@ -91,7 +149,8 @@ class LiveCardWidget extends StatelessWidget {
             }
           },
       child: Container(
-        constraints: BoxConstraints(maxWidth: SizeConfig.padding300),
+        constraints:
+            BoxConstraints(maxWidth: widget.maxWidth ?? SizeConfig.padding300),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.roundness8),
           color: UiConstants.greyVarient,
@@ -111,17 +170,17 @@ class LiveCardWidget extends StatelessWidget {
                       topRight: Radius.circular(SizeConfig.roundness8),
                     ),
                     image: DecorationImage(
-                      image: NetworkImage(bgImage),
+                      image: NetworkImage(widget.bgImage),
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
-                if (status == 'live') ...[
+                if (widget.status == 'live') ...[
                   buildLiveIndicator(),
                   buildPlayIcon(),
                 ],
-                if (status == 'upcoming') buildUpcomingIndicator(),
-                if (status == 'recent') buildRecentIndicator(),
+                if (widget.status == 'upcoming') buildUpcomingIndicator(),
+                if (widget.status == 'recent') buildRecentIndicator(),
               ],
             ),
             Padding(
@@ -136,7 +195,7 @@ class LiveCardWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
-                      category.toUpperCase(),
+                      widget.category.toUpperCase(),
                       style: TextStyles.sourceSansSB.body4.colour(
                         UiConstants.kblue1,
                       ),
@@ -145,7 +204,7 @@ class LiveCardWidget extends StatelessWidget {
                   SizedBox(height: SizeConfig.padding4),
                   // Title
                   Text(
-                    title,
+                    widget.title,
                     style: TextStyles.sourceSansSB.body2.colour(
                       UiConstants.kTextColor,
                     ),
@@ -154,7 +213,7 @@ class LiveCardWidget extends StatelessWidget {
 
                   // Subtitle (time started or duration)
                   Text(
-                    subTitle,
+                    widget.subTitle,
                     style: TextStyles.sourceSans.body4.colour(
                       UiConstants.kTextColor5,
                     ),
@@ -163,7 +222,7 @@ class LiveCardWidget extends StatelessWidget {
 
                   // Author's name
                   Text(
-                    author,
+                    widget.author,
                     style: TextStyles.sourceSans.body4.colour(
                       UiConstants.kTextColor,
                     ),
@@ -215,21 +274,21 @@ class LiveCardWidget extends StatelessWidget {
             ),
             child: Row(
               children: [
-                if (liveCount != null)
+                if (widget.liveCount != null)
                   Icon(
                     Icons.visibility,
                     color: Colors.white,
                     size: SizeConfig.body4,
                   ),
-                if (liveCount != null)
+                if (widget.liveCount != null)
                   SizedBox(
                     width: SizeConfig.padding4,
                   ),
-                if (liveCount != null)
+                if (widget.liveCount != null)
                   Text(
-                    liveCount! >= 1000
-                        ? '${liveCount! ~/ 1000}K'
-                        : '$liveCount',
+                    widget.liveCount! >= 1000
+                        ? '${widget.liveCount! ~/ 1000}K'
+                        : '${widget.liveCount}',
                     style: TextStyles.sourceSansSB.body4.colour(
                       UiConstants.titleTextColor,
                     ),
@@ -274,28 +333,13 @@ class LiveCardWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(SizeConfig.roundness5),
         ),
         child: Text(
-          'STARTS IN ${_calculateStartTimeDifference()}',
+          'STARTS $_remainingTime',
           style: TextStyles.sourceSansSB.body4.colour(
             UiConstants.titleTextColor,
           ),
         ),
       ),
     );
-  }
-
-  String _calculateStartTimeDifference() {
-    if (startTime == null) return '';
-    final now = DateTime.now();
-    final start = DateTime.parse(startTime!);
-    final difference = start.difference(now);
-    return formatDuration(difference);
-  }
-
-  String formatDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
   Widget buildRecentIndicator() {
@@ -312,7 +356,7 @@ class LiveCardWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(SizeConfig.roundness5),
         ),
         child: Text(
-          '$duration MINS',
+          '${widget.duration} MINS',
           style: TextStyles.sourceSansSB.body4.colour(
             UiConstants.titleTextColor,
           ),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -11,7 +13,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
-class UpcomingLiveCardWidget extends StatelessWidget {
+class UpcomingLiveCardWidget extends StatefulWidget {
   final String? id;
   final String status;
   final String title;
@@ -24,7 +26,7 @@ class UpcomingLiveCardWidget extends StatelessWidget {
   final String? timeSlot;
   final String? broadcasterCode;
 
-  UpcomingLiveCardWidget({
+  const UpcomingLiveCardWidget({
     required this.status,
     required this.title,
     required this.subTitle,
@@ -38,6 +40,60 @@ class UpcomingLiveCardWidget extends StatelessWidget {
     this.broadcasterCode,
     super.key,
   });
+
+  @override
+  State<UpcomingLiveCardWidget> createState() => _UpcomingLiveCardWidgetState();
+}
+
+class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
+  Timer? _timer;
+  String _remainingTime = '';
+  @override
+  void initState() {
+    super.initState();
+    if (widget.status == 'upcoming' && widget.timeSlot != null) {
+      _startCountdown();
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _startCountdown() {
+    _updateRemainingTime(); // Initial update
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      _updateRemainingTime();
+    });
+  }
+
+  void _updateRemainingTime() {
+    final now = DateTime.now();
+    final start = DateTime.parse(widget.timeSlot!);
+    final difference = start.difference(now);
+
+    if (difference.isNegative) {
+      // Stop the timer if the start time has passed
+      _timer?.cancel();
+      setState(() {
+        _remainingTime = 'START NOW';
+      });
+    } else {
+      setState(() {
+        _remainingTime = "STARTS IN ${_formatDuration(difference)}";
+      });
+    }
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String hours = twoDigits(duration.inHours);
+    String minutes = twoDigits(duration.inMinutes.remainder(60));
+    String seconds = twoDigits(duration.inSeconds.remainder(60));
+    return "$hours:$minutes:$seconds";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,12 +118,12 @@ class UpcomingLiveCardWidget extends StatelessWidget {
                     topRight: Radius.circular(SizeConfig.roundness8),
                   ),
                   image: DecorationImage(
-                    image: NetworkImage(bgImage),
+                    image: NetworkImage(widget.bgImage),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
-              if (status == 'live')
+              if (widget.status == 'live')
                 Positioned(
                   bottom: SizeConfig.padding10,
                   left: SizeConfig.padding10,
@@ -90,7 +146,7 @@ class UpcomingLiveCardWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-              if (status == 'upcoming')
+              if (widget.status == 'upcoming')
                 Positioned(
                   bottom: SizeConfig.padding10,
                   left: SizeConfig.padding10,
@@ -105,15 +161,14 @@ class UpcomingLiveCardWidget extends StatelessWidget {
                           BorderRadius.circular(SizeConfig.roundness5),
                     ),
                     child: Text(
-                      '',
-                      // 'STARTS IN ${_calculateStartTimeDifference()}',
+                      _remainingTime,
                       style: TextStyles.sourceSansSB.body4.colour(
                         UiConstants.titleTextColor,
                       ),
                     ),
                   ),
                 ),
-              if (broadcasterCode != null)
+              if (widget.broadcasterCode != null)
                 Positioned(
                   bottom: SizeConfig.padding10,
                   right: SizeConfig.padding10,
@@ -131,7 +186,7 @@ class UpcomingLiveCardWidget extends StatelessWidget {
                         page: LivePreviewPageConfig,
                         state: PageState.addWidget,
                         widget: HMSPrebuilt(
-                          roomCode: broadcasterCode,
+                          roomCode: widget.broadcasterCode,
                           options: HMSPrebuiltOptions(
                             userName: userName,
                             userId: userId,
@@ -171,7 +226,7 @@ class UpcomingLiveCardWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    category.toUpperCase(),
+                    widget.category.toUpperCase(),
                     style: TextStyles.sourceSansSB.body4.colour(
                       UiConstants.kblue1,
                     ),
@@ -180,7 +235,7 @@ class UpcomingLiveCardWidget extends StatelessWidget {
                 SizedBox(height: SizeConfig.padding4),
                 // Title
                 Text(
-                  title,
+                  widget.title,
                   style: TextStyles.sourceSansSB.body2.colour(
                     UiConstants.kTextColor,
                   ),
@@ -188,7 +243,7 @@ class UpcomingLiveCardWidget extends StatelessWidget {
                 SizedBox(height: SizeConfig.padding4),
 
                 Text(
-                  subTitle,
+                  widget.subTitle,
                   style: TextStyles.sourceSans.body4.colour(
                     UiConstants.kTextColor5,
                   ),
@@ -199,7 +254,7 @@ class UpcomingLiveCardWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      author,
+                      widget.author,
                       style: TextStyles.sourceSans.body4.colour(
                         UiConstants.kTextColor,
                       ),
@@ -235,14 +290,6 @@ class UpcomingLiveCardWidget extends StatelessWidget {
     );
   }
 
-  String _calculateStartTimeDifference() {
-    if ('startTime' == null) return '';
-    final now = DateTime.now();
-    final start = DateTime.parse('3:15');
-    final difference = start.difference(now);
-    return formatDuration(difference);
-  }
-
   String formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
@@ -272,17 +319,17 @@ class UpcomingLiveCardWidget extends StatelessWidget {
       state: PageState.addWidget,
       page: ScheduleCallViewConfig,
       widget: ScheduleCallWrapper(
-        id: id,
-        status: status, // "live"
-        title: title, // "Investment Webinar"
-        subTitle:
-            subTitle, // "A comprehensive webinar on investment strategies."
-        author: author, // "Not coming from backend"
-        category: category, // "Finance"
-        bgImage: bgImage, // "https://example.com/image.jpg"
-        liveCount: liveCount, // 3
-        duration: duration,
-        timeSlot: timeSlot,
+        id: widget.id,
+        status: widget.status, // "live"
+        title: widget.title, // "Investment Webinar"
+        subTitle: widget
+            .subTitle, // "A comprehensive webinar on investment strategies."
+        author: widget.author, // "Not coming from backend"
+        category: widget.category, // "Finance"
+        bgImage: widget.bgImage, // "https://example.com/image.jpg"
+        liveCount: widget.liveCount, // 3
+        duration: widget.duration,
+        timeSlot: widget.timeSlot,
       ),
     );
   }

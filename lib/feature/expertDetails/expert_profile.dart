@@ -338,6 +338,10 @@ class _ExpertProfilePage extends StatelessWidget {
                                                           decoration:
                                                               TextDecoration
                                                                   .underline,
+                                                          decorationColor:
+                                                              Colors.white70,
+                                                          decorationThickness:
+                                                              1,
                                                         ),
                                                   ),
                                                   SizedBox(
@@ -414,6 +418,7 @@ class _ExpertProfilePage extends StatelessWidget {
                                 EdgeInsets.only(bottom: SizeConfig.padding16),
                             child: LiveCardWidget(
                               status: 'recent',
+                              maxWidth: SizeConfig.padding350,
                               onTap: () async {
                                 final preloadBloc =
                                     BlocProvider.of<PreloadBloc>(context);

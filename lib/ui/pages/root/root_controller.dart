@@ -115,21 +115,21 @@ class RootController {
           () => RootController.expertNavBarItem,
         );
         break;
-      case "SP":
+      case "SH":
         navItems.putIfAbsent(
-          const SupportNewPage(),
-          () => RootController.supportNavBarItem,
+          const ShortsVideoPage(),
+          () => RootController.shortsNavBarItem,
         );
         break;
-      case "SH":
-        final UserService _userService = locator<UserService>();
-        if (_userService.baseUser?.isAdvisor ?? false) {
+      case "SP":
+        final UserService userService = locator<UserService>();
+        if (userService.baseUser?.isAdvisor ?? false) {
           navItems.putIfAbsent(
-              const AdvisorPage(), () => RootController.advisortNavBarItem);
+              const AdvisorPage(), () => RootController.advisortNavBarItem,);
         } else {
           navItems.putIfAbsent(
-            const ShortsVideoPage(),
-            () => RootController.shortsNavBarItem,
+            const SupportNewPage(),
+            () => RootController.supportNavBarItem,
           );
         }
         break;

@@ -1,3 +1,4 @@
+import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'live_home.g.dart';
@@ -11,7 +12,7 @@ class LiveHome {
   final Section sections;
   final List<LiveStream> live;
   final List<UpcomingStream> upcoming;
-  final List<RecentStream> recent;
+  final List<VideoData> recent;
 
   LiveHome({
     required this.sections,

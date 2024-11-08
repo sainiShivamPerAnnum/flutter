@@ -17,147 +17,152 @@ class FeedbackBottomSheet extends StatefulWidget {
 
 class _FeedbackBottomSheetState extends State<FeedbackBottomSheet> {
   final TextEditingController _controller = TextEditingController();
-  double rating = 0;
+  double rating = 3;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(
-            vertical: SizeConfig.padding14,
-            horizontal: SizeConfig.padding20,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Share Your Feedback',
-                style: TextStyles.sourceSansSB.body1,
-              ),
-            ],
-          ),
-        ),
-        const Divider(
-          color: UiConstants.greyVarient,
-        ),
-        Container(
-          margin: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding18,
-            vertical: SizeConfig.padding16,
-          ),
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding16,
-            vertical: SizeConfig.padding20,
-          ),
-          decoration: BoxDecoration(
-            color: UiConstants.greyVarient,
-            borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Rate your call',
-                style: TextStyles.sourceSansSB.body2,
-              ),
-              RatingBar.builder(
-                initialRating: 3,
-                minRating: 1,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                glow: false,
-                itemSize: SizeConfig.body1,
-                itemPadding:
-                    EdgeInsets.symmetric(horizontal: SizeConfig.padding4),
-                itemBuilder: (context, _) => Icon(
-                  Icons.star,
-                  color: Colors.amber,
-                  size: SizeConfig.body1,
-                ),
-                onRatingUpdate: (value) {
-                  rating = value;
-                },
-              ),
-            ],
-          ),
-        ),
-        const Divider(
-          color: UiConstants.greyVarient,
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding16,
-            vertical: SizeConfig.padding14,
-          ).copyWith(bottom: 0),
-          child: Text(
-            'How was your experience',
-            style: TextStyles.sourceSans.body3,
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding16,
-            vertical: SizeConfig.padding14,
-          ),
-          child: TextField(
-            maxLines: 4,
-            controller: _controller,
-            style: TextStyles.sourceSans.body3.colour(UiConstants.kTextColor),
-            decoration: InputDecoration(
-              hintText: 'Start typing here',
-              hintStyle: TextStyles.sourceSans.body3.colour(
-                UiConstants.kTextColor5,
-              ),
-              fillColor: UiConstants.greyVarient,
-              filled: true,
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-                borderSide: const BorderSide(color: UiConstants.greyVarient),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-                borderSide: const BorderSide(color: UiConstants.greyVarient),
-              ),
-            ),
-          ),
-        ),
-        const Divider(
-          color: UiConstants.greyVarient,
-        ),
-        SizedBox(
-          width: double.infinity,
-          child: Padding(
+    return SingleChildScrollView(
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
             padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.padding18,
-            ).copyWith(
-              top: SizeConfig.padding18,
-              bottom: SizeConfig.padding40,
+              vertical: SizeConfig.padding14,
+              horizontal: SizeConfig.padding20,
             ),
-            child: ElevatedButton(
-              onPressed: () => widget.onSubmit(rating, _controller.text.trim()),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: UiConstants.kTextColor,
-                padding: EdgeInsets.symmetric(
-                  vertical: SizeConfig.padding16,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Share Your Feedback',
+                  style: TextStyles.sourceSansSB.body1,
                 ),
-                shape: RoundedRectangleBorder(
+              ],
+            ),
+          ),
+          const Divider(
+            color: UiConstants.greyVarient,
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding18,
+              vertical: SizeConfig.padding16,
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding16,
+              vertical: SizeConfig.padding20,
+            ),
+            decoration: BoxDecoration(
+              color: UiConstants.greyVarient,
+              borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Rate your call',
+                  style: TextStyles.sourceSansSB.body2,
+                ),
+                RatingBar.builder(
+                  initialRating: 3,
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  glow: false,
+                  itemSize: SizeConfig.body1,
+                  itemPadding:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding4),
+                  itemBuilder: (context, _) => Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                    size: SizeConfig.body1,
+                  ),
+                  onRatingUpdate: (value) {
+                    rating = value;
+                  },
+                ),
+              ],
+            ),
+          ),
+          const Divider(
+            color: UiConstants.greyVarient,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding16,
+              vertical: SizeConfig.padding14,
+            ).copyWith(bottom: 0),
+            child: Text(
+              'How was your experience',
+              style: TextStyles.sourceSans.body3,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding16,
+              vertical: SizeConfig.padding14,
+            ),
+            child: TextField(
+              maxLines: 4,
+              controller: _controller,
+              style: TextStyles.sourceSans.body3.colour(UiConstants.kTextColor),
+              decoration: InputDecoration(
+                hintText: 'Start typing here',
+                hintStyle: TextStyles.sourceSans.body3.colour(
+                  UiConstants.kTextColor5,
+                ),
+                fillColor: UiConstants.greyVarient,
+                filled: true,
+                focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+                  borderSide: const BorderSide(color: UiConstants.greyVarient),
                 ),
-              ),
-              child: Text(
-                'Rate',
-                style: TextStyles.sourceSansSB.body3.colour(
-                  UiConstants.kTextColor4,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+                  borderSide: const BorderSide(color: UiConstants.greyVarient),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+          const Divider(
+            color: UiConstants.greyVarient,
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding18,
+              ).copyWith(
+                top: SizeConfig.padding18,
+                bottom: SizeConfig.padding40,
+              ),
+              child: ElevatedButton(
+                onPressed: () =>
+                    widget.onSubmit(rating, _controller.text.trim()),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: UiConstants.kTextColor,
+                  padding: EdgeInsets.symmetric(
+                    vertical: SizeConfig.padding16,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+                  ),
+                ),
+                child: Text(
+                  'Rate',
+                  style: TextStyles.sourceSansSB.body3.colour(
+                    UiConstants.kTextColor4,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

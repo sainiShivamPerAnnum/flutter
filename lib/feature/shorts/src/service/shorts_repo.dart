@@ -10,7 +10,7 @@ import 'video_data.dart';
 class ShortsRepo {
   static final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://advisors.fello-dev.net/'
-      : 'https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod';
+      : 'https://advisors.fello-prod.net/';
 
   // Updated getVideos function
   Future<ApiResponse<List<VideoData>>> getVideos({

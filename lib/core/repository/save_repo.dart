@@ -15,10 +15,9 @@ class SaveRepo extends BaseRepo {
   static const _live = 'live';
   final String _blogUrl =
       "https://felloblog815893968.wpcomstaging.com/wp-json/wp/v2";
-  final String _bookingsUrl = "https://advisors.fello-dev.net/";
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://advisors.fello-dev.net/'
-      : 'https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod';
+      : 'https://advisors.fello-prod.net/';
 
   Future<ApiResponse<List<BlogPostModel>>> getBlogs(int noOfBlogs) async {
     List<BlogPostModel> blogs = <BlogPostModel>[];
@@ -45,7 +44,7 @@ class SaveRepo extends BaseRepo {
     try {
       final response = await APIService.instance.getData(
         'booking/user/upcoming',
-        cBaseUrl: _bookingsUrl,
+        cBaseUrl: _baseUrl,
         apiName: 'bookings/getUpcomingBookings',
       );
       final responseData = response["data"];
@@ -70,7 +69,7 @@ class SaveRepo extends BaseRepo {
     try {
       final response = await APIService.instance.getData(
         'booking/user/past',
-        cBaseUrl: _bookingsUrl,
+        cBaseUrl: _baseUrl,
         apiName: 'bookings/getPastBookings',
       );
       final responseData = response["data"];

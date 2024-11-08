@@ -21,8 +21,9 @@ class BookingConfirmSheet extends StatelessWidget {
       children: [
         Container(
           padding: EdgeInsets.symmetric(
-            vertical: SizeConfig.padding14,
             horizontal: SizeConfig.padding20,
+          ).copyWith(
+            top: SizeConfig.padding14,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -159,20 +159,14 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                                   ),
                                 ),
                               ),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.padding12,
-                                  vertical: SizeConfig.padding12,
-                                ),
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    model.genderOptions[index],
-                                    style: TextStyles.sourceSans.body3.colour(
-                                      (model.genderValue == index)
-                                          ? UiConstants.primaryColor
-                                          : UiConstants.kTextColor2,
-                                    ),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  model.genderOptions[index],
+                                  style: TextStyles.sourceSans.body3.colour(
+                                    (model.genderValue == index)
+                                        ? UiConstants.primaryColor
+                                        : UiConstants.kTextColor2,
                                   ),
                                 ),
                               ),

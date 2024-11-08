@@ -58,6 +58,7 @@ class AdvisorViewWrapper extends StatelessWidget {
                           const TitleSubtitleContainer(
                             title: "Advisor Section",
                             zeroPadding: true,
+                            largeFont: true,
                           ),
                           GestureDetector(
                             onTap: () {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/live/live_home.dart';
 import 'package:felloapp/feature/live/bloc/live_bloc.dart';
+import 'package:felloapp/feature/live/view_all_live.dart';
 import 'package:felloapp/feature/live/widgets/header.dart';
 import 'package:felloapp/feature/live/widgets/live_card.dart';
 import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
@@ -82,6 +83,7 @@ class __LiveHomeState extends State<_LiveHome> {
                         TitleSubtitleContainer(
                           title: "Live",
                           zeroPadding: true,
+                          largeFont: true,
                         ),
                       ],
                     ),
@@ -92,7 +94,20 @@ class __LiveHomeState extends State<_LiveHome> {
                       child: LiveHeader(
                         title: liveData.sections.live.title,
                         subtitle: liveData.sections.live.subtitle,
-                        onViewAllPressed: () {},
+                        onViewAllPressed: () {
+                          AppState.delegate!.appState.currentAction =
+                              PageAction(
+                            page: AllEventsPageConfig,
+                            state: PageState.addWidget,
+                            widget: ViewAllLive(
+                              type: 'live',
+                              appBarTitle: liveData.sections.live.title,
+                              liveList: liveData.live,
+                              upcomingList: null,
+                              recentList: null,
+                            ),
+                          );
+                        },
                         showViewAll: liveData.live.length > 1,
                       ),
                     ),
@@ -105,7 +120,20 @@ class __LiveHomeState extends State<_LiveHome> {
                         child: LiveHeader(
                           title: liveData.sections.upcoming.title,
                           subtitle: liveData.sections.upcoming.subtitle,
-                          onViewAllPressed: () {},
+                          onViewAllPressed: () {
+                            AppState.delegate!.appState.currentAction =
+                                PageAction(
+                              page: AllEventsPageConfig,
+                              state: PageState.addWidget,
+                              widget: ViewAllLive(
+                                type: 'upcoming',
+                                appBarTitle: liveData.sections.upcoming.title,
+                                liveList: null,
+                                upcomingList: liveData.upcoming,
+                                recentList: null,
+                              ),
+                            );
+                          },
                           showViewAll: liveData.upcoming.length > 1,
                         ),
                       ),
@@ -118,11 +146,24 @@ class __LiveHomeState extends State<_LiveHome> {
                         child: LiveHeader(
                           title: liveData.sections.recent.title,
                           subtitle: liveData.sections.recent.subtitle,
-                          onViewAllPressed: () {},
+                          onViewAllPressed: () {
+                            AppState.delegate!.appState.currentAction =
+                                PageAction(
+                              page: AllEventsPageConfig,
+                              state: PageState.addWidget,
+                              widget: ViewAllLive(
+                                type: 'recent',
+                                appBarTitle: liveData.sections.recent.title,
+                                liveList: null,
+                                upcomingList: null,
+                                recentList: liveData.recent,
+                              ),
+                            );
+                          },
                           showViewAll: liveData.recent.length > 1,
                         ),
                       ),
-                    buildRecentSection(liveData.recent,context),
+                    buildRecentSection(liveData.recent, context),
                     SizedBox(height: SizeConfig.padding14),
                   ],
                 ),
@@ -153,6 +194,7 @@ class __LiveHomeState extends State<_LiveHome> {
                 title: live.title,
                 subTitle: live.subtitle,
                 author: live.author,
+                startTime: live.startTime,
                 category: live.categories.join(', '),
                 bgImage: live.thumbnail,
                 duration: live.startTime,
@@ -254,7 +296,7 @@ Widget buildLiveSection(List<LiveStream> liveData) {
         );
 }
 
-Widget buildRecentSection(List<RecentStream> recentData, BuildContext context) {
+Widget buildRecentSection(List<VideoData> recentData, BuildContext context) {
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal,
     child: Row(
@@ -269,13 +311,12 @@ Widget buildRecentSection(List<RecentStream> recentData, BuildContext context) {
               onTap: () async {
                 final preloadBloc = BlocProvider.of<PreloadBloc>(context);
                 final switchCompleter = Completer<void>();
-                //todo @vamshifello model same krna hao
-                // preloadBloc.add(
-                //   PreloadEvent.initializeLiveStream(
-                //     VideoData(id: recent.,),
-                //     completer: switchCompleter,
-                //   ),
-                // );
+                preloadBloc.add(
+                  PreloadEvent.initializeLiveStream(
+                    recent,
+                    completer: switchCompleter,
+                  ),
+                );
                 await switchCompleter.future;
                 AppState.delegate!.appState.currentAction = PageAction(
                   page: ShortsPageConfig,
@@ -308,9 +349,10 @@ Widget buildRecentSection(List<RecentStream> recentData, BuildContext context) {
               title: recent.title,
               subTitle: recent.subtitle,
               author: recent.author,
-              category: recent.categories.join(', '),
+              category: (recent.category ?? []).join(', '),
               bgImage: recent.thumbnail,
-              liveCount: recent.views, // Number of views instead of live count
+              liveCount:
+                  recent.viewCount, // Number of views instead of live count
               duration: recent.duration.toString(),
             ),
           ),

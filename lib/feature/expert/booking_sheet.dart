@@ -166,20 +166,23 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                 style: TextStyles.sourceSansSB.body2,
               ),
               SizedBox(height: SizeConfig.padding16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: dates.take(4).map((date) {
-                  return Padding(
-                    padding: EdgeInsets.only(right: SizeConfig.padding12),
-                    child: DateButton(
-                      date: date,
-                      isSelected: date == selectedDate,
-                      onTap: () {
-                        context.read<BookingBloc>().add(SelectDate(date));
-                      },
-                    ),
-                  );
-                }).toList(),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: dates.map((date) {
+                    return Padding(
+                      padding: EdgeInsets.only(right: SizeConfig.padding12),
+                      child: DateButton(
+                        date: date,
+                        isSelected: date == selectedDate,
+                        onTap: () {
+                          context.read<BookingBloc>().add(SelectDate(date));
+                        },
+                      ),
+                    );
+                  }).toList(),
+                ),
               ),
               SizedBox(height: SizeConfig.padding16),
               Divider(
@@ -467,8 +470,9 @@ Widget _buildPaymentSummary(BuildContext context, PricingData state) {
     children: [
       Container(
         padding: EdgeInsets.symmetric(
-          vertical: SizeConfig.padding14,
           horizontal: SizeConfig.padding20,
+        ).copyWith(
+          top: SizeConfig.padding14,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

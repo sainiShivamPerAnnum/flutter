@@ -111,7 +111,7 @@ class RootViewModel extends BaseViewModel {
         await _userService.userBootUpEE();
         _checkForAppUpdates();
         if (!await verifyUserBootupDetails()) return;
-        await showLastWeekOverview();
+        // await showLastWeekOverview();
         showMarketingCampings();
         await Future.wait([
           _referralService.verifyReferral(),

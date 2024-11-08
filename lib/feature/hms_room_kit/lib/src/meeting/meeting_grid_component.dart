@@ -43,7 +43,7 @@ class MeetingGridComponent extends StatelessWidget {
               color: Colors.transparent,
               height: double.infinity,
               width: double.infinity,
-              child: WaitingRoomScreen(),
+              child: const WaitingRoomScreen(),
             ));
           }
           return Selector<MeetingStore, Tuple2<MeetingMode, HMSPeer?>>(

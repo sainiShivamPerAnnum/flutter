@@ -15,7 +15,7 @@ LiveHome _$LiveHomeFromJson(Map<String, dynamic> json) => LiveHome(
           .map((e) => UpcomingStream.fromJson(e as Map<String, dynamic>))
           .toList(),
       recent: (json['recent'] as List<dynamic>)
-          .map((e) => RecentStream.fromJson(e as Map<String, dynamic>))
+          .map((e) => VideoData.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

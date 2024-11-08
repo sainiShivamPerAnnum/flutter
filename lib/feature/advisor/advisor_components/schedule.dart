@@ -5,6 +5,7 @@ import 'package:felloapp/feature/advisor/bloc/live_details_bloc.dart';
 import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -259,7 +260,7 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
               color: const Color(0xff1A1A1A),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: isSelected ? Colors.white : Color(0xff1A1A1A),
+                color: isSelected ? Colors.white : const Color(0xff1A1A1A),
                 width: 1,
               ),
             ),
@@ -283,25 +284,83 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
     final description = state.profilePicture != null
         ? "Image Uploaded"
         : "Upload and resize image to be used as cover for your upcoming live";
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: Text(description,
-              style:
-                  TextStyles.sourceSans.body3.colour(UiConstants.kTextColor5)),
+        if(state.profilePicture!=null)
+        Container(
+          decoration: BoxDecoration(
+            color: UiConstants.kTambolaMidTextColor,
+            borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding20,
+            vertical: SizeConfig.padding12,
+          ),
+          margin: EdgeInsets.only(bottom: SizeConfig.padding16,),
+          child: Row(
+            children: [
+              AppImage(
+                Assets.image,
+                height: SizeConfig.padding20,
+                width: SizeConfig.padding20,
+              ),
+              SizedBox(
+                width: SizeConfig.padding16,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      state.profilePicture?.name ?? 'null',
+                      style: TextStyles.sourceSansSB.body3
+                          .colour(UiConstants.kTextColor),
+                    ),
+                    Text(
+                      BaseUtil.formatDateTime(DateTime.now()),
+                      style: TextStyles.sourceSans.body4
+                          .colour(UiConstants.kTextColor5),
+                    ),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                 onTap: () =>
+                  context.read<ScheduleLiveBloc>().add(UploadProfilePicture()),
+                child: AppImage(
+                  Assets.garbageBin,
+                  height: SizeConfig.padding18,
+                  width: SizeConfig.padding18,
+                ),
+              ),
+            ],
+          ),
         ),
-        ElevatedButton(
-          onPressed: () =>
-              context.read<ScheduleLiveBloc>().add(UploadProfilePicture()),
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          ),
-          child: Text(
-            profilePictureText,
-            style: TextStyle(color: Colors.black, fontSize: 12),
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                description,
+                style:
+                    TextStyles.sourceSans.body3.colour(UiConstants.kTextColor5),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () =>
+                  context.read<ScheduleLiveBloc>().add(UploadProfilePicture()),
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6),
+                ),
+              ),
+              child: Text(
+                profilePictureText,
+                style: const TextStyle(color: Colors.black, fontSize: 12),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -318,11 +377,11 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
         return GestureDetector(
           onTap: () => context.read<ScheduleLiveBloc>().add(SelectDate(index)),
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
               border: Border.all(
-                color: isSelected ? Colors.white : Color(0xff2D3135),
+                color: isSelected ? Colors.white : const Color(0xff2D3135),
                 width: 2.0,
               ),
             ),
@@ -331,11 +390,11 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
               children: [
                 Text(
                   date['day']!,
-                  style: TextStyle(color: Colors.white, fontSize: 14),
+                  style: const TextStyle(color: Colors.white, fontSize: 14),
                 ),
                 Text(
                   date['date']!,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
@@ -360,16 +419,18 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
         return GestureDetector(
           onTap: () => context.read<ScheduleLiveBloc>().add(SelectTime(index)),
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
               border: Border.all(
-                color: isSelected ? Colors.white : Color(0xff2D3135),
+                color: isSelected ? Colors.white : const Color(0xff2D3135),
                 width: 2.0,
               ),
             ),
-            child:
-                Text(time, style: TextStyle(color: Colors.white, fontSize: 14)),
+            child: Text(
+              time,
+              style: const TextStyle(color: Colors.white, fontSize: 14),
+            ),
           ),
         );
       }),

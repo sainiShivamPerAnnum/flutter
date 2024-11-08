@@ -10,10 +10,10 @@ CommentData _$CommentDataFromJson(Map<String, dynamic> json) => CommentData(
       id: json['_id'] as String,
       videoId: json['videoId'] as String,
       name: json['name'] as String,
-      userId: json['userId'] as String,
       comment: json['comment'] as String,
       createdAt: json['createdAt'] as String,
       avatarId: json['avatarId'] as String? ?? "AV1",
+      userId: json['userId'] as String? ?? '',
       dpUrl: json['dpUrl'] as String? ?? "",
     );
 
