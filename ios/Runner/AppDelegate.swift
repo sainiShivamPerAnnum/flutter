@@ -6,6 +6,8 @@ import Flutter
 import Contacts
 import CleverTapSDK
 import clevertap_plugin
+import WebEngage
+import webengage_flutter
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -89,6 +91,7 @@ import clevertap_plugin
         let action3 = UNNotificationAction(identifier: "action_3", title: "View In App", options: [])
         let category = UNNotificationCategory(identifier: "CTNotification", actions: [action1, action2, action3], intentIdentifiers: [], options: [])
         UNUserNotificationCenter.current().setNotificationCategories([category])
+        WebEngage.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         
         
         
@@ -187,6 +190,9 @@ import clevertap_plugin
     // Called when the application sucessfuly registers for push notifications
     override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         AppsFlyerLib.shared().registerUninstall(deviceToken)
+    }
+    override func applicationDidBecomeActive(_ application: UIApplication) {
+        ATTrackingManager.requestTrackingAuthorization(completionHandler: {_ in })
     }
 }
 
