@@ -57,6 +57,7 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
       await iosScreenShotChannel.invokeMethod('secureiOS');
     }
     logger.d("Mobile No: $mobileNo");
+    listenForCode();
     assert(() {
       listenForDummyCode();
       return true;

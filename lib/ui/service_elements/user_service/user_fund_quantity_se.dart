@@ -1,6 +1,6 @@
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/model/user_funt_wallet_model.dart';
+import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -13,21 +13,21 @@ class UserFundQuantitySE extends StatelessWidget {
   final InvestmentType investmentType;
 
   const UserFundQuantitySE({
+    super.key,
     this.style,
     this.investmentType = InvestmentType.AUGGOLD99,
   });
 
-  String getQuantity(UserFundWallet? fund) {
+  String getQuantity(Portfolio? fund) {
     final suffix = investmentType == InvestmentType.AUGGOLD99 ? " gm" : '';
     final prefix = investmentType == InvestmentType.AUGGOLD99 ? '' : '₹ ';
     final quantity = investmentType == InvestmentType.AUGGOLD99
-        ? fund?.augGoldQuantity
-        : fund?.wLbBalance;
+        ? fund?.augmont.balance
+        : fund?.flo.balance;
 
     if (quantity != null) {
       if (quantity == 0.0) {
         return "${prefix}0$suffix";
-        return "0 $suffix";
       } else {
         if (investmentType == InvestmentType.AUGGOLD99) {
           return "$prefix${quantity.toStringAsFixed(4)}$suffix";
@@ -48,7 +48,7 @@ class UserFundQuantitySE extends StatelessWidget {
         UserServiceProperties.myUserWallet
       ],
       builder: (context, model, property) => Text(
-        getQuantity(model!.userFundWallet),
+        getQuantity(model!.userPortfolio),
         style: style ?? TextStyles.sourceSansSB.title4,
       ),
     );
@@ -61,17 +61,18 @@ class LboxGrowthArrow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-        properties: const [
-          UserServiceProperties.myUserFund,
-          UserServiceProperties.myUserWallet
-        ],
-        builder: (context, model, property) =>
-            (model!.userFundWallet?.wLbBalance ?? 0) > 0
-                ? Icon(
-                    Icons.arrow_upward,
-                    size: SizeConfig.padding16,
-                    color: UiConstants.primaryColor,
-                  )
-                : const SizedBox());
+      properties: const [
+        UserServiceProperties.myUserFund,
+        UserServiceProperties.myUserWallet
+      ],
+      builder: (context, model, property) =>
+          (model!.userFundWallet?.wLbBalance ?? 0) > 0
+              ? Icon(
+                  Icons.arrow_upward,
+                  size: SizeConfig.padding16,
+                  color: UiConstants.primaryColor,
+                )
+              : const SizedBox(),
+    );
   }
 }

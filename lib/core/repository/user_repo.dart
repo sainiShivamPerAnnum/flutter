@@ -636,7 +636,7 @@ class UserRepository extends BaseRepo {
         apiName: '$_userOps/portfolio',
       );
       _logger.i("Portfolio: ${res['data']}");
-      final Portfolio portfolio = Portfolio.fromMap(res['data']);
+      final Portfolio portfolio = Portfolio.fromJson(res['data']);
       return ApiResponse(code: 200, model: portfolio);
     } catch (e) {
       logger.d(e);

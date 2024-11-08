@@ -34,6 +34,7 @@ class SipPollingPage extends StatelessWidget {
       create: (context) => SipPollingBloc(
         locator(),
         locator(),
+        locator(),
       )..add(event),
       child: _SipStatusView(assetType),
     );

@@ -45,6 +45,7 @@ class LendboxWithdrawalSuccessView extends StatelessWidget {
           TextButton(
             onPressed: () {
               AppState.backButtonDispatcher!.didPopRoute();
+              AppState.backButtonDispatcher!.didPopRoute();
             },
             child: Text(
               locale.obDone,

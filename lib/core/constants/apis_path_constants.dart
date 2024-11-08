@@ -112,6 +112,7 @@ class ApiPath {
 
   static String kSingleTransactions(String? uid) => "/users/$uid/payments";
 
+  static String kSingleSipTransactions(String? uid) => "/$uid/sub/funds";
   // Scratch Card rewards Apis
   static const String prizes = '/prizes';
 

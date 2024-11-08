@@ -18,6 +18,8 @@ import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:provider/provider.dart';
 
 class LendboxWithdrawalView extends StatefulWidget {
+  const LendboxWithdrawalView({super.key, this.onWithDrawalSubitted});
+  final VoidCallback? onWithDrawalSubitted;
   @override
   State<LendboxWithdrawalView> createState() => _LendboxWithdrawalViewState();
 }
@@ -136,6 +138,7 @@ class _LendboxWithdrawalViewState extends State<LendboxWithdrawalView>
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
       return LendboxLoadingView(transactionType: type);
     } else if (txnService.currentTransactionState == TransactionState.success) {
+      widget.onWithDrawalSubitted!.call();
       return const LendboxWithdrawalSuccessView();
     }
 

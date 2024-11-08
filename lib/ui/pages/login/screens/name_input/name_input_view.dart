@@ -87,6 +87,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                   Form(
                     key: model.formKey,
                     child: AppTextField(
+                      key: const ValueKey("userNameTab"),
                       textEditingController: model.nameController,
                       isEnabled: model.enabled,
                       maxLength: 15,
@@ -192,6 +193,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                               leftPadding: 0,
                             ),
                             AppTextField(
+                              key: const ValueKey("refferalCode"),
                               textEditingController:
                                   model.referralCodeController,
                               onChanged: (val) {},
@@ -233,6 +235,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                                 padding: EdgeInsets.all(SizeConfig.padding8),
                                 child: Text(
                                   locale.refHaveReferral,
+                                  key: const ValueKey("refferalTab"),
                                   style: TextStyles.body2.bold
                                       .colour(UiConstants.kPrimaryColor),
                                   textAlign: TextAlign.center,

@@ -394,6 +394,7 @@ class AppPositiveBtn extends StatelessWidget {
             ),
           ),
           child: MaterialButton(
+            key: const ValueKey('floSaveButton'),
             // padding: EdgeInsets.zero,
             onPressed: onPressed,
             child: child ??
@@ -1154,14 +1155,17 @@ class GradientBoxBorder extends BoxBorder {
   }
 }
 
-
 class CustomSwitch extends StatefulWidget {
   final bool initialValue;
-  final ValueChanged<bool> onChanged;
+  final ValueChanged<bool>? onChanged;
+  final VoidCallback? onTap;
+  final bool isLoading;
 
   const CustomSwitch({
     required this.initialValue,
-    required this.onChanged,
+    this.isLoading = false,
+    this.onChanged,
+    this.onTap,
     super.key,
   });
 
@@ -1226,24 +1230,30 @@ class _CustomSwitchState extends State<CustomSwitch>
     super.dispose();
   }
 
-  void _onToggle() {
-    setState(() => _selected = !_selected);
-    widget.onChanged(_selected);
-    _onValueChanged();
+  Future<void> _onTap() async {
+    if (widget.onChanged != null) {
+      setState(() => _selected = !_selected);
+      await _onValueChanged();
+      widget.onChanged?.call(_selected);
+    }
+
+    if (widget.onTap != null) {
+      widget.onTap?.call();
+    }
   }
 
-  void _onValueChanged() {
+  Future<void> _onValueChanged() async {
     if (_selected) {
-      _animationController.forward();
+      await _animationController.forward();
     } else {
-      _animationController.reverse();
+      await _animationController.reverse();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: _onToggle,
+      onTap: _onTap,
       child: Container(
         height: SizeConfig.padding25,
         width: SizeConfig.padding46,
@@ -1298,6 +1308,13 @@ class _CustomSwitchState extends State<CustomSwitch>
               child: AnimatedBuilder(
                 animation: _animationController,
                 builder: (context, child) {
+                  if (widget.isLoading) {
+                    return SizedBox.square(
+                      dimension: SizeConfig.padding16,
+                      child: const CircularProgressIndicator(),
+                    );
+                  }
+
                   return SizedBox.square(
                     dimension: SizeConfig.padding16,
                     child: CustomPaint(
@@ -1354,9 +1371,7 @@ class _ThumbPainter extends CustomPainter {
   bool shouldRepaint(covariant _ThumbPainter oldDelegate) =>
       oldDelegate.thumbColor != thumbColor ||
       oldDelegate.circleSize != circleSize;
-
 }
-
 
 class BaseScaffold extends StatelessWidget {
   const BaseScaffold({

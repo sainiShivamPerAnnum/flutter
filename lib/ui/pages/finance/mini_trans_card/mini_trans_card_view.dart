@@ -103,6 +103,8 @@ class MiniTransactionCard extends StatelessWidget {
                                                 ),
                                                 child: Text(
                                                   locale.btnSeeAll,
+                                                  key: const ValueKey(
+                                                      'transactionSeeAll'),
                                                   style: TextStyles
                                                       .rajdhaniSB.body2
                                                       .colour(

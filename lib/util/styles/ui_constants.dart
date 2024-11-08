@@ -23,6 +23,7 @@ class UiConstants {
   static const Color referralIconColor = Color(0xff6052A9);
   static const Color customBorderShadow = Color(0xfffff9f9);
   static const Color customSubtitle = Color(0xffB9B9B9);
+  static const Color customCoupon = Color(0xff2A343A);
 
   // static final Color chipColor = const Color.fromARGB(255, 241, 227, 243);
   static final Color? chipColor = Colors.grey[200];
@@ -37,6 +38,7 @@ class UiConstants {
   static const Color titleTextColor = Colors.white;
   static const Color textColor = Colors.black87;
   static const Color errorText = Color(0xffC34B29);
+  static const Color greyBg = Color(0xffF5F5F8);
 
   static const MaterialColor kPrimaryColor = MaterialColor(
     0xff2EB19F,
@@ -83,6 +85,7 @@ class UiConstants {
   static const Color kTabBorderColor = Color(0xFF62E3C4);
   static const Color kDividerColor = Color(0xFF9EA1A1);
   static const Color kBackgroundDividerColor = Color(0xFF23272B);
+  static const Color kDividerColorLight = Color(0xff3E3E3E);
   static const Color kGridLineColor = Color(0x32414145);
   static const Color kFirstRankPillerColor = Color(0xFFF2B826);
   static const Color kSecondRankPillerColor = Color(0x0f5371ee);
@@ -237,12 +240,14 @@ class UiConstants {
   static const grey5 = Color(0xFF1A1A1A);
 
   static const yellow3 = Color(0xFFFFD979);
+  static const yellow2 = Color(0xFFFFE9B1);
 
   static const teal1 = Color(0xFFCEF8F5);
   static const teal2 = Color(0xFFA5FCE7);
   static const teal3 = Color(0xFF62E3C4);
   static const teal4 = Color(0xFF01656B);
   static const teal5 = Color(0xFF023C40);
+  static const teal6 = Color(0xff1CA98F);
 
   static const blue3 = Color(0xff93B5FE);
 

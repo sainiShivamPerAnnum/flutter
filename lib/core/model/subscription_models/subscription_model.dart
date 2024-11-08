@@ -1,7 +1,7 @@
-import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../sip_model/select_asset_options.dart';
 import 'subscription_status.dart';
 
 part 'subscription_model.g.dart';
@@ -16,8 +16,7 @@ class SubscriptionModel {
   final AutosaveState status;
   final num amount;
   final String frequency;
-  @JsonKey(unknownEnumValue: SIPAssetTypes.UNKNOWN)
-  final SIPAssetTypes assetType;
+  final String assetType;
   @JsonKey(name: 'AUGGOLD99')
   final num aUGGOLD99;
   @JsonKey(name: 'LENDBOXP2P')
@@ -29,7 +28,7 @@ class SubscriptionModel {
     this.id = '',
     this.subId = '',
     this.status = AutosaveState.IDLE,
-    this.assetType = SIPAssetTypes.UNKNOWN,
+    this.assetType = 'UNKNOWN',
     this.amount = 0,
     this.frequency = '',
     this.aUGGOLD99 = 0,
@@ -45,4 +44,15 @@ class SubscriptionModel {
 extension SubscriptionModelX on SubscriptionModel {
   String get formattedStartDate =>
       DateFormat('dd MMM yyyy').format(DateTime.parse(createdOn));
+}
+
+extension SubscriptionModelXX on SubscriptionModel {
+  bool get isAugGold => assetType == 'AUGGOLD99';
+  bool get isCombined => assetType == 'BOTH';
+  bool get isLendbox =>
+      assetType != 'AUGGOLD99' && assetType != 'BOTH' && assetType != 'UNKNOWN';
+}
+
+extension AssetOptionsExtension on SubscriptionModel {
+  AssetOptions get assetOptionsModel => AssetOptions(type: assetType);
 }

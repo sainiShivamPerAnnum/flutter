@@ -1,5 +1,5 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/sip_asset_type.dart';
+import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
 import 'package:felloapp/feature/sip/mandate_page/bloc/mandate_bloc.dart';
 import 'package:felloapp/feature/sip/sip_polling_page/constants/asset_type.dart';
 import 'package:felloapp/feature/sip/sip_polling_page/view/sip_polling_view.dart';
@@ -25,7 +25,7 @@ class SipMandateView extends StatelessWidget {
 
   final num amount;
   final String frequency;
-  final SIPAssetTypes assetType;
+  final AssetOptions assetType;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class SipMandateView extends StatelessWidget {
 class _SipMandatePage extends StatelessWidget {
   final num amount;
   final String frequency;
-  final SIPAssetTypes assetType;
+  final AssetOptions assetType;
 
   const _SipMandatePage({
     required this.amount,
@@ -123,7 +123,7 @@ class MandateStepView extends StatelessWidget {
   final List<ApplicationMeta> pspApps;
   final num amount;
   final String frequency;
-  final SIPAssetTypes assetType;
+  final AssetOptions assetType;
   final locale = locator<S>();
   final ListedPSPApps state;
 
@@ -165,7 +165,7 @@ class MandateStepView extends StatelessWidget {
                     assetType,
                     freq: frequency,
                     meta: meta,
-                    assetType: assetType.name,
+                    assetType: assetType,
                     value: amount.toInt(),
                   );
                   context.read<MandateBloc>().add(event);

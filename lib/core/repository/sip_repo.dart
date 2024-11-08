@@ -6,8 +6,8 @@ import 'package:felloapp/util/flavor_config.dart';
 
 class SipRepository extends BaseRepo {
   String baseUrl = FlavorConfig.isProduction()
-      ? "https://d11q4cti75qmcp.cloudfront.net/sip.json"
-      : "https://d18gbwu7fwwwtf.cloudfront.net/sip.json";
+      ? "https://d11q4cti75qmcp.cloudfront.net/sip-flow/v1/sip.json"
+      : "https://d18gbwu7fwwwtf.cloudfront.net/sip-flow/v1/sip.json";
 
   static const _subscription = 'subscription';
 

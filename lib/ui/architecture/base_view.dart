@@ -8,9 +8,10 @@ import 'package:provider/provider.dart';
 
 class BaseView<T extends BaseViewModel> extends StatefulWidget {
   final Widget Function(BuildContext context, T model, Widget? child)? builder;
-  final Function(T)? onModelReady;
-  final Function(T)? onModelDispose;
+  final void Function(T)? onModelReady;
+  final void Function(T)? onModelDispose;
   final Widget? child;
+  final T Function()? create;
 
   const BaseView({
     super.key,
@@ -18,6 +19,7 @@ class BaseView<T extends BaseViewModel> extends StatefulWidget {
     this.onModelReady,
     this.onModelDispose,
     this.child,
+    this.create,
   });
 
   @override
@@ -25,11 +27,12 @@ class BaseView<T extends BaseViewModel> extends StatefulWidget {
 }
 
 class _BaseViewState<T extends BaseViewModel> extends State<BaseView<T>> {
-  T? model = locator<T>();
+  T? model;
 
   @override
   void initState() {
     super.initState();
+    model = widget.create?.call() ?? locator<T>();
     widget.onModelReady?.call(model!);
   }
 

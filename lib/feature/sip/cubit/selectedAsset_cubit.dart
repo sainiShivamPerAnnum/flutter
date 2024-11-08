@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/sip_asset_type.dart';
+import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -14,21 +14,21 @@ part 'selectedAsset_state.dart';
 class SelectAssetCubit extends Cubit<SelectAssetCubitState> {
   SelectAssetCubit() : super(const SelectAssetCubitState());
 
-  void setSelectedAsset(SIPAssetTypes asset) {
+  void setSelectedAsset(AssetOptions asset) {
     emit(state.copyWith(selectedAsset: asset));
 
     locator<AnalyticsService>().track(
       eventName: AnalyticsEvents.sipAssetSelected,
       properties: {
-        "asset selected": asset.name,
+        "asset selected": asset.type,
       },
     );
   }
 
-  void submitAsset(SIPAssetTypes asset, bool isMandateAvailable) {
+  void submitAsset(AssetOptions asset, bool isMandateAvailable) {
     locator<AnalyticsService>()
         .track(eventName: AnalyticsEvents.asChooseAssetNextTapped, properties: {
-      "asset selected": asset.name,
+      "asset selected": asset.type,
     });
     AppState.delegate!.appState.currentAction = PageAction(
       page: SipFormPageConfig,

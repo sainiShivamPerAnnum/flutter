@@ -4,7 +4,6 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
-import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -17,8 +16,13 @@ import 'package:provider/provider.dart';
 
 class AutosaveCard extends StatelessWidget {
   final InvestmentType? investmentType;
+  final TextStyle? titleStyle;
 
-  const AutosaveCard({super.key, this.investmentType});
+  const AutosaveCard({
+    super.key,
+    this.titleStyle,
+    this.investmentType,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +37,11 @@ class AutosaveCard extends StatelessWidget {
                 }
                 service.handleTap(type: investmentType);
               },
-              child: AutoSaveCardNew(service: service))
+              child: AutoSaveCardNew(
+                service: service,
+                titleStyle: titleStyle,
+              ),
+            )
           : const SizedBox(),
     );
   }
@@ -41,25 +49,30 @@ class AutosaveCard extends StatelessWidget {
 
 class AutoSaveCardNew extends StatelessWidget {
   final SubService service;
+  final TextStyle? titleStyle;
 
-  AutoSaveCardNew({
+  const AutoSaveCardNew({
     required this.service,
-    Key? key,
-  }) : super(key: key);
-  final locale = locator<S>();
-
-  final UserService _userService = locator<UserService>();
+    this.titleStyle,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final isSActiveSub = _userService.baseUser!.doesHaveSubscriptionTransaction;
+    final userService = locator<UserService>();
+    final locale = locator<S>();
+    final isSActiveSub = userService.baseUser!.doesHaveSubscriptionTransaction;
     return Container(
       margin: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.pageHorizontalMargins,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TitleSubtitleContainer(
-            title: locale.siptitle,
+          Text(
+            locale.siptitle,
+            style: titleStyle ?? TextStyles.sourceSansSB.title3,
           ),
           SizedBox(
             height: SizeConfig.padding12,
@@ -67,13 +80,10 @@ class AutoSaveCardNew extends StatelessWidget {
           GestureDetector(
             onTap: service.handleTap,
             child: Container(
-              // height: SizeConfig.screenWidth! * 0.36,
-              // width: SizeConfig.screenWidth,
               padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding16,
-                  vertical: SizeConfig.padding16),
-              margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins),
+                horizontal: SizeConfig.padding16,
+                vertical: SizeConfig.padding16,
+              ),
               decoration: BoxDecoration(
                 color: UiConstants.kArrowButtonBackgroundColor,
                 borderRadius: BorderRadius.circular(SizeConfig.roundness12),

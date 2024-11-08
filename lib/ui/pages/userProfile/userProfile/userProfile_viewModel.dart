@@ -13,10 +13,7 @@ import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
-import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
@@ -24,6 +21,9 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
+import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
+import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'package:felloapp/feature/tambola/src/repos/tambola_repo.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -80,10 +80,11 @@ class UserProfileVM extends BaseViewModel {
   final AppState _appstate = locator<AppState>();
   final TambolaService _tambolaService = locator<TambolaService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final TransactionBloc _transactionBloc = locator<TransactionBloc>();
+  final MyFundsBloc _myFundsBloc = locator<MyFundsBloc>();
+  final SIPTransactionBloc _sipTransactionBloc = locator<SIPTransactionBloc>();
   final S _locale = locator<S>();
   final BaseUtil? baseProvider = locator<BaseUtil>();
-  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
-  final JourneyService _journeyService = locator<JourneyService>();
   final GoogleSignInService _googleSignInService =
       locator<GoogleSignInService>();
   final BankAndPanService _bankAndKycService = locator<BankAndPanService>();
@@ -553,6 +554,9 @@ class UserProfileVM extends BaseViewModel {
               _analyticsService.signOut();
             }).then((flag) async {
               if (flag) {
+                _transactionBloc.dispose();
+                _myFundsBloc.dispose();
+                _sipTransactionBloc.dispose();
                 await _baseUtil.signOut();
                 _marketingService.dump();
                 _txnHistoryService.signOut();
@@ -565,7 +569,6 @@ class UserProfileVM extends BaseViewModel {
                 _appstate.dump();
                 locator<SubService>().dump();
                 _tambolaService.dump();
-                locator<LendboxMaturityService>().dump();
                 await AppState.backButtonDispatcher!.didPopRoute();
 
                 AppState.delegate!.appState.currentAction = PageAction(

@@ -1,4 +1,3 @@
-import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'select_asset_options.g.dart';
@@ -11,8 +10,7 @@ class AssetOptions {
   final String imageUrl;
   final String subText;
   final bool defaultSelected;
-  @JsonKey(unknownEnumValue: SIPAssetTypes.UNKNOWN)
-  final SIPAssetTypes type;
+  final String type;
   final num interest;
 
   const AssetOptions(
@@ -20,8 +18,15 @@ class AssetOptions {
       this.imageUrl = '',
       this.subText = '',
       this.defaultSelected = false,
-      this.type = SIPAssetTypes.UNKNOWN,
+      this.type = 'UNKNOWN',
       this.interest = 8});
   factory AssetOptions.fromJson(Map<String, dynamic> json) =>
       _$AssetOptionsFromJson(json);
+}
+
+extension AssetOptionsX on AssetOptions {
+  bool get isAugGold => type == 'AUGGOLD99';
+  bool get isCombined => type == 'BOTH';
+  bool get isLendBox =>
+      type != 'AUGGOLD99' && type != 'BOTH' && type != 'UNKNOWN';
 }

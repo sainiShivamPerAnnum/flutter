@@ -116,6 +116,7 @@ class _FormDialogState extends State<ConfirmationDialog> {
                       if (widget.showSecondaryButton) ...[
                         Expanded(
                           child: AppNegativeBtn(
+                            key: const Key('logoutCancelCTA'),
                             width: SizeConfig.screenWidth! * 0.40,
                             btnText: widget.cancelBtnText,
                             onPressed: () {
@@ -130,7 +131,8 @@ class _FormDialogState extends State<ConfirmationDialog> {
                       Expanded(
                         child: Center(
                           child: AppPositiveBtn(
-                            key: K.confirmationDialogCTAKey,
+                            key: const Key('logoutConfirmationCTA'),
+                            // key: K.confirmationDialogCTAKey,
                             btnText: widget.buttonText,
                             width: !widget.showSecondaryButton
                                 ? null

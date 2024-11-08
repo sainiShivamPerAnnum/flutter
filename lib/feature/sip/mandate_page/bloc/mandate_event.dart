@@ -14,13 +14,13 @@ class CreateSubscription extends MandateEvent {
   final num lbAmt;
   final num augAmt;
   final String freq;
-  final String assetType;
+  final AssetOptions assetType;
 
   factory CreateSubscription.fromAssetType(
-    SIPAssetTypes type, {
+    AssetOptions type, {
     required ApplicationMeta meta,
     required String freq,
-    required String assetType,
+    required AssetOptions assetType,
     required int value,
   }) {
     return type.isAugGold

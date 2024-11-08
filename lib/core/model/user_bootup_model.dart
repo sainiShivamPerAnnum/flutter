@@ -331,24 +331,34 @@ class BanMap {
 class InvestmentsBanMap {
   InvestmentTypeBanMap? deposit;
   InvestmentTypeBanMap? withdrawal;
+  TransactionMap? depositV2;
+  TransactionMap? withdrawalV2;
 
   InvestmentsBanMap({
     required this.deposit,
     required this.withdrawal,
+    required this.depositV2,
+    required this.withdrawalV2,
   });
 
   InvestmentsBanMap.base() {
     deposit = InvestmentTypeBanMap.base();
     withdrawal = InvestmentTypeBanMap.base();
+    depositV2 = TransactionMap.base();
+    withdrawalV2 = TransactionMap.base();
   }
 
   InvestmentsBanMap copyWith({
     InvestmentTypeBanMap? deposit,
     InvestmentTypeBanMap? withdrawal,
+    TransactionMap? depositV2,
+    TransactionMap? withdrawalV2,
   }) {
     return InvestmentsBanMap(
       deposit: deposit ?? this.deposit,
       withdrawal: withdrawal ?? this.withdrawal,
+      depositV2: depositV2 ?? this.depositV2,
+      withdrawalV2: withdrawalV2 ?? this.withdrawalV2,
     );
   }
 
@@ -356,6 +366,8 @@ class InvestmentsBanMap {
     return <String, dynamic>{
       'deposit': deposit!.toMap(),
       'withdrawal': withdrawal!.toMap(),
+      'depositV2': depositV2!.toMap(),
+      'withdrawalV2': withdrawalV2!.toMap(),
     };
   }
 
@@ -368,6 +380,12 @@ class InvestmentsBanMap {
           ? InvestmentTypeBanMap.fromMap(
               map['withdrawal'] as Map<String, dynamic>)
           : InvestmentTypeBanMap.base(),
+      depositV2: map['depositV2'] != null
+          ? TransactionMap.fromMap(map['depositV2'] as Map<String, dynamic>)
+          : TransactionMap.base(),
+      withdrawalV2: map['withdrawalV2'] != null
+          ? TransactionMap.fromMap(map['withdrawalV2'] as Map<String, dynamic>)
+          : TransactionMap.base(),
     );
   }
 
@@ -389,6 +407,55 @@ class InvestmentsBanMap {
 
   @override
   int get hashCode => deposit.hashCode ^ withdrawal.hashCode;
+}
+
+class TransactionMap {
+  final Map<String, AssetBanMap> flo;
+  final Map<String, AssetBanMap> auggold;
+
+  const TransactionMap({
+    required this.flo,
+    required this.auggold,
+  });
+  TransactionMap.base()
+      : flo = const {},
+        auggold = const {};
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'flo': flo.map((key, value) => MapEntry(key, value.toJson())),
+      'auggold': auggold.map((key, value) => MapEntry(key, value.toJson())),
+    };
+  }
+
+  factory TransactionMap.fromMap(Map<String, dynamic> map) {
+    Map<String, AssetBanMap> floMap = map['flo'] != null
+        ? (map['flo'] as Map<String, dynamic>)
+            .map((key, value) => MapEntry(key, AssetBanMap.fromJson(value)))
+        : {};
+
+    Map<String, AssetBanMap> auggoldMap = map['auggold'] != null
+        ? (map['auggold'] as Map<String, dynamic>)
+            .map((key, value) => MapEntry(key, AssetBanMap.fromJson(value)))
+        : {};
+
+    return TransactionMap(
+      flo: floMap,
+      auggold: auggoldMap,
+    );
+  }
+  @override
+  String toString() => 'TransactionMap(flo: $flo, auggold: $auggold)';
+
+  @override
+  bool operator ==(covariant TransactionMap other) {
+    if (identical(this, other)) return true;
+
+    return other.flo == flo && other.auggold == auggold;
+  }
+
+  @override
+  int get hashCode => flo.hashCode ^ auggold.hashCode;
 }
 
 class InvestmentTypeBanMap {
@@ -445,27 +512,27 @@ class InvestmentTypeBanMap {
       augmont: map[Constants.ASSET_TYPE_AUGMONT] != null
           ? AssetBanMap.fromMap(
               map[Constants.ASSET_TYPE_AUGMONT] as Map<String, dynamic>,
-              Constants.ASSET_TYPE_AUGMONT)
+            )
           : AssetBanMap.base(),
       goldPro: map[Constants.ASSET_TYPE_AUGMONT_FD] != null
           ? AssetBanMap.fromMap(
               map[Constants.ASSET_TYPE_AUGMONT_FD] as Map<String, dynamic>,
-              Constants.ASSET_TYPE_AUGMONT_FD)
+            )
           : AssetBanMap.base(),
       lendBox: map[Constants.ASSET_TYPE_LENDBOX] != null
           ? AssetBanMap.fromMap(
               map[Constants.ASSET_TYPE_LENDBOX] as Map<String, dynamic>,
-              Constants.ASSET_TYPE_LENDBOX)
+            )
           : AssetBanMap.base(),
       lendBoxFd1: map[Constants.ASSET_TYPE_LENDBOX_FD1] != null
           ? AssetBanMap.fromMap(
               map[Constants.ASSET_TYPE_LENDBOX_FD1] as Map<String, dynamic>,
-              Constants.ASSET_TYPE_LENDBOX_FD1)
+            )
           : AssetBanMap.base(),
       lendBoxFd2: map[Constants.ASSET_TYPE_LENDBOX_FD2] != null
           ? AssetBanMap.fromMap(
               map[Constants.ASSET_TYPE_LENDBOX_FD2] as Map<String, dynamic>,
-              Constants.ASSET_TYPE_LENDBOX_FD2)
+            )
           : AssetBanMap.base(),
     );
   }
@@ -576,57 +643,57 @@ class GamesBanMap {
       cricketMap: map[Constants.GAME_TYPE_CRICKET] != null
           ? AssetBanMap.fromMap(
               map[Constants.GAME_TYPE_CRICKET] as Map<String, dynamic>,
-              Constants.GAME_TYPE_CRICKET)
+            )
           : AssetBanMap.base(),
       tambolaMap: map[Constants.GAME_TYPE_TAMBOLA] != null
           ? AssetBanMap.fromMap(
               map[Constants.GAME_TYPE_TAMBOLA] as Map<String, dynamic>,
-              Constants.GAME_TYPE_TAMBOLA)
+            )
           : null,
       poolClubMap: map[Constants.GAME_TYPE_POOLCLUB] != null
           ? AssetBanMap.fromMap(
               map[Constants.GAME_TYPE_POOLCLUB] as Map<String, dynamic>,
-              Constants.GAME_TYPE_POOLCLUB)
+            )
           : null,
       footballMap: map[Constants.GAME_TYPE_FOOTBALL] != null
           ? AssetBanMap.fromMap(
               map[Constants.GAME_TYPE_FOOTBALL] as Map<String, dynamic>,
-              Constants.GAME_TYPE_FOOTBALL)
+            )
           : null,
       candyFiestaMap: map[Constants.GAME_TYPE_CANDYFIESTA] != null
           ? AssetBanMap.fromMap(
               map[Constants.GAME_TYPE_CANDYFIESTA] as Map<String, dynamic>,
-              Constants.GAME_TYPE_CANDYFIESTA)
+            )
           : null,
       bowlingMap: map[Constants.GAME_TYPE_BOWLING] != null
           ? AssetBanMap.fromMap(
               map[Constants.GAME_TYPE_BOWLING] as Map<String, dynamic>,
-              Constants.GAME_TYPE_BOWLING)
+            )
           : null,
       bottleFlipMap: map[Constants.GAME_TYPE_BOTTLEFLIP] != null
           ? AssetBanMap.fromMap(
               map[Constants.GAME_TYPE_BOTTLEFLIP] as Map<String, dynamic>,
-              Constants.GAME_TYPE_BOTTLEFLIP)
+            )
           : null,
       rollyVortex: map[Constants.GAME_TYPE_ROLLYVORTEX] != null
           ? AssetBanMap.fromMap(
               map[Constants.GAME_TYPE_ROLLYVORTEX] as Map<String, dynamic>,
-              Constants.GAME_TYPE_ROLLYVORTEX)
+            )
           : null,
       knifeHit: map[Constants.GAME_TYPE_KNIFEHIT] != null
           ? AssetBanMap.fromMap(
               map[Constants.GAME_TYPE_KNIFEHIT] as Map<String, dynamic>,
-              Constants.GAME_TYPE_KNIFEHIT)
+            )
           : null,
       fruitMania: map[Constants.GAME_TYPE_FRUITMAINA] != null
           ? AssetBanMap.fromMap(
               map[Constants.GAME_TYPE_FRUITMAINA] as Map<String, dynamic>,
-              Constants.GAME_TYPE_FRUITMAINA)
+            )
           : null,
       twoDots: map[Constants.GAME_TYPE_TWODOTS] != null
           ? AssetBanMap.fromMap(
               map[Constants.GAME_TYPE_TWODOTS] as Map<String, dynamic>,
-              Constants.GAME_TYPE_TWODOTS)
+            )
           : null,
     );
   }
@@ -665,18 +732,15 @@ class GamesBanMap {
 class AssetBanMap {
   String? reason;
   bool? isBanned;
-  String? asset;
 
   AssetBanMap({
     required this.reason,
     required this.isBanned,
-    required this.asset,
   });
 
   AssetBanMap.base() {
     reason = '';
     isBanned = false;
-    asset = '';
   }
 
   AssetBanMap copyWith({
@@ -687,7 +751,6 @@ class AssetBanMap {
     return AssetBanMap(
       reason: reason ?? this.reason,
       isBanned: isBanned ?? this.isBanned,
-      asset: asset ?? this.asset,
     );
   }
 
@@ -695,36 +758,31 @@ class AssetBanMap {
     return <String, dynamic>{
       'reason': reason,
       'isBanned': isBanned,
-      'asset': asset,
     };
   }
 
-  factory AssetBanMap.fromMap(Map<String, dynamic> map, String asset) {
+  factory AssetBanMap.fromMap(Map<String, dynamic> map) {
     return AssetBanMap(
       reason: map['reason'] as String?,
       isBanned: map['isBanned'] as bool?,
-      asset: asset,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory AssetBanMap.fromJson(String source, String asset) =>
-      AssetBanMap.fromMap(json.decode(source) as Map<String, dynamic>, asset);
+  factory AssetBanMap.fromJson(Map<String, dynamic> source) =>
+      AssetBanMap.fromMap(source);
 
   @override
-  String toString() =>
-      'AssetBanMap(reason: $reason, isBanned: $isBanned, asset: $asset)';
+  String toString() => 'AssetBanMap(reason: $reason, isBanned: $isBanned)';
 
   @override
   bool operator ==(covariant AssetBanMap other) {
     if (identical(this, other)) return true;
 
-    return other.reason == reason &&
-        other.isBanned == isBanned &&
-        other.asset == asset;
+    return other.reason == reason && other.isBanned == isBanned;
   }
 
   @override
-  int get hashCode => reason.hashCode ^ isBanned.hashCode ^ asset.hashCode;
+  int get hashCode => reason.hashCode ^ isBanned.hashCode;
 }

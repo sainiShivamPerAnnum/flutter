@@ -24,8 +24,10 @@ import 'package:lottie/lottie.dart';
 class LendboxLoadingView extends StatefulWidget {
   final TransactionType transactionType;
 
-  const LendboxLoadingView({required this.transactionType, Key? key})
-      : super(key: key);
+  const LendboxLoadingView({
+    required this.transactionType,
+    super.key,
+  });
 
   @override
   State<LendboxLoadingView> createState() => _LendboxLoadingViewState();
@@ -80,8 +82,7 @@ class _LendboxLoadingViewState extends State<LendboxLoadingView> {
                 begin: Duration(seconds: waitTimeInSec),
                 end: Duration.zero,
               ),
-              onEnd: () {},
-              builder: (BuildContext context, Duration value, Widget? child) {
+              builder: (context, value, child) {
                 final seconds = value.inSeconds % 60;
                 return Container(
                   width: SizeConfig.screenWidth! * 0.7,

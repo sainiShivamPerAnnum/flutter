@@ -1,6 +1,4 @@
 import 'dart:math' as math;
-import 'package:felloapp/core/model/lendbox_maturity_response.dart';
-import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -10,7 +8,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
 class TicketsPendingAction extends StatefulWidget {
   const TicketsPendingAction({
@@ -42,95 +39,84 @@ class _TicketsPendingActionState extends State<TicketsPendingAction>
   @override
   Widget build(BuildContext context) {
     final locale = locator<S>();
-    return Selector<LendboxMaturityService, int>(
-        selector: (_, lendboxMaturityService) =>
-            lendboxMaturityService.pendingMaturityCount,
-        builder: (_, pendingMaturityAmount, child) {
-          return Selector2<LendboxMaturityService, ScratchCardService,
-              Tuple2<List<Deposit>?, int>>(
-            selector: (p0, lendboxMaturityService, scratchCardService) =>
-                Tuple2(lendboxMaturityService.filteredDeposits,
-                    scratchCardService.unscratchedTicketsCount),
-            builder: (context, value, child) {
-              if (!(pendingMaturityAmount > 0 &&
-                      (value.item1 != null && value.item1?[0] != null)) &&
-                  value.item2 > 0) {
-                animationController?.forward();
-                return AnimatedBuilder(
-                    animation: animationController!,
-                    builder: (context, _) {
-                      final sineValue = math
-                          .sin(3 * 2 * math.pi * animationController!.value);
-                      return Transform.translate(
-                          offset: Offset(sineValue * 10, 0),
-                          child: GestureDetector(
-                            onTap: () {
-                              Haptic.vibrate();
-                              AppState.delegate!
-                                  .parseRoute(Uri.parse("myWinnings"));
-                            },
-                            child: Container(
-                              margin:
-                                  EdgeInsets.only(left: SizeConfig.padding24),
-                              height: SizeConfig.padding74,
-                              child: Transform.translate(
-                                offset: Offset(-SizeConfig.padding12,
-                                    -SizeConfig.padding14),
-                                child: Stack(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: SizeConfig.padding10),
-                                      child: CustomPaint(
-                                        size: Size(
-                                            SizeConfig.screenWidth!,
-                                            (SizeConfig.screenWidth! * 0.18)
-                                                .toDouble()),
-                                        painter: RPSCustomPainter(),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: SizeConfig.padding36 +
-                                          SizeConfig.padding1,
-                                      left: SizeConfig.padding22,
-                                      child: SizedBox(
-                                        width: SizeConfig.screenWidth! * 0.83,
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              locale.ticketsWiting,
-                                              style: TextStyles.sourceSans.body2
-                                                  .colour(Colors.white),
-                                            ),
-                                            const Spacer(),
-                                            Container(
-                                              width: SizeConfig.padding20,
-                                              height: SizeConfig.padding20,
-                                              decoration: const ShapeDecoration(
-                                                color: Color(0xFFFFD979),
-                                                shape: OvalBorder(),
-                                              ),
-                                              child: Icon(
-                                                Icons.arrow_forward_ios_rounded,
-                                                size: SizeConfig.padding12,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+    return Selector<ScratchCardService, int>(
+        selector: (_, scratchCardService) =>
+            scratchCardService.unscratchedTicketsCount,
+        builder: (_, value, child) {
+          if (value > 0) {
+            animationController?.forward();
+            return AnimatedBuilder(
+                animation: animationController!,
+                builder: (context, _) {
+                  final sineValue =
+                      math.sin(3 * 2 * math.pi * animationController!.value);
+                  return Transform.translate(
+                      offset: Offset(sineValue * 10, 0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Haptic.vibrate();
+                          AppState.delegate!
+                              .parseRoute(Uri.parse("myWinnings"));
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(left: SizeConfig.padding24),
+                          height: SizeConfig.padding74,
+                          child: Transform.translate(
+                            offset: Offset(
+                                -SizeConfig.padding12, -SizeConfig.padding14),
+                            child: Stack(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: SizeConfig.padding10),
+                                  child: CustomPaint(
+                                    size: Size(
+                                        SizeConfig.screenWidth!,
+                                        (SizeConfig.screenWidth! * 0.18)
+                                            .toDouble()),
+                                    painter: RPSCustomPainter(),
+                                  ),
                                 ),
-                              ),
+                                Positioned(
+                                  top: SizeConfig.padding36 +
+                                      SizeConfig.padding1,
+                                  left: SizeConfig.padding22,
+                                  child: SizedBox(
+                                    width: SizeConfig.screenWidth! * 0.83,
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          locale.ticketsWiting,
+                                          style: TextStyles.sourceSans.body2
+                                              .colour(Colors.white),
+                                        ),
+                                        const Spacer(),
+                                        Container(
+                                          width: SizeConfig.padding20,
+                                          height: SizeConfig.padding20,
+                                          decoration: const ShapeDecoration(
+                                            color: Color(0xFFFFD979),
+                                            shape: OvalBorder(),
+                                          ),
+                                          child: Icon(
+                                            Icons.arrow_forward_ios_rounded,
+                                            size: SizeConfig.padding12,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ));
-                    });
-              } else {
-                return const SizedBox.shrink();
-              }
-            },
-          );
+                          ),
+                        ),
+                      ));
+                });
+          } else {
+            return const SizedBox.shrink();
+          }
         });
   }
 }

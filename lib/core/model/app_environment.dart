@@ -38,7 +38,7 @@ initializing the AppEnvironment. Initialize app environment prior access it.''')
         referral: data?['referral'] ??
             'https://2k3cus82jj.execute-api.ap-south-1.amazonaws.com/dev',
         coupons: data?['coupons'] ??
-            'https://64w9v5hct9.execute-api.ap-south-1.amazonaws.com/dev',
+            'https://mpw6ael6ve.execute-api.ap-south-1.amazonaws.com/dev',
       );
 
       return _instance!;

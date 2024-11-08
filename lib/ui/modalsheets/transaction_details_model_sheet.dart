@@ -55,19 +55,17 @@ class TransactionSummary extends StatelessWidget {
   String getPendingSubtitle() {
     if (assetType == InvestmentType.LENDBOXP2P) {
       if (lbMap != null) {
-        if (lbMap!.fundType != Constants.ASSET_TYPE_FLO_FELXI) {
-          if ((txnType ?? '') == UserTransaction.TRAN_TYPE_WITHDRAW) {
-            if (DateTime.now().isBefore(
+        if ((txnType ?? '') == UserTransaction.TRAN_TYPE_WITHDRAW) {
+          if (DateTime.now().isBefore(
+            createdOn.toDate().add(
+                  const Duration(days: 5),
+                ),
+          )) {
+            return "Amount will be credited to your bank account by ${DateHelper.getDateInHumanReadableFormat(
               createdOn.toDate().add(
                     const Duration(days: 5),
                   ),
-            )) {
-              return "Amount will be credited to your bank account by ${DateHelper.getDateInHumanReadableFormat(
-                createdOn.toDate().add(
-                      const Duration(days: 5),
-                    ),
-              )}";
-            }
+            )}";
           }
         }
       }

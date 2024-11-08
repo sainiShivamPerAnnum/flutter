@@ -1,7 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/sip/cubit/selectedAsset_cubit.dart';
 import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -49,7 +47,6 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
   ];
   List<String> titles = [];
   List<String> subTitle = [];
-  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   @override
   void initState() {
@@ -105,7 +102,6 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
                       for (int i = 0; i < assetsLength; i++) ...[
                         AssetBlock(
                           option: assets[i],
-                          asset: assets[i].type,
                         ),
                         SizedBox(
                           height: SizeConfig.padding16,
@@ -197,9 +193,8 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
 }
 
 class AssetBlock extends StatefulWidget {
-  const AssetBlock({required this.option, required this.asset, super.key});
+  const AssetBlock({required this.option, super.key});
   final AssetOptions option;
-  final SIPAssetTypes asset;
 
   @override
   State<AssetBlock> createState() => _AssetBlockState();
@@ -216,12 +211,12 @@ class _AssetBlockState extends State<AssetBlock> with TickerProviderStateMixin {
       vsync: this,
     );
     final model = context.read<SelectAssetCubit>();
-    if (model.state.selectedAsset == widget.asset ||
+    if (model.state.selectedAsset == widget.option.type ||
         widget.option.defaultSelected) {
       _controller.forward(from: 0.0);
     }
     if (model.state.selectedAsset == null && widget.option.defaultSelected) {
-      model.setSelectedAsset(widget.asset);
+      model.setSelectedAsset(widget.option);
     }
     super.initState();
   }
@@ -236,14 +231,14 @@ class _AssetBlockState extends State<AssetBlock> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (widget.asset != SIPAssetTypes.UNKNOWN) {
+        if (widget.option.type != 'UNKNOWN') {
           final model = context.read<SelectAssetCubit>();
-          model.setSelectedAsset(widget.asset);
+          model.setSelectedAsset(widget.option);
         }
       },
       child: BlocListener<SelectAssetCubit, SelectAssetCubitState>(
         listener: (context, state) {
-          if (state.selectedAsset == widget.asset) {
+          if (state.selectedAsset == widget.option) {
             _controller.forward(from: 0.0);
           } else if (_controller.value == 1.0) {
             _controller.reverse(from: 1.0);
@@ -295,7 +290,7 @@ class _AssetBlockState extends State<AssetBlock> with TickerProviderStateMixin {
                 );
               },
             ),
-            if (widget.asset == SIPAssetTypes.UNKNOWN)
+            if (widget.option.type == 'UNKNOWN')
               Positioned.fill(
                 child: Container(
                   decoration: BoxDecoration(

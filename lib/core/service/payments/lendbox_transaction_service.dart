@@ -18,6 +18,9 @@ import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/payments/transaction_service_mixin.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
+import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
+import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
+import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -44,6 +47,9 @@ class LendboxTransactionService extends BaseTransactionService
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   final RazorpayService _razorpayService = locator<RazorpayService>();
+  final TransactionBloc _transactionBloc = locator<TransactionBloc>();
+  final MyFundsBloc _myFundsBloc = locator<MyFundsBloc>();
+  final SIPTransactionBloc _sipTransactionBloc = locator<SIPTransactionBloc>();
 
   TransactionResponseModel? transactionResponseModel;
   FloPurchaseDetails? currentFloPurchaseDetails;
@@ -51,6 +57,9 @@ class LendboxTransactionService extends BaseTransactionService
 
   Future<void> initiateWithdrawal(double txnAmount, String? txnId) async {
     currentTransactionState = TransactionState.success;
+    _transactionBloc.reset();
+    _sipTransactionBloc.reset();
+    _myFundsBloc.reset();
     await _txnHistoryService.updateTransactions(InvestmentType.LENDBOXP2P);
   }
 
@@ -157,7 +166,12 @@ class LendboxTransactionService extends BaseTransactionService
         currentTransactionState = TransactionState.success;
         Haptic.vibrate();
       }
-
+      if (currentTransactionState == TransactionState.success) {
+        _transactionBloc.reset();
+        _sipTransactionBloc.reset();
+        _myFundsBloc.reset();
+        unawaited(_userService.updatePortFolio());
+      }
       unawaited(
           _txnHistoryService.updateTransactions(InvestmentType.LENDBOXP2P));
     } catch (e) {

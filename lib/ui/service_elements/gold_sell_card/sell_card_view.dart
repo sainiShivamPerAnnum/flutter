@@ -64,6 +64,7 @@ class SellCardView extends StatelessWidget {
                       investmentType: investmentType,
                     ),
                     SellButton(
+                      key: const ValueKey('sellButton'),
                       text: investmentType == InvestmentType.AUGGOLD99
                           ? "SELL"
                           : "WITHDRAW",
@@ -109,12 +110,14 @@ class SellCardView extends StatelessWidget {
               SizedBox(height: SizeConfig.padding12),
               if (!sellService.isKYCVerified || sellService.userKycData == null)
                 SellActionButton(
+                  key: const ValueKey('kycPending'),
                   title: locale.completeKYCText,
                   onTap: navigateToKycScreen,
                 ),
               if (!sellService.isBankDetailsAdded ||
                   sellService.activeBankAccountDetails == null)
                 SellActionButton(
+                  key: const ValueKey('bankDetailsPending'),
                   title: locale.addBankDetails,
                   onTap: navigateToBankDetailsScreen,
                 ),

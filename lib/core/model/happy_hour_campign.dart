@@ -26,6 +26,7 @@ class Data {
   bool showHappyHour = false;
   HappyHourType happyHourType = HappyHourType.expired;
   PreBuzz? preBuzz;
+  List<String>? forAssets;
   Data(
       {required this.happyHourType,
       this.id,
@@ -40,6 +41,7 @@ class Data {
       this.rewards,
       this.bgColor = '#495DB2',
       this.preBuzz,
+      this.forAssets,
       this.maxApplicable});
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -61,13 +63,13 @@ class Data {
     preBuzz = PreBuzz.fromJson(json['prebuzz']);
     maxApplicable = json['maxApplicable'];
     bgColor = json['bgColor'] ?? '#495DB2';
+    forAssets = json['forAssets']?.cast<String>() ?? [];
     final date = DateTime.now();
     final _startDate = DateTime.parse(startTime!);
     final _endTime = DateTime.parse(endTime!);
     showHappyHour = date.isAfter(_startDate) && date.isBefore(_endTime);
     getType(_startDate, _endTime);
   }
-
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -80,6 +82,7 @@ class Data {
     data['ctaText'] = ctaText;
     data['docketHeading'] = docketHeading;
     data['minAmount'] = minAmount;
+    data['forAssets'] = forAssets;
     if (rewards != null) {
       data['rewards'] = rewards!.map((v) => v.toJson()).toList();
     }

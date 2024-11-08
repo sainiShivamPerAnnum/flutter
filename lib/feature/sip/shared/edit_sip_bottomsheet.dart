@@ -1,5 +1,5 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/sip_asset_type.dart';
+import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
@@ -28,7 +28,7 @@ class EditSipBottomSheet extends StatefulWidget {
   final bool allowEdit;
   final num amount;
   final String frequency;
-  final SIPAssetTypes assetType;
+  final AssetOptions assetType;
   final SipCubit model;
   @override
   State<EditSipBottomSheet> createState() => _EditSipBottomSheetState();

@@ -5,7 +5,6 @@ import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/enums/transaction_type_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
-import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_input_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
@@ -23,21 +22,19 @@ import 'package:provider/provider.dart';
 class LendboxBuyView extends StatefulWidget {
   final int? amount;
   final bool skipMl;
-  final OnAmountChanged? onChanged;
   final String floAssetType;
   final String? initialCouponCode;
   final String? entryPoint;
   final bool quickCheckout;
 
   const LendboxBuyView({
-    required this.onChanged,
     required this.floAssetType,
-    super.key,
     this.amount = 250,
     this.skipMl = false,
     this.initialCouponCode,
     this.entryPoint,
     this.quickCheckout = false,
+    super.key,
   });
 
   @override
@@ -87,7 +84,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
         builder: (transactionContext, lboxTxnService, transactionProperty) {
           return AnimatedContainer(
             width: double.infinity,
-            height: _getHeight(lboxTxnService),
+            height: SizeConfig.screenHeight,
             color: UiConstants.kSecondaryBackgroundColor,
             duration: const Duration(milliseconds: 500),
             child: Stack(
@@ -117,13 +114,17 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
                       entryPoint: widget.entryPoint,
                       quickCheckout: widget.quickCheckout,
                     ),
+                    onModelDispose: (model) => model.onDispose(),
                     builder: (ctx, model, child) {
                       if (model.state.isBusy) {
                         return const Center(child: FullScreenLoader());
                       }
                       _secureScreenshots(lboxTxnService);
 
-                      return _getView(lboxTxnService, model);
+                      return _getView(
+                        lboxTxnService.currentTransactionState,
+                        model,
+                      );
                     },
                   ),
                 ),
@@ -154,12 +155,12 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
   }
 
   Widget _getView(
-    LendboxTransactionService lboxTxnService,
+    TransactionState state,
     LendboxBuyViewModel model,
   ) {
     const type = TransactionType.DEPOSIT;
 
-    switch (lboxTxnService.currentTransactionState) {
+    switch (state) {
       case TransactionState.idle:
         return LendboxBuyInputView(
           amount: widget.amount,
@@ -178,19 +179,6 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
           transactionType: type,
         );
     }
-  }
-
-  double? _getHeight(lboxTxnService) {
-    if (lboxTxnService.currentTransactionState == TransactionState.idle) {
-      return SizeConfig.screenHeight!;
-    } else if (lboxTxnService.currentTransactionState ==
-        TransactionState.ongoing) {
-      return SizeConfig.screenHeight!;
-    } else if (lboxTxnService.currentTransactionState ==
-        TransactionState.success) {
-      return SizeConfig.screenHeight;
-    }
-    return 0;
   }
 
   Widget _getBackground(LendboxTransactionService lboxTxnService) {

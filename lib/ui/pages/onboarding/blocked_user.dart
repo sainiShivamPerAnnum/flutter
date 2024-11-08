@@ -190,6 +190,7 @@ class BlockedUserView extends StatelessWidget {
         padding: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding44, vertical: SizeConfig.padding24),
         child: RichText(
+          key: const ValueKey('blockedScreenTermsAndConditions'),
           textAlign: TextAlign.center,
           text: TextSpan(
             text: "${locale.obBlockedSubtitle1} ",

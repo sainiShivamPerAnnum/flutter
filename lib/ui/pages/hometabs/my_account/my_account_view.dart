@@ -60,7 +60,8 @@ class MyAccount extends StatelessWidget {
                 ),
 
                 AccountInfoTiles(
-                  key: K.userProfileEntryCTAKey,
+                  key: const Key('userProfileEntry'),
+                  //key: K.userProfileEntryCTAKey,
                   title: locale.abMyProfile,
                   uri: "/profile",
                 ),

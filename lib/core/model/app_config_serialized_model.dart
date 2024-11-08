@@ -16,7 +16,7 @@ class AppConfigV2 {
   }
 
   static AppConfigV2Data get instance {
-    assert(_instance != null, 'message');
+    assert(_instance != null, 'AppConfig is not initialized');
     return _instance!;
   }
 }
@@ -64,8 +64,12 @@ class AppConfigV2Data {
   final bool enableJourney;
 
   final bool canChangePostMaturityPreference;
-  @JsonKey(name: "LENDBOXP2P")
-  final List<Lendboxp2P> lendBoxP2P;
+
+  @JsonKey(name: "LENDBOX_P2P_V2")
+  final List<LendboxAssetConfiguration> lendBoxP2Pv2;
+
+  @JsonKey(name: "p2p_v2", fromJson: _convertP2PV2)
+  final Map<String, LendboxAssetConfiguration> lbV2;
 
   final List<String> youtubeVideos;
 
@@ -119,7 +123,8 @@ class AppConfigV2Data {
     this.showNewAutosave = false,
     this.enableJourney = false,
     this.canChangePostMaturityPreference = false,
-    this.lendBoxP2P = const [],
+    this.lendBoxP2Pv2 = const [],
+    this.lbV2 = const {},
     this.youtubeVideos = const [],
     this.ticketsYoutubeVideos = const [],
     this.ticketsCategories,
@@ -139,33 +144,62 @@ class AppConfigV2Data {
 
   factory AppConfigV2Data.fromJson(Map<String, dynamic> json) =>
       _$AppConfigV2DataFromJson(json);
+
+  static Map<String, LendboxAssetConfiguration> _convertP2PV2(
+    List<dynamic>? input,
+  ) {
+    final raw = input
+            ?.map(
+              (e) =>
+                  LendboxAssetConfiguration.fromJson(e as Map<String, dynamic>),
+            )
+            .toList() ??
+        const [];
+
+    final mapped = <String, LendboxAssetConfiguration>{};
+
+    for (var i = 0; i < raw.length; i++) {
+      mapped.putIfAbsent(raw[i].fundType, () => raw[i]);
+    }
+
+    return mapped;
+  }
 }
 
 @_deserializable
-class Lendboxp2P {
+class LendboxAssetConfiguration {
   final String fundType;
-
   final String maturityPeriodText;
-
   final String minAmountText;
-
   final String descText;
-  @JsonKey(name: "tambolaMultiplier")
-  final num tamBolaMultiplier;
-
+  final num tambolaMultiplier;
   final bool isForOldLb;
+  final String highlights;
+  final String description;
+  final num interest;
+  final int maturityDuration;
+  final String assetName;
+  final num reinvestInterestGain;
+  final num minAmount;
 
-  const Lendboxp2P({
-    this.fundType = '',
-    this.maturityPeriodText = '',
-    this.minAmountText = '',
-    this.descText = '',
-    this.tamBolaMultiplier = 0,
+  const LendboxAssetConfiguration({
+    required this.fundType,
+    required this.maturityPeriodText,
+    required this.minAmountText,
+    required this.descText,
+    required this.tambolaMultiplier,
+    this.reinvestInterestGain = 0,
     this.isForOldLb = false,
+    this.interest = 10,
+    this.maturityDuration = 3,
+    this.assetName = '',
+    this.highlights = '',
+    this.description = '',
+    this.minAmount = 100,
   });
 
-  factory Lendboxp2P.fromJson(Map<String, dynamic> json) =>
-      _$Lendboxp2PFromJson(json);
+  factory LendboxAssetConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$LendboxAssetConfigurationFromJson(json);
 }
 
 @_deserializable
