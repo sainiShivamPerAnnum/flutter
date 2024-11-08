@@ -2150,6 +2150,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  webengage_flutter:
+    dependency: "direct main"
+    description:
+      name: webengage_flutter
+      sha256: "4cdfefe4e141f2f4bc92be249d545e051c6a977ba5f25aa31713cc58ec8f7485"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.0"
   webview_flutter:
     dependency: "direct main"
     description:
