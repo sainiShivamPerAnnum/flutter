@@ -191,6 +191,9 @@ import webengage_flutter
     override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         AppsFlyerLib.shared().registerUninstall(deviceToken)
     }
+    override func applicationDidBecomeActive(_ application: UIApplication) {
+        ATTrackingManager.requestTrackingAuthorization(completionHandler: {_ in })
+    }
 }
 
 

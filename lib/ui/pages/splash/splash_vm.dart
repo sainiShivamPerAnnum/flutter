@@ -98,6 +98,7 @@ class LauncherViewModel extends BaseViewModel {
       //Initialize every time
       await _getterRepo.setUpAppConfigs();
       await userService.init();
+
       //Initialize only if user is onboarded
       if (userService.isUserOnboarded) {
         await Future.wait([
