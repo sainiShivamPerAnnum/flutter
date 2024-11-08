@@ -31,4 +31,23 @@ class LiveRepository extends BaseRepo {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
+
+    Future<ApiResponse<LiveHome>> getEventById() async {
+    try {
+      final response = await APIService.instance.getData(
+        'events/home',
+        cBaseUrl: _baseUrl,
+        apiName: '$_live/getEventById',
+      );
+      final responseData = response["data"];
+      log("Live data: $responseData");
+      return ApiResponse<LiveHome>(
+        model: LiveHome.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
 }

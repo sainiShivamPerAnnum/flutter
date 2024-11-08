@@ -60,6 +60,32 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       switchToMainReels: (e) {
         emit(state.copyWith(currentContext: ReelContext.main));
       },
+      initializeFromDynamicLink: (e) async {
+        await _stopAndDisposeAllControllers();
+        emit(
+          state.copyWith(
+            currentContext: ReelContext.main,
+            mainVideos: [],
+            profileVideos: [],
+            liveVideo: [],
+            focusedIndex: 0,
+            profileVideoIndex: 0,
+          ),
+        );
+        final databyId = await repository.getVideoById(videoId: e.videoId);
+        final data = await repository.getVideos(page: 1);
+        final List<VideoData> urls = data.model ?? [];
+        if (databyId.model != null) {
+          state.mainVideos.add(databyId.model!);
+        }
+        state.mainVideos.addAll(urls);
+
+        /// Initialize 1st video
+        await _initializeControllerAtIndex(0);
+
+        /// Initialize 2nd video
+        await _initializeControllerAtIndex(1);
+      },
       updateViewCount: (e) {
         unawaited(
           repository.updateViewCount(
@@ -113,7 +139,6 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
 
         /// Initialize 2nd video
         await _initializeControllerAtIndex(1);
-        emit(state.copyWith(reloadCounter: state.reloadCounter + 1));
       },
       onVideoIndexChanged: (e) async {
         final bool shouldFetch =
@@ -154,7 +179,6 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         }
         emit(
           state.copyWith(
-            reloadCounter: state.reloadCounter + 1,
             isLoading: false,
           ),
         );
@@ -198,7 +222,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         log('🚀🚀🚀 Comment posted');
       },
       disposeProfileControllers: (e) {
-        _stopAndDisposeAllControllers();
+        _stopAndDisposeProfileControllers();
       },
       likeVideo: (e) async {
         final UserService userService = locator<UserService>();
@@ -249,7 +273,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
               }).toList(),
             ),
           );
-        } else if (state.currentContext == ReelContext.liveStream ) {
+        } else if (state.currentContext == ReelContext.liveStream) {
           emit(
             state.copyWith(
               liveVideo: state.liveVideo.map((video) {
@@ -416,7 +440,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
     }
   }
 
-  Future<void> _stopAndDisposeAllControllers() async {
+  Future<void> _stopAndDisposeProfileControllers() async {
     // Stop and dispose all controllers in the main feed
     // for (final entry in state.controllers.entries) {
     //   final controller = entry.value;
@@ -435,6 +459,34 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
     }
     state.profileControllers
         .clear(); // Clear the map after disposing all controllers
+    log('🚀🚀🚀 All controllers stopped and disposed');
+  }
+
+  Future<void> _stopAndDisposeAllControllers() async {
+    // Stop and dispose all controllers in the main feed
+    for (final entry in state.controllers.entries) {
+      final controller = entry.value;
+      await controller.pause();
+      await controller.seekTo(const Duration()); // Reset to the beginning
+      await controller.dispose();
+    }
+    state.controllers.clear(); // Clear the map after disposing all controllers
+
+    // Stop and dispose all controllers in the profile feed
+    for (final entry in state.profileControllers.entries) {
+      final controller = entry.value;
+      await controller.pause();
+      await controller.seekTo(const Duration());
+      await controller.dispose();
+    }
+    state.profileControllers
+        .clear(); // Clear the map after disposing all controllers
+    if (state.liveStreamController != null) {
+      final controller = state.liveStreamController!;
+      await controller.pause();
+      await controller.seekTo(const Duration());
+      await controller.dispose();
+    }
     log('🚀🚀🚀 All controllers stopped and disposed');
   }
 }

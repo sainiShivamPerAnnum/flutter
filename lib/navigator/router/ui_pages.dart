@@ -122,11 +122,14 @@ const String flexiBalanceViewPath = "/flexiBalanceViewPath";
 const String balanceViewPath = "/balanceViewPath";
 
 const String liveSectionViewPath = "/live";
+const String expertSectionViewPath = "/experts";
+const String shortsSectionViewPath = "/shorts";
+const String shortsByIdViewPath = "/shorts";
 const String livePreviewSectionViewPath = "/livePreview";
 const String expertDetailsViewPath = "/expertDetails";
 const String tellUsAboutYourselfViewPath = "/tellUsAboutYourself";
 const String meettingChatViewPath = "/meetingChat";
-const String shortsViewPath = "/shorts";
+const String shortsViewPath = "/shorts-internal";
 const String viewAllVideosViewPath = "/events";
 
 enum Pages {
@@ -246,6 +249,10 @@ enum Pages {
   BalanceView,
 
   Live,
+  Expert,
+  AllShorts,
+  ShortsById,
+
   LivePreview,
   ExpertDetails,
   TellUsAboutYourself,
@@ -1016,3 +1023,16 @@ PageConfiguration AllEventsPageConfig = PageConfiguration(
   uiPage: Pages.AllEvents,
   name: "All Videos",
 );
+PageConfiguration AllExpertsPageConfig = PageConfiguration(
+  key: 'expertSectionViewPath',
+  path: expertSectionViewPath,
+  uiPage: Pages.Expert,
+  name: "All Experts",
+);
+PageConfiguration AllShortsPageConfig = PageConfiguration(
+  key: 'shortsSectionViewPath',
+  path: shortsSectionViewPath,
+  uiPage: Pages.AllShorts,
+  name: "All Shorts",
+);
+

@@ -50,6 +50,10 @@ class PreloadEvent with _$PreloadEvent {
     required int index,
     Completer<void>? completer,
   }) = _InitializeAtIndex;
+  const factory PreloadEvent.initializeFromDynamicLink({
+    required String videoId,
+    Completer<void>? completer,
+  }) = _InitializeFromDynamicLink;
   const factory PreloadEvent.updateKeyboardState({required bool state}) =
       _UpdateKeyboardState;
   const factory PreloadEvent.disposeProfileControllers() =

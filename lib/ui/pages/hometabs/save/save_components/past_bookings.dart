@@ -1,10 +1,21 @@
+import 'dart:async';
+
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
+import 'package:felloapp/feature/expertDetails/expert_profile.dart';
+import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
+import 'package:felloapp/feature/shorts/video_page.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class PastBookingsComponent extends StatelessWidget {
@@ -162,17 +173,82 @@ class PastScheduleCard extends StatelessWidget {
                 const Divider(
                   color: UiConstants.grey6,
                 ),
-                SizedBox(height: SizeConfig.padding16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    TextButton(
+                    if (booking.recordingLink != '')
+                      TextButton(
+                        onPressed: () async {
+                          //@vamshifello backend shi kro
+                          final preloadBloc =
+                              BlocProvider.of<PreloadBloc>(context);
+                          final switchCompleter = Completer<void>();
+                          // preloadBloc.add(
+                          //   PreloadEvent.initializeLiveStream(
+                          //     booking,
+                          //     completer: switchCompleter,
+                          //   ),
+                          // );
+                          await switchCompleter.future;
+                          // AppState.delegate!.appState.currentAction =
+                          //     PageAction(
+                          //   page: ShortsPageConfig,
+                          //   state: PageState.addWidget,
+                          //   widget: BaseScaffold(
+                          //     appBar: FAppBar(
+                          //       backgroundColor: Colors.transparent,
+                          //       centerTitle: true,
+                          //       titleWidget: Text(
+                          //         recent.title,
+                          //         style: TextStyles.rajdhaniSB.body1,
+                          //       ),
+                          //       leading: const BackButton(
+                          //         color: Colors.white,
+                          //       ),
+                          //       showAvatar: false,
+                          //       showCoinBar: false,
+                          //     ),
+                          //     body: WillPopScope(
+                          //       onWillPop: () async {
+                          //         await AppState.backButtonDispatcher!
+                          //             .didPopRoute();
+                          //         return false;
+                          //       },
+                          //       child: const ShortsVideoPage(),
+                          //     ),
+                          //   ),
+                          // );
+                        },
+                        child: Text(
+                          'View Recording',
+                          style: TextStyles.sourceSansSB.body3,
+                        ),
+                      ),
+                    ElevatedButton(
                       onPressed: () {
-                        // Handle edit action
+                        AppState.delegate!.appState.currentAction = PageAction(
+                          page: ExpertDetailsPageConfig,
+                          state: PageState.addWidget,
+                          widget:
+                              ExpertsDetailsView(advisorID: booking.advisorId),
+                        );
                       },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: UiConstants.kTextColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(SizeConfig.roundness5),
+                          ),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding16,
+                          vertical: SizeConfig.padding8,
+                        ),
+                      ),
                       child: Text(
-                        'View Recording',
-                        style: TextStyles.sourceSansSB.body3,
+                        'Book Again',
+                        style: TextStyles.sourceSansSB.body3
+                            .colour(UiConstants.kTextColor4),
                       ),
                     ),
                   ],

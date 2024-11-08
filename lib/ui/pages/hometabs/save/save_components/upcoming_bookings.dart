@@ -171,43 +171,57 @@ class ScheduleCard extends StatelessWidget {
                   children: [
                     TextButton(
                       onPressed: () {
-                        BaseUtil.openBookAdvisorSheet(
-                          advisorId: booking.advisorId,
-                          isEdit: true,
-                          bookingId: booking.bookingId,
-                          advisorName: booking.advisorName,
-                        );
+                        if (_isEditButtonClickable()) {
+                          BaseUtil.openBookAdvisorSheet(
+                            advisorId: booking.advisorId,
+                            isEdit: true,
+                            bookingId: booking.bookingId,
+                            advisorName: booking.advisorName,
+                          );
+                        }
                       },
                       child: Text(
                         'Edit',
-                        style: TextStyles.sourceSansSB.body3,
+                        style: _isEditButtonClickable()
+                            ? TextStyles.sourceSansSB.body3
+                            : TextStyles.sourceSansSB.body3.colour(
+                                UiConstants.kTextColor.withOpacity(0.5),
+                              ),
                       ),
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        final String? name = locator<UserService>()
-                                .baseUser!
-                                .kycName!
-                                .isNotEmpty
-                            ? locator<UserService>().baseUser!.kycName!
-                            : locator<UserService>().baseUser!.name!.isNotEmpty
-                                ? locator<UserService>().baseUser!.name
-                                : locator<UserService>().baseUser!.username;
-                        final userId = locator<UserService>().baseUser!.uid;
-                        AppState.delegate!.appState.currentAction = PageAction(
-                          page: LivePreviewPageConfig,
-                          state: PageState.addWidget,
-                          widget: HMSPrebuilt(
-                            roomCode: booking.guestCode,
-                            options: HMSPrebuiltOptions(
-                              userName: name,
-                              userId: userId,
+                        if (_isButtonClickable()) {
+                          final String? name = locator<UserService>()
+                                  .baseUser!
+                                  .kycName!
+                                  .isNotEmpty
+                              ? locator<UserService>().baseUser!.kycName!
+                              : locator<UserService>()
+                                      .baseUser!
+                                      .name!
+                                      .isNotEmpty
+                                  ? locator<UserService>().baseUser!.name
+                                  : locator<UserService>().baseUser!.username;
+                          final userId = locator<UserService>().baseUser!.uid;
+                          AppState.delegate!.appState.currentAction =
+                              PageAction(
+                            page: LivePreviewPageConfig,
+                            state: PageState.addWidget,
+                            widget: HMSPrebuilt(
+                              roomCode: booking.guestCode,
+                              options: HMSPrebuiltOptions(
+                                userName: name,
+                                userId: userId,
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: UiConstants.kTextColor,
+                        backgroundColor: _isButtonClickable()
+                            ? UiConstants.kTextColor
+                            : UiConstants.kTextColor.withOpacity(0.5),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(SizeConfig.roundness5),
@@ -268,6 +282,29 @@ class ScheduleCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  bool _isButtonClickable() {
+    final DateTime now = DateTime.now();
+    final DateTime scheduledOn = booking.scheduledOn;
+    final DateTime startWindow =
+        scheduledOn.subtract(const Duration(minutes: 15));
+
+    // Parse duration minutes from string
+    final int durationMinutes =
+        int.tryParse(booking.duration.split(' ').first) ?? 0;
+    final DateTime endWindow =
+        scheduledOn.add(Duration(minutes: durationMinutes));
+
+    return now.isAfter(startWindow) && now.isBefore(endWindow);
+  }
+
+  bool _isEditButtonClickable() {
+    final DateTime now = DateTime.now();
+    final DateTime scheduledOn = booking.scheduledOn;
+    final DateTime startWindow =
+        scheduledOn.subtract(const Duration(hours: 24));
+    return now.isAfter(startWindow) && now.isBefore(scheduledOn);
   }
 
   // Helper function to format the scheduledOn DateTime

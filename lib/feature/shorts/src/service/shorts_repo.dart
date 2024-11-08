@@ -47,6 +47,31 @@ class ShortsRepo {
     }
   }
 
+  Future<ApiResponse<VideoData>> getVideoById({
+    String? videoId,
+  }) async {
+    try {
+      final queryParameters = {
+        'videoId': videoId,
+      };
+      final response = await APIService.instance.getData(
+        'videos/list',
+        cBaseUrl: _baseUrl,
+        apiName: 'ShortsRepo/getVideoById',
+        queryParams: queryParameters,
+      );
+      final responseData = response["data"];
+      log("Video data: $responseData");
+      return ApiResponse<VideoData>(
+        model: VideoData.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      log("Error fetching videos: ${e.toString()}");
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
   // Updated getComments function
   Future<ApiResponse<List<CommentData>>> getComments(String videoId) async {
     final String commentsUrl = 'videos/comments/$videoId';
