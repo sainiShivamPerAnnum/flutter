@@ -29,9 +29,19 @@ class HMSPrebuilt extends StatelessWidget {
   ///in addition to leaving the room when the leave room button is pressed
   final Function? onLeave;
 
+  final String advisorId;
+  final String title;
+  final String description;
+  // final String id;
+
+
   ///The key for the widget
   HMSPrebuilt({
     required this.roomCode,
+    required this.advisorId,
+    required this.title,
+    required this.description,
+    // required this.id,
     super.key,
     this.options,
     this.onLeave,
@@ -59,6 +69,9 @@ class HMSPrebuilt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenController(
+      advisorId: advisorId,
+      title: title,
+      description: description,
       roomCode: roomCode,
       authToken: authToken,
       options: options,

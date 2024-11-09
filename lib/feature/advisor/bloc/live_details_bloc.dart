@@ -60,8 +60,8 @@ class ScheduleLiveBloc extends Bloc<ScheduleCallEvent, ScheduleCallState> {
         dates: dates,
         times: times,
         selectedCategory: categories[0],
-        selectedDateIndex: 0,
-        selectedTimeIndex: 0,
+        selectedDateIndex: null,
+        selectedTimeIndex: null,
       ),
     );
   }
@@ -124,12 +124,12 @@ class ScheduleLiveBloc extends Bloc<ScheduleCallEvent, ScheduleCallState> {
     emit(ScheduleCallLoading());
     try {
       String date =
-          currentState.dates[currentState.selectedDateIndex]['dateTime']!;
+          currentState.dates[currentState.selectedDateIndex!]['dateTime']!;
       DateTime parsedDateTime =
           DateFormat("MMMM d, yyyy hh:mm:ss a").parse(date);
       String dateOnlyString = DateFormat("MMMM d, yyyy").format(parsedDateTime);
       String time =
-          currentState.times[currentState.selectedTimeIndex]['TimeUI']!;
+          currentState.times[currentState.selectedTimeIndex!]['TimeUI']!;
       String dateTimeString = "$dateOnlyString $time";
       DateTime dateTime =
           DateFormat("MMMM d, yyyy hh:mm a").parse(dateTimeString);

@@ -15,6 +15,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -412,6 +413,34 @@ class _ExpertProfilePage extends StatelessWidget {
                         SizedBox(
                           height: SizeConfig.padding18,
                         ),
+                        if (recentlive.isEmpty)
+                          SizedBox(
+                             width: SizeConfig.padding300,
+                            child: Column(
+                              children: [
+                                SizedBox(height: SizeConfig.padding12),
+                                AppImage(
+                                  Assets.no_live,
+                                  height: SizeConfig.padding35,
+                                  width: SizeConfig.padding35,
+                                ),
+                                SizedBox(height: SizeConfig.padding12),
+                                Text(
+                                  'Currently, there are no live sessions available.',
+                                  style: TextStyles.sourceSansSB.body0,
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(height: SizeConfig.padding10),
+                                Text(
+                                  'Book a one-on-one for personalized advice!',
+                                  style: TextStyles.sourceSans.body3.colour(
+                                    UiConstants.kTextColor.withOpacity(0.7),
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
                         for (int i = 0; i < recentlive.length; i++)
                           Padding(
                             padding:
@@ -461,8 +490,10 @@ class _ExpertProfilePage extends StatelessWidget {
                                 );
                               },
                               title: recentlive[i].title,
+                              startTime: recentlive[i].timeStamp,
                               subTitle: recentlive[i].subtitle,
                               author: recentlive[i].author,
+                              advisorCode: recentlive[i].advisorId,
                               category:
                                   recentlive[i].category?.join(', ') ?? '',
                               bgImage: recentlive[i].thumbnail,
@@ -471,7 +502,7 @@ class _ExpertProfilePage extends StatelessWidget {
                             ),
                           ),
                       ] else
-                        _buildTabOneData(shortsData),
+                        _buildTabOneData(shortsData, expertDetails.name),
                     ],
                   ),
                 ),
@@ -485,9 +516,35 @@ class _ExpertProfilePage extends StatelessWidget {
   }
 }
 
-Widget _buildTabOneData(List<VideoData> shortsData) {
+Widget _buildTabOneData(List<VideoData> shortsData, String name) {
   if (shortsData.isEmpty) {
-    return const SizedBox.shrink();
+    return SizedBox(
+      width: SizeConfig.padding300,
+      child: Column(
+        children: [
+          SizedBox(height: SizeConfig.padding30),
+          AppImage(
+            Assets.no_shorts,
+            height: SizeConfig.padding35,
+            width: SizeConfig.padding35,
+          ),
+          SizedBox(height: SizeConfig.padding12),
+          Text(
+            '$name hasn’t shared any shorts yet',
+            style: TextStyles.sourceSansSB.body0,
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: SizeConfig.padding10),
+          Text(
+            'Book a session to get personal advice directly from them!',
+            style: TextStyles.sourceSans.body3.colour(
+              UiConstants.kTextColor.withOpacity(0.7),
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
   }
   final double gridHeight =
       (shortsData.length / 2).ceil() * SizeConfig.padding300;

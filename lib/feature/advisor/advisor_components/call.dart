@@ -6,6 +6,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/advisor/advisor_components/call_details_sheet.dart';
 import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
+import 'package:felloapp/feature/live/view_all_live.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
@@ -53,19 +54,41 @@ class _CallState extends State<Call> {
                   if (data.length > 3)
                     TextButton(
                       onPressed: () {
-                        setState(() {
-                          showAll = !showAll;
-                        });
+                        AppState.delegate!.appState.currentAction = PageAction(
+                          page: AllEventsPageConfig,
+                          state: PageState.addWidget,
+                          widget: ViewAllLive(
+                            type: 'upcoming-advisor',
+                            appBarTitle: widget.callType == 'upcoming'
+                                ? 'Upcoming Calls'
+                                : 'Past Scheduled Calls',
+                            advisorUpcoming:
+                                widget.callType == 'upcoming' ? data : [],
+                            advisorPast: widget.callType == 'past' ? data : [],
+                            liveList: null,
+                            upcomingList: null,
+                            recentList: null,
+                          ),
+                        );
                       },
-                      child: Text(
-                        showAll ? 'View Less' : 'View More',
-                        style: TextStyles.sourceSans.body4,
+                      child: Row(
+                        children: [
+                          Text(
+                            'VIEW ALL',
+                            style: TextStyles.sourceSansSB.body3,
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.white,
+                            size: SizeConfig.body3,
+                          ),
+                        ],
                       ),
                     ),
                 ],
               ),
               SizedBox(
-                height: SizeConfig.padding24,
+                height: SizeConfig.padding14,
               ),
               data.isEmpty
                   ? const Center(
@@ -79,6 +102,7 @@ class _CallState extends State<Call> {
                           .map(
                             (call) => callContainer(
                               call.userName ?? 'Unknown Title',
+                              call.userName ?? 'Unknown Description',
                               call.scheduledOn.toString(),
                               call.duration,
                               widget.callType,
@@ -100,6 +124,7 @@ class _CallState extends State<Call> {
 
 Widget callContainer(
   String title,
+  String description,
   String scheduledOn,
   String duration,
   String callType,
@@ -225,6 +250,9 @@ Widget callContainer(
                       page: LivePreviewPageConfig,
                       state: PageState.addWidget,
                       widget: HMSPrebuilt(
+                        advisorId: userId!,
+                        title: title,
+                        description: description,
                         roomCode: hostCode,
                         options: HMSPrebuiltOptions(
                           userName: userName,

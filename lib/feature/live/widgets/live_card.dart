@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
@@ -10,6 +11,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class LiveCardWidget extends StatefulWidget {
   final String status;
@@ -21,10 +23,11 @@ class LiveCardWidget extends StatefulWidget {
   final int? liveCount;
   final String? duration;
   final String? startTime;
-  final String? advisorCode;
+  final String advisorCode;
   final String? viewerCode;
   final VoidCallback? onTap;
   final double? maxWidth;
+  final String? eventId;
 
   const LiveCardWidget({
     required this.status,
@@ -33,14 +36,15 @@ class LiveCardWidget extends StatefulWidget {
     required this.author,
     required this.category,
     required this.bgImage,
+    required this.advisorCode,
     super.key,
     this.liveCount,
     this.duration,
     this.startTime,
-    this.advisorCode,
     this.viewerCode,
     this.onTap,
     this.maxWidth,
+    this.eventId,
   });
 
   @override
@@ -80,7 +84,7 @@ class _LiveCardWidgetState extends State<LiveCardWidget> {
       // Stop the timer if the start time has passed
       _timer?.cancel();
       setState(() {
-        _remainingTime =  'SOON';
+        _remainingTime = 'SOON';
       });
     } else {
       setState(() {
@@ -138,6 +142,10 @@ class _LiveCardWidgetState extends State<LiveCardWidget> {
                     state: PageState.addWidget,
                     widget: HMSPrebuilt(
                       roomCode: widget.viewerCode,
+                      // id: widget.eventId,
+                      advisorId: widget.advisorCode,
+                      title: widget.title,
+                      description: widget.subTitle,
                       options: HMSPrebuiltOptions(
                         userName: name,
                         userId: userId,
@@ -211,13 +219,39 @@ class _LiveCardWidgetState extends State<LiveCardWidget> {
                   ),
                   SizedBox(height: SizeConfig.padding4),
 
-                  // Subtitle (time started or duration)
-                  Text(
-                    widget.subTitle,
-                    style: TextStyles.sourceSans.body4.colour(
-                      UiConstants.kTextColor5,
+                  if (widget.status == 'upcoming')
+                    Text(
+                      'Starts on ${BaseUtil.formatDateTime(
+                        DateTime.parse(
+                          widget.startTime!,
+                        ),
+                      )}',
+                      style: TextStyles.sourceSans.body4.colour(
+                        UiConstants.kTextColor5,
+                      ),
+                    )
+                  else if (widget.status == 'recent')
+                    Text(
+                      '${widget.liveCount} views  •  ${timeago.format(
+                        DateTime.tryParse(widget.startTime ?? '') ??
+                            DateTime.now(),
+                      )}',
+                      style: TextStyles.sourceSans.body4.colour(
+                        UiConstants.kTextColor5,
+                      ),
+                    )
+                  else
+                    Text(
+                      'Started at ${BaseUtil.formatTime(
+                        DateTime.tryParse(
+                              widget.startTime ?? '',
+                            ) ??
+                            DateTime.now(),
+                      )}',
+                      style: TextStyles.sourceSans.body4.colour(
+                        UiConstants.kTextColor5,
+                      ),
                     ),
-                  ),
                   SizedBox(height: SizeConfig.padding20),
 
                   // Author's name

@@ -204,42 +204,42 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                   const SizedBox(
                     height: 10,
                   ),
-                  if (meetingStore.localPeer?.role.publishSettings?.allowed
-                          .contains("screen") ??
-                      false)
-                    Selector<MeetingStore, bool>(
-                        selector: ((_, meetingStore) =>
-                            meetingStore.isScreenShareOn),
-                        builder: (_, isScreenShareOn, __) {
-                          return ListTile(
-                            horizontalTitleGap: 2,
-                            onTap: () async {
-                              Navigator.pop(context);
-                              if (isScreenShareOn) {
-                                meetingStore.stopScreenShare();
-                              } else {
-                                meetingStore.startScreenShare();
-                              }
-                            },
-                            contentPadding: EdgeInsets.zero,
-                            leading: SvgPicture.asset(
-                              "assets/hms/icons/screen_share.svg",
-                              height: 20,
-                              width: 20,
-                              colorFilter: ColorFilter.mode(
-                                  HMSThemeColors.onSurfaceHighEmphasis,
-                                  BlendMode.srcIn),
-                            ),
-                            title: HMSSubheadingText(
-                              text: isScreenShareOn
-                                  ? "Stop Screen Share"
-                                  : "Share Screen",
-                              textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                              letterSpacing: 0.15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          );
-                        }),
+                  // if (meetingStore.localPeer?.role.publishSettings?.allowed
+                  //         .contains("screen") ??
+                  //     false)
+                  //   Selector<MeetingStore, bool>(
+                  //       selector: ((_, meetingStore) =>
+                  //           meetingStore.isScreenShareOn),
+                  //       builder: (_, isScreenShareOn, __) {
+                  //         return ListTile(
+                  //           horizontalTitleGap: 2,
+                  //           onTap: () async {
+                  //             Navigator.pop(context);
+                  //             if (isScreenShareOn) {
+                  //               meetingStore.stopScreenShare();
+                  //             } else {
+                  //               meetingStore.startScreenShare();
+                  //             }
+                  //           },
+                  //           contentPadding: EdgeInsets.zero,
+                  //           leading: SvgPicture.asset(
+                  //             "assets/hms/icons/screen_share.svg",
+                  //             height: 20,
+                  //             width: 20,
+                  //             colorFilter: ColorFilter.mode(
+                  //                 HMSThemeColors.onSurfaceHighEmphasis,
+                  //                 BlendMode.srcIn),
+                  //           ),
+                  //           title: HMSSubheadingText(
+                  //             text: isScreenShareOn
+                  //                 ? "Stop Screen Share"
+                  //                 : "Share Screen",
+                  //             textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                  //             letterSpacing: 0.15,
+                  //             fontWeight: FontWeight.w600,
+                  //           ),
+                  //         );
+                  //       }),
                   ListTile(
                     horizontalTitleGap: 2,
                     onTap: () async {
@@ -300,50 +300,50 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  ListTile(
-                      horizontalTitleGap: 2,
-                      onTap: () async {
-                        context.read<MeetingStore>().toggleLocalPeerHandRaise();
-                        Navigator.pop(context);
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "assets/hms/icons/hand_outline.svg",
-                        height: 20,
-                        width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
-                      ),
-                      title: HMSSubheadingText(
-                        text: meetingStore.isRaisedHand
-                            ? "Lower Hand"
-                            : "Raise Hand",
-                        textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                        fontWeight: FontWeight.w600,
-                      )),
-                  ListTile(
-                    horizontalTitleGap: 2,
-                    onTap: () async {
-                      meetingStore.changeMetadataBRB();
-                      Navigator.pop(context);
-                    },
-                    contentPadding: EdgeInsets.zero,
-                    leading: SvgPicture.asset(
-                      "assets/hms/icons/brb.svg",
-                      colorFilter: ColorFilter.mode(
-                          HMSThemeColors.onSurfaceHighEmphasis,
-                          BlendMode.srcIn),
-                    ),
-                    title: HMSSubheadingText(
-                      text: "BRB",
-                      textColor: meetingStore.isBRB
-                          ? HMSThemeColors.alertErrorDefault
-                          : HMSThemeColors.onSurfaceHighEmphasis,
-                      letterSpacing: 0.15,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  // ListTile(
+                  //     horizontalTitleGap: 2,
+                  //     onTap: () async {
+                  //       context.read<MeetingStore>().toggleLocalPeerHandRaise();
+                  //       Navigator.pop(context);
+                  //     },
+                  //     contentPadding: EdgeInsets.zero,
+                  //     leading: SvgPicture.asset(
+                  //       "assets/hms/icons/hand_outline.svg",
+                  //       height: 20,
+                  //       width: 20,
+                  //       colorFilter: ColorFilter.mode(
+                  //           HMSThemeColors.onSurfaceHighEmphasis,
+                  //           BlendMode.srcIn),
+                  //     ),
+                  //     title: HMSSubheadingText(
+                  //       text: meetingStore.isRaisedHand
+                  //           ? "Lower Hand"
+                  //           : "Raise Hand",
+                  //       textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                  //       fontWeight: FontWeight.w600,
+                  //     )),
+                  // ListTile(
+                  //   horizontalTitleGap: 2,
+                  //   onTap: () async {
+                  //     meetingStore.changeMetadataBRB();
+                  //     Navigator.pop(context);
+                  //   },
+                  //   contentPadding: EdgeInsets.zero,
+                  //   leading: SvgPicture.asset(
+                  //     "assets/hms/icons/brb.svg",
+                  //     colorFilter: ColorFilter.mode(
+                  //         HMSThemeColors.onSurfaceHighEmphasis,
+                  //         BlendMode.srcIn),
+                  //   ),
+                  //   title: HMSSubheadingText(
+                  //     text: "BRB",
+                  //     textColor: meetingStore.isBRB
+                  //         ? HMSThemeColors.alertErrorDefault
+                  //         : HMSThemeColors.onSurfaceHighEmphasis,
+                  //     letterSpacing: 0.15,
+                  //     fontWeight: FontWeight.w600,
+                  //   ),
+                  // ),
                   if (Constant.debugMode)
                     ListTile(
                       horizontalTitleGap: 2,

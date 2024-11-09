@@ -83,7 +83,8 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     if (AppState.isInLiveStream &&
         AppState.screenStack.last != ScreenItem.dialog &&
         (AppState.delegate!.currentConfiguration?.path ?? '') ==
-            '/livePreview') {
+            '/livePreview' &&
+        AppState.screenStack.last != ScreenItem.modalsheet) {
       BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         isScrollControlled: true,
@@ -96,7 +97,9 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       );
       return Future.value(true);
     }
-    if ((AppState.delegate!.currentConfiguration?.path ?? '') == '/shorts') {
+    if ((AppState.delegate!.currentConfiguration?.path ?? '') ==
+            '/shorts-internal' &&
+        AppState.screenStack.last != ScreenItem.modalsheet) {
       BlocProvider.of<PreloadBloc>(
         _routerDelegate!.navigatorKey.currentContext!,
         listen: false,

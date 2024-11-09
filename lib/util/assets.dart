@@ -517,4 +517,6 @@ class Assets {
   static const String add_comment = "assets/svg/add_comment.svg";
   static const String remove_comment = "assets/svg/remove_comment.svg";
   static const String image = "assets/svg/image.svg";
+  static const String no_shorts = "assets/svg/no_shorts.svg";
+  static const String no_live = "assets/svg/no_live.svg";
 }

@@ -176,71 +176,71 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       optionText: "Participants"),
 
                 ///This renders the screen share option
-                if (meetingStore.localPeer?.role.publishSettings?.allowed
-                        .contains("screen") ??
-                    false)
-                  MoreOptionItem(
-                    onTap: () async {
-                      Navigator.pop(context);
-                      if (meetingStore.isScreenShareOn) {
-                        meetingStore.stopScreenShare();
-                      } else {
-                        meetingStore.startScreenShare();
-                      }
-                    },
-                    isActive: meetingStore.isScreenShareOn,
-                    optionIcon: SvgPicture.asset(
-                      "assets/hms/icons/screen_share.svg",
-                      height: 20,
-                      width: 20,
-                      colorFilter: ColorFilter.mode(
-                          HMSThemeColors.onSurfaceHighEmphasis,
-                          BlendMode.srcIn),
-                    ),
-                    optionText: meetingStore.isScreenShareOn
-                        ? "Sharing Screen"
-                        : "Share Screen",
-                  ),
+                // if (meetingStore.localPeer?.role.publishSettings?.allowed
+                //         .contains("screen") ??
+                //     false)
+                //   MoreOptionItem(
+                //     onTap: () async {
+                //       Navigator.pop(context);
+                //       if (meetingStore.isScreenShareOn) {
+                //         meetingStore.stopScreenShare();
+                //       } else {
+                //         meetingStore.startScreenShare();
+                //       }
+                //     },
+                //     isActive: meetingStore.isScreenShareOn,
+                //     optionIcon: SvgPicture.asset(
+                //       "assets/hms/icons/screen_share.svg",
+                //       height: 20,
+                //       width: 20,
+                //       colorFilter: ColorFilter.mode(
+                //           HMSThemeColors.onSurfaceHighEmphasis,
+                //           BlendMode.srcIn),
+                //     ),
+                //     optionText: meetingStore.isScreenShareOn
+                //         ? "Sharing Screen"
+                //         : "Share Screen",
+                //   ),
 
                 ///This renders the brb option
-                if (HMSRoomLayout.isBRBEnabled)
-                  MoreOptionItem(
-                      onTap: () async {
-                        meetingStore.changeMetadataBRB();
-                        Navigator.pop(context);
-                      },
-                      isActive: meetingStore.isBRB,
-                      optionIcon: Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: SvgPicture.asset(
-                          "assets/hms/icons/brb.svg",
-                          colorFilter: ColorFilter.mode(
-                              HMSThemeColors.onSurfaceHighEmphasis,
-                              BlendMode.srcIn),
-                        ),
-                      ),
-                      optionText:
-                          meetingStore.isBRB ? "I'm Back" : "Be Right Back"),
+                // if (HMSRoomLayout.isBRBEnabled)
+                //   MoreOptionItem(
+                //       onTap: () async {
+                //         meetingStore.changeMetadataBRB();
+                //         Navigator.pop(context);
+                //       },
+                //       isActive: meetingStore.isBRB,
+                //       optionIcon: Padding(
+                //         padding: const EdgeInsets.only(top: 8.0),
+                //         child: SvgPicture.asset(
+                //           "assets/hms/icons/brb.svg",
+                //           colorFilter: ColorFilter.mode(
+                //               HMSThemeColors.onSurfaceHighEmphasis,
+                //               BlendMode.srcIn),
+                //         ),
+                //       ),
+                //       optionText:
+                //           meetingStore.isBRB ? "I'm Back" : "Be Right Back"),
 
                 ///This renders the raise hand option
-                if (HMSRoomLayout.isHandRaiseEnabled)
-                  MoreOptionItem(
-                      onTap: () async {
-                        context.read<MeetingStore>().toggleLocalPeerHandRaise();
-                        Navigator.pop(context);
-                      },
-                      isActive: meetingStore.isRaisedHand,
-                      optionIcon: SvgPicture.asset(
-                        "assets/hms/icons/hand_outline.svg",
-                        height: 20,
-                        width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
-                      ),
-                      optionText: meetingStore.isRaisedHand
-                          ? "Lower Hand"
-                          : "Raise Hand"),
+                // if (HMSRoomLayout.isHandRaiseEnabled)
+                //   MoreOptionItem(
+                //       onTap: () async {
+                //         context.read<MeetingStore>().toggleLocalPeerHandRaise();
+                //         Navigator.pop(context);
+                //       },
+                //       isActive: meetingStore.isRaisedHand,
+                //       optionIcon: SvgPicture.asset(
+                //         "assets/hms/icons/hand_outline.svg",
+                //         height: 20,
+                //         width: 20,
+                //         colorFilter: ColorFilter.mode(
+                //             HMSThemeColors.onSurfaceHighEmphasis,
+                //             BlendMode.srcIn),
+                //       ),
+                //       optionText: meetingStore.isRaisedHand
+                //           ? "Lower Hand"
+                //           : "Raise Hand"),
 
                 ///This renders the polls and quizzes option
                 if ((meetingStore.localPeer?.role.permissions.pollRead ??
@@ -273,7 +273,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                             HMSThemeColors.onSurfaceHighEmphasis,
                             BlendMode.srcIn),
                       ),
-                      optionText: "Polls and Quizzes"),
+                      optionText: "Polls"),
 
                 ///This renders the recording option
                 ///This option is only rendered if the local peer has the permission to
@@ -282,113 +282,113 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                 ///The recording permission is checked using the role of the local peer
                 ///
                 ///If Streaming is already running we disable the recording option
-                if (meetingStore.localPeer?.role.permissions.browserRecording ??
-                    false)
+                // if (meetingStore.localPeer?.role.permissions.browserRecording ??
+                //     false)
 
-                  ///If streaming is on or in initialising state disable the button
-                  ((meetingStore.streamingType["hls"] ==
-                              HMSStreamingState.started) ||
-                          (meetingStore.streamingType["rtmp"] ==
-                              HMSStreamingState.started) ||
-                          meetingStore.recordingType["browser"] ==
-                              HMSRecordingState.starting)
-                      ? MoreOptionItem(
-                          onTap: () {},
-                          isActive: false,
-                          optionIcon: SvgPicture.asset(
-                            "assets/hms/icons/record.svg",
-                            height: 20,
-                            width: 20,
-                            colorFilter: ColorFilter.mode(
-                                HMSThemeColors.onSurfaceLowEmphasis,
-                                BlendMode.srcIn),
-                          ),
-                          optionText: "Record",
-                          optionTextColor: HMSThemeColors.onSurfaceLowEmphasis,
-                        )
-                      : MoreOptionItem(
-                          onTap: () async {
-                            bool isRecordingRunning =
-                                ((meetingStore.recordingType["hls"] ==
-                                            HMSRecordingState.started) ||
-                                        meetingStore.recordingType["hls"] ==
-                                            HMSRecordingState.resumed) ||
-                                    (meetingStore.recordingType["browser"] ==
-                                            HMSRecordingState.started ||
-                                        meetingStore.recordingType["browser"] ==
-                                            HMSRecordingState.resumed);
-                            if (isRecordingRunning) {
-                              Navigator.pop(context);
-                              showModalBottomSheet(
-                                isScrollControlled: true,
-                                backgroundColor: HMSThemeColors.surfaceDim,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(16),
-                                      topRight: Radius.circular(16)),
-                                ),
-                                context: context,
-                                builder: (ctx) => ChangeNotifierProvider.value(
-                                  value: meetingStore,
-                                  child: EndServiceBottomSheet(
-                                    onButtonPressed: () =>
-                                        meetingStore.stopRtmpAndRecording(),
-                                    title: HMSTitleText(
-                                      text: "Stop Recording",
-                                      textColor:
-                                          HMSThemeColors.alertErrorDefault,
-                                      letterSpacing: 0.15,
-                                      fontSize: 20,
-                                    ),
-                                    bottomSheetTitleIcon: SvgPicture.asset(
-                                      "assets/hms/icons/alert.svg",
-                                      height: 20,
-                                      width: 20,
-                                      colorFilter: ColorFilter.mode(
-                                          HMSThemeColors.alertErrorDefault,
-                                          BlendMode.srcIn),
-                                    ),
-                                    subTitle: HMSSubheadingText(
-                                      text:
-                                          "Are you sure you want to stop recording? You\n can’t undo this action.",
-                                      maxLines: 2,
-                                      textColor: HMSThemeColors
-                                          .onSurfaceMediumEmphasis,
-                                    ),
-                                    buttonText: "Stop Recording",
-                                  ),
-                                ),
-                              );
-                            } else {
-                              Navigator.pop(context);
-                              meetingStore.startRtmpOrRecording(
-                                  meetingUrl: Constant.streamingUrl,
-                                  toRecord: true,
-                                  rtmpUrls: null);
-                            }
-                          },
-                          isActive: false,
-                          optionIcon: SvgPicture.asset(
-                            "assets/hms/icons/${meetingStore.recordingType["browser"] == HMSRecordingState.paused ? "recording_paused" : "record"}.svg",
-                            height: 20,
-                            width: 20,
-                            colorFilter: ColorFilter.mode(
-                                meetingStore.recordingType["browser"] ==
-                                        HMSRecordingState.started
-                                    ? HMSThemeColors.alertErrorDefault
-                                    : HMSThemeColors.onSurfaceHighEmphasis,
-                                BlendMode.srcIn),
-                          ),
-                          optionText: meetingStore.recordingType["browser"] ==
-                                  HMSRecordingState.paused
-                              ? "Recording Paused"
-                              : ((meetingStore.recordingType["hls"] ==
-                                          HMSRecordingState.started) ||
-                                      (meetingStore.recordingType["browser"] ==
-                                          HMSRecordingState.started))
-                                  ? "Recording"
-                                  : "Record",
-                        ),
+                //   ///If streaming is on or in initialising state disable the button
+                //   ((meetingStore.streamingType["hls"] ==
+                //               HMSStreamingState.started) ||
+                //           (meetingStore.streamingType["rtmp"] ==
+                //               HMSStreamingState.started) ||
+                //           meetingStore.recordingType["browser"] ==
+                //               HMSRecordingState.starting)
+                //       ? MoreOptionItem(
+                //           onTap: () {},
+                //           isActive: false,
+                //           optionIcon: SvgPicture.asset(
+                //             "assets/hms/icons/record.svg",
+                //             height: 20,
+                //             width: 20,
+                //             colorFilter: ColorFilter.mode(
+                //                 HMSThemeColors.onSurfaceLowEmphasis,
+                //                 BlendMode.srcIn),
+                //           ),
+                //           optionText: "Record",
+                //           optionTextColor: HMSThemeColors.onSurfaceLowEmphasis,
+                //         )
+                //       : MoreOptionItem(
+                //           onTap: () async {
+                //             bool isRecordingRunning =
+                //                 ((meetingStore.recordingType["hls"] ==
+                //                             HMSRecordingState.started) ||
+                //                         meetingStore.recordingType["hls"] ==
+                //                             HMSRecordingState.resumed) ||
+                //                     (meetingStore.recordingType["browser"] ==
+                //                             HMSRecordingState.started ||
+                //                         meetingStore.recordingType["browser"] ==
+                //                             HMSRecordingState.resumed);
+                //             if (isRecordingRunning) {
+                //               Navigator.pop(context);
+                //               showModalBottomSheet(
+                //                 isScrollControlled: true,
+                //                 backgroundColor: HMSThemeColors.surfaceDim,
+                //                 shape: const RoundedRectangleBorder(
+                //                   borderRadius: BorderRadius.only(
+                //                       topLeft: Radius.circular(16),
+                //                       topRight: Radius.circular(16)),
+                //                 ),
+                //                 context: context,
+                //                 builder: (ctx) => ChangeNotifierProvider.value(
+                //                   value: meetingStore,
+                //                   child: EndServiceBottomSheet(
+                //                     onButtonPressed: () =>
+                //                         meetingStore.stopRtmpAndRecording(),
+                //                     title: HMSTitleText(
+                //                       text: "Stop Recording",
+                //                       textColor:
+                //                           HMSThemeColors.alertErrorDefault,
+                //                       letterSpacing: 0.15,
+                //                       fontSize: 20,
+                //                     ),
+                //                     bottomSheetTitleIcon: SvgPicture.asset(
+                //                       "assets/hms/icons/alert.svg",
+                //                       height: 20,
+                //                       width: 20,
+                //                       colorFilter: ColorFilter.mode(
+                //                           HMSThemeColors.alertErrorDefault,
+                //                           BlendMode.srcIn),
+                //                     ),
+                //                     subTitle: HMSSubheadingText(
+                //                       text:
+                //                           "Are you sure you want to stop recording? You\n can’t undo this action.",
+                //                       maxLines: 2,
+                //                       textColor: HMSThemeColors
+                //                           .onSurfaceMediumEmphasis,
+                //                     ),
+                //                     buttonText: "Stop Recording",
+                //                   ),
+                //                 ),
+                //               );
+                //             } else {
+                //               Navigator.pop(context);
+                //               meetingStore.startRtmpOrRecording(
+                //                   meetingUrl: Constant.streamingUrl,
+                //                   toRecord: true,
+                //                   rtmpUrls: null);
+                //             }
+                //           },
+                //           isActive: false,
+                //           optionIcon: SvgPicture.asset(
+                //             "assets/hms/icons/${meetingStore.recordingType["browser"] == HMSRecordingState.paused ? "recording_paused" : "record"}.svg",
+                //             height: 20,
+                //             width: 20,
+                //             colorFilter: ColorFilter.mode(
+                //                 meetingStore.recordingType["browser"] ==
+                //                         HMSRecordingState.started
+                //                     ? HMSThemeColors.alertErrorDefault
+                //                     : HMSThemeColors.onSurfaceHighEmphasis,
+                //                 BlendMode.srcIn),
+                //           ),
+                //           optionText: meetingStore.recordingType["browser"] ==
+                //                   HMSRecordingState.paused
+                //               ? "Recording Paused"
+                //               : ((meetingStore.recordingType["hls"] ==
+                //                           HMSRecordingState.started) ||
+                //                       (meetingStore.recordingType["browser"] ==
+                //                           HMSRecordingState.started))
+                //                   ? "Recording"
+                //                   : "Record",
+                //         ),
                 if (meetingStore.isNoiseCancellationAvailable &&
                     meetingStore.localPeer?.audioTrack != null &&
                     meetingStore.isMicOn)

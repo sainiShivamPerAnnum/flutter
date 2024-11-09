@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:felloapp/core/model/advisor/advisor_upcoming_call.dart';
 import 'package:felloapp/core/model/live/live_home.dart';
+import 'package:felloapp/feature/advisor/advisor_components/call.dart';
 import 'package:felloapp/feature/live/widgets/live_card.dart';
 import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
 import 'package:felloapp/feature/shorts/src/service/video_data.dart';
@@ -23,6 +25,8 @@ class ViewAllLive extends StatelessWidget {
     required this.liveList,
     required this.upcomingList,
     required this.recentList,
+    required this.advisorUpcoming,
+    required this.advisorPast,
     super.key,
   });
   final String appBarTitle;
@@ -30,6 +34,8 @@ class ViewAllLive extends StatelessWidget {
   final List<LiveStream>? liveList;
   final List<UpcomingStream>? upcomingList;
   final List<VideoData>? recentList;
+  final List<AdvisorCall>? advisorUpcoming;
+  final List<AdvisorCall>? advisorPast;
 
   @override
   Widget build(BuildContext context) {
@@ -129,9 +135,41 @@ class ViewAllLive extends StatelessWidget {
                     },
                     title: item.title,
                     subTitle: item.subtitle,
+                    advisorCode: item.advisorId,
                     author: item.author,
                     category: (item.category ?? []).join(', '),
                     bgImage: item.thumbnail,
+                    startTime: item.timeStamp,
+                  ),
+                ),
+              for (final AdvisorCall call in advisorUpcoming ?? [])
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding20,
+                  ),
+                  child: callContainer(
+                    call.userName ?? 'Unknown Title',
+                    call.userName ?? 'Unknown Description',
+                    call.scheduledOn.toString(),
+                    call.duration,
+                    'upcoming',
+                    call.hostCode,
+                    call.detailsQA,
+                  ),
+                ),
+              for (final AdvisorCall call in advisorPast ?? [])
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding20,
+                  ),
+                  child: callContainer(
+                    call.userName ?? 'Unknown Title',
+                    call.userName ?? 'Unknown Description',
+                    call.scheduledOn.toString(),
+                    call.duration,
+                    'past',
+                    call.hostCode,
+                    call.detailsQA,
                   ),
                 ),
             ],

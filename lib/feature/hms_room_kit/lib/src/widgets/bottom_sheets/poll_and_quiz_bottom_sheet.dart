@@ -59,7 +59,7 @@ class _PollAndQuizBottomSheetState extends State<PollAndQuizBottomSheet> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     HMSTitleText(
-                      text: "Polls and Quizzes",
+                      text: "Polls",
                       fontSize: 20,
                       textColor: HMSThemeColors.onSurfaceHighEmphasis,
                     ),
@@ -133,7 +133,7 @@ class _PollAndQuizBottomSheetState extends State<PollAndQuizBottomSheet> {
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 24.0),
                                 child: HMSTitleText(
-                                  text: "Previous Polls and Quizzes",
+                                  text: "Previous Polls",
                                   textColor:
                                       HMSThemeColors.onSurfaceHighEmphasis,
                                   fontSize: 20,
@@ -172,7 +172,7 @@ class _PollAndQuizBottomSheetState extends State<PollAndQuizBottomSheet> {
                               true))) {
                         return Center(
                           child: HMSTitleText(
-                              text: "No polls/quizzes started in this session",
+                              text: "No polls started in this session",
                               textColor: HMSThemeColors.onPrimaryHighEmphasis),
                         );
                       } else {

@@ -57,6 +57,7 @@ class _SipIntroViewState extends State<SipIntroView> {
             icon: const Icon(
               Icons.chevron_left,
               size: 32,
+              color: UiConstants.kTextColor,
             ),
           ),
           backgroundColor: UiConstants.kTextColor4,

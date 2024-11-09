@@ -55,11 +55,18 @@ class MeetingScreenController extends StatefulWidget {
   final HMSSDKInteractor hmsSDKInteractor;
 
   final bool isNoiseCancellationEnabled;
+  final String advisorId;
+  final String title;
+  final String description;
+  // final String id;
 
   const MeetingScreenController({
     required this.user,
     required this.localPeerNetworkQuality,
     required this.hmsSDKInteractor,
+    required this.advisorId,
+    required this.title,
+    required this.description,
     Key? key,
     this.isRoomMute = false,
     this.showStats = false,
@@ -81,7 +88,7 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
   HLSPlayerStore? _hlsPlayerStore;
   bool showLoader = false;
   late MeetingStore _meetingStore;
-  
+
   void _recreateMeetingStore() {
     // Unregister the existing MeetingStore instance
     if (locator.isRegistered<MeetingStore>()) {
@@ -134,6 +141,11 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
   ///This function sets the initial values of the meeting
   Future<void> _setInitValues() async {
     _meetingStore.setSettings();
+    _meetingStore.setDefaults(
+      widget.advisorId,
+      widget.title,
+      widget.description,
+    );
   }
 
   void setScreenRotation() {

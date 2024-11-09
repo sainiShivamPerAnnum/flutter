@@ -3,7 +3,7 @@ import 'package:felloapp/core/model/advisor/advisor_events.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/advisor/advisor_components/schedule.dart';
 import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
-import 'package:felloapp/feature/live/widgets/upcoming_live_card.dart';
+import 'package:felloapp/feature/advisor/advisor_components/upcoming_live_card.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';

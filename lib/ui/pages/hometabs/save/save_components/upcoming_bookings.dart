@@ -178,6 +178,11 @@ class ScheduleCard extends StatelessWidget {
                             bookingId: booking.bookingId,
                             advisorName: booking.advisorName,
                           );
+                        } else {
+                          BaseUtil.showNegativeAlert(
+                            'Editing Closed',
+                            'Editing the schedule is only possible up to 24 hours before the scheduled time.',
+                          );
                         }
                       },
                       child: Text(
@@ -209,12 +214,20 @@ class ScheduleCard extends StatelessWidget {
                             page: LivePreviewPageConfig,
                             state: PageState.addWidget,
                             widget: HMSPrebuilt(
+                              title: '',
+                              description: '',
+                              advisorId: booking.advisorId,
                               roomCode: booking.guestCode,
                               options: HMSPrebuiltOptions(
                                 userName: name,
                                 userId: userId,
                               ),
                             ),
+                          );
+                        } else {
+                          BaseUtil.showNegativeAlert(
+                            'Unable to Join Meeting',
+                            'You can join the meeting 15 minutes prior to your scheduled time!',
                           );
                         }
                       },
@@ -302,9 +315,8 @@ class ScheduleCard extends StatelessWidget {
   bool _isEditButtonClickable() {
     final DateTime now = DateTime.now();
     final DateTime scheduledOn = booking.scheduledOn;
-    final DateTime startWindow =
-        scheduledOn.subtract(const Duration(hours: 24));
-    return now.isAfter(startWindow) && now.isBefore(scheduledOn);
+    final DateTime endWindow = scheduledOn.subtract(const Duration(hours: 24));
+    return now.isBefore(endWindow);
   }
 
   // Helper function to format the scheduledOn DateTime

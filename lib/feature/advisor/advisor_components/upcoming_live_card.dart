@@ -186,6 +186,9 @@ class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
                         page: LivePreviewPageConfig,
                         state: PageState.addWidget,
                         widget: HMSPrebuilt(
+                          advisorId: userId!,
+                          title: widget.title,
+                          description: widget.subTitle,
                           roomCode: widget.broadcasterCode,
                           options: HMSPrebuiltOptions(
                             userName: userName,
@@ -241,15 +244,12 @@ class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
                   ),
                 ),
                 SizedBox(height: SizeConfig.padding4),
-
                 Text(
                   widget.subTitle,
                   style: TextStyles.sourceSans.body4.colour(
                     UiConstants.kTextColor5,
                   ),
                 ),
-                SizedBox(height: SizeConfig.padding20),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -295,19 +295,6 @@ class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
     return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
-  }
-
-  Color getCategoryColor(String category) {
-    switch (category.toLowerCase()) {
-      case 'stocks':
-        return Colors.green;
-      case 'crypto':
-        return Colors.blue;
-      case 'investments':
-        return Colors.orange;
-      default:
-        return Colors.grey;
-    }
   }
 
   final AnalyticsService _analyticsService = locator<AnalyticsService>();

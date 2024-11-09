@@ -178,9 +178,7 @@ class _MeetingBottomNavigationBarState
                                   else if (HMSRoomLayout.chatData?.isOverlay ??
                                       false)
                                     {
-                                      context
-                                          .read<MeetingStore>()
-                                          .toggleChatOverlay()
+                                     
                                     }
                                   else
                                     {

@@ -12,6 +12,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
+import 'package:felloapp/core/repository/live_repository.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -57,7 +58,6 @@ import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/earn_more_returns_view.dart';
 import 'package:felloapp/ui/pages/static/web_view.dart';
 import 'package:felloapp/ui/pages/support/freshdesk_help.dart';
@@ -1010,13 +1010,24 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'live':
         final id = queryParams['id'];
         if (id != null) {
-          openLiveById(id);
+          await openLiveById(id);
         } else if (rootController.navItems
             .containsValue(RootController.liveNavBarItem)) {
           onTapItem(RootController.liveNavBarItem);
           break;
         }
         pageConfiguration = LivePageConfig;
+        break;
+      case 'bookCall':
+        final id = queryParams['id'];
+        final name = queryParams['name'];
+        if (id != null && name != null) {
+          BaseUtil.openBookAdvisorSheet(
+            advisorId: id,
+            advisorName: name,
+            isEdit: false,
+          );
+        }
         break;
       case 'experts':
         final id = queryParams['id'];
@@ -1265,19 +1276,48 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     );
   }
 
-  void openLiveById(String id) async{
-    final repository = locator();
-    // AppState.delegate!.appState.currentAction = PageAction(
-    //                   page: LivePreviewPageConfig,
-    //                   state: PageState.addWidget,
-    //                   widget: HMSPrebuilt(
-    //                     roomCode: hostCode,
-    //                     options: HMSPrebuiltOptions(
-    //                       userName: userName,
-    //                       userId: userId,
-    //                     ),
-    //                   ),
-    //                 );
+  Future<void> openLiveById(String id) async {
+    final repository = locator<LiveRepository>();
+    final userService = locator<UserService>();
+    final advisorId = userService.baseUser!.advisorId;
+    final String? uid = userService.baseUser!.uid;
+    final String userName = (userService.baseUser!.kycName != null &&
+                userService.baseUser!.kycName!.isNotEmpty
+            ? userService.baseUser!.kycName
+            : userService.baseUser!.name) ??
+        "N/A";
+    final videoData = await repository.getEventById(id: id);
+    if (videoData.model != null && advisorId != null && advisorId != '') {
+      AppState.delegate!.appState.currentAction = PageAction(
+        page: LivePreviewPageConfig,
+        state: PageState.addWidget,
+        widget: HMSPrebuilt(
+          advisorId: advisorId,
+          title: videoData.model!.topic ?? '',
+          description: videoData.model!.description ?? '',
+          roomCode: videoData.model!.broadcasterCode,
+          options: HMSPrebuiltOptions(
+            userName: userName,
+            userId: uid,
+          ),
+        ),
+      );
+    } else if (videoData.model != null) {
+      AppState.delegate!.appState.currentAction = PageAction(
+        page: LivePreviewPageConfig,
+        state: PageState.addWidget,
+        widget: HMSPrebuilt(
+          roomCode: videoData.model!.guestCode,
+          advisorId: videoData.model!.advisorId,
+          title: videoData.model!.topic ?? '',
+          description: videoData.model!.description ?? '',
+          options: HMSPrebuiltOptions(
+            userName: userName,
+            userId: uid,
+          ),
+        ),
+      );
+    }
   }
 
   void openPowerPlayModalSheet() {

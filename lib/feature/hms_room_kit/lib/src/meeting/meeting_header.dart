@@ -3,6 +3,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
+import 'package:felloapp/feature/hms_room_kit/lib/src/enums/meeting_mode.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_store.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/bottom_sheets/audio_settings_bottom_sheet.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/bottom_sheets/leave_session_bottom_sheet.dart';
@@ -189,14 +190,14 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                     ///For hls streaming status we use the streamingType map from the [MeetingStore]
                     ///
                     ///If recording initialising state is true we show the loader
-                    Selector<MeetingStore, bool>(
-                        selector: (_, meetingStore) =>
-                            meetingStore.streamingType['hls'] ==
-                                HMSStreamingState.started ||
-                            meetingStore.streamingType['rtmp'] ==
-                                HMSStreamingState.started,
-                        builder: (_, isHLSStarted, __) {
-                          return isHLSStarted ? const LiveBadge() : Container();
+                    Selector<MeetingStore, Tuple2<String?, MeetingMode>>(
+                        selector: (p0, meetingStore) => Tuple2(
+                              meetingStore.localPeer?.role.name,
+                              meetingStore.meetingMode,
+                            ),
+                        builder: (_, value, __) {
+                          showControls = value.item1 == 'viewer-realtime';
+                          return showControls ? const LiveBadge() : Container();
                         }),
                     const SizedBox(
                       width: 8,
@@ -205,15 +206,13 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                     ///This renders the number of peers
                     ///If the HLS streaming is started, we render the number of peers
                     ///else we render an empty Container
-                    Selector<MeetingStore, Tuple2<bool, int>>(
+                    Selector<MeetingStore, Tuple2<String?, int>>(
                         selector: (_, meetingStore) => Tuple2(
-                            (meetingStore.streamingType['hls'] ==
-                                    HMSStreamingState.started) ||
-                                (meetingStore.streamingType['rtmp'] ==
-                                    HMSStreamingState.started),
+                           meetingStore.localPeer?.role.name,
                             meetingStore.peersInRoom),
                         builder: (_, data, __) {
-                          return data.item1
+                          showControls = data.item1 == 'viewer-realtime';
+                          return showControls
                               ? Container(
                                   width: 59,
                                   height: 24,
@@ -342,7 +341,7 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                           backgroundColor: UiConstants.bg,
                           content: ChangeNotifierProvider.value(
                               value: context.read<MeetingStore>(),
-                            child: const LeaveSessionBottomSheet()),
+                              child: const LeaveSessionBottomSheet()),
                         );
                       },
                       // onColor: HMSThemeColors.backgroundDim,

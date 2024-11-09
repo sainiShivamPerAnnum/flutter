@@ -34,8 +34,17 @@ class ScreenController extends StatefulWidget {
   ///in addition to leaving the room when the leave room button is pressed
   final Function? onLeave;
 
+  final String advisorId;
+  final String title;
+  final String description;
+  // final String id;
+
   const ScreenController({
     required this.roomCode,
+    required this.advisorId,
+    required this.title,
+    required this.description,
+    // required this.id,
     super.key,
     this.options,
     this.onLeave,
@@ -56,6 +65,7 @@ class _ScreenControllerState extends State<ScreenController> {
   void initState() {
     super.initState();
     AppState.isInLiveStream = true;
+
     ///Setting the prebuilt options and roomCode
     Constant.prebuiltOptions = widget.options;
     Constant.roomCode = widget.roomCode;
@@ -145,7 +155,7 @@ class _ScreenControllerState extends State<ScreenController> {
       });
     }
 
-     _hmsSDKInteractor = locator<HMSSDKInteractor>();
+    _hmsSDKInteractor = locator<HMSSDKInteractor>();
     _hmsSDKInteractor.configure(
       iOSScreenshareConfig: widget.options?.iOSScreenshareConfig,
       joinWithMutedAudio: true,
@@ -176,7 +186,6 @@ class _ScreenControllerState extends State<ScreenController> {
           return UtilityComponents.showFailureError(
             ans,
             context,
-            
             () => AppState.backButtonDispatcher!.didPopRoute(),
           );
         },
@@ -212,6 +221,9 @@ class _ScreenControllerState extends State<ScreenController> {
             )
           : isPermissionGranted
               ? PreviewMeetingFlow(
+                  title: widget.title,
+                  description: widget.description,
+                  advisorId: widget.advisorId,
                   prebuiltOptions: widget.options,
                   hmsSDKInteractor: _hmsSDKInteractor,
                   tokenData: tokenData,

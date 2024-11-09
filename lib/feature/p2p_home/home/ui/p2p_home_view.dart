@@ -156,6 +156,7 @@ class _TabBar extends StatelessWidget {
         labelStyle: TextStyles.sourceSans.body2,
         labelColor: UiConstants.teal3,
         unselectedLabelColor: UiConstants.textGray70,
+         dividerColor: UiConstants.grey5,
         unselectedLabelStyle: TextStyles.sourceSans.body2,
         indicatorPadding: const EdgeInsets.symmetric(horizontal: 20),
         isScrollable: false,

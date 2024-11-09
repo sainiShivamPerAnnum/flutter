@@ -15,15 +15,12 @@ import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/pip_view.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/preview_for_role/preview_for_role_bottom_sheet.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/preview_for_role/preview_for_role_header.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/app_dialogs/audio_device_change_dialog.dart';
-import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/bottom_sheets/leave_session_bottom_sheet.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/common_widgets/hms_circular_avatar.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/common_widgets/hms_hls_starting_overlay.dart';
-import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/common_widgets/hms_left_room_screen.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/common_widgets/transcription_view.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/toasts/hms_toast_model.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/toasts/toast_widget.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 
 ///Package imports
 import 'package:flutter/material.dart';
@@ -39,12 +36,12 @@ class MeetingPage extends StatefulWidget {
   final HMSAudioDevice currentAudioDeviceMode;
   final bool isNoiseCancellationEnabled;
 
-  const MeetingPage(
-      {Key? key,
-      this.isRoomMute = true,
-      required this.currentAudioDeviceMode,
-      this.isNoiseCancellationEnabled = false})
-      : super(key: key);
+  const MeetingPage({
+    required this.currentAudioDeviceMode,
+    Key? key,
+    this.isRoomMute = true,
+    this.isNoiseCancellationEnabled = false,
+  }) : super(key: key);
 
   @override
   State<MeetingPage> createState() => _MeetingPageState();
@@ -130,8 +127,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                 bottom: 2),
                                             child: ChangeNotifierProvider.value(
                                                 value: _visibilityController,
-                                                child:
-                                                    const MeetingHeader())),
+                                                child: const MeetingHeader())),
                                         Padding(
                                             padding: const EdgeInsets.only(
                                                 bottom: 8.0),
@@ -141,11 +137,11 @@ class _MeetingPageState extends State<MeetingPage> {
                                                     const MeetingBottomNavigationBar())),
                                       ],
                                     ),
-    
+
                                     ChangeNotifierProvider.value(
                                         value: _visibilityController,
                                         child: const TranscriptionView()),
-    
+
                                     ///This gets rendered when the previewForRole method is called
                                     ///This is used to show the preview for role component
                                     Selector<
@@ -161,8 +157,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                 .previewForRoleAudioTrack,
                                             meetingStore
                                                 .currentRoleChangeRequest),
-                                        builder:
-                                            (_, previewForRoleTracks, __) {
+                                        builder: (_, previewForRoleTracks, __) {
                                           ///If the preview for role tracks are not null
                                           ///or role change request is not null
                                           ///we show the preview for role component
@@ -181,8 +176,8 @@ class _MeetingPageState extends State<MeetingPage> {
                                                   pageBuilder: (ctx, _, __) {
                                                     return ListenableProvider
                                                         .value(
-                                                      value: context.read<
-                                                          MeetingStore>(),
+                                                      value: context
+                                                          .read<MeetingStore>(),
                                                       child: Scaffold(
                                                         body: SafeArea(
                                                           child: Container(
@@ -198,7 +193,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                         context)
                                                                     .size
                                                                     .width,
-    
+
                                                             ///We render the preview for role component
                                                             child: Stack(
                                                               children: [
@@ -223,9 +218,10 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                         width: MediaQuery.of(context)
                                                                             .size
                                                                             .width,
-                                                                        color:
-                                                                            HMSThemeColors.backgroundDim,
-                                                                        child: (isVideoOn && previewForRoleTracks.item1 != null)
+                                                                        color: HMSThemeColors
+                                                                            .backgroundDim,
+                                                                        child: (isVideoOn &&
+                                                                                previewForRoleTracks.item1 != null)
                                                                             ? Center(
                                                                                 child: HMSTextureView(
                                                                                   scaleType: ScaleType.SCALE_ASPECT_FILL,
@@ -238,10 +234,10 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                               ),
                                                                       );
                                                                     }),
-    
+
                                                                 ///This renders the preview for role header
                                                                 const PreviewForRoleHeader(),
-    
+
                                                                 ///This renders the preview for role bottom sheet
                                                                 PreviewForRoleBottomSheet(
                                                                   meetingStore:
@@ -263,12 +259,11 @@ class _MeetingPageState extends State<MeetingPage> {
                                           }
                                           return Container();
                                         }),
-    
+
                                     Selector<MeetingStore,
                                             HMSTrackChangeRequest?>(
                                         selector: (_, meetingStore) =>
-                                            meetingStore
-                                                .hmsTrackChangeRequest,
+                                            meetingStore.hmsTrackChangeRequest,
                                         builder:
                                             (_, hmsTrackChangeRequest, __) {
                                           if (hmsTrackChangeRequest != null) {
@@ -282,8 +277,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                 .addPostFrameCallback((_) {
                                               UtilityComponents
                                                   .showTrackChangeDialog(
-                                                      context,
-                                                      currentRequest);
+                                                      context, currentRequest);
                                             });
                                           }
                                           return const SizedBox();
@@ -292,8 +286,8 @@ class _MeetingPageState extends State<MeetingPage> {
                                         selector: (_, meetingStore) =>
                                             meetingStore
                                                 .showAudioDeviceChangePopup,
-                                        builder: (_,
-                                            showAudioDeviceChangePopup, __) {
+                                        builder: (_, showAudioDeviceChangePopup,
+                                            __) {
                                           if (showAudioDeviceChangePopup) {
                                             context
                                                     .read<MeetingStore>()
@@ -329,13 +323,11 @@ class _MeetingPageState extends State<MeetingPage> {
                                         }),
                                     Positioned(
                                       bottom: SizeConfig.padding26,
-                                      child: Selector<
-                                              MeetingStore,
-                                              Tuple2<List<HMSToastModel>,
-                                                  int>>(
-                                          selector: (_, meetingStore) =>
-                                              Tuple2(meetingStore.toasts,
-                                                  meetingStore.toasts.length),
+                                      child: Selector<MeetingStore,
+                                              Tuple2<List<HMSToastModel>, int>>(
+                                          selector: (_, meetingStore) => Tuple2(
+                                              meetingStore.toasts,
+                                              meetingStore.toasts.length),
                                           builder: (_, toastsItem, __) {
                                             if (toastsItem.item1.isEmpty) {
                                               return Container();
@@ -349,8 +341,8 @@ class _MeetingPageState extends State<MeetingPage> {
                                                     .asMap()
                                                     .entries
                                                     .map((toasts) {
-                                              var meetingStore = context
-                                                  .read<MeetingStore>();
+                                              var meetingStore =
+                                                  context.read<MeetingStore>();
                                               return ChangeNotifierProvider
                                                   .value(
                                                 value: _visibilityController,
@@ -359,8 +351,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                     index: toasts.key,
                                                     toastsCount:
                                                         toastsItem.item2,
-                                                    meetingStore:
-                                                        meetingStore),
+                                                    meetingStore: meetingStore),
                                               );
                                             }).toList());
                                           }),
@@ -388,13 +379,10 @@ class _MeetingPageState extends State<MeetingPage> {
                                             ?.joinBtnType ==
                                         HMSTheme.JoinButtonType
                                             .JOIN_BTN_TYPE_JOIN_AND_GO_LIVE)
-                                      Selector<MeetingStore,
-                                              Tuple2<bool, int>>(
-                                          selector: (_, meetingStore) =>
-                                              Tuple2(
-                                                  meetingStore.isHLSStarting,
-                                                  meetingStore
-                                                      .peerTracks.length),
+                                      Selector<MeetingStore, Tuple2<bool, int>>(
+                                          selector: (_, meetingStore) => Tuple2(
+                                              meetingStore.isHLSStarting,
+                                              meetingStore.peerTracks.length),
                                           builder: (_, hlsData, __) {
                                             return (!hlsData.item1 ||
                                                     hlsData.item2 == 0)
@@ -402,8 +390,8 @@ class _MeetingPageState extends State<MeetingPage> {
                                                 : HMSHLSStartingOverlay();
                                           }),
                                     if (failureErrors.item2 != null)
-                                      if (showError(failureErrors
-                                          .item2?.code?.errorCode))
+                                      if (showError(
+                                          failureErrors.item2?.code?.errorCode))
                                         UtilityComponents.showFailureError(
                                             failureErrors.item2!,
                                             context,

@@ -116,6 +116,7 @@ class MyWinningsView extends StatelessWidget {
                                               TabBarIndicatorSize.label,
                                           indicatorWeight: SizeConfig.padding4,
                                           labelColor: Colors.white,
+                                          // dividerColor: UiConstants.kBackgroundColor,
                                           isScrollable: false,
                                           onTap: (value) {
                                             model.trackTabClicked(value == 0

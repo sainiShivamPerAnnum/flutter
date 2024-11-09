@@ -92,6 +92,7 @@ class _SipFormAmountState extends State<SipFormAmount> {
             icon: const Icon(
               Icons.chevron_left,
               size: 32,
+              color: UiConstants.kTextColor,
             ),
           ),
           backgroundColor: UiConstants.bg,

@@ -101,6 +101,8 @@ class __LiveHomeState extends State<_LiveHome> {
                             state: PageState.addWidget,
                             widget: ViewAllLive(
                               type: 'live',
+                              advisorPast: null,
+                              advisorUpcoming: null,
                               appBarTitle: liveData.sections.live.title,
                               liveList: liveData.live,
                               upcomingList: null,
@@ -127,6 +129,8 @@ class __LiveHomeState extends State<_LiveHome> {
                               state: PageState.addWidget,
                               widget: ViewAllLive(
                                 type: 'upcoming',
+                                advisorPast: null,
+                                advisorUpcoming: null,
                                 appBarTitle: liveData.sections.upcoming.title,
                                 liveList: null,
                                 upcomingList: liveData.upcoming,
@@ -152,6 +156,8 @@ class __LiveHomeState extends State<_LiveHome> {
                               page: AllEventsPageConfig,
                               state: PageState.addWidget,
                               widget: ViewAllLive(
+                                advisorPast: null,
+                                advisorUpcoming: null,
                                 type: 'recent',
                                 appBarTitle: liveData.sections.recent.title,
                                 liveList: null,
@@ -193,6 +199,7 @@ class __LiveHomeState extends State<_LiveHome> {
                 status: 'upcoming',
                 title: live.title,
                 subTitle: live.subtitle,
+                advisorCode: live.advisorCode,
                 author: live.author,
                 startTime: live.startTime,
                 category: live.categories.join(', '),
@@ -347,6 +354,8 @@ Widget buildRecentSection(List<VideoData> recentData, BuildContext context) {
               },
               status: 'recent',
               title: recent.title,
+              startTime: recent.timeStamp,
+              advisorCode: recent.advisorId,
               subTitle: recent.subtitle,
               author: recent.author,
               category: (recent.category ?? []).join(', '),

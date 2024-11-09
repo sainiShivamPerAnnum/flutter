@@ -17,10 +17,17 @@ class PreviewMeetingFlow extends StatefulWidget {
   final HMSPrebuiltOptions? prebuiltOptions;
   final HMSSDKInteractor hmsSDKInteractor;
   final String tokenData;
+    final String advisorId;
+  final String title;
+  final String description;
+  // final String id;
   const PreviewMeetingFlow({
     required this.prebuiltOptions,
     required this.hmsSDKInteractor,
     required this.tokenData,
+    required this.advisorId,
+    required this.title,
+    required this.description,
     super.key,
   });
 
@@ -43,6 +50,9 @@ class _PreviewMeetingFlowState extends State<PreviewMeetingFlow> {
   @override
   Widget build(BuildContext context) {
     return MeetingScreenController(
+      advisorId: widget.advisorId,
+      title: widget.title,
+      description: widget.description,
       user: widget.prebuiltOptions?.userName ??
           widget.prebuiltOptions?.userId ??
           "",

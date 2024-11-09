@@ -33,12 +33,12 @@ class _PollQuizSelectionWidgetState extends State<PollQuizSelectionWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        HMSSubtitleText(
-            text: "Select the type you want to continue with",
-            textColor: HMSThemeColors.onSurfaceMediumEmphasis),
-        const SizedBox(
-          height: 8,
-        ),
+        // HMSSubtitleText(
+        //     text: "Select the type you want to continue with",
+        //     textColor: HMSThemeColors.onSurfaceMediumEmphasis),
+        // const SizedBox(
+        //   height: 8,
+        // ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -50,17 +50,17 @@ class _PollQuizSelectionWidgetState extends State<PollQuizSelectionWidget> {
                 text: "Poll",
               ),
             ),
-            const SizedBox(
-              width: 16,
-            ),
-            GestureDetector(
-              onTap: () => _updateSelection(1),
-              child: PollQuizSelectionButton(
-                isSelected: (index == 1),
-                iconName: "quiz",
-                text: "Quiz",
-              ),
-            ),
+            // const SizedBox(
+            //   width: 16,
+            // ),
+            // GestureDetector(
+            //   onTap: () => _updateSelection(1),
+            //   child: PollQuizSelectionButton(
+            //     isSelected: (index == 1),
+            //     iconName: "quiz",
+            //     text: "Quiz",
+            //   ),
+            // ),
           ],
         ),
       ],

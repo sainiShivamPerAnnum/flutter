@@ -71,6 +71,7 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
           icon: const Icon(
             Icons.chevron_left,
             size: 32,
+            color: UiConstants.kTextColor,
           ),
         ),
         backgroundColor: UiConstants.bg, surfaceTintColor: UiConstants.bg,

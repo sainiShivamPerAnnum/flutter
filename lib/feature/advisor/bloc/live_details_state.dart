@@ -19,8 +19,8 @@ class ScheduleCallLoaded extends ScheduleCallState {
   final List<Map<String, String>> dates;
   final List<Map<String, String>> times;
   final String selectedCategory;
-  final int selectedDateIndex;
-  final int selectedTimeIndex;
+  final int? selectedDateIndex;
+  final int? selectedTimeIndex;
   final XFile? profilePicture;
 
   const ScheduleCallLoaded({

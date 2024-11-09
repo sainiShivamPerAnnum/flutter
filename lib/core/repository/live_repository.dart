@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:felloapp/core/model/advisor/advisor_events.dart';
 import 'package:felloapp/core/model/live/live_home.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -32,17 +33,21 @@ class LiveRepository extends BaseRepo {
     }
   }
 
-    Future<ApiResponse<LiveHome>> getEventById() async {
+  Future<ApiResponse<AdvisorEvents>> getEventById({
+    required String id,
+  }) async {
     try {
+      final params = {"eventId": id};
       final response = await APIService.instance.getData(
-        'events/home',
+        'events',
         cBaseUrl: _baseUrl,
+        queryParams: params,
         apiName: '$_live/getEventById',
       );
       final responseData = response["data"];
       log("Live data: $responseData");
-      return ApiResponse<LiveHome>(
-        model: LiveHome.fromJson(responseData),
+      return ApiResponse<AdvisorEvents>(
+        model: AdvisorEvents.fromJson(responseData),
         code: 200,
       );
     } catch (e) {

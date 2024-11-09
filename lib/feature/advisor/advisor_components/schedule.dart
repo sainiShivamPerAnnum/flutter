@@ -75,44 +75,50 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
           color: UiConstants.kTextColor,
         ),
       ),
-      body: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) =>
-                ScheduleLiveBloc(locator())..add(LoadCategories()),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) =>
+                  ScheduleLiveBloc(locator())..add(LoadCategories()),
+            ),
+            BlocProvider(
+              create: (context) => AdvisorBloc(locator()),
+            ),
+          ],
+          child: BlocConsumer<ScheduleLiveBloc, ScheduleCallState>(
+            listener: (context, state) {
+              if (state is ScheduleCallSuccess) {
+                BaseUtil.openModalBottomSheet(
+                  isBarrierDismissible: false,
+                  content: BookingConfirmSheet(
+                    name: topicController.text.trim(),
+                    date: state.date,
+                  ),
+                );
+                Future.delayed(const Duration(seconds: 2), () {
+                  BlocProvider.of<AdvisorBloc>(
+                    context,
+                    listen: false,
+                  ).add(const LoadAdvisorData());
+                });
+              }
+            },
+            builder: (context, state) {
+              return switch (state) {
+                ScheduleCallInitial() ||
+                ScheduleCallLoading() =>
+                  const FullScreenLoader(),
+                ScheduleCallLoaded() =>
+                  _buildScheduleCallContent(context, state),
+                ScheduleCallFailure() => const ErrorPage(),
+                ScheduleCallSuccess() => const SizedBox.shrink(),
+              };
+            },
           ),
-          BlocProvider(
-            create: (context) => AdvisorBloc(locator()),
-          ),
-        ],
-        child: BlocConsumer<ScheduleLiveBloc, ScheduleCallState>(
-          listener: (context, state) {
-            if (state is ScheduleCallSuccess) {
-              BaseUtil.openModalBottomSheet(
-                isBarrierDismissible: false,
-                content: BookingConfirmSheet(
-                  name: topicController.text.trim(),
-                  date: state.date,
-                ),
-              );
-              Future.delayed(const Duration(seconds: 2), () {
-                BlocProvider.of<AdvisorBloc>(
-                  context,
-                  listen: false,
-                ).add(const LoadAdvisorData());
-              });
-            }
-          },
-          builder: (context, state) {
-            return switch (state) {
-              ScheduleCallInitial() ||
-              ScheduleCallLoading() =>
-                const FullScreenLoader(),
-              ScheduleCallLoaded() => _buildScheduleCallContent(context, state),
-              ScheduleCallFailure() => const ErrorPage(),
-              ScheduleCallSuccess() => const SizedBox.shrink(),
-            };
-          },
         ),
       ),
     );
@@ -286,56 +292,59 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
         : "Upload and resize image to be used as cover for your upcoming live";
     return Column(
       children: [
-        if(state.profilePicture!=null)
-        Container(
-          decoration: BoxDecoration(
-            color: UiConstants.kTambolaMidTextColor,
-            borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-          ),
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding20,
-            vertical: SizeConfig.padding12,
-          ),
-          margin: EdgeInsets.only(bottom: SizeConfig.padding16,),
-          child: Row(
-            children: [
-              AppImage(
-                Assets.image,
-                height: SizeConfig.padding20,
-                width: SizeConfig.padding20,
-              ),
-              SizedBox(
-                width: SizeConfig.padding16,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      state.profilePicture?.name ?? 'null',
-                      style: TextStyles.sourceSansSB.body3
-                          .colour(UiConstants.kTextColor),
-                    ),
-                    Text(
-                      BaseUtil.formatDateTime(DateTime.now()),
-                      style: TextStyles.sourceSans.body4
-                          .colour(UiConstants.kTextColor5),
-                    ),
-                  ],
+        if (state.profilePicture != null)
+          Container(
+            decoration: BoxDecoration(
+              color: UiConstants.kTambolaMidTextColor,
+              borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding20,
+              vertical: SizeConfig.padding12,
+            ),
+            margin: EdgeInsets.only(
+              bottom: SizeConfig.padding16,
+            ),
+            child: Row(
+              children: [
+                AppImage(
+                  Assets.image,
+                  height: SizeConfig.padding20,
+                  width: SizeConfig.padding20,
                 ),
-              ),
-              GestureDetector(
-                 onTap: () =>
-                  context.read<ScheduleLiveBloc>().add(UploadProfilePicture()),
-                child: AppImage(
-                  Assets.garbageBin,
-                  height: SizeConfig.padding18,
-                  width: SizeConfig.padding18,
+                SizedBox(
+                  width: SizeConfig.padding16,
                 ),
-              ),
-            ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        state.profilePicture?.name ?? 'null',
+                        style: TextStyles.sourceSansSB.body3
+                            .colour(UiConstants.kTextColor),
+                      ),
+                      Text(
+                        BaseUtil.formatDateTime(DateTime.now()),
+                        style: TextStyles.sourceSans.body4
+                            .colour(UiConstants.kTextColor5),
+                      ),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => context
+                      .read<ScheduleLiveBloc>()
+                      .add(UploadProfilePicture()),
+                  child: AppImage(
+                    Assets.garbageBin,
+                    height: SizeConfig.padding18,
+                    width: SizeConfig.padding18,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
         Row(
           children: [
             Expanded(
@@ -456,31 +465,70 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
     return BlocBuilder<ScheduleLiveBloc, ScheduleCallState>(
       builder: (context, state) {
         bool isEnabled = state is ScheduleCallLoaded && isButtonEnabled(state);
-        return ElevatedButton(
-          onPressed: isEnabled
-              ? () {
-                  final topic = topicController.text;
-                  final description = descriptionController.text;
-                  if (widget.id != null) {
-                    bloc.add(UpdateEvent(widget.id!, topic, description));
-                  } else {
-                    bloc.add(ScheduleEvent(topic, description));
+        String getMissingFieldsMessage(ScheduleCallLoaded state) {
+          List<String> missingFields = [];
+
+          if (topicController.text.isEmpty) {
+            missingFields.add("Topic");
+          }
+          if (descriptionController.text.isEmpty) {
+            missingFields.add("Description");
+          }
+          if (state.selectedCategory.isEmpty) {
+            missingFields.add("Category");
+          }
+          if (state.selectedDateIndex == null) {
+            missingFields.add("Date");
+          }
+          if (state.selectedTimeIndex == null) {
+            missingFields.add("Time");
+          }
+          if (state.profilePicture == null) {
+            missingFields.add("Profile Picture");
+          }
+
+          return missingFields.isNotEmpty ? missingFields.join(', ') : "";
+        }
+
+        return GestureDetector(
+          onTap: () {
+            if (!isEnabled) {
+              final message = getMissingFieldsMessage(
+                state as ScheduleCallLoaded,
+              );
+              BaseUtil.showNegativeAlert(
+                "Please complete the following fields",
+                message,
+              );
+            }
+          },
+          child: ElevatedButton(
+            onPressed: isEnabled
+                ? () {
+                    final topic = topicController.text;
+                    final description = descriptionController.text;
+                    if (widget.id != null) {
+                      bloc.add(UpdateEvent(widget.id!, topic, description));
+                    } else {
+                      bloc.add(ScheduleEvent(topic, description));
+                    }
                   }
-                }
-              : null,
-          style: ElevatedButton.styleFrom(
-            disabledBackgroundColor: Colors.white38,
-            backgroundColor: Colors.white,
-            minimumSize: const Size(double.infinity, 50),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          ),
-          child: const Text(
-            'Schedule Live',
-            style: TextStyle(
-              color: Color(0xff3F4748),
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
+                : null,
+            style: ElevatedButton.styleFrom(
+              disabledBackgroundColor: Colors.white38,
+              backgroundColor: Colors.white,
+              minimumSize: const Size(double.infinity, 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text(
+              'Schedule Live',
+              style: TextStyle(
+                color: Color(0xff3F4748),
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         );

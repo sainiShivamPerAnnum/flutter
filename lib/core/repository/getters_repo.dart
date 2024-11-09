@@ -348,7 +348,7 @@ class GetterRepository extends BaseRepo {
     try {
       return await _cacheService.cachedApi(
         CacheKeys.PAGE_CONFIGS,
-        0,
+        TTL.ONE_DAY,
         () => APIService.instance.getData(
           "dynamicUi.txt",
           cBaseUrl: _cdnBaseUrl,
