@@ -34,6 +34,7 @@ SectionContent _$SectionContentFromJson(Map<String, dynamic> json) =>
     );
 
 LiveStream _$LiveStreamFromJson(Map<String, dynamic> json) => LiveStream(
+      id: json['id'] as String,
       categories: (json['categories'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
@@ -44,10 +45,12 @@ LiveStream _$LiveStreamFromJson(Map<String, dynamic> json) => LiveStream(
       liveCount: json['liveCount'] as int,
       advisorCode: json['advisorCode'] as String,
       viewerCode: json['viewerCode'] as String,
+      isEventLikedByUser: json['isEventLikedByUser'] as bool,
     );
 
 UpcomingStream _$UpcomingStreamFromJson(Map<String, dynamic> json) =>
     UpcomingStream(
+      id: json['id'] as String,
       categories: (json['categories'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
@@ -58,17 +61,4 @@ UpcomingStream _$UpcomingStreamFromJson(Map<String, dynamic> json) =>
       startTime: json['startTime'] as String,
       advisorCode: json['advisorCode'] as String,
       viewerCode: json['viewerCode'] as String,
-    );
-
-RecentStream _$RecentStreamFromJson(Map<String, dynamic> json) => RecentStream(
-      title: json['title'] as String,
-      subtitle: json['subtitle'] as String,
-      author: json['author'] as String,
-      thumbnail: json['thumbnail'] as String,
-      duration: json['duration'] as int,
-      views: json['views'] as int,
-      categories: (json['categories'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
     );

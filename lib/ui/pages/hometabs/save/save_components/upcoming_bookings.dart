@@ -214,6 +214,8 @@ class ScheduleCard extends StatelessWidget {
                             page: LivePreviewPageConfig,
                             state: PageState.addWidget,
                             widget: HMSPrebuilt(
+                              isLiked: false,
+                              eventId: '',
                               title: '',
                               description: '',
                               advisorId: booking.advisorId,

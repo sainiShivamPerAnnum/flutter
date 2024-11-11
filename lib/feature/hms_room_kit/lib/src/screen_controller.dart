@@ -37,14 +37,16 @@ class ScreenController extends StatefulWidget {
   final String advisorId;
   final String title;
   final String description;
-  // final String id;
+  final bool isLiked;
+  final String eventId;
 
   const ScreenController({
     required this.roomCode,
     required this.advisorId,
     required this.title,
     required this.description,
-    // required this.id,
+    required this.isLiked,
+    required this.eventId,
     super.key,
     this.options,
     this.onLeave,
@@ -221,6 +223,8 @@ class _ScreenControllerState extends State<ScreenController> {
             )
           : isPermissionGranted
               ? PreviewMeetingFlow(
+                  isLiked: widget.isLiked,
+                  eventId: widget.eventId,
                   title: widget.title,
                   description: widget.description,
                   advisorId: widget.advisorId,

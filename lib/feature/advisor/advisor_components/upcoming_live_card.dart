@@ -202,6 +202,8 @@ class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
                         page: LivePreviewPageConfig,
                         state: PageState.addWidget,
                         widget: HMSPrebuilt(
+                          eventId: widget.id ?? '',
+                          isLiked: false,
                           advisorId: advisoriD,
                           title: widget.title,
                           description: widget.subTitle,

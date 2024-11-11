@@ -1292,12 +1292,14 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         page: LivePreviewPageConfig,
         state: PageState.addWidget,
         widget: HMSPrebuilt(
+          eventId: '',
+          isLiked: false,
           advisorId: advisorId,
           title: videoData.model!.topic ?? '',
           description: videoData.model!.description ?? '',
-          onLeave: () async{
-                          await AppState.backButtonDispatcher!.didPopRoute();
-                        },
+          onLeave: () async {
+            await AppState.backButtonDispatcher!.didPopRoute();
+          },
           roomCode: videoData.model!.broadcasterCode,
           options: HMSPrebuiltOptions(
             userName: userName,
@@ -1310,13 +1312,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         page: LivePreviewPageConfig,
         state: PageState.addWidget,
         widget: HMSPrebuilt(
+          eventId: id,
+          isLiked: false,
           roomCode: videoData.model!.guestCode,
           advisorId: videoData.model!.advisorId,
           title: videoData.model!.topic ?? '',
           description: videoData.model!.description ?? '',
-          onLeave: () async{
-                          await AppState.backButtonDispatcher!.didPopRoute();
-                        },
+          onLeave: () async {
+            await AppState.backButtonDispatcher!.didPopRoute();
+          },
           options: HMSPrebuiltOptions(
             userName: userName,
             userId: uid,

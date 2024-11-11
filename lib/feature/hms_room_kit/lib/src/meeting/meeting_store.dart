@@ -12,6 +12,7 @@ import 'dart:io';
 // import 'package:hms_video_plugin/hms_video_plugin.dart';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/repository/live_repository.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/enums/meeting_mode.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/enums/session_store_keys.dart';
@@ -25,6 +26,7 @@ import 'package:felloapp/feature/hms_room_kit/lib/src/model/transcript_store.dar
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/toasts/hms_toast_model.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/toasts/hms_toasts_type.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -95,15 +97,30 @@ class MeetingStore extends ChangeNotifier
   String? advisorId;
   String calltitle = '';
   String calldescription = '';
+  bool isEventLikedByUser = false;
+  String? eventId;
 
   void setDefaults(
     String advId,
     String title,
     String description,
+    bool isLiked,
+    String eventID,
   ) {
     advisorId = advId;
     calltitle = title;
     calldescription = description;
+    isEventLikedByUser = isLiked;
+    eventId = eventID;
+    notifyListeners();
+  }
+
+  void onLike() {
+    isEventLikedByUser = !isEventLikedByUser;
+    final liveRepository = locator<LiveRepository>();
+    unawaited(
+      liveRepository.likeEvent(id: eventId ?? '', isLiked: isEventLikedByUser),
+    );
     notifyListeners();
   }
 

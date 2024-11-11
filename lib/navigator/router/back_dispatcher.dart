@@ -82,6 +82,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     }
     if (AppState.isInLiveStream &&
         AppState.screenStack.last != ScreenItem.dialog &&
+        AppState.screenStack.last != ScreenItem.modalsheet &&
         (AppState.delegate!.currentConfiguration?.path ?? '') ==
             '/livePreview' &&
         AppState.screenStack.last != ScreenItem.modalsheet) {

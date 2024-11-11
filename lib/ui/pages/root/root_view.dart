@@ -59,7 +59,14 @@ class _RootState extends State<Root> {
                   Column(
                     children: [
                       const RootAppBar(),
-                      const HeadAlerts(),
+                      Consumer<AppState>(
+                        builder: (ctx, m, child) {
+                          if (m.getCurrentTabIndex == 0) {
+                            return const HeadAlerts();
+                          }
+                          return const SizedBox.shrink();
+                        },
+                      ),
                       Expanded(
                         child: Consumer<AppState>(
                           builder: (ctx, m, child) {

@@ -59,6 +59,7 @@ class SectionContent {
 
 @_deserializable
 class LiveStream {
+  final String id;
   final List<String> categories;
   final String title;
   final String subtitle;
@@ -67,8 +68,10 @@ class LiveStream {
   final int liveCount;
   final String advisorCode;
   final String viewerCode;
+  final bool isEventLikedByUser;
 
   LiveStream({
+    required this.id,
     required this.categories,
     required this.title,
     required this.subtitle,
@@ -77,6 +80,7 @@ class LiveStream {
     required this.liveCount,
     required this.advisorCode,
     required this.viewerCode,
+    required this.isEventLikedByUser,
   });
 
   factory LiveStream.fromJson(Map<String, dynamic> json) =>
@@ -85,6 +89,7 @@ class LiveStream {
 
 @_deserializable
 class UpcomingStream {
+  final String id;
   final List<String> categories;
   final String title;
   final String subtitle;
@@ -95,6 +100,7 @@ class UpcomingStream {
   final String viewerCode;
 
   UpcomingStream({
+    required this.id,
     required this.categories,
     required this.title,
     required this.subtitle,
@@ -107,30 +113,4 @@ class UpcomingStream {
 
   factory UpcomingStream.fromJson(Map<String, dynamic> json) =>
       _$UpcomingStreamFromJson(json);
-}
-
-@_deserializable
-class RecentStream {
-  final List<String> categories;
-  final String title;
-  final String subtitle;
-  final String author;
-  final String thumbnail;
-  final int duration;
-  // final String url;
-  final int views;
-
-  RecentStream({
-    required this.title,
-    required this.subtitle,
-    required this.author,
-    required this.thumbnail,
-    required this.duration,
-    // required this.url,
-    required this.views,
-    this.categories = const [],
-  });
-
-  factory RecentStream.fromJson(Map<String, dynamic> json) =>
-      _$RecentStreamFromJson(json);
 }

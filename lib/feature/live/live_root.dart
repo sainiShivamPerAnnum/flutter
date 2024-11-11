@@ -196,6 +196,7 @@ class __LiveHomeState extends State<_LiveHome> {
                 bottom: SizeConfig.padding8,
               ),
               child: LiveCardWidget(
+                id: live.id,
                 status: 'upcoming',
                 title: live.title,
                 subTitle: live.subtitle,
@@ -254,7 +255,9 @@ Widget buildLiveSection(List<LiveStream> liveData) {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  AppState.delegate!.parseRoute(Uri.parse("experts"));
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(
@@ -287,6 +290,7 @@ Widget buildLiveSection(List<LiveStream> liveData) {
                     bottom: SizeConfig.padding8,
                   ),
                   child: LiveCardWidget(
+                    id: live.id,
                     status: 'live',
                     title: live.title,
                     subTitle: live.subtitle,
@@ -315,6 +319,7 @@ Widget buildRecentSection(List<VideoData> recentData, BuildContext context) {
               right: SizeConfig.padding8,
             ),
             child: LiveCardWidget(
+              id: recent.id,
               onTap: () async {
                 final preloadBloc = BlocProvider.of<PreloadBloc>(context);
                 final switchCompleter = Completer<void>();

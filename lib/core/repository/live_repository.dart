@@ -55,4 +55,30 @@ class LiveRepository extends BaseRepo {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
+
+  Future<ApiResponse<bool>> likeEvent({
+    required String id,
+    required bool isLiked,
+  }) async {
+    try {
+      final body = {
+        'isLiked': isLiked,
+      };
+      final response = await APIService.instance.postData(
+        'events/$id',
+        cBaseUrl: _baseUrl,
+        body: body,
+        apiName: '$_live/likeEvent',
+      );
+      final responseData = response["data"];
+      log("Live liked: $responseData");
+      return const ApiResponse<bool>(
+        model: true,
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
 }

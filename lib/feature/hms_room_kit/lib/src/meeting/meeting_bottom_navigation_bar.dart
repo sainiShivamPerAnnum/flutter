@@ -1,4 +1,6 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/common/utility_components.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/enums/meeting_mode.dart';
@@ -8,7 +10,6 @@ import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/one_on_one_chat.da
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/bottom_sheets/app_utilities_bottom_sheet.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/bottom_sheets/chat_only_bottom_sheet.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/chat_widgets/overlay_chat_component.dart';
-import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/meeting_modes/one_to_one_mode.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -177,27 +178,20 @@ class _MeetingBottomNavigationBarState
                                     }
                                   else if (HMSRoomLayout.chatData?.isOverlay ??
                                       false)
-                                    {
-                                     
-                                    }
+                                    {}
                                   else
                                     {
                                       context
                                           .read<MeetingStore>()
                                           .setNewMessageFalse(),
-                                      showModalBottomSheet(
-                                        isScrollControlled: true,
+                                      AppState.screenStack
+                                          .add(ScreenItem.modalsheet),
+                                      BaseUtil.openModalBottomSheet(
+                                        isBarrierDismissible: true,
                                         backgroundColor:
                                             HMSThemeColors.surfaceDim,
-                                        shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(16),
-                                            topRight: Radius.circular(16),
-                                          ),
-                                        ),
-                                        context: context,
-                                        builder: (ctx) =>
-                                            ChangeNotifierProvider.value(
+                                        isScrollControlled: true,
+                                        content: ChangeNotifierProvider.value(
                                           value: context.read<MeetingStore>(),
                                           child: HMSRoomLayout
                                                   .isParticipantsListEnabled
@@ -206,7 +200,7 @@ class _MeetingBottomNavigationBarState
                                                 )
                                               : const ChatOnlyBottomSheet(),
                                         ),
-                                      )
+                                      ),
                                     }
                                 },
                                 child: Container(
@@ -243,19 +237,16 @@ class _MeetingBottomNavigationBarState
                         ///Menu Button
                         GestureDetector(
                           onTap: () async => {
-                            showModalBottomSheet(
-                              isScrollControlled: true,
+                            AppState.screenStack.add(ScreenItem.modalsheet),
+                            BaseUtil.openModalBottomSheet(
+                              isBarrierDismissible: true,
                               backgroundColor: HMSThemeColors.surfaceDim,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(16),
-                                    topRight: Radius.circular(16)),
+                              isScrollControlled: true,
+                              content: ChangeNotifierProvider.value(
+                                value: context.read<MeetingStore>(),
+                                child: const AppUtilitiesBottomSheet(),
                               ),
-                              context: context,
-                              builder: (ctx) => ChangeNotifierProvider.value(
-                                  value: context.read<MeetingStore>(),
-                                  child: const AppUtilitiesBottomSheet()),
-                            )
+                            ),
                           },
                           child: Container(
                             decoration: const BoxDecoration(

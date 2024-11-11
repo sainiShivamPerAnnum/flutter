@@ -20,7 +20,8 @@ class PreviewMeetingFlow extends StatefulWidget {
     final String advisorId;
   final String title;
   final String description;
-  // final String id;
+  final bool isLiked;
+  final String eventId;
   const PreviewMeetingFlow({
     required this.prebuiltOptions,
     required this.hmsSDKInteractor,
@@ -28,6 +29,8 @@ class PreviewMeetingFlow extends StatefulWidget {
     required this.advisorId,
     required this.title,
     required this.description,
+    required this.isLiked,
+    required this.eventId,
     super.key,
   });
 
@@ -65,6 +68,8 @@ class _PreviewMeetingFlowState extends State<PreviewMeetingFlow> {
         ),
         authToken: widget.tokenData,
       ),
+      isLiked: widget.isLiked,
+      eventId: widget.eventId,
       localPeerNetworkQuality: null,
       options: widget.prebuiltOptions,
       tokenData: widget.tokenData,

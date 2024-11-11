@@ -8,10 +8,17 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ChatActionButtons extends StatelessWidget {
-  const ChatActionButtons(
-      {required this.advisorId, required this.advisorName, super.key});
+  const ChatActionButtons({
+    required this.advisorId,
+    required this.advisorName,
+    required this.isLiked,
+    required this.onLike,
+    super.key,
+  });
   final String advisorId;
   final String advisorName;
+  final bool isLiked;
+  final VoidCallback onLike;
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +50,11 @@ class ChatActionButtons extends StatelessWidget {
             IconButton(
               icon: AppImage(
                 Assets.video_like,
-                color: true ? Colors.red : Colors.white,
+                color: isLiked ? Colors.red : Colors.white,
                 height: SizeConfig.padding20,
                 width: SizeConfig.padding20,
               ),
-              onPressed: () {},
+              onPressed: onLike,
             ),
             Text(
               'Like',

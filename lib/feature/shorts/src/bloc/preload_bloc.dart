@@ -169,7 +169,14 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             page: (e.index + VideoPreloadConstants.preloadLimit) ~/ 10 + 1,
           );
           final List<VideoData> urls = response.model ?? [];
-          add(PreloadEvent.updateUrls(urls));
+          if (urls.isEmpty) {
+            // If we reach the end of the list, start from the beginning
+            final resetResponse = await repository.getVideos(page: 1);
+            final List<VideoData> resetUrls = resetResponse.model ?? [];
+            add(PreloadEvent.updateUrls(resetUrls));
+          } else {
+            add(PreloadEvent.updateUrls(urls));
+          }
         }
         final index = state.currentContext == ReelContext.main
             ? state.focusedIndex

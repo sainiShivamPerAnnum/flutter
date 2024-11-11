@@ -60,7 +60,7 @@ class ConsultationWidget extends StatelessWidget {
                     SizedBox(height: SizeConfig.padding12),
                     InkWell(
                       onTap: () {
-                        AppState.delegate!.parseRoute(Uri.parse('/experts'));
+                        AppState.delegate!.parseRoute(Uri.parse('experts'));
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(

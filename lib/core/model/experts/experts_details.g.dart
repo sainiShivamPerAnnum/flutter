@@ -45,6 +45,7 @@ License _$LicenseFromJson(Map<String, dynamic> json) => License(
 Social _$SocialFromJson(Map<String, dynamic> json) => Social(
       platform: json['platform'] as String,
       url: json['url'] as String,
+      iconUrl: json['iconUrl'] as String? ?? '',
     );
 
 RatingInfo _$RatingInfoFromJson(Map<String, dynamic> json) => RatingInfo(

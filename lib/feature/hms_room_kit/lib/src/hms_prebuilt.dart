@@ -32,8 +32,8 @@ class HMSPrebuilt extends StatelessWidget {
   final String advisorId;
   final String title;
   final String description;
-  // final String id;
-
+  final bool isLiked;
+  final String eventId;
 
   ///The key for the widget
   HMSPrebuilt({
@@ -42,7 +42,8 @@ class HMSPrebuilt extends StatelessWidget {
     required this.title,
     required this.description,
     required this.onLeave,
-    // required this.id,
+    required this.isLiked,
+    required this.eventId,
     super.key,
     this.options,
     this.authToken,
@@ -76,6 +77,8 @@ class HMSPrebuilt extends StatelessWidget {
       authToken: authToken,
       options: options,
       onLeave: onLeave,
+      isLiked: isLiked,
+      eventId: eventId,
     );
   }
 }

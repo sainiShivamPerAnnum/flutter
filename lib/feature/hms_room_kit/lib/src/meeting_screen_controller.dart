@@ -58,6 +58,8 @@ class MeetingScreenController extends StatefulWidget {
   final String advisorId;
   final String title;
   final String description;
+  final bool isLiked;
+  final String eventId;
   // final String id;
 
   const MeetingScreenController({
@@ -67,6 +69,8 @@ class MeetingScreenController extends StatefulWidget {
     required this.advisorId,
     required this.title,
     required this.description,
+    required this.isLiked,
+    required this.eventId,
     Key? key,
     this.isRoomMute = false,
     this.showStats = false,
@@ -145,6 +149,8 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
       widget.advisorId,
       widget.title,
       widget.description,
+      widget.isLiked,
+      widget.eventId,
     );
   }
 

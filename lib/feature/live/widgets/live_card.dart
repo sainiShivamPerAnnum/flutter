@@ -14,6 +14,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class LiveCardWidget extends StatefulWidget {
+  final String id;
   final String status;
   final String title;
   final String subTitle;
@@ -28,8 +29,10 @@ class LiveCardWidget extends StatefulWidget {
   final VoidCallback? onTap;
   final double? maxWidth;
   final String? eventId;
+  final bool? isLiked;
 
   const LiveCardWidget({
+    required this.id,
     required this.status,
     required this.title,
     required this.subTitle,
@@ -37,6 +40,7 @@ class LiveCardWidget extends StatefulWidget {
     required this.category,
     required this.bgImage,
     required this.advisorCode,
+    this.isLiked,
     super.key,
     this.liveCount,
     this.duration,
@@ -158,7 +162,8 @@ class _LiveCardWidgetState extends State<LiveCardWidget> {
                     state: PageState.addWidget,
                     widget: HMSPrebuilt(
                       roomCode: widget.viewerCode,
-                      // id: widget.eventId,
+                      eventId: widget.id,
+                      isLiked: widget.isLiked ?? false,
                       onLeave: () async {
                         await AppState.backButtonDispatcher!.didPopRoute();
                       },
@@ -235,6 +240,8 @@ class _LiveCardWidgetState extends State<LiveCardWidget> {
                     style: TextStyles.sourceSansSB.body2.colour(
                       UiConstants.kTextColor,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: SizeConfig.padding4),
 

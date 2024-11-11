@@ -60,6 +60,7 @@ class ViewAllLive extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(bottom: SizeConfig.padding16),
                   child: LiveCardWidget(
+                    id: item.id,
                     maxWidth: SizeConfig.padding350,
                     status: type,
                     title: item.title,
@@ -76,6 +77,7 @@ class ViewAllLive extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(bottom: SizeConfig.padding16),
                   child: LiveCardWidget(
+                    id: item.id,
                     maxWidth: SizeConfig.padding350,
                     status: type,
                     title: item.title,
@@ -93,6 +95,7 @@ class ViewAllLive extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(bottom: SizeConfig.padding16),
                   child: LiveCardWidget(
+                    id: item.id,
                     maxWidth: SizeConfig.padding350,
                     status: type,
                     onTap: () async {
@@ -140,6 +143,8 @@ class ViewAllLive extends StatelessWidget {
                     category: (item.category ?? []).join(', '),
                     bgImage: item.thumbnail,
                     startTime: item.timeStamp,
+                    duration: item.duration,
+                    liveCount: item.viewCount,
                   ),
                 ),
               for (final AdvisorCall call in advisorUpcoming ?? [])

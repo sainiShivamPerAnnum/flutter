@@ -85,6 +85,7 @@ class _ShortsVideoPageState extends State<ShortsVideoPage> {
                         advisorId: videos[index].advisorId,
                         isKeyBoardOpen: state.keyboardVisible,
                         commentsVisibility: state.showComments,
+                        currentContext: state.currentContext,
                         onCommentToggle: () {
                           BlocProvider.of<PreloadBloc>(
                             context,
@@ -185,6 +186,7 @@ class VideoWidget extends StatefulWidget {
   final Function(bool isKeyBoardOpen) updateKeyboardState;
   final bool isLikedByUser;
   final bool isKeyBoardOpen;
+  final ReelContext currentContext;
 
   const VideoWidget({
     required this.isLoading,
@@ -201,6 +203,7 @@ class VideoWidget extends StatefulWidget {
     required this.updateKeyboardState,
     required this.commentsVisibility,
     required this.onCommentToggle,
+    required this.currentContext,
     this.comments = const [],
     this.showUserName = true,
     this.showVideoTitle = true,
@@ -362,7 +365,10 @@ class VideoWidgetState extends State<VideoWidget>
             ),
           ),
           Positioned(
-            bottom: 70.h,
+            bottom: widget.isKeyBoardOpen &&
+                    widget.currentContext == ReelContext.liveStream
+                ? 55.h
+                : 70.h,
             child: ExpandableWidget(
               title: widget.videoTitle,
               leadingIcon: Icons.info,
@@ -375,7 +381,9 @@ class VideoWidgetState extends State<VideoWidget>
           AnimatedPositioned(
             duration: const Duration(milliseconds: 200),
             bottom: widget.isKeyBoardOpen
-                ? MediaQuery.of(context).viewInsets.bottom - 50.h
+                ? widget.currentContext == ReelContext.liveStream
+                    ? MediaQuery.of(context).viewInsets.bottom
+                    : MediaQuery.of(context).viewInsets.bottom - 50.h
                 : 10.h,
             child: SizedBox(
               width: .95.sw,

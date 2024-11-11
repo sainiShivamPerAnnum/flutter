@@ -72,6 +72,7 @@ class _ExpertProfilePage extends StatelessWidget {
         if (state is ExpertDetailsLoaded) {
           final expertDetails = state.expertDetails;
           final tab = state.currentTab;
+          final isLoading = state.isLoading;
           final recentlive = state.recentLive;
           final shortsData = state.shortsData;
           return DefaultTabController(
@@ -256,7 +257,9 @@ class _ExpertProfilePage extends StatelessWidget {
                           },
                         ),
                       ),
-                      if (tab == 0)
+                      if (isLoading)
+                        const FullScreenLoader()
+                      else if (tab == 0)
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -392,10 +395,10 @@ class _ExpertProfilePage extends StatelessWidget {
                                         SizeConfig.roundness8,
                                       ),
                                     ),
-                                    child: Icon(
-                                      Icons.safety_check,
+                                    child: AppImage(
+                                      social.iconUrl,
                                       color: UiConstants.kTextColor5,
-                                      size: SizeConfig.body2,
+                                      height: SizeConfig.body2,
                                     ),
                                   ),
                                 );
@@ -416,7 +419,7 @@ class _ExpertProfilePage extends StatelessWidget {
                         ),
                         if (recentlive.isEmpty)
                           SizedBox(
-                             width: SizeConfig.padding300,
+                            width: SizeConfig.padding300,
                             child: Column(
                               children: [
                                 SizedBox(height: SizeConfig.padding12),
@@ -447,6 +450,7 @@ class _ExpertProfilePage extends StatelessWidget {
                             padding:
                                 EdgeInsets.only(bottom: SizeConfig.padding16),
                             child: LiveCardWidget(
+                              id: recentlive[i].id,
                               status: 'recent',
                               maxWidth: SizeConfig.padding350,
                               onTap: () async {
@@ -511,7 +515,19 @@ class _ExpertProfilePage extends StatelessWidget {
             ),
           );
         }
-        return const NewErrorPage();
+        return BaseScaffold(
+          appBar: FAppBar(
+            backgroundColor: Colors.transparent,
+            centerTitle: true,
+            titleWidget: Text('Profile', style: TextStyles.rajdhaniSB.body1),
+            leading: const BackButton(
+              color: Colors.white,
+            ),
+            showAvatar: false,
+            showCoinBar: false,
+          ),
+          body: const NewErrorPage(),
+        );
       },
     );
   }
@@ -692,7 +708,7 @@ class CustomCarouselState extends State<CustomCarousel> {
                 e.subheading,
                 e.buttonText,
                 onTap: () {
-                  print("Chat tapped: ${e.buttonCTA}");
+                  AppState.delegate!.parseRoute(Uri.parse(e.buttonCTA));
                 },
               );
             }).toList(),

@@ -86,10 +86,9 @@ class MyAccount extends StatelessWidget {
                     title: "Tickets",
                     uri: "/tambolaHome",
                   ),
-                  AccountInfoTiles(
-                    title: 'Last Week on Fello',
-                    uri: "",
-                    onTap: () => model.showLastWeekSummary(),
+                  const AccountInfoTiles(
+                    title: 'Sip',
+                    uri: "/autosave",
                   ),
                   AccountInfoTiles(
                     title: 'Rate Us',

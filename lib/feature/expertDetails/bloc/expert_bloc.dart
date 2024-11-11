@@ -35,25 +35,34 @@ class ExpertDetailsBloc extends Bloc<ExpertDetailsEvent, ExpertDetailsState> {
     if (state is ExpertDetailsLoaded) {
       final currentState = state as ExpertDetailsLoaded;
       if (currentState.currentTab != event.tab) {
-        final updatedState = currentState.copyWith(currentTab: event.tab);
+        final updatedState = currentState.copyWith(
+          currentTab: event.tab,
+          isLoading: event.tab == 0 ? false : true,
+        );
         emitter(updatedState);
       }
       if (event.tab == 1) {
-          final tabOneData = await _expertsRepository.getShortsByAdvisor(
+        final tabOneData = await _expertsRepository.getShortsByAdvisor(
           advisorId: event.advisorId,
         );
-        emitter(currentState.copyWith(
-          currentTab: event.tab,
-          shortsData: tabOneData.model,
-        ),);
+        emitter(
+          currentState.copyWith(
+            currentTab: event.tab,
+            shortsData: tabOneData.model,
+            isLoading: false,
+          ),
+        );
       } else if (event.tab == 2) {
         final tabTwoData = await _expertsRepository.getLiveByAdvisor(
           advisorId: event.advisorId,
         );
-        emitter(currentState.copyWith(
-          currentTab: event.tab,
-          recentLive: tabTwoData.model,
-        ),);
+        emitter(
+          currentState.copyWith(
+            currentTab: event.tab,
+            recentLive: tabTwoData.model,
+            isLoading: false,
+          ),
+        );
       }
     }
   }

@@ -78,10 +78,12 @@ class License {
 class Social {
   final String platform;
   final String url;
+  final String iconUrl;
 
   Social({
     required this.platform,
     required this.url,
+    this.iconUrl ='',
   });
 
   factory Social.fromJson(Map<String, dynamic> json) => _$SocialFromJson(json);

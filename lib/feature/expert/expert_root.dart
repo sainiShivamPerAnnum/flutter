@@ -366,7 +366,7 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
       child: Transform.translate(
         offset: const Offset(0, 2),
         child: Container(
-          margin: EdgeInsets.only(right: SizeConfig.padding10),
+          margin: EdgeInsets.only(right: SizeConfig.padding16),
           padding: const EdgeInsets.symmetric(vertical: 10.0),
           decoration: BoxDecoration(
             border: isSelected

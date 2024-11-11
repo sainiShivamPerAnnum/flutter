@@ -136,8 +136,9 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(SizeConfig.padding8),
-      child: Selector<MeetingStore, Tuple4<String?, String?, String?, String?>>(
-        selector: (_, meetingStore) => Tuple4(
+      child: Selector<MeetingStore,
+          Tuple5<String?, String?, String?, String?, bool>>(
+        selector: (_, meetingStore) => Tuple5(
           meetingStore.advisorId,
           meetingStore.calltitle,
           meetingStore.calldescription,
@@ -145,6 +146,7 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
                   meetingStore.peerTracks.first.peer.name != null
               ? meetingStore.peerTracks.first.peer.name
               : 'Waiting...',
+          meetingStore.isEventLikedByUser,
         ),
         builder: (_, value, __) {
           return Column(
@@ -171,6 +173,11 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
                       child: ChatActionButtons(
                         advisorId: value.item1 ?? '',
                         advisorName: value.item4 ?? '',
+                        onLike: () {
+                          final meetingStore = context.read<MeetingStore>();
+                          meetingStore.onLike();
+                        },
+                        isLiked: value.item5,
                       ),
                     ),
                 ],
@@ -388,8 +395,7 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
                                         ? ClipOval(
                                             child: SizedBox(
                                               width: 2 * SizeConfig.padding10,
-                                              height:
-                                                  2 * SizeConfig.padding10,
+                                              height: 2 * SizeConfig.padding10,
                                               child: CachedNetworkImage(
                                                 imageUrl: metaData['dpurl'],
                                                 fit: BoxFit.cover,
@@ -399,8 +405,7 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
                                         : ClipOval(
                                             child: SizedBox(
                                               width: 2 * SizeConfig.padding10,
-                                              height:
-                                                  2 * SizeConfig.padding10,
+                                              height: 2 * SizeConfig.padding10,
                                               child: Image.asset(
                                                 Assets.profilePic,
                                                 fit: BoxFit.cover,
@@ -422,8 +427,7 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
                                       Row(
                                         children: [
                                           Text(
-                                            comments[index].sender?.name ??
-                                                '',
+                                            comments[index].sender?.name ?? '',
                                             style:
                                                 TextStyles.sourceSansSB.body4,
                                             maxLines: 1,
@@ -442,8 +446,7 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
                                             timeago.format(
                                               comments[index].time,
                                             ),
-                                            style:
-                                                TextStyles.sourceSans.body4,
+                                            style: TextStyles.sourceSans.body4,
                                           ),
                                         ],
                                       ),
