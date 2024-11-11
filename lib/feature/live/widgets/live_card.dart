@@ -143,6 +143,9 @@ class _LiveCardWidgetState extends State<LiveCardWidget> {
                     widget: HMSPrebuilt(
                       roomCode: widget.viewerCode,
                       // id: widget.eventId,
+                      onLeave: () async{
+                          await AppState.backButtonDispatcher!.didPopRoute();
+                        },
                       advisorId: widget.advisorCode,
                       title: widget.title,
                       description: widget.subTitle,

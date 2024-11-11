@@ -45,48 +45,11 @@ class _MeetingHeaderState extends State<MeetingHeader> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ///This renders the logo, live indicator, recording indicator, number of peers
-                Row(
+                const Row(
                   children: [
                     ///This renders the audio device selection button
                     ///If the role is allowed to publish audio, we render the audio device selection button
                     ///else we render an empty SizedBox
-                    Selector<MeetingStore, String?>(
-                      selector: (_, meetingStore) => meetingStore
-                                  .peerTracks.isNotEmpty &&
-                              meetingStore.peerTracks.first.peer.name != null
-                          ? meetingStore.peerTracks.first.peer.name
-                          : 'Waiting...',
-                      builder: (_, data, __) {
-                        return Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding8,
-                            vertical: SizeConfig.padding2,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(SizeConfig.roundness5),
-                            ),
-                            color: Colors.black45,
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.person,
-                                size: SizeConfig.body4,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: SizeConfig.padding4,
-                              ),
-                              Text(
-                                data ?? '',
-                                style: TextStyles.sourceSans.body4,
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
 
                     ///This renders the logo
                     ///If the logo is null, we render an empty SizedBox
@@ -208,7 +171,7 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                     ///else we render an empty Container
                     Selector<MeetingStore, Tuple2<String?, int>>(
                         selector: (_, meetingStore) => Tuple2(
-                           meetingStore.localPeer?.role.name,
+                            meetingStore.localPeer?.role.name,
                             meetingStore.peersInRoom),
                         builder: (_, data, __) {
                           showControls = data.item1 == 'viewer-realtime';

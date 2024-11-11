@@ -1295,6 +1295,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           advisorId: advisorId,
           title: videoData.model!.topic ?? '',
           description: videoData.model!.description ?? '',
+          onLeave: () async{
+                          await AppState.backButtonDispatcher!.didPopRoute();
+                        },
           roomCode: videoData.model!.broadcasterCode,
           options: HMSPrebuiltOptions(
             userName: userName,
@@ -1311,6 +1314,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           advisorId: videoData.model!.advisorId,
           title: videoData.model!.topic ?? '',
           description: videoData.model!.description ?? '',
+          onLeave: () async{
+                          await AppState.backButtonDispatcher!.didPopRoute();
+                        },
           options: HMSPrebuiltOptions(
             userName: userName,
             userId: uid,

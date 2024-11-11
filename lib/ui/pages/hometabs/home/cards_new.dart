@@ -64,55 +64,44 @@ class PortfolioCard extends StatelessWidget {
               ],
             ),
             SizedBox(height: SizeConfig.padding4),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Selector<UserService, Portfolio>(
-                  builder: (_, portfolio, child) => Text(
+            Selector<UserService, Portfolio>(
+              builder: (_, portfolio, child) => Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
                     BaseUtil.formatIndianRupees(getTotalBalance(portfolio)),
                     style: TextStyles.sourceSansSB.title3,
                   ),
-                  selector: (_, userService) => userService.userPortfolio,
-                ),
-                SizedBox(width: SizeConfig.padding8),
-                Selector<UserService, Portfolio>(
-                  builder: (context, value, child) => Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Transform.translate(
-                            offset: Offset(
-                              0,
-                              -SizeConfig.padding4,
-                            ),
-                            child: RotatedBox(
-                              quarterTurns:
-                                  value.absolute.percGains < 0 ? 2 : 0,
-                              child: AppImage(
-                                Assets.arrow,
-                                width: SizeConfig.body3,
-                                color: value.absolute.percGains < 0
-                                    ? Colors.red
-                                    : UiConstants.primaryColor,
-                              ),
-                            ),
+                  SizedBox(width: SizeConfig.padding8),
+                  Transform.translate(
+                    offset: Offset(0, SizeConfig.padding3),
+                    child: Row(
+                      children: [
+                        RotatedBox(
+                          quarterTurns:
+                              portfolio.absolute.percGains < 0 ? 2 : 0,
+                          child: AppImage(
+                            Assets.arrow,
+                            width: SizeConfig.body4,
+                            color: portfolio.absolute.percGains < 0
+                                ? Colors.red
+                                : UiConstants.primaryColor,
                           ),
-                          Text(
-                            " ${BaseUtil.digitPrecision(value.absolute.percGains, 2, false)}%",
-                            style: TextStyles.sourceSansSB.body3.colour(
-                              value.absolute.percGains < 0
-                                  ? Colors.red
-                                  : UiConstants.primaryColor,
-                            ),
+                        ),
+                        Text(
+                          " ${BaseUtil.digitPrecision(portfolio.absolute.percGains, 2, false)}%",
+                          style: TextStyles.sourceSansSB.body3.colour(
+                            portfolio.absolute.percGains < 0
+                                ? Colors.red
+                                : UiConstants.primaryColor,
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
-                  selector: (p0, p1) => p1.userPortfolio,
-                ),
-              ],
+                ],
+              ),
+              selector: (_, userService) => userService.userPortfolio,
             ),
           ],
         ),

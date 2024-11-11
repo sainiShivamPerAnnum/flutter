@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -190,6 +191,9 @@ class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
                           title: widget.title,
                           description: widget.subTitle,
                           roomCode: widget.broadcasterCode,
+                         onLeave: () async{
+                          await AppState.backButtonDispatcher!.didPopRoute();
+                        },
                           options: HMSPrebuiltOptions(
                             userName: userName,
                             userId: userId,

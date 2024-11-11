@@ -27,7 +27,7 @@ class HMSPrebuilt extends StatelessWidget {
   ///The callback for the leave room button
   ///This function can be passed if you wish to perform some specific actions
   ///in addition to leaving the room when the leave room button is pressed
-  final Function? onLeave;
+  final Function onLeave;
 
   final String advisorId;
   final String title;
@@ -41,10 +41,10 @@ class HMSPrebuilt extends StatelessWidget {
     required this.advisorId,
     required this.title,
     required this.description,
+    required this.onLeave,
     // required this.id,
     super.key,
     this.options,
-    this.onLeave,
     this.authToken,
   }) {
     if (roomCode == null && authToken == null) {

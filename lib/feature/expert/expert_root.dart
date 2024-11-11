@@ -5,11 +5,11 @@ import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/expert/widgets/expert_card.dart';
 import 'package:felloapp/feature/expertDetails/expert_profile.dart';
-import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/upcoming_bookings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -58,7 +58,7 @@ class __ExpertHomeState extends State<_ExpertHome>
           final expertsData = state.expertsHome;
 
           if (expertsData == null || expertsData.list.isEmpty) {
-            return const Center(child: ErrorPage());
+            return const Center(child: NewErrorPage());
           }
           sectionKeys = {
             for (final section in expertsData.list)
@@ -160,7 +160,7 @@ class __ExpertHomeState extends State<_ExpertHome>
             ),
           );
         } else {
-          return const ErrorPage();
+          return const NewErrorPage();
         }
       },
     );

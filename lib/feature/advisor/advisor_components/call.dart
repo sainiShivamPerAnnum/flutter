@@ -250,6 +250,9 @@ Widget callContainer(
                       page: LivePreviewPageConfig,
                       state: PageState.addWidget,
                       widget: HMSPrebuilt(
+                        onLeave: () async{
+                          await AppState.backButtonDispatcher!.didPopRoute();
+                        },
                         advisorId: userId!,
                         title: title,
                         description: description,

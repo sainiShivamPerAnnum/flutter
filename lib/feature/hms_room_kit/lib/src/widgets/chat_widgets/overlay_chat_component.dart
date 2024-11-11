@@ -321,10 +321,6 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
                           );
                         },
                       ),
-                      if (widget.role == 'viewer-realtime')
-                        SizedBox(
-                          height: SizeConfig.padding10,
-                        ),
                     ],
                   ),
                 ),

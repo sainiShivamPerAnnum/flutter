@@ -222,6 +222,10 @@ class ScheduleCard extends StatelessWidget {
                                 userName: name,
                                 userId: userId,
                               ),
+                              onLeave: () async {
+                                await AppState.backButtonDispatcher!
+                                    .didPopRoute();
+                              },
                             ),
                           );
                         } else {

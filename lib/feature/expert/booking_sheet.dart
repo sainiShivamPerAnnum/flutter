@@ -4,8 +4,8 @@ import 'package:felloapp/core/model/bookings/new_booking.dart';
 import 'package:felloapp/feature/expert/bloc/booking_bloc.dart';
 import 'package:felloapp/feature/expert/payment_sheet.dart';
 import 'package:felloapp/feature/expert/polling_sheet.dart';
-import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -105,7 +105,7 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
           } else if (state is PricingData) {
             return _buildPaymentSummary(context, state);
           } else {
-            return const ErrorPage();
+            return const NewErrorPage();
           }
         },
       ),

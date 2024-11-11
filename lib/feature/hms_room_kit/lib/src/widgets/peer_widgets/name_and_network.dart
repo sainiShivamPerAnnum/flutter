@@ -3,9 +3,11 @@ import 'package:felloapp/feature/hms_room_kit/lib/src/layout_api/hms_theme_color
 import 'package:felloapp/feature/hms_room_kit/lib/src/model/peer_track_node.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/peer_widgets/network_icon_widget.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/peer_widgets/peer_name.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 
 ///Package import
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
@@ -20,8 +22,8 @@ class NameAndNetwork extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned(
       //Bottom left
-      bottom: 5,
-      left: 5,
+      top: SizeConfig.padding16,
+      left:SizeConfig.padding12,
       child: Container(
         decoration: BoxDecoration(
             color: HMSThemeColors.backgroundDim.withOpacity(0.64),
@@ -37,6 +39,14 @@ class NameAndNetwork extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Icon(
+                  Icons.person,
+                  size: SizeConfig.body4,
+                  color: Colors.white,
+                ),
+                SizedBox(
+                  width: SizeConfig.padding4,
+                ),
                 ///Phone icon is only rendered if its a SIP peer
                 if (context.read<PeerTrackNode>().peer.type == HMSPeerType.sip)
                   Padding(

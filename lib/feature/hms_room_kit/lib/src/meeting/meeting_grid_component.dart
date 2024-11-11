@@ -2,13 +2,16 @@
 
 import 'dart:io';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/enums/meeting_mode.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_navigation_visibility_controller.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_store.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/waiting_room_screen.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/model/peer_track_node.dart';
+import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/bottom_sheets/leave_session_bottom_sheet.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/meeting_modes/custom_one_to_one_grid.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/meeting_modes/one_to_one_mode.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/styles/styles.dart';
 
 ///Package imports
@@ -25,15 +28,19 @@ class MeetingGridComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<MeetingStore,
-            Tuple6<List<PeerTrackNode>, bool, int, int, MeetingMode, int>>(
-        selector: (_, meetingStore) => Tuple6(
-            meetingStore.peerTracks,
-            meetingStore.isHLSLink,
-            meetingStore.peerTracks.length,
-            meetingStore.screenShareCount,
-            meetingStore.meetingMode,
-            meetingStore.viewControllers.length),
+    return Selector<
+            MeetingStore,
+            Tuple7<List<PeerTrackNode>, bool, int, int, MeetingMode, int,
+                bool>>(
+        selector: (_, meetingStore) => Tuple7(
+              meetingStore.peerTracks,
+              meetingStore.isHLSLink,
+              meetingStore.peerTracks.length,
+              meetingStore.screenShareCount,
+              meetingStore.meetingMode,
+              meetingStore.viewControllers.length,
+              meetingStore.isEndRoomCalled,
+            ),
         builder: (_, data, __) {
           ///If there are no peerTracks or the view controllers are empty we show an empty tapable container
           if (data.item3 == 0 || data.item6 == 0) {

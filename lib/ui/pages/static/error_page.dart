@@ -1,14 +1,16 @@
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 class NewErrorPage extends StatelessWidget {
+  final VoidCallback? onTryAgain;
   final VoidCallback? onPressed;
-  final String? btnLabel;
 
   const NewErrorPage({
+    this.onTryAgain,
     this.onPressed,
-    this.btnLabel,
     super.key,
   });
 
@@ -18,29 +20,64 @@ class NewErrorPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          AppImage(
+            Assets.error,
+            height: SizeConfig.padding80,
+            width: SizeConfig.padding80,
+          ),
           Text(
-            'Oops, this one is on us',
-            style: TextStyles.rajdhaniSB.title4.colour(UiConstants.kTextColor),
+            'Oops, Something went wrong',
+            style: TextStyles.sourceSansSB.title4.colour(
+              UiConstants.kTextColor,
+            ),
           ),
           SizedBox(
-            height: SizeConfig.padding16,
+            height: SizeConfig.padding12,
           ),
           Text(
-            'Our team is trying to resolve it earliest possible',
+            'Our team is trying to resolve it earliest possible. Please try again later.',
             style: TextStyles.sourceSans.body3.colour(
               UiConstants.textGray70,
             ),
           ),
           SizedBox(
-            height: SizeConfig.padding42,
+            height: SizeConfig.padding40,
           ),
-          AppImage(
-            'assets/images/sip_error.png',
-            height: SizeConfig.padding252,
-          ),
-          SecondaryButton(
-            onPressed: onPressed ?? () => Navigator.of(context).pop(),
-            label: btnLabel ?? 'CLOSE',
+          Row(
+            children: [
+              MaterialButton(
+                height: SizeConfig.padding44,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                ),
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                color: UiConstants.greyVarient,
+                onPressed: onTryAgain ??
+                    () => AppState.backButtonDispatcher!.didPopRoute(),
+                child: Text(
+                  'Try Again',
+                  style: TextStyles.rajdhaniB.body1.colour(
+                    Colors.black,
+                  ),
+                ),
+              ),
+              MaterialButton(
+                height: SizeConfig.padding44,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                ),
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                color: UiConstants.kTextColor,
+                onPressed: onPressed ??
+                    () => AppState.backButtonDispatcher!.didPopRoute(),
+                child: Text(
+                  'Close',
+                  style: TextStyles.rajdhaniB.body1.colour(
+                    Colors.black,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

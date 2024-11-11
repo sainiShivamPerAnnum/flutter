@@ -24,6 +24,7 @@ class PeerName extends StatelessWidget {
               return HMSSubheadingText(
                 text: "${data.item1.trim()}${data.item2 ? " (You)" : ""}",
                 textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                fontSize: 12,
               );
             }));
   }

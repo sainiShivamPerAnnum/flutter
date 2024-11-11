@@ -11,6 +11,7 @@ import 'dart:io';
 //Package imports
 // import 'package:hms_video_plugin/hms_video_plugin.dart';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/enums/meeting_mode.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/enums/session_store_keys.dart';
@@ -23,6 +24,7 @@ import 'package:felloapp/feature/hms_room_kit/lib/src/model/rtc_stats.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/model/transcript_store.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/toasts/hms_toast_model.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/toasts/hms_toasts_type.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -1503,12 +1505,28 @@ class MeetingStore extends ChangeNotifier
     screenshareViewController?.disposeTextureView();
     viewControllers.clear();
     screenshareViewController = null;
+    AppState.isInLiveStream = false;
 
     ///Here we call the method passed by the user in HMSPrebuilt as a callback
     if (Constant.onLeave != null) {
       Constant.onLeave!();
     }
     notifyListeners();
+    if (isEndRoomCalled) {
+      Future.delayed(const Duration(seconds: 1), () {
+        BaseUtil.showNegativeAlert(
+          'Meeting Ended',
+          'Meeting was ended by the host!',
+        );
+      });
+    } else {
+      Future.delayed(const Duration(seconds: 1), () {
+        BaseUtil.showNegativeAlert(
+          'Meeting Ended',
+          description,
+        );
+      });
+    }
   }
 
   void resetOrientation() {

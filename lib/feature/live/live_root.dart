@@ -6,7 +6,6 @@ import 'package:felloapp/feature/live/bloc/live_bloc.dart';
 import 'package:felloapp/feature/live/view_all_live.dart';
 import 'package:felloapp/feature/live/widgets/header.dart';
 import 'package:felloapp/feature/live/widgets/live_card.dart';
-import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
 import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
 import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 import 'package:felloapp/feature/shorts/video_page.dart';
@@ -15,6 +14,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -67,7 +67,7 @@ class __LiveHomeState extends State<_LiveHome> {
           } else if (state is LiveHomeData) {
             final liveData = state.homeData;
             if (liveData == null) {
-              return const ErrorPage();
+              return const NewErrorPage();
             }
             return SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -176,7 +176,7 @@ class __LiveHomeState extends State<_LiveHome> {
               ),
             );
           } else {
-            return const ErrorPage();
+            return const NewErrorPage();
           }
         },
       ),
