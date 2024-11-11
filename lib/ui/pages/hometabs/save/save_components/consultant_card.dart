@@ -1,3 +1,4 @@
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -58,7 +59,9 @@ class ConsultationWidget extends StatelessWidget {
                     ),
                     SizedBox(height: SizeConfig.padding12),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        AppState.delegate!.parseRoute(Uri.parse('/experts'));
+                      },
                       child: Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: SizeConfig.padding12,

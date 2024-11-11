@@ -302,7 +302,7 @@ class ScheduleCard extends StatelessWidget {
   }
 
   bool _isButtonClickable() {
-    final DateTime now = DateTime.now();
+    final DateTime now = getAdjustedUtcTime();
     final DateTime scheduledOn = booking.scheduledOn;
     final DateTime startWindow =
         scheduledOn.subtract(const Duration(minutes: 15));
@@ -311,13 +311,29 @@ class ScheduleCard extends StatelessWidget {
     final int durationMinutes =
         int.tryParse(booking.duration.split(' ').first) ?? 0;
     final DateTime endWindow =
-        scheduledOn.add(Duration(minutes: durationMinutes));
+        scheduledOn.add(Duration(minutes: durationMinutes.toInt()));
+    final clickable = now.isAfter(startWindow) && now.isBefore(endWindow);
+    return clickable;
+  }
 
-    return now.isAfter(startWindow) && now.isBefore(endWindow);
+  DateTime getAdjustedUtcTime() {
+    // Get the current UTC time
+    final DateTime nowUtc = DateTime.now().toUtc();
+
+    // Get the current local time
+    final DateTime nowLocal = DateTime.now();
+
+    // Calculate the difference between local and UTC
+    final Duration offset = nowLocal.timeZoneOffset;
+
+    // Adjust the UTC time by adding or subtracting the offset
+    final DateTime adjustedUtcTime = nowUtc.add(offset);
+
+    return adjustedUtcTime;
   }
 
   bool _isEditButtonClickable() {
-    final DateTime now = DateTime.now();
+    final DateTime now = getAdjustedUtcTime();
     final DateTime scheduledOn = booking.scheduledOn;
     final DateTime endWindow = scheduledOn.subtract(const Duration(hours: 24));
     return now.isBefore(endWindow);

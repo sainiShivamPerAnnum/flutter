@@ -240,6 +240,7 @@ Widget callContainer(
                   onPressed: () {
                     final userService = locator<UserService>();
                     final userId = userService.baseUser!.uid;
+                    final advisoriD = userService.baseUser!.advisorId!;
                     final String userName =
                         (userService.baseUser!.kycName != null &&
                                     userService.baseUser!.kycName!.isNotEmpty
@@ -253,7 +254,7 @@ Widget callContainer(
                         onLeave: () async{
                           await AppState.backButtonDispatcher!.didPopRoute();
                         },
-                        advisorId: userId!,
+                        advisorId: advisoriD,
                         title: title,
                         description: description,
                         roomCode: hostCode,

@@ -14,6 +14,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
@@ -510,7 +511,7 @@ class _ExpertProfilePage extends StatelessWidget {
             ),
           );
         }
-        return const Center(child: Text('Failed to load expert details'));
+        return const NewErrorPage();
       },
     );
   }

@@ -75,8 +75,24 @@ class _LiveCardWidgetState extends State<LiveCardWidget> {
     });
   }
 
+  DateTime getAdjustedUtcTime() {
+    // Get the current UTC time
+    final DateTime nowUtc = DateTime.now().toUtc();
+
+    // Get the current local time
+    final DateTime nowLocal = DateTime.now();
+
+    // Calculate the difference between local and UTC
+    final Duration offset = nowLocal.timeZoneOffset;
+
+    // Adjust the UTC time by adding or subtracting the offset
+    final DateTime adjustedUtcTime = nowUtc.add(offset);
+
+    return adjustedUtcTime;
+  }
+
   void _updateRemainingTime() {
-    final now = DateTime.now();
+    final now = getAdjustedUtcTime();
     final start = DateTime.parse(widget.startTime!);
     final difference = start.difference(now);
 
@@ -143,9 +159,9 @@ class _LiveCardWidgetState extends State<LiveCardWidget> {
                     widget: HMSPrebuilt(
                       roomCode: widget.viewerCode,
                       // id: widget.eventId,
-                      onLeave: () async{
-                          await AppState.backButtonDispatcher!.didPopRoute();
-                        },
+                      onLeave: () async {
+                        await AppState.backButtonDispatcher!.didPopRoute();
+                      },
                       advisorId: widget.advisorCode,
                       title: widget.title,
                       description: widget.subTitle,

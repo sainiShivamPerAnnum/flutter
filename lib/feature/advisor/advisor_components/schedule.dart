@@ -82,11 +82,12 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
         child: MultiBlocProvider(
           providers: [
             BlocProvider(
-              create: (context) =>
-                  ScheduleLiveBloc(locator())..add(LoadCategories()),
+              create: (context) => ScheduleLiveBloc(
+                locator(),
+              )..add(LoadCategories()),
             ),
-            BlocProvider(
-              create: (context) => AdvisorBloc(locator()),
+            BlocProvider.value(
+              value: locator<AdvisorBloc>(),
             ),
           ],
           child: BlocConsumer<ScheduleLiveBloc, ScheduleCallState>(
@@ -321,6 +322,8 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
                     children: [
                       Text(
                         state.profilePicture?.name ?? 'null',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyles.sourceSansSB.body3
                             .colour(UiConstants.kTextColor),
                       ),
@@ -331,6 +334,9 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
                       ),
                     ],
                   ),
+                ),
+                SizedBox(
+                  width: SizeConfig.padding6,
                 ),
                 GestureDetector(
                   onTap: () => context
@@ -457,8 +463,8 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
       return topicController.text.isNotEmpty &&
           descriptionController.text.isNotEmpty &&
           state.selectedCategory.isNotEmpty &&
-          state.selectedDateIndex != -1 &&
-          state.selectedTimeIndex != -1 &&
+          state.selectedDateIndex != null &&
+          state.selectedTimeIndex != null &&
           state.profilePicture != null;
     }
 

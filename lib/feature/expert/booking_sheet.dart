@@ -184,33 +184,36 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                   }).toList(),
                 ),
               ),
-              SizedBox(height: SizeConfig.padding16),
-              Divider(
-                color: UiConstants.kTextColor5.withOpacity(.3),
-              ),
-              Text(
-                'Select Duration',
-                style: TextStyles.sourceSansSB.body2,
-              ),
-              SizedBox(height: SizeConfig.padding16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: duration.take(4).map((e) {
-                  return Padding(
-                    padding: EdgeInsets.only(right: SizeConfig.padding12),
-                    child: DateButton(
-                      date: e['name'].toString(),
-                      requireFormat: false,
-                      isSelected: e['value'] == selectedDuration,
-                      onTap: () {
-                        context
-                            .read<BookingBloc>()
-                            .add(SelectDuration(e['value'] as int));
-                      },
-                    ),
-                  );
-                }).toList(),
-              ),
+              if (!widget.isEdit) SizedBox(height: SizeConfig.padding16),
+              if (!widget.isEdit)
+                Divider(
+                  color: UiConstants.kTextColor5.withOpacity(.3),
+                ),
+              if (!widget.isEdit)
+                Text(
+                  'Select Duration',
+                  style: TextStyles.sourceSansSB.body2,
+                ),
+              if (!widget.isEdit) SizedBox(height: SizeConfig.padding16),
+              if (!widget.isEdit)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: duration.take(4).map((e) {
+                    return Padding(
+                      padding: EdgeInsets.only(right: SizeConfig.padding12),
+                      child: DateButton(
+                        date: e['name'].toString(),
+                        requireFormat: false,
+                        isSelected: e['value'] == selectedDuration,
+                        onTap: () {
+                          context
+                              .read<BookingBloc>()
+                              .add(SelectDuration(e['value'] as int));
+                        },
+                      ),
+                    );
+                  }).toList(),
+                ),
               SizedBox(height: SizeConfig.padding16),
               Divider(
                 color: UiConstants.kTextColor5.withOpacity(.3),

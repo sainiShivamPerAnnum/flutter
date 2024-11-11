@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -70,8 +68,24 @@ class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
     });
   }
 
+  DateTime getAdjustedUtcTime() {
+    // Get the current UTC time
+    final DateTime nowUtc = DateTime.now().toUtc();
+
+    // Get the current local time
+    final DateTime nowLocal = DateTime.now();
+
+    // Calculate the difference between local and UTC
+    final Duration offset = nowLocal.timeZoneOffset;
+
+    // Adjust the UTC time by adding or subtracting the offset
+    final DateTime adjustedUtcTime = nowUtc.add(offset);
+
+    return adjustedUtcTime;
+  }
+
   void _updateRemainingTime() {
-    final now = DateTime.now();
+    final now = getAdjustedUtcTime();
     final start = DateTime.parse(widget.timeSlot!);
     final difference = start.difference(now);
 
@@ -177,6 +191,7 @@ class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
                     onTap: () {
                       final userService = locator<UserService>();
                       final userId = userService.baseUser!.uid;
+                      final advisoriD = userService.baseUser!.advisorId!;
                       final String userName =
                           (userService.baseUser!.kycName != null &&
                                       userService.baseUser!.kycName!.isNotEmpty
@@ -187,13 +202,13 @@ class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
                         page: LivePreviewPageConfig,
                         state: PageState.addWidget,
                         widget: HMSPrebuilt(
-                          advisorId: userId!,
+                          advisorId: advisoriD,
                           title: widget.title,
                           description: widget.subTitle,
                           roomCode: widget.broadcasterCode,
-                         onLeave: () async{
-                          await AppState.backButtonDispatcher!.didPopRoute();
-                        },
+                          onLeave: () async {
+                            await AppState.backButtonDispatcher!.didPopRoute();
+                          },
                           options: HMSPrebuiltOptions(
                             userName: userName,
                             userId: userId,

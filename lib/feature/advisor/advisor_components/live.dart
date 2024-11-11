@@ -2,8 +2,8 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/advisor/advisor_events.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/advisor/advisor_components/schedule.dart';
-import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
 import 'package:felloapp/feature/advisor/advisor_components/upcoming_live_card.dart';
+import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
@@ -13,13 +13,18 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Live extends StatelessWidget {
+class Live extends StatefulWidget {
   const Live({Key? key}) : super(key: key);
 
   @override
+  State<Live> createState() => _LiveState();
+}
+
+class _LiveState extends State<Live> {
+  @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(height: SizeConfig.padding14),
         Container(
@@ -75,9 +80,13 @@ class Live extends StatelessWidget {
         SizedBox(
           height: SizeConfig.padding24,
         ),
-        const TitleSubtitleContainer(
-          title: "Upcoming Live",
-          zeroPadding: true,
+        const Row(
+          children: [
+            TitleSubtitleContainer(
+              title: "Upcoming Live",
+              zeroPadding: true,
+            ),
+          ],
         ),
         LiveFello(),
       ],
@@ -120,6 +129,7 @@ class LiveFello extends StatelessWidget {
                 : SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         for (int i = 0; i < data.length; i++)
                           Padding(

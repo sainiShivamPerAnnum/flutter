@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/feature/shorts/src/service/video_data.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -59,6 +58,9 @@ class _ShortsVideoPageState extends State<ShortsVideoPage> {
             final PageController pageController = PageController(
               initialPage: initialIndex,
             );
+            if (state.errorMessage != null) {
+              return const NewErrorPage();
+            }
             return PageView.builder(
               controller: pageController,
               itemCount: videos.length,
@@ -347,8 +349,9 @@ class VideoWidgetState extends State<VideoWidget>
             left: 15.w,
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-           
-              constraints: BoxConstraints(maxWidth:  240.w,),
+              constraints: BoxConstraints(
+                maxWidth: 240.w,
+              ),
               height: (widget.comments == null ||
                       widget.comments!.isEmpty ||
                       !widget.commentsVisibility ||

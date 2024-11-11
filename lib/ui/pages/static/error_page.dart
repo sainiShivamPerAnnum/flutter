@@ -39,11 +39,13 @@ class NewErrorPage extends StatelessWidget {
             style: TextStyles.sourceSans.body3.colour(
               UiConstants.textGray70,
             ),
+            textAlign: TextAlign.center,
           ),
           SizedBox(
             height: SizeConfig.padding40,
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               MaterialButton(
                 height: SizeConfig.padding44,
@@ -57,9 +59,12 @@ class NewErrorPage extends StatelessWidget {
                 child: Text(
                   'Try Again',
                   style: TextStyles.rajdhaniB.body1.colour(
-                    Colors.black,
+                    Colors.white,
                   ),
                 ),
+              ),
+              SizedBox(
+                width: SizeConfig.padding20,
               ),
               MaterialButton(
                 height: SizeConfig.padding44,

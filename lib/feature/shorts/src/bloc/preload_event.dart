@@ -34,6 +34,8 @@ class PreloadEvent with _$PreloadEvent {
     required String videoId,
   }) = _UpdateViewCount;
 
+  const factory PreloadEvent.onError() = _ErrorPage;
+
   const factory PreloadEvent.likeVideo({
     required String videoId,
   }) = _LikeVideo;

@@ -106,6 +106,13 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       toggleComments: (e) {
         emit(state.copyWith(showComments: !state.showComments));
       },
+      onError: (value) {
+        emit(
+          state.copyWith(
+            errorMessage: "An error occurred while loading videos.",
+          ),
+        );
+      },
       initializeAtIndex: (e) async {
         if (state.currentContext == ReelContext.main) {
           emit(state.copyWith(focusedIndex: e.index));
@@ -126,19 +133,27 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       },
       getVideosFromApi: (e) async {
         final data = await repository.getVideos(page: 1);
-        final List<VideoData> urls = data.model ?? [];
+        if (data.isSuccess()) {
+          final List<VideoData> urls = data.model ?? [];
 
-        if (state.currentContext == ReelContext.main) {
-          state.mainVideos.addAll(urls);
+          if (state.currentContext == ReelContext.main) {
+            state.mainVideos.addAll(urls);
+          } else {
+            state.profileVideos.addAll(urls);
+          }
+
+          /// Initialize 1st video
+          await _initializeControllerAtIndex(0);
+
+          /// Initialize 2nd video
+          await _initializeControllerAtIndex(1);
         } else {
-          state.profileVideos.addAll(urls);
+          emit(
+            state.copyWith(
+              errorMessage: "An error occurred while loading videos.",
+            ),
+          );
         }
-
-        /// Initialize 1st video
-        await _initializeControllerAtIndex(0);
-
-        /// Initialize 2nd video
-        await _initializeControllerAtIndex(1);
       },
       onVideoIndexChanged: (e) async {
         final bool shouldFetch =
@@ -210,7 +225,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           dpUrl: dpUrl ?? '',
         );
         List<CommentData> updatedComments = List.from(currentComments)
-          ..add(newComment);
+          ..insert(0, newComment);
         emit(
           state.copyWith(
             videoComments: {

@@ -5,6 +5,7 @@ import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
+import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -44,6 +45,7 @@ class AdvisorViewWrapper extends StatelessWidget {
         builder: (context, state) {
           return switch (state) {
             LoadingAdvisorData() => const FullScreenLoader(),
+            ErrorAdvisorData() => const NewErrorPage(),
             AdvisorData() => Padding(
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
                 child: SingleChildScrollView(

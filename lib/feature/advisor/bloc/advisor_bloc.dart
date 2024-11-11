@@ -26,23 +26,6 @@ class AdvisorBloc extends Bloc<AdvisorEvent, AdvisorState> {
     List<AdvisorCall> advisorPastCalls = [];
 
     try {
-      final response = await _advisorRepo.getEvents();
-      if (response.isSuccess()) {
-        advisorEvents = response.model ?? [];
-      } else {
-        BaseUtil.showNegativeAlert(
-          'Error',
-          response.errorMessage ?? 'Failed to load advisor events.',
-        );
-      }
-    } catch (e) {
-      BaseUtil.showNegativeAlert(
-        'Error',
-        'An error occurred while loading advisor events.',
-      );
-    }
-
-    try {
       final response2 = await _advisorRepo.getUpcomingCalls();
       if (response2.isSuccess()) {
         advisorUpcomingCalls = response2.model ?? [];
@@ -75,13 +58,40 @@ class AdvisorBloc extends Bloc<AdvisorEvent, AdvisorState> {
         'An error occurred while loading past calls.',
       );
     }
+    try {
+      final response = await _advisorRepo.getEvents();
+      if (response.isSuccess()) {
+        advisorEvents = response.model ?? [];
+      } else {
+        BaseUtil.showNegativeAlert(
+          'Error',
+          response.errorMessage ?? 'Failed to load advisor events.',
+        );
+      }
+    } catch (e) {
+      BaseUtil.showNegativeAlert(
+        'Error',
+        'An error occurred while loading advisor events.',
+      );
+    }
 
-    emitter(
-      AdvisorData(
-        advisorEvents: advisorEvents,
-        advisorUpcomingCalls: advisorUpcomingCalls,
-        advisorPastCalls: advisorPastCalls,
-      ),
-    );
+    if (state is AdvisorData) {
+      final currentState = state as AdvisorData;
+      emitter(
+        currentState.copyWith(
+          advisorEvents: advisorEvents.toList(),
+          advisorUpcomingCalls: advisorUpcomingCalls.toList(),
+          advisorPastCalls: advisorPastCalls.toList(),
+        ),
+      );
+    } else {
+      emitter(
+        AdvisorData(
+          advisorEvents: advisorEvents.toList(),
+          advisorUpcomingCalls: advisorUpcomingCalls.toList(),
+          advisorPastCalls: advisorPastCalls.toList(),
+        ),
+      );
+    }
   }
 }

@@ -1364,7 +1364,7 @@ class MeetingStore extends ChangeNotifier
     isEndRoomCalled = hmsPeerRemovedFromPeer.roomWasEnded;
     log("onRemovedFromRoom-> sender: ${hmsPeerRemovedFromPeer.peerWhoRemoved}, reason: ${hmsPeerRemovedFromPeer.reason}, roomEnded: ${hmsPeerRemovedFromPeer.roomWasEnded}");
     description = "Removed by ${hmsPeerRemovedFromPeer.peerWhoRemoved?.name}";
-    clearRoomState();
+    clearRoomState(true);
   }
 
   @override
@@ -1478,7 +1478,7 @@ class MeetingStore extends ChangeNotifier
 
 // Helper Methods
 
-  void clearRoomState() async {
+  void clearRoomState(bool showToast) async {
     // clearPIPState();
     removeListeners();
     toggleAlwaysScreenOn();
@@ -1512,20 +1512,22 @@ class MeetingStore extends ChangeNotifier
       Constant.onLeave!();
     }
     notifyListeners();
-    if (isEndRoomCalled) {
-      Future.delayed(const Duration(seconds: 1), () {
-        BaseUtil.showNegativeAlert(
-          'Meeting Ended',
-          'Meeting was ended by the host!',
-        );
-      });
-    } else {
-      Future.delayed(const Duration(seconds: 1), () {
-        BaseUtil.showNegativeAlert(
-          'Meeting Ended',
-          description,
-        );
-      });
+    if (showToast) {
+      if (isEndRoomCalled) {
+        Future.delayed(const Duration(seconds: 1), () {
+          BaseUtil.showNegativeAlert(
+            'Meeting Ended',
+            'Meeting was ended by the host!',
+          );
+        });
+      } else {
+        Future.delayed(const Duration(seconds: 1), () {
+          BaseUtil.showNegativeAlert(
+            'Meeting Ended',
+            description,
+          );
+        });
+      }
     }
   }
 
@@ -2895,7 +2897,7 @@ class MeetingStore extends ChangeNotifier
       Map<String, dynamic>? arguments}) {
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
-        clearRoomState();
+        clearRoomState(false);
         break;
       case HMSActionResultListenerMethod.changeTrackState:
         Utilities.showToast(
@@ -2907,7 +2909,7 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.endRoom:
-        clearRoomState();
+        clearRoomState(true);
         break;
       case HMSActionResultListenerMethod.removePeer:
         HMSPeer peer = arguments!['peer'];
