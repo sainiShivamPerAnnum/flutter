@@ -2,6 +2,7 @@ import 'package:felloapp/core/model/sip_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/ui/widgets/sip_transaction_card.dart';
+import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/util/assets.dart';
@@ -45,7 +46,7 @@ class _MyFundSectionState extends State<MyFundSection> {
       child: BlocBuilder<MyFundsBloc, PaginationState<dynamic, int, Object>>(
         builder: (context, state) {
           if (state.status.isFailedToLoadInitial) {
-            return const NewErrorPage();
+            return const ErrorPage();
           }
 
           if (state.status.isFetchingInitialPage) {

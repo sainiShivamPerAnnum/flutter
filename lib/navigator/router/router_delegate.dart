@@ -1018,7 +1018,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         }
         pageConfiguration = LivePageConfig;
         break;
-      case 'bookCall':
+      case 'bookings':
         final id = queryParams['id'];
         final name = queryParams['name'];
         if (id != null && name != null) {

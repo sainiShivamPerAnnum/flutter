@@ -74,6 +74,7 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
                               borderRadius: BorderRadius.circular(8)),
                           child: TabBar(
                             controller: _controller,
+                            indicatorSize: TabBarIndicatorSize.tab,
                             tabs: [
                               Tab(
                                 child: HMSSubheadingText(

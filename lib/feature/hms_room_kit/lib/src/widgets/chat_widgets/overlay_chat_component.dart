@@ -7,7 +7,6 @@ import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_store.dart
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/chat_widgets/action_buttons.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/chat_widgets/pin_chat_widget.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/styles.dart';
 
 ///Package imports
@@ -114,13 +113,15 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
 
   void _scrollToEnd() {
     if (_scrollController.hasClients) {
-      WidgetsBinding.instance.addPostFrameCallback((_) =>
-          _scrollController.positions.isNotEmpty
-              ? _scrollController.animateTo(
-                  _scrollController.position.maxScrollExtent,
-                  duration: const Duration(milliseconds: 200),
-                  curve: Curves.easeInOut)
-              : null);
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _scrollController.positions.isNotEmpty
+            ? _scrollController.animateTo(
+                _scrollController.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOut,
+              )
+            : null,
+      );
     }
   }
 
@@ -178,6 +179,12 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
                           meetingStore.onLike();
                         },
                         isLiked: value.item5,
+                        onShare: () {
+                          final meetingStore = context.read<MeetingStore>();
+                          if (meetingStore.isShareAlreadyClicked == false) {
+                            meetingStore.shareLink();
+                          }
+                        },
                       ),
                     ),
                 ],
@@ -290,7 +297,8 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
                               hintStyle: const TextStyle(color: Colors.white70),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(
-                                    SizeConfig.roundness12),
+                                  SizeConfig.roundness12,
+                                ),
                                 borderSide:
                                     const BorderSide(color: Colors.white),
                               ),
@@ -315,15 +323,18 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
                                       .trim()
                                       .isEmpty) {
                                     Utilities.showToast(
-                                        "Message can't be empty", 'Try Again!');
+                                      "Message can't be empty",
+                                      'Try Again!',
+                                    );
                                   }
                                   _sendMessage(messageTextController);
                                   messageTextController.clear();
                                 },
                               ),
                               contentPadding: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.padding4,
-                                  horizontal: SizeConfig.padding12),
+                                vertical: SizeConfig.padding4,
+                                horizontal: SizeConfig.padding12,
+                              ),
                             ),
                           );
                         },

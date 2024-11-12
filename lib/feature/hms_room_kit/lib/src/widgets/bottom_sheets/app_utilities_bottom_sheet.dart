@@ -1,6 +1,8 @@
 ///Package imports
 
 import 'package:badges/badges.dart' as badge;
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/layout_api/hms_room_layout.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_store.dart';
@@ -15,6 +17,7 @@ import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/common_widgets/hms
 ///Project imports
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/common_widgets/more_option_item.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -121,15 +124,15 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                 if (HMSRoomLayout.isParticipantsListEnabled)
                   MoreOptionItem(
                       onTap: () async {
-                        Navigator.pop(context);
-                        showModalBottomSheet(
-                          isScrollControlled: true,
+                        await AppState.backButtonDispatcher!.didPopRoute();
+                        AppState.screenStack.add(ScreenItem.modalsheet);
+                        await BaseUtil.openModalBottomSheet(
+                          isBarrierDismissible: false,
                           backgroundColor: HMSThemeColors.surfaceDim,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          context: context,
-                          builder: (ctx) => ChangeNotifierProvider.value(
+                          isScrollControlled: true,
+                          addToScreenStack: false,
+                          enableDrag: false,
+                          content: ChangeNotifierProvider.value(
                               value: meetingStore,
                               child: (HMSRoomLayout.chatData == null ||
                                       (HMSRoomLayout.chatData?.isOverlay ??
@@ -248,21 +251,20 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                     (meetingStore.localPeer?.role.permissions.pollWrite ??
                         false))
                   MoreOptionItem(
-                      onTap: () {
+                      onTap: () async {
                         meetingStore.fetchPollList(HMSPollState.created);
-                        Navigator.pop(context);
-                        showModalBottomSheet(
-                          isScrollControlled: true,
+                        await AppState.backButtonDispatcher!.didPopRoute();
+                        AppState.screenStack.add(ScreenItem.modalsheet);
+                        await BaseUtil.openModalBottomSheet(
+                          isBarrierDismissible: false,
                           backgroundColor: HMSThemeColors.surfaceDim,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(16),
-                                topRight: Radius.circular(16)),
+                          isScrollControlled: true,
+                          addToScreenStack: false,
+                          enableDrag: false,
+                          content: ChangeNotifierProvider.value(
+                            value: meetingStore,
+                            child: const PollAndQuizBottomSheet(),
                           ),
-                          context: context,
-                          builder: (ctx) => ChangeNotifierProvider.value(
-                              value: meetingStore,
-                              child: const PollAndQuizBottomSheet()),
                         );
                       },
                       optionIcon: SvgPicture.asset(

@@ -2,6 +2,7 @@
 
 ///Project imports
 import 'package:felloapp/feature/hms_room_kit/lib/src/layout_api/hms_theme_colors.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:flutter/material.dart';
 
 ///This renders the cross button
@@ -22,7 +23,7 @@ class HMSCrossButton extends StatelessWidget {
         if (onPressed != null) {
           onPressed!();
         }
-        Navigator.pop(context);
+        AppState.backButtonDispatcher!.didPopRoute();
       },
     );
   }

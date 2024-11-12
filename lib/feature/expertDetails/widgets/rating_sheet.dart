@@ -17,7 +17,7 @@ class FeedbackBottomSheet extends StatefulWidget {
 
 class _FeedbackBottomSheetState extends State<FeedbackBottomSheet> {
   final TextEditingController _controller = TextEditingController();
-  double rating = 3;
+  double rating = 5;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class _FeedbackBottomSheetState extends State<FeedbackBottomSheet> {
                   style: TextStyles.sourceSansSB.body2,
                 ),
                 RatingBar.builder(
-                  initialRating: 3,
+                  initialRating: 5,
                   minRating: 1,
                   direction: Axis.horizontal,
                   allowHalfRating: true,

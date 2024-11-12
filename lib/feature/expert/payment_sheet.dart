@@ -4,7 +4,9 @@ import 'package:felloapp/feature/expert/bloc/booking_bloc.dart';
 import 'package:felloapp/feature/expert/polling_sheet.dart';
 import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -65,15 +67,42 @@ class _BookingMandatePage extends StatelessWidget {
       children: [
         Container(
           padding: EdgeInsets.symmetric(
-            vertical: SizeConfig.padding14,
-            horizontal: SizeConfig.padding20,
+            horizontal: SizeConfig.padding10,
+          ).copyWith(
+            top: SizeConfig.padding14,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Stack(
+            alignment: AlignmentDirectional.center,
             children: [
-              Text(
-                'Select Payment Application',
-                style: TextStyles.sourceSansSB.body1,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Select Payment Application',
+                    style: TextStyles.sourceSansSB.body1,
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      BaseUtil.openDialog(
+                        isBarrierDismissible: true,
+                        addToScreenStack: true,
+                        content: const DismissDailog(),
+                      );
+                    },
+                    child: Icon(
+                      Icons.close,
+                      size: SizeConfig.body1,
+                      color: UiConstants.kTextColor,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -88,7 +117,7 @@ class _BookingMandatePage extends StatelessWidget {
               AppState.screenStack.add(ScreenItem.modalsheet);
               BaseUtil.openModalBottomSheet(
                 isScrollControlled: true,
-                enableDrag: true,
+                enableDrag: false,
                 isBarrierDismissible: false,
                 addToScreenStack: false,
                 content: PollingSheet(
@@ -136,6 +165,130 @@ class _BookingMandatePage extends StatelessWidget {
           },
         ),
       ],
+    );
+  }
+}
+
+class DismissDailog extends StatelessWidget {
+  const DismissDailog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      elevation: 0,
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.padding30,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(
+          SizeConfig.roundness12,
+        ),
+      ),
+      backgroundColor: UiConstants.bg,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding20,
+            ).copyWith(
+              top: SizeConfig.padding14,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Cancel Your Payment',
+                  style: TextStyles.sourceSansSB.body1,
+                ),
+              ],
+            ),
+          ),
+          const Divider(
+            color: UiConstants.greyVarient,
+          ),
+          SizedBox(height: SizeConfig.padding22,),
+          AppImage(Assets.exit_logo, height: SizeConfig.padding88),
+
+          SizedBox(height: SizeConfig.padding22,),
+          Text(
+            'Confirm Payment Cancellation',
+            style: TextStyles.sourceSansSB.body1,
+          ),
+          SizedBox(
+            height: SizeConfig.padding12,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding18),
+            child: Text(
+              'You\'re one step away from securing your booking. Canceling may result in losing your slot.',
+              style:
+                  TextStyles.sourceSans.body3.colour(UiConstants.kTextColor5),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(
+            height: SizeConfig.padding18,
+          ),
+          const Divider(
+            color: UiConstants.greyVarient,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding18)
+                .copyWith(top: SizeConfig.padding18),
+            child: Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      AppState.backButtonDispatcher!.didPopRoute();
+                      AppState.backButtonDispatcher!.didPopRoute();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: UiConstants.greyVarient,
+                      padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.padding16,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness8),
+                      ),
+                    ),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyles.sourceSans.body3,
+                    ),
+                  ),
+                ),
+                SizedBox(width: SizeConfig.padding12),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      AppState.backButtonDispatcher!.didPopRoute();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: UiConstants.kTextColor,
+                      padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.padding16,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness8),
+                      ),
+                    ),
+                    child: Text(
+                      'Continue',
+                      style: TextStyles.sourceSans.body3
+                          .colour(UiConstants.kTextColor4),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: SizeConfig.padding18),
+        ],
+      ),
     );
   }
 }

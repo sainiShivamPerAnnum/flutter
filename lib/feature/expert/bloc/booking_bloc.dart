@@ -55,9 +55,11 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
 
       if (availableDates.contains(formattedScheduledOn)) {
         selectedDate = formattedScheduledOn;
-      } else {
+      } else if (availableDates.isNotEmpty) {
         selectedDate = availableDates.first;
       }
+    } else if (availableDates.isNotEmpty) {
+      selectedDate = availableDates.first;
     }
 
     if (availableDates.isNotEmpty) {

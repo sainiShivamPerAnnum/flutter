@@ -60,4 +60,6 @@ class PreloadEvent with _$PreloadEvent {
       _UpdateKeyboardState;
   const factory PreloadEvent.disposeProfileControllers() =
       _DisposeProfileControllers;
+  const factory PreloadEvent.generateDynamicLink({required String videoId}) =
+      _GenerateDynamicLink;
 }

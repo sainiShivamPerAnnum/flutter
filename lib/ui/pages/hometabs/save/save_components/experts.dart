@@ -10,32 +10,36 @@ import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 class Experts extends StatelessWidget {
   const Experts({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Selector<SaveViewModel, List<Expert>>(
-      selector: (_, model) => model.topExperts,
-      builder: (_, topExperts, __) {
-        return topExperts.isNotEmpty
+    return Selector<SaveViewModel, Tuple2<List<Expert>, bool>>(
+      selector: (_, model) => Tuple2(
+        model.topExperts,
+        model.freeCallAvailable,
+      ),
+      builder: (_, value, __) {
+        return value.item1.isNotEmpty
             ? Column(
                 children: [
                   SizedBox(height: SizeConfig.padding14),
-                  GestureDetector(
-                    onTap: () {},
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        TitleSubtitleContainer(
-                          title: "Experts",
-                        ),
-                      ],
-                    ),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TitleSubtitleContainer(
+                        title: "Experts",
+                      ),
+                    ],
                   ),
-                  TopExperts(topExperts: topExperts),
+                  TopExperts(
+                    topExperts: value.item1,
+                    isFree: value.item2,
+                  ),
                 ],
               )
             : const SizedBox.shrink();
@@ -46,7 +50,9 @@ class Experts extends StatelessWidget {
 
 class TopExperts extends StatelessWidget {
   final List<Expert> topExperts;
-  const TopExperts({required this.topExperts, Key? key}) : super(key: key);
+  final bool isFree;
+  const TopExperts({required this.topExperts, required this.isFree, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +65,7 @@ class TopExperts extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20)
                   .copyWith(bottom: SizeConfig.padding16),
               child: ExpertCard(
+                isFree: isFree,
                 expert: topExperts[i],
                 onBookCall: () {
                   BaseUtil.openBookAdvisorSheet(

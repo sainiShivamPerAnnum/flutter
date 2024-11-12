@@ -8,11 +8,13 @@ class ExpertCard extends StatelessWidget {
   final Expert expert;
   final VoidCallback onBookCall;
   final VoidCallback onTap;
+  final bool isFree;
 
   const ExpertCard({
     required this.expert,
     required this.onBookCall,
     required this.onTap,
+    required this.isFree,
     super.key,
   });
 
@@ -210,17 +212,17 @@ class ExpertCard extends StatelessWidget {
                                     UiConstants.kTextColor,
                                   )
                                   .copyWith(
-                                    decoration: expert.isFree
+                                    decoration: isFree && expert.isFree
                                         ? TextDecoration.lineThrough
                                         : TextDecoration.none,
                                     decorationColor: UiConstants.kTextColor,
                                   ),
                             ),
-                            if (expert.isFree)
+                            if (isFree && expert.isFree)
                               SizedBox(
                                 width: SizeConfig.padding4,
                               ),
-                            if (expert.isFree)
+                            if (isFree && expert.isFree)
                               Text(
                                 "Free",
                                 style: TextStyles.sourceSansSB.body3

@@ -24,7 +24,7 @@ class LiveCardWidget extends StatefulWidget {
   final int? liveCount;
   final String? duration;
   final String? startTime;
-  final String advisorCode;
+  final String advisorId;
   final String? viewerCode;
   final VoidCallback? onTap;
   final double? maxWidth;
@@ -39,7 +39,7 @@ class LiveCardWidget extends StatefulWidget {
     required this.author,
     required this.category,
     required this.bgImage,
-    required this.advisorCode,
+    required this.advisorId,
     this.isLiked,
     super.key,
     this.liveCount,
@@ -167,7 +167,7 @@ class _LiveCardWidgetState extends State<LiveCardWidget> {
                       onLeave: () async {
                         await AppState.backButtonDispatcher!.didPopRoute();
                       },
-                      advisorId: widget.advisorCode,
+                      advisorId: widget.advisorId,
                       title: widget.title,
                       description: widget.subTitle,
                       options: HMSPrebuiltOptions(

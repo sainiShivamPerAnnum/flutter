@@ -470,7 +470,7 @@ class BaseUtil extends ChangeNotifier {
     AppState.screenStack.add(ScreenItem.modalsheet);
     return openModalBottomSheet(
       isScrollControlled: true,
-      enableDrag: true,
+      enableDrag: false,
       isBarrierDismissible: false,
       addToScreenStack: false,
       content: BookCallSheetView(

@@ -53,11 +53,40 @@ class ExpertsDetailsView extends StatelessWidget {
   }
 }
 
-class _ExpertProfilePage extends StatelessWidget {
+class _ExpertProfilePage extends StatefulWidget {
   const _ExpertProfilePage({
     required this.advisorID,
   });
   final String advisorID;
+
+  @override
+  State<_ExpertProfilePage> createState() => _ExpertProfilePageState();
+}
+
+class _ExpertProfilePageState extends State<_ExpertProfilePage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  int _previousTabIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(() {
+      if (_tabController.index != _previousTabIndex) {
+        BlocProvider.of<ExpertDetailsBloc>(context).add(
+          TabChanged(_tabController.index, widget.advisorID),
+        );
+        _previousTabIndex = _tabController.index;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,169 +100,185 @@ class _ExpertProfilePage extends StatelessWidget {
         }
         if (state is ExpertDetailsLoaded) {
           final expertDetails = state.expertDetails;
-          final tab = state.currentTab;
           final isLoading = state.isLoading;
           final recentlive = state.recentLive;
           final shortsData = state.shortsData;
-          return DefaultTabController(
-            length: 3,
-            initialIndex: 0,
-            child: BaseScaffold(
-              showBackgroundGrid: true,
-              floatingActionButton: GestureDetector(
-                onTap: () {
-                  BaseUtil.openBookAdvisorSheet(
-                    advisorId: advisorID,
-                    advisorName: state.expertDetails?.name ?? '',
-                    isEdit: false,
-                  );
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(
-                        SizeConfig.roundness5,
-                      ),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(SizeConfig.padding12),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.calendar_month,
-                          size: SizeConfig.body3,
-                          color: UiConstants.kTextColor4,
-                        ),
-                        SizedBox(
-                          width: SizeConfig.padding12,
-                        ),
-                        Text(
-                          'Book a Slot',
-                          style: TextStyles.sourceSansSB.body3.colour(
-                            UiConstants.kTextColor4,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              appBar: FAppBar(
-                backgroundColor: Colors.transparent,
-                centerTitle: true,
-                titleWidget:
-                    Text('Profile', style: TextStyles.rajdhaniSB.body1),
-                leading: const BackButton(
+          return BaseScaffold(
+            showBackgroundGrid: true,
+            floatingActionButton: GestureDetector(
+              onTap: () {
+                BaseUtil.openBookAdvisorSheet(
+                  advisorId: widget.advisorID,
+                  advisorName: state.expertDetails?.name ?? '',
+                  isEdit: false,
+                );
+              },
+              child: Container(
+                decoration: BoxDecoration(
                   color: Colors.white,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(
+                      SizeConfig.roundness5,
+                    ),
+                  ),
                 ),
-                showAvatar: false,
-                showCoinBar: false,
-              ),
-              body: SingleChildScrollView(
                 child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  padding: EdgeInsets.all(SizeConfig.padding12),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      SizedBox(
-                        height: SizeConfig.padding25,
-                      ),
-                      CircleAvatar(
-                        radius: SizeConfig.padding35,
-                        backgroundImage: NetworkImage(
-                          expertDetails!.image,
-                        ),
+                      Icon(
+                        Icons.calendar_month,
+                        size: SizeConfig.body3,
+                        color: UiConstants.kTextColor4,
                       ),
                       SizedBox(
-                        height: SizeConfig.padding20,
+                        width: SizeConfig.padding12,
                       ),
                       Text(
-                        expertDetails.name,
-                        style: TextStyles.sourceSansSB.body0.colour(
-                          UiConstants.kTextColor,
+                        'Book a Slot',
+                        style: TextStyles.sourceSansSB.body3.colour(
+                          UiConstants.kTextColor4,
                         ),
                       ),
-                      SizedBox(
-                        height: SizeConfig.padding6,
-                      ),
-                      Text(
-                        expertDetails.description,
-                        style: TextStyles.sourceSansSB.body4.colour(
-                          UiConstants.kTextColor.withOpacity(.7),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding12,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            appBar: FAppBar(
+              backgroundColor: Colors.transparent,
+              centerTitle: true,
+              titleWidget: Text('Profile', style: TextStyles.rajdhaniSB.body1),
+              leading: const BackButton(
+                color: Colors.white,
+              ),
+              showAvatar: false,
+              showCoinBar: false,
+            ),
+            body: NestedScrollView(
+              headerSliverBuilder: (context, innerBoxIsScrolled) {
+                return <Widget>[
+                  SliverPadding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding20,
+                    ),
+                    sliver: SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Column(
+                          SizedBox(
+                            height: SizeConfig.padding25,
+                          ),
+                          CircleAvatar(
+                            radius: SizeConfig.padding35,
+                            backgroundImage: NetworkImage(
+                              expertDetails!.image,
+                            ),
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding20,
+                          ),
+                          Text(
+                            expertDetails.name,
+                            style: TextStyles.sourceSansSB.body0.colour(
+                              UiConstants.kTextColor,
+                            ),
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding6,
+                          ),
+                          Text(
+                            expertDetails.description,
+                            style: TextStyles.sourceSansSB.body4.colour(
+                              UiConstants.kTextColor.withOpacity(.7),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding12,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Text(
-                                'Experience',
-                                style: TextStyles.sourceSansSB.body6.colour(
-                                  UiConstants.kTextColor,
-                                ),
+                              Column(
+                                children: [
+                                  Text(
+                                    'Experience',
+                                    style: TextStyles.sourceSansSB.body6.colour(
+                                      UiConstants.kTextColor,
+                                    ),
+                                  ),
+                                  Text(
+                                    expertDetails
+                                        .experience, // Display experience
+                                    style: TextStyles.sourceSansSB.body2.colour(
+                                      UiConstants.kTextColor,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Text(
-                                expertDetails.experience, // Display experience
-                                style: TextStyles.sourceSansSB.body2.colour(
-                                  UiConstants.kTextColor,
-                                ),
+                              Column(
+                                children: [
+                                  Text(
+                                    'Sessions',
+                                    style: TextStyles.sourceSansSB.body6.colour(
+                                      UiConstants.kTextColor,
+                                    ),
+                                  ),
+                                  Text(
+                                    expertDetails.sessionCount
+                                        .toString(), // Display session count
+                                    style: TextStyles.sourceSansSB.body2.colour(
+                                      UiConstants.kTextColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Text(
+                                    'Rating',
+                                    style: TextStyles.sourceSansSB.body6.colour(
+                                      UiConstants.kTextColor,
+                                    ),
+                                  ),
+                                  Text(
+                                    expertDetails.rating
+                                        .toString(), // Display rating
+                                    style: TextStyles.sourceSansSB.body2.colour(
+                                      UiConstants.kTextColor,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          Column(
-                            children: [
-                              Text(
-                                'Sessions',
-                                style: TextStyles.sourceSansSB.body6.colour(
-                                  UiConstants.kTextColor,
-                                ),
-                              ),
-                              Text(
-                                expertDetails.sessionCount
-                                    .toString(), // Display session count
-                                style: TextStyles.sourceSansSB.body2.colour(
-                                  UiConstants.kTextColor,
-                                ),
-                              ),
-                            ],
+                          SizedBox(
+                            height: SizeConfig.padding32,
                           ),
-                          Column(
-                            children: [
-                              Text(
-                                'Rating',
-                                style: TextStyles.sourceSansSB.body6.colour(
-                                  UiConstants.kTextColor,
-                                ),
-                              ),
-                              Text(
-                                expertDetails.rating
-                                    .toString(), // Display rating
-                                style: TextStyles.sourceSansSB.body2.colour(
-                                  UiConstants.kTextColor,
-                                ),
-                              ),
-                            ],
+                          CustomCarousel(
+                            quickActions: expertDetails.QuickActions,
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: SizeConfig.padding32,
+                    ),
+                  ),
+                  SliverOverlapAbsorber(
+                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                      context,
+                    ),
+                    sliver: SliverPadding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.padding20,
                       ),
-                      CustomCarousel(
-                        quickActions: expertDetails.QuickActions,
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding48,
-                        child: TabBar(
+                      sliver: SliverAppBar(
+                        pinned: true,
+                        toolbarHeight: 0,
+                        backgroundColor: Colors.transparent,
+                        surfaceTintColor: Colors.transparent,
+                        bottom: TabBar(
+                          controller: _tabController,
                           indicatorPadding: EdgeInsets.zero,
                           indicatorSize: TabBarIndicatorSize.tab,
                           dividerColor: UiConstants.grey4,
@@ -251,267 +296,44 @@ class _ExpertProfilePage extends StatelessWidget {
                             Tab(text: "Shorts"),
                             Tab(text: "Popular Live"),
                           ],
-                          onTap: (value) {
-                            BlocProvider.of<ExpertDetailsBloc>(context)
-                                .add(TabChanged(value, advisorID));
-                          },
                         ),
                       ),
-                      if (isLoading)
-                        const FullScreenLoader()
-                      else if (tab == 0)
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: SizeConfig.padding18,
-                            ),
-                            Text(
-                              "Licenses",
-                              style: TextStyles.sourceSansSB.body2,
-                            ),
-                            SizedBox(
-                              height: SizeConfig.padding18,
-                            ),
-                            for (final license in expertDetails.licenses)
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: SizeConfig.padding46,
-                                    height: SizeConfig.padding46,
-                                    margin: EdgeInsets.only(
-                                      bottom: SizeConfig.padding8,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: UiConstants.greyVarient,
-                                      borderRadius: BorderRadius.circular(
-                                        SizeConfig.roundness8,
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Image.network(
-                                        license.imageUrl,
-                                        width: SizeConfig.padding46,
-                                        height: SizeConfig.padding46,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: SizeConfig.padding10,
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          license.name,
-                                          style: TextStyles.sourceSansSB.body3,
-                                        ),
-                                        SizedBox(
-                                          height: SizeConfig.padding2,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              "Issued on ${DateFormat('MMMM d, y').format(license.issueDate)}",
-                                              style: TextStyles
-                                                  .sourceSansSB.body3
-                                                  .colour(
-                                                UiConstants.kTextColor
-                                                    .withOpacity(.7),
-                                              ),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                BaseUtil.launchUrl(
-                                                  license.credentials,
-                                                );
-                                              },
-                                              child: Row(
-                                                children: [
-                                                  Text(
-                                                    "View Credentials",
-                                                    style: TextStyles
-                                                        .sourceSans.body4
-                                                        .colour(Colors.white70)
-                                                        .copyWith(
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline,
-                                                          decorationColor:
-                                                              Colors.white70,
-                                                          decorationThickness:
-                                                              1,
-                                                        ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: SizeConfig.padding4,
-                                                  ),
-                                                  Icon(
-                                                    Icons.open_in_new,
-                                                    color: Colors.white70,
-                                                    size: SizeConfig.body6,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            SizedBox(
-                              height: SizeConfig.padding24,
-                            ),
-                            Text(
-                              "Social",
-                              style: TextStyles.sourceSansSB.body2,
-                            ),
-                            SizedBox(
-                              height: SizeConfig.padding18,
-                            ),
-                            Row(
-                              children: expertDetails.social.map((social) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    BaseUtil.launchUrl(social.url);
-                                  },
-                                  child: Container(
-                                    padding:
-                                        EdgeInsets.all(SizeConfig.padding14),
-                                    margin: EdgeInsets.only(
-                                      right: SizeConfig.padding4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: UiConstants.greyVarient,
-                                      borderRadius: BorderRadius.circular(
-                                        SizeConfig.roundness8,
-                                      ),
-                                    ),
-                                    child: AppImage(
-                                      social.iconUrl,
-                                      color: UiConstants.kTextColor5,
-                                      height: SizeConfig.body2,
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                            SizedBox(
-                              height: SizeConfig.padding24,
-                            ),
-                            RatingReviewSection(
-                              ratingInfo: expertDetails.ratingInfo,
-                              advisorId: advisorID,
-                            ),
-                          ],
-                        )
-                      else if (tab == 2) ...[
-                        SizedBox(
-                          height: SizeConfig.padding18,
-                        ),
-                        if (recentlive.isEmpty)
-                          SizedBox(
-                            width: SizeConfig.padding300,
-                            child: Column(
-                              children: [
-                                SizedBox(height: SizeConfig.padding12),
-                                AppImage(
-                                  Assets.no_live,
-                                  height: SizeConfig.padding35,
-                                  width: SizeConfig.padding35,
-                                ),
-                                SizedBox(height: SizeConfig.padding12),
-                                Text(
-                                  'Currently, there are no live sessions available.',
-                                  style: TextStyles.sourceSansSB.body0,
-                                  textAlign: TextAlign.center,
-                                ),
-                                SizedBox(height: SizeConfig.padding10),
-                                Text(
-                                  'Book a one-on-one for personalized advice!',
-                                  style: TextStyles.sourceSans.body3.colour(
-                                    UiConstants.kTextColor.withOpacity(0.7),
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                        for (int i = 0; i < recentlive.length; i++)
-                          Padding(
-                            padding:
-                                EdgeInsets.only(bottom: SizeConfig.padding16),
-                            child: LiveCardWidget(
-                              id: recentlive[i].id,
-                              status: 'recent',
-                              maxWidth: SizeConfig.padding350,
-                              onTap: () async {
-                                final preloadBloc =
-                                    BlocProvider.of<PreloadBloc>(context);
-                                final switchCompleter = Completer<void>();
-
-                                preloadBloc.add(
-                                  PreloadEvent.initializeLiveStream(
-                                    recentlive[i],
-                                    completer: switchCompleter,
-                                  ),
-                                );
-                                await switchCompleter.future;
-                                AppState.delegate!.appState.currentAction =
-                                    PageAction(
-                                  page: ShortsPageConfig,
-                                  state: PageState.addWidget,
-                                  widget: BaseScaffold(
-                                    appBar: FAppBar(
-                                      backgroundColor: Colors.transparent,
-                                      centerTitle: true,
-                                      titleWidget: Text(
-                                        'Profile',
-                                        style: TextStyles.rajdhaniSB.body1,
-                                      ),
-                                      leading: const BackButton(
-                                        color: Colors.white,
-                                      ),
-                                      showAvatar: false,
-                                      showCoinBar: false,
-                                    ),
-                                    body: WillPopScope(
-                                      onWillPop: () async {
-                                        await AppState.backButtonDispatcher!
-                                            .didPopRoute();
-                                        return false;
-                                      },
-                                      child: const ShortsVideoPage(),
-                                    ),
-                                  ),
-                                );
-                              },
-                              title: recentlive[i].title,
-                              startTime: recentlive[i].timeStamp,
-                              subTitle: recentlive[i].subtitle,
-                              author: recentlive[i].author,
-                              advisorCode: recentlive[i].advisorId,
-                              category:
-                                  recentlive[i].category?.join(', ') ?? '',
-                              bgImage: recentlive[i].thumbnail,
-                              liveCount: recentlive[i].viewCount,
-                              duration: recentlive[i].duration.toString(),
-                            ),
-                          ),
-                      ] else
-                        _buildTabOneData(shortsData, expertDetails.name),
-                    ],
+                    ),
                   ),
-                ),
-              ),
+                ];
+              },
+              body: isLoading
+                  ? const FullScreenLoader()
+                  : TabBarView(
+                      controller: _tabController,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding20,
+                          ),
+                          child: _buildInfoTab(
+                            expertDetails!,
+                            widget.advisorID,
+                            context,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding8,
+                          ),
+                          child: _buildTabOneData(
+                            shortsData,
+                            expertDetails.name,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding20,
+                          ),
+                          child: _buildLiveTab(recentlive, context),
+                        ),
+                      ],
+                    ),
             ),
           );
         }
@@ -526,61 +348,334 @@ class _ExpertProfilePage extends StatelessWidget {
             showAvatar: false,
             showCoinBar: false,
           ),
-          body: const NewErrorPage(),
+          body: NewErrorPage(
+            onTryAgain: () {
+              BlocProvider.of<ExpertDetailsBloc>(
+                context,
+                listen: false,
+              ).add(
+                LoadExpertsDetails(widget.advisorID),
+              );
+            },
+          ),
         );
       },
     );
   }
 }
 
-Widget _buildTabOneData(List<VideoData> shortsData, String name) {
-  if (shortsData.isEmpty) {
-    return SizedBox(
-      width: SizeConfig.padding300,
-      child: Column(
-        children: [
-          SizedBox(height: SizeConfig.padding30),
-          AppImage(
-            Assets.no_shorts,
-            height: SizeConfig.padding35,
-            width: SizeConfig.padding35,
-          ),
-          SizedBox(height: SizeConfig.padding12),
-          Text(
-            '$name hasn’t shared any shorts yet',
-            style: TextStyles.sourceSansSB.body0,
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: SizeConfig.padding10),
-          Text(
-            'Book a session to get personal advice directly from them!',
-            style: TextStyles.sourceSans.body3.colour(
-              UiConstants.kTextColor.withOpacity(0.7),
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+Widget _buildLiveTab(List<VideoData> recentlive, BuildContext context) {
+  return CustomScrollView(
+    slivers: [
+      SliverPadding(
+        padding: EdgeInsets.only(top: SizeConfig.padding12),
       ),
-    );
-  }
-  final double gridHeight =
-      (shortsData.length / 2).ceil() * SizeConfig.padding300;
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      SizedBox(height: SizeConfig.padding16),
-      SizedBox(
-        height: gridHeight,
-        child: GridView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: SizeConfig.padding4,
-            mainAxisSpacing: SizeConfig.padding4,
-            childAspectRatio: 0.6,
+      if (recentlive.isEmpty)
+        SliverToBoxAdapter(
+          child: SizedBox(
+            width: SizeConfig.padding252,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: SizeConfig.padding18),
+                AppImage(
+                  Assets.no_live,
+                  height: SizeConfig.padding35,
+                  width: SizeConfig.padding35,
+                ),
+                SizedBox(height: SizeConfig.padding12),
+                Text(
+                  'Currently, there are no live sessions available.',
+                  style: TextStyles.sourceSansSB.body0,
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: SizeConfig.padding10),
+                Text(
+                  'Book a one-on-one for personalized advice!',
+                  style: TextStyles.sourceSans.body3.colour(
+                    UiConstants.kTextColor.withOpacity(0.7),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
-          itemCount: shortsData.length,
-          itemBuilder: (context, index) {
+        )
+      else
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final video = recentlive[index];
+              return Padding(
+                padding: EdgeInsets.only(bottom: SizeConfig.padding16),
+                child: LiveCardWidget(
+                  id: video.id,
+                  status: 'recent',
+                  maxWidth: SizeConfig.padding350,
+                  onTap: () async {
+                    final preloadBloc = BlocProvider.of<PreloadBloc>(context);
+                    final switchCompleter = Completer<void>();
+
+                    preloadBloc.add(
+                      PreloadEvent.initializeLiveStream(
+                        video,
+                        completer: switchCompleter,
+                      ),
+                    );
+                    await switchCompleter.future;
+                    AppState.delegate!.appState.currentAction = PageAction(
+                      page: ShortsPageConfig,
+                      state: PageState.addWidget,
+                      widget: BaseScaffold(
+                        appBar: FAppBar(
+                          backgroundColor: Colors.transparent,
+                          centerTitle: true,
+                          titleWidget: Text(
+                            'Profile',
+                            style: TextStyles.rajdhaniSB.body1,
+                          ),
+                          leading: const BackButton(
+                            color: Colors.white,
+                          ),
+                          showAvatar: false,
+                          showCoinBar: false,
+                        ),
+                        body: WillPopScope(
+                          onWillPop: () async {
+                            await AppState.backButtonDispatcher!.didPopRoute();
+                            return false;
+                          },
+                          child: const ShortsVideoPage(),
+                        ),
+                      ),
+                    );
+                  },
+                  title: video.title,
+                  startTime: video.timeStamp,
+                  subTitle: video.subtitle,
+                  author: video.author,
+                  advisorId: video.advisorId,
+                  category: video.category?.join(', ') ?? '',
+                  bgImage: video.thumbnail,
+                  liveCount: video.viewCount,
+                  duration: video.duration.toString(),
+                ),
+              );
+            },
+            childCount: recentlive.length,
+          ),
+        ),
+    ],
+  );
+}
+
+Widget _buildInfoTab(
+  ExpertDetails expertDetails,
+  String advisorID,
+  BuildContext context,
+) {
+  return CustomScrollView(
+    slivers: [
+      SliverToBoxAdapter(
+        child: SizedBox(
+          height: SizeConfig.padding12,
+        ),
+      ),
+      SliverToBoxAdapter(
+        child: Text(
+          "Licenses",
+          style: TextStyles.sourceSansSB.body2,
+        ),
+      ),
+      SliverToBoxAdapter(
+        child: SizedBox(
+          height: SizeConfig.padding18,
+        ),
+      ),
+      SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            final license = expertDetails.licenses[index];
+            return Padding(
+              padding: EdgeInsets.only(bottom: SizeConfig.padding8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: SizeConfig.padding46,
+                    height: SizeConfig.padding46,
+                    decoration: BoxDecoration(
+                      color: UiConstants.greyVarient,
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness8),
+                    ),
+                    child: Center(
+                      child: Image.network(
+                        license.imageUrl,
+                        width: SizeConfig.padding46,
+                        height: SizeConfig.padding46,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: SizeConfig.padding10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          license.name,
+                          style: TextStyles.sourceSansSB.body3,
+                        ),
+                        SizedBox(height: SizeConfig.padding2),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Issued on ${DateFormat('MMMM d, y').format(license.issueDate)}",
+                              style: TextStyles.sourceSansSB.body3.colour(
+                                UiConstants.kTextColor.withOpacity(.7),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                BaseUtil.launchUrl(license.credentials);
+                              },
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "View Credentials",
+                                    style: TextStyles.sourceSans.body4
+                                        .colour(Colors.white70)
+                                        .copyWith(
+                                          decoration: TextDecoration.underline,
+                                          decorationColor: Colors.white70,
+                                          decorationThickness: 1,
+                                        ),
+                                  ),
+                                  SizedBox(width: SizeConfig.padding4),
+                                  Icon(
+                                    Icons.open_in_new,
+                                    color: Colors.white70,
+                                    size: SizeConfig.body6,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+          childCount: expertDetails.licenses.length,
+        ),
+      ),
+      if (expertDetails.social.isNotEmpty)
+        SliverToBoxAdapter(
+          child: SizedBox(
+            height: SizeConfig.padding24,
+          ),
+        ),
+      if (expertDetails.social.isNotEmpty)
+        SliverToBoxAdapter(
+          child: Text(
+            "Social",
+            style: TextStyles.sourceSansSB.body2,
+          ),
+        ),
+      if (expertDetails.social.isNotEmpty)
+        SliverToBoxAdapter(
+          child: SizedBox(
+            height: SizeConfig.padding18,
+          ),
+        ),
+      SliverToBoxAdapter(
+        child: Row(
+          children: expertDetails.social.map((social) {
+            return GestureDetector(
+              onTap: () {
+                BaseUtil.launchUrl(social.url);
+              },
+              child: Container(
+                padding: EdgeInsets.all(SizeConfig.padding14),
+                margin: EdgeInsets.only(
+                  right: SizeConfig.padding4,
+                ),
+                decoration: BoxDecoration(
+                  color: UiConstants.greyVarient,
+                  borderRadius: BorderRadius.circular(
+                    SizeConfig.roundness8,
+                  ),
+                ),
+                child: AppImage(
+                  social.icon,
+                  color: UiConstants.kTextColor5,
+                  height: SizeConfig.body2,
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+      SliverToBoxAdapter(
+        child: SizedBox(
+          height: SizeConfig.padding24,
+        ),
+      ),
+      SliverToBoxAdapter(
+        child: RatingReviewSection(
+          ratingInfo: expertDetails.ratingInfo,
+          advisorId: advisorID,
+        ),
+      ),
+    ],
+  );
+}
+
+Widget _buildTabOneData(List<VideoData> shortsData, String name) {
+  return CustomScrollView(
+    slivers: [
+      if (shortsData.isEmpty)
+        SliverToBoxAdapter(
+          child: SizedBox(
+            width: SizeConfig.padding252,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: SizeConfig.padding30),
+                AppImage(
+                  Assets.no_shorts,
+                  height: SizeConfig.padding35,
+                  width: SizeConfig.padding35,
+                ),
+                SizedBox(height: SizeConfig.padding12),
+                Text(
+                  '$name hasn’t shared any shorts yet',
+                  style: TextStyles.sourceSansSB.body0,
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: SizeConfig.padding10),
+                Text(
+                  'Book a session to get personal advice directly from them!',
+                  style: TextStyles.sourceSans.body3.colour(
+                    UiConstants.kTextColor.withOpacity(0.7),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      SliverPadding(
+        padding: EdgeInsets.only(top: SizeConfig.padding12),
+      ),
+      SliverGrid(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
             final video = shortsData[index];
             return GestureDetector(
               onTap: () async {
@@ -642,9 +737,7 @@ Widget _buildTabOneData(List<VideoData> shortsData, String name) {
                       borderRadius:
                           BorderRadius.circular(SizeConfig.roundness2),
                       image: DecorationImage(
-                        image: NetworkImage(
-                          video.thumbnail,
-                        ),
+                        image: NetworkImage(video.thumbnail),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -671,6 +764,13 @@ Widget _buildTabOneData(List<VideoData> shortsData, String name) {
               ),
             );
           },
+          childCount: shortsData.length,
+        ),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          crossAxisSpacing: SizeConfig.padding4,
+          mainAxisSpacing: SizeConfig.padding4,
+          childAspectRatio: 0.6,
         ),
       ),
     ],
@@ -1009,7 +1109,9 @@ class ReviewCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  date,
+                  BaseUtil.formatDateTime(
+                    DateTime.tryParse(date) ?? DateTime.now(),
+                  ),
                   style: TextStyles.sourceSans.body4.colour(
                     UiConstants.kTextColor.withOpacity(.7),
                   ),

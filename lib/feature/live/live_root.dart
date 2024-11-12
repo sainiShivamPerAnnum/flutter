@@ -67,7 +67,16 @@ class __LiveHomeState extends State<_LiveHome> {
           } else if (state is LiveHomeData) {
             final liveData = state.homeData;
             if (liveData == null) {
-              return const NewErrorPage();
+              return NewErrorPage(
+                onTryAgain: () {
+                  BlocProvider.of<LiveBloc>(
+                    context,
+                    listen: false,
+                  ).add(
+                    const LoadHomeData(),
+                  );
+                },
+              );
             }
             return SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -176,7 +185,16 @@ class __LiveHomeState extends State<_LiveHome> {
               ),
             );
           } else {
-            return const NewErrorPage();
+            return NewErrorPage(
+              onTryAgain: () {
+                BlocProvider.of<LiveBloc>(
+                  context,
+                  listen: false,
+                ).add(
+                  const LoadHomeData(),
+                );
+              },
+            );
           }
         },
       ),
@@ -200,7 +218,7 @@ class __LiveHomeState extends State<_LiveHome> {
                 status: 'upcoming',
                 title: live.title,
                 subTitle: live.subtitle,
-                advisorCode: live.advisorCode,
+                advisorId: live.advisorId,
                 author: live.author,
                 startTime: live.startTime,
                 category: live.categories.join(', '),
@@ -298,7 +316,7 @@ Widget buildLiveSection(List<LiveStream> liveData) {
                     category: live.categories.join(', '),
                     bgImage: live.thumbnail,
                     liveCount: live.liveCount,
-                    advisorCode: live.advisorCode,
+                    advisorId: live.advisorId,
                     viewerCode: live.viewerCode,
                     isLiked: live.isEventLikedByUser,
                   ),
@@ -361,7 +379,7 @@ Widget buildRecentSection(List<VideoData> recentData, BuildContext context) {
               status: 'recent',
               title: recent.title,
               startTime: recent.timeStamp,
-              advisorCode: recent.advisorId,
+              advisorId: recent.advisorId,
               subTitle: recent.subtitle,
               author: recent.author,
               category: (recent.category ?? []).join(', '),

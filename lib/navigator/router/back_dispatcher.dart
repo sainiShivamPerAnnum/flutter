@@ -84,8 +84,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         AppState.screenStack.last != ScreenItem.dialog &&
         AppState.screenStack.last != ScreenItem.modalsheet &&
         (AppState.delegate!.currentConfiguration?.path ?? '') ==
-            '/livePreview' &&
-        AppState.screenStack.last != ScreenItem.modalsheet) {
+            '/livePreview') {
       BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         isScrollControlled: true,

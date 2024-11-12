@@ -87,12 +87,34 @@ class _BookingStatusSheet extends StatelessWidget {
                   ).copyWith(
                     top: SizeConfig.padding14,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  child: Stack(
+                    alignment: AlignmentDirectional.center,
                     children: [
-                      Text(
-                        'Booking Failed',
-                        style: TextStyles.sourceSansSB.body1,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Booking Failed',
+                            style: TextStyles.sourceSansSB.body1,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              AppState.backButtonDispatcher!.didPopRoute();
+                            },
+                            child: Icon(
+                              Icons.close,
+                              size: SizeConfig.body1,
+                              color: UiConstants.kTextColor,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -193,9 +215,45 @@ class _BookingStatusSheet extends StatelessWidget {
                   ).copyWith(
                     top: SizeConfig.padding14,
                   ),
-                  child: Text(
-                    'Call Confirmed',
-                    style: TextStyles.sourceSansSB.body1,
+                  child: Stack(
+                    alignment: AlignmentDirectional.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Call Confirmed',
+                            style: TextStyles.sourceSansSB.body1,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              AppState.backButtonDispatcher!.didPopRoute();
+                              AppState.delegate!.appState.currentAction =
+                                  PageAction(
+                                page: TellUsAboutYourselfPageConfig,
+                                state: PageState.addWidget,
+                                widget: TellUsAboutYourselfView(
+                                  bookingId:
+                                      state.response.data.bookingId ?? '',
+                                ),
+                              );
+                            },
+                            child: Icon(
+                              Icons.close,
+                              size: SizeConfig.body1,
+                              color: UiConstants.kTextColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
                 const Divider(
@@ -264,12 +322,34 @@ class _BookingStatusSheet extends StatelessWidget {
                   ).copyWith(
                     top: SizeConfig.padding14,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  child: Stack(
+                    alignment: AlignmentDirectional.center,
                     children: [
-                      Text(
-                        'Booking Pending',
-                        style: TextStyles.sourceSansSB.body1,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Booking Pending',
+                            style: TextStyles.sourceSansSB.body1,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              AppState.backButtonDispatcher!.didPopRoute();
+                            },
+                            child: Icon(
+                              Icons.close,
+                              size: SizeConfig.body1,
+                              color: UiConstants.kTextColor,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

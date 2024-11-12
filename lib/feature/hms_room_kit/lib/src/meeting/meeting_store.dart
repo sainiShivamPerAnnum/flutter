@@ -12,7 +12,10 @@ import 'dart:io';
 // import 'package:hms_video_plugin/hms_video_plugin.dart';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/repository/experts_repo.dart';
 import 'package:felloapp/core/repository/live_repository.dart';
+import 'package:felloapp/feature/expertDetails/widgets/rating_sheet.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/enums/meeting_mode.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/enums/session_store_keys.dart';
@@ -25,12 +28,15 @@ import 'package:felloapp/feature/hms_room_kit/lib/src/model/rtc_stats.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/model/transcript_store.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/toasts/hms_toast_model.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/toasts/hms_toasts_type.dart';
+import 'package:felloapp/feature/shorts/flutter_preload_videos.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 
 ///[MeetingStore] is the store that is used to store the data of the meeting
 ///It takes the following parameters:
@@ -113,6 +119,45 @@ class MeetingStore extends ChangeNotifier
     isEventLikedByUser = isLiked;
     eventId = eventID;
     notifyListeners();
+  }
+
+  bool shareLinkInProgress = false;
+
+  bool _isShareAlreadyClicked = false;
+
+  bool get isShareAlreadyClicked => _isShareAlreadyClicked;
+
+  Future<void> shareLink({String? videoId}) async {
+    Haptic.vibrate();
+    if (shareLinkInProgress || _isShareAlreadyClicked == true) return;
+    if (await BaseUtil.showNoInternetAlert()) return;
+    shareLinkInProgress = true;
+    notifyListeners();
+    String? url;
+    if (eventId != null) {
+      final databyId = await locator<ShortsRepo>().dynamicLink(id: eventId!);
+      if (databyId.isSuccess()) {
+        url = databyId.model;
+      }
+    }
+    shareLinkInProgress = false;
+    notifyListeners();
+
+    if (url == null) {
+      BaseUtil.showNegativeAlert(
+        'Generating link failed',
+        'Please try after some time',
+      );
+    } else {
+      _isShareAlreadyClicked = true;
+      notifyListeners();
+      await Share.share("Lets start saving and playing together!\n $url");
+    }
+
+    Future.delayed(const Duration(seconds: 3), () {
+      _isShareAlreadyClicked = false;
+      notifyListeners();
+    });
   }
 
   void onLike() {
@@ -1546,6 +1591,29 @@ class MeetingStore extends ChangeNotifier
         });
       }
     }
+
+    // if (meetingMode == MeetingMode.activeSpeakerWithInset) {
+    AppState.screenStack.add(ScreenItem.modalsheet);
+    await BaseUtil.openModalBottomSheet(
+      isScrollControlled: true,
+      enableDrag: true,
+      isBarrierDismissible: true,
+      addToScreenStack: false,
+      content: FeedbackBottomSheet(
+        advisorId: advisorId!,
+        onSubmit: (rating, comment) async {
+          unawaited(
+            locator<ExpertsRepository>().postRatingDetails(
+              advisorId: advisorId!,
+              comments: comment,
+              rating: rating,
+            ),
+          );
+          await AppState.backButtonDispatcher!.didPopRoute();
+        },
+      ),
+    );
+    // }
   }
 
   void resetOrientation() {

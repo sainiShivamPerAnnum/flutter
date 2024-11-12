@@ -162,4 +162,23 @@ class ShortsRepo {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
+  Future<ApiResponse<String>> dynamicLink({
+    required String id,
+  }) async {
+    try {
+      final response = await APIService.instance.postData(
+        'events/generate-link/$id',
+        cBaseUrl: _baseUrl,
+        apiName: 'ShortsRepo/dynamicLink',
+      );
+      final responseData = response["data"];
+      return ApiResponse<String>(
+        model: responseData['shortLink'],
+        code: 200,
+      );
+    } catch (e) {
+      log(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
 }

@@ -187,10 +187,12 @@ class _MeetingBottomNavigationBarState
                                       AppState.screenStack
                                           .add(ScreenItem.modalsheet),
                                       BaseUtil.openModalBottomSheet(
-                                        isBarrierDismissible: true,
+                                        isBarrierDismissible: false,
                                         backgroundColor:
                                             HMSThemeColors.surfaceDim,
                                         isScrollControlled: true,
+                                        addToScreenStack: false,
+                                        enableDrag: false,
                                         content: ChangeNotifierProvider.value(
                                           value: context.read<MeetingStore>(),
                                           child: HMSRoomLayout
@@ -239,7 +241,9 @@ class _MeetingBottomNavigationBarState
                           onTap: () async => {
                             AppState.screenStack.add(ScreenItem.modalsheet),
                             BaseUtil.openModalBottomSheet(
-                              isBarrierDismissible: true,
+                              isBarrierDismissible: false,
+                              addToScreenStack: false,
+                              enableDrag: false,
                               backgroundColor: HMSThemeColors.surfaceDim,
                               isScrollControlled: true,
                               content: ChangeNotifierProvider.value(

@@ -69,6 +69,7 @@ class LiveStream {
   final String advisorCode;
   final String viewerCode;
   final bool isEventLikedByUser;
+  final String advisorId;
 
   LiveStream({
     required this.id,
@@ -81,6 +82,7 @@ class LiveStream {
     required this.advisorCode,
     required this.viewerCode,
     required this.isEventLikedByUser,
+    required this.advisorId,
   });
 
   factory LiveStream.fromJson(Map<String, dynamic> json) =>
@@ -98,6 +100,7 @@ class UpcomingStream {
   final String startTime;
   final String advisorCode;
   final String viewerCode;
+  final String advisorId;
 
   UpcomingStream({
     required this.id,
@@ -109,6 +112,7 @@ class UpcomingStream {
     required this.startTime,
     required this.advisorCode,
     required this.viewerCode,
+    required this.advisorId,
   });
 
   factory UpcomingStream.fromJson(Map<String, dynamic> json) =>

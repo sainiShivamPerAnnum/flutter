@@ -56,6 +56,8 @@ class BookCallSheetView extends StatelessWidget {
         advisorName: advisorName,
         isEdit: isEdit,
         bookingId: bookingId,
+        duration: duration,
+        scheduledOn: scheduledOn,
       ),
     );
   }
@@ -66,12 +68,16 @@ class _BookCallBottomSheet extends StatefulWidget {
     required this.advisorId,
     required this.advisorName,
     required this.isEdit,
+    this.duration,
+    this.scheduledOn,
     this.bookingId,
   });
   final String advisorId;
   final String advisorName;
   final bool isEdit;
   final String? bookingId;
+  final String? duration;
+  final DateTime? scheduledOn;
 
   @override
   State<_BookCallBottomSheet> createState() => _BookCallBottomSheetState();
@@ -111,11 +117,29 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
               children: [FullScreenLoader()],
             );
           } else if (state is BookingsLoaded) {
-            return _buildContent(context, state.schedule, widget.advisorId);
+            return _buildContent(
+              context,
+              state.schedule,
+              widget.advisorId,
+              state.isFree,
+            );
           } else if (state is PricingData) {
             return _buildPaymentSummary(context, state);
           } else {
-            return const NewErrorPage();
+            return NewErrorPage(
+              onTryAgain: () {
+                BlocProvider.of<BookingBloc>(
+                  context,
+                  listen: false,
+                ).add(
+                  LoadBookingDates(
+                    widget.advisorId,
+                    int.tryParse(widget.duration ?? "30") ?? 30,
+                    widget.scheduledOn,
+                  ),
+                );
+              },
+            );
           }
         },
       ),
@@ -126,12 +150,13 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
     BuildContext context,
     Schedule? schedule,
     String advisorId,
+    bool isFree,
   ) {
     final state = context.read<BookingBloc>().state;
     final selectedDate = state is BookingsLoaded ? state.selectedDate : null;
     final selectedDuration =
         state is BookingsLoaded ? state.selectedDuration : null;
-    final selectedTime = state is BookingsLoaded ? state.selectedTime : null;
+    selectedTime = state is BookingsLoaded ? state.selectedTime : null;
     final duration = [
       {"name": '15 Mins', "value": 15},
       {"name": '30 Mins', "value": 30},
@@ -150,15 +175,38 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
       children: [
         Container(
           padding: EdgeInsets.symmetric(
-            vertical: SizeConfig.padding14,
             horizontal: SizeConfig.padding20,
+          ).copyWith(
+            top: SizeConfig.padding12,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Stack(
+            alignment: AlignmentDirectional.center,
             children: [
-              Text(
-                'Book a call',
-                style: TextStyles.sourceSansSB.body1,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Book a call',
+                    style: TextStyles.sourceSansSB.body1,
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      AppState.backButtonDispatcher!.didPopRoute();
+                    },
+                    child: Icon(
+                      Icons.close,
+                      size: SizeConfig.body1,
+                      color: UiConstants.kTextColor,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -208,7 +256,7 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
               if (!widget.isEdit)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: duration.take(4).map((e) {
+                  children: duration.take(isFree ? 2 : 4).map((e) {
                     return Padding(
                       padding: EdgeInsets.only(right: SizeConfig.padding12),
                       child: DateButton(
@@ -487,12 +535,34 @@ Widget _buildPaymentSummary(BuildContext context, PricingData state) {
         ).copyWith(
           top: SizeConfig.padding14,
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
+          alignment: AlignmentDirectional.center,
           children: [
-            Text(
-              'Payment Summary',
-              style: TextStyles.sourceSansSB.body1,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Payment Summary',
+                  style: TextStyles.sourceSansSB.body1,
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    AppState.backButtonDispatcher!.didPopRoute();
+                  },
+                  child: Icon(
+                    Icons.close,
+                    size: SizeConfig.body1,
+                    color: UiConstants.kTextColor,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -584,7 +654,7 @@ Widget _buildPaymentSummary(BuildContext context, PricingData state) {
               AppState.screenStack.add(ScreenItem.modalsheet);
               BaseUtil.openModalBottomSheet(
                 isScrollControlled: true,
-                enableDrag: true,
+                enableDrag: false,
                 isBarrierDismissible: false,
                 addToScreenStack: false,
                 content: PaymentSheet(

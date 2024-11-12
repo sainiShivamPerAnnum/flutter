@@ -81,4 +81,24 @@ class LiveRepository extends BaseRepo {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
+
+  Future<ApiResponse<String>> dynamicLink({
+    required String id,
+  }) async {
+    try {
+      final response = await APIService.instance.postData(
+        'events/generate-link/$id',
+        cBaseUrl: _baseUrl,
+        apiName: '$_live/dynamicLink',
+      );
+      final responseData = response["data"];
+      return ApiResponse<String>(
+        model: responseData['shortLink'],
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
 }

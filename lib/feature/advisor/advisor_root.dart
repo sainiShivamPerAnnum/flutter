@@ -45,7 +45,16 @@ class AdvisorViewWrapper extends StatelessWidget {
         builder: (context, state) {
           return switch (state) {
             LoadingAdvisorData() => const FullScreenLoader(),
-            ErrorAdvisorData() => const NewErrorPage(),
+            ErrorAdvisorData() => NewErrorPage(
+                onTryAgain: () {
+                  BlocProvider.of<AdvisorBloc>(
+                    context,
+                    listen: false,
+                  ).add(
+                    const LoadAdvisorData(),
+                  );
+                },
+              ),
             AdvisorData() => Padding(
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
                 child: SingleChildScrollView(

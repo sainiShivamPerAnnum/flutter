@@ -87,7 +87,7 @@ class MyAccount extends StatelessWidget {
                     uri: "/tambolaHome",
                   ),
                   const AccountInfoTiles(
-                    title: 'Sip',
+                    title: 'Manage SIP',
                     uri: "/autosave",
                   ),
                   AccountInfoTiles(

@@ -5,7 +5,6 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -14,7 +13,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:keyboard_detection/keyboard_detection.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:video_player/video_player.dart';
 
@@ -59,7 +57,16 @@ class _ShortsVideoPageState extends State<ShortsVideoPage> {
               initialPage: initialIndex,
             );
             if (state.errorMessage != null) {
-              return const NewErrorPage();
+              return NewErrorPage(
+                onTryAgain: () {
+                  BlocProvider.of<PreloadBloc>(
+                    context,
+                    listen: false,
+                  ).add(
+                    const PreloadEvent.getVideosFromApi(),
+                  );
+                },
+              );
             }
             return PageView.builder(
               controller: pageController,
@@ -105,17 +112,16 @@ class _ShortsVideoPageState extends State<ShortsVideoPage> {
                           );
                         },
                         onShare: () async {
-                          // PendingDynamicLinkData? dynamicLinkData =
-                          //     await FirebaseDynamicLinks.instance
-                          //         .getDynamicLink(
-                          //   Uri.parse(
-                          //     '',
-                          //   ),
-                          // );
-                          // Uri? deepLink = dynamicLinkData?.link;
-                          await Share.share(
-                            '${FlavorConfig.instance!.values.dynamicLinkPrefix}/shorts/${videos[index].id}',
-                          );
+                          if (state.isShareAlreadyClicked == false) {
+                            BlocProvider.of<PreloadBloc>(
+                              context,
+                              listen: false,
+                            ).add(
+                              PreloadEvent.generateDynamicLink(
+                                videoId: videos[index].id,
+                              ),
+                            );
+                          }
                         },
                         onLike: () {
                           BlocProvider.of<PreloadBloc>(
@@ -288,13 +294,33 @@ class VideoWidgetState extends State<VideoWidget>
           Positioned.fill(
             child: AspectRatio(
               aspectRatio: widget.controller.value.aspectRatio,
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: SizedBox(
-                  width: widget.controller.value.size.width,
-                  height: widget.controller.value.size.height,
-                  child: VideoPlayer(widget.controller),
-                ),
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: SizedBox(
+                        height: widget.controller.value.size.height,
+                        width: widget.controller.value.size.width,
+                        child: VideoPlayer(widget.controller),
+                      ),
+                    ),
+                  ),
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            UiConstants.kTextColor4.withOpacity(.8),
+                            UiConstants.kTextColor4.withOpacity(0),
+                          ],
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

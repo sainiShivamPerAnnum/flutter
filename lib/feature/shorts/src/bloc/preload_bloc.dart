@@ -3,10 +3,13 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
 
 import '../core/constants.dart';
@@ -59,6 +62,43 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       },
       switchToMainReels: (e) {
         emit(state.copyWith(currentContext: ReelContext.main));
+      },
+      generateDynamicLink: (e) async {
+        if (state.shareLinkInProgress || state.isShareAlreadyClicked) {
+          return;
+        }
+        Haptic.vibrate();
+        String? url;
+        emit(
+          state.copyWith(
+            shareLinkInProgress: true,
+            isShareAlreadyClicked: true,
+          ),
+        );
+        if (await BaseUtil.showNoInternetAlert()) return;
+        if (state.link[e.videoId] != null) {
+          url = state.link[e.videoId];
+        } else {
+          final databyId = await repository.dynamicLink(id: e.videoId);
+          if (databyId.isSuccess()) {
+            url = databyId.model;
+            emit(
+              state
+                  .copyWith(link: {e.videoId.toString(): databyId.model ?? ''}),
+            );
+          }
+        }
+        emit(state.copyWith(shareLinkInProgress: false));
+        if (url == null) {
+          BaseUtil.showNegativeAlert(
+            'Generating link failed',
+            'Please try after some time',
+          );
+          emit(state.copyWith(isShareAlreadyClicked: false));
+        } else {
+          await Share.share("Let's start saving and playing together!\n$url");
+          emit(state.copyWith(isShareAlreadyClicked: false));
+        }
       },
       initializeFromDynamicLink: (e) async {
         await _stopAndDisposeAllControllers();

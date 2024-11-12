@@ -122,7 +122,7 @@ class _TellUsAboutYourselfScreenState
           value: selectedIncome,
           isExpanded: true,
           icon: Icon(
-            Icons.chevron_left_rounded,
+            Icons.chevron_right_rounded,
             color: UiConstants.kTextColor,
             size: SizeConfig.body4,
           ),

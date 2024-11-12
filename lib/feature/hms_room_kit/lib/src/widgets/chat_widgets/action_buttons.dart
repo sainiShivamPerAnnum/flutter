@@ -13,12 +13,14 @@ class ChatActionButtons extends StatelessWidget {
     required this.advisorName,
     required this.isLiked,
     required this.onLike,
+    required this.onShare,
     super.key,
   });
   final String advisorId;
   final String advisorName;
   final bool isLiked;
   final VoidCallback onLike;
+  final VoidCallback onShare;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class ChatActionButtons extends StatelessWidget {
                 height: SizeConfig.padding20,
                 width: SizeConfig.padding20,
               ),
-              onPressed: () {},
+              onPressed: onShare,
             ),
             Text(
               'Share',

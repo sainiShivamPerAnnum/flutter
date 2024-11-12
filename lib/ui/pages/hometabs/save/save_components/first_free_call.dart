@@ -1,3 +1,4 @@
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,7 @@ class FirstFreeCall extends StatelessWidget {
                     SizedBox(height: SizeConfig.padding18),
                     ElevatedButton(
                       onPressed: () {
-                        // Handle the book call action here
+                        AppState.delegate!.parseRoute(Uri.parse("experts"));
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: UiConstants.kTextColor,

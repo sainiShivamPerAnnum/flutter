@@ -122,7 +122,23 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
                   const FullScreenLoader(),
                 ScheduleCallLoaded() =>
                   _buildScheduleCallContent(context, state),
-                ScheduleCallFailure() => const NewErrorPage(),
+                ScheduleCallFailure() => NewErrorPage(
+                    onTryAgain: () {
+                      BlocProvider.of<ScheduleLiveBloc>(
+                        context,
+                        listen: false,
+                      )
+                        ..add(LoadCategories())
+                        ..add(
+                          LoadCategoriesWithPrefill(
+                            timeSlot: widget.timeSlot,
+                            title: widget.title,
+                            description: widget.subTitle,
+                            selectedCategory: widget.category,
+                          ),
+                        );
+                    },
+                  ),
                 ScheduleCallSuccess() => const SizedBox.shrink(),
               };
             },

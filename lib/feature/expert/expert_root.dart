@@ -58,7 +58,16 @@ class __ExpertHomeState extends State<_ExpertHome>
           final expertsData = state.expertsHome;
 
           if (expertsData == null || expertsData.list.isEmpty) {
-            return const Center(child: NewErrorPage());
+            return Center(child: NewErrorPage(
+              onTryAgain: () {
+                BlocProvider.of<ExpertBloc>(
+                  context,
+                  listen: false,
+                ).add(
+                  const LoadExpertsData(),
+                );
+              },
+            ));
           }
           sectionKeys = {
             for (final section in expertsData.list)
@@ -99,7 +108,9 @@ class __ExpertHomeState extends State<_ExpertHome>
                   ),
                 ),
                 SliverPadding(
-                  padding: EdgeInsets.only(left: SizeConfig.padding20),
+                  padding: EdgeInsets.only(
+                    left: SizeConfig.padding20,
+                  ),
                   sliver: _buildUpcomingBookings(),
                 ),
                 SliverPadding(
@@ -121,6 +132,7 @@ class __ExpertHomeState extends State<_ExpertHome>
                       EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
                   sliver: _buildTopExpertList(
                     expertsData.values[topSectionKey]?.take(3).toList() ?? [],
+                    expertsData.isAnyFreeCallAvailable,
                   ),
                 ),
                 SliverPadding(
@@ -150,6 +162,7 @@ class __ExpertHomeState extends State<_ExpertHome>
                             (section) => _buildInViewSection(
                               section,
                               expertsData.values[section] ?? [],
+                              expertsData.isAnyFreeCallAvailable,
                             ),
                           )
                           .toList(),
@@ -160,7 +173,16 @@ class __ExpertHomeState extends State<_ExpertHome>
             ),
           );
         } else {
-          return const NewErrorPage();
+          return NewErrorPage(
+            onTryAgain: () {
+              BlocProvider.of<ExpertBloc>(
+                context,
+                listen: false,
+              ).add(
+                const LoadExpertsData(),
+              );
+            },
+          );
         }
       },
     );
@@ -175,27 +197,41 @@ class __ExpertHomeState extends State<_ExpertHome>
             selector: (_, model) => model.upcomingBookings,
             builder: (_, upcomingBookings, __) {
               return upcomingBookings.isNotEmpty
-                  ? Container(
-                      height: SizeConfig.screenHeight! * 0.3465,
-                      padding: EdgeInsets.only(top: SizeConfig.padding10),
-                      margin: EdgeInsets.only(top: SizeConfig.padding10),
-                      child: ListView.builder(
-                        itemCount: upcomingBookings.length,
-                        scrollDirection: Axis.horizontal,
-                        physics: upcomingBookings.length > 1
-                            ? const AlwaysScrollableScrollPhysics()
-                            : const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) => Padding(
-                          padding: EdgeInsets.only(right: SizeConfig.padding10)
-                              .copyWith(bottom: SizeConfig.padding16),
-                          child: ScheduleCard(
-                            booking: upcomingBookings[index],
-                            width: upcomingBookings.length > 1
-                                ? SizeConfig.padding325
-                                : SizeConfig.padding350,
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: SizeConfig.padding24,
+                        ),
+                        const TitleSubtitleContainer(
+                          title: "Your upcoming calls",
+                          zeroPadding: true,
+                        ),
+                        Container(
+                          height: SizeConfig.screenHeight! * 0.324,
+                          margin: EdgeInsets.only(top: SizeConfig.padding10),
+                          padding: EdgeInsets.only(top: SizeConfig.padding8),
+                          child: ListView.builder(
+                            padding: EdgeInsets.zero,
+                            itemCount: upcomingBookings.length,
+                            scrollDirection: Axis.horizontal,
+                            physics: upcomingBookings.length > 1
+                                ? const AlwaysScrollableScrollPhysics()
+                                : const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) => Padding(
+                              padding: EdgeInsets.only(
+                                right: SizeConfig.padding18,
+                              ),
+                              child: ScheduleCard(
+                                booking: upcomingBookings[index],
+                                width: upcomingBookings.length > 1
+                                    ? SizeConfig.padding325
+                                    : SizeConfig.padding350,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     )
                   : const SizedBox.shrink();
             },
@@ -205,7 +241,11 @@ class __ExpertHomeState extends State<_ExpertHome>
     );
   }
 
-  Widget _buildInViewSection(String section, List<Expert> experts) {
+  Widget _buildInViewSection(
+    String section,
+    List<Expert> experts,
+    bool isFree,
+  ) {
     final sectionKey = sectionKeys[section];
     return InViewNotifierWidget(
       id: sectionKey.toString(),
@@ -218,7 +258,7 @@ class __ExpertHomeState extends State<_ExpertHome>
           mainAxisSize: MainAxisSize.min,
           children: [
             _buildSectionContent(section),
-            _buildExpertList(experts),
+            _buildExpertList(experts, isFree),
           ],
         );
       },
@@ -233,7 +273,10 @@ class __ExpertHomeState extends State<_ExpertHome>
     );
   }
 
-  Widget _buildTopExpertList(List<Expert> experts) {
+  Widget _buildTopExpertList(
+    List<Expert> experts,
+    bool isFree,
+  ) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
@@ -241,6 +284,7 @@ class __ExpertHomeState extends State<_ExpertHome>
           return Padding(
             padding: EdgeInsets.only(bottom: SizeConfig.padding16),
             child: ExpertCard(
+              isFree: isFree,
               expert: expert,
               onBookCall: () {
                 BaseUtil.openBookAdvisorSheet(
@@ -266,7 +310,10 @@ class __ExpertHomeState extends State<_ExpertHome>
     );
   }
 
-  Widget _buildExpertList(List<Expert> experts) {
+  Widget _buildExpertList(
+    List<Expert> experts,
+    bool isFree,
+  ) {
     return ListView.builder(
       shrinkWrap: true,
       padding: EdgeInsets.zero,
@@ -275,6 +322,7 @@ class __ExpertHomeState extends State<_ExpertHome>
         return Padding(
           padding: EdgeInsets.only(bottom: SizeConfig.padding16),
           child: ExpertCard(
+            isFree: isFree,
             expert: experts[index],
             onBookCall: () {
               BaseUtil.openBookAdvisorSheet(
