@@ -5,9 +5,7 @@ import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_store.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/styles.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -152,127 +150,124 @@ class _OneOnOneChatState extends State<OneOnOneChat> {
     return SizedBox(
       child: (comments == null || comments.isEmpty)
           ? const SizedBox.shrink()
-          : Expanded(
-              flex: 3,
-              child: SingleChildScrollView(
-                reverse: true,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ListView.builder(
-                      controller: scrollController,
-                      shrinkWrap: true,
-                      itemCount: comments.length,
-                      itemBuilder: (context, index) {
-                        var metaData = jsonDecode(
-                          comments[index].sender?.metadata != ''
-                              ? comments[index].sender?.metadata ??
-                                  '{"avatar": "","dpurl":""}'
-                              : '{"avatar": "","dpurl":""}',
-                        );
-                        return Padding(
-                          padding:
-                              EdgeInsets.only(bottom: SizeConfig.padding18),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CircleAvatar(
-                                radius: SizeConfig.padding10,
-                                backgroundColor: Colors.black,
-                                child: metaData != null &&
+          : SingleChildScrollView(
+            reverse: true,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ListView.builder(
+                  controller: scrollController,
+                  shrinkWrap: true,
+                  itemCount: comments.length,
+                  itemBuilder: (context, index) {
+                    var metaData = jsonDecode(
+                      comments[index].sender?.metadata != ''
+                          ? comments[index].sender?.metadata ??
+                              '{"avatar": "","dpurl":""}'
+                          : '{"avatar": "","dpurl":""}',
+                    );
+                    return Padding(
+                      padding:
+                          EdgeInsets.only(bottom: SizeConfig.padding18),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: SizeConfig.padding10,
+                            backgroundColor: Colors.black,
+                            child: metaData != null &&
+                                    metaData['avatar'] != '' &&
+                                    metaData['avatar'] != 'CUSTOM'
+                                ? ClipOval(
+                                    child: SizedBox(
+                                      width: 2 * SizeConfig.padding10,
+                                      height: 2 * SizeConfig.padding10,
+                                      child: SvgPicture.asset(
+                                        "assets/vectors/userAvatars/${metaData['avatar']}.svg",
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  )
+                                : (metaData != null &&
                                         metaData['avatar'] != '' &&
-                                        metaData['avatar'] != 'CUSTOM'
+                                        metaData!['avatar'] == 'CUSTOM' &&
+                                        metaData!['dpurl'] != '')
                                     ? ClipOval(
                                         child: SizedBox(
                                           width: 2 * SizeConfig.padding10,
                                           height: 2 * SizeConfig.padding10,
-                                          child: SvgPicture.asset(
-                                            "assets/vectors/userAvatars/${metaData['avatar']}.svg",
+                                          child: CachedNetworkImage(
+                                            imageUrl: metaData['dpurl'],
                                             fit: BoxFit.cover,
                                           ),
                                         ),
                                       )
-                                    : (metaData != null &&
-                                            metaData['avatar'] != '' &&
-                                            metaData!['avatar'] == 'CUSTOM' &&
-                                            metaData!['dpurl'] != '')
-                                        ? ClipOval(
-                                            child: SizedBox(
-                                              width: 2 * SizeConfig.padding10,
-                                              height: 2 * SizeConfig.padding10,
-                                              child: CachedNetworkImage(
-                                                imageUrl: metaData['dpurl'],
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          )
-                                        : ClipOval(
-                                            child: SizedBox(
-                                              width: 2 * SizeConfig.padding10,
-                                              height: 2 * SizeConfig.padding10,
-                                              child: Image.asset(
-                                                Assets.profilePic,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
+                                    : ClipOval(
+                                        child: SizedBox(
+                                          width: 2 * SizeConfig.padding10,
+                                          height: 2 * SizeConfig.padding10,
+                                          child: Image.asset(
+                                            Assets.profilePic,
+                                            fit: BoxFit.cover,
                                           ),
-                              ),
-                              SizedBox(
-                                width: SizeConfig.padding6,
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      bottom: SizeConfig.padding2),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                        ),
+                                      ),
+                          ),
+                          SizedBox(
+                            width: SizeConfig.padding6,
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  bottom: SizeConfig.padding2),
+                              child: Column(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                children: [
+                                  Row(
                                     children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            comments[index].sender?.name ?? '',
-                                            style:
-                                                TextStyles.sourceSansSB.body4,
-                                            maxLines: 1,
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: SizeConfig.padding4,
-                                            ),
-                                            child: const Icon(
-                                              Icons.circle,
-                                              size: 4,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Text(
-                                            timeago.format(
-                                              comments[index].time,
-                                            ),
-                                            style: TextStyles.sourceSans.body4,
-                                          ),
-                                        ],
+                                      Text(
+                                        comments[index].sender?.name ?? '',
+                                        style:
+                                            TextStyles.sourceSansSB.body4,
+                                        maxLines: 1,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: SizeConfig.padding4,
+                                        ),
+                                        child: const Icon(
+                                          Icons.circle,
+                                          size: 4,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                       Text(
-                                        comments[index].message,
+                                        timeago.format(
+                                          comments[index].time,
+                                        ),
                                         style: TextStyles.sourceSans.body4,
-                                        maxLines: 4,
-                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ],
                                   ),
-                                ),
+                                  Text(
+                                    comments[index].message,
+                                    style: TextStyles.sourceSans.body4,
+                                    maxLines: 4,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        );
-                      },
-                    ),
-                  ],
+                        ],
+                      ),
+                    );
+                  },
                 ),
-              ),
+              ],
             ),
+          ),
     );
   }
 }

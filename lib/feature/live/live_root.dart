@@ -300,6 +300,7 @@ Widget buildLiveSection(List<LiveStream> liveData) {
                     liveCount: live.liveCount,
                     advisorCode: live.advisorCode,
                     viewerCode: live.viewerCode,
+                    isLiked: live.isEventLikedByUser,
                   ),
                 ),
             ],

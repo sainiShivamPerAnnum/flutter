@@ -263,10 +263,14 @@ class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
                   style: TextStyles.sourceSansSB.body2.colour(
                     UiConstants.kTextColor,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: SizeConfig.padding4),
                 Text(
                   widget.subTitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyles.sourceSans.body4.colour(
                     UiConstants.kTextColor5,
                   ),
@@ -328,14 +332,14 @@ class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
       page: ScheduleCallViewConfig,
       widget: ScheduleCallWrapper(
         id: widget.id,
-        status: widget.status, // "live"
-        title: widget.title, // "Investment Webinar"
+        status: widget.status, 
+        title: widget.title,
         subTitle: widget
-            .subTitle, // "A comprehensive webinar on investment strategies."
-        author: widget.author, // "Not coming from backend"
-        category: widget.category, // "Finance"
-        bgImage: widget.bgImage, // "https://example.com/image.jpg"
-        liveCount: widget.liveCount, // 3
+            .subTitle,
+        author: widget.author,
+        category: widget.category, 
+        bgImage: widget.bgImage, 
+        liveCount: widget.liveCount,
         duration: widget.duration,
         timeSlot: widget.timeSlot,
       ),

@@ -35,3 +35,17 @@ class UpdateEvent extends ScheduleCallEvent {
   final String description;
   UpdateEvent(this.id, this.topic, this.description);
 }
+
+class LoadCategoriesWithPrefill extends ScheduleCallEvent {
+  final String? title;
+  final String? description;
+  final String? selectedCategory;
+  final String? timeSlot;
+
+  LoadCategoriesWithPrefill({
+    required this.title,
+    required this.description,
+    required this.selectedCategory,
+    required this.timeSlot,
+  });
+}

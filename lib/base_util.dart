@@ -463,6 +463,8 @@ class BaseUtil extends ChangeNotifier {
     required String advisorId,
     required String advisorName,
     required bool isEdit,
+    String? duration,
+    DateTime? scheduledOn,
     String? bookingId,
   }) {
     AppState.screenStack.add(ScreenItem.modalsheet);
@@ -476,6 +478,8 @@ class BaseUtil extends ChangeNotifier {
         advisorName: advisorName,
         isEdit: isEdit,
         bookingId: bookingId,
+        duration: duration,
+        scheduledOn: scheduledOn,
       ),
       backgroundColor: UiConstants.kBackgroundColor,
       hapticVibrate: true,
@@ -1018,7 +1022,8 @@ class BaseUtil extends ChangeNotifier {
     final DateFormat formatter = DateFormat('dd MMM yyyy, hh:mm a');
     return formatter.format(dateTime);
   }
-   static String formatTime(DateTime dateTime) {
+
+  static String formatTime(DateTime dateTime) {
     final DateFormat formatter = DateFormat('hh:mm a');
     return formatter.format(dateTime);
   }

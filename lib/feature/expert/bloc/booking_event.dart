@@ -5,9 +5,10 @@ sealed class BookingEvent {
 }
 
 class LoadBookingDates extends BookingEvent {
-  const LoadBookingDates(this.advisorId, this.duration);
+  const LoadBookingDates(this.advisorId, this.duration,this.scheduledOn);
   final String advisorId;
   final int duration;
+  final DateTime? scheduledOn;
 }
 
 class SelectDate extends BookingEvent {

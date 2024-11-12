@@ -13,6 +13,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:upi_pay/upi_pay.dart';
 
 part 'booking_event.dart';
@@ -45,9 +46,21 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       duration: event.duration,
     );
     final availableDates = data.model?.slots?.keys.toList() ?? [];
+    String? selectedDate;
+
+    if (event.scheduledOn != null) {
+      final formattedScheduledOn = DateFormat('yyyy-MM-dd').format(
+        event.scheduledOn!,
+      );
+
+      if (availableDates.contains(formattedScheduledOn)) {
+        selectedDate = formattedScheduledOn;
+      } else {
+        selectedDate = availableDates.first;
+      }
+    }
 
     if (availableDates.isNotEmpty) {
-      final selectedDate = availableDates.first;
       emitter(
         BookingsLoaded(
           advisorId: event.advisorId,
@@ -85,6 +98,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
         LoadBookingDates(
           (state as BookingsLoaded).advisorId,
           event.selectDuration,
+          null,
         ),
       );
     }

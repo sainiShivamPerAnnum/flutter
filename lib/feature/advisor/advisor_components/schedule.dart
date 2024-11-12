@@ -70,7 +70,7 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
             const Text('Schedule Live', style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
+        surfaceTintColor: const Color.fromRGBO(0, 0, 0, 0),
         leading: const BackButton(
           color: UiConstants.kTextColor,
         ),
@@ -84,7 +84,16 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
             BlocProvider(
               create: (context) => ScheduleLiveBloc(
                 locator(),
-              )..add(LoadCategories()),
+              )
+                ..add(LoadCategories())
+                ..add(
+                  LoadCategoriesWithPrefill(
+                    timeSlot: widget.timeSlot,
+                    title: widget.title,
+                    description: widget.subTitle,
+                    selectedCategory: widget.category,
+                  ),
+                ),
             ),
             BlocProvider.value(
               value: locator<AdvisorBloc>(),
@@ -100,12 +109,10 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
                     date: state.date,
                   ),
                 );
-                Future.delayed(const Duration(seconds: 2), () {
-                  BlocProvider.of<AdvisorBloc>(
-                    context,
-                    listen: false,
-                  ).add(const LoadAdvisorData());
-                });
+                BlocProvider.of<AdvisorBloc>(
+                  context,
+                  listen: false,
+                ).add(const LoadAdvisorData());
               }
             },
             builder: (context, state) {

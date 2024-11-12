@@ -127,51 +127,44 @@ class FelloBalanceScreen extends StatelessWidget {
               child: Row(
                 children: [
                   Selector<UserService, Portfolio>(
-                    builder: (_, portfolio, child) => Text(
-                      BaseUtil.formatIndianRupees(getTotalBalance(portfolio)),
-                      style: TextStyles.sourceSansSB.title3.colour(
-                        UiConstants.kTextColor,
-                      ),
-                    ),
-                    selector: (_, userService) => userService.userPortfolio,
-                  ),
-                  SizedBox(width: SizeConfig.padding8),
-                  Selector<UserService, Portfolio>(
-                    builder: (context, value, child) => Column(
+                    builder: (_, portfolio, child) => Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Transform.translate(
-                              offset: Offset(
-                                0,
-                                -SizeConfig.padding4,
-                              ),
-                              child: RotatedBox(
+                        Text(
+                          BaseUtil.formatIndianRupees(
+                              getTotalBalance(portfolio)),
+                          style: TextStyles.sourceSansSB.title3,
+                        ),
+                        SizedBox(width: SizeConfig.padding8),
+                        Transform.translate(
+                          offset: Offset(0, SizeConfig.padding3),
+                          child: Row(
+                            children: [
+                              RotatedBox(
                                 quarterTurns:
-                                    value.absolute.percGains < 0 ? 2 : 0,
+                                    portfolio.absolute.percGains < 0 ? 2 : 0,
                                 child: AppImage(
                                   Assets.arrow,
-                                  width: SizeConfig.body3,
-                                  color: value.absolute.percGains < 0
+                                  width: SizeConfig.body4,
+                                  color: portfolio.absolute.percGains < 0
                                       ? Colors.red
                                       : UiConstants.primaryColor,
                                 ),
                               ),
-                            ),
-                            Text(
-                              " ${BaseUtil.digitPrecision(value.absolute.percGains, 2, false)}%",
-                              style: TextStyles.sourceSansSB.body3.colour(
-                                value.absolute.percGains < 0
-                                    ? Colors.red
-                                    : UiConstants.primaryColor,
+                              Text(
+                                " ${BaseUtil.digitPrecision(portfolio.absolute.percGains, 2, false)}%",
+                                style: TextStyles.sourceSansSB.body3.colour(
+                                  portfolio.absolute.percGains < 0
+                                      ? Colors.red
+                                      : UiConstants.primaryColor,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                    selector: (p0, p1) => p1.userPortfolio,
+                    selector: (_, userService) => userService.userPortfolio,
                   ),
                 ],
               ),

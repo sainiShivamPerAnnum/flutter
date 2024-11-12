@@ -20,7 +20,65 @@ class ScheduleLiveBloc extends Bloc<ScheduleCallEvent, ScheduleCallState> {
     on<UploadProfilePicture>(_onUploadProfilePicture);
     on<ScheduleEvent>(_onScheduleEvent);
     on<UpdateEvent>(_onUpdateEvent);
+    on<LoadCategoriesWithPrefill>(_onPreFill);
   }
+  FutureOr<void> _onPreFill(
+    LoadCategoriesWithPrefill event,
+    Emitter<ScheduleCallState> emit,
+  ) async {
+    final categories = [
+      "Personal Finance",
+      "Mutual Funds",
+      "Retirement Planning",
+      "Loan Expert",
+      "Tax and Compliance",
+      "Stock Market",
+      "Savings and Planning",
+      "Alternate Assets",
+    ];
+    final dates = generateDates(5);
+    final times = [
+      {'TimeUI': '10:00 AM'},
+      {'TimeUI': '11:00 AM'},
+      {'TimeUI': '12:00 PM'},
+      {'TimeUI': '1:00 PM'},
+      {'TimeUI': '2:00 PM'},
+      {'TimeUI': '3:00 PM'},
+      {'TimeUI': '4:00 PM'},
+      {'TimeUI': '5:00 PM'},
+      {'TimeUI': '6:00 PM'},
+      {'TimeUI': '7:00 PM'},
+      {'TimeUI': '8:00 PM'},
+    ];
+    if (event.timeSlot != null) {
+      emit(ScheduleCallLoading());
+      int? selectedDateIndex;
+      int? selectedTimeIndex;
+      final DateTime parsedDateTime = DateTime.parse(event.timeSlot!);
+
+      selectedDateIndex = dates.indexWhere((date) {
+        final dateInList = DateFormat("MMMM d, yyyy").parse(date['dateTime']!);
+        return dateInList.year == parsedDateTime.year &&
+            dateInList.month == parsedDateTime.month &&
+            dateInList.day == parsedDateTime.day;
+      });
+
+      selectedTimeIndex = times.indexWhere((time) {
+        return time['TimeUI'] == DateFormat('h:mm a').format(parsedDateTime);
+      });
+      emit(
+        ScheduleCallLoaded(
+          categories: categories,
+          dates: dates,
+          times: times,
+          selectedCategory: event.selectedCategory ?? categories[0],
+          selectedDateIndex: selectedDateIndex,
+          selectedTimeIndex: selectedTimeIndex,
+        ),
+      );
+    }
+  }
+
   FutureOr<void> _onLoadCategories(
     LoadCategories event,
     Emitter<ScheduleCallState> emit,
@@ -171,14 +229,14 @@ class ScheduleLiveBloc extends Bloc<ScheduleCallEvent, ScheduleCallState> {
         if (response.isSuccess()) {
           emit(
             ScheduleCallSuccess(
-              'Event scheduled successfully!',
+              'Event updated successfully!',
               dateTime.toString(),
             ),
           );
         } else {
           emit(
             ScheduleCallFailure(
-              response.errorMessage ?? 'Failed to schedule event',
+              response.errorMessage ?? 'Failed to update event',
             ),
           );
         }

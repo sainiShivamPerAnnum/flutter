@@ -177,6 +177,8 @@ class ScheduleCard extends StatelessWidget {
                             isEdit: true,
                             bookingId: booking.bookingId,
                             advisorName: booking.advisorName,
+                            scheduledOn: booking.scheduledOn,
+                            duration: booking.duration.trim().split(' ').first,
                           );
                         } else {
                           BaseUtil.showNegativeAlert(

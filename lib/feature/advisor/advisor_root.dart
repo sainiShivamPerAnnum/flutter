@@ -19,7 +19,7 @@ class AdvisorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AdvisorBloc(locator())..add(const LoadAdvisorData()),
+      create: (context) => locator<AdvisorBloc>()..add(const LoadAdvisorData()),
       child: const AdvisorViewWrapper(),
     );
   }

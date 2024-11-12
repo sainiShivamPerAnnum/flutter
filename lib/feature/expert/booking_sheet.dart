@@ -18,11 +18,15 @@ class BookCallSheetView extends StatelessWidget {
   final String advisorName;
   final bool isEdit;
   final String? bookingId;
+  final String? duration;
+  final DateTime? scheduledOn;
   const BookCallSheetView({
     required this.advisorID,
     required this.advisorName,
     required this.isEdit,
     this.bookingId,
+    this.duration,
+    this.scheduledOn,
     super.key,
   });
 
@@ -35,7 +39,13 @@ class BookCallSheetView extends StatelessWidget {
             locator(),
             locator(),
             locator(),
-          )..add(LoadBookingDates(advisorID, 30)),
+          )..add(
+              LoadBookingDates(
+                advisorID,
+                int.tryParse(duration ?? "30") ?? 30,
+                scheduledOn,
+              ),
+            ),
         ),
         BlocProvider(
           create: (context) => PaymentBloc(locator(), locator(), locator()),
