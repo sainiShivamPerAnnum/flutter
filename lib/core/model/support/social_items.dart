@@ -27,11 +27,13 @@ class SocialVideo {
   final String title;
   final String bgImage;
   final String duration;
+  final String video;
 
   SocialVideo({
     required this.title,
     required this.bgImage,
     required this.duration,
+    required this.video,
   });
 
   factory SocialVideo.fromJson(Map<String, dynamic> json) =>

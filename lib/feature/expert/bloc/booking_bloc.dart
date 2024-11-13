@@ -329,15 +329,15 @@ class PaymentBloc extends Bloc<BookingEvent, PaymentState> {
           }
 
           // debug assertion to avoid this in production.
-          // assert(() {
+          assert(() {
           if (element.upiApplication.appName == "PhonePe Simulator" &&
               AppConfig.getValue<String>(
                 AppConfigKey.enabled_psp_apps_booking,
               ).contains('E')) {
             appMetaList.add(element);
           }
-          //   return true;
-          // }());
+            return true;
+          }());
 
           if (element.upiApplication.appName == "PhonePe Preprod" &&
               AppConfig.getValue<String>(

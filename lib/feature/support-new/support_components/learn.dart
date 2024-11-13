@@ -30,10 +30,14 @@ class LearnFello extends StatelessWidget {
         if (state is SupportData && state.introData.isNotEmpty) {
           return Column(
             children: [
-              TitleSubtitleContainer(
-                titleStyle: TextStyles.sourceSansSB.body1,
-                title: "Learn about Fello",
-                zeroPadding: true,
+              Row(
+                children: [
+                  TitleSubtitleContainer(
+                    titleStyle: TextStyles.sourceSansSB.body1,
+                    title: "Learn about Fello",
+                    zeroPadding: true,
+                  ),
+                ],
               ),
               Padding(
                 padding: EdgeInsets.only(top: SizeConfig.padding24),
@@ -53,6 +57,7 @@ class LearnFello extends StatelessWidget {
                                 title: state.introData[i].title,
                                 bgImage: state.introData[i].bgImage,
                                 duration: state.introData[i].duration,
+                                videoLink: state.introData[i].video,
                               ),
                             ),
                           ),

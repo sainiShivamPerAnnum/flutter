@@ -435,25 +435,9 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         Uri.parse(currentVideos[index].url),
       );
       if (state.currentContext == ReelContext.main) {
-        final updatedControllers =
-            Map<int, VideoPlayerController>.from(state.controllers);
-        updatedControllers[index] = controller;
-        add(
-          PreloadEvent.updateControllers(
-            reelContext: ReelContext.main,
-            controller: updatedControllers,
-          ),
-        );
+        state.controllers[index] = controller;
       } else {
-        final updatedProfileControllers =
-            Map<int, VideoPlayerController>.from(state.profileControllers);
-        updatedProfileControllers[index] = controller;
-        add(
-          PreloadEvent.updateControllers(
-            reelContext: ReelContext.profile,
-            controller: updatedProfileControllers,
-          ),
-        );
+        state.profileControllers[index] = controller;
       }
       await controller.initialize();
       await controller.setLooping(true);

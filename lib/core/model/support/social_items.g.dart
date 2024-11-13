@@ -16,4 +16,5 @@ SocialVideo _$SocialVideoFromJson(Map<String, dynamic> json) => SocialVideo(
       title: json['title'] as String,
       bgImage: json['bgImage'] as String,
       duration: json['duration'] as String,
+      video: json['video'] as String,
     );

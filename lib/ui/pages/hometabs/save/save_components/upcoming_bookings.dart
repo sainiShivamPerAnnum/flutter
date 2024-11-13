@@ -32,7 +32,7 @@ class UpcomingBookingsComponent extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: SizeConfig.padding18),
                     child: Container(
-                      height: SizeConfig.padding300,
+                      height: SizeConfig.padding275,
                       margin: EdgeInsets.only(
                         top: SizeConfig.padding10,
                       ),

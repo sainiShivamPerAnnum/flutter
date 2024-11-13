@@ -75,9 +75,11 @@ class _ShortsVideoPageState extends State<ShortsVideoPage> {
                   ? const NeverScrollableScrollPhysics()
                   : const AlwaysScrollableScrollPhysics(),
               scrollDirection: Axis.vertical,
-              onPageChanged: (index) =>
-                  BlocProvider.of<PreloadBloc>(context, listen: false)
-                      .add(PreloadEvent.onVideoIndexChanged(index)),
+              onPageChanged: (index) {
+                BlocProvider.of<PreloadBloc>(context, listen: false)
+                    .add(PreloadEvent.onVideoIndexChanged(index));
+                setState(() {});
+              },
               itemBuilder: (context, index) {
                 final bool isLoading =
                     state.isLoading && index == videos.length - 1;
