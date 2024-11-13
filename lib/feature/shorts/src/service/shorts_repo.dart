@@ -52,7 +52,7 @@ class ShortsRepo {
   }) async {
     try {
       final queryParameters = {
-        'videoId': videoId,
+        'videoID': videoId,
       };
       final response = await APIService.instance.getData(
         'videos/list',
@@ -60,7 +60,7 @@ class ShortsRepo {
         apiName: 'ShortsRepo/getVideoById',
         queryParams: queryParameters,
       );
-      final responseData = response["data"];
+      final responseData = response["data"][0];
       log("Video data: $responseData");
       return ApiResponse<VideoData>(
         model: VideoData.fromJson(responseData),
@@ -165,10 +165,15 @@ class ShortsRepo {
   Future<ApiResponse<String>> dynamicLink({
     required String id,
   }) async {
+    final query = {
+      "type": "shorts",
+       "id": id,
+    };
     try {
       final response = await APIService.instance.postData(
-        'events/generate-link/$id',
+        'events/generate-link',
         cBaseUrl: _baseUrl,
+        queryParams: query,
         apiName: 'ShortsRepo/dynamicLink',
       );
       final responseData = response["data"];

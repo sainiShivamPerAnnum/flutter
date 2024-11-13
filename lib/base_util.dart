@@ -1022,6 +1022,10 @@ class BaseUtil extends ChangeNotifier {
     final DateFormat formatter = DateFormat('dd MMM yyyy, hh:mm a');
     return formatter.format(dateTime);
   }
+   static String formatDateTime2(DateTime dateTime) {
+    final DateFormat formatter = DateFormat('MMMM d, yyyy');
+    return formatter.format(dateTime);
+  }
 
   static String formatTime(DateTime dateTime) {
     final DateFormat formatter = DateFormat('hh:mm a');

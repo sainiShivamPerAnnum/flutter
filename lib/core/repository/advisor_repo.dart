@@ -29,7 +29,6 @@ class AdvisorRepo extends BaseRepo {
       eventPayload.addAll({
         "advisorId": uid,
       });
-      print(payload);
 
       final response = await APIService.instance.putData(
         ApiPath.updateEvent(id),
@@ -58,7 +57,7 @@ class AdvisorRepo extends BaseRepo {
       final params = {"advisor-id": uid};
       final response = await APIService.instance.getData(
         "/events/presigned-url",
-        headers: {'Content-Type': "image/$format"},
+        headers: {'Content-Type': "image/$format","format": format},
         queryParams: params,
         cBaseUrl: baseUrl,
         apiName: '$_advisor/getPresignedUrl',

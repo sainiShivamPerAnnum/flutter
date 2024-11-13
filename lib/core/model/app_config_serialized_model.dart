@@ -1,3 +1,4 @@
+import 'package:felloapp/core/model/support/social_items.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'app_config_serialized_model.g.dart';
@@ -71,6 +72,9 @@ class AppConfigV2Data {
   @JsonKey(name: "p2p_v2", fromJson: _convertP2PV2)
   final Map<String, LendboxAssetConfiguration> lbV2;
 
+  final List<SocialItems> socialLinks;
+  final List<SocialVideo> socialVideos;
+
   final List<String> youtubeVideos;
 
   final List<String> ticketsYoutubeVideos;
@@ -140,6 +144,8 @@ class AppConfigV2Data {
     this.goldProInterest = 0,
     this.quickActions = const [],
     this.features = const {},
+    this.socialLinks = const [],
+    this.socialVideos = const [],
   });
 
   factory AppConfigV2Data.fromJson(Map<String, dynamic> json) =>

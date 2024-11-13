@@ -70,6 +70,7 @@ class LiveStream {
   final String viewerCode;
   final bool isEventLikedByUser;
   final String advisorId;
+  final String startTime;
 
   LiveStream({
     required this.id,
@@ -83,6 +84,7 @@ class LiveStream {
     required this.viewerCode,
     required this.isEventLikedByUser,
     required this.advisorId,
+    required this.startTime,
   });
 
   factory LiveStream.fromJson(Map<String, dynamic> json) =>

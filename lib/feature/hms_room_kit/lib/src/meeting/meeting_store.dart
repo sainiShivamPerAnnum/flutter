@@ -15,6 +15,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/repository/experts_repo.dart';
 import 'package:felloapp/core/repository/live_repository.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/expertDetails/widgets/rating_sheet.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/enums/meeting_mode.dart';
@@ -28,7 +29,6 @@ import 'package:felloapp/feature/hms_room_kit/lib/src/model/rtc_stats.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/model/transcript_store.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/toasts/hms_toast_model.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/toasts/hms_toasts_type.dart';
-import 'package:felloapp/feature/shorts/flutter_preload_videos.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -135,7 +135,8 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
     String? url;
     if (eventId != null) {
-      final databyId = await locator<ShortsRepo>().dynamicLink(id: eventId!);
+      final databyId =
+          await locator<LiveRepository>().dynamicLink(id: eventId!);
       if (databyId.isSuccess()) {
         url = databyId.model;
       }
@@ -1592,28 +1593,29 @@ class MeetingStore extends ChangeNotifier
       }
     }
 
-    // if (meetingMode == MeetingMode.activeSpeakerWithInset) {
-    AppState.screenStack.add(ScreenItem.modalsheet);
-    await BaseUtil.openModalBottomSheet(
-      isScrollControlled: true,
-      enableDrag: true,
-      isBarrierDismissible: true,
-      addToScreenStack: false,
-      content: FeedbackBottomSheet(
-        advisorId: advisorId!,
-        onSubmit: (rating, comment) async {
-          unawaited(
-            locator<ExpertsRepository>().postRatingDetails(
-              advisorId: advisorId!,
-              comments: comment,
-              rating: rating,
-            ),
-          );
-          await AppState.backButtonDispatcher!.didPopRoute();
-        },
-      ),
-    );
-    // }
+    final isAdvisor = locator<UserService>().baseUser!.isAdvisor;
+    if (!(isAdvisor ?? false)) {
+      AppState.screenStack.add(ScreenItem.modalsheet);
+      await BaseUtil.openModalBottomSheet(
+        isScrollControlled: true,
+        enableDrag: false,
+        isBarrierDismissible: false,
+        addToScreenStack: false,
+        content: FeedbackBottomSheet(
+          advisorId: advisorId!,
+          onSubmit: (rating, comment) async {
+            unawaited(
+              locator<ExpertsRepository>().postRatingDetails(
+                advisorId: advisorId!,
+                comments: comment,
+                rating: rating,
+              ),
+            );
+            await AppState.backButtonDispatcher!.didPopRoute();
+          },
+        ),
+      );
+    }
   }
 
   void resetOrientation() {

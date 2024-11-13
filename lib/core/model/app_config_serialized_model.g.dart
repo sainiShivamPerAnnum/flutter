@@ -78,6 +78,14 @@ AppConfigV2Data _$AppConfigV2DataFromJson(Map<String, dynamic> json) =>
               .toList() ??
           const [],
       features: json['features'] as Map<String, dynamic>? ?? const {},
+      socialLinks: (json['socialLinks'] as List<dynamic>?)
+              ?.map((e) => SocialItems.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      socialVideos: (json['socialVideos'] as List<dynamic>?)
+              ?.map((e) => SocialVideo.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 LendboxAssetConfiguration _$LendboxAssetConfigurationFromJson(

@@ -54,6 +54,17 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           latency: e.latency,
         );
       },
+      updateControllers: (e) {
+        if (e.reelContext == ReelContext.main) {
+          emit(
+            state.copyWith(controllers: e.controller),
+          );
+        } else {
+          emit(
+            state.copyWith(profileControllers: e.controller),
+          );
+        }
+      },
       pauseVideoAtIndex: (e) {
         _stopControllerAtIndex(e.index);
       },
@@ -125,6 +136,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
 
         /// Initialize 2nd video
         await _initializeControllerAtIndex(1);
+        e.completer?.complete();
       },
       updateViewCount: (e) {
         unawaited(
@@ -423,9 +435,25 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         Uri.parse(currentVideos[index].url),
       );
       if (state.currentContext == ReelContext.main) {
-        state.controllers[index] = controller;
+        final updatedControllers =
+            Map<int, VideoPlayerController>.from(state.controllers);
+        updatedControllers[index] = controller;
+        add(
+          PreloadEvent.updateControllers(
+            reelContext: ReelContext.main,
+            controller: updatedControllers,
+          ),
+        );
       } else {
-        state.profileControllers[index] = controller;
+        final updatedProfileControllers =
+            Map<int, VideoPlayerController>.from(state.profileControllers);
+        updatedProfileControllers[index] = controller;
+        add(
+          PreloadEvent.updateControllers(
+            reelContext: ReelContext.profile,
+            controller: updatedProfileControllers,
+          ),
+        );
       }
       await controller.initialize();
       await controller.setLooping(true);

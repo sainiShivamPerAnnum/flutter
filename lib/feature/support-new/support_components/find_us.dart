@@ -12,7 +12,7 @@ class FindUs extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SupportBloc, SupportState>(
       builder: (context, state) {
-        if (state is SupportData) {
+        if (state is SupportData && state.socialItems.isNotEmpty) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -40,11 +40,11 @@ class FindUs extends StatelessWidget {
                           ),
                           child: GestureDetector(
                             onTap: () {
-                              BaseUtil.launchUrl(item['link']!);
+                              BaseUtil.launchUrl(item.link);
                             },
                             child: buildSocialMediaButton(
-                              item['name']!,
-                              item['icon']!,
+                              item.name,
+                              item.icon,
                             ),
                           ),
                         ),

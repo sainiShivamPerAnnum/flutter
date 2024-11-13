@@ -62,4 +62,8 @@ class PreloadEvent with _$PreloadEvent {
       _DisposeProfileControllers;
   const factory PreloadEvent.generateDynamicLink({required String videoId}) =
       _GenerateDynamicLink;
+  const factory PreloadEvent.updateControllers({
+    required Map<int, VideoPlayerController> controller,
+    required ReelContext reelContext,
+  }) = _UpdateControllers;
 }

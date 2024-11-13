@@ -14,11 +14,6 @@ class Learn extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: SizeConfig.padding24),
-        TitleSubtitleContainer(
-          titleStyle: TextStyles.sourceSansSB.body1,
-          title: "Learn about Fello",
-          zeroPadding: true,
-        ),
         const LearnFello(),
       ],
     );
@@ -32,32 +27,41 @@ class LearnFello extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SupportBloc, SupportState>(
       builder: (context, state) {
-        if (state is SupportData) {
-          return Padding(
-            padding: EdgeInsets.only(top: SizeConfig.padding24),
-            child: SizedBox(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    for (int i = 0; i < state.introData.length; i++)
-                      Padding(
-                        padding: EdgeInsets.only(
-                          right: SizeConfig.padding12,
-                          bottom: SizeConfig.padding8,
-                        ),
-                        child: SizedBox(
-                          child: VideoCardWidget(
-                            title: state.introData[i]['title']!,
-                            bgImage: state.introData[i]['bgImage']!,
-                            duration: state.introData[i]['duration']!,
+        if (state is SupportData && state.introData.isNotEmpty) {
+          return Column(
+            children: [
+              TitleSubtitleContainer(
+                titleStyle: TextStyles.sourceSansSB.body1,
+                title: "Learn about Fello",
+                zeroPadding: true,
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: SizeConfig.padding24),
+                child: SizedBox(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        for (int i = 0; i < state.introData.length; i++)
+                          Padding(
+                            padding: EdgeInsets.only(
+                              right: SizeConfig.padding12,
+                              bottom: SizeConfig.padding8,
+                            ),
+                            child: SizedBox(
+                              child: VideoCardWidget(
+                                title: state.introData[i].title,
+                                bgImage: state.introData[i].bgImage,
+                                duration: state.introData[i].duration,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                  ],
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           );
         } else {
           return const SizedBox.shrink();

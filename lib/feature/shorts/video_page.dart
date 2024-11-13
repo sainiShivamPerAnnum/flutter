@@ -294,33 +294,27 @@ class VideoWidgetState extends State<VideoWidget>
           Positioned.fill(
             child: AspectRatio(
               aspectRatio: widget.controller.value.aspectRatio,
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: FittedBox(
-                      fit: BoxFit.contain,
-                      child: SizedBox(
-                        height: widget.controller.value.size.height,
-                        width: widget.controller.value.size.width,
-                        child: VideoPlayer(widget.controller),
-                      ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            UiConstants.kTextColor4.withOpacity(.8),
-                            UiConstants.kTextColor4.withOpacity(0),
-                          ],
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.center,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: SizedBox(
+                  width: widget.controller.value.size.width,
+                  height: widget.controller.value.size.height,
+                  child: VideoPlayer(widget.controller),
+                ),
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    UiConstants.kTextColor4.withOpacity(.8),
+                    UiConstants.kTextColor4.withOpacity(0),
+                  ],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.center,
+                ),
               ),
             ),
           ),

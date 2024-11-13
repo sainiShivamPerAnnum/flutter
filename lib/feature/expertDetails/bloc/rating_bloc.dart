@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/experts/experts_details.dart';
 import 'package:felloapp/core/repository/experts_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -46,7 +45,6 @@ class RatingBloc extends Bloc<RatingEvent, RatingState> {
     } else {
       add(LoadRatings(event.advisorId));
       await AppState.backButtonDispatcher!.didPopRoute();
-      BaseUtil.showNegativeAlert('Failed to upload rating!', data.errorMessage);
     }
   }
 

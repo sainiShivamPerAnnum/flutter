@@ -44,7 +44,7 @@ class LiveRepository extends BaseRepo {
         queryParams: params,
         apiName: '$_live/getEventById',
       );
-      final responseData = response["data"];
+      final responseData = response["data"][0];
       log("Live data: $responseData");
       return ApiResponse<AdvisorEvents>(
         model: AdvisorEvents.fromJson(responseData),
@@ -85,10 +85,15 @@ class LiveRepository extends BaseRepo {
   Future<ApiResponse<String>> dynamicLink({
     required String id,
   }) async {
+    final query = {
+      "type": "live",
+      "id": id,
+    };
     try {
       final response = await APIService.instance.postData(
-        'events/generate-link/$id',
+        'events/generate-link',
         cBaseUrl: _baseUrl,
+        queryParams: query,
         apiName: '$_live/dynamicLink',
       );
       final responseData = response["data"];

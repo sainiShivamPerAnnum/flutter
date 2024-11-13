@@ -94,6 +94,9 @@ class AdvisorViewWrapper extends StatelessWidget {
                       const Live(),
                       const Call(callType: "upcoming"),
                       const Call(callType: "past"),
+                      SizedBox(
+                        height: SizeConfig.padding24,
+                      ),
                     ],
                   ),
                 ),

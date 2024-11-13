@@ -1292,7 +1292,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         page: LivePreviewPageConfig,
         state: PageState.addWidget,
         widget: HMSPrebuilt(
-          eventId: '',
+          eventId: videoData.model!.id,
           isLiked: false,
           advisorId: advisorId,
           title: videoData.model!.topic ?? '',

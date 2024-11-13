@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/bookings/new_booking.dart';
 import 'package:felloapp/core/model/bookings/payment_polling.dart';
 import 'package:felloapp/core/model/bookings/payment_response.dart';
@@ -118,13 +119,17 @@ class ExpertsRepository extends BaseRepo {
         apiName: '$_ratings/postRatingDetails',
       );
       final responseData = response["data"];
-      log("Post Ratings data: $responseData");
+      BaseUtil.showNegativeAlert(
+        'Rating Uploaded Successfully!',
+        'Thanks for your feedback!',
+      );
       return ApiResponse<UserRating>(
         model: UserRating.fromJson(responseData),
         code: 200,
       );
     } catch (e) {
       logger.e(e.toString());
+      BaseUtil.showNegativeAlert('Failed to upload rating!', e.toString());
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -162,7 +167,7 @@ class ExpertsRepository extends BaseRepo {
       final response = await APIService.instance.getData(
         'videos/list',
         queryParams: {
-          'type': "shorts",
+          'type': "live",
           'advisorId': advisorId,
         },
         cBaseUrl: _baseUrl,

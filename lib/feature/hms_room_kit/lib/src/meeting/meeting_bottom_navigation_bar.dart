@@ -86,6 +86,7 @@ class _MeetingBottomNavigationBarState
                             builder: (_, isMicOn, __) {
                               return GestureDetector(
                                 onTap: () => {
+                                  FocusScope.of(context).unfocus(),
                                   context
                                       .read<MeetingStore>()
                                       .toggleMicMuteState(),
@@ -126,6 +127,7 @@ class _MeetingBottomNavigationBarState
                             builder: (_, data, __) {
                               return GestureDetector(
                                 onTap: () => {
+                                  FocusScope.of(context).unfocus(),
                                   (data.item2)
                                       ? null
                                       : context
@@ -163,6 +165,7 @@ class _MeetingBottomNavigationBarState
                             builder: (_, chatState, __) {
                               return GestureDetector(
                                 onTap: () => {
+                                  FocusScope.of(context).unfocus(),
                                   if (value.item2 ==
                                       MeetingMode.activeSpeakerWithInset)
                                     {
@@ -176,9 +179,6 @@ class _MeetingBottomNavigationBarState
                                         ),
                                       )
                                     }
-                                  else if (HMSRoomLayout.chatData?.isOverlay ??
-                                      false)
-                                    {}
                                   else
                                     {
                                       context
@@ -239,6 +239,7 @@ class _MeetingBottomNavigationBarState
                         ///Menu Button
                         GestureDetector(
                           onTap: () async => {
+                            FocusScope.of(context).unfocus(),
                             AppState.screenStack.add(ScreenItem.modalsheet),
                             BaseUtil.openModalBottomSheet(
                               isBarrierDismissible: false,

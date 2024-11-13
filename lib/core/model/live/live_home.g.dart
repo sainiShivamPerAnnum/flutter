@@ -47,6 +47,7 @@ LiveStream _$LiveStreamFromJson(Map<String, dynamic> json) => LiveStream(
       viewerCode: json['viewerCode'] as String,
       isEventLikedByUser: json['isEventLikedByUser'] as bool,
       advisorId: json['advisorId'] as String,
+      startTime: json['startTime'] as String,
     );
 
 UpcomingStream _$UpcomingStreamFromJson(Map<String, dynamic> json) =>

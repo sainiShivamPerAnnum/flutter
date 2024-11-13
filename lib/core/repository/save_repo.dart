@@ -7,6 +7,7 @@ import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/core/model/live/live_home.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
 
@@ -90,7 +91,32 @@ class SaveRepo extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<(List<Expert>,bool)>> getTopExpertsData() async {
+  Future<ApiResponse<VideoData>> getRecordingByVideoId({
+    required String videoId,
+  }) async {
+    try {
+      final response = await APIService.instance.getData(
+        'videos/list',
+        queryParams: {
+          'videoId': videoId,
+        },
+        cBaseUrl: _baseUrl,
+        apiName: '$_experts/getRecordingByVideoId',
+      );
+      final responseData = response["data"];
+      log("Recording data: $responseData");
+      final VideoData recentStreams = VideoData.fromJson(responseData);
+      return ApiResponse<VideoData>(
+        model: recentStreams,
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<(List<Expert>, bool)>> getTopExpertsData() async {
     try {
       final response = await APIService.instance.getData(
         'advisors/sections',
@@ -107,8 +133,8 @@ class SaveRepo extends BaseRepo {
         }
       });
 
-      return ApiResponse<(List<Expert>,bool)>(
-        model: (topExperts,allData.isAnyFreeCallAvailable),
+      return ApiResponse<(List<Expert>, bool)>(
+        model: (topExperts, allData.isAnyFreeCallAvailable),
         code: 200,
       );
     } catch (e) {

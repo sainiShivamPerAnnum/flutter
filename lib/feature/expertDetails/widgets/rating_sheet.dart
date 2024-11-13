@@ -1,3 +1,4 @@
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -30,15 +31,38 @@ class _FeedbackBottomSheetState extends State<FeedbackBottomSheet> {
         children: [
           Container(
             padding: EdgeInsets.symmetric(
-              vertical: SizeConfig.padding14,
               horizontal: SizeConfig.padding20,
+            ).copyWith(
+              top: SizeConfig.padding14,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Stack(
+              alignment: AlignmentDirectional.center,
               children: [
-                Text(
-                  'Share Your Feedback',
-                  style: TextStyles.sourceSansSB.body1,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Share Your Feedback',
+                      style: TextStyles.sourceSansSB.body1,
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        AppState.backButtonDispatcher!.didPopRoute();
+                      },
+                      child: Icon(
+                        Icons.close,
+                        size: SizeConfig.body1,
+                        color: UiConstants.kTextColor,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

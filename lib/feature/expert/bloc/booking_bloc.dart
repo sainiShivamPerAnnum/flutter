@@ -4,13 +4,16 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/bookings/new_booking.dart';
 import 'package:felloapp/core/model/bookings/payment_response.dart';
 import 'package:felloapp/core/repository/experts_repo.dart';
-import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -39,6 +42,9 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     LoadBookingDates event,
     Emitter<BookingState> emitter,
   ) async {
+    final currentSelectedDate = (state is BookingsLoaded)
+        ? (state as BookingsLoaded).selectedDate
+        : null;
     emitter(const LoadingBookingsData());
 
     final data = await _expertsRepository.getExpertAvailableSlots(
@@ -67,7 +73,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
         BookingsLoaded(
           advisorId: event.advisorId,
           schedule: data.model,
-          selectedDate: selectedDate,
+          selectedDate: currentSelectedDate ?? selectedDate,
           selectedDuration: event.duration,
           isFree: data.model?.hasFreeCall ?? false,
         ),
@@ -180,11 +186,9 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
 }
 
 class PaymentBloc extends Bloc<BookingEvent, PaymentState> {
-  final SubService _subService;
   final ExpertsRepository _expertsRepository;
   final CustomLogger _logger;
   PaymentBloc(
-    this._subService,
     this._expertsRepository,
     this._logger,
   ) : super(const MandateInitialState()) {
@@ -196,7 +200,7 @@ class PaymentBloc extends Bloc<BookingEvent, PaymentState> {
     Emitter<PaymentState> emitter,
   ) async {
     emitter(const ListingPSPApps());
-    final apps = await _subService.getUPIApps();
+    final apps = await getUPIApps();
     emitter(ListedPSPApps(apps));
   }
 
@@ -264,6 +268,103 @@ class PaymentBloc extends Bloc<BookingEvent, PaymentState> {
       }
     } catch (e) {
       _logger.d('Failed launch intent url');
+    }
+  }
+
+  Future<List<ApplicationMeta>> getUPIApps() async {
+    S locale = locator<S>();
+    List<ApplicationMeta> appMetaList = [];
+
+    if (Platform.isIOS) {
+      const platform = MethodChannel("methodChannel/deviceData");
+      try {
+        if (AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps_booking)
+            .contains('E')) {
+          final result = await platform
+              .invokeMethod('isAppInstalled', {"appName": "phonepe"});
+          if (result) {
+            appMetaList.add(ApplicationMeta.ios(UpiApplication.phonePe));
+          }
+        }
+        if (AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps_booking)
+            .contains('P')) {
+          final result = await platform
+              .invokeMethod('isAppInstalled', {"appName": "paytm"});
+          if (result) {
+            appMetaList.add(ApplicationMeta.ios(UpiApplication.paytm));
+          }
+        }
+        if (AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps_booking)
+            .contains('G')) {
+          final result = await platform
+              .invokeMethod('isAppInstalled', {"appName": "gpay"});
+          if (result) {
+            appMetaList.add(ApplicationMeta.ios(UpiApplication.googlePay));
+          }
+        }
+        return appMetaList;
+      } on PlatformException catch (e) {
+        _logger.d('Failed to fetch installed applications on ios $e');
+        return appMetaList;
+      }
+    } else {
+      try {
+        List<ApplicationMeta> allUpiApps =
+            await UpiPay.getInstalledUpiApplications(
+          statusType: UpiApplicationDiscoveryAppStatusType.all,
+        );
+
+        for (final element in allUpiApps) {
+          if (element.upiApplication.appName == "Paytm" &&
+              AppConfig.getValue<String>(
+                AppConfigKey.enabled_psp_apps_booking,
+              ).contains('P')) {
+            appMetaList.add(element);
+          }
+          if (element.upiApplication.appName == "PhonePe" &&
+              AppConfig.getValue<String>(
+                AppConfigKey.enabled_psp_apps_booking,
+              ).contains('E')) {
+            appMetaList.add(element);
+          }
+
+          // debug assertion to avoid this in production.
+          // assert(() {
+          if (element.upiApplication.appName == "PhonePe Simulator" &&
+              AppConfig.getValue<String>(
+                AppConfigKey.enabled_psp_apps_booking,
+              ).contains('E')) {
+            appMetaList.add(element);
+          }
+          //   return true;
+          // }());
+
+          if (element.upiApplication.appName == "PhonePe Preprod" &&
+              AppConfig.getValue<String>(
+                AppConfigKey.enabled_psp_apps_booking,
+              ).contains('E')) {
+            appMetaList.add(element);
+          }
+
+          if (element.upiApplication.appName == "Google Pay" &&
+              AppConfig.getValue<String>(
+                AppConfigKey.enabled_psp_apps_booking,
+              ).contains('G')) {
+            appMetaList.add(element);
+          }
+        }
+
+        return appMetaList;
+      } catch (e) {
+        _logger.d('Failed to list all psp app due to error: $e');
+
+        BaseUtil.showNegativeAlert(
+          locale.unableToGetUpi,
+          locale.tryLater,
+        );
+
+        return [];
+      }
     }
   }
 }

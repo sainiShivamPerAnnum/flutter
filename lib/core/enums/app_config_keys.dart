@@ -41,6 +41,7 @@ enum AppConfigKey {
   quickActions,
   canChangePostMaturityPreference,
   enableJourney,
+  enabled_psp_apps_booking,
 }
 
 extension AppConfigKeys on String {
@@ -83,6 +84,8 @@ extension AppConfigKeys on String {
         return AppConfigKey.active_pg_android;
       case 'enabledPspApps':
         return AppConfigKey.enabled_psp_apps;
+      case 'enabledPspAppsBooking':
+        return AppConfigKey.enabled_psp_apps_booking;
       case 'appShareMessage':
         return AppConfigKey.appShareMessage;
       case 'minPrincipleForPrize':

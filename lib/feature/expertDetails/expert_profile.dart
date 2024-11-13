@@ -1109,7 +1109,7 @@ class ReviewCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  BaseUtil.formatDateTime(
+                  BaseUtil.formatDateTime2(
                     DateTime.tryParse(date) ?? DateTime.now(),
                   ),
                   style: TextStyles.sourceSans.body4.colour(

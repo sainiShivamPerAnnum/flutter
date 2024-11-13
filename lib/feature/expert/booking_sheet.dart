@@ -48,7 +48,7 @@ class BookCallSheetView extends StatelessWidget {
             ),
         ),
         BlocProvider(
-          create: (context) => PaymentBloc(locator(), locator(), locator()),
+          create: (context) => PaymentBloc(locator(), locator(),),
         ),
       ],
       child: _BookCallBottomSheet(

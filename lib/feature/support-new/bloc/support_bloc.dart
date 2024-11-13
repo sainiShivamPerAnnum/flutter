@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:felloapp/core/model/app_config_serialized_model.dart';
+import 'package:felloapp/core/model/support/social_items.dart';
 import 'package:felloapp/feature/support-new/support_components/find_us.dart';
 import 'package:felloapp/feature/support-new/support_components/help.dart';
 import 'package:felloapp/feature/support-new/support_components/learn.dart';
@@ -21,6 +23,8 @@ class SupportBloc extends Bloc<SupportEvent, SupportState> {
     Emitter<SupportState> emitter,
   ) async {
     emitter(const LoadingSupportData());
+    List<SocialItems> socialItems = AppConfigV2.instance.socialLinks;
+    List<SocialVideo> socialVidoes = AppConfigV2.instance.socialVideos;
     List<Widget> saveViewItems = [];
     for (final key in DynamicUiUtils.support) {
       switch (key) {
@@ -41,6 +45,12 @@ class SupportBloc extends Bloc<SupportEvent, SupportState> {
           break;
       }
     }
-    emitter(SupportData(supportItems: saveViewItems));
+    emitter(
+      SupportData(
+        supportItems: saveViewItems,
+        socialItems: socialItems,
+        introData: socialVidoes,
+      ),
+    );
   }
 }

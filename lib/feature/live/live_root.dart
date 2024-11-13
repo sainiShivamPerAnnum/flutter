@@ -319,6 +319,7 @@ Widget buildLiveSection(List<LiveStream> liveData) {
                     advisorId: live.advisorId,
                     viewerCode: live.viewerCode,
                     isLiked: live.isEventLikedByUser,
+                    startTime: live.startTime,
                   ),
                 ),
             ],

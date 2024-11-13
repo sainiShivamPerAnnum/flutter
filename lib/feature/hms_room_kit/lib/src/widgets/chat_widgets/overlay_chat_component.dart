@@ -290,6 +290,7 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
                               color: Colors.white,
                               fontSize: SizeConfig.body4,
                             ),
+                            autofocus: false,
                             decoration: InputDecoration(
                               hintText: isChatEnabled
                                   ? 'Add a comment'

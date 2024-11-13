@@ -22,10 +22,14 @@ class TopLive extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: SizeConfig.padding14),
-                      TitleSubtitleContainer(
-                        title: liveData.live.isNotEmpty
-                            ? "Live"
-                            : "Recent Live Streams",
+                      Row(
+                        children: [
+                          TitleSubtitleContainer(
+                            title: liveData.live.isNotEmpty
+                                ? "Live"
+                                : "Recent Live Streams",
+                          ),
+                        ],
                       ),
                       SizedBox(height: SizeConfig.padding14),
                       Padding(
@@ -35,6 +39,7 @@ class TopLive extends StatelessWidget {
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               if (liveData.live.isNotEmpty)
                                 buildLiveSection(liveData.live),
