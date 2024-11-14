@@ -67,19 +67,39 @@ class FelloBalanceScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        "Fello Balance",
-                        style: TextStyles.sourceSansSB.body2,
-                      ),
-                      SizedBox(width: SizeConfig.padding4),
-                      Icon(
-                        Icons.chevron_right,
-                        size: SizeConfig.body1,
-                        color: UiConstants.kTextColor,
-                      ),
-                    ],
+                  GestureDetector(
+                    onTap: () {
+                      BaseUtil.openDialog(
+                        isBarrierDismissible: false,
+                        addToScreenStack: true,
+                        hapticVibrate: true,
+                        barrierColor: Colors.black45,
+                        content: const FundBreakdownDialog(),
+                      );
+                      _analyticsService.track(
+                        eventName: AnalyticsEvents.viewBreakdownTapped,
+                        properties: {
+                          "fello balance": locator<UserService>()
+                              .userPortfolio
+                              .absolute
+                              .balance,
+                        },
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          "Fello Balance",
+                          style: TextStyles.sourceSansSB.body2,
+                        ),
+                        SizedBox(width: SizeConfig.padding4),
+                        Icon(
+                          Icons.chevron_right,
+                          size: SizeConfig.body1,
+                          color: UiConstants.kTextColor,
+                        ),
+                      ],
+                    ),
                   ),
                   TextButton(
                     onPressed: () {
@@ -354,29 +374,49 @@ class FelloBalanceScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      if (iconData != null)
-                        AppImage(
-                          iconData,
-                          height: SizeConfig.padding30,
-                          fit: BoxFit.fill,
+                  GestureDetector(
+                    onTap: () {
+                      if (title == "Fello Flo") {
+                        AppState.delegate!.appState.currentAction = PageAction(
+                          page: P2PHomePageConfig,
+                          widget: const P2PHomePage(),
+                          state: PageState.addWidget,
+                        );
+                      }
+                      if (title == "Digital Gold") {
+                        AppState.delegate!.appState.currentAction = PageAction(
+                          state: PageState.addWidget,
+                          page: SaveAssetsViewConfig,
+                          widget: const AssetSectionView(
+                            type: InvestmentType.AUGGOLD99,
+                          ),
+                        );
+                      }
+                    },
+                    child: Row(
+                      children: [
+                        if (iconData != null)
+                          AppImage(
+                            iconData,
+                            height: SizeConfig.padding30,
+                            fit: BoxFit.fill,
+                          ),
+                        if (iconData != null)
+                          SizedBox(width: SizeConfig.padding10),
+                        Text(
+                          title,
+                          style: TextStyles.sourceSansSB.body1,
                         ),
-                      if (iconData != null)
-                        SizedBox(width: SizeConfig.padding10),
-                      Text(
-                        title,
-                        style: TextStyles.sourceSansSB.body1,
-                      ),
-                      if (title != "Fello Rewards")
-                        SizedBox(width: SizeConfig.padding4),
-                      if (title != "Fello Rewards")
-                        Icon(
-                          Icons.chevron_right,
-                          size: SizeConfig.body1,
-                          color: UiConstants.kTextColor,
-                        ),
-                    ],
+                        if (title != "Fello Rewards")
+                          SizedBox(width: SizeConfig.padding4),
+                        if (title != "Fello Rewards")
+                          Icon(
+                            Icons.chevron_right,
+                            size: SizeConfig.body1,
+                            color: UiConstants.kTextColor,
+                          ),
+                      ],
+                    ),
                   ),
                   TextButton(
                     onPressed: onButtonPressed,

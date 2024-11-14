@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:share_plus/share_plus.dart';
@@ -166,10 +166,23 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         );
       },
       initializeAtIndex: (e) async {
+        final PageController pageController = PageController(
+          initialPage: e.index,
+        );
         if (state.currentContext == ReelContext.main) {
-          emit(state.copyWith(focusedIndex: e.index));
+          emit(
+            state.copyWith(
+              focusedIndex: e.index,
+              mainPageController: pageController,
+            ),
+          );
         } else {
-          emit(state.copyWith(profileVideoIndex: e.index));
+          emit(
+            state.copyWith(
+              profileVideoIndex: e.index,
+              profilePageController: pageController,
+            ),
+          );
         }
         e.completer?.complete();
         await _initializeControllerAtIndex(e.index);
@@ -221,10 +234,11 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             page: (e.index + VideoPreloadConstants.preloadLimit) ~/ 10 + 1,
           );
           final List<VideoData> urls = response.model ?? [];
-          if (urls.isEmpty) {
+          if (urls.length < 10) {
             // If we reach the end of the list, start from the beginning
             final resetResponse = await repository.getVideos(page: 1);
-            final List<VideoData> resetUrls = resetResponse.model ?? [];
+            final List<VideoData> resetUrls =
+                urls + (resetResponse.model ?? []);
             add(PreloadEvent.updateUrls(resetUrls));
           } else {
             add(PreloadEvent.updateUrls(urls));
@@ -394,7 +408,13 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             VideoPlayerController.networkUrl(
           Uri.parse(e.video.url),
         );
-        emit(state.copyWith(liveStreamController: controller));
+        final PageController pageController = PageController();
+        emit(
+          state.copyWith(
+            liveStreamController: controller,
+            livePageController: pageController,
+          ),
+        );
         await controller.initialize();
         await controller.setLooping(true);
         await controller.setVolume(1);
@@ -410,6 +430,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       disposeLiveStreamController: (e) async {
         if (state.liveStreamController != null) {
           await state.liveStreamController!.dispose();
+          state.livePageController!.dispose();
         }
       },
     );
@@ -530,6 +551,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       await controller.pause();
       await controller.seekTo(const Duration());
       await controller.dispose();
+      state.profilePageController.dispose();
     }
     state.profileControllers
         .clear(); // Clear the map after disposing all controllers
@@ -543,6 +565,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       await controller.pause();
       await controller.seekTo(const Duration()); // Reset to the beginning
       await controller.dispose();
+      state.mainPageController.dispose();
     }
     state.controllers.clear(); // Clear the map after disposing all controllers
 
@@ -552,6 +575,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       await controller.pause();
       await controller.seekTo(const Duration());
       await controller.dispose();
+      state.profilePageController.dispose();
     }
     state.profileControllers
         .clear(); // Clear the map after disposing all controllers
@@ -560,6 +584,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       await controller.pause();
       await controller.seekTo(const Duration());
       await controller.dispose();
+      await state.liveStreamController?.dispose();
     }
     log('🚀🚀🚀 All controllers stopped and disposed');
   }

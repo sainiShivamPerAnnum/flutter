@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/experts/experts_details.dart';
 import 'package:felloapp/core/repository/experts_repo.dart';
 import 'package:felloapp/feature/shorts/src/service/video_data.dart';
@@ -16,6 +17,7 @@ class ExpertDetailsBloc extends Bloc<ExpertDetailsEvent, ExpertDetailsState> {
   ) : super(const LoadingExpertsDetails()) {
     on<LoadExpertsDetails>(_onLoadExpertsData);
     on<TabChanged>(_tabChanged);
+    on<GetCertificate>(_getCertificate);
   }
   FutureOr<void> _onLoadExpertsData(
     LoadExpertsDetails event,
@@ -64,6 +66,19 @@ class ExpertDetailsBloc extends Bloc<ExpertDetailsEvent, ExpertDetailsState> {
           ),
         );
       }
+    }
+  }
+
+  FutureOr<void> _getCertificate(
+    GetCertificate event,
+    Emitter<ExpertDetailsState> emitter,
+  ) async {
+    final data = await _expertsRepository.getCertificateById(
+      advisorId: event.advisorId,
+      certificateId: event.credentialId,
+    );
+    if (data.isSuccess()) {
+      await BaseUtil.launchUrl(data.model!);
     }
   }
 }

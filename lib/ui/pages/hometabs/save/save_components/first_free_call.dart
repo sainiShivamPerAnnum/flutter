@@ -15,7 +15,7 @@ class FirstFreeCall extends StatelessWidget {
         return freeCallAvailable
             ? Container(
                 margin: EdgeInsets.symmetric(
-                  vertical: SizeConfig.padding24,
+                  vertical: SizeConfig.padding14,
                   horizontal: SizeConfig.padding20,
                 ),
                 padding: EdgeInsets.all(SizeConfig.padding18),

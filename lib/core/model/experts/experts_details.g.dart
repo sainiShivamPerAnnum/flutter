@@ -40,6 +40,7 @@ License _$LicenseFromJson(Map<String, dynamic> json) => License(
       imageUrl: json['imageUrl'] as String,
       issueDate: DateTime.parse(json['issueDate'] as String),
       credentials: json['credentials'] as String,
+      id: json['_id'] as String? ?? '',
     );
 
 Social _$SocialFromJson(Map<String, dynamic> json) => Social(

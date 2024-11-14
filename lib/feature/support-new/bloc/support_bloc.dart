@@ -25,6 +25,8 @@ class SupportBloc extends Bloc<SupportEvent, SupportState> {
     emitter(const LoadingSupportData());
     List<SocialItems> socialItems = AppConfigV2.instance.socialLinks;
     List<SocialVideo> socialVidoes = AppConfigV2.instance.socialVideos;
+    String contactDetails = AppConfigV2.instance.contactDetails;
+    String btnTxt = AppConfigV2.instance.socialBtnTxt;
     List<Widget> saveViewItems = [];
     for (final key in DynamicUiUtils.support) {
       switch (key) {
@@ -50,6 +52,8 @@ class SupportBloc extends Bloc<SupportEvent, SupportState> {
         supportItems: saveViewItems,
         socialItems: socialItems,
         introData: socialVidoes,
+        btnTxt: btnTxt,
+        contactDetails: contactDetails,
       ),
     );
   }

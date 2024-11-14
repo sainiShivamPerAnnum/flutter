@@ -540,6 +540,9 @@ Widget _buildInfoTab(
                             GestureDetector(
                               onTap: () {
                                 BaseUtil.launchUrl(license.credentials);
+                                BlocProvider.of<ExpertDetailsBloc>(context).add(
+                                  GetCertificate(license.id, advisorID),
+                                );
                               },
                               child: Row(
                                 children: [

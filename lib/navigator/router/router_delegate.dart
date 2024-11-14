@@ -1307,7 +1307,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           ),
         ),
       );
-    } else if (videoData.model != null) {
+    } else if (videoData.model != null && videoData.model!.status == 'live') {
       AppState.delegate!.appState.currentAction = PageAction(
         page: LivePreviewPageConfig,
         state: PageState.addWidget,
@@ -1327,6 +1327,24 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           ),
         ),
       );
+    } else if (videoData.model != null) {
+      if (videoData.model!.status == 'completed') {
+        BaseUtil.showNegativeAlert(
+          'Cannot Join Live Stream',
+          'The live stream has ended.',
+        );
+      } else if (videoData.model!.status == 'scheduled' ||
+          videoData.model!.status == 'upcoming') {
+        BaseUtil.showNegativeAlert(
+          'Cannot Join Live Stream',
+          'The live stream will start soon.',
+        );
+      } else if (videoData.model!.status == 'cancelled') {
+        BaseUtil.showNegativeAlert(
+          'Cannot Join Live Stream',
+          'The live stream has been cancelled.',
+        );
+      }
     }
   }
 

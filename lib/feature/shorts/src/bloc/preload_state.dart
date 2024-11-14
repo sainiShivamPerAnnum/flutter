@@ -13,10 +13,12 @@ class PreloadState with _$PreloadState {
     required List<VideoData> profileVideos,
     required List<VideoData> liveVideo,
     required Map<int, VideoPlayerController> controllers,
+    required PageController mainPageController,
     required Map<String, String> link,
     required bool shareLinkInProgress,
     required bool isShareAlreadyClicked,
     required Map<int, VideoPlayerController> profileControllers,
+    required PageController profilePageController,
     required int focusedIndex,
     required int profileVideoIndex,
     required bool isLoading,
@@ -26,6 +28,7 @@ class PreloadState with _$PreloadState {
     required bool showComments,
     String? errorMessage,
     VideoPlayerController? liveStreamController,
+    PageController? livePageController,
   }) = _PreloadState;
 
   factory PreloadState.initial() => PreloadState(
@@ -46,5 +49,8 @@ class PreloadState with _$PreloadState {
         showComments: true,
         liveStreamController: null,
         errorMessage: null,
+        mainPageController: PageController(initialPage: 0,keepPage: true,),
+        profilePageController: PageController(initialPage: 0,keepPage: true,),
+        livePageController: null,
       );
 }

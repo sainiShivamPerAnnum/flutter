@@ -74,6 +74,8 @@ class AppConfigV2Data {
 
   final List<SocialItems> socialLinks;
   final List<SocialVideo> socialVideos;
+  final String contactDetails;
+  final String socialBtnTxt;
 
   final List<String> youtubeVideos;
 
@@ -106,6 +108,8 @@ class AppConfigV2Data {
   final Map<String, dynamic> features;
 
   const AppConfigV2Data({
+    this.contactDetails="support@fello.in",
+    this.socialBtnTxt="Raise a Ticket",
     this.loginAssetUrl = '',
     this.invalidateBefore = 0,
     this.autosaveActive = false,

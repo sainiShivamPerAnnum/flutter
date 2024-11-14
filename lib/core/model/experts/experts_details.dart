@@ -58,6 +58,8 @@ class QuickAction {
 
 @_deserializable
 class License {
+  @JsonKey(name: "_id")
+  final String id;
   final String name;
   final String imageUrl;
   final DateTime issueDate;
@@ -68,6 +70,7 @@ class License {
     required this.imageUrl,
     required this.issueDate,
     required this.credentials,
+    this.id = '',
   });
 
   factory License.fromJson(Map<String, dynamic> json) =>
@@ -83,7 +86,7 @@ class Social {
   Social({
     required this.platform,
     required this.url,
-    this.icon ='',
+    this.icon = '',
   });
 
   factory Social.fromJson(Map<String, dynamic> json) => _$SocialFromJson(json);
@@ -120,7 +123,7 @@ class UserRating {
     required this.createdAt,
     required this.rating,
     required this.comments,
-    this.avatarId ='AV1',
+    this.avatarId = 'AV1',
   });
 
   factory UserRating.fromJson(Map<String, dynamic> json) =>

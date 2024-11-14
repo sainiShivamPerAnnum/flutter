@@ -4084,10 +4084,13 @@ mixin _$PreloadState {
   List<VideoData> get liveVideo => throw _privateConstructorUsedError;
   Map<int, VideoPlayerController> get controllers =>
       throw _privateConstructorUsedError;
+  PageController get mainPageController => throw _privateConstructorUsedError;
   Map<String, String> get link => throw _privateConstructorUsedError;
   bool get shareLinkInProgress => throw _privateConstructorUsedError;
   bool get isShareAlreadyClicked => throw _privateConstructorUsedError;
   Map<int, VideoPlayerController> get profileControllers =>
+      throw _privateConstructorUsedError;
+  PageController get profilePageController =>
       throw _privateConstructorUsedError;
   int get focusedIndex => throw _privateConstructorUsedError;
   int get profileVideoIndex => throw _privateConstructorUsedError;
@@ -4100,6 +4103,7 @@ mixin _$PreloadState {
   String? get errorMessage => throw _privateConstructorUsedError;
   VideoPlayerController? get liveStreamController =>
       throw _privateConstructorUsedError;
+  PageController? get livePageController => throw _privateConstructorUsedError;
 
   @optionalTypeArgs
   TResult map<TResult extends Object?>(
@@ -4134,10 +4138,12 @@ abstract class $PreloadStateCopyWith<$Res> {
       List<VideoData> profileVideos,
       List<VideoData> liveVideo,
       Map<int, VideoPlayerController> controllers,
+      PageController mainPageController,
       Map<String, String> link,
       bool shareLinkInProgress,
       bool isShareAlreadyClicked,
       Map<int, VideoPlayerController> profileControllers,
+      PageController profilePageController,
       int focusedIndex,
       int profileVideoIndex,
       bool isLoading,
@@ -4146,7 +4152,8 @@ abstract class $PreloadStateCopyWith<$Res> {
       bool keyboardVisible,
       bool showComments,
       String? errorMessage,
-      VideoPlayerController? liveStreamController});
+      VideoPlayerController? liveStreamController,
+      PageController? livePageController});
 }
 
 /// @nodoc
@@ -4166,10 +4173,12 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
     Object? profileVideos = null,
     Object? liveVideo = null,
     Object? controllers = null,
+    Object? mainPageController = null,
     Object? link = null,
     Object? shareLinkInProgress = null,
     Object? isShareAlreadyClicked = null,
     Object? profileControllers = null,
+    Object? profilePageController = null,
     Object? focusedIndex = null,
     Object? profileVideoIndex = null,
     Object? isLoading = null,
@@ -4179,6 +4188,7 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
     Object? showComments = null,
     Object? errorMessage = freezed,
     Object? liveStreamController = freezed,
+    Object? livePageController = freezed,
   }) {
     return _then(_value.copyWith(
       mainVideos: null == mainVideos
@@ -4197,6 +4207,10 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
           ? _value.controllers
           : controllers // ignore: cast_nullable_to_non_nullable
               as Map<int, VideoPlayerController>,
+      mainPageController: null == mainPageController
+          ? _value.mainPageController
+          : mainPageController // ignore: cast_nullable_to_non_nullable
+              as PageController,
       link: null == link
           ? _value.link
           : link // ignore: cast_nullable_to_non_nullable
@@ -4213,6 +4227,10 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
           ? _value.profileControllers
           : profileControllers // ignore: cast_nullable_to_non_nullable
               as Map<int, VideoPlayerController>,
+      profilePageController: null == profilePageController
+          ? _value.profilePageController
+          : profilePageController // ignore: cast_nullable_to_non_nullable
+              as PageController,
       focusedIndex: null == focusedIndex
           ? _value.focusedIndex
           : focusedIndex // ignore: cast_nullable_to_non_nullable
@@ -4249,6 +4267,10 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
           ? _value.liveStreamController
           : liveStreamController // ignore: cast_nullable_to_non_nullable
               as VideoPlayerController?,
+      livePageController: freezed == livePageController
+          ? _value.livePageController
+          : livePageController // ignore: cast_nullable_to_non_nullable
+              as PageController?,
     ) as $Val);
   }
 }
@@ -4266,10 +4288,12 @@ abstract class _$$PreloadStateImplCopyWith<$Res>
       List<VideoData> profileVideos,
       List<VideoData> liveVideo,
       Map<int, VideoPlayerController> controllers,
+      PageController mainPageController,
       Map<String, String> link,
       bool shareLinkInProgress,
       bool isShareAlreadyClicked,
       Map<int, VideoPlayerController> profileControllers,
+      PageController profilePageController,
       int focusedIndex,
       int profileVideoIndex,
       bool isLoading,
@@ -4278,7 +4302,8 @@ abstract class _$$PreloadStateImplCopyWith<$Res>
       bool keyboardVisible,
       bool showComments,
       String? errorMessage,
-      VideoPlayerController? liveStreamController});
+      VideoPlayerController? liveStreamController,
+      PageController? livePageController});
 }
 
 /// @nodoc
@@ -4296,10 +4321,12 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
     Object? profileVideos = null,
     Object? liveVideo = null,
     Object? controllers = null,
+    Object? mainPageController = null,
     Object? link = null,
     Object? shareLinkInProgress = null,
     Object? isShareAlreadyClicked = null,
     Object? profileControllers = null,
+    Object? profilePageController = null,
     Object? focusedIndex = null,
     Object? profileVideoIndex = null,
     Object? isLoading = null,
@@ -4309,6 +4336,7 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
     Object? showComments = null,
     Object? errorMessage = freezed,
     Object? liveStreamController = freezed,
+    Object? livePageController = freezed,
   }) {
     return _then(_$PreloadStateImpl(
       mainVideos: null == mainVideos
@@ -4327,6 +4355,10 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
           ? _value.controllers
           : controllers // ignore: cast_nullable_to_non_nullable
               as Map<int, VideoPlayerController>,
+      mainPageController: null == mainPageController
+          ? _value.mainPageController
+          : mainPageController // ignore: cast_nullable_to_non_nullable
+              as PageController,
       link: null == link
           ? _value.link
           : link // ignore: cast_nullable_to_non_nullable
@@ -4343,6 +4375,10 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
           ? _value.profileControllers
           : profileControllers // ignore: cast_nullable_to_non_nullable
               as Map<int, VideoPlayerController>,
+      profilePageController: null == profilePageController
+          ? _value.profilePageController
+          : profilePageController // ignore: cast_nullable_to_non_nullable
+              as PageController,
       focusedIndex: null == focusedIndex
           ? _value.focusedIndex
           : focusedIndex // ignore: cast_nullable_to_non_nullable
@@ -4379,6 +4415,10 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
           ? _value.liveStreamController
           : liveStreamController // ignore: cast_nullable_to_non_nullable
               as VideoPlayerController?,
+      livePageController: freezed == livePageController
+          ? _value.livePageController
+          : livePageController // ignore: cast_nullable_to_non_nullable
+              as PageController?,
     ));
   }
 }
@@ -4391,10 +4431,12 @@ class _$PreloadStateImpl implements _PreloadState {
       required this.profileVideos,
       required this.liveVideo,
       required this.controllers,
+      required this.mainPageController,
       required this.link,
       required this.shareLinkInProgress,
       required this.isShareAlreadyClicked,
       required this.profileControllers,
+      required this.profilePageController,
       required this.focusedIndex,
       required this.profileVideoIndex,
       required this.isLoading,
@@ -4403,7 +4445,8 @@ class _$PreloadStateImpl implements _PreloadState {
       required this.keyboardVisible,
       required this.showComments,
       this.errorMessage,
-      this.liveStreamController});
+      this.liveStreamController,
+      this.livePageController});
 
   @override
   final List<VideoData> mainVideos;
@@ -4414,6 +4457,8 @@ class _$PreloadStateImpl implements _PreloadState {
   @override
   final Map<int, VideoPlayerController> controllers;
   @override
+  final PageController mainPageController;
+  @override
   final Map<String, String> link;
   @override
   final bool shareLinkInProgress;
@@ -4421,6 +4466,8 @@ class _$PreloadStateImpl implements _PreloadState {
   final bool isShareAlreadyClicked;
   @override
   final Map<int, VideoPlayerController> profileControllers;
+  @override
+  final PageController profilePageController;
   @override
   final int focusedIndex;
   @override
@@ -4439,10 +4486,12 @@ class _$PreloadStateImpl implements _PreloadState {
   final String? errorMessage;
   @override
   final VideoPlayerController? liveStreamController;
+  @override
+  final PageController? livePageController;
 
   @override
   String toString() {
-    return 'PreloadState(mainVideos: $mainVideos, profileVideos: $profileVideos, liveVideo: $liveVideo, controllers: $controllers, link: $link, shareLinkInProgress: $shareLinkInProgress, isShareAlreadyClicked: $isShareAlreadyClicked, profileControllers: $profileControllers, focusedIndex: $focusedIndex, profileVideoIndex: $profileVideoIndex, isLoading: $isLoading, videoComments: $videoComments, currentContext: $currentContext, keyboardVisible: $keyboardVisible, showComments: $showComments, errorMessage: $errorMessage, liveStreamController: $liveStreamController)';
+    return 'PreloadState(mainVideos: $mainVideos, profileVideos: $profileVideos, liveVideo: $liveVideo, controllers: $controllers, mainPageController: $mainPageController, link: $link, shareLinkInProgress: $shareLinkInProgress, isShareAlreadyClicked: $isShareAlreadyClicked, profileControllers: $profileControllers, profilePageController: $profilePageController, focusedIndex: $focusedIndex, profileVideoIndex: $profileVideoIndex, isLoading: $isLoading, videoComments: $videoComments, currentContext: $currentContext, keyboardVisible: $keyboardVisible, showComments: $showComments, errorMessage: $errorMessage, liveStreamController: $liveStreamController, livePageController: $livePageController)';
   }
 
   @override
@@ -4457,6 +4506,8 @@ class _$PreloadStateImpl implements _PreloadState {
             const DeepCollectionEquality().equals(other.liveVideo, liveVideo) &&
             const DeepCollectionEquality()
                 .equals(other.controllers, controllers) &&
+            (identical(other.mainPageController, mainPageController) ||
+                other.mainPageController == mainPageController) &&
             const DeepCollectionEquality().equals(other.link, link) &&
             (identical(other.shareLinkInProgress, shareLinkInProgress) ||
                 other.shareLinkInProgress == shareLinkInProgress) &&
@@ -4464,6 +4515,8 @@ class _$PreloadStateImpl implements _PreloadState {
                 other.isShareAlreadyClicked == isShareAlreadyClicked) &&
             const DeepCollectionEquality()
                 .equals(other.profileControllers, profileControllers) &&
+            (identical(other.profilePageController, profilePageController) ||
+                other.profilePageController == profilePageController) &&
             (identical(other.focusedIndex, focusedIndex) ||
                 other.focusedIndex == focusedIndex) &&
             (identical(other.profileVideoIndex, profileVideoIndex) ||
@@ -4481,29 +4534,35 @@ class _$PreloadStateImpl implements _PreloadState {
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage) &&
             (identical(other.liveStreamController, liveStreamController) ||
-                other.liveStreamController == liveStreamController));
+                other.liveStreamController == liveStreamController) &&
+            (identical(other.livePageController, livePageController) ||
+                other.livePageController == livePageController));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(mainVideos),
-      const DeepCollectionEquality().hash(profileVideos),
-      const DeepCollectionEquality().hash(liveVideo),
-      const DeepCollectionEquality().hash(controllers),
-      const DeepCollectionEquality().hash(link),
-      shareLinkInProgress,
-      isShareAlreadyClicked,
-      const DeepCollectionEquality().hash(profileControllers),
-      focusedIndex,
-      profileVideoIndex,
-      isLoading,
-      const DeepCollectionEquality().hash(videoComments),
-      currentContext,
-      keyboardVisible,
-      showComments,
-      errorMessage,
-      liveStreamController);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        const DeepCollectionEquality().hash(mainVideos),
+        const DeepCollectionEquality().hash(profileVideos),
+        const DeepCollectionEquality().hash(liveVideo),
+        const DeepCollectionEquality().hash(controllers),
+        mainPageController,
+        const DeepCollectionEquality().hash(link),
+        shareLinkInProgress,
+        isShareAlreadyClicked,
+        const DeepCollectionEquality().hash(profileControllers),
+        profilePageController,
+        focusedIndex,
+        profileVideoIndex,
+        isLoading,
+        const DeepCollectionEquality().hash(videoComments),
+        currentContext,
+        keyboardVisible,
+        showComments,
+        errorMessage,
+        liveStreamController,
+        livePageController
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -4546,10 +4605,12 @@ abstract class _PreloadState implements PreloadState {
       required final List<VideoData> profileVideos,
       required final List<VideoData> liveVideo,
       required final Map<int, VideoPlayerController> controllers,
+      required final PageController mainPageController,
       required final Map<String, String> link,
       required final bool shareLinkInProgress,
       required final bool isShareAlreadyClicked,
       required final Map<int, VideoPlayerController> profileControllers,
+      required final PageController profilePageController,
       required final int focusedIndex,
       required final int profileVideoIndex,
       required final bool isLoading,
@@ -4558,7 +4619,8 @@ abstract class _PreloadState implements PreloadState {
       required final bool keyboardVisible,
       required final bool showComments,
       final String? errorMessage,
-      final VideoPlayerController? liveStreamController}) = _$PreloadStateImpl;
+      final VideoPlayerController? liveStreamController,
+      final PageController? livePageController}) = _$PreloadStateImpl;
 
   @override
   List<VideoData> get mainVideos;
@@ -4569,6 +4631,8 @@ abstract class _PreloadState implements PreloadState {
   @override
   Map<int, VideoPlayerController> get controllers;
   @override
+  PageController get mainPageController;
+  @override
   Map<String, String> get link;
   @override
   bool get shareLinkInProgress;
@@ -4576,6 +4640,8 @@ abstract class _PreloadState implements PreloadState {
   bool get isShareAlreadyClicked;
   @override
   Map<int, VideoPlayerController> get profileControllers;
+  @override
+  PageController get profilePageController;
   @override
   int get focusedIndex;
   @override
@@ -4594,6 +4660,8 @@ abstract class _PreloadState implements PreloadState {
   String? get errorMessage;
   @override
   VideoPlayerController? get liveStreamController;
+  @override
+  PageController? get livePageController;
   @override
   @JsonKey(ignore: true)
   _$$PreloadStateImplCopyWith<_$PreloadStateImpl> get copyWith =>

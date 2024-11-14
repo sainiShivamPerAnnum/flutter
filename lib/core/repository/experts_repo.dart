@@ -6,7 +6,6 @@ import 'package:felloapp/core/model/bookings/payment_polling.dart';
 import 'package:felloapp/core/model/bookings/payment_response.dart';
 import 'package:felloapp/core/model/experts/experts_details.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
-import 'package:felloapp/core/model/live/live_home.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/feature/shorts/src/service/video_data.dart';
@@ -119,7 +118,7 @@ class ExpertsRepository extends BaseRepo {
         apiName: '$_ratings/postRatingDetails',
       );
       final responseData = response["data"];
-      BaseUtil.showNegativeAlert(
+      BaseUtil.showPositiveAlert(
         'Rating Uploaded Successfully!',
         'Thanks for your feedback!',
       );
@@ -152,6 +151,27 @@ class ExpertsRepository extends BaseRepo {
       log("Slot data: $responseData");
       return ApiResponse<Schedule>(
         model: Schedule.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<String>> getCertificateById({
+    required String advisorId,
+    required String certificateId,
+  }) async {
+    try {
+      final response = await APIService.instance.getData(
+        'advisors/$advisorId/credentials/$certificateId/download',
+        cBaseUrl: _baseUrl,
+        apiName: '$_experts/getCertificateById',
+      );
+      final responseData = response['data'];
+      return ApiResponse<String>(
+        model: responseData["presignedUrl"] ?? '',
         code: 200,
       );
     } catch (e) {

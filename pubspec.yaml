@@ -123,6 +123,7 @@ dependencies:
   webengage_flutter: ^1.3.0
   vertical_scrollable_tabview: ^0.1.1
   scroll_to_index: ^3.0.1
+  injectable: ^1.5.4
 
 
 
