@@ -29,7 +29,7 @@ class Expert {
   final num rating;
   final String expertise;
   final String qualifications;
-  final num rate;
+  final String rate;
   final String image;
   final bool isFree;
   final String advisorId;

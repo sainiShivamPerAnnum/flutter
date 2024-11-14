@@ -43,7 +43,7 @@ mixin _$PreloadEvent {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -73,7 +73,7 @@ mixin _$PreloadEvent {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -103,7 +103,7 @@ mixin _$PreloadEvent {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -227,7 +227,7 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return initializeLiveStream(this);
   }
@@ -260,7 +260,7 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return initializeLiveStream?.call(this);
   }
@@ -293,7 +293,7 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (initializeLiveStream != null) {
@@ -381,7 +381,7 @@ class _$DisposeLiveStreamControllerImpl
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return disposeLiveStreamController(this);
   }
@@ -414,7 +414,7 @@ class _$DisposeLiveStreamControllerImpl
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return disposeLiveStreamController?.call(this);
   }
@@ -447,7 +447,7 @@ class _$DisposeLiveStreamControllerImpl
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (disposeLiveStreamController != null) {
@@ -525,7 +525,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return getVideosFromApi(this);
   }
@@ -558,7 +558,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return getVideosFromApi?.call(this);
   }
@@ -591,7 +591,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (getVideosFromApi != null) {
@@ -668,7 +668,7 @@ class _$SetLoadingImpl implements _SetLoading {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return setLoading(this);
   }
@@ -701,7 +701,7 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return setLoading?.call(this);
   }
@@ -734,7 +734,7 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (setLoading != null) {
@@ -854,7 +854,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return updateUrls(this);
   }
@@ -887,7 +887,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return updateUrls?.call(this);
   }
@@ -920,7 +920,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (updateUrls != null) {
@@ -1031,7 +1031,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return onVideoIndexChanged(this);
   }
@@ -1064,7 +1064,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return onVideoIndexChanged?.call(this);
   }
@@ -1097,7 +1097,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (onVideoIndexChanged != null) {
@@ -1207,7 +1207,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return pauseVideoAtIndex(this);
   }
@@ -1240,7 +1240,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return pauseVideoAtIndex?.call(this);
   }
@@ -1273,7 +1273,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (pauseVideoAtIndex != null) {
@@ -1382,7 +1382,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return playVideoAtIndex(this);
   }
@@ -1415,7 +1415,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return playVideoAtIndex?.call(this);
   }
@@ -1448,7 +1448,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (playVideoAtIndex != null) {
@@ -1577,7 +1577,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return updateConstants(this);
   }
@@ -1610,7 +1610,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return updateConstants?.call(this);
   }
@@ -1643,7 +1643,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (updateConstants != null) {
@@ -1764,7 +1764,7 @@ class _$AddCommentImpl implements _AddComment {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return addComment(this);
   }
@@ -1797,7 +1797,7 @@ class _$AddCommentImpl implements _AddComment {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return addComment?.call(this);
   }
@@ -1830,7 +1830,7 @@ class _$AddCommentImpl implements _AddComment {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (addComment != null) {
@@ -1942,7 +1942,7 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return updateViewCount(this);
   }
@@ -1975,7 +1975,7 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return updateViewCount?.call(this);
   }
@@ -2008,7 +2008,7 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (updateViewCount != null) {
@@ -2091,7 +2091,7 @@ class _$ErrorPageImpl implements _ErrorPage {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return onError(this);
   }
@@ -2124,7 +2124,7 @@ class _$ErrorPageImpl implements _ErrorPage {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return onError?.call(this);
   }
@@ -2157,7 +2157,7 @@ class _$ErrorPageImpl implements _ErrorPage {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (onError != null) {
@@ -2260,7 +2260,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return likeVideo(this);
   }
@@ -2293,7 +2293,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return likeVideo?.call(this);
   }
@@ -2326,7 +2326,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (likeVideo != null) {
@@ -2408,7 +2408,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return toggleComments(this);
   }
@@ -2441,7 +2441,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return toggleComments?.call(this);
   }
@@ -2474,7 +2474,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (toggleComments != null) {
@@ -2594,7 +2594,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return addCommentToState(this);
   }
@@ -2627,7 +2627,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return addCommentToState?.call(this);
   }
@@ -2660,7 +2660,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (addCommentToState != null) {
@@ -2745,7 +2745,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return switchToMainReels(this);
   }
@@ -2778,7 +2778,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return switchToMainReels?.call(this);
   }
@@ -2811,7 +2811,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (switchToMainReels != null) {
@@ -2917,7 +2917,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return switchToProfileReels(this);
   }
@@ -2950,7 +2950,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return switchToProfileReels?.call(this);
   }
@@ -2983,7 +2983,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (switchToProfileReels != null) {
@@ -3102,7 +3102,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return initializeAtIndex(this);
   }
@@ -3135,7 +3135,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return initializeAtIndex?.call(this);
   }
@@ -3168,7 +3168,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (initializeAtIndex != null) {
@@ -3292,7 +3292,7 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return initializeFromDynamicLink(this);
   }
@@ -3325,7 +3325,7 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return initializeFromDynamicLink?.call(this);
   }
@@ -3358,7 +3358,7 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (initializeFromDynamicLink != null) {
@@ -3470,7 +3470,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return updateKeyboardState(this);
   }
@@ -3503,7 +3503,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return updateKeyboardState?.call(this);
   }
@@ -3536,7 +3536,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (updateKeyboardState != null) {
@@ -3622,7 +3622,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return disposeProfileControllers(this);
   }
@@ -3655,7 +3655,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return disposeProfileControllers?.call(this);
   }
@@ -3688,7 +3688,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (disposeProfileControllers != null) {
@@ -3792,7 +3792,7 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
     return generateDynamicLink(this);
   }
@@ -3825,7 +3825,7 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
     return generateDynamicLink?.call(this);
   }
@@ -3858,7 +3858,7 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
     if (generateDynamicLink != null) {
@@ -3879,87 +3879,66 @@ abstract class _GenerateDynamicLink implements PreloadEvent {
 }
 
 /// @nodoc
-abstract class _$$UpdateControllersImplCopyWith<$Res> {
-  factory _$$UpdateControllersImplCopyWith(_$UpdateControllersImpl value,
-          $Res Function(_$UpdateControllersImpl) then) =
-      __$$UpdateControllersImplCopyWithImpl<$Res>;
+abstract class _$$UpdateLoadingImplCopyWith<$Res> {
+  factory _$$UpdateLoadingImplCopyWith(
+          _$UpdateLoadingImpl value, $Res Function(_$UpdateLoadingImpl) then) =
+      __$$UpdateLoadingImplCopyWithImpl<$Res>;
   @useResult
-  $Res call(
-      {Map<int, VideoPlayerController> controller, ReelContext reelContext});
+  $Res call({bool isLoading});
 }
 
 /// @nodoc
-class __$$UpdateControllersImplCopyWithImpl<$Res>
-    extends _$PreloadEventCopyWithImpl<$Res, _$UpdateControllersImpl>
-    implements _$$UpdateControllersImplCopyWith<$Res> {
-  __$$UpdateControllersImplCopyWithImpl(_$UpdateControllersImpl _value,
-      $Res Function(_$UpdateControllersImpl) _then)
+class __$$UpdateLoadingImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$UpdateLoadingImpl>
+    implements _$$UpdateLoadingImplCopyWith<$Res> {
+  __$$UpdateLoadingImplCopyWithImpl(
+      _$UpdateLoadingImpl _value, $Res Function(_$UpdateLoadingImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? controller = null,
-    Object? reelContext = null,
+    Object? isLoading = null,
   }) {
-    return _then(_$UpdateControllersImpl(
-      controller: null == controller
-          ? _value._controller
-          : controller // ignore: cast_nullable_to_non_nullable
-              as Map<int, VideoPlayerController>,
-      reelContext: null == reelContext
-          ? _value.reelContext
-          : reelContext // ignore: cast_nullable_to_non_nullable
-              as ReelContext,
+    return _then(_$UpdateLoadingImpl(
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
 
 /// @nodoc
 
-class _$UpdateControllersImpl implements _UpdateControllers {
-  const _$UpdateControllersImpl(
-      {required final Map<int, VideoPlayerController> controller,
-      required this.reelContext})
-      : _controller = controller;
-
-  final Map<int, VideoPlayerController> _controller;
-  @override
-  Map<int, VideoPlayerController> get controller {
-    if (_controller is EqualUnmodifiableMapView) return _controller;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_controller);
-  }
+class _$UpdateLoadingImpl implements _UpdateLoading {
+  const _$UpdateLoadingImpl({required this.isLoading});
 
   @override
-  final ReelContext reelContext;
+  final bool isLoading;
 
   @override
   String toString() {
-    return 'PreloadEvent.updateControllers(controller: $controller, reelContext: $reelContext)';
+    return 'PreloadEvent.updateLoading(isLoading: $isLoading)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$UpdateControllersImpl &&
-            const DeepCollectionEquality()
-                .equals(other._controller, _controller) &&
-            (identical(other.reelContext, reelContext) ||
-                other.reelContext == reelContext));
+            other is _$UpdateLoadingImpl &&
+            (identical(other.isLoading, isLoading) ||
+                other.isLoading == isLoading));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_controller), reelContext);
+  int get hashCode => Object.hash(runtimeType, isLoading);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$UpdateControllersImplCopyWith<_$UpdateControllersImpl> get copyWith =>
-      __$$UpdateControllersImplCopyWithImpl<_$UpdateControllersImpl>(
-          this, _$identity);
+  _$$UpdateLoadingImplCopyWith<_$UpdateLoadingImpl> get copyWith =>
+      __$$UpdateLoadingImplCopyWithImpl<_$UpdateLoadingImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -3989,9 +3968,9 @@ class _$UpdateControllersImpl implements _UpdateControllers {
     required TResult Function(_DisposeProfileControllers value)
         disposeProfileControllers,
     required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
-    required TResult Function(_UpdateControllers value) updateControllers,
+    required TResult Function(_UpdateLoading value) updateLoading,
   }) {
-    return updateControllers(this);
+    return updateLoading(this);
   }
 
   @override
@@ -4022,9 +4001,9 @@ class _$UpdateControllersImpl implements _UpdateControllers {
     TResult? Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult? Function(_UpdateControllers value)? updateControllers,
+    TResult? Function(_UpdateLoading value)? updateLoading,
   }) {
-    return updateControllers?.call(this);
+    return updateLoading?.call(this);
   }
 
   @override
@@ -4055,25 +4034,23 @@ class _$UpdateControllersImpl implements _UpdateControllers {
     TResult Function(_DisposeProfileControllers value)?
         disposeProfileControllers,
     TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
-    TResult Function(_UpdateControllers value)? updateControllers,
+    TResult Function(_UpdateLoading value)? updateLoading,
     required TResult orElse(),
   }) {
-    if (updateControllers != null) {
-      return updateControllers(this);
+    if (updateLoading != null) {
+      return updateLoading(this);
     }
     return orElse();
   }
 }
 
-abstract class _UpdateControllers implements PreloadEvent {
-  const factory _UpdateControllers(
-      {required final Map<int, VideoPlayerController> controller,
-      required final ReelContext reelContext}) = _$UpdateControllersImpl;
+abstract class _UpdateLoading implements PreloadEvent {
+  const factory _UpdateLoading({required final bool isLoading}) =
+      _$UpdateLoadingImpl;
 
-  Map<int, VideoPlayerController> get controller;
-  ReelContext get reelContext;
+  bool get isLoading;
   @JsonKey(ignore: true)
-  _$$UpdateControllersImplCopyWith<_$UpdateControllersImpl> get copyWith =>
+  _$$UpdateLoadingImplCopyWith<_$UpdateLoadingImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

@@ -8,6 +8,8 @@ part of 'app_config_serialized_model.dart';
 
 AppConfigV2Data _$AppConfigV2DataFromJson(Map<String, dynamic> json) =>
     AppConfigV2Data(
+      contactDetails: json['contactDetails'] as String? ?? "support@fello.in",
+      socialBtnTxt: json['socialBtnTxt'] as String? ?? "Raise a Ticket",
       loginAssetUrl: json['loginAssetUrl'] as String? ?? '',
       invalidateBefore: json['invalidateBefore'] as num? ?? 0,
       autosaveActive: json['autosaveActive'] as bool? ?? false,

@@ -54,16 +54,10 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           latency: e.latency,
         );
       },
-      updateControllers: (e) {
-        if (e.reelContext == ReelContext.main) {
-          emit(
-            state.copyWith(controllers: e.controller),
+      updateLoading: (e) {
+        emit(
+            state.copyWith(isLoading: e.isLoading),
           );
-        } else {
-          emit(
-            state.copyWith(profileControllers: e.controller),
-          );
-        }
       },
       pauseVideoAtIndex: (e) {
         _stopControllerAtIndex(e.index);
@@ -460,6 +454,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       } else {
         state.profileControllers[index] = controller;
       }
+      add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
       await controller.initialize();
       await controller.setLooping(true);
       await controller.setVolume(1);

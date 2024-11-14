@@ -20,7 +20,6 @@ class ExpertCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String price = '₹${expert.rate}/min';
 
     return GestureDetector(
       onTap: onTap,
@@ -206,7 +205,7 @@ class ExpertCard extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              price,
+                              expert.rate,
                               style: TextStyles.sourceSansSB.body3
                                   .colour(
                                     UiConstants.kTextColor,
