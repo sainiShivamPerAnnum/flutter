@@ -16,6 +16,9 @@ class FindUs extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(
+                height: SizeConfig.padding24,
+              ),
               Text(
                 'You can also find us on',
                 style: TextStyles.sourceSansSB.body1,

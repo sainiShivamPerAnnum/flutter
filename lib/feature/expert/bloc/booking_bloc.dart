@@ -45,7 +45,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     final currentSelectedDate = (state is BookingsLoaded)
         ? (state as BookingsLoaded).selectedDate
         : null;
-    emitter(const LoadingBookingsData());
+    // emitter(const LoadingBookingsData());
 
     final data = await _expertsRepository.getExpertAvailableSlots(
       advisorId: event.advisorId,

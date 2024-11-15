@@ -241,7 +241,7 @@ Widget buildLiveSection(List<LiveStream> liveData) {
           ),
           decoration: BoxDecoration(
             color: UiConstants.greyVarient,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(SizeConfig.roundness5),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -252,7 +252,7 @@ Widget buildLiveSection(List<LiveStream> liveData) {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Currently offline',
+                      'Currently offline'.toUpperCase(),
                       style: TextStyles.sourceSansSB.body6.colour(
                         UiConstants.kTabBorderColor,
                       ),
@@ -272,24 +272,26 @@ Widget buildLiveSection(List<LiveStream> liveData) {
                   ],
                 ),
               ),
-              ElevatedButton(
-                onPressed: () {
+              GestureDetector(
+                onTap: () {
                   AppState.delegate!.parseRoute(Uri.parse("experts"));
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
+                child: Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.padding8,
                     vertical: SizeConfig.padding6,
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  decoration: BoxDecoration(
+                    color: UiConstants.kTextColor,
+                    borderRadius: BorderRadius.circular(
+                      SizeConfig.roundness5,
+                    ),
                   ),
-                ),
-                child: Text(
-                  'Book a Call',
-                  style: TextStyles.sourceSansSB.body4.colour(
-                    UiConstants.kTextColor4,
+                  child: Text(
+                    'Book a Call',
+                    style: TextStyles.sourceSansSB.body4.colour(
+                      UiConstants.kTextColor4,
+                    ),
                   ),
                 ),
               ),

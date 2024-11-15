@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -110,6 +111,20 @@ class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
     return "$hours:$minutes:$seconds";
   }
 
+  bool _isButtonClickable(DateTime schedule, String duration) {
+    final DateTime now = getAdjustedUtcTime();
+    final DateTime scheduledOn = schedule;
+    final DateTime startWindow =
+        scheduledOn.subtract(const Duration(minutes: 15));
+
+    // Parse duration minutes from string
+    final int durationMinutes = int.tryParse(duration.split(' ').first) ?? 0;
+    final DateTime endWindow =
+        scheduledOn.add(Duration(minutes: durationMinutes.toInt()));
+    final clickable = now.isAfter(startWindow) && now.isBefore(endWindow);
+    return clickable;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -189,44 +204,62 @@ class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
                   right: SizeConfig.padding10,
                   child: GestureDetector(
                     onTap: () {
-                      final userService = locator<UserService>();
-                      final userId = userService.baseUser!.uid;
-                      final advisoriD = userService.baseUser!.advisorId!;
-                      final String userName =
-                          (userService.baseUser!.kycName != null &&
-                                      userService.baseUser!.kycName!.isNotEmpty
-                                  ? userService.baseUser!.kycName
-                                  : userService.baseUser!.name) ??
-                              "N/A";
-                      AppState.delegate!.appState.currentAction = PageAction(
-                        page: LivePreviewPageConfig,
-                        state: PageState.addWidget,
-                        widget: HMSPrebuilt(
-                          eventId: widget.id ?? '',
-                          isLiked: false,
-                          advisorId: advisoriD,
-                          title: widget.title,
-                          description: widget.subTitle,
-                          roomCode: widget.broadcasterCode,
-                          onLeave: () async {
-                            await AppState.backButtonDispatcher!.didPopRoute();
-                          },
-                          options: HMSPrebuiltOptions(
-                            userName: userName,
-                            userId: userId,
+                      if (_isButtonClickable(
+                        DateTime.parse(widget.timeSlot!),
+                        "60",
+                      )) {
+                        final userService = locator<UserService>();
+                        final userId = userService.baseUser!.uid;
+                        final advisoriD = userService.baseUser!.advisorId!;
+                        final String userName =
+                            (userService.baseUser!.kycName != null &&
+                                        userService
+                                            .baseUser!.kycName!.isNotEmpty
+                                    ? userService.baseUser!.kycName
+                                    : userService.baseUser!.name) ??
+                                "N/A";
+                        AppState.delegate!.appState.currentAction = PageAction(
+                          page: LivePreviewPageConfig,
+                          state: PageState.addWidget,
+                          widget: HMSPrebuilt(
+                            eventId: widget.id ?? '',
+                            isLiked: false,
+                            advisorId: advisoriD,
+                            title: widget.title,
+                            description: widget.subTitle,
+                            roomCode: widget.broadcasterCode,
+                            onLeave: () async {
+                              await AppState.backButtonDispatcher!
+                                  .didPopRoute();
+                            },
+                            options: HMSPrebuiltOptions(
+                              userName: userName,
+                              userId: userId,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      } else {
+                        BaseUtil.showNegativeAlert(
+                          'Unable to Join Meeting',
+                          'You can join the meeting 15 minutes prior to your scheduled time!',
+                        );
+                      }
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.padding8,
-                        vertical: SizeConfig.padding4,
+                        vertical: SizeConfig.padding6,
                       ),
                       decoration: BoxDecoration(
-                        color: UiConstants.kTextColor,
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness5),
+                        color: _isButtonClickable(
+                          DateTime.parse(widget.timeSlot!),
+                          "60",
+                        )
+                            ? UiConstants.kTextColor
+                            : UiConstants.kTextColor.withOpacity(.5),
+                        borderRadius: BorderRadius.circular(
+                          SizeConfig.roundness5,
+                        ),
                       ),
                       child: Text(
                         'Join Live',
@@ -284,25 +317,23 @@ class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
                         UiConstants.kTextColor,
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: navigateToEdit,
-                      style: ElevatedButton.styleFrom(
-                        // primary: Colors.white,
-                        backgroundColor: UiConstants.kBackgroundColor,
-                        minimumSize: Size.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    GestureDetector(
+                      onTap: navigateToEdit,
+                      child: Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: SizeConfig.padding8,
                           vertical: SizeConfig.padding6,
                         ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness5),
+                        decoration: BoxDecoration(
+                          color: UiConstants.kBackgroundColor,
+                          borderRadius: BorderRadius.circular(
+                            SizeConfig.roundness5,
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        'Edit',
-                        style: TextStyles.sourceSansSB.body4,
+                        child: Text(
+                          'Edit',
+                          style: TextStyles.sourceSansSB.body4,
+                        ),
                       ),
                     ),
                   ],
@@ -332,13 +363,12 @@ class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
       page: ScheduleCallViewConfig,
       widget: ScheduleCallWrapper(
         id: widget.id,
-        status: widget.status, 
+        status: widget.status,
         title: widget.title,
-        subTitle: widget
-            .subTitle,
+        subTitle: widget.subTitle,
         author: widget.author,
-        category: widget.category, 
-        bgImage: widget.bgImage, 
+        category: widget.category,
+        bgImage: widget.bgImage,
         liveCount: widget.liveCount,
         duration: widget.duration,
         timeSlot: widget.timeSlot,

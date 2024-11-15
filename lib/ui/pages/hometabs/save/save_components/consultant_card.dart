@@ -30,12 +30,15 @@ class ConsultationWidget extends StatelessWidget {
             left: SizeConfig.padding20,
             right: SizeConfig.padding20,
           ),
-          padding: EdgeInsets.all(SizeConfig.padding16),
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding18,
+            vertical: SizeConfig.padding14,
+          ),
           decoration: BoxDecoration(
             color: UiConstants.greyVarient,
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(SizeConfig.roundness16),
-              topRight: Radius.circular(SizeConfig.roundness16),
+              topLeft: Radius.circular(SizeConfig.roundness12),
+              topRight: Radius.circular(SizeConfig.roundness12),
             ),
           ),
           child: Row(
@@ -50,7 +53,7 @@ class ConsultationWidget extends StatelessWidget {
                         UiConstants.kTabBorderColor,
                       ),
                     ),
-                    SizedBox(height: SizeConfig.padding4),
+                    SizedBox(height: SizeConfig.padding6),
                     Text(
                       'Get expert advice and start\nachieving financial goals!',
                       style: TextStyles.sourceSansSB.body2.colour(
@@ -58,34 +61,33 @@ class ConsultationWidget extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: SizeConfig.padding12),
-                    InkWell(
-                      onTap: () {
+                    ElevatedButton(
+                      onPressed: () {
                         AppState.delegate!.parseRoute(Uri.parse('experts'));
                       },
-                      child: Container(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(0, 0),
                         padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding12,
                           vertical: SizeConfig.padding6,
+                          horizontal: SizeConfig.padding12,
                         ),
-                        decoration: BoxDecoration(
-                          color: UiConstants.kTextColor,
+                        shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
                             SizeConfig.roundness5,
                           ),
                         ),
-                        child: Text(
-                          'Book Now!',
-                          style: TextStyles.sourceSansSB.body4.colour(
-                            UiConstants.kTextColor4,
-                          ),
-                        ),
+                      ),
+                      child: Text(
+                        'Book Now!',
+                        style: TextStyles.sourceSansSB.body4
+                            .colour(UiConstants.kTextColor4),
                       ),
                     ),
                   ],
                 ),
               ),
               SizedBox(
-                width: SizeConfig.padding64,
+                width: SizeConfig.padding54,
                 height: SizeConfig.padding64,
                 child: Image.network(
                   Assets.calender,
@@ -99,14 +101,14 @@ class ConsultationWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: UiConstants.greyVarient.withOpacity(0.6),
             borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(SizeConfig.roundness16),
-              bottomRight: Radius.circular(SizeConfig.roundness16),
+              bottomLeft: Radius.circular(SizeConfig.roundness12),
+              bottomRight: Radius.circular(SizeConfig.roundness12),
             ),
           ),
           margin: EdgeInsets.only(
             bottom: SizeConfig.padding10,
-            left: SizeConfig.padding18,
-            right: SizeConfig.padding18,
+            left: SizeConfig.padding20,
+            right: SizeConfig.padding20,
           ),
           padding: EdgeInsets.symmetric(
             vertical: SizeConfig.padding12,

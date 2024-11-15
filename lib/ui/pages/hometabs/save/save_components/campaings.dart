@@ -30,6 +30,8 @@ class CampaignCardSection extends StatelessWidget {
                 margin: EdgeInsets.symmetric(
                   vertical: SizeConfig.padding14,
                   horizontal: SizeConfig.padding20,
+                ).copyWith(
+                  bottom: SizeConfig.padding8,
                 ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(
@@ -39,7 +41,7 @@ class CampaignCardSection extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: SizeConfig.padding164,
+                      height: SizeConfig.padding152,
                       child: ClipRRect(
                         borderRadius:
                             BorderRadius.circular(SizeConfig.padding16),
@@ -164,9 +166,11 @@ class CustomCampaignCard extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: SizeConfig.padding8),
-                  Text(
-                    description,
-                    style: TextStyles.sourceSansSB.body2,
+                  Expanded(
+                    child: Text(
+                      description,
+                      style: TextStyles.sourceSansSB.body2,
+                    ),
                   ),
                   SizedBox(
                     height: SizeConfig.padding12,
@@ -174,18 +178,21 @@ class CustomCampaignCard extends StatelessWidget {
                   ElevatedButton(
                     onPressed: ontap,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
+                      minimumSize: const Size(0, 0),
+                      padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.padding6,
+                        horizontal: SizeConfig.padding12,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(
-                          SizeConfig.roundness8,
+                          SizeConfig.roundness5,
                         ),
                       ),
                     ),
                     child: Text(
                       buttonText,
-                      style: TextStyles.sourceSansSB.body4.colour(
-                        UiConstants.kTextColor4,
-                      ),
+                      style: TextStyles.sourceSansSB.body4
+                          .colour(UiConstants.textColor),
                     ),
                   ),
                 ],

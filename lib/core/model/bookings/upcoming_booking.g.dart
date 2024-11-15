@@ -22,4 +22,5 @@ Booking _$BookingFromJson(Map<String, dynamic> json) => Booking(
       advisorId: json['advisorId'] as String,
       guestCode: json['guestCode'] as String,
       recordingLink: json['recordingLink'] as String?,
+      eventId: json['eventId'] as String?,
     );

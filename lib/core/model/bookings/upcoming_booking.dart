@@ -27,6 +27,7 @@ class Booking {
   final String? recordingLink;
   final String advisorId;
   final String guestCode;
+  final String? eventId;
 
   Booking({
     required this.bookingId,
@@ -37,6 +38,7 @@ class Booking {
     required this.advisorId,
     required this.guestCode,
     this.recordingLink,
+    this.eventId,
   });
 
   factory Booking.fromJson(Map<String, dynamic> json) =>

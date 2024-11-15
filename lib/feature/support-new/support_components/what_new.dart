@@ -11,7 +11,7 @@ class WhatNew extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: SizeConfig.padding14),
+        SizedBox(height: SizeConfig.padding40),
         const TitleSubtitleContainer(
           title: "What is new in Fello",
           zeroPadding: true,

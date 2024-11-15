@@ -45,9 +45,6 @@ class _ShortsVideoPageState extends State<ShortsVideoPage> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               mainPageController.jumpToPage(focusedIndex);
             });
-            // if (mainPageController.hasClients &&
-            //     mainPageController.page?.toInt() != focusedIndex) {
-            // }
           },
           child: BlocBuilder<PreloadBloc, PreloadState>(
             builder: (context, state) {
@@ -89,7 +86,6 @@ class _ShortsVideoPageState extends State<ShortsVideoPage> {
                 onPageChanged: (index) {
                   BlocProvider.of<PreloadBloc>(context, listen: false)
                       .add(PreloadEvent.onVideoIndexChanged(index));
-                  // setState(() {}); // Remove if not needed
                 },
                 itemBuilder: (context, index) {
                   final bool isLoading =
@@ -367,16 +363,20 @@ class VideoWidgetState extends State<VideoWidget>
           Positioned(
             bottom: _iconPositionAnimation.value,
             right: 10.w,
-            child: AnimatedOpacity(
-              duration: const Duration(milliseconds: 200),
-              opacity: widget.isKeyBoardOpen ? 0 : 1,
-              child: _buildIconColumn(
-                widget.onShare,
-                widget.onLike,
-                widget.onBook,
-                widget.onCommentToggle,
-                widget.isLikedByUser,
-                widget.commentsVisibility,
+            child: Visibility(
+              visible: !widget.isKeyBoardOpen,
+              replacement: const SizedBox.shrink(),
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 200),
+                opacity: widget.isKeyBoardOpen ? 0 : 1,
+                child: _buildIconColumn(
+                  widget.onShare,
+                  widget.onLike,
+                  widget.onBook,
+                  widget.onCommentToggle,
+                  widget.isLikedByUser,
+                  widget.commentsVisibility,
+                ),
               ),
             ),
           ),
@@ -400,7 +400,7 @@ class VideoWidgetState extends State<VideoWidget>
           ),
           Positioned(
             bottom: widget.isKeyBoardOpen &&
-                    widget.currentContext == ReelContext.liveStream
+                    widget.currentContext != ReelContext.main
                 ? 55.h
                 : 70.h,
             child: ExpandableWidget(
@@ -415,7 +415,7 @@ class VideoWidgetState extends State<VideoWidget>
           AnimatedPositioned(
             duration: const Duration(milliseconds: 200),
             bottom: widget.isKeyBoardOpen
-                ? widget.currentContext == ReelContext.liveStream
+                ? widget.currentContext != ReelContext.main
                     ? MediaQuery.of(context).viewInsets.bottom
                     : MediaQuery.of(context).viewInsets.bottom - 50.h
                 : 10.h,

@@ -122,6 +122,36 @@ class _CallState extends State<Call> {
   }
 }
 
+bool _isButtonClickable(DateTime schedule, String duration) {
+  final DateTime now = getAdjustedUtcTime();
+  final DateTime scheduledOn = schedule;
+  final DateTime startWindow =
+      scheduledOn.subtract(const Duration(minutes: 15));
+
+  // Parse duration minutes from string
+  final int durationMinutes = int.tryParse(duration.split(' ').first) ?? 0;
+  final DateTime endWindow =
+      scheduledOn.add(Duration(minutes: durationMinutes.toInt()));
+  final clickable = now.isAfter(startWindow) && now.isBefore(endWindow);
+  return clickable;
+}
+
+DateTime getAdjustedUtcTime() {
+  // Get the current UTC time
+  final DateTime nowUtc = DateTime.now().toUtc();
+
+  // Get the current local time
+  final DateTime nowLocal = DateTime.now();
+
+  // Calculate the difference between local and UTC
+  final Duration offset = nowLocal.timeZoneOffset;
+
+  // Adjust the UTC time by adding or subtracting the offset
+  final DateTime adjustedUtcTime = nowUtc.add(offset);
+
+  return adjustedUtcTime;
+}
+
 Widget callContainer(
   String title,
   String description,
@@ -236,51 +266,68 @@ Widget callContainer(
                 width: SizeConfig.padding28,
               ),
               if (hostCode != null)
-                ElevatedButton(
-                  onPressed: () {
-                    final userService = locator<UserService>();
-                    final userId = userService.baseUser!.uid;
-                    final advisoriD = userService.baseUser!.advisorId!;
-                    final String userName =
-                        (userService.baseUser!.kycName != null &&
-                                    userService.baseUser!.kycName!.isNotEmpty
-                                ? userService.baseUser!.kycName
-                                : userService.baseUser!.name) ??
-                            "N/A";
-                    AppState.delegate!.appState.currentAction = PageAction(
-                      page: LivePreviewPageConfig,
-                      state: PageState.addWidget,
-                      widget: HMSPrebuilt(
-                        eventId: '',
-                        isLiked: false,
-                        onLeave: () async {
-                          await AppState.backButtonDispatcher!.didPopRoute();
-                        },
-                        advisorId: advisoriD,
-                        title: title,
-                        description: description,
-                        roomCode: hostCode,
-                        options: HMSPrebuiltOptions(
-                          userName: userName,
-                          userId: userId,
+                GestureDetector(
+                  onTap: () {
+                    if (_isButtonClickable(
+                      DateTime.parse(scheduledOn),
+                      duration,
+                    )) {
+                      final userService = locator<UserService>();
+                      final userId = userService.baseUser!.uid;
+                      final advisoriD = userService.baseUser!.advisorId!;
+                      final String userName =
+                          (userService.baseUser!.kycName != null &&
+                                      userService.baseUser!.kycName!.isNotEmpty
+                                  ? userService.baseUser!.kycName
+                                  : userService.baseUser!.name) ??
+                              "N/A";
+                      AppState.delegate!.appState.currentAction = PageAction(
+                        page: LivePreviewPageConfig,
+                        state: PageState.addWidget,
+                        widget: HMSPrebuilt(
+                          eventId: '',
+                          isLiked: false,
+                          onLeave: () async {
+                            await AppState.backButtonDispatcher!.didPopRoute();
+                          },
+                          advisorId: advisoriD,
+                          title: title,
+                          description: description,
+                          roomCode: hostCode,
+                          options: HMSPrebuiltOptions(
+                            userName: userName,
+                            userId: userId,
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    } else {
+                      BaseUtil.showNegativeAlert(
+                        'Unable to Join Meeting',
+                        'You can join the meeting 15 minutes prior to your scheduled time!',
+                      );
+                    }
                   },
-                  style: ElevatedButton.styleFrom(
+                  child: Container(
                     padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.padding6,
                       horizontal: SizeConfig.padding8,
+                      vertical: SizeConfig.padding6,
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness5),
+                    decoration: BoxDecoration(
+                      color: _isButtonClickable(
+                        DateTime.parse(scheduledOn),
+                        duration,
+                      )
+                          ? UiConstants.kTextColor
+                          : UiConstants.kTextColor.withOpacity(.5),
+                      borderRadius: BorderRadius.circular(
+                        SizeConfig.roundness5,
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    'Join Call',
-                    style: TextStyles.sourceSansSB.body3.colour(
-                      UiConstants.kTextColor4,
+                    child: Text(
+                      'Join Call',
+                      style: TextStyles.sourceSansSB.body3.colour(
+                        UiConstants.kTextColor4,
+                      ),
                     ),
                   ),
                 ),

@@ -29,7 +29,8 @@ class Expert {
   final num rating;
   final String expertise;
   final String qualifications;
-  final String rate;
+  final num rate;
+  final String rateNew;
   final String image;
   final bool isFree;
   final String advisorId;
@@ -41,6 +42,7 @@ class Expert {
     required this.expertise,
     required this.qualifications,
     required this.rate,
+    required this.rateNew,
     required this.image,
     required this.isFree,
     required this.advisorId,

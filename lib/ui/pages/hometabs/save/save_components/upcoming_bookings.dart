@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -94,30 +95,39 @@ class ScheduleCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: SizeConfig.padding16,
-                          backgroundImage: NetworkImage(
-                            booking.image,
+                GestureDetector(
+                  onTap: () {
+                    AppState.delegate!.appState.currentAction = PageAction(
+                      page: ExpertDetailsPageConfig,
+                      state: PageState.addWidget,
+                      widget: ExpertsDetailsView(advisorID: booking.advisorId),
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            radius: SizeConfig.padding16,
+                            backgroundImage: NetworkImage(
+                              booking.image,
+                            ),
                           ),
-                        ),
-                        SizedBox(width: SizeConfig.padding10),
-                        Text(
-                          booking.advisorName,
-                          style: TextStyles.sourceSansSB.body1,
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: SizeConfig.padding10),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      color: UiConstants.kTextColor,
-                      size: SizeConfig.body4,
-                    ),
-                  ],
+                          SizedBox(width: SizeConfig.padding10),
+                          Text(
+                            booking.advisorName,
+                            style: TextStyles.sourceSansSB.body1,
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: SizeConfig.padding10),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: UiConstants.kTextColor,
+                        size: SizeConfig.body4,
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: SizeConfig.padding16),
                 Row(
@@ -196,8 +206,8 @@ class ScheduleCard extends StatelessWidget {
                               ),
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () {
+                    GestureDetector(
+                      onTap: () {
                         if (_isButtonClickable()) {
                           final String? name = locator<UserService>()
                                   .baseUser!
@@ -239,24 +249,24 @@ class ScheduleCard extends StatelessWidget {
                           );
                         }
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _isButtonClickable()
-                            ? UiConstants.kTextColor
-                            : UiConstants.kTextColor.withOpacity(0.5),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(SizeConfig.roundness5),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding8,
+                          vertical: SizeConfig.padding6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _isButtonClickable()
+                              ? UiConstants.kTextColor
+                              : UiConstants.kTextColor.withOpacity(.5),
+                          borderRadius: BorderRadius.circular(
+                            SizeConfig.roundness5,
                           ),
                         ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding16,
-                          vertical: SizeConfig.padding8,
+                        child: Text(
+                          'Join Call',
+                          style: TextStyles.sourceSansSB.body4
+                              .colour(UiConstants.kTextColor4),
                         ),
-                      ),
-                      child: Text(
-                        'Join Call',
-                        style: TextStyles.sourceSansSB.body3
-                            .colour(UiConstants.kTextColor4),
                       ),
                     ),
                   ],

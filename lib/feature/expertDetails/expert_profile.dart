@@ -24,6 +24,28 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 
+class EaseInFloatingActionButtonAnimator extends FloatingActionButtonAnimator {
+  @override
+  Offset getOffset({
+    required Offset begin,
+    required Offset end,
+    required double progress,
+  }) {
+    final curve = Curves.easeIn.transform(progress);
+    return Offset.lerp(begin, end, curve)!;
+  }
+
+  @override
+  Animation<double> getScaleAnimation({required Animation<double> parent}) {
+    return CurvedAnimation(parent: parent, curve: Curves.easeIn);
+  }
+
+  @override
+  Animation<double> getRotationAnimation({required Animation<double> parent}) {
+    return CurvedAnimation(parent: parent, curve: Curves.easeIn);
+  }
+}
+
 class ExpertsDetailsView extends StatelessWidget {
   final String advisorID;
   const ExpertsDetailsView({
@@ -105,6 +127,7 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
           final shortsData = state.shortsData;
           return BaseScaffold(
             showBackgroundGrid: true,
+            floatingActionButtonAnimator: EaseInFloatingActionButtonAnimator(),
             floatingActionButton: GestureDetector(
               onTap: () {
                 BaseUtil.openBookAdvisorSheet(
@@ -123,17 +146,20 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.all(SizeConfig.padding12),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding12,
+                    vertical: SizeConfig.padding12,
+                  ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.calendar_month,
-                        size: SizeConfig.body3,
+                      AppImage(
+                        Assets.book_call,
+                        height: SizeConfig.body3,
                         color: UiConstants.kTextColor4,
                       ),
                       SizedBox(
-                        width: SizeConfig.padding12,
+                        width: SizeConfig.padding10,
                       ),
                       Text(
                         'Book a Slot',
@@ -227,8 +253,7 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                                     ),
                                   ),
                                   Text(
-                                    expertDetails.sessionCount
-                                        .toString(), // Display session count
+                                    expertDetails.sessionCount.toString(),
                                     style: TextStyles.sourceSansSB.body2.colour(
                                       UiConstants.kTextColor,
                                     ),
@@ -244,8 +269,7 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                                     ),
                                   ),
                                   Text(
-                                    expertDetails.rating
-                                        .toString(), // Display rating
+                                    expertDetails.rating.toString(),
                                     style: TextStyles.sourceSansSB.body2.colour(
                                       UiConstants.kTextColor,
                                     ),
@@ -881,22 +905,24 @@ class CustomCarouselState extends State<CustomCarousel> {
               ),
             ],
           ),
-          ElevatedButton(
-            onPressed: onTap,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
+          GestureDetector(
+            onTap: onTap,
+            child: Container(
               padding: EdgeInsets.symmetric(
                 horizontal: SizeConfig.padding8,
                 vertical: SizeConfig.padding6,
               ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+              decoration: BoxDecoration(
+                color: UiConstants.kTextColor,
+                borderRadius: BorderRadius.circular(
+                  SizeConfig.roundness5,
+                ),
               ),
-            ),
-            child: Text(
-              btnTxt,
-              style: TextStyles.sourceSansSB.body4.colour(
-                UiConstants.kTextColor4,
+              child: Text(
+                btnTxt,
+                style: TextStyles.sourceSansSB.body4.colour(
+                  UiConstants.kTextColor4,
+                ),
               ),
             ),
           ),
@@ -946,16 +972,24 @@ class RatingReviewSection extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: List.generate(5, (index) {
-                            return Icon(
-                              Icons.star_rounded,
-                              color: index < ratingInfo.overallRating
-                                  ? Colors.amber
-                                  : Colors.grey,
-                              size: SizeConfig.body6,
-                            );
-                          }),
+                        RatingBar.builder(
+                          initialRating: ratingInfo.overallRating,
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          glow: false,
+                          ignoreGestures: true,
+                          unratedColor: Colors.grey,
+                          itemSize: SizeConfig.body6,
+                          itemPadding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding1,
+                          ),
+                          itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                            size: SizeConfig.body6,
+                          ),
+                          onRatingUpdate: (rating) {},
                         ),
                         Text(
                           '${ratingInfo.ratingCount} ratings',
@@ -991,10 +1025,13 @@ class RatingReviewSection extends StatelessWidget {
                         );
                       },
                       style: ButtonStyle(
+                        minimumSize: WidgetStateProperty.all(
+                          const Size(0, 0),
+                        ),
                         padding: WidgetStateProperty.all(
                           EdgeInsets.symmetric(
                             horizontal: SizeConfig.padding18,
-                            vertical: SizeConfig.padding4,
+                            vertical: SizeConfig.padding6,
                           ),
                         ),
                         side: WidgetStateProperty.all(
@@ -1134,7 +1171,8 @@ class ReviewCard extends StatelessWidget {
           glow: false,
           ignoreGestures: true,
           itemSize: SizeConfig.body6,
-          itemPadding: EdgeInsets.symmetric(horizontal: SizeConfig.padding4),
+          unratedColor: Colors.grey,
+          itemPadding: EdgeInsets.symmetric(horizontal: SizeConfig.padding2),
           itemBuilder: (context, _) => Icon(
             Icons.star,
             color: Colors.amber,

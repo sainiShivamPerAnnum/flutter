@@ -1,5 +1,5 @@
-import 'package:felloapp/feature/live/widgets/video_card.dart';
 import 'package:felloapp/feature/support-new/bloc/support_bloc.dart';
+import 'package:felloapp/feature/support-new/support_components/video_card.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';

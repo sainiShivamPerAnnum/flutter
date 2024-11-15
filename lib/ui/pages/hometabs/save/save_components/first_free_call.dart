@@ -15,10 +15,10 @@ class FirstFreeCall extends StatelessWidget {
         return freeCallAvailable
             ? Container(
                 margin: EdgeInsets.symmetric(
-                  vertical: SizeConfig.padding14,
+                  vertical: SizeConfig.padding4,
                   horizontal: SizeConfig.padding20,
-                ),
-                padding: EdgeInsets.all(SizeConfig.padding18),
+                ).copyWith(top: SizeConfig.padding8,),
+                padding: EdgeInsets.all(SizeConfig.padding16),
                 width: double.maxFinite,
                 decoration: BoxDecoration(
                   color: UiConstants.greyVarient,
@@ -45,27 +45,27 @@ class FirstFreeCall extends StatelessWidget {
                       style: TextStyles.sourceSans.body3,
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: SizeConfig.padding18),
+                    SizedBox(height: SizeConfig.padding16),
                     ElevatedButton(
                       onPressed: () {
                         AppState.delegate!.parseRoute(Uri.parse("experts"));
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: UiConstants.kTextColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness5),
-                        ),
+                        minimumSize: const Size(0, 0),
                         padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding8,
                           vertical: SizeConfig.padding6,
+                          horizontal: SizeConfig.padding12,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            SizeConfig.roundness5,
+                          ),
                         ),
                       ),
                       child: Text(
                         'Book Now!',
-                        style: TextStyles.sourceSansSB.body4.colour(
-                          UiConstants.kTextColor4,
-                        ),
+                        style: TextStyles.sourceSansSB.body4
+                            .colour(UiConstants.textColor),
                       ),
                     ),
                   ],

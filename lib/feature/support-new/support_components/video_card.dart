@@ -57,7 +57,6 @@ class VideoCardWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                //''
                 Align(
                   alignment: Alignment.center,
                   child: Icon(
@@ -76,6 +75,8 @@ class VideoCardWidget extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyles.sourceSansSB.body2,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: SizeConfig.padding6),
                   Text(

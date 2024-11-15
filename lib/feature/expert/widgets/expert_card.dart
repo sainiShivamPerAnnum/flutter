@@ -20,7 +20,6 @@ class ExpertCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -205,7 +204,7 @@ class ExpertCard extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              expert.rate,
+                              expert.rateNew,
                               style: TextStyles.sourceSansSB.body3
                                   .colour(
                                     UiConstants.kTextColor,

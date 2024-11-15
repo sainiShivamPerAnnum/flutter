@@ -55,23 +55,24 @@ class _LiveState extends State<Live> {
                   ),
                 ],
               ),
-              ElevatedButton(
-                onPressed: navigateToCreateLive,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: UiConstants.kTextColor,
-                  foregroundColor: UiConstants.kTextColor4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-                  ),
+              GestureDetector(
+                onTap: navigateToCreateLive,
+                child: Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.padding8,
-                    vertical: SizeConfig.padding4,
+                    vertical: SizeConfig.padding6,
                   ),
-                ),
-                child: Text(
-                  'Create New',
-                  style: TextStyles.sourceSansSB.body4
-                      .colour(UiConstants.kTextColor4),
+                  decoration: BoxDecoration(
+                    color: UiConstants.kTextColor,
+                    borderRadius: BorderRadius.circular(
+                      SizeConfig.roundness5,
+                    ),
+                  ),
+                  child: Text(
+                    'Create New',
+                    style: TextStyles.sourceSansSB.body4
+                        .colour(UiConstants.kTextColor4),
+                  ),
                 ),
               ),
             ],

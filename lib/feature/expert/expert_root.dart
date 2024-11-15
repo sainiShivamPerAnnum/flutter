@@ -112,7 +112,7 @@ class __ExpertHomeState extends State<_ExpertHome>
                         (section) => !section.toLowerCase().contains('top'),
                       ),
                     ],
-                    verticalScrollPosition: VerticalScrollPosition.middle,
+                    verticalScrollPosition: VerticalScrollPosition.begin,
                     eachItemChild: (object, index) => Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.padding20,

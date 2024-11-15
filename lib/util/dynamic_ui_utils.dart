@@ -16,7 +16,6 @@ class DynamicUiUtils {
 
   static String goldTag = "";
   static String lbTag = "";
-  static List<String> support = ["LV", "QL", "BL", "SN"];
   static List<String> advisor = ["LV", "UC", "PC"];
 
   // static Text trendingTag=

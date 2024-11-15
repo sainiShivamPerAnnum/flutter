@@ -74,7 +74,6 @@ class SaveRepo extends BaseRepo {
         apiName: 'bookings/getPastBookings',
       );
       final responseData = response["data"];
-      log("Past booking data: $responseData");
       final List<Booking> pastBooking = (responseData as List)
           .map(
             (item) => Booking.fromJson(
@@ -98,12 +97,12 @@ class SaveRepo extends BaseRepo {
       final response = await APIService.instance.getData(
         'videos/list',
         queryParams: {
-          'videoId': videoId,
+          'eventID': videoId,
         },
         cBaseUrl: _baseUrl,
         apiName: '$_experts/getRecordingByVideoId',
       );
-      final responseData = response["data"];
+      final responseData = response["data"][0];
       log("Recording data: $responseData");
       final VideoData recentStreams = VideoData.fromJson(responseData);
       return ApiResponse<VideoData>(

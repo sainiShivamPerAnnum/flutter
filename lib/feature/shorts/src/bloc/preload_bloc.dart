@@ -56,8 +56,8 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       },
       updateLoading: (e) {
         emit(
-            state.copyWith(isLoading: e.isLoading),
-          );
+          state.copyWith(isLoading: e.isLoading),
+        );
       },
       pauseVideoAtIndex: (e) {
         _stopControllerAtIndex(e.index);
@@ -231,8 +231,10 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           if (urls.length < 10) {
             // If we reach the end of the list, start from the beginning
             final resetResponse = await repository.getVideos(page: 1);
-            final List<VideoData> resetUrls =
-                urls + (resetResponse.model ?? []);
+            List<VideoData> resetUrls = resetResponse.model ?? [];
+            if (resetUrls.isNotEmpty) {
+              urls.addAll(resetUrls);
+            }
             add(PreloadEvent.updateUrls(resetUrls));
           } else {
             add(PreloadEvent.updateUrls(urls));
@@ -454,10 +456,10 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       } else {
         state.profileControllers[index] = controller;
       }
-      add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
       await controller.initialize();
       await controller.setLooping(true);
       await controller.setVolume(1);
+      add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
       final comments = await repository.getComments(currentVideos[index].id);
       add(
         PreloadEvent.addCommentToState(

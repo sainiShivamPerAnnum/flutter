@@ -606,7 +606,6 @@ class QuickLinks extends StatelessWidget {
           quickLinks.length,
           (index) => GestureDetector(
             onTap: () {
-              //todo block logic here @Hirdesh2101cdfvdc
               Haptic.vibrate();
               AppState.delegate!
                   .parseRoute(Uri.parse(quickLinks[index].deeplink));

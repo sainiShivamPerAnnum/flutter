@@ -17,7 +17,7 @@ class HelpWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: SizeConfig.padding34),
+      margin: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
       padding: EdgeInsets.symmetric(
         vertical: SizeConfig.padding14,
         horizontal: SizeConfig.padding18,
@@ -36,11 +36,11 @@ class HelpWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Need help?',
+                        'NEED HELP?',
                         style: TextStyles.sourceSans.body6
                             .colour(UiConstants.primaryColor),
                       ),
-                      SizedBox(height: SizeConfig.padding4),
+                      SizedBox(height: SizeConfig.padding6),
                       Text(
                         'For more help contact us at: ${state.contactDetails}',
                         style: TextStyles.sourceSans.body2,
@@ -56,12 +56,15 @@ class HelpWidget extends StatelessWidget {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.only(
-                            left: SizeConfig.padding12,
-                            right: SizeConfig.padding12,
+                          minimumSize: const Size(0, 0),
+                          padding: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding6,
+                            horizontal: SizeConfig.padding12,
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(
+                              SizeConfig.roundness5,
+                            ),
                           ),
                         ),
                         child: Text(
