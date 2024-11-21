@@ -135,11 +135,11 @@
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Access to Camera is requested. This is only required for choosing your profile picture and completing KYC Verification.</string>
+	<string>We need access to your camera for video calls and live interactions with experts. Rest assured, your privacy is our priority.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Why is my app authenticating using face id?</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Access to Microphone is requested. This is only required for completing KYC Verification.</string>
+	<string>Fello requires microphone access to enable smooth audio communication during calls and live sessions with experts.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Access to photos is requested. This is only required for choosing your profile picture and completing KYC Verification.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>

@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/bookings/payment_polling.dart';
 import 'package:felloapp/core/repository/experts_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 
 part 'polling_event.dart';
@@ -12,9 +14,11 @@ part 'polling_state.dart';
 class PollingBloc extends Bloc<PollingEvent, PollingState> {
   final ExpertsRepository _expertsRepository;
   final SaveViewModel _saveViewModel;
+  final AnalyticsService _analyticsService;
   PollingBloc(
     this._expertsRepository,
     this._saveViewModel,
+    this._analyticsService,
   ) : super(const InitialPollingState()) {
     on<StartPolling>(_onStartPolling);
   }
@@ -34,6 +38,12 @@ class PollingBloc extends Bloc<PollingEvent, PollingState> {
         CompletedPollingWithSuccess(data),
       );
       unawaited(_saveViewModel.getUpcomingBooking());
+      _analyticsService.track(
+        eventName: AnalyticsEvents.paymentStatus,
+        properties: {
+          "status": "Success",
+        },
+      );
     } else if (response.isSuccess() &&
         data != null &&
         data.data.paymentDetails!.status == BookingPaymentStatus.pending) {
@@ -41,11 +51,23 @@ class PollingBloc extends Bloc<PollingEvent, PollingState> {
         CompletedPollingWithPending(data),
       );
       unawaited(_saveViewModel.getUpcomingBooking());
+      _analyticsService.track(
+        eventName: AnalyticsEvents.paymentStatus,
+        properties: {
+          "status": "Pending",
+        },
+      );
     } else {
       emitter(
         CompletedPollingWithFailure(
           response.errorMessage ?? 'Failed to check status',
         ),
+      );
+      _analyticsService.track(
+        eventName: AnalyticsEvents.paymentStatus,
+        properties: {
+          "status": "Failure",
+        },
       );
     }
   }

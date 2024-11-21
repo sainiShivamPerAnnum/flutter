@@ -236,12 +236,31 @@ class AppState extends ChangeNotifier {
   }
 
   void trackEvent(int index) {
-    final ScratchCardService gtService = locator<ScratchCardService>();
     if (_rootController.currentNavBarItemModel ==
-        RootController.saveNavBarItem) {
+        RootController.liveNavBarItem) {
       _analyticsService.track(
-          eventName: AnalyticsEvents.saveSection,
-          properties: AnalyticsProperties.getDefaultPropertiesMap());
+        eventName: AnalyticsEvents.liveClicked,
+      );
+    } else if (_rootController.currentNavBarItemModel ==
+        RootController.expertNavBarItem) {
+      _analyticsService.track(
+        eventName: AnalyticsEvents.expertClicked,
+      );
+    } else if (_rootController.currentNavBarItemModel ==
+        RootController.advisortNavBarItem) {
+      _analyticsService.track(
+        eventName: AnalyticsEvents.advisorClicked,
+      );
+    } else if (_rootController.currentNavBarItemModel ==
+        RootController.supportNavBarItem) {
+      _analyticsService.track(
+        eventName: AnalyticsEvents.supportClicked,
+      );
+    } else if (_rootController.currentNavBarItemModel ==
+        RootController.shortsNavBarItem) {
+      _analyticsService.track(
+        eventName: AnalyticsEvents.shortsClicked,
+      );
     }
   }
 

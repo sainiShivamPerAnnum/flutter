@@ -103,6 +103,7 @@ class UpcomingStream {
   final String advisorCode;
   final String viewerCode;
   final String advisorId;
+  final bool addedToNotify;
 
   UpcomingStream({
     required this.id,
@@ -115,6 +116,7 @@ class UpcomingStream {
     required this.advisorCode,
     required this.viewerCode,
     required this.advisorId,
+    this.addedToNotify=false,
   });
 
   factory UpcomingStream.fromJson(Map<String, dynamic> json) =>

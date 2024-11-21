@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/experts/experts_details.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/expertDetails/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/expertDetails/bloc/rating_bloc.dart';
 import 'package:felloapp/feature/expertDetails/widgets/rating_sheet.dart';
@@ -89,6 +91,7 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _previousTabIndex = 0;
+  final _analyticsService = locator<AnalyticsService>();
 
   @override
   void initState() {
@@ -102,6 +105,12 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
         _previousTabIndex = _tabController.index;
       }
     });
+    _analyticsService.track(
+      eventName: AnalyticsEvents.expertProfileView,
+      properties: {
+        "Expert ID": widget.advisorID,
+      },
+    );
   }
 
   @override
@@ -134,6 +143,13 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                   advisorId: widget.advisorID,
                   advisorName: state.expertDetails?.name ?? '',
                   isEdit: false,
+                );
+                _analyticsService.track(
+                  eventName: AnalyticsEvents.bookQuick,
+                  properties: {
+                    "Expert ID": widget.advisorID,
+                    "Expert Name": state.expertDetails?.name ?? '',
+                  },
                 );
               },
               child: Container(
@@ -836,6 +852,9 @@ class CustomCarouselState extends State<CustomCarousel> {
                 e.buttonText,
                 onTap: () {
                   AppState.delegate!.parseRoute(Uri.parse(e.buttonCTA));
+                  locator<AnalyticsService>().track(
+                    eventName: AnalyticsEvents.bookQuick,
+                  );
                 },
               );
             }).toList(),

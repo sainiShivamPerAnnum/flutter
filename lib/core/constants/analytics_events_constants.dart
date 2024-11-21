@@ -198,7 +198,7 @@ class AnalyticsEvents {
   static const viewBreakdownTapped = "View breakdown tapped";
   static const saveOnAssetBannerTapped = "Save on Asset Banner";
   static const tambolaStripOnHomeTapped = "Tambola Strip on Home Tapped";
-  static const offerBannerTapped = "Offer Banner Tapped";
+  static const offerBannerTapped = "Home page banner";
   static const floSlabBannerTapped = "Flo Slab Banner Tapped";
   static const withdrawFloTapped = "Withdraw on Flo Asset Tapped";
   static const investFloBannerTapped = "Invest on Flo Slab Tapped";
@@ -370,4 +370,32 @@ class AnalyticsEvents {
 
   static const editSipOption = "Edit SIP Options";
   static const pauseSipOption = "Pause SIP Confirm";
+
+  static const recentLiveHome = "Recent live Stream - Home";
+  static const expertsHome = "Experts - Home section";
+  static const liveClicked = "Live Section Click";
+  static const liveSectionView = "Live section view";
+  static const expertClicked = "Expert Section Click";
+  static const advisorClicked = "Advisor Section Click";
+  static const supportClicked = "Support Section Click";
+  static const shortsClicked = "Shorts Section Click";
+  static const portfolioBalanceClick = "Portfolio Balance Click";
+  static const homePageBanner = "Home page banner";
+  static const pastCalls = "Past scheduled calls ";
+  static const topExperts = "Our top experts";
+  static const upcomingLiveStream = "Upcoming live click - LIVE";
+  static const recentLiveStream = "Recent live stream - LIVE";
+  static const bookACall = "Book a call";
+  static const bookCallTime = "Book a call - select time";
+  static const expertProfileView = "Expert profile view";
+  static const bookQuick = "Book Now - Quick";
+  static const paymentStatus = "Payment status";
+  static const upiappSelect = "UPI app select";
+  static const bookFirstCall = "Booked first call";
+  static const upcomingLiveAdvisor = "Upcoming live-Advisor";
+  static const createNewStream = "Create new stream - Advisor";
+  static const scheduleLive = "Schedule Live";
+  static const scheduleCategorySelect = "Schedule Live Category";
+  static const scheduleTimeSelect = "Schedule Live Time";
+  static const callUsNow = "Call us now";
 }

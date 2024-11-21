@@ -68,6 +68,8 @@ class _CallState extends State<Call> {
                             liveList: null,
                             upcomingList: null,
                             recentList: null,
+                            notificationState: null,
+                            onNotify:null,
                           ),
                         );
                       },
@@ -291,6 +293,7 @@ Widget callContainer(
                             await AppState.backButtonDispatcher!.didPopRoute();
                           },
                           advisorId: advisoriD,
+                          advisorName: userName,
                           title: title,
                           description: description,
                           roomCode: hostCode,

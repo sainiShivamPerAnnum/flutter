@@ -33,6 +33,7 @@ class PaymentSheet extends StatelessWidget {
       create: (_) => PaymentBloc(
         locator(),
         locator(),
+        locator(),
       )..add(const LoadPSPApps()),
       child: _BookingMandatePage(
         advisorID: advisorID,

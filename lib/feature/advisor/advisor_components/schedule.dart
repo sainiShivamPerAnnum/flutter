@@ -84,6 +84,7 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
             BlocProvider(
               create: (context) => ScheduleLiveBloc(
                 locator(),
+                locator(),
               )
                 ..add(LoadCategories())
                 ..add(

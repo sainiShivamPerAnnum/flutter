@@ -39,6 +39,7 @@ class BookCallSheetView extends StatelessWidget {
             locator(),
             locator(),
             locator(),
+            locator(),
           )..add(
               LoadBookingDates(
                 advisorID,
@@ -48,7 +49,11 @@ class BookCallSheetView extends StatelessWidget {
             ),
         ),
         BlocProvider(
-          create: (context) => PaymentBloc(locator(), locator(),),
+          create: (context) => PaymentBloc(
+            locator(),
+            locator(),
+            locator(),
+          ),
         ),
       ],
       child: _BookCallBottomSheet(
@@ -153,10 +158,10 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
     bool isFree,
   ) {
     final state = context.read<BookingBloc>().state;
-    final selectedDate = state is BookingsLoaded ? state.selectedDate : null;
-    final selectedDuration =
-        state is BookingsLoaded ? state.selectedDuration : null;
-    selectedTime = state is BookingsLoaded ? state.selectedTime : null;
+    BookingsLoaded? loadedState = state is BookingsLoaded ? state : null;
+    final selectedDate = loadedState?.selectedDate;
+    final selectedDuration = loadedState?.selectedDuration;
+    final selectedTime = loadedState?.selectedTime;
     final duration = [
       {"name": '15 Mins', "value": 15},
       {"name": '30 Mins', "value": 30},
@@ -164,10 +169,10 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
       {"name": '1 hour', "value": 60},
     ];
     final dates = schedule?.slots?.keys.toList() ?? [];
-
-    final currentTimes = selectedDate != null
-        ? schedule!.slots![selectedDate]!.map((e) => e.fromTime).toList()
-        : [];
+    final currentTimes =
+        (selectedDate != null && schedule?.slots?[selectedDate] != null)
+            ? schedule!.slots![selectedDate]!.map((e) => e.fromTime).toList()
+            : [];
 
     return Column(
       mainAxisSize: MainAxisSize.min,

@@ -31,7 +31,7 @@ class UpcomingBookingsComponent extends StatelessWidget {
                     title: "Your upcoming calls",
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: SizeConfig.padding18),
+                    padding: EdgeInsets.only(left: SizeConfig.padding20),
                     child: Container(
                       height: SizeConfig.padding275,
                       margin: EdgeInsets.only(
@@ -231,6 +231,7 @@ class ScheduleCard extends StatelessWidget {
                               title: '',
                               description: '',
                               advisorId: booking.advisorId,
+                              advisorName: booking.advisorName,
                               roomCode: booking.guestCode,
                               options: HMSPrebuiltOptions(
                                 userName: name,

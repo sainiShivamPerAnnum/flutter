@@ -101,6 +101,7 @@ class MeetingStore extends ChangeNotifier
 
   bool isRoomEnded = false;
   String? advisorId;
+  String? advisorName;
   String calltitle = '';
   String calldescription = '';
   bool isEventLikedByUser = false;
@@ -112,9 +113,11 @@ class MeetingStore extends ChangeNotifier
     String description,
     bool isLiked,
     String eventID,
+    String advName,
   ) {
     advisorId = advId;
     calltitle = title;
+    advisorName = advName;
     calldescription = description;
     isEventLikedByUser = isLiked;
     eventId = eventID;
@@ -152,7 +155,9 @@ class MeetingStore extends ChangeNotifier
     } else {
       _isShareAlreadyClicked = true;
       notifyListeners();
-      await Share.share("Lets start saving and playing together!\n $url");
+      await Share.share(
+        "🚨 Live Now! 🚨\nJoin $advisorName on the Fello App for a LIVE session on $calltitle! 💡\n💰 Get expert insights on $description and take control of your financial future.\n📱 Don’t miss it—join now: $url",
+      );
     }
 
     Future.delayed(const Duration(seconds: 3), () {

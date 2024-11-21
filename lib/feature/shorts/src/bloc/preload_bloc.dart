@@ -101,8 +101,19 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           );
           emit(state.copyWith(isShareAlreadyClicked: false));
         } else {
-          await Share.share("Let's start saving and playing together!\n$url");
-          emit(state.copyWith(isShareAlreadyClicked: false));
+          if (state.currentContext == ReelContext.main) {
+            await Share.share(
+                "Hi,\nCheck out this quick finance tip from Fello: ${state.mainVideos[state.focusedIndex].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url");
+            emit(state.copyWith(isShareAlreadyClicked: false));
+          } else if (state.currentContext == ReelContext.profile) {
+            await Share.share(
+                "Hi,\nCheck out this quick finance tip from Fello: ${state.profileVideos[state.profileVideoIndex].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url");
+            emit(state.copyWith(isShareAlreadyClicked: false));
+          } else {
+            await Share.share(
+                "Hi,\nCheck out this quick finance tip from Fello: ${state.liveVideo[0].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url");
+            emit(state.copyWith(isShareAlreadyClicked: false));
+          }
         }
       },
       initializeFromDynamicLink: (e) async {
@@ -135,6 +146,13 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       updateViewCount: (e) {
         unawaited(
           repository.updateViewCount(
+            e.videoId,
+          ),
+        );
+      },
+      updateSeen: (e) {
+        unawaited(
+          repository.updateSeen(
             e.videoId,
           ),
         );
@@ -235,7 +253,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             if (resetUrls.isNotEmpty) {
               urls.addAll(resetUrls);
             }
-            add(PreloadEvent.updateUrls(resetUrls));
+            add(PreloadEvent.updateUrls(urls));
           } else {
             add(PreloadEvent.updateUrls(urls));
           }
@@ -415,6 +433,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         await controller.setLooping(true);
         await controller.setVolume(1);
         await controller.play();
+        add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
         final comments = await repository.getComments(e.video.id);
         add(
           PreloadEvent.addCommentToState(
@@ -468,6 +487,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         ),
       );
       _addProgressListener(controller, currentVideos[index].id);
+      _addSeenListener(controller, currentVideos[index].id);
       log('🚀🚀🚀 INITIALIZED $index for context ${state.currentContext}');
     }
   }
@@ -486,6 +506,27 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
 
         // Dispatch the event that 25% has been watched
         add(PreloadEvent.updateViewCount(videoId: videoId));
+      }
+    };
+
+    // Add the listener to the controller
+    controller.addListener(listener);
+  }
+
+  void _addSeenListener(VideoPlayerController controller, String videoId) {
+    late VoidCallback listener;
+
+    listener = () {
+      final duration = controller.value.duration;
+      final position = controller.value.position;
+
+      if (duration.inMilliseconds > 0 &&
+          position.inMilliseconds >= duration.inMilliseconds * 0.90) {
+        // Remove this specific listener to prevent repeated events
+        controller.removeListener(listener);
+
+        // Dispatch the event that 25% has been watched
+        add(PreloadEvent.updateSeen(videoId: videoId));
       }
     };
 

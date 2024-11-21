@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -33,7 +32,6 @@ class ShortsRepo {
       );
 
       final responseData = response["data"];
-      log("Video data: $responseData");
 
       return ApiResponse<List<VideoData>>(
         model: (responseData as List<dynamic>)
@@ -42,7 +40,6 @@ class ShortsRepo {
         code: 200,
       );
     } catch (e) {
-      log("Error fetching videos: ${e.toString()}");
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -61,13 +58,12 @@ class ShortsRepo {
         queryParams: queryParameters,
       );
       final responseData = response["data"][0];
-      log("Video data: $responseData");
+      
       return ApiResponse<VideoData>(
         model: VideoData.fromJson(responseData),
         code: 200,
       );
     } catch (e) {
-      log("Error fetching videos: ${e.toString()}");
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -83,7 +79,6 @@ class ShortsRepo {
       );
 
       final commentsData = response["data"];
-      log("Comments data: $commentsData");
 
       return ApiResponse<List<CommentData>>(
         model: (commentsData as List<dynamic>)
@@ -92,7 +87,6 @@ class ShortsRepo {
         code: 200,
       );
     } catch (e) {
-      log("Error fetching comments: ${e.toString()}");
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -119,7 +113,6 @@ class ShortsRepo {
       );
       return const ApiResponse<void>(code: 201);
     } catch (e) {
-      log("Error adding comment: ${e.toString()}");
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -141,7 +134,6 @@ class ShortsRepo {
       );
       return const ApiResponse<void>(code: 200);
     } catch (e) {
-      log("Error adding like: ${e.toString()}");
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -158,7 +150,21 @@ class ShortsRepo {
       );
       return const ApiResponse<void>(code: 200);
     } catch (e) {
-      log("Error adding like: ${e.toString()}");
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+  Future<ApiResponse<void>> updateSeen(
+    String videoId,
+  ) async {
+    final String countUrl = 'videos/$videoId/mark-seen';
+    try {
+      await APIService.instance.patchData(
+        countUrl,
+        cBaseUrl: _baseUrl,
+        apiName: 'ShortsRepo/updateSeen',
+      );
+      return const ApiResponse<void>(code: 200);
+    } catch (e) {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -182,7 +188,6 @@ class ShortsRepo {
         code: 200,
       );
     } catch (e) {
-      log(e.toString());
       return ApiResponse.withError(e.toString(), 400);
     }
   }

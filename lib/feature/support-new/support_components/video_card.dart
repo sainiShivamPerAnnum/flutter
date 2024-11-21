@@ -1,5 +1,7 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/pages/static/youtube_player_view.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -21,6 +23,9 @@ class VideoCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        locator<AnalyticsService>().track(
+          eventName: title,
+        );
         BaseUtil.openDialog(
           isBarrierDismissible: true,
           addToScreenStack: true,

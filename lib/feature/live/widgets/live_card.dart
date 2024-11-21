@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -27,6 +29,8 @@ class LiveCardWidget extends StatefulWidget {
   final String advisorId;
   final String? viewerCode;
   final VoidCallback? onTap;
+  final VoidCallback? onNotify;
+  final bool? notifyOn;
   final double? maxWidth;
   final String? eventId;
   final bool? isLiked;
@@ -41,6 +45,8 @@ class LiveCardWidget extends StatefulWidget {
     required this.bgImage,
     required this.advisorId,
     this.isLiked,
+    this.onNotify,
+    this.notifyOn,
     super.key,
     this.liveCount,
     this.duration,
@@ -168,6 +174,7 @@ class _LiveCardWidgetState extends State<LiveCardWidget> {
                         await AppState.backButtonDispatcher!.didPopRoute();
                       },
                       advisorId: widget.advisorId,
+                      advisorName: widget.author,
                       title: widget.title,
                       description: widget.subTitle,
                       options: HMSPrebuiltOptions(
@@ -178,6 +185,15 @@ class _LiveCardWidgetState extends State<LiveCardWidget> {
                   );
                 }
               }
+            } else if (widget.status == 'upcoming') {
+              locator<AnalyticsService>().track(
+                eventName: AnalyticsEvents.upcomingLiveStream,
+                properties: {
+                  "Advisor sequence": widget.advisorId,
+                  "Upcoming stream Id": widget.id,
+                  "Upcoming stream Title": widget.title,
+                },
+              );
             }
           },
       child: Container(
@@ -280,12 +296,40 @@ class _LiveCardWidgetState extends State<LiveCardWidget> {
                     ),
                   SizedBox(height: SizeConfig.padding20),
 
-                  // Author's name
-                  Text(
-                    widget.author,
-                    style: TextStyles.sourceSans.body4.colour(
-                      UiConstants.kTextColor,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        widget.author,
+                        style: TextStyles.sourceSans.body4.colour(
+                          UiConstants.kTextColor,
+                        ),
+                      ),
+                      if (widget.status == 'upcoming')
+                        GestureDetector(
+                          onTap: (widget.notifyOn ?? false)
+                              ? null
+                              : widget.onNotify,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding8,
+                              vertical: SizeConfig.padding6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: UiConstants.kBackgroundColor,
+                              borderRadius: BorderRadius.circular(
+                                SizeConfig.roundness5,
+                              ),
+                            ),
+                            child: Text(
+                              (widget.notifyOn ?? false)
+                                  ? 'Notification On'
+                                  : 'Notify Me',
+                              style: TextStyles.sourceSansSB.body4,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ],
               ),

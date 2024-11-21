@@ -121,8 +121,9 @@ class FelloBalanceScreen extends StatelessWidget {
                       );
                     },
                     style: TextButton.styleFrom(
+                      minimumSize: const Size(0, 0),
                       padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding10,
+                        horizontal: SizeConfig.padding12,
                         vertical: SizeConfig.padding6,
                       ),
                       backgroundColor: Colors.white,
@@ -418,27 +419,28 @@ class FelloBalanceScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  TextButton(
-                    onPressed: onButtonPressed,
-                    style: TextButton.styleFrom(
-                      backgroundColor:
-                          title == "Fello Rewards" && !isRewardButtonEnabled
-                              ? Colors.white.withOpacity(0.5)
-                              : Colors.white,
+                  InkWell(
+                    onTap: onButtonPressed,
+                    child: Container(
+                      width: SizeConfig.padding100,
                       padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding32,
                         vertical: SizeConfig.padding6,
                       ),
-                      shape: RoundedRectangleBorder(
+                      decoration: BoxDecoration(
+                        color:
+                            title == "Fello Rewards" && !isRewardButtonEnabled
+                                ? Colors.white.withOpacity(0.5)
+                                : Colors.white,
                         borderRadius: BorderRadius.all(
                           Radius.circular(SizeConfig.roundness5),
                         ),
                       ),
-                    ),
-                    child: Text(
-                      title == "Fello Rewards" ? "Redeem" : "Invest",
-                      style: TextStyles.sourceSansSB.body4
-                          .colour(UiConstants.kTextColor4),
+                      child: Text(
+                        title == "Fello Rewards" ? "Redeem" : "Invest",
+                        style: TextStyles.sourceSansSB.body4
+                            .colour(UiConstants.kTextColor4),
+                            textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ],

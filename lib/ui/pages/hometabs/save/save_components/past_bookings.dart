@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
-import 'package:felloapp/core/repository/live_repository.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/feature/shorts/flutter_preload_videos.dart';
-import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
@@ -39,7 +39,7 @@ class PastBookingsComponent extends StatelessWidget {
                     leadingPadding: true,
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: SizeConfig.padding18),
+                    padding: EdgeInsets.only(left: SizeConfig.padding20),
                     child: Container(
                       height: SizeConfig.screenHeight! * 0.277,
                       margin: EdgeInsets.only(
@@ -246,6 +246,12 @@ class PastScheduleCard extends StatelessWidget {
                               'Try Again later',
                             );
                           }
+                          locator<AnalyticsService>().track(
+                            eventName: AnalyticsEvents.pastCalls,
+                            properties: {
+                              "bookingId": booking.eventId,
+                            },
+                          );
                         },
                         child: Text(
                           'View Recording',

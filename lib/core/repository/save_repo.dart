@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/blog_model.dart';
 import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
@@ -49,7 +47,6 @@ class SaveRepo extends BaseRepo {
         apiName: 'bookings/getUpcomingBookings',
       );
       final responseData = response["data"];
-      log("Upcoming booking data: $responseData");
       final List<Booking> upcomingBooking = (responseData as List)
           .map(
             (item) => Booking.fromJson(
@@ -103,7 +100,6 @@ class SaveRepo extends BaseRepo {
         apiName: '$_experts/getRecordingByVideoId',
       );
       final responseData = response["data"][0];
-      log("Recording data: $responseData");
       final VideoData recentStreams = VideoData.fromJson(responseData);
       return ApiResponse<VideoData>(
         model: recentStreams,
@@ -123,7 +119,6 @@ class SaveRepo extends BaseRepo {
         apiName: '$_experts/getTopExpertsData',
       );
       final responseData = response["data"];
-      log("Experts data: $responseData");
       final allData = ExpertsHome.fromJson(responseData);
       final List<Expert> topExperts = [];
       allData.values.forEach((key, expertsList) {
@@ -150,7 +145,6 @@ class SaveRepo extends BaseRepo {
         apiName: '$_live/getLiveHomeData',
       );
       final responseData = response["data"];
-      log("Live data: $responseData");
       return ApiResponse<LiveHome>(
         model: LiveHome.fromJson(responseData),
         code: 200,

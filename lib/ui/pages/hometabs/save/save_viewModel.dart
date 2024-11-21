@@ -549,13 +549,15 @@ class SaveViewModel extends ChangeNotifier {
 
   void trackChallengeTapped(String bannerUri, String actionUri, int order) {
     _analyticsService.track(
-        eventName: AnalyticsEvents.offerBannerTapped,
-        properties: AnalyticsProperties.getDefaultPropertiesMap(
-            extraValuesMap: {
-              "banner_uri": bannerUri,
-              "order": order,
-              "action_uri": actionUri
-            }));
+      eventName: AnalyticsEvents.offerBannerTapped,
+      properties: AnalyticsProperties.getDefaultPropertiesMap(
+        extraValuesMap: {
+          "banner_uri": bannerUri,
+          "Sequence": order,
+          "action_uri": actionUri
+        },
+      ),
+    );
   }
 
   void trackBannerClickEvent(int orderNumber) {

@@ -1,12 +1,15 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/expert/widgets/expert_card.dart';
 import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -81,6 +84,12 @@ class TopExperts extends StatelessWidget {
                     widget: ExpertsDetailsView(
                       advisorID: topExperts[i].advisorId,
                     ),
+                  );
+                  locator<AnalyticsService>().track(
+                    eventName: AnalyticsEvents.expertsHome,
+                    properties: {
+                      "Expert sequence": topExperts[i].advisorId,
+                    },
                   );
                 },
               ),

@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -38,7 +37,6 @@ class AdvisorRepo extends BaseRepo {
       );
 
       final data = response['data'];
-      log("UpdateUpdateUpdateUpdateUpdate data: $data");
       return ApiResponse<AdvisorDetails>(
         model: AdvisorDetails.fromJson(data),
         code: 200,
@@ -107,7 +105,6 @@ class AdvisorRepo extends BaseRepo {
         apiName: '$_advisor/saveEvent',
       );
       final data = response['data'];
-      log("Experts data: $data");
       return ApiResponse<AdvisorDetails>(
         model: AdvisorDetails.fromJson(data),
         code: 200,

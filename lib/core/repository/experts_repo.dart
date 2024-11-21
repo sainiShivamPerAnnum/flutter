@@ -29,7 +29,6 @@ class ExpertsRepository extends BaseRepo {
         apiName: '$_experts/getExpertsHomeData',
       );
       final responseData = response["data"];
-      log("Experts data: $responseData");
       return ApiResponse<ExpertsHome>(
         model: ExpertsHome.fromJson(responseData),
         code: 200,
@@ -50,7 +49,7 @@ class ExpertsRepository extends BaseRepo {
         apiName: '$_experts/getExperDetailsByID',
       );
       final responseData = response["data"];
-      log("Experts data: $responseData");
+
       return ApiResponse<ExpertDetails>(
         model: ExpertDetails.fromJson(responseData),
         code: 200,
@@ -74,7 +73,7 @@ class ExpertsRepository extends BaseRepo {
         apiName: '$_ratings/getRatingByExpert',
       );
       final responseData = response["data"];
-      log("Ratings data: $responseData");
+
       final List<UserRating> ratings = (responseData as List)
           .map(
             (item) => UserRating.fromJson(
@@ -148,7 +147,7 @@ class ExpertsRepository extends BaseRepo {
         apiName: '$_experts/getExpertAvailableSlots',
       );
       final responseData = response['data'];
-      log("Slot data: $responseData");
+
       return ApiResponse<Schedule>(
         model: Schedule.fromJson(responseData),
         code: 200,
@@ -194,7 +193,7 @@ class ExpertsRepository extends BaseRepo {
         apiName: '$_experts/getLiveByAdvisor',
       );
       final responseData = response["data"];
-      log("Experts live data: $responseData");
+
       final List<VideoData> recentStreams = (responseData as List)
           .map(
             (item) => VideoData.fromJson(
@@ -227,7 +226,7 @@ class ExpertsRepository extends BaseRepo {
         apiName: '$_experts/getShortsByAdvisor',
       );
       final responseData = response["data"];
-      log("Experts shorts data: $responseData");
+
       final List<VideoData> recentStreams = (responseData as List)
           .map(
             (item) => VideoData.fromJson(
@@ -265,7 +264,7 @@ class ExpertsRepository extends BaseRepo {
         apiName: '$_booking/updateBooking',
       );
       final responseData = response['data'];
-      log("Update booking data: $responseData");
+
       return const ApiResponse<bool>(
         model: true,
         code: 200,
@@ -293,7 +292,7 @@ class ExpertsRepository extends BaseRepo {
         apiName: '$_booking/getPricing',
       );
       final responseData = response['data'];
-      log("Pricing data: $responseData");
+
       return ApiResponse<PricingResponse>(
         model: PricingResponse.fromJson(responseData),
         code: 200,
@@ -348,7 +347,6 @@ class ExpertsRepository extends BaseRepo {
         apiName: '$_booking/submitBooking',
       );
       final responseData = response;
-      log("Booking data: $responseData");
       return ApiResponse<PaymentStatusResponse>(
         model: PaymentStatusResponse.fromJson(responseData),
         code: 200,
@@ -374,7 +372,7 @@ class ExpertsRepository extends BaseRepo {
         apiName: '$_booking/submitQNA',
       );
       final responseData = response;
-      log("Booking data: $responseData");
+
       return const ApiResponse<bool>(
         model: true,
         code: 200,
@@ -438,7 +436,7 @@ class ExpertsRepository extends BaseRepo {
         apiName: '$_booking/getPollingResponse',
       );
       final responseData = response;
-      log("Polling data: $responseData");
+
       return ApiResponse<PollingStatusResponse>(
         model: PollingStatusResponse.fromJson(responseData),
         code: 200,

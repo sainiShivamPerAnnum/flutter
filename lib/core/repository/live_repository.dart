@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/model/advisor/advisor_events.dart';
 import 'package:felloapp/core/model/live/live_home.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
@@ -22,7 +20,6 @@ class LiveRepository extends BaseRepo {
         apiName: '$_live/getLiveHomeData',
       );
       final responseData = response["data"];
-      log("Live data: $responseData");
       return ApiResponse<LiveHome>(
         model: LiveHome.fromJson(responseData),
         code: 200,
@@ -45,7 +42,6 @@ class LiveRepository extends BaseRepo {
         apiName: '$_live/getEventById',
       );
       final responseData = response["data"][0];
-      log("Live data: $responseData");
       return ApiResponse<AdvisorEvents>(
         model: AdvisorEvents.fromJson(responseData),
         code: 200,
@@ -64,14 +60,31 @@ class LiveRepository extends BaseRepo {
       final body = {
         'isLiked': isLiked,
       };
-      final response = await APIService.instance.postData(
+      await APIService.instance.postData(
         'events/$id',
         cBaseUrl: _baseUrl,
         body: body,
         apiName: '$_live/likeEvent',
       );
-      final responseData = response["data"];
-      log("Live liked: $responseData");
+      return const ApiResponse<bool>(
+        model: true,
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<bool>> notifyEvent({
+    required String id,
+  }) async {
+    try {
+      await APIService.instance.patchData(
+        'events/$id/notify',
+        cBaseUrl: _baseUrl,
+        apiName: '$_live/notifyEvent',
+      );
       return const ApiResponse<bool>(
         model: true,
         code: 200,

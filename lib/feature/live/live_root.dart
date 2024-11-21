@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/live/live_home.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/live/bloc/live_bloc.dart';
 import 'package:felloapp/feature/live/view_all_live.dart';
 import 'package:felloapp/feature/live/widgets/header.dart';
@@ -109,6 +111,7 @@ class __LiveHomeState extends State<_LiveHome> {
                             page: AllEventsPageConfig,
                             state: PageState.addWidget,
                             widget: ViewAllLive(
+                              onNotify: null,
                               type: 'live',
                               advisorPast: null,
                               advisorUpcoming: null,
@@ -116,6 +119,7 @@ class __LiveHomeState extends State<_LiveHome> {
                               liveList: liveData.live,
                               upcomingList: null,
                               recentList: null,
+                              notificationState: null,
                             ),
                           );
                         },
@@ -136,21 +140,36 @@ class __LiveHomeState extends State<_LiveHome> {
                                 PageAction(
                               page: AllEventsPageConfig,
                               state: PageState.addWidget,
-                              widget: ViewAllLive(
-                                type: 'upcoming',
-                                advisorPast: null,
-                                advisorUpcoming: null,
-                                appBarTitle: liveData.sections.upcoming.title,
-                                liveList: null,
-                                upcomingList: liveData.upcoming,
-                                recentList: null,
+                              widget: BlocProvider.value(
+                                value: BlocProvider.of<LiveBloc>(
+                                  context,
+                                ),
+                                child: ViewAllLive(
+                                  onNotify: (id) {
+                                    BlocProvider.of<LiveBloc>(
+                                      context,
+                                      listen: false,
+                                    ).add(TurnOnNotification(id: id));
+                                  },
+                                  notificationState: state.notificationStatus,
+                                  type: 'upcoming',
+                                  advisorPast: null,
+                                  advisorUpcoming: null,
+                                  appBarTitle: liveData.sections.upcoming.title,
+                                  liveList: null,
+                                  upcomingList: liveData.upcoming,
+                                  recentList: null,
+                                ),
                               ),
                             );
                           },
                           showViewAll: liveData.upcoming.length > 1,
                         ),
                       ),
-                    _buildUpcomingSection(liveData.upcoming),
+                    _buildUpcomingSection(
+                      liveData.upcoming,
+                      state.notificationStatus,
+                    ),
                     if (liveData.recent.isNotEmpty)
                       Padding(
                         padding: EdgeInsets.symmetric(
@@ -165,12 +184,14 @@ class __LiveHomeState extends State<_LiveHome> {
                               page: AllEventsPageConfig,
                               state: PageState.addWidget,
                               widget: ViewAllLive(
+                                onNotify: null,
                                 advisorPast: null,
                                 advisorUpcoming: null,
                                 type: 'recent',
                                 appBarTitle: liveData.sections.recent.title,
                                 liveList: null,
                                 upcomingList: null,
+                                notificationState: null,
                                 recentList: liveData.recent,
                               ),
                             );
@@ -178,7 +199,7 @@ class __LiveHomeState extends State<_LiveHome> {
                           showViewAll: liveData.recent.length > 1,
                         ),
                       ),
-                    buildRecentSection(liveData.recent, context),
+                    buildRecentSection(liveData.recent, context, false),
                     SizedBox(height: SizeConfig.padding14),
                   ],
                 ),
@@ -201,12 +222,18 @@ class __LiveHomeState extends State<_LiveHome> {
     );
   }
 
-  Widget _buildUpcomingSection(List<UpcomingStream> liveData) {
+  Widget _buildUpcomingSection(
+    List<UpcomingStream> upcomingData,
+    Map<String, bool> notificationState,
+  ) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
+      physics: upcomingData.length > 1
+          ? const AlwaysScrollableScrollPhysics()
+          : const NeverScrollableScrollPhysics(),
       child: Row(
         children: [
-          for (final live in liveData)
+          for (int i = 0; i < upcomingData.length; i++)
             Padding(
               padding: EdgeInsets.only(
                 right: SizeConfig.padding8,
@@ -214,16 +241,29 @@ class __LiveHomeState extends State<_LiveHome> {
                 bottom: SizeConfig.padding8,
               ),
               child: LiveCardWidget(
-                id: live.id,
+                id: upcomingData[i].id,
                 status: 'upcoming',
-                title: live.title,
-                subTitle: live.subtitle,
-                advisorId: live.advisorId,
-                author: live.author,
-                startTime: live.startTime,
-                category: live.categories.join(', '),
-                bgImage: live.thumbnail,
-                duration: live.startTime,
+                title: upcomingData[i].title,
+                subTitle: upcomingData[i].subtitle,
+                advisorId: upcomingData[i].advisorId,
+                author: upcomingData[i].author,
+                startTime: upcomingData[i].startTime,
+                category: upcomingData[i].categories.join(', '),
+                bgImage: upcomingData[i].thumbnail,
+                duration: upcomingData[i].startTime,
+                maxWidth:
+                    upcomingData.length == 1 ? SizeConfig.padding350 : null,
+                notifyOn: notificationState[upcomingData[i].id],
+                onNotify: () {
+                  BlocProvider.of<LiveBloc>(
+                    context,
+                    listen: false,
+                  ).add(
+                    TurnOnNotification(
+                      id: upcomingData[i].id,
+                    ),
+                  );
+                },
               ),
             ),
         ],
@@ -300,6 +340,9 @@ Widget buildLiveSection(List<LiveStream> liveData) {
         )
       : SingleChildScrollView(
           scrollDirection: Axis.horizontal,
+          physics: liveData.length > 1
+              ? const AlwaysScrollableScrollPhysics()
+              : const NeverScrollableScrollPhysics(),
           child: Row(
             children: [
               for (final live in liveData)
@@ -313,6 +356,8 @@ Widget buildLiveSection(List<LiveStream> liveData) {
                     id: live.id,
                     status: 'live',
                     title: live.title,
+                    maxWidth:
+                        liveData.length == 1 ? SizeConfig.padding350 : null,
                     subTitle: live.subtitle,
                     author: live.author,
                     category: live.categories.join(', '),
@@ -329,25 +374,33 @@ Widget buildLiveSection(List<LiveStream> liveData) {
         );
 }
 
-Widget buildRecentSection(List<VideoData> recentData, BuildContext context) {
+Widget buildRecentSection(
+  List<VideoData> recentData,
+  BuildContext context,
+  bool isHome,
+) {
+  final analytics = locator<AnalyticsService>();
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal,
+    physics: recentData.length > 1
+        ? const AlwaysScrollableScrollPhysics()
+        : const NeverScrollableScrollPhysics(),
     child: Row(
       children: [
-        for (final recent in recentData)
+        for (int i = 0; i < recentData.length; i++)
           Padding(
             padding: EdgeInsets.only(
               bottom: SizeConfig.padding8,
               right: SizeConfig.padding8,
             ),
             child: LiveCardWidget(
-              id: recent.id,
+              id: recentData[i].id,
               onTap: () async {
                 final preloadBloc = BlocProvider.of<PreloadBloc>(context);
                 final switchCompleter = Completer<void>();
                 preloadBloc.add(
                   PreloadEvent.initializeLiveStream(
-                    recent,
+                    recentData[i],
                     completer: switchCompleter,
                   ),
                 );
@@ -360,7 +413,7 @@ Widget buildRecentSection(List<VideoData> recentData, BuildContext context) {
                       backgroundColor: Colors.transparent,
                       centerTitle: true,
                       titleWidget: Text(
-                        recent.title,
+                        recentData[i].title,
                         style: TextStyles.rajdhaniSB.body1,
                       ),
                       leading: const BackButton(
@@ -378,18 +431,39 @@ Widget buildRecentSection(List<VideoData> recentData, BuildContext context) {
                     ),
                   ),
                 );
+                if (isHome) {
+                  analytics.track(
+                    eventName: AnalyticsEvents.recentLiveHome,
+                    properties: {
+                      "Banner Number": i,
+                      "Banner Id": recentData[i].id,
+                      "Banner Title": recentData[i].title,
+                      "Advisor sequence": recentData[i].advisorId,
+                    },
+                  );
+                } else {
+                  analytics.track(
+                    eventName: AnalyticsEvents.recentLiveStream,
+                    properties: {
+                      "Live stream sequence": i,
+                      "Live stream Id": recentData[i].id,
+                      "Live stream Title": recentData[i].title,
+                      "Advisor sequence": recentData[i].advisorId,
+                    },
+                  );
+                }
               },
               status: 'recent',
-              title: recent.title,
-              startTime: recent.timeStamp,
-              advisorId: recent.advisorId,
-              subTitle: recent.subtitle,
-              author: recent.author,
-              category: (recent.category ?? []).join(', '),
-              bgImage: recent.thumbnail,
-              liveCount:
-                  recent.viewCount, // Number of views instead of live count
-              duration: recent.duration.toString(),
+              title: recentData[i].title,
+              startTime: recentData[i].timeStamp,
+              advisorId: recentData[i].advisorId,
+              subTitle: recentData[i].subtitle,
+              author: recentData[i].author,
+              category: (recentData[i].category ?? []).join(', '),
+              bgImage: recentData[i].thumbnail,
+              maxWidth: recentData.length == 1 ? SizeConfig.padding350 : null,
+              liveCount: recentData[i].viewCount,
+              duration: recentData[i].duration.toString(),
             ),
           ),
       ],

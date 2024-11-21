@@ -7,3 +7,8 @@ sealed class LiveEvent{
 class LoadHomeData extends LiveEvent {
   const LoadHomeData();
 }
+
+class TurnOnNotification extends LiveEvent {
+  const TurnOnNotification({required this.id});
+  final String id;
+}

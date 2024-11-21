@@ -4,14 +4,17 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/bookings/new_booking.dart';
 import 'package:felloapp/core/model/bookings/payment_response.dart';
 import 'package:felloapp/core/repository/experts_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -26,10 +29,12 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
   final ExpertsRepository _expertsRepository;
   final SaveViewModel _saveViewModel;
   final CustomLogger _logger;
+  final AnalyticsService _analyticsService;
   BookingBloc(
     this._expertsRepository,
     this._logger,
     this._saveViewModel,
+    this._analyticsService,
   ) : super(const LoadingBookingsData()) {
     on<LoadBookingDates>(_onLoadBookingDates);
     on<SelectDate>(_onSelectDate);
@@ -97,6 +102,12 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           selectedTime: null,
         ),
       );
+      _analyticsService.track(
+        eventName: AnalyticsEvents.bookCallTime,
+        properties: {
+          "date": event.selectedDate,
+        },
+      );
     }
   }
 
@@ -109,6 +120,12 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           null,
         ),
       );
+      _analyticsService.track(
+        eventName: AnalyticsEvents.bookCallTime,
+        properties: {
+          "duration": event.selectDuration,
+        },
+      );
     }
   }
 
@@ -118,6 +135,12 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
         (state as BookingsLoaded).copyWith(
           selectedTime: event.selectedTime,
         ),
+      );
+      _analyticsService.track(
+        eventName: AnalyticsEvents.bookCallTime,
+        properties: {
+          "time": event.selectedTime,
+        },
       );
     }
   }
@@ -188,9 +211,11 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
 class PaymentBloc extends Bloc<BookingEvent, PaymentState> {
   final ExpertsRepository _expertsRepository;
   final CustomLogger _logger;
+  final AnalyticsService _analyticsService;
   PaymentBloc(
     this._expertsRepository,
     this._logger,
+    this._analyticsService,
   ) : super(const MandateInitialState()) {
     on<LoadPSPApps>(_onLoadPSPApps);
     on<SubmitPaymentRequest>(_onSubmitPayment);
@@ -222,11 +247,19 @@ class PaymentBloc extends Bloc<BookingEvent, PaymentState> {
     final intentData = data?.intent;
     if (response.isSuccess() && event.isFree) {
       emitter(SubmittedPayment(data: response.model!));
+      _analyticsService.track(eventName: AnalyticsEvents.bookFirstCall);
     } else if (response.isSuccess() &&
         intentData != null &&
         paymentId != null) {
       if (intentData.isNotEmpty) {
         await _openPSPApp(intentData, event.appuse!.packageName);
+
+        _analyticsService.track(
+          eventName: AnalyticsEvents.upiappSelect,
+          properties: {
+            "app": event.appuse!.packageName,
+          },
+        );
       }
       emitter(SubmittedPayment(data: response.model!));
     } else {
@@ -329,15 +362,15 @@ class PaymentBloc extends Bloc<BookingEvent, PaymentState> {
           }
 
           // debug assertion to avoid this in production.
-          assert(() {
-          if (element.upiApplication.appName == "PhonePe Simulator" &&
-              AppConfig.getValue<String>(
-                AppConfigKey.enabled_psp_apps_booking,
-              ).contains('E')) {
-            appMetaList.add(element);
-          }
-            return true;
-          }());
+          // assert(() {
+            if (element.upiApplication.appName == "PhonePe Simulator" &&
+                AppConfig.getValue<String>(
+                  AppConfigKey.enabled_psp_apps_booking,
+                ).contains('E') && FlavorConfig.isDevelopment()) {
+              appMetaList.add(element);
+            }
+          //   return true;
+          // }());
 
           if (element.upiApplication.appName == "PhonePe Preprod" &&
               AppConfig.getValue<String>(

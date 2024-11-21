@@ -85,6 +85,11 @@ class CampaignCardSection extends StatelessWidget {
                                           event.type + (event.misc['id'] ?? ''),
                                         ),
                                       );
+                                      model.trackChallengeTapped(
+                                        event.bgImage,
+                                        event.type,
+                                        index,
+                                      );
                                     },
                                     title: event.title,
                                     description: event.subtitle,

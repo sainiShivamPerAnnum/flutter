@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -8,6 +10,7 @@ import 'package:felloapp/ui/pages/hometabs/home/balance_page.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +26,9 @@ class PortfolioCard extends StatelessWidget {
           page: BalancePageConfig,
           state: PageState.addWidget,
           widget: FelloBalanceScreen(),
+        );
+        locator<AnalyticsService>().track(
+          eventName: AnalyticsEvents.portfolioBalanceClick,
         );
       },
       child: Container(

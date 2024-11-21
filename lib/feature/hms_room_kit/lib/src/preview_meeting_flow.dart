@@ -22,8 +22,10 @@ class PreviewMeetingFlow extends StatefulWidget {
   final String description;
   final bool isLiked;
   final String eventId;
+  final String advisorName;
   const PreviewMeetingFlow({
     required this.prebuiltOptions,
+    required this.advisorName,
     required this.hmsSDKInteractor,
     required this.tokenData,
     required this.advisorId,
@@ -53,6 +55,7 @@ class _PreviewMeetingFlowState extends State<PreviewMeetingFlow> {
   @override
   Widget build(BuildContext context) {
     return MeetingScreenController(
+      advisorName: widget.advisorName,
       advisorId: widget.advisorId,
       title: widget.title,
       description: widget.description,

@@ -25,6 +25,7 @@ class UpcomingLiveCardWidget extends StatefulWidget {
   final int? duration;
   final String? timeSlot;
   final String? broadcasterCode;
+  final double? maxWidth;
 
   const UpcomingLiveCardWidget({
     required this.status,
@@ -38,6 +39,7 @@ class UpcomingLiveCardWidget extends StatefulWidget {
     this.duration,
     this.timeSlot,
     this.broadcasterCode,
+    this.maxWidth,
     super.key,
   });
 
@@ -128,7 +130,8 @@ class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: SizeConfig.padding300,
+       constraints:
+            BoxConstraints(maxWidth: widget.maxWidth ?? SizeConfig.padding300),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(SizeConfig.roundness8),
         color: UiConstants.greyVarient,
@@ -225,6 +228,7 @@ class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
                             eventId: widget.id ?? '',
                             isLiked: false,
                             advisorId: advisoriD,
+                            advisorName: userName,
                             title: widget.title,
                             description: widget.subTitle,
                             roomCode: widget.broadcasterCode,

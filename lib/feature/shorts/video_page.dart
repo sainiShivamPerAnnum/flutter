@@ -103,6 +103,7 @@ class _ShortsVideoPageState extends State<ShortsVideoPage> {
                           commentsVisibility: state.showComments,
                           currentContext: state.currentContext,
                           onCommentToggle: () {
+                            FocusScope.of(context).unfocus();
                             BlocProvider.of<PreloadBloc>(
                               context,
                               listen: false,
@@ -121,6 +122,7 @@ class _ShortsVideoPageState extends State<ShortsVideoPage> {
                             );
                           },
                           onShare: () async {
+                            FocusScope.of(context).unfocus();
                             if (state.isShareAlreadyClicked == false) {
                               BlocProvider.of<PreloadBloc>(
                                 context,
@@ -133,6 +135,7 @@ class _ShortsVideoPageState extends State<ShortsVideoPage> {
                             }
                           },
                           onLike: () {
+                            FocusScope.of(context).unfocus();
                             BlocProvider.of<PreloadBloc>(
                               context,
                               listen: false,
@@ -154,17 +157,18 @@ class _ShortsVideoPageState extends State<ShortsVideoPage> {
                             );
                           },
                           onBook: () {
+                            FocusScope.of(context).unfocus();
                             BaseUtil.openBookAdvisorSheet(
                               advisorId: videos[index].advisorId,
                               advisorName: videos[index].author,
                               isEdit: false,
                             );
                           },
-                          showUserName: true,
+                          showUserName: videos[index].author != "",
                           showVideoTitle: true,
                           showShareButton: true,
                           showLikeButton: true,
-                          showBookButton: true,
+                          showBookButton: videos[index].advisorId != "",
                           comments: state
                               .videoComments[videos[index].id]?.reversed
                               .toList(),

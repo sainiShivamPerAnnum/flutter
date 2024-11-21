@@ -1,7 +1,9 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/expert/widgets/expert_card.dart';
 import 'package:felloapp/feature/expertDetails/expert_profile.dart';
@@ -51,6 +53,7 @@ class __ExpertHomeState extends State<_ExpertHome>
     super.initState();
     _autoScrollController = AutoScrollController();
   }
+
   @override
   void dispose() {
     _autoScrollController.dispose();
@@ -296,7 +299,7 @@ class __ExpertHomeState extends State<_ExpertHome>
       mainAxisSize: MainAxisSize.min,
       children: [
         _buildSectionContent(section),
-        _buildExpertList(experts, isFree),
+        _buildExpertList(experts, isFree, section),
       ],
     );
   }
@@ -313,6 +316,7 @@ class __ExpertHomeState extends State<_ExpertHome>
     List<Expert> experts,
     bool isFree,
   ) {
+    final analytics = locator<AnalyticsService>();
     return SliverToBoxAdapter(
       child: Column(
         children: experts.map((expert) {
@@ -327,6 +331,14 @@ class __ExpertHomeState extends State<_ExpertHome>
                   advisorName: expert.name,
                   isEdit: false,
                 );
+                analytics.track(
+                  eventName: AnalyticsEvents.bookACall,
+                  properties: {
+                    "Section": "Our top expert",
+                    "Expert ID": expert.advisorId,
+                    "Expert name": expert.name,
+                  },
+                );
               },
               onTap: () {
                 AppState.delegate!.appState.currentAction = PageAction(
@@ -335,6 +347,13 @@ class __ExpertHomeState extends State<_ExpertHome>
                   widget: ExpertsDetailsView(
                     advisorID: expert.advisorId,
                   ),
+                );
+                analytics.track(
+                  eventName: AnalyticsEvents.topExperts,
+                  properties: {
+                    "Expert sequence": expert.advisorId,
+                    "Expert name": expert.name,
+                  },
                 );
               },
             ),
@@ -347,7 +366,9 @@ class __ExpertHomeState extends State<_ExpertHome>
   Widget _buildExpertList(
     List<Expert> experts,
     bool isFree,
+    String section,
   ) {
+    final analytics = locator<AnalyticsService>();
     return Column(
       children: experts.map((expert) {
         return Padding(
@@ -361,6 +382,14 @@ class __ExpertHomeState extends State<_ExpertHome>
                 advisorName: expert.name,
                 isEdit: false,
               );
+              analytics.track(
+                eventName: AnalyticsEvents.bookACall,
+                properties: {
+                  "Section": section,
+                  "Expert ID": expert.advisorId,
+                  "Expert name": expert.name,
+                },
+              );
             },
             onTap: () {
               AppState.delegate!.appState.currentAction = PageAction(
@@ -369,6 +398,13 @@ class __ExpertHomeState extends State<_ExpertHome>
                 widget: ExpertsDetailsView(
                   advisorID: expert.advisorId,
                 ),
+              );
+              analytics.track(
+                eventName: "$section - Experts",
+                properties: {
+                  "Expert sequence": expert.advisorId,
+                  "Expert name": expert.name,
+                },
               );
             },
           ),

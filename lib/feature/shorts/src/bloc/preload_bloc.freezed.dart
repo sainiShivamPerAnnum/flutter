@@ -30,6 +30,7 @@ mixin _$PreloadEvent {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -60,6 +61,7 @@ mixin _$PreloadEvent {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -90,6 +92,7 @@ mixin _$PreloadEvent {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -214,6 +217,7 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -247,6 +251,7 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -280,6 +285,7 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -368,6 +374,7 @@ class _$DisposeLiveStreamControllerImpl
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -401,6 +408,7 @@ class _$DisposeLiveStreamControllerImpl
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -434,6 +442,7 @@ class _$DisposeLiveStreamControllerImpl
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -512,6 +521,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -545,6 +555,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -578,6 +589,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -655,6 +667,7 @@ class _$SetLoadingImpl implements _SetLoading {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -688,6 +701,7 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -721,6 +735,7 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -841,6 +856,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -874,6 +890,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -907,6 +924,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -1018,6 +1036,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -1051,6 +1070,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -1084,6 +1104,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -1194,6 +1215,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -1227,6 +1249,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -1260,6 +1283,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -1369,6 +1393,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -1402,6 +1427,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -1435,6 +1461,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -1564,6 +1591,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -1597,6 +1625,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -1630,6 +1659,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -1751,6 +1781,7 @@ class _$AddCommentImpl implements _AddComment {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -1784,6 +1815,7 @@ class _$AddCommentImpl implements _AddComment {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -1817,6 +1849,7 @@ class _$AddCommentImpl implements _AddComment {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -1929,6 +1962,7 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -1962,6 +1996,7 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -1995,6 +2030,7 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -2025,6 +2061,183 @@ abstract class _UpdateViewCount implements PreloadEvent {
   String get videoId;
   @JsonKey(ignore: true)
   _$$UpdateViewCountImplCopyWith<_$UpdateViewCountImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$UpdateSeenImplCopyWith<$Res> {
+  factory _$$UpdateSeenImplCopyWith(
+          _$UpdateSeenImpl value, $Res Function(_$UpdateSeenImpl) then) =
+      __$$UpdateSeenImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String videoId});
+}
+
+/// @nodoc
+class __$$UpdateSeenImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$UpdateSeenImpl>
+    implements _$$UpdateSeenImplCopyWith<$Res> {
+  __$$UpdateSeenImplCopyWithImpl(
+      _$UpdateSeenImpl _value, $Res Function(_$UpdateSeenImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? videoId = null,
+  }) {
+    return _then(_$UpdateSeenImpl(
+      videoId: null == videoId
+          ? _value.videoId
+          : videoId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$UpdateSeenImpl implements _UpdateSeen {
+  const _$UpdateSeenImpl({required this.videoId});
+
+  @override
+  final String videoId;
+
+  @override
+  String toString() {
+    return 'PreloadEvent.updateSeen(videoId: $videoId)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UpdateSeenImpl &&
+            (identical(other.videoId, videoId) || other.videoId == videoId));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, videoId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UpdateSeenImplCopyWith<_$UpdateSeenImpl> get copyWith =>
+      __$$UpdateSeenImplCopyWithImpl<_$UpdateSeenImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
+    required TResult Function(_GetVideosFromApi value) getVideosFromApi,
+    required TResult Function(_SetLoading value) setLoading,
+    required TResult Function(_UpdateUrls value) updateUrls,
+    required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
+    required TResult Function(_ErrorPage value) onError,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_ToggleComments value) toggleComments,
+    required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_InitializeFromDynamicLink value)
+        initializeFromDynamicLink,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
+    required TResult Function(_DisposeProfileControllers value)
+        disposeProfileControllers,
+    required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
+    required TResult Function(_UpdateLoading value) updateLoading,
+  }) {
+    return updateSeen(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult? Function(_SetLoading value)? setLoading,
+    TResult? Function(_UpdateUrls value)? updateUrls,
+    TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
+    TResult? Function(_ErrorPage value)? onError,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_ToggleComments value)? toggleComments,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_InitializeFromDynamicLink value)?
+        initializeFromDynamicLink,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult? Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+    TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
+    TResult? Function(_UpdateLoading value)? updateLoading,
+  }) {
+    return updateSeen?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult Function(_SetLoading value)? setLoading,
+    TResult Function(_UpdateUrls value)? updateUrls,
+    TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
+    TResult Function(_ErrorPage value)? onError,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_ToggleComments value)? toggleComments,
+    TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_InitializeFromDynamicLink value)?
+        initializeFromDynamicLink,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+    TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
+    TResult Function(_UpdateLoading value)? updateLoading,
+    required TResult orElse(),
+  }) {
+    if (updateSeen != null) {
+      return updateSeen(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _UpdateSeen implements PreloadEvent {
+  const factory _UpdateSeen({required final String videoId}) = _$UpdateSeenImpl;
+
+  String get videoId;
+  @JsonKey(ignore: true)
+  _$$UpdateSeenImplCopyWith<_$UpdateSeenImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -2078,6 +2291,7 @@ class _$ErrorPageImpl implements _ErrorPage {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -2111,6 +2325,7 @@ class _$ErrorPageImpl implements _ErrorPage {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -2144,6 +2359,7 @@ class _$ErrorPageImpl implements _ErrorPage {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -2247,6 +2463,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -2280,6 +2497,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -2313,6 +2531,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -2395,6 +2614,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -2428,6 +2648,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -2461,6 +2682,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -2581,6 +2803,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -2614,6 +2837,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -2647,6 +2871,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -2732,6 +2957,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -2765,6 +2991,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -2798,6 +3025,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -2904,6 +3132,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -2937,6 +3166,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -2970,6 +3200,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -3089,6 +3320,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -3122,6 +3354,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -3155,6 +3388,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -3279,6 +3513,7 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -3312,6 +3547,7 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -3345,6 +3581,7 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -3457,6 +3694,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -3490,6 +3728,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -3523,6 +3762,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -3609,6 +3849,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -3642,6 +3883,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -3675,6 +3917,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -3779,6 +4022,7 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -3812,6 +4056,7 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -3845,6 +4090,7 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,
@@ -3955,6 +4201,7 @@ class _$UpdateLoadingImpl implements _UpdateLoading {
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_ErrorPage value) onError,
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_ToggleComments value) toggleComments,
@@ -3988,6 +4235,7 @@ class _$UpdateLoadingImpl implements _UpdateLoading {
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_ErrorPage value)? onError,
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_ToggleComments value)? toggleComments,
@@ -4021,6 +4269,7 @@ class _$UpdateLoadingImpl implements _UpdateLoading {
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_ErrorPage value)? onError,
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_ToggleComments value)? toggleComments,

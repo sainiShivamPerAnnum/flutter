@@ -64,4 +64,5 @@ UpcomingStream _$UpcomingStreamFromJson(Map<String, dynamic> json) =>
       advisorCode: json['advisorCode'] as String,
       viewerCode: json['viewerCode'] as String,
       advisorId: json['advisorId'] as String,
+      addedToNotify: json['addedToNotify'] as bool? ?? false,
     );

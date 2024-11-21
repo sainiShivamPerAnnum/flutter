@@ -1,5 +1,7 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/advisor/advisor_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/advisor/advisor_components/schedule.dart';
 import 'package:felloapp/feature/advisor/advisor_components/upcoming_live_card.dart';
@@ -101,6 +103,9 @@ class _LiveState extends State<Live> {
       page: ScheduleCallViewConfig,
       widget: const ScheduleCallWrapper(),
     );
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.createNewStream,
+    );
   }
 }
 
@@ -129,6 +134,9 @@ class LiveFello extends StatelessWidget {
                   )
                 : SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
+                    physics: data.length > 1
+                        ? const AlwaysScrollableScrollPhysics()
+                        : const NeverScrollableScrollPhysics(),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -137,6 +145,9 @@ class LiveFello extends StatelessWidget {
                             padding: EdgeInsets.only(right: SizeConfig.padding8)
                                 .copyWith(bottom: 8),
                             child: UpcomingLiveCardWidget(
+                              maxWidth: data.length == 1
+                                  ? SizeConfig.padding350
+                                  : null,
                               id: data[i].id,
                               status: data[i].status,
                               title: data[i].topic ?? '',

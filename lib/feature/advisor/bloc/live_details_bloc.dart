@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/repository/advisor_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -12,7 +14,11 @@ part 'live_details_state.dart';
 
 class ScheduleLiveBloc extends Bloc<ScheduleCallEvent, ScheduleCallState> {
   final AdvisorRepo _advisorRepo;
-  ScheduleLiveBloc(this._advisorRepo) : super(ScheduleCallInitial()) {
+  final AnalyticsService _analyticsService;
+  ScheduleLiveBloc(
+    this._advisorRepo,
+    this._analyticsService,
+  ) : super(ScheduleCallInitial()) {
     on<LoadCategories>(_onLoadCategories);
     on<SelectCategory>(_onSelectCategory);
     on<SelectDate>(_onSelectDate);
@@ -130,6 +136,12 @@ class ScheduleLiveBloc extends Bloc<ScheduleCallEvent, ScheduleCallState> {
   ) {
     final currentState = state as ScheduleCallLoaded;
     emit(currentState.copyWith(selectedCategory: event.category));
+    _analyticsService.track(
+      eventName: AnalyticsEvents.scheduleCategorySelect,
+      properties: {
+        "Category": event.category,
+      },
+    );
   }
 
   FutureOr<void> _onSelectDate(
@@ -145,7 +157,26 @@ class ScheduleLiveBloc extends Bloc<ScheduleCallEvent, ScheduleCallState> {
     Emitter<ScheduleCallState> emit,
   ) {
     final currentState = state as ScheduleCallLoaded;
+    final times = [
+      {'TimeUI': '10:00 AM'},
+      {'TimeUI': '11:00 AM'},
+      {'TimeUI': '12:00 PM'},
+      {'TimeUI': '1:00 PM'},
+      {'TimeUI': '2:00 PM'},
+      {'TimeUI': '3:00 PM'},
+      {'TimeUI': '4:00 PM'},
+      {'TimeUI': '5:00 PM'},
+      {'TimeUI': '6:00 PM'},
+      {'TimeUI': '7:00 PM'},
+      {'TimeUI': '8:00 PM'},
+    ];
     emit(currentState.copyWith(selectedTimeIndex: event.index));
+    _analyticsService.track(
+      eventName: AnalyticsEvents.scheduleTimeSelect,
+      properties: {
+        "Time": times[event.index]['TimeUI'],
+      },
+    );
   }
 
   FutureOr<void> _onUploadProfilePicture(
@@ -266,11 +297,23 @@ class ScheduleLiveBloc extends Bloc<ScheduleCallEvent, ScheduleCallState> {
                 dateTime.toString(),
               ),
             );
+            _analyticsService.track(
+              eventName: AnalyticsEvents.scheduleLive,
+              properties: {
+                "Status": 'Success',
+              },
+            );
           } else {
             emit(
               ScheduleCallFailure(
                 response.errorMessage ?? 'Failed to schedule event',
               ),
+            );
+            _analyticsService.track(
+              eventName: AnalyticsEvents.scheduleLive,
+              properties: {
+                "Status": 'failure',
+              },
             );
           }
           unawaited(_advisorRepo.getEvents());
