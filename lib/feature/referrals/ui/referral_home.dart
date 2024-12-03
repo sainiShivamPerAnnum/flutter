@@ -45,7 +45,7 @@ class _ReferralHomeState extends State<ReferralHome> {
       AppConfigKey.revamped_referrals_config)['hero']['subtitle'];
 
   String get referralShareText =>
-      'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. Lets start saving and playing together! Share this code: *${referralService.refCode}* with your friends.\n';
+      'Hey I am gifting you ${AppConfig.getValue(AppConfigKey.referralBonus)} coins and ${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. Lets start saving and playing together! Share this code: *${referralService.refCode}* with your friends.\n';
 
   @override
   void initState() {
