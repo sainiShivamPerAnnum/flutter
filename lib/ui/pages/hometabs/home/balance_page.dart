@@ -37,7 +37,7 @@ class FelloBalanceScreen extends StatelessWidget {
     } else {
       BaseUtil.showNegativeAlert(
         "Not enough winnings",
-        "Winnings can only be redeemed after reaching ₹${referralService.minWithdrawPrizeAmt}",
+        "Winnings can only be redeemed after reaching ${referralService.minWithdrawPrizeAmt} coins",
       );
     }
   }
@@ -439,7 +439,7 @@ class FelloBalanceScreen extends StatelessWidget {
                         title == "Fello Rewards" ? "Redeem" : "Invest",
                         style: TextStyles.sourceSansSB.body4
                             .colour(UiConstants.kTextColor4),
-                            textAlign: TextAlign.center,
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
@@ -465,19 +465,30 @@ class FelloBalanceScreen extends StatelessWidget {
                           children: [
                             Selector<UserService,
                                 Tuple2<Portfolio, UserFundWallet?>>(
-                              builder: (_, value, child) => Text(
-                                BaseUtil.formatIndianRupees(
-                                  num.parse(
-                                    getFirstValue(
-                                      value.item1,
-                                      value.item2,
-                                      title,
-                                    ),
-                                  ),
-                                ),
-                                style: TextStyles.sourceSansB.body0
-                                    .colour(Colors.white),
-                              ),
+                              builder: (_, value, child) =>
+                                  title != "Fello Rewards"
+                                      ? Text(
+                                          BaseUtil.formatIndianRupees(
+                                            num.parse(
+                                              getFirstValue(
+                                                value.item1,
+                                                value.item2,
+                                                title,
+                                              ),
+                                            ),
+                                          ),
+                                          style: TextStyles.sourceSansB.body0
+                                              .colour(Colors.white),
+                                        )
+                                      : Text(
+                                          '${getFirstValue(
+                                            value.item1,
+                                            value.item2,
+                                            title,
+                                          )} coins',
+                                          style: TextStyles.sourceSansB.body0
+                                              .colour(Colors.white),
+                                        ),
                               selector: (_, userService) => Tuple2(
                                 userService.userPortfolio,
                                 userService.userFundWallet,

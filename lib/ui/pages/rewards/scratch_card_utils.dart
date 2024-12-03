@@ -233,7 +233,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
         children: [
           RichText(
             text: TextSpan(
-              text: '₹ ${reward.value}',
+              text: '${reward.value} coins',
               style: TextStyles.rajdhaniB.title2.colour(Colors.black),
             ),
           ),

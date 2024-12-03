@@ -1317,7 +1317,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           isLiked: false,
           roomCode: videoData.model!.guestCode,
           advisorId: videoData.model!.advisorId,
-          advisorName: 'videoData.model!.advisorName',
+          advisorName: videoData.model!.advisorName,
           title: videoData.model!.topic ?? '',
           description: videoData.model!.description ?? '',
           onLeave: () async {

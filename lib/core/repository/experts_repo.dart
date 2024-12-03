@@ -278,11 +278,13 @@ class ExpertsRepository extends BaseRepo {
   Future<ApiResponse<PricingResponse>> getPricing({
     required String advisorId,
     required int duration,
+    required bool isCoinBalance,
   }) async {
     try {
       final body = {
         "duration": duration,
         "service": 'generic',
+        "isCoinBalance": isCoinBalance,
       };
 
       final response = await APIService.instance.postData(
@@ -323,6 +325,7 @@ class ExpertsRepository extends BaseRepo {
     required num duration,
     required String appuse,
     required bool isFree,
+    required bool isCoinBalance,
   }) async {
     try {
       final String? uid = userService.baseUser!.uid;
@@ -333,6 +336,7 @@ class ExpertsRepository extends BaseRepo {
         "fromTime": fromTime,
         "duration": duration,
         "isFree": isFree,
+        "isCoinBalance": isCoinBalance,
       };
       final headers = {
         "appuse": formatUpiAppName(appuse),

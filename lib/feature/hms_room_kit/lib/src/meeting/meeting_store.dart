@@ -156,7 +156,7 @@ class MeetingStore extends ChangeNotifier
       _isShareAlreadyClicked = true;
       notifyListeners();
       await Share.share(
-        "🚨 Live Now! 🚨\nJoin $advisorName on the Fello App for a LIVE session on $calltitle! 💡\n💰 Get expert insights on $description and take control of your financial future.\n📱 Don’t miss it—join now: $url",
+        "🚨 Live Now! 🚨\nJoin $advisorName on the Fello App for a LIVE session on $calltitle! 💡\n💰 Get expert insights on $calldescription and take control of your financial future.\n📱 Don’t miss it—join now: $url",
       );
     }
 

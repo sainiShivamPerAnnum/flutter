@@ -30,10 +30,10 @@ final class BookingsLoaded extends BookingState {
   const BookingsLoaded({
     required this.advisorId,
     required this.schedule,
+    required this.isFree,
     this.selectedDate,
     this.selectedTime,
     this.selectedDuration = 30,
-    required this.isFree,
   });
 
   BookingState copyWith({
@@ -74,6 +74,9 @@ class PricingData extends BookingState {
   final num duration;
   final num gst;
   final num totalPayable;
+  final bool reedem;
+  final num coinBalanceUse;
+  final bool isApplyingReedem;
 
   const PricingData({
     required this.advisorId,
@@ -84,11 +87,52 @@ class PricingData extends BookingState {
     required this.duration,
     required this.gst,
     required this.totalPayable,
+    required this.coinBalanceUse,
+    this.reedem = false,
+    this.isApplyingReedem = false,
   });
+  PricingData copyWith({
+    String? advisorId,
+    String? advisorName,
+    String? time,
+    String? date,
+    num? price,
+    num? duration,
+    num? gst,
+    num? totalPayable,
+    bool? reedem,
+    bool? isApplyingReedem,
+    num? coinBalanceUse,
+  }) {
+    return PricingData(
+      advisorId: advisorId ?? this.advisorId,
+      advisorName: advisorName ?? this.advisorName,
+      time: time ?? this.time,
+      date: date ?? this.date,
+      price: price ?? this.price,
+      duration: duration ?? this.duration,
+      gst: gst ?? this.gst,
+      totalPayable: totalPayable ?? this.totalPayable,
+      reedem: reedem ?? this.reedem,
+      isApplyingReedem: isApplyingReedem ?? this.isApplyingReedem,
+      coinBalanceUse: coinBalanceUse ?? this.coinBalanceUse,
+    );
+  }
 
   @override
-  List<Object?> get props =>
-      [advisorId, advisorName, time, date, price, duration, gst, totalPayable];
+  List<Object?> get props => [
+        advisorId,
+        advisorName,
+        time,
+        date,
+        price,
+        duration,
+        gst,
+        totalPayable,
+        reedem,
+        isApplyingReedem,
+        coinBalanceUse,
+      ];
 }
 
 sealed class PaymentState extends Equatable {
@@ -150,5 +194,7 @@ class SubmittedPayment extends PaymentState {
   });
 
   @override
-  List<Object?> get props => [data];
+  List<Object?> get props => [
+        data,
+      ];
 }

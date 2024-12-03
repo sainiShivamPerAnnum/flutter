@@ -6,6 +6,7 @@ part 'advisor_events.g.dart';
 class AdvisorEvents {
   final String id;
   final String advisorId;
+  final String advisorName;
   final String type;
   final String? topic;
   final String? description;
@@ -41,6 +42,7 @@ class AdvisorEvents {
     this.categories = const [],
     this.totalLiveCount = 0,
     this.currentLiveCount = 0,
+    this.advisorName='',
     this.coverImage,
   });
 

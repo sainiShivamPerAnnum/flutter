@@ -68,8 +68,11 @@ class GTDetailedView extends StatelessWidget {
                 onPressed: () {
                   AppState.backButtonDispatcher!.didPopRoute();
                 },
-                icon: const Icon(Icons.close),
-              )
+                icon: const Icon(
+                  Icons.close,
+                  color: UiConstants.kTextColor,
+                ),
+              ),
             ],
           ),
           backgroundColor: Colors.black.withOpacity(0.7),

@@ -30,6 +30,7 @@ class PollingSheet extends StatelessWidget {
         locator(),
         locator(),
         locator(),
+        locator(),
       )..add(StartPolling(paymentID, fromTime, advisorName)),
       child: _BookingStatusSheet(
         paymentID: paymentID,

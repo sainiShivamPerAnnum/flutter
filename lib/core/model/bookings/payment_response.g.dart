@@ -11,6 +11,7 @@ PricingResponse _$PricingResponseFromJson(Map<String, dynamic> json) =>
       price: json['price'] as num,
       gst: json['gst'] as num,
       totalPrice: json['totalPrice'] as num,
+      coinBalanceUse: json['coinBalanceUse'] as num,
     );
 
 PaymentStatusResponse _$PaymentStatusResponseFromJson(

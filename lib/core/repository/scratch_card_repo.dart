@@ -5,16 +5,21 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/app_environment.dart';
 import 'package:felloapp/core/model/daily_bonus_event_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/model/rewards_history.dart';
 import 'package:felloapp/core/model/rewardsquickLinks_model.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/preference_helper.dart';
 
 class ScratchCardRepository extends BaseRepo {
   static const _rewards = 'rewards';
+  final _newbaseUrl = FlavorConfig.isDevelopment()
+      ? 'https://advisors.fello-dev.net/'
+      : 'https://advisors.fello-prod.net/';
 
   Future<ApiResponse<ScratchCard>> getScratchCardById({
     String? scratchCardId,
@@ -32,6 +37,32 @@ class ScratchCardRepository extends BaseRepo {
       final ticket =
           ScratchCard.fromJson(scratchCardRespone['data'], scratchCardId!);
       return ApiResponse<ScratchCard>(model: ticket, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch ticket", 400);
+    }
+  }
+
+  Future<ApiResponse<List<RewardsHistoryModel>>> getRewardsHistory() async {
+    try {
+      final historyResponse = await APIService.instance.getData(
+        'payments/txn/coins',
+        cBaseUrl: _newbaseUrl,
+        apiName: '$_rewards/getRewardsHistory',
+      );
+      final responseData = historyResponse["data"];
+
+      final List<RewardsHistoryModel> history = (responseData as List)
+          .map(
+            (item) => RewardsHistoryModel.fromJson(
+              item,
+            ),
+          )
+          .toList();
+      return ApiResponse<List<RewardsHistoryModel>>(
+        model: history,
+        code: 200,
+      );
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch ticket", 400);

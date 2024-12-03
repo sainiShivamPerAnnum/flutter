@@ -5,7 +5,7 @@ sealed class BookingEvent {
 }
 
 class LoadBookingDates extends BookingEvent {
-  const LoadBookingDates(this.advisorId, this.duration,this.scheduledOn);
+  const LoadBookingDates(this.advisorId, this.duration, this.scheduledOn);
   final String advisorId;
   final int duration;
   final DateTime? scheduledOn;
@@ -24,6 +24,17 @@ class SelectDuration extends BookingEvent {
 class SelectTime extends BookingEvent {
   final String selectedTime;
   const SelectTime(this.selectedTime);
+}
+
+class SelectReedem extends BookingEvent {
+  final bool reddem;
+  final num duration;
+  final String advisorId;
+  const SelectReedem(
+    this.reddem,
+    this.duration,
+    this.advisorId,
+  );
 }
 
 class GetPricing extends BookingEvent {
@@ -47,6 +58,7 @@ class LoadPSPApps extends BookingEvent {
 
 class SubmitPaymentRequest extends BookingEvent {
   const SubmitPaymentRequest({
+    required this.reddem,
     required this.advisorId,
     required this.amount,
     required this.fromTime,
@@ -54,6 +66,7 @@ class SubmitPaymentRequest extends BookingEvent {
     required this.appuse,
     required this.isFree,
   });
+  final bool reddem;
   final String advisorId;
   final num amount;
   final String fromTime;
@@ -62,7 +75,7 @@ class SubmitPaymentRequest extends BookingEvent {
   final bool isFree;
 }
 
-class EditBooking extends BookingEvent{
+class EditBooking extends BookingEvent {
   const EditBooking({
     required this.duration,
     required this.bookingId,

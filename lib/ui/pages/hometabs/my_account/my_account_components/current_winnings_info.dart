@@ -2,6 +2,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/prize_claim_card.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,17 +14,24 @@ class CurrentWinningsInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final minWithdrawPrize = locator<UserService>().baseUser!.minRedemptionAmt;
-    return Consumer<UserService>(
-      builder: (context, userservice, properties) {
-        return GestureDetector(
-          onTap: () => AppState.delegate!.parseRoute(Uri.parse('/myWinnings')),
-          child: RewardRedeemWidget(
-            m: userservice,
-            minWithdrawPrize: minWithdrawPrize,
-            isWinView: true,
-          ),
-        );
-      },
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.pageHorizontalMargins,
+        vertical: SizeConfig.padding14,
+      ),
+      child: Consumer<UserService>(
+        builder: (context, userservice, properties) {
+          return GestureDetector(
+            onTap: () =>
+                AppState.delegate!.parseRoute(Uri.parse('/myWinnings')),
+            child: RewardRedeemWidget(
+              m: userservice,
+              minWithdrawPrize: minWithdrawPrize,
+              isWinView: true,
+            ),
+          );
+        },
+      ),
     );
   }
 }

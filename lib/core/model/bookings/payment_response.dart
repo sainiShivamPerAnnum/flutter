@@ -11,11 +11,13 @@ class PricingResponse {
   final num price;
   final num gst;
   final num totalPrice;
+  final num coinBalanceUse;
 
   const PricingResponse({
     required this.price,
     required this.gst,
     required this.totalPrice,
+    required this.coinBalanceUse,
   });
 
   factory PricingResponse.fromJson(Map<String, dynamic> json) =>

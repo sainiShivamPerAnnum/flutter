@@ -155,7 +155,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                                 .colour(Colors.white),
                           ),
                           TextSpan(
-                            text: '₹${model.referralAmount}',
+                            text: '${model.referralAmount} coins',
                             style: TextStyles.rajdhaniB.title1
                                 .colour(const Color(0xFFFFD979)),
                           ),
@@ -284,7 +284,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                                 style: TextStyles.rajdhaniSB.body2
                                     .colour(Colors.white)),
                             TextSpan(
-                                text: '₹${model.totalReferralWon}',
+                                text: '${model.totalReferralWon} coins',
                                 style: TextStyles.rajdhaniB.body2
                                     .colour(const Color(0xFFFFD979))),
                             TextSpan(

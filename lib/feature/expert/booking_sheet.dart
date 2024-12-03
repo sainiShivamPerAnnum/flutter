@@ -1,9 +1,12 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/bookings/new_booking.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/expert/bloc/booking_bloc.dart';
 import 'package:felloapp/feature/expert/payment_sheet.dart';
 import 'package:felloapp/feature/expert/polling_sheet.dart';
+import 'package:felloapp/feature/expert/widgets/custom_switch.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -12,6 +15,7 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 class BookCallSheetView extends StatelessWidget {
   final String advisorID;
@@ -129,7 +133,7 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
               state.isFree,
             );
           } else if (state is PricingData) {
-            return _buildPaymentSummary(context, state);
+            return _buildPaymentSummary(context, state, widget.advisorId);
           } else {
             return NewErrorPage(
               onTryAgain: () {
@@ -360,6 +364,7 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                         context.read<BookingBloc>().add(event);
                       } else if (state.isFree) {
                         final event = SubmitPaymentRequest(
+                          reddem: false,
                           advisorId: widget.advisorId,
                           amount: 0,
                           fromTime: state.selectedTime!,
@@ -529,7 +534,11 @@ class TimeButton extends StatelessWidget {
   }
 }
 
-Widget _buildPaymentSummary(BuildContext context, PricingData state) {
+Widget _buildPaymentSummary(
+  BuildContext context,
+  PricingData state,
+  String advisorId,
+) {
   return Column(
     mainAxisSize: MainAxisSize.min,
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -624,7 +633,6 @@ Widget _buildPaymentSummary(BuildContext context, PricingData state) {
         ),
       ),
       Container(
-        padding: EdgeInsets.all(SizeConfig.padding18),
         margin: EdgeInsets.only(
           left: SizeConfig.padding18,
           right: SizeConfig.padding18,
@@ -636,15 +644,65 @@ Widget _buildPaymentSummary(BuildContext context, PricingData state) {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildSummaryRow('Call Duration', '${state.duration} Mins'),
-            _buildDottedDivider(),
-            _buildSummaryRow('Price', '₹${state.price}'),
-            _buildSummaryRow('GST (18%)', '₹${state.gst}'),
-            const Divider(color: UiConstants.greyVarient),
-            _buildSummaryRow(
-              'Net Payable',
-              '₹${state.totalPayable}',
-              isBold: true,
+            PropertyChangeConsumer<UserService, UserServiceProperties>(
+              properties: const [UserServiceProperties.myUserFund],
+              builder: (context, m, property) {
+                final minWithdrawPrize = m?.baseUser!.minRedemptionAmt;
+                bool isEnabled =
+                    (m?.userFundWallet?.unclaimedBalance.toInt() ?? 0) >=
+                        (minWithdrawPrize ?? 200);
+                return isEnabled
+                    ? _buildCoinsRow(
+                        isLoading: state.isApplyingReedem,
+                        value: state.reedem,
+                        onChanged: (p0) {
+                          context.read<BookingBloc>().add(
+                                SelectReedem(p0, state.duration, advisorId),
+                              );
+                        },
+                      )
+                    : const SizedBox.shrink();
+              },
+            ),
+            Padding(
+              padding: EdgeInsets.all(SizeConfig.padding18),
+              child: Column(
+                children: [
+                  _buildSummaryRow('Call Duration', '${state.duration} Mins'),
+                  _buildDottedDivider(),
+                  _buildSummaryRow('Price', '₹${state.price}'),
+                  _buildDottedDivider(),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    transitionBuilder: (child, animation) => FadeTransition(
+                      opacity: animation,
+                      child: SizeTransition(
+                        sizeFactor: animation,
+                        child: child,
+                      ),
+                    ),
+                    child: state.reedem
+                        ? Column(
+                            children: [
+                              _buildSummaryRow(
+                                'Reward Points',
+                                '-${state.coinBalanceUse}',
+                                textColor: UiConstants.teal3,
+                              ),
+                              _buildDottedDivider(),
+                            ],
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+                  _buildSummaryRow('GST (18%)', '₹${state.gst}'),
+                  _buildDottedDivider(),
+                  _buildSummaryRow(
+                    'Net Payable',
+                    '₹${state.totalPayable}',
+                    isBold: true,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -663,6 +721,7 @@ Widget _buildPaymentSummary(BuildContext context, PricingData state) {
                 isBarrierDismissible: false,
                 addToScreenStack: false,
                 content: PaymentSheet(
+                  isCoinBalance: state.reedem,
                   advisorID: state.advisorId,
                   amount: state.totalPayable,
                   fromTime: state.time,
@@ -694,7 +753,65 @@ Widget _buildPaymentSummary(BuildContext context, PricingData state) {
   );
 }
 
-Widget _buildSummaryRow(String label, String value, {bool isBold = false}) {
+Widget _buildCoinsRow({
+  bool isLoading = false,
+  bool isBold = false,
+  bool value = false,
+  Function(bool)? onChanged,
+}) {
+  return Container(
+    decoration: BoxDecoration(
+      color: UiConstants.kTextColor.withOpacity(.1),
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(SizeConfig.roundness12),
+        topRight: Radius.circular(SizeConfig.roundness12),
+      ),
+    ),
+    padding: EdgeInsets.symmetric(
+      vertical: SizeConfig.padding12,
+      horizontal: SizeConfig.padding20,
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'Reward Points',
+          style: isBold
+              ? TextStyles.sourceSansSB.body2.colour(UiConstants.textGray70)
+              : TextStyles.sourceSans.body3.colour(UiConstants.textGray70),
+        ),
+        Row(
+          children: [
+            PropertyChangeConsumer<UserService, UserServiceProperties>(
+              properties: const [UserServiceProperties.myUserFund],
+              builder: (context, m, property) {
+                return Text(
+                  "${m?.userFundWallet?.unclaimedBalance.toInt() ?? '-'} coins",
+                  style: TextStyles.sourceSans.body4,
+                );
+              },
+            ),
+            SizedBox(
+              width: SizeConfig.padding8,
+            ),
+            CustomSwitchNew(
+              isLoading: isLoading,
+              initialValue: value,
+              onChanged: onChanged,
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildSummaryRow(
+  String label,
+  String value, {
+  bool isBold = false,
+  Color textColor = UiConstants.kTextColor,
+}) {
   return Padding(
     padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
     child: Row(
@@ -703,14 +820,26 @@ Widget _buildSummaryRow(String label, String value, {bool isBold = false}) {
         Text(
           label,
           style: isBold
-              ? TextStyles.sourceSansSB.body2.colour(UiConstants.textGray70)
-              : TextStyles.sourceSans.body3.colour(UiConstants.textGray70),
+              ? TextStyles.sourceSansSB.body2.colour(
+                  UiConstants.textGray70,
+                )
+              : TextStyles.sourceSans.body3.colour(
+                  UiConstants.textGray70,
+                ),
         ),
-        Text(
-          value,
-          style: isBold
-              ? TextStyles.sourceSansSB.body2
-              : TextStyles.sourceSans.body3,
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          transitionBuilder: (child, animation) => FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+          child: Text(
+            value,
+            key: ValueKey(value),
+            style: isBold
+                ? TextStyles.sourceSansSB.body2.colour(textColor)
+                : TextStyles.sourceSans.body3.colour(textColor),
+          ),
         ),
       ],
     ),
@@ -734,25 +863,25 @@ Widget drawDottedLine({required int lenghtOfStripes}) {
 
 Widget _buildDottedDivider() {
   return SizedBox(
-    height: 10, // Adjust the height as needed
+    height: 10,
     child: CustomPaint(
-      painter: DottedLinePainter(
-        gap: 5.0, // Adjust the gap between dots
-        radius: 2.0, // Adjust the size of the dots
-        color: UiConstants.greyVarient, // Adjust the color as needed
+      painter: DottedDashLinePainter(
+        color: UiConstants.kTextColor,
       ),
       child: Container(),
     ),
   );
 }
 
-class DottedLinePainter extends CustomPainter {
-  final double gap;
+class DottedDashLinePainter extends CustomPainter {
+  final double dashLength;
+  final double gapLength;
   final double radius;
   final Color color;
 
-  DottedLinePainter({
-    this.gap = 5.0,
+  DottedDashLinePainter({
+    this.dashLength = 2.0,
+    this.gapLength = 3.0,
     this.radius = 2.0,
     this.color = Colors.white,
   });
@@ -765,8 +894,12 @@ class DottedLinePainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     while (startX < size.width) {
-      canvas.drawCircle(Offset(startX, size.height / 2), radius, paint);
-      startX += 2 * radius + gap;
+      canvas.drawLine(
+        Offset(startX, size.height / 2),
+        Offset(startX + dashLength, size.height / 2),
+        paint,
+      );
+      startX += dashLength + gapLength;
     }
   }
 

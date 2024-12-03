@@ -519,5 +519,6 @@ class Assets {
   static const String image = "assets/svg/image.svg";
   static const String no_shorts = "assets/svg/no_shorts.svg";
   static const String no_live = "assets/svg/no_live.svg";
-   static const String error = "assets/svg/error.svg";
+  static const String error = "assets/svg/error.svg";
+  static const String noRewardsTxn = "assets/svg/no_rewards_txn.svg";
 }

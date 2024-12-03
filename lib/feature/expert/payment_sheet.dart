@@ -5,6 +5,7 @@ import 'package:felloapp/feature/expert/polling_sheet.dart';
 import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
@@ -18,12 +19,14 @@ class PaymentSheet extends StatelessWidget {
   final num amount;
   final String fromTime;
   final num duration;
+  final bool isCoinBalance;
   const PaymentSheet({
     required this.advisorID,
     required this.advisorName,
     required this.amount,
     required this.fromTime,
     required this.duration,
+    required this.isCoinBalance,
     super.key,
   });
 
@@ -34,13 +37,26 @@ class PaymentSheet extends StatelessWidget {
         locator(),
         locator(),
         locator(),
-      )..add(const LoadPSPApps()),
+      )..add(
+          amount == 0
+              ? SubmitPaymentRequest(
+                  reddem: isCoinBalance,
+                  advisorId: advisorID,
+                  amount: amount,
+                  fromTime: fromTime,
+                  duration: duration,
+                  appuse: null,
+                  isFree: false,
+                )
+              : const LoadPSPApps(),
+        ),
       child: _BookingMandatePage(
         advisorID: advisorID,
         amount: amount,
         fromTime: fromTime,
         duration: duration,
         advisorName: advisorName,
+        isCoinBalance: isCoinBalance,
       ),
     );
   }
@@ -53,12 +69,14 @@ class _BookingMandatePage extends StatelessWidget {
     required this.amount,
     required this.fromTime,
     required this.duration,
+    required this.isCoinBalance,
   });
   final String advisorID;
   final String advisorName;
   final num amount;
   final String fromTime;
   final num duration;
+  final bool isCoinBalance;
 
   @override
   Widget build(BuildContext context) {
@@ -143,6 +161,7 @@ class _BookingMandatePage extends StatelessWidget {
                     onSelectApplication: (meta) {
                       if (state case ListedPSPApps()) {
                         final event = SubmitPaymentRequest(
+                          reddem: isCoinBalance,
                           advisorId: advisorID,
                           amount: amount,
                           fromTime: fromTime,
@@ -159,7 +178,7 @@ class _BookingMandatePage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [FullScreenLoader()],
                 ),
-              SubmittingPaymentFailed() => Container(),
+              SubmittingPaymentFailed() => const NewErrorPage(),
               SubmittedPayment() => Container()
             };
           },
@@ -207,10 +226,13 @@ class DismissDailog extends StatelessWidget {
           const Divider(
             color: UiConstants.greyVarient,
           ),
-          SizedBox(height: SizeConfig.padding22,),
+          SizedBox(
+            height: SizeConfig.padding22,
+          ),
           AppImage(Assets.exit_logo, height: SizeConfig.padding88),
-
-          SizedBox(height: SizeConfig.padding22,),
+          SizedBox(
+            height: SizeConfig.padding22,
+          ),
           Text(
             'Confirm Payment Cancellation',
             style: TextStyles.sourceSansSB.body1,

@@ -131,6 +131,7 @@ const String tellUsAboutYourselfViewPath = "/tellUsAboutYourself";
 const String meettingChatViewPath = "/meetingChat";
 const String shortsViewPath = "/shorts-internal";
 const String viewAllVideosViewPath = "/events";
+const String rewardsHistoryViewPath = "/rewards-history";
 
 enum Pages {
   Splash,
@@ -259,6 +260,7 @@ enum Pages {
   meettingChat,
   Shorts,
   AllEvents,
+  RewardsHistory,
 }
 
 class PageConfiguration {
@@ -1035,4 +1037,9 @@ PageConfiguration AllShortsPageConfig = PageConfiguration(
   uiPage: Pages.AllShorts,
   name: "All Shorts",
 );
-
+PageConfiguration RewardsHistoryPageConfig = PageConfiguration(
+  key: 'rewardsHistoryViewPath',
+  path: rewardsHistoryViewPath,
+  uiPage: Pages.RewardsHistory,
+  name: "All Rewards History",
+);

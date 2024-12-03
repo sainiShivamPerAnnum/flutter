@@ -110,16 +110,19 @@ class FundBreakdownDialog extends StatelessWidget {
                   ),
                   BreakdownInfoTile(
                     title: "Current Rewards",
-                    value: BaseUtil.formatIndianRupees(num.parse(
-                        BaseUtil.digitPrecision(portfolio.rewards, 2, false)
-                            .toString())),
+                    value: num.parse(BaseUtil.digitPrecision(
+                                    portfolio.rewards, 2, false)
+                                .toString())
+                            .toString() +
+                        ' coins',
                   ),
                   BreakdownInfoTile(
                     title: "Total Rewards",
-                    value: BaseUtil.formatIndianRupees(num.parse(
-                        BaseUtil.digitPrecision(
-                                portfolio.lifeTimeRewards, 2, false)
-                            .toString())),
+                    value: num.parse(BaseUtil.digitPrecision(
+                                    portfolio.lifeTimeRewards, 2, false)
+                                .toString())
+                            .toString() +
+                        ' coins',
                   ),
                 ]),
               )

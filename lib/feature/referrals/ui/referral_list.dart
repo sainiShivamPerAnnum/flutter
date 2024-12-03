@@ -97,7 +97,7 @@ class _ReferralListState extends State<ReferralList> {
                             .colour(Colors.white.withOpacity(0.8)),
                       ),
                       SizedBox(height: SizeConfig.padding12),
-                      Text('Earn over ₹1Lakh',
+                      Text('Earn over 1 Lakh coins',
                           textAlign: TextAlign.center,
                           style: TextStyles.rajdhaniSB.body0
                               .colour(Colors.white.withOpacity(0.8))),
@@ -270,7 +270,7 @@ class _ReferralListViewState extends State<ReferralListView> {
               SizedBox(
                 width: SizeConfig.padding6,
               ),
-              'Remind your friends. Don’t miss out on ₹1Lakh!'.beautify(
+              'Remind your friends. Don’t miss out on 1Lakh coins!'.beautify(
                 boldStyle: TextStyles.sourceSansB.body3.colour(
                   Colors.white.withOpacity(0.5),
                 ),
@@ -490,7 +490,7 @@ class _ReferralListViewState extends State<ReferralListView> {
                     ),
                     Text(
                       filteredReferrals[i].revampedInfo?.subtitle ??
-                          'You earned ₹500',
+                          'You earned 500 coins',
                       style: TextStyles.sourceSans.body3.colour(Colors.white),
                     )
                   ],

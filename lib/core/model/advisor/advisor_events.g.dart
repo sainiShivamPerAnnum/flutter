@@ -28,6 +28,7 @@ AdvisorEvents _$AdvisorEventsFromJson(Map<String, dynamic> json) =>
           const [],
       totalLiveCount: json['totalLiveCount'] as int? ?? 0,
       currentLiveCount: json['currentLiveCount'] as int? ?? 0,
+      advisorName: json['advisorName'] as String? ?? '',
       coverImage: json['coverImage'] as String?,
     );
 
@@ -35,6 +36,7 @@ Map<String, dynamic> _$AdvisorEventsToJson(AdvisorEvents instance) =>
     <String, dynamic>{
       'id': instance.id,
       'advisorId': instance.advisorId,
+      'advisorName': instance.advisorName,
       'type': instance.type,
       'topic': instance.topic,
       'description': instance.description,

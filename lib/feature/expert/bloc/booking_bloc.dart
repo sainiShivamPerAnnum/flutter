@@ -42,6 +42,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     on<GetPricing>(_getPricing);
     on<SelectDuration>(_onSelectDuration);
     on<EditBooking>(_editBooking);
+    on<SelectReedem>(_useCoins);
   }
   FutureOr<void> _onLoadBookingDates(
     LoadBookingDates event,
@@ -129,6 +130,50 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     }
   }
 
+  Future<void> _useCoins(
+    SelectReedem event,
+    Emitter<BookingState> emitter,
+  ) async {
+    emitter(
+      (state as PricingData).copyWith(
+        isApplyingReedem: true,
+      ),
+    );
+    if (state is PricingData) {
+      final response = await _expertsRepository.getPricing(
+        advisorId: event.advisorId,
+        duration: event.duration.toInt(),
+        isCoinBalance: event.reddem,
+      );
+
+      if (response.isSuccess()) {
+        emitter(
+          (state as PricingData).copyWith(
+            reedem: event.reddem,
+            price: response.model?.price ?? 0,
+            duration: event.duration,
+            gst: response.model?.gst ?? 0,
+            totalPayable: response.model?.totalPrice ?? 0,
+            isApplyingReedem: false,
+            coinBalanceUse: response.model?.coinBalanceUse ?? 0,
+          ),
+        );
+      } else {
+        emitter(
+          (state as PricingData).copyWith(
+            reedem: false,
+            isApplyingReedem: false,
+          ),
+        );
+        _logger.d('Failed to submit booking');
+        BaseUtil.showNegativeAlert(
+          "Unable to use coins",
+          'Please try again later.',
+        );
+      }
+    }
+  }
+
   void _onSelectTime(SelectTime event, Emitter<BookingState> emitter) {
     if (state is BookingsLoaded) {
       emitter(
@@ -155,6 +200,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     final response = await _expertsRepository.getPricing(
       advisorId: event.advisorId,
       duration: event.duration,
+      isCoinBalance: false,
     );
 
     if (response.isSuccess()) {
@@ -168,6 +214,8 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           duration: event.duration,
           gst: response.model?.gst ?? 0,
           totalPayable: response.model?.totalPrice ?? 0,
+          reedem: false,
+          coinBalanceUse: response.model?.coinBalanceUse ?? 0,
         ),
       );
     } else {
@@ -235,11 +283,12 @@ class PaymentBloc extends Bloc<BookingEvent, PaymentState> {
   ) async {
     emitter(const SubmittingPayment());
     final response = await _expertsRepository.submitBooking(
+      isCoinBalance: event.reddem,
       advisorId: event.advisorId,
       amount: event.amount,
       fromTime: event.fromTime,
       duration: event.duration,
-      appuse: event.appuse?.upiApplication.appName ?? '',
+      appuse: event.appuse?.upiApplication.appName ?? 'PHONE_PE',
       isFree: event.isFree,
     );
     final data = response.model?.data;
@@ -261,6 +310,8 @@ class PaymentBloc extends Bloc<BookingEvent, PaymentState> {
           },
         );
       }
+      emitter(SubmittedPayment(data: response.model!));
+    } else if (response.isSuccess()) {
       emitter(SubmittedPayment(data: response.model!));
     } else {
       emitter(SubmittingPaymentFailed(response.errorMessage!));
@@ -363,12 +414,13 @@ class PaymentBloc extends Bloc<BookingEvent, PaymentState> {
 
           // debug assertion to avoid this in production.
           // assert(() {
-            if (element.upiApplication.appName == "PhonePe Simulator" &&
-                AppConfig.getValue<String>(
-                  AppConfigKey.enabled_psp_apps_booking,
-                ).contains('E') && FlavorConfig.isDevelopment()) {
-              appMetaList.add(element);
-            }
+          if (element.upiApplication.appName == "PhonePe Simulator" &&
+              AppConfig.getValue<String>(
+                AppConfigKey.enabled_psp_apps_booking,
+              ).contains('E') &&
+              FlavorConfig.isDevelopment()) {
+            appMetaList.add(element);
+          }
           //   return true;
           // }());
 
