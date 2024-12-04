@@ -11,7 +11,6 @@ class ConsultationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: SizeConfig.padding14),
         GestureDetector(
           onTap: () {},
           child: const Row(

@@ -86,212 +86,203 @@ class PastScheduleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: width,
+      decoration: BoxDecoration(
+        color: UiConstants.greyVarient,
+        borderRadius: BorderRadius.all(
+          Radius.circular(SizeConfig.roundness8),
+        ),
+      ),
+      padding: EdgeInsets.only(
+        left: SizeConfig.padding16,
+        top: SizeConfig.padding16,
+        right: SizeConfig.padding16,
+      ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: UiConstants.greyVarient,
-              borderRadius: BorderRadius.all(
-                Radius.circular(SizeConfig.roundness8),
-              ),
-            ),
-            padding: EdgeInsets.only(
-              left: SizeConfig.padding16,
-              top: SizeConfig.padding16,
-              right: SizeConfig.padding16,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+          GestureDetector(
+            onTap: () {
+              AppState.delegate!.appState.currentAction = PageAction(
+                page: ExpertDetailsPageConfig,
+                state: PageState.addWidget,
+                widget: ExpertsDetailsView(advisorID: booking.advisorId),
+              );
+            },
+            child: Row(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    AppState.delegate!.appState.currentAction = PageAction(
-                      page: ExpertDetailsPageConfig,
-                      state: PageState.addWidget,
-                      widget: ExpertsDetailsView(advisorID: booking.advisorId),
-                    );
-                  },
-                  child: Row(
-                    children: [
-                      Row(
-                        children: [
-                          CircleAvatar(
-                            radius: SizeConfig.padding16,
-                            backgroundImage: NetworkImage(
-                              booking.image,
-                            ),
-                          ),
-                          SizedBox(width: SizeConfig.padding10),
-                          Text(
-                            booking.advisorName,
-                            style: TextStyles.sourceSansSB.body1,
-                          ),
-                        ],
-                      ),
-                      SizedBox(width: SizeConfig.padding10),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        color: UiConstants.kTextColor,
-                        size: SizeConfig.body4,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: SizeConfig.padding16),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Scheduled on',
-                          style: TextStyles.sourceSans.body4.colour(
-                            UiConstants.kTextColor5,
-                          ),
-                        ),
-                        SizedBox(height: SizeConfig.padding4),
-                        Text(
-                          _formatDate(booking.scheduledOn),
-                          style: TextStyles.sourceSansSB.body2.colour(
-                            UiConstants.kTextColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          'Duration',
-                          style: TextStyles.sourceSans.body4.colour(
-                            UiConstants.kTextColor5,
-                          ),
-                        ),
-                        SizedBox(height: SizeConfig.padding4),
-                        Text(
-                          booking.duration, // Display the duration
-                          style: TextStyles.sourceSansSB.body2.colour(
-                            UiConstants.kTextColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(height: SizeConfig.padding16),
-                const Divider(
-                  color: UiConstants.grey6,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    if (booking.eventId != null && booking.eventId != '')
-                      TextButton(
-                        onPressed: () async {
-                          final preloadBloc =
-                              BlocProvider.of<PreloadBloc>(context);
-                          final videoData = await locator<SaveRepo>()
-                              .getRecordingByVideoId(videoId: booking.eventId!);
-                          if (videoData.isSuccess()) {
-                            if (videoData.model!.url != "") {
-                              final switchCompleter = Completer<void>();
-                              preloadBloc.add(
-                                PreloadEvent.initializeLiveStream(
-                                  videoData.model!,
-                                  completer: switchCompleter,
-                                ),
-                              );
-                              await switchCompleter.future;
-                              AppState.delegate!.appState.currentAction =
-                                  PageAction(
-                                page: ShortsPageConfig,
-                                state: PageState.addWidget,
-                                widget: BaseScaffold(
-                                  appBar: FAppBar(
-                                    backgroundColor: Colors.transparent,
-                                    centerTitle: true,
-                                    titleWidget: Text(
-                                      videoData.model!.title,
-                                      style: TextStyles.rajdhaniSB.body1,
-                                    ),
-                                    leading: const BackButton(
-                                      color: Colors.white,
-                                    ),
-                                    showAvatar: false,
-                                    showCoinBar: false,
-                                  ),
-                                  body: WillPopScope(
-                                    onWillPop: () async {
-                                      await AppState.backButtonDispatcher!
-                                          .didPopRoute();
-                                      return false;
-                                    },
-                                    child: const ShortsVideoPage(),
-                                  ),
-                                ),
-                              );
-                            } else {
-                              BaseUtil.showNegativeAlert(
-                                'We are still processing recording!',
-                                'Try Again later',
-                              );
-                            }
-                          } else {
-                            BaseUtil.showNegativeAlert(
-                              'Unable to fetch recording',
-                              'Try Again later',
-                            );
-                          }
-                          locator<AnalyticsService>().track(
-                            eventName: AnalyticsEvents.pastCalls,
-                            properties: {
-                              "bookingId": booking.eventId,
-                            },
-                          );
-                        },
-                        child: Text(
-                          'View Recording',
-                          style: TextStyles.sourceSansSB.body4,
-                        ),
+                    CircleAvatar(
+                      radius: SizeConfig.padding16,
+                      backgroundImage: NetworkImage(
+                        booking.image,
                       ),
+                    ),
                     SizedBox(width: SizeConfig.padding10),
-                    GestureDetector(
-                      onTap: () {
-                        AppState.delegate!.appState.currentAction = PageAction(
-                          page: ExpertDetailsPageConfig,
-                          state: PageState.addWidget,
-                          widget:
-                              ExpertsDetailsView(advisorID: booking.advisorId),
-                        );
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding8,
-                          vertical: SizeConfig.padding6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: UiConstants.kTextColor,
-                          borderRadius: BorderRadius.circular(
-                            SizeConfig.roundness5,
-                          ),
-                        ),
-                        child: Text(
-                          'Book Again',
-                          style: TextStyles.sourceSansSB.body4
-                              .colour(UiConstants.kTextColor4),
-                        ),
-                      ),
+                    Text(
+                      booking.advisorName,
+                      style: TextStyles.sourceSansSB.body1,
                     ),
                   ],
                 ),
-                SizedBox(height: SizeConfig.padding16),
+                SizedBox(width: SizeConfig.padding10),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: UiConstants.kTextColor,
+                  size: SizeConfig.body4,
+                ),
               ],
             ),
           ),
+          SizedBox(height: SizeConfig.padding16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Scheduled on',
+                    style: TextStyles.sourceSans.body4.colour(
+                      UiConstants.kTextColor5,
+                    ),
+                  ),
+                  SizedBox(height: SizeConfig.padding4),
+                  Text(
+                    _formatDate(booking.scheduledOn),
+                    style: TextStyles.sourceSansSB.body2.colour(
+                      UiConstants.kTextColor,
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Duration',
+                    style: TextStyles.sourceSans.body4.colour(
+                      UiConstants.kTextColor5,
+                    ),
+                  ),
+                  SizedBox(height: SizeConfig.padding4),
+                  Text(
+                    booking.duration, // Display the duration
+                    style: TextStyles.sourceSansSB.body2.colour(
+                      UiConstants.kTextColor,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: SizeConfig.padding16),
+          const Divider(
+            color: UiConstants.grey6,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              if (booking.eventId != null && booking.eventId != '')
+                TextButton(
+                  onPressed: () async {
+                    final preloadBloc = BlocProvider.of<PreloadBloc>(context);
+                    final videoData = await locator<SaveRepo>()
+                        .getRecordingByVideoId(videoId: booking.eventId!);
+                    if (videoData.isSuccess()) {
+                      if (videoData.model!.url != "") {
+                        final switchCompleter = Completer<void>();
+                        preloadBloc.add(
+                          PreloadEvent.initializeLiveStream(
+                            videoData.model!,
+                            completer: switchCompleter,
+                          ),
+                        );
+                        await switchCompleter.future;
+                        AppState.delegate!.appState.currentAction = PageAction(
+                          page: ShortsPageConfig,
+                          state: PageState.addWidget,
+                          widget: BaseScaffold(
+                            appBar: FAppBar(
+                              backgroundColor: Colors.transparent,
+                              centerTitle: true,
+                              titleWidget: Text(
+                                videoData.model!.title,
+                                style: TextStyles.rajdhaniSB.body1,
+                              ),
+                              leading: const BackButton(
+                                color: Colors.white,
+                              ),
+                              showAvatar: false,
+                              showCoinBar: false,
+                            ),
+                            body: WillPopScope(
+                              onWillPop: () async {
+                                await AppState.backButtonDispatcher!
+                                    .didPopRoute();
+                                return false;
+                              },
+                              child: const ShortsVideoPage(),
+                            ),
+                          ),
+                        );
+                      } else {
+                        BaseUtil.showNegativeAlert(
+                          'We are still processing recording!',
+                          'Try Again later',
+                        );
+                      }
+                    } else {
+                      BaseUtil.showNegativeAlert(
+                        'Unable to fetch recording',
+                        'Try Again later',
+                      );
+                    }
+                    locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.pastCalls,
+                      properties: {
+                        "bookingId": booking.eventId,
+                      },
+                    );
+                  },
+                  child: Text(
+                    'View Recording',
+                    style: TextStyles.sourceSansSB.body4,
+                  ),
+                ),
+              SizedBox(width: SizeConfig.padding10),
+              GestureDetector(
+                onTap: () {
+                  AppState.delegate!.appState.currentAction = PageAction(
+                    page: ExpertDetailsPageConfig,
+                    state: PageState.addWidget,
+                    widget: ExpertsDetailsView(advisorID: booking.advisorId),
+                  );
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding8,
+                    vertical: SizeConfig.padding6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: UiConstants.kTextColor,
+                    borderRadius: BorderRadius.circular(
+                      SizeConfig.roundness5,
+                    ),
+                  ),
+                  child: Text(
+                    'Book Again',
+                    style: TextStyles.sourceSansSB.body4
+                        .colour(UiConstants.kTextColor4),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: SizeConfig.padding16),
         ],
       ),
     );

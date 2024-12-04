@@ -597,7 +597,7 @@ class QuickLinks extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(
         top: SizeConfig.padding24,
-        bottom: SizeConfig.padding8,
+        bottom: SizeConfig.padding20,
         left: SizeConfig.padding20,
         right: SizeConfig.padding20,
       ),
