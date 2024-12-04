@@ -391,20 +391,24 @@ class _ReferralListViewState extends State<ReferralListView> {
           child: Column(
             children: [
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      filteredReferrals[i].userName,
-                      style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-                    ),
-                    Text(
-                      filteredReferrals[i].revampedInfo!.subtitle!,
-                      style: TextStyles.sourceSans.body3.colour(
-                        Colors.white.withOpacity(0.44),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        filteredReferrals[i].userName,
+                        style:
+                            TextStyles.sourceSansSB.body2.colour(Colors.white),
                       ),
-                    ),
-                  ],
+                      Text(
+                        filteredReferrals[i].revampedInfo!.subtitle!,
+                        maxLines: 2,
+                        style: TextStyles.sourceSans.body3.colour(
+                          Colors.white.withOpacity(0.44),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(
                   width: SizeConfig.padding76,

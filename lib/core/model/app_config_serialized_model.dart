@@ -85,11 +85,11 @@ class AppConfigV2Data {
   @JsonKey(name: "powerplayConfig")
   final PowerPlayConfig? powerPlayConfig;
 
-  final RevampedReferralsConfig? revampedReferralsConfig;
+  final RevampedReferralsConfig? revampedReferralsConfigV1;
 
   final QuizConfig? quizConfig;
 
-  final String appReferralMessage;
+  final String appReferralMessageV1;
 
   final bool paymentBriefView;
 
@@ -108,8 +108,8 @@ class AppConfigV2Data {
   final Map<String, dynamic> features;
 
   const AppConfigV2Data({
-    this.contactDetails="support@fello.in",
-    this.socialBtnTxt="Raise a Ticket",
+    this.contactDetails = "support@fello.in",
+    this.socialBtnTxt = "Raise a Ticket",
     this.loginAssetUrl = '',
     this.invalidateBefore = 0,
     this.autosaveActive = false,
@@ -137,9 +137,9 @@ class AppConfigV2Data {
     this.ticketsYoutubeVideos = const [],
     this.ticketsCategories,
     this.powerPlayConfig,
-    this.revampedReferralsConfig,
+    this.revampedReferralsConfigV1,
     this.quizConfig,
-    this.appReferralMessage = '',
+    this.appReferralMessageV1 = '',
     this.paymentBriefView = false,
     this.useNewUrlUserOps = false,
     this.overrideUrls,

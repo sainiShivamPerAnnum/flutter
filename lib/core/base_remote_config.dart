@@ -240,7 +240,7 @@ class BaseRemoteConfig {
   };
 
   static const Map<String, String> _APP_REFERRAL_MESSAGE = {
-    "appReferralMessage":
+    "appReferralMessageV1":
         "Earn upto *₹20* and *200* tokens from every scratch card. Highest referrer wins an iPad every month"
   };
 

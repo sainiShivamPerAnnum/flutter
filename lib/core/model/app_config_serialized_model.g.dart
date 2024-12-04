@@ -56,14 +56,14 @@ AppConfigV2Data _$AppConfigV2DataFromJson(Map<String, dynamic> json) =>
           ? null
           : PowerPlayConfig.fromJson(
               json['powerplayConfig'] as Map<String, dynamic>),
-      revampedReferralsConfig: json['revampedReferralsConfig'] == null
+      revampedReferralsConfigV1: json['revampedReferralsConfigV1'] == null
           ? null
           : RevampedReferralsConfig.fromJson(
-              json['revampedReferralsConfig'] as Map<String, dynamic>),
+              json['revampedReferralsConfigV1'] as Map<String, dynamic>),
       quizConfig: json['quizConfig'] == null
           ? null
           : QuizConfig.fromJson(json['quizConfig'] as Map<String, dynamic>),
-      appReferralMessage: json['appReferralMessage'] as String? ?? '',
+      appReferralMessageV1: json['appReferralMessageV1'] as String? ?? '',
       paymentBriefView: json['paymentBriefView'] as bool? ?? false,
       useNewUrlUserOps: json['useNewUrlUserOps'] as bool? ?? false,
       overrideUrls: json['overrideUrls'] == null

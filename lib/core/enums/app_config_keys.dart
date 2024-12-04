@@ -110,7 +110,7 @@ extension AppConfigKeys on String {
         return AppConfigKey.youtube_videos;
       case 'ticketsYoutubeVideos':
         return AppConfigKey.tickets_youtube_videos;
-      case "appReferralMessage":
+      case "appReferralMessageV1":
         return AppConfigKey.app_referral_message;
       case "enableTruecallerLogin":
         return AppConfigKey.enable_truecaller_login;
@@ -118,7 +118,7 @@ extension AppConfigKeys on String {
         return AppConfigKey.payment_brief_view;
       case "quizConfig":
         return AppConfigKey.quiz_config;
-      case "revampedReferralsConfig":
+      case "revampedReferralsConfigV1":
         return AppConfigKey.revamped_referrals_config;
       case 'useNewUrlUserOps':
         return AppConfigKey.useNewUrlUserOps;

@@ -171,7 +171,7 @@ class ApiPath {
 
   static String getReferralCode(String? uid) => "/user/referral/$uid";
 
-  static String getReferralHistory(String? uid) => "/referrals/$uid";
+  static String getReferralHistory(String? uid) => "/v1/referrals/$uid";
 
   //Journey
   static const kJourney = "/journey";
