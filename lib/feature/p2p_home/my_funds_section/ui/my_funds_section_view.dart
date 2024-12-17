@@ -4,7 +4,6 @@ import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section
 import 'package:felloapp/feature/p2p_home/my_funds_section/ui/widgets/sip_transaction_card.dart';
 import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/bloc_pagination/bloc_pagination.dart';
 import 'package:felloapp/util/locator.dart';
@@ -15,7 +14,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/service/notifier_services/user_service.dart';
 import '../../home/widgets/no_transaction_widget.dart';
-import '../../ui/shared/footer.dart';
 import 'widgets/widgets.dart';
 
 class MyFundSection extends StatefulWidget {
@@ -153,7 +151,7 @@ class _MyFundSectionState extends State<MyFundSection> {
                   )
                 ],
               ),
-              if (fundsBloc.state.entries.isNotEmpty) const Footer(),
+              // if (fundsBloc.state.entries.isNotEmpty) const Footer(),
             ],
           );
         },

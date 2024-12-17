@@ -49,7 +49,13 @@ class FundBreakdownDialog extends StatelessWidget {
                 title: Text("Invested Balance",
                     style: TextStyles.rajdhaniSB.body1),
                 trailing: Text(
-                  "₹ ${BaseUtil.formatIndianRupees(num.parse(BaseUtil.digitPrecision(portfolio.absolute.principle, 2, false).toString()))}",
+                  BaseUtil.formatIndianRupees(
+                    num.parse(
+                      BaseUtil.digitPrecision(
+                              portfolio.absolute.principle, 2, false)
+                          .toString(),
+                    ),
+                  ),
                   style: TextStyles.sourceSansB.body1,
                 ),
               ),
@@ -113,6 +119,7 @@ class FundBreakdownDialog extends StatelessWidget {
                     value: num.parse(BaseUtil.digitPrecision(
                                     portfolio.rewards, 2, false)
                                 .toString())
+                            .toInt()
                             .toString() +
                         ' coins',
                   ),
@@ -121,6 +128,7 @@ class FundBreakdownDialog extends StatelessWidget {
                     value: num.parse(BaseUtil.digitPrecision(
                                     portfolio.lifeTimeRewards, 2, false)
                                 .toString())
+                            .toInt()
                             .toString() +
                         ' coins',
                   ),

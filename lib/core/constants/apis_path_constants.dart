@@ -265,4 +265,5 @@ class ApiPath {
   static const String felloBadges = "/super-fello";
 
   static const String badgesLeaderBoard = "/super-fello/leaderboard";
+  static const String rpsPath = "/withdrawal/rps";
 }

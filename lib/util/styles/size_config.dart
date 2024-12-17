@@ -240,6 +240,7 @@ class SizeConfig {
 
   static double get padding200 => screenWidth! * 0.48;
 
+  static double get padding232 => screenWidth! * 0.54;
   static double get padding252 => screenWidth! * 0.579;
 
   static double get padding275 => screenWidth! * 0.73;

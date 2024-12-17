@@ -24,6 +24,7 @@ import 'package:felloapp/core/repository/power_play_repo.dart';
 import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/report_repo.dart';
+import 'package:felloapp/core/repository/rps_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
 import 'package:felloapp/core/repository/sip_repo.dart';
@@ -233,6 +234,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(PowerPlayRepository.new);
   locator.registerLazySingleton(ClientCommsRepo.new);
   locator.registerLazySingleton(ReportRepository.new);
+  locator.registerLazySingleton(RpsRepository.new);
   locator.registerLazySingleton(() => FcmHandlerV2(locator()));
   locator.registerLazySingleton<StoriesRepository>(
     () => StoriesRepository(locator()),

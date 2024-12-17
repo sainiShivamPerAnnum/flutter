@@ -71,7 +71,8 @@ class AppConfigV2Data {
 
   @JsonKey(name: "p2p_v2", fromJson: _convertP2PV2)
   final Map<String, LendboxAssetConfiguration> lbV2;
-
+  final String rpsDisclaimer;
+  final List<Map<String, String>> rpsLearnMore;
   final List<SocialItems> socialLinks;
   final List<SocialVideo> socialVideos;
   final String contactDetails;
@@ -150,6 +151,9 @@ class AppConfigV2Data {
     this.features = const {},
     this.socialLinks = const [],
     this.socialVideos = const [],
+    this.rpsDisclaimer =
+        'This repayment schedule is estimated based on past performance of the loans mapped to you. Past performance is not a guarantee of future returns. Actual repayment amount received will depend on repayments made by the borrowers.',
+    this.rpsLearnMore = const [],
   });
 
   factory AppConfigV2Data.fromJson(Map<String, dynamic> json) =>

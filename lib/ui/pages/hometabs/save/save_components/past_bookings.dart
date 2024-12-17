@@ -41,7 +41,7 @@ class PastBookingsComponent extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: SizeConfig.padding20),
                     child: Container(
-                      height: SizeConfig.screenHeight! * 0.277,
+                      height: SizeConfig.padding232,
                       margin: EdgeInsets.only(
                         top: SizeConfig.padding10,
                       ),
@@ -94,10 +94,8 @@ class PastScheduleCard extends StatelessWidget {
           Radius.circular(SizeConfig.roundness8),
         ),
       ),
-      padding: EdgeInsets.only(
-        left: SizeConfig.padding16,
-        top: SizeConfig.padding16,
-        right: SizeConfig.padding16,
+      padding: EdgeInsets.all(
+        SizeConfig.padding16,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -282,7 +280,6 @@ class PastScheduleCard extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: SizeConfig.padding16),
         ],
       ),
     );

@@ -6,7 +6,7 @@ class Assets {
   const Assets._();
   static const String logoMaxSize = 'images/fello_logo.png';
   static const String logoWhite =
-      'https://ik.imagekit.io/9xfwtu0xm/fello_stories_logo.png';
+      'https://d11q4cti75qmcp.cloudfront.net/imagekit/fello_stories_logo.png';
   static const String logoShortform = 'assets/svg/fello-short-logo.svg';
 
   static const String bulb = 'assets/vectors/icons/bulb.svg';
@@ -447,7 +447,7 @@ class Assets {
 
   // super-fello.
   static const String superFelloStar =
-      'https://ik.imagekit.io/9xfwtu0xm/Badges/star.svg';
+      'https://d11q4cti75qmcp.cloudfront.net/imagekit/Badges/star.svg';
   static const String superFelloTitle =
       'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/super_fello_title.svg';
   static const String kycSecurity = "assets/images/kyc_security.png";
@@ -469,31 +469,31 @@ class Assets {
   static const String savingsAvatar = "assets/vectors/savings_avatar.svg";
   static const String paperPlane = "assets/svg/paper_plane.svg";
   static const String rewardsIntro =
-      "https://ik.imagekit.io/9xfwtu0xm/rewards/rewards.png";
+      "https://d11q4cti75qmcp.cloudfront.net/imagekit/rewards/rewards.png";
   static const String rewardsIntro1 =
-      "https://ik.imagekit.io/9xfwtu0xm/rewards/rewards_1.png";
+      "https://d11q4cti75qmcp.cloudfront.net/imagekit/rewards/rewards_1.png";
   static const String rewardsIntro2 =
-      "https://ik.imagekit.io/9xfwtu0xm/rewards/rewards_2.png";
+      "https://d11q4cti75qmcp.cloudfront.net/imagekit/rewards/rewards_2.png";
   static const String garbageBin = "assets/vectors/garbage-bin.svg";
   static const String sipIntroImage =
-      "https://ik.imagekit.io/9xfwtu0xm/sip/sip_intro.png?updatedAt=1706526977156";
+      "https://d11q4cti75qmcp.cloudfront.net/imagekit/sip/sip_intro.png";
   static const String sipBox = "assets/svg/sip_box.svg";
   static const String iphone = 'assets/svg/iphone.svg';
   static const String car = 'assets/svg/car.svg';
   static const String trip = 'assets/svg/trip.svg';
   static const String mandate_intro =
-      "https://ik.imagekit.io/9xfwtu0xm/sip/mandate_intro.png?updatedAt=1707312146215";
+      "https://d11q4cti75qmcp.cloudfront.net/imagekit/sip/mandate_intro.png";
 
   static const String sipError = 'assets/images/sip_error.png';
 
   static const String p2pHomeBanner =
-      'https://ik.imagekit.io/9xfwtu0xm/p2p_home_v2/lb_info.png';
+      'https://d11q4cti75qmcp.cloudfront.net/imagekit/p2p_home_v2/lb_info.png';
   static const String howFelloFloWorks =
       "https://d37gtxigg82zaw.cloudfront.net/flo-workflow.mp4";
 
   static const String p2pWallet = "assets/images/p2pWallet.png";
   static const String p2pNonInvest =
-      "https://ik.imagekit.io/9xfwtu0xm/p2p_home_v2/empty_flov2.png";
+      "https://d11q4cti75qmcp.cloudfront.net/imagekit/p2p_home_v2/empty_flov2.png";
 
   static const String home_bottom_nav = "assets/svg/home.svg";
 
@@ -504,7 +504,7 @@ class Assets {
   static const String support_bottom_nav = "assets/svg/support.svg";
   static const String shorts_bottom_nav = "assets/svg/shorts.svg";
   static const String calender =
-      "https://ik.imagekit.io/9xfwtu0xm/static/calender.png";
+      "https://d11q4cti75qmcp.cloudfront.net/imagekit/static/calender.png";
 
   static const String video_share = "assets/svg/share_video.svg";
   static const String book_call = "assets/svg/calender.svg";
@@ -521,4 +521,5 @@ class Assets {
   static const String no_live = "assets/svg/no_live.svg";
   static const String error = "assets/svg/error.svg";
   static const String noRewardsTxn = "assets/svg/no_rewards_txn.svg";
+  static const String rpsSvg = "assets/svg/rps.svg";
 }

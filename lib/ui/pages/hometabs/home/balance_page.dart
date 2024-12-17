@@ -2,7 +2,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
@@ -33,7 +32,7 @@ class FelloBalanceScreen extends StatelessWidget {
     final currentWinnings =
         locator<UserService>().userFundWallet?.unclaimedBalance ?? 0.0;
     if (currentWinnings >= (referralService.minWithdrawPrizeAmt ?? 200)) {
-      referralService.showConfirmDialog(PrizeClaimChoice.GOLD_CREDIT);
+      AppState.delegate!.parseRoute(Uri.parse("experts"));
     } else {
       BaseUtil.showNegativeAlert(
         "Not enough winnings",
@@ -606,7 +605,7 @@ class FelloBalanceScreen extends StatelessWidget {
   ) {
     switch (title) {
       case "Fello Flo":
-        return "₹${BaseUtil.digitPrecision(portfolio?.flo.principle ?? 0.0, 2)}";
+        return BaseUtil.formatIndianRupees(portfolio?.flo.principle ?? 0);
       case "Digital Gold":
         return "${BaseUtil.digitPrecision(wallet?.wAugTotal ?? 0, 4, false)}g";
       case "Fello Rewards":
@@ -627,7 +626,7 @@ class FelloBalanceScreen extends StatelessWidget {
       case "Digital Gold":
         return "${BaseUtil.digitPrecision(portfolio?.augmont.balance ?? 0, 2)}";
       case "Fello Rewards":
-        return "${wallet?.unclaimedBalance ?? 0}";
+        return "${wallet?.unclaimedBalance.toInt()}";
       default:
         return "-";
     }
