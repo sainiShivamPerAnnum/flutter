@@ -522,4 +522,10 @@ class Assets {
   static const String error = "assets/svg/error.svg";
   static const String noRewardsTxn = "assets/svg/no_rewards_txn.svg";
   static const String rpsSvg = "assets/svg/rps.svg";
+  static const String onbaording1 = "assets/images/onboarding_1.png";
+  static const String onbaording2 = "assets/images/onboarding_2.png";
+  static const String onbaording3 = "assets/images/onboarding_3.png";
+  static const String sebi_new = "assets/images/sebi.png";
+  static const String rbi = "assets/images/rbi.png";
+  static const String amfi = "assets/images/amfi.png";
 }

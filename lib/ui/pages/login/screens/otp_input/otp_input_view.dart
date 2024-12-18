@@ -57,11 +57,13 @@ class LoginOtpViewState extends State<LoginOtpView> {
         model.exit();
       },
       builder: (ctx, model, child) {
-        return ListView(
-          shrinkWrap: true,
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const LoginImage(),
-            SizedBox(height: SizeConfig.padding8),
+            SizedBox(height: SizeConfig.padding68),
+
             Align(
               alignment: Alignment.center,
               child: Text(

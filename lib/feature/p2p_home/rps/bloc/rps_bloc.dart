@@ -25,7 +25,7 @@ class RpsDetailsBloc extends Bloc<RPSEvent, RPSState> {
       'flexi',
     );
     emitter(
-      RPSDataState(fixedData: fixedData.model!, flexiData: flexiData.model),
+      RPSDataState(fixedData: fixedData.model, flexiData: flexiData.model),
     );
   }
 }

@@ -2,12 +2,8 @@ import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding_main/onboarding_main_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 class OnBoardingView extends StatefulWidget {
   const OnBoardingView({Key? key}) : super(key: key);
@@ -18,28 +14,23 @@ class OnBoardingView extends StatefulWidget {
 
 class _OnBoardingViewState extends State<OnBoardingView>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  AnimationController? controller;
-
-  static const _entryPoint = 0.26413942732900914;
-  static const _secondPoint = 0.5196233785377358;
-  static const _thirdPoint = 0.9370692990860865;
+  PageController? pageController;
+  double? pageValue;
 
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 8500),
-    );
-
-    Future.delayed(const Duration(seconds: 1)).then((value) {
-      controller!.animateTo(_entryPoint);
+    pageController = PageController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        pageValue = pageController?.page;
+      });
     });
   }
 
   @override
   void dispose() {
-    controller?.dispose();
+    pageController?.dispose();
     super.dispose();
   }
 
@@ -51,7 +42,14 @@ class _OnBoardingViewState extends State<OnBoardingView>
     super.build(context);
 
     return BaseView<OnboardingViewModel>(
-      onModelReady: (model) => model.init(),
+      onModelReady: (model) {
+        model.init();
+        pageController?.addListener(() {
+          if (pageController!.page != null && pageController!.page! >= 2.2) {
+            model.registerWalkthroughCompletion();
+          }
+        });
+      },
       builder: (context, model, child) {
         return Scaffold(
           backgroundColor: UiConstants.onboardingBackgroundColor,
@@ -60,176 +58,140 @@ class _OnBoardingViewState extends State<OnBoardingView>
               n.disallowIndicator();
               return false;
             },
-            child: GestureDetector(
-              onHorizontalDragEnd: (_) {
-                bool leftSwipe =
-                    model.dragStartPosition > model.dragUpdatePosition;
-                double swipeCount =
-                    (model.dragStartPosition - model.dragUpdatePosition).abs();
-                if (swipeCount >= 40) {
-                  if (leftSwipe) {
-                    if (model.currentPage == 2) {
-                      controller!.forward().then((value) {
-                        model.registerWalkthroughCompletion();
-                      });
-                      return;
-                    } else {
-                      model.pageController!.nextPage(
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.easeIn,
-                      );
-                    }
-                  } else {
-                    model.pageController!.previousPage(
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeIn,
-                    );
-                  }
-                }
-              },
-              onHorizontalDragStart: (details) {
-                model.dragStartPosition = details.globalPosition.dx;
-              },
-              onHorizontalDragUpdate: (details) {
-                model.dragUpdatePosition = details.globalPosition.dx;
-              },
-              child: Stack(
-                children: [
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Lottie.asset(
-                      Assets.onboarding,
-                      width: double.infinity,
-                      height: double.infinity,
-                      frameRate: FrameRate(60),
-                      controller: controller,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          height: SizeConfig.screenWidth!,
-                          width: SizeConfig.screenWidth!,
-                          margin: EdgeInsets.only(bottom: SizeConfig.padding32),
-                          child: PageView.builder(
-                            controller: model.pageController,
-                            onPageChanged: (val) {
-                              if (val > model.currentPage) {
-                                if (val == 2) {
-                                  controller!.animateTo(_thirdPoint);
-                                  model.indicatorPosition = 2;
-                                } else {
-                                  controller!.animateTo(_secondPoint);
-                                  model.indicatorPosition = 1;
-                                }
-                              } else {
-                                if (val == 0) {
-                                  controller!.animateTo(_entryPoint);
-                                  model.indicatorPosition = 0;
-                                } else if (val == 1) {
-                                  controller!
-                                      .animateBack(_secondPoint)
-                                      .then((_) => model.indicatorPosition = 1);
-                                } else {
-                                  controller!
-                                      .animateBack(_entryPoint)
-                                      .then((_) => model.indicatorPosition = 0);
-                                }
-                              }
-                              model.currentPage = val;
-                            },
-                            itemCount: 3,
-                            itemBuilder: (_, __) => const SizedBox.shrink(),
-                          ),
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: SizeConfig.padding70,
                         ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    bottom: SizeConfig.padding20,
-                    left: SizeConfig.padding24,
-                    right: SizeConfig.padding24,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: List.generate(
                             3,
                             (index) {
                               return Container(
-                                width: SizeConfig.padding8,
-                                height: SizeConfig.padding8,
+                                width: SizeConfig.padding22,
+                                height: SizeConfig.padding2,
                                 margin:
                                     const EdgeInsets.symmetric(horizontal: 3),
                                 decoration: BoxDecoration(
-                                  color: index == model.indicatorPosition
+                                  color: index <= model.indicatorPosition
                                       ? Colors.white
                                       : Colors.transparent,
-                                  border: Border.all(color: Colors.white),
-                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: index <= model.indicatorPosition
+                                        ? Colors.white
+                                        : UiConstants.greyVarient,
+                                  ),
+                                  shape: BoxShape.rectangle,
                                 ),
                               );
                             },
                           ),
                         ),
-                        _SignUpCTA(
-                          onTap: model.registerWalkthroughCompletion,
-                        )
-                      ],
-                    ),
+                      ),
+                      Expanded(
+                        child: PageView.builder(
+                          controller: pageController,
+                          physics: const BouncingScrollPhysics(),
+                          onPageChanged: (val) {
+                            if (val > 2) {
+                              model.registerWalkthroughCompletion();
+                            } else if (val > model.currentPage) {
+                              if (val == 2) {
+                                model.indicatorPosition = 2;
+                              } else {
+                                model.indicatorPosition = 1;
+                              }
+                            } else {
+                              if (val == 0) {
+                                model.indicatorPosition = 0;
+                              } else if (val == 1) {
+                                model.indicatorPosition = 1;
+                              } else {
+                                model.indicatorPosition = 0;
+                              }
+                            }
+                            model.currentPage = val;
+                          },
+                          itemCount: 4,
+                          itemBuilder: (_, __) {
+                            return AnimatedBuilder(
+                              animation: pageController!,
+                              builder: (context, child) {
+                                if (pageValue == null || __ == 3) {
+                                  return const SizedBox.shrink();
+                                }
+                                double scale = 1 -
+                                    (pageController!.page! - __).abs() * 0.1;
+                                return Transform.scale(
+                                  scale: scale,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        width: SizeConfig.padding325,
+                                        child: Text(
+                                          model.onboardingData![__].first,
+                                          style: TextStyles.sourceSansB.title3,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: SizeConfig.padding14,
+                                      ),
+                                      SizedBox(
+                                        width: SizeConfig.padding325,
+                                        child: Text(
+                                          model.onboardingData![__][1],
+                                          style: TextStyles.sourceSans.body2
+                                              .colour(
+                                            UiConstants.kTextColor5,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: SizeConfig.padding35,
+                                      ),
+                                      SizedBox(
+                                        width: SizeConfig.padding300,
+                                        child: AppImage(
+                                          model.onboardingData![__][2],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              child: const SizedBox.shrink(),
+                            );
+                          },
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _SignUpCTA(
+                            onTap: model.registerWalkthroughCompletion,
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding44,
+                      ),
+                    ],
                   ),
-                  Positioned(
-                    right: SizeConfig.padding16,
-                    top: MediaQuery.paddingOf(context).top,
-                    child: _SkipButton(
-                      onTap: () {
-                        if (model.currentPage == 2) {
-                          controller?.forward().then(
-                                (_) => model.registerWalkthroughCompletion(),
-                              );
-                        } else {
-                          model.pageController!.animateToPage(
-                            model.currentPage + 1,
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.easeIn,
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                  const CircularAnim()
-                ],
-              ),
+                ),
+                const CircularAnim(),
+              ],
             ),
           ),
         );
       },
-    );
-  }
-}
-
-class _SkipButton extends StatelessWidget {
-  const _SkipButton({
-    this.onTap,
-  });
-
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final locale = locator<S>();
-    return TextButton(
-      onPressed: onTap,
-      child: Text(
-        locale.obNext,
-        style: TextStyles.rajdhaniB.body1.setHeight(
-          1.3,
-        ),
-      ),
     );
   }
 }
@@ -243,40 +205,18 @@ class _SignUpCTA extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = locator<S>();
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.fromLTRB(
-          SizeConfig.padding16,
-          SizeConfig.padding10,
-          SizeConfig.padding10,
-          SizeConfig.padding10,
+    return ElevatedButton(
+      onPressed: onTap,
+      style: ElevatedButton.styleFrom(
+        minimumSize: Size(SizeConfig.padding325, SizeConfig.padding48),
+        backgroundColor: UiConstants.kTextColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(SizeConfig.roundness8),
         ),
-        decoration: BoxDecoration(
-          color: const Color(0xff0C0F10),
-          borderRadius: BorderRadius.circular(
-            SizeConfig.roundness24,
-          ),
-        ),
-        child: Row(
-          children: [
-            Text(
-              locale.signUp,
-              style: TextStyles.rajdhaniB.body1.setHeight(
-                1.3,
-              ),
-            ),
-            SizedBox(
-              width: SizeConfig.padding12,
-            ),
-            AppImage(
-              Assets.chevRonRightArrow,
-              height: SizeConfig.padding24,
-              color: Colors.white,
-            )
-          ],
-        ),
+      ),
+      child: Text(
+        'Get Started',
+        style: TextStyles.sourceSansSB.body3.colour(UiConstants.kTextColor4),
       ),
     );
   }
