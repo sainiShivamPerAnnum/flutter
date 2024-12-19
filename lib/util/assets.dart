@@ -528,4 +528,7 @@ class Assets {
   static const String sebi_new = "assets/images/sebi.png";
   static const String rbi = "assets/images/rbi.png";
   static const String amfi = "assets/images/amfi.png";
+  static const String tick = "assets/images/icons/tick.png";
+  static const String experts = "assets/images/experts.png";
+  static const String noSlots = "assets/lotties/no_slots.json";
 }

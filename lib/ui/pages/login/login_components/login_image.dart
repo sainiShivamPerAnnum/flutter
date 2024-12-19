@@ -9,12 +9,13 @@ class LoginImage extends StatelessWidget {
   const LoginImage({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final assetUrl = AppConfig.getValue(AppConfigKey.loginAssetUrl);
     return Container(
       margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
       width: SizeConfig.screenWidth,
-      child: AppConfig.getValue(AppConfigKey.loginAssetUrl) != null
+      child: assetUrl != null && assetUrl != ''
           ? AppImage(
-              AppConfig.getValue<String>(AppConfigKey.loginAssetUrl),
+              assetUrl,
               fit: BoxFit.fill,
             )
           : Container(
@@ -43,7 +44,7 @@ class LoginImage extends StatelessWidget {
                     height: SizeConfig.padding24,
                   ),
                   Text(
-                    'Welcome to fello',
+                    'Welcome To Fello',
                     style: TextStyles.sourceSansB.title3,
                   ),
                   SizedBox(

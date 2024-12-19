@@ -8,8 +8,10 @@ import 'package:felloapp/feature/expert/payment_sheet.dart';
 import 'package:felloapp/feature/expert/polling_sheet.dart';
 import 'package:felloapp/feature/expert/widgets/custom_switch.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -178,248 +180,377 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
             ? schedule!.slots![selectedDate]!.map((e) => e.fromTime).toList()
             : [];
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding20,
-          ).copyWith(
-            top: SizeConfig.padding12,
-          ),
-          child: Stack(
-            alignment: AlignmentDirectional.center,
+    return dates.isEmpty
+        ? Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Book a call',
-                    style: TextStyles.sourceSansSB.body1,
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      AppState.backButtonDispatcher!.didPopRoute();
-                    },
-                    child: Icon(
-                      Icons.close,
-                      size: SizeConfig.body1,
-                      color: UiConstants.kTextColor,
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.padding20,
+                ).copyWith(
+                  top: SizeConfig.padding12,
+                ),
+                child: Stack(
+                  alignment: AlignmentDirectional.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'No available slots',
+                          style: TextStyles.sourceSansSB.body1,
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            AppState.backButtonDispatcher!.didPopRoute();
+                          },
+                          child: Icon(
+                            Icons.close,
+                            size: SizeConfig.body1,
+                            color: UiConstants.kTextColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(
+                color: UiConstants.greyVarient,
+              ),
+              AppImage(Assets.noSlots, height: SizeConfig.padding124),
+              Text(
+                'No Slots Available at the Moment',
+                style: TextStyles.sourceSansM.body0,
+              ),
+              SizedBox(
+                height: SizeConfig.padding12,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.padding18,
+                ),
+                child: Text(
+                  'Unfortunately, ${widget.advisorName} doesn’t have any available slots right now. You can discover more experts who are ready to assist you.',
+                  style: TextStyles.sourceSans.body3
+                      .colour(UiConstants.kTextColor5),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              SizedBox(
+                height: SizeConfig.padding18,
+              ),
+              const Divider(
+                color: UiConstants.greyVarient,
+              ),
+              Padding(
+                padding: EdgeInsets.all(SizeConfig.padding18),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          AppState.backButtonDispatcher!.didPopRoute();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: UiConstants.greyVarient,
+                          padding: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding16,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness8),
+                          ),
+                        ),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyles.sourceSans.body3,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: SizeConfig.padding12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          AppState.delegate!.parseRoute(Uri.parse("experts"));
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: UiConstants.kTextColor,
+                          padding: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding16,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness8),
+                          ),
+                        ),
+                        child: Text(
+                          'Explore Advisors',
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor4),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
-          ),
-        ),
-        const Divider(
-          color: UiConstants.greyVarient,
-        ),
-        Container(
-          padding: EdgeInsets.all(SizeConfig.padding18),
-          child: Column(
+          )
+        : Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Select Date',
-                style: TextStyles.sourceSansSB.body2,
-              ),
-              SizedBox(height: SizeConfig.padding16),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: dates.map((date) {
-                    return Padding(
-                      padding: EdgeInsets.only(right: SizeConfig.padding12),
-                      child: DateButton(
-                        date: date,
-                        isSelected: date == selectedDate,
-                        onTap: () {
-                          context.read<BookingBloc>().add(SelectDate(date));
-                        },
-                      ),
-                    );
-                  }).toList(),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.padding20,
+                ).copyWith(
+                  top: SizeConfig.padding12,
+                ),
+                child: Stack(
+                  alignment: AlignmentDirectional.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Book a call',
+                          style: TextStyles.sourceSansSB.body1,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            AppState.backButtonDispatcher!.didPopRoute();
+                          },
+                          child: Icon(
+                            Icons.close,
+                            size: SizeConfig.body1,
+                            color: UiConstants.kTextColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              if (!widget.isEdit) SizedBox(height: SizeConfig.padding16),
-              if (!widget.isEdit)
-                Divider(
-                  color: UiConstants.kTextColor5.withOpacity(.3),
-                ),
-              if (!widget.isEdit)
-                Text(
-                  'Select Duration',
-                  style: TextStyles.sourceSansSB.body2,
-                ),
-              if (!widget.isEdit) SizedBox(height: SizeConfig.padding16),
-              if (!widget.isEdit)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: duration.take(isFree ? 2 : 4).map((e) {
-                    return Padding(
-                      padding: EdgeInsets.only(right: SizeConfig.padding12),
-                      child: DateButton(
-                        date: e['name'].toString(),
-                        requireFormat: false,
-                        isSelected: e['value'] == selectedDuration,
-                        onTap: () {
-                          context
-                              .read<BookingBloc>()
-                              .add(SelectDuration(e['value'] as int));
+              const Divider(
+                color: UiConstants.greyVarient,
+              ),
+              Container(
+                padding: EdgeInsets.all(SizeConfig.padding18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Select Date',
+                      style: TextStyles.sourceSansSB.body2,
+                    ),
+                    SizedBox(height: SizeConfig.padding16),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: dates.map((date) {
+                          return Padding(
+                            padding:
+                                EdgeInsets.only(right: SizeConfig.padding12),
+                            child: DateButton(
+                              date: date,
+                              isSelected: date == selectedDate,
+                              onTap: () {
+                                context
+                                    .read<BookingBloc>()
+                                    .add(SelectDate(date));
+                              },
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    if (!widget.isEdit) SizedBox(height: SizeConfig.padding16),
+                    if (!widget.isEdit)
+                      Divider(
+                        color: UiConstants.kTextColor5.withOpacity(.3),
+                      ),
+                    if (!widget.isEdit)
+                      Text(
+                        'Select Duration',
+                        style: TextStyles.sourceSansSB.body2,
+                      ),
+                    if (!widget.isEdit) SizedBox(height: SizeConfig.padding16),
+                    if (!widget.isEdit)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: duration.take(isFree ? 2 : 4).map((e) {
+                          return Padding(
+                            padding:
+                                EdgeInsets.only(right: SizeConfig.padding12),
+                            child: DateButton(
+                              date: e['name'].toString(),
+                              requireFormat: false,
+                              isSelected: e['value'] == selectedDuration,
+                              onTap: () {
+                                context
+                                    .read<BookingBloc>()
+                                    .add(SelectDuration(e['value'] as int));
+                              },
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    SizedBox(height: SizeConfig.padding16),
+                    Divider(
+                      color: UiConstants.kTextColor5.withOpacity(.3),
+                    ),
+                    Text(
+                      'Select Time',
+                      style: TextStyles.sourceSansSB.body2,
+                    ),
+                    SizedBox(height: SizeConfig.padding16),
+                    Container(
+                      constraints:
+                          BoxConstraints(maxHeight: SizeConfig.padding252),
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        itemCount: currentTimes.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: SizeConfig.padding12,
+                          mainAxisSpacing: SizeConfig.padding16,
+                          childAspectRatio: 3,
+                        ),
+                        itemBuilder: (context, index) {
+                          final time = currentTimes[index];
+                          final displayTime = time?.split(' ')[0];
+                          return TimeButton(
+                            time: displayTime!,
+                            isSelected: time == selectedTime,
+                            onTap: () {
+                              context.read<BookingBloc>().add(SelectTime(time));
+                            },
+                          );
                         },
                       ),
-                    );
-                  }).toList(),
+                    ),
+                  ],
                 ),
-              SizedBox(height: SizeConfig.padding16),
+              ),
               Divider(
                 color: UiConstants.kTextColor5.withOpacity(.3),
               ),
-              Text(
-                'Select Time',
-                style: TextStyles.sourceSansSB.body2,
-              ),
-              SizedBox(height: SizeConfig.padding16),
-              Container(
-                constraints: BoxConstraints(maxHeight: SizeConfig.padding252),
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  itemCount: currentTimes.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: SizeConfig.padding12,
-                    mainAxisSpacing: SizeConfig.padding16,
-                    childAspectRatio: 3,
-                  ),
-                  itemBuilder: (context, index) {
-                    final time = currentTimes[index];
-                    final displayTime = time?.split(' ')[0];
-                    return TimeButton(
-                      time: displayTime!,
-                      isSelected: time == selectedTime,
-                      onTap: () {
-                        context.read<BookingBloc>().add(SelectTime(time));
-                      },
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-        Divider(
-          color: UiConstants.kTextColor5.withOpacity(.3),
-        ),
-        SizedBox(height: SizeConfig.padding18),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding18),
-          child: Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    AppState.backButtonDispatcher!.didPopRoute();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: UiConstants.greyVarient,
-                    padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.padding16,
+              SizedBox(height: SizeConfig.padding18),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding18),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          AppState.backButtonDispatcher!.didPopRoute();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: UiConstants.greyVarient,
+                          padding: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding16,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness8),
+                          ),
+                        ),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyles.sourceSans.body3,
+                        ),
+                      ),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness8),
-                    ),
-                  ),
-                  child: Text(
-                    'Cancel',
-                    style: TextStyles.sourceSans.body3,
-                  ),
-                ),
-              ),
-              SizedBox(width: SizeConfig.padding12),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    final state = context.read<BookingBloc>().state;
+                    SizedBox(width: SizeConfig.padding12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          final state = context.read<BookingBloc>().state;
 
-                    if (state is BookingsLoaded &&
-                        state.selectedDate != null &&
-                        state.selectedTime != null) {
-                      if (widget.isEdit && widget.bookingId != null) {
-                        final event = EditBooking(
-                          bookingId: widget.bookingId!,
-                          selectedDate: state.selectedTime!,
-                          duration: state.selectedDuration,
-                        );
-                        context.read<BookingBloc>().add(event);
-                      } else if (state.isFree) {
-                        final event = SubmitPaymentRequest(
-                          reddem: false,
-                          advisorId: widget.advisorId,
-                          amount: 0,
-                          fromTime: state.selectedTime!,
-                          duration: state.selectedDuration,
-                          appuse: null,
-                          isFree: true,
-                        );
-                        context.read<PaymentBloc>().add(event);
-                      } else {
-                        context.read<BookingBloc>().add(
-                              GetPricing(
-                                state.selectedDuration,
-                                widget.advisorId,
-                                state.selectedDate!,
-                                state.selectedTime!,
-                                widget.advisorName,
-                              ),
+                          if (state is BookingsLoaded &&
+                              state.selectedDate != null &&
+                              state.selectedTime != null) {
+                            if (widget.isEdit && widget.bookingId != null) {
+                              final event = EditBooking(
+                                bookingId: widget.bookingId!,
+                                selectedDate: state.selectedTime!,
+                                duration: state.selectedDuration,
+                              );
+                              context.read<BookingBloc>().add(event);
+                            } else if (state.isFree) {
+                              final event = SubmitPaymentRequest(
+                                reddem: false,
+                                advisorId: widget.advisorId,
+                                amount: 0,
+                                fromTime: state.selectedTime!,
+                                duration: state.selectedDuration,
+                                appuse: null,
+                                isFree: true,
+                              );
+                              context.read<PaymentBloc>().add(event);
+                            } else {
+                              context.read<BookingBloc>().add(
+                                    GetPricing(
+                                      state.selectedDuration,
+                                      widget.advisorId,
+                                      state.selectedDate!,
+                                      state.selectedTime!,
+                                      widget.advisorName,
+                                    ),
+                                  );
+                            }
+                          } else {
+                            BaseUtil.showNegativeAlert(
+                              'Try Again',
+                              "Please select both date and time",
                             );
-                      }
-                    } else {
-                      BaseUtil.showNegativeAlert(
-                        'Try Again',
-                        "Please select both date and time",
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: (state is BookingsLoaded &&
-                                state.selectedDate == null) ||
-                            (state is BookingsLoaded &&
-                                state.selectedTime == null)
-                        ? UiConstants.kTextColor.withOpacity(0.3)
-                        : UiConstants.kTextColor,
-                    padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.padding16,
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: (state is BookingsLoaded &&
+                                      state.selectedDate == null) ||
+                                  (state is BookingsLoaded &&
+                                      state.selectedTime == null)
+                              ? UiConstants.kTextColor.withOpacity(0.3)
+                              : UiConstants.kTextColor,
+                          padding: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding16,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness8),
+                          ),
+                        ),
+                        child: Text(
+                          'Confirm',
+                          style: TextStyles.sourceSans.body3.colour(
+                            UiConstants.kTextColor4,
+                          ),
+                        ),
+                      ),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness8),
-                    ),
-                  ),
-                  child: Text(
-                    'Confirm',
-                    style: TextStyles.sourceSans.body3.colour(
-                      UiConstants.kTextColor4,
-                    ),
-                  ),
+                  ],
                 ),
               ),
+              SizedBox(height: SizeConfig.padding40),
             ],
-          ),
-        ),
-        SizedBox(height: SizeConfig.padding40),
-      ],
-    );
+          );
   }
 }
 

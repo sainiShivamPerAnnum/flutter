@@ -20,6 +20,7 @@ import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/feature/fello_badges/ui/fello_badges_home.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
+import 'package:felloapp/feature/p2p_home/rps/view/view_rps.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
 import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
@@ -339,6 +340,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(const SettingsView(), SettingsViewPageConfig);
           break;
 
+        case Pages.FlexiBalaceView:
+          _addPageData(const RpsView(), FlexiBalancePageConfig);
+          break;
         case Pages.PowerPlayHome:
           _addPageData(const PowerPlayHome(), PowerPlayHomeConfig);
           break;
@@ -1115,6 +1119,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       // BACKWARD COMPATIBILITY --END
       case 'pop':
         AppState.backButtonDispatcher!.didPopRoute();
+        break;
+      case 'rps':
+        pageConfiguration = FlexiBalancePageConfig;
         break;
       case "autosave":
         if (!(AppConfig.getValue(AppConfigKey.showNewAutosave) as bool)) break;

@@ -17,7 +17,6 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/feature_flag_service/feature_flag_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -161,6 +160,15 @@ class LoginControllerViewModel extends BaseViewModel {
               properties: {'mobile': userMobile},
             );
             _verificationId = '+91${userMobile!}';
+            await _controller!.animateToPage(
+              LoginOtpView.index,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeInToLinear,
+            );
+            setState(ViewState.Idle);
+            Future.delayed(const Duration(seconds: 1), () {
+              _otpScreenKey.currentState!.model!.otpFocusNode.requestFocus();
+            });
             await _verifyPhone();
           }
           break;
@@ -672,16 +680,6 @@ class LoginControllerViewModel extends BaseViewModel {
     if (res.isSuccess()) {
       if (baseProvider!.isOtpResendCount == 0) {
         ///this is the first time that the otp was requested
-
-        await _controller!.animateToPage(
-          LoginOtpView.index,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInToLinear,
-        );
-        setState(ViewState.Idle);
-        Future.delayed(const Duration(seconds: 1), () {
-          _otpScreenKey.currentState!.model!.otpFocusNode.requestFocus();
-        });
       } else {
         ///the otp was requested to be resent
         _otpScreenKey.currentState!.model!.onOtpResendConfirmed(true);

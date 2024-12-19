@@ -15,10 +15,7 @@ class BaseRemoteConfig {
 
   ///Each config is set as a map = {name, default value}
 
-  static const Map<String, String> _LOGIN_ASSET_URL = {
-    'loginAssetUrl':
-        'https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/temp%2Fmain.svg?alt=media&token=2d4ceda1-2d0b-44c4-8433-1de255da8664'
-  };
+  static const Map<String, String> _LOGIN_ASSET_URL = {'loginAssetUrl': ''};
   static const Map<String, String> _DRAW_PICK_TIME = {'draw_pick_time': '18'};
 
   static const Map<String, String> _TAMBOLA_HEADER_FIRST = {

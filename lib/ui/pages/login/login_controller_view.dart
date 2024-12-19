@@ -85,42 +85,42 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                   ),
                 ),
               ),
-              if (keyboardIsOpen)
-                Positioned(
-                  bottom: MediaQuery.of(context).viewInsets.bottom,
-                  child: GestureDetector(
-                    onTap: () => {
-                      print({'_formKey.currentStat', model.currentPage}),
-                      model.processScreenInput(model.currentPage),
-                    },
-                    child: Container(
-                      key: const ValueKey("LoginCTA"),
-                      //key: K.loginNextCTAKey,
-                      width: SizeConfig.screenWidth,
-                      height: SizeConfig.padding54,
-                      color: UiConstants.kArrowButtonBackgroundColor,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins,
-                      ),
-                      alignment: Alignment.centerRight,
-                      child: model.state == ViewState.Busy
-                          ? SizedBox(
-                              width: SizeConfig.padding32,
-                              child: SpinKitThreeBounce(
-                                color: UiConstants.primaryColor,
-                                size: SizeConfig.padding20,
-                              ),
-                            )
-                          : Text(
-                              model.currentPage == LoginNameInputView.index
-                                  ? locale.obFinish
-                                  : locale.obNext,
-                              style: TextStyles.rajdhaniB.body1
-                                  .colour(UiConstants.primaryColor),
-                            ),
-                    ),
-                  ),
-                ),
+              // if (keyboardIsOpen)
+              //   Positioned(
+              //     bottom: MediaQuery.of(context).viewInsets.bottom,
+              //     child: GestureDetector(
+              //       onTap: () => {
+              //         print({'_formKey.currentStat', model.currentPage}),
+              //         model.processScreenInput(model.currentPage),
+              //       },
+              //       child: Container(
+              //         key: const ValueKey("LoginCTA"),
+              //         //key: K.loginNextCTAKey,
+              //         width: SizeConfig.screenWidth,
+              //         height: SizeConfig.padding54,
+              //         color: UiConstants.kArrowButtonBackgroundColor,
+              //         padding: EdgeInsets.symmetric(
+              //           horizontal: SizeConfig.pageHorizontalMargins,
+              //         ),
+              //         alignment: Alignment.centerRight,
+              //         child: model.state == ViewState.Busy
+              //             ? SizedBox(
+              //                 width: SizeConfig.padding32,
+              //                 child: SpinKitThreeBounce(
+              //                   color: UiConstants.primaryColor,
+              //                   size: SizeConfig.padding20,
+              //                 ),
+              //               )
+              //             : Text(
+              //                 model.currentPage == LoginNameInputView.index
+              //                     ? locale.obFinish
+              //                     : locale.obNext,
+              //                 style: TextStyles.rajdhaniB.body1
+              //                     .colour(UiConstants.primaryColor),
+              //               ),
+              //       ),
+              //     ),
+              //   ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
@@ -155,62 +155,46 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                     width: SizeConfig.screenWidth,
                     height: SizeConfig.padding58,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            AppImage(
+                              Assets.sebi_new,
+                              width: SizeConfig.padding36,
+                            ),
                             Text(
                               'SEBI Registered Experts',
                               style: TextStyles.sourceSans.body6,
                               maxLines: 2,
                             ),
-                            AppImage(
-                              Assets.sebi_new,
-                              width: SizeConfig.padding36,
-                            ),
                           ],
-                        ),
-                        Container(
-                          width: SizeConfig.padding1,
-                          height: SizeConfig.padding36,
-                          color: UiConstants.kTextColor.withOpacity(.6),
-                          margin: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding10,
-                          ),
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              'RBI Regulated',
-                              style: TextStyles.sourceSans.body6,
-                            ),
                             AppImage(
                               Assets.rbi,
                               width: SizeConfig.padding30,
                             ),
+                            Text(
+                              'RBI Regulated',
+                              style: TextStyles.sourceSans.body6,
+                            ),
                           ],
-                        ),
-                        Container(
-                          width: SizeConfig.padding1,
-                          height: SizeConfig.padding36,
-                          color: UiConstants.kTextColor.withOpacity(.6),
-                          margin: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding10,
-                          ),
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              'AMFI Certified Experts',
-                              style: TextStyles.sourceSans.body6,
-                            ),
                             AppImage(
                               Assets.amfi,
                               width: SizeConfig.padding24,
+                            ),
+                            Text(
+                              'AMFI Certified Experts',
+                              style: TextStyles.sourceSans.body6,
                             ),
                           ],
                         ),
