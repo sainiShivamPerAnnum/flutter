@@ -227,6 +227,16 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                                   return;
                                 }
                                 model.hasReferralCode = true;
+                                Future.delayed(
+                                    const Duration(milliseconds: 500), () {
+                                  widget.loginModel.nameViewScrollController
+                                      .animateTo(
+                                    widget.loginModel.nameViewScrollController
+                                        .position.maxScrollExtent,
+                                    duration: const Duration(milliseconds: 500),
+                                    curve: Curves.easeIn,
+                                  );
+                                });
                               },
                               child: Text(
                                 locale.refHaveReferral,

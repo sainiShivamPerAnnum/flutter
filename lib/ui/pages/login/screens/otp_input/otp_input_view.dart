@@ -57,225 +57,223 @@ class LoginOtpViewState extends State<LoginOtpView> {
         model.exit();
       },
       builder: (ctx, model, child) {
-        return SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const LoginImage(),
-              SizedBox(height: SizeConfig.padding68),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding25),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Enter OTP',
-                          style: TextStyles.sourceSansSB.body1,
-                        ),
-                        if (model.showResendOption && !model.isTriesExceeded)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  if (BaseUtil.showNoInternetAlert()) return;
-                                  model.log.debug("Resend action triggered");
-                                  // FocusScope.of(context).unfocus();
-
-                                  model.showResendOption = false;
-
-                                  if (!model.isResendClicked) {
-                                    //ensure that button isnt clicked multiple times
-                                    if (widget.resendOtp != null)
-                                      widget.resendOtp!();
-                                  }
-
-                                  if (baseProvider.isOtpResendCount < 2) {
-                                    baseProvider.isOtpResendCount++;
-                                    logger.d(baseProvider.isOtpResendCount);
-                                    BaseUtil.showPositiveAlert(
-                                      locale.otpSentSuccess,
-                                      locale.waitForNewOTP,
-                                    );
-                                  }
-                                },
-                                child: Text(
-                                  'RESEND OTP',
-                                  key: const ValueKey("OtpResend"),
-                                  style: TextStyles.sourceSansM.body3.colour(
-                                    UiConstants.primaryColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        if (model.isTriesExceeded)
-                          Text(
-                            'RESEND OTP',
-                            textAlign: TextAlign.center,
-                            style: TextStyles.sourceSansM.body3.colour(
-                              UiConstants.kProfileBorderColor,
-                            ),
-                          ),
-                        if (!model.showResendOption && !model.isTriesExceeded)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Resend OTP in ',
-                                style: TextStyles.sourceSans.body3.colour(
-                                  UiConstants.kTextFieldTextColor,
-                                ),
-                              ),
-                              TweenAnimationBuilder<Duration>(
-                                duration: const Duration(seconds: 30),
-                                tween: Tween(
-                                  begin: const Duration(seconds: 30),
-                                  end: Duration.zero,
-                                ),
-                                onEnd: () {
-                                  print('Timer ended');
-                                  model.showResendOption = true;
-                                },
-                                builder: (
-                                  context,
-                                  value,
-                                  child,
-                                ) {
-                                  final minutes = (value.inMinutes)
-                                      .toString()
-                                      .padLeft(2, '0');
-                                  final seconds = (value.inSeconds % 60)
-                                      .toString()
-                                      .padLeft(2, '0');
-                                  return Text(
-                                    "$minutes:$seconds",
-                                    style: TextStyles.sourceSansB.body3
-                                        .colour(UiConstants.primaryColor),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                      ],
-                    ),
-                    SizedBox(height: SizeConfig.padding14),
-                    PinInputTextField(
-                      key: ValueKey("otpTextField"),
-                      //key: K.otpTextFieldKey,
-                      enabled: model.otpFieldEnabled,
-                      controller: model.pinEditingController,
-                      autoFocus: true,
-                      pinLength: 6,
-                      focusNode: model.otpFocusNode,
-                      keyboardType: TextInputType.number,
-                      decoration: BoxLooseDecoration(
-                        solidColor: UiConstants.greyVarient,
-                        strokeColor: UiConstants.grey6,
-                        strokeWidth: 1,
-                        gapSpace: SizeConfig.padding12,
-                        textStyle: TextStyles.sourceSansSB.body1.colour(
-                          const Color(0xFFFFFFFF),
-                        ),
+        return ListView(
+          // mainAxisAlignment: MainAxisAlignment.start,
+          controller: widget.loginModel.otpScrollController,
+          shrinkWrap: true,
+          children: [
+            const LoginImage(),
+            SizedBox(height: SizeConfig.padding68),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding25),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Enter OTP',
+                        style: TextStyles.sourceSansSB.body1,
                       ),
-                      onChanged: (value) {
-                        if (value.length == 6) {
-                          if (widget.otpEntered != null) widget.otpEntered!();
-                        }
-                      },
-                      onSubmit: (pin) {
-                        model.log.debug(
-                          "Pressed submit for pin: $pin\n  No action taken.",
-                        );
-                        widget.loginModel.processScreenInput(1);
-                      },
-                    ),
-                    SizedBox(height: SizeConfig.padding14),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
+                      if (model.showResendOption && !model.isTriesExceeded)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                if (BaseUtil.showNoInternetAlert()) return;
+                                model.log.debug("Resend action triggered");
+                                // FocusScope.of(context).unfocus();
+
+                                model.showResendOption = false;
+
+                                if (!model.isResendClicked) {
+                                  //ensure that button isnt clicked multiple times
+                                  if (widget.resendOtp != null)
+                                    widget.resendOtp!();
+                                }
+
+                                if (baseProvider.isOtpResendCount < 2) {
+                                  baseProvider.isOtpResendCount++;
+                                  logger.d(baseProvider.isOtpResendCount);
+                                  BaseUtil.showPositiveAlert(
+                                    locale.otpSentSuccess,
+                                    locale.waitForNewOTP,
+                                  );
+                                }
+                              },
+                              child: Text(
+                                'RESEND OTP',
+                                key: const ValueKey("OtpResend"),
+                                style: TextStyles.sourceSansM.body3.colour(
+                                  UiConstants.primaryColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      if (model.isTriesExceeded)
                         Text(
-                          locale.obLoginAsText(model.mobileNo!),
-                          style: TextStyles.sourceSans.body3.colour(
+                          'RESEND OTP',
+                          textAlign: TextAlign.center,
+                          style: TextStyles.sourceSansM.body3.colour(
                             UiConstants.kProfileBorderColor,
                           ),
                         ),
-                        SizedBox(
-                          width: SizeConfig.padding12,
-                        ),
-                        ListenableBuilder(
-                          listenable: model.parentModelInstance,
-                          builder: (context, child) {
-                            final isBusy = model.parentModelInstance.state ==
-                                ViewState.Busy;
-                            return GestureDetector(
-                              onTap: () {
-                                if (isBusy || BaseUtil.showNoInternetAlert()) {
-                                  return;
-                                }
-
-                                model.parentModelInstance.editPhone();
-                              },
-                              child: Text(
-                                'Change',
-                                style: TextStyles.sourceSans.body3.colour(
-                                  isBusy
-                                      ? UiConstants.kTextFieldTextColor
-                                      : UiConstants.primaryColor,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: SizeConfig.padding30),
-                    Consumer<LoginControllerViewModel>(
-                      builder: (context, model, child) {
-                        return SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () =>
-                                model.processScreenInput(model.currentPage),
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(
-                                  SizeConfig.padding325, SizeConfig.padding48),
-                              backgroundColor: UiConstants.kTextColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    SizeConfig.roundness8),
+                      if (!model.showResendOption && !model.isTriesExceeded)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Resend OTP in ',
+                              style: TextStyles.sourceSans.body3.colour(
+                                UiConstants.kTextFieldTextColor,
                               ),
                             ),
-                            child: model.state == ViewState.Busy
-                                ? SizedBox(
-                                    width: SizeConfig.padding32,
-                                    child: SpinKitThreeBounce(
-                                      color: UiConstants.kTextColor4,
-                                      size: SizeConfig.padding20,
-                                    ),
-                                  )
-                                : Text(
-                                    model.currentPage ==
-                                            LoginNameInputView.index
-                                        ? locale.obFinish
-                                        : locale.obNext,
-                                    style: TextStyles.sourceSansSB.body3
-                                        .colour(UiConstants.kTextColor4),
-                                  ),
-                          ),
-                        );
-                      },
+                            TweenAnimationBuilder<Duration>(
+                              duration: const Duration(seconds: 30),
+                              tween: Tween(
+                                begin: const Duration(seconds: 30),
+                                end: Duration.zero,
+                              ),
+                              onEnd: () {
+                                print('Timer ended');
+                                model.showResendOption = true;
+                              },
+                              builder: (
+                                context,
+                                value,
+                                child,
+                              ) {
+                                final minutes = (value.inMinutes)
+                                    .toString()
+                                    .padLeft(2, '0');
+                                final seconds = (value.inSeconds % 60)
+                                    .toString()
+                                    .padLeft(2, '0');
+                                return Text(
+                                  "$minutes:$seconds",
+                                  style: TextStyles.sourceSansB.body3
+                                      .colour(UiConstants.primaryColor),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
+                  SizedBox(height: SizeConfig.padding14),
+                  PinInputTextField(
+                    key: ValueKey("otpTextField"),
+                    //key: K.otpTextFieldKey,
+                    enabled: model.otpFieldEnabled,
+                    controller: model.pinEditingController,
+                    autoFocus: true,
+                    pinLength: 6,
+                    focusNode: model.otpFocusNode,
+                    keyboardType: TextInputType.number,
+                    decoration: BoxLooseDecoration(
+                      solidColor: UiConstants.greyVarient,
+                      strokeColor: UiConstants.grey6,
+                      strokeWidth: 1,
+                      gapSpace: SizeConfig.padding12,
+                      textStyle: TextStyles.sourceSansSB.body1.colour(
+                        const Color(0xFFFFFFFF),
+                      ),
                     ),
-                  ],
-                ),
+                    onChanged: (value) {
+                      if (value.length == 6) {
+                        if (widget.otpEntered != null) widget.otpEntered!();
+                      }
+                    },
+                    onSubmit: (pin) {
+                      model.log.debug(
+                        "Pressed submit for pin: $pin\n  No action taken.",
+                      );
+                      widget.loginModel.processScreenInput(1);
+                    },
+                  ),
+                  SizedBox(height: SizeConfig.padding14),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        locale.obLoginAsText(model.mobileNo!),
+                        style: TextStyles.sourceSans.body3.colour(
+                          UiConstants.kProfileBorderColor,
+                        ),
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding12,
+                      ),
+                      ListenableBuilder(
+                        listenable: model.parentModelInstance,
+                        builder: (context, child) {
+                          final isBusy =
+                              model.parentModelInstance.state == ViewState.Busy;
+                          return GestureDetector(
+                            onTap: () {
+                              if (isBusy || BaseUtil.showNoInternetAlert()) {
+                                return;
+                              }
+
+                              model.parentModelInstance.editPhone();
+                            },
+                            child: Text(
+                              'Change',
+                              style: TextStyles.sourceSans.body3.colour(
+                                isBusy
+                                    ? UiConstants.kTextFieldTextColor
+                                    : UiConstants.primaryColor,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: SizeConfig.padding30),
+                  Consumer<LoginControllerViewModel>(
+                    builder: (context, model, child) {
+                      return SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () =>
+                              model.processScreenInput(model.currentPage),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(
+                                SizeConfig.padding325, SizeConfig.padding48),
+                            backgroundColor: UiConstants.kTextColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.roundness8),
+                            ),
+                          ),
+                          child: model.state == ViewState.Busy
+                              ? SizedBox(
+                                  width: SizeConfig.padding32,
+                                  child: SpinKitThreeBounce(
+                                    color: UiConstants.kTextColor4,
+                                    size: SizeConfig.padding20,
+                                  ),
+                                )
+                              : Text(
+                                  model.currentPage == LoginNameInputView.index
+                                      ? locale.obFinish
+                                      : locale.obNext,
+                                  style: TextStyles.sourceSansSB.body3
+                                      .colour(UiConstants.kTextColor4),
+                                ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
-              SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 100),
-            ],
-          ),
+            ),
+            SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 100),
+          ],
         );
       },
     );

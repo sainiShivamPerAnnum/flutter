@@ -91,6 +91,8 @@ class LoginControllerViewModel extends BaseViewModel {
   ValueNotifier<double?>? _pageNotifier;
   StreamSubscription? streamSubscription;
   static List<Widget> _pages = [];
+  ScrollController phoneScrollController = ScrollController();
+  ScrollController otpScrollController = ScrollController();
   ScrollController nameViewScrollController = ScrollController();
 
 //Getters and Setters
@@ -168,6 +170,13 @@ class LoginControllerViewModel extends BaseViewModel {
             setState(ViewState.Idle);
             Future.delayed(const Duration(seconds: 1), () {
               _otpScreenKey.currentState!.model!.otpFocusNode.requestFocus();
+            });
+            Future.delayed(const Duration(milliseconds: 500), () {
+              otpScrollController.animateTo(
+                otpScrollController.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeIn,
+              );
             });
             await _verifyPhone();
           }
@@ -875,6 +884,8 @@ class LoginControllerViewModel extends BaseViewModel {
   exit() {
     _controller!.removeListener(_pageListener);
     _controller!.dispose();
+    phoneScrollController.dispose();
+    otpScrollController.dispose();
     nameViewScrollController.dispose();
     streamSubscription?.cancel();
   }

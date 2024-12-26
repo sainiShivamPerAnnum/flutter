@@ -47,7 +47,7 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		4B168F0B2AADB9880050BE5F /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
@@ -55,7 +55,7 @@
 				4BFB43342AADE7450007B3A3 /* NotificationContentExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -758,7 +758,7 @@
 				CURRENT_PROJECT_VERSION = 223;
 				CleverTapAccountID = "848-479-W96Z";
 				CleverTapToken = "ca4-b4b";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
 				FLUTTER_TARGET = lib/main_prod.dart;
@@ -859,7 +859,7 @@
 				CleverTapAccountID = "TEST-948-479-W96Z";
 				CleverTapToken = "TEST-ca4-b4c";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_BITCODE = NO;
 				FLUTTER_BUILD_DIR = build/ios;
 				FLUTTER_TARGET = lib/main_qa.dart;
@@ -878,7 +878,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				MARKETING_VERSION = 4.5.2;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.newDev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -957,7 +957,7 @@
 				CURRENT_PROJECT_VERSION = 223;
 				CleverTapAccountID = "TEST-948-479-W96Z";
 				CleverTapToken = "TEST-ca4-b4c";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_BITCODE = NO;
 				FLUTTER_TARGET = lib/main_qa.dart;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -975,7 +975,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				MARKETING_VERSION = 4.5.2;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.newDev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -1051,7 +1051,7 @@
 				CURRENT_PROJECT_VERSION = 223;
 				CleverTapAccountID = "TEST-948-479-W96Z";
 				CleverTapToken = "TEST-ca4-b4c";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
 				FLUTTER_TARGET = lib/main_qa.dart;
@@ -1070,7 +1070,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				MARKETING_VERSION = 4.5.2;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.qa;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.newqa;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -1119,7 +1119,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
@@ -1151,7 +1151,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.NotificationService;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.NewNotificationService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1202,7 +1202,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
@@ -1234,7 +1234,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev.NotificationService;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.newDev.NewNotificationService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1285,7 +1285,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
@@ -1317,7 +1317,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev.NotificationService;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.newDev.NewNotificationService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1368,7 +1368,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1392,7 +1392,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.NotificationService;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.NewNotificationService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1444,7 +1444,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1468,7 +1468,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev.NotificationService;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.newDev.NewNotificationService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1520,7 +1520,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1544,7 +1544,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev.NotificationService;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.newDev.NewNotificationService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1596,7 +1596,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1620,7 +1620,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.NotificationService;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.NewNotificationService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1672,7 +1672,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1696,7 +1696,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev.NotificationService;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.newDev.NewNotificationService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1748,7 +1748,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1772,7 +1772,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev.NotificationService;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.newDev.NewNotificationService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1823,7 +1823,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
@@ -1855,7 +1855,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.NotificationContentExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.NewNotificationContentExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1905,7 +1905,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
@@ -1937,7 +1937,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev.NotificationContentExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.newDev.NotificationContentExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1987,7 +1987,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
@@ -2019,7 +2019,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev.NotificationContentExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.newDev.NotificationContentExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -2069,7 +2069,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2093,7 +2093,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.NotificationContentExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.NewNotificationContentExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -2144,7 +2144,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2168,7 +2168,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev.NotificationContentExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.newDev.NotificationContentExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -2219,7 +2219,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2243,7 +2243,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev.NotificationContentExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.newDev.NotificationContentExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -2294,7 +2294,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2318,7 +2318,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.NotificationContentExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.NewNotificationContentExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -2369,7 +2369,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2393,7 +2393,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev.NotificationContentExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.newDev.NotificationContentExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -2444,7 +2444,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2468,7 +2468,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev.NotificationContentExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.newDev.NotificationContentExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -2555,7 +2555,7 @@
 				CleverTapAccountID = "TEST-948-479-W96Z";
 				CleverTapToken = "TEST-ca4-b4c";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphoneos*]" = "armv7 i386";
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
@@ -2576,7 +2576,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				MARKETING_VERSION = 4.5.2;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.newDev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -2655,7 +2655,7 @@
 				CURRENT_PROJECT_VERSION = 223;
 				CleverTapAccountID = "TEST-948-479-W96Z";
 				CleverTapToken = "TEST-ca4-b4c";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
 				FLUTTER_TARGET = lib/main_dev.dart;
@@ -2674,7 +2674,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				MARKETING_VERSION = 4.5.2;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.newDev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -2750,7 +2750,7 @@
 				CURRENT_PROJECT_VERSION = 223;
 				CleverTapAccountID = "TEST-948-479-W96Z";
 				CleverTapToken = "TEST-ca4-b4c";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
 				FLUTTER_TARGET = lib/main_dev.dart;
@@ -2769,7 +2769,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				MARKETING_VERSION = 4.5.2;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.newDev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -2905,7 +2905,7 @@
 				CleverTapAccountID = "848-479-W96Z";
 				CleverTapToken = "ca4-b4b";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
 				FLUTTER_BUILD_DIR = build/ios;
@@ -2950,7 +2950,7 @@
 				CURRENT_PROJECT_VERSION = 223;
 				CleverTapAccountID = "848-479-W96Z";
 				CleverTapToken = "ca4-b4b";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphoneos*]" = "armv7 1386";
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";

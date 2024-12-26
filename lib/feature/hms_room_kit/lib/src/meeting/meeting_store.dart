@@ -1609,6 +1609,7 @@ class MeetingStore extends ChangeNotifier
         content: FeedbackBottomSheet(
           advisorId: advisorId!,
           onSubmit: (rating, comment) async {
+            await AppState.backButtonDispatcher!.didPopRoute();
             unawaited(
               locator<ExpertsRepository>().postRatingDetails(
                 advisorId: advisorId!,
@@ -1616,7 +1617,6 @@ class MeetingStore extends ChangeNotifier
                 rating: rating,
               ),
             );
-            await AppState.backButtonDispatcher!.didPopRoute();
           },
         ),
       );

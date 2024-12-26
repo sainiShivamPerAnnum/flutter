@@ -521,7 +521,7 @@ class Assets {
   static const String no_live = "assets/svg/no_live.svg";
   static const String error = "assets/svg/error.svg";
   static const String noRewardsTxn = "assets/svg/no_rewards_txn.svg";
-  static const String rpsSvg = "assets/svg/rps.svg";
+  static const String rpsSvg = "assets/images/rps.png";
   static const String onbaording1 = "assets/images/onboarding_1.png";
   static const String onbaording2 = "assets/images/onboarding_2.png";
   static const String onbaording3 = "assets/images/onboarding_3.png";

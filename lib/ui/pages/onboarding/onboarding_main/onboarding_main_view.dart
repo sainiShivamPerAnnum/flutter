@@ -60,131 +60,130 @@ class _OnBoardingViewState extends State<OnBoardingView>
             },
             child: Stack(
               children: [
-                Positioned.fill(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: SizeConfig.padding70,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(
-                            3,
-                            (index) {
-                              return Container(
-                                width: SizeConfig.padding22,
-                                height: SizeConfig.padding2,
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 3),
-                                decoration: BoxDecoration(
+                Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.padding70,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          3,
+                          (index) {
+                            return Container(
+                              width: SizeConfig.padding22,
+                              height: SizeConfig.padding2,
+                              margin: const EdgeInsets.symmetric(horizontal: 3),
+                              decoration: BoxDecoration(
+                                color: index <= model.indicatorPosition
+                                    ? Colors.white
+                                    : Colors.transparent,
+                                border: Border.all(
                                   color: index <= model.indicatorPosition
                                       ? Colors.white
-                                      : Colors.transparent,
-                                  border: Border.all(
-                                    color: index <= model.indicatorPosition
-                                        ? Colors.white
-                                        : UiConstants.greyVarient,
-                                  ),
-                                  shape: BoxShape.rectangle,
+                                      : UiConstants.greyVarient,
                                 ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: PageView.builder(
-                          controller: pageController,
-                          physics: const BouncingScrollPhysics(),
-                          onPageChanged: (val) {
-                            if (val > 2) {
-                              model.registerWalkthroughCompletion();
-                            } else if (val > model.currentPage) {
-                              if (val == 2) {
-                                model.indicatorPosition = 2;
-                              } else {
-                                model.indicatorPosition = 1;
-                              }
-                            } else {
-                              if (val == 0) {
-                                model.indicatorPosition = 0;
-                              } else if (val == 1) {
-                                model.indicatorPosition = 1;
-                              } else {
-                                model.indicatorPosition = 0;
-                              }
-                            }
-                            model.currentPage = val;
-                          },
-                          itemCount: 4,
-                          itemBuilder: (_, __) {
-                            return AnimatedBuilder(
-                              animation: pageController!,
-                              builder: (context, child) {
-                                if (pageValue == null || __ == 3) {
-                                  return const SizedBox.shrink();
-                                }
-                                double scale = 1 -
-                                    (pageController!.page! - __).abs() * 0.1;
-                                return Transform.scale(
-                                  scale: scale,
-                                  child: Column(
-                                    children: [
-                                      SizedBox(
-                                        width: SizeConfig.padding325,
-                                        child: Text(
-                                          model.onboardingData![__].first,
-                                          style: TextStyles.sourceSansB.title3,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: SizeConfig.padding14,
-                                      ),
-                                      SizedBox(
-                                        width: SizeConfig.padding325,
-                                        child: Text(
-                                          model.onboardingData![__][1],
-                                          style: TextStyles.sourceSans.body2
-                                              .colour(
-                                            UiConstants.kTextColor5,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: SizeConfig.padding35,
-                                      ),
-                                      SizedBox(
-                                        width: SizeConfig.padding300,
-                                        child: AppImage(
-                                          model.onboardingData![__][2],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              child: const SizedBox.shrink(),
+                                shape: BoxShape.rectangle,
+                              ),
                             );
                           },
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _SignUpCTA(
-                            onTap: model.registerWalkthroughCompletion,
-                          ),
-                        ],
+                    ),
+                    Expanded(
+                      child: PageView.builder(
+                        controller: pageController,
+                        physics: const BouncingScrollPhysics(),
+                        onPageChanged: (val) {
+                          if (val > 2) {
+                            model.registerWalkthroughCompletion();
+                          } else if (val > model.currentPage) {
+                            if (val == 2) {
+                              model.indicatorPosition = 2;
+                            } else {
+                              model.indicatorPosition = 1;
+                            }
+                          } else {
+                            if (val == 0) {
+                              model.indicatorPosition = 0;
+                            } else if (val == 1) {
+                              model.indicatorPosition = 1;
+                            } else {
+                              model.indicatorPosition = 0;
+                            }
+                          }
+                          model.currentPage = val;
+                        },
+                        itemCount: 4,
+                        itemBuilder: (_, __) {
+                          return AnimatedBuilder(
+                            animation: pageController!,
+                            builder: (context, child) {
+                              if (pageValue == null || __ == 3) {
+                                return const SizedBox.shrink();
+                              }
+                              double scale =
+                                  1 - (pageController!.page! - __).abs() * 0.1;
+                              return Transform.scale(
+                                scale: scale,
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      width: SizeConfig.padding325,
+                                      child: Text(
+                                        model.onboardingData![__].first,
+                                        style: TextStyles.sourceSansB.title3,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding14,
+                                    ),
+                                    SizedBox(
+                                      width: SizeConfig.padding325,
+                                      child: Text(
+                                        model.onboardingData![__][1],
+                                        style:
+                                            TextStyles.sourceSans.body2.colour(
+                                          UiConstants.kTextColor5,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding35,
+                                    ),
+                                    SizedBox(
+                                      width: SizeConfig.padding300,
+                                      height: SizeConfig.padding300,
+                                      child: AppImage(
+                                        model.onboardingData![__][2],
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            child: const SizedBox.shrink(),
+                          );
+                        },
                       ),
-                      SizedBox(
-                        height: SizeConfig.padding44,
-                      ),
-                    ],
-                  ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _SignUpCTA(
+                          onTap: model.registerWalkthroughCompletion,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding40,
+                    ),
+                  ],
                 ),
                 const CircularAnim(),
               ],
