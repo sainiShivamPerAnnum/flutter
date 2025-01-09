@@ -1,4 +1,5 @@
 ///Project imports
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/enums/meeting_mode.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_store.dart';
@@ -8,6 +9,7 @@ import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/common_widgets/lea
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 
 ///Package imports
@@ -202,6 +204,8 @@ class _LeaveSessionBottomSheetState extends State<LeaveSessionBottomSheet> {
               child: Selector<MeetingStore, MeetingMode>(
                 selector: (p0, meetingStore) => meetingStore.meetingMode,
                 builder: (context, meetingMode, state) {
+                  final isAdvisor =
+                      locator<UserService>().baseUser!.isAdvisor ?? false;
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -226,7 +230,9 @@ class _LeaveSessionBottomSheetState extends State<LeaveSessionBottomSheet> {
                       SizedBox(height: SizeConfig.padding18),
                       AppImage(Assets.exit_logo, height: SizeConfig.padding100),
                       Text(
-                        "End ${(meetingMode != MeetingMode.activeSpeakerWithInset) ? 'Streaming' : "Call"}",
+                        isAdvisor
+                            ? "End ${(meetingMode != MeetingMode.activeSpeakerWithInset) ? 'Streaming' : "Call"}"
+                            : "Leave ${(meetingMode != MeetingMode.activeSpeakerWithInset) ? 'Session' : "Call"}",
                         style: TextStyles.sourceSansSB.title4,
                       ),
                       SizedBox(

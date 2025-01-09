@@ -43,13 +43,15 @@ class GetPricing extends BookingEvent {
   final String selectedDate;
   final String selectedTime;
   final String advisorName;
+  final bool isFree;
   const GetPricing(
     this.duration,
     this.advisorId,
     this.selectedDate,
     this.selectedTime,
-    this.advisorName,
-  );
+    this.advisorName, {
+    this.isFree = false,
+  });
 }
 
 class LoadPSPApps extends BookingEvent {

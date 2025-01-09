@@ -20,6 +20,7 @@ class PaymentSheet extends StatelessWidget {
   final String fromTime;
   final num duration;
   final bool isCoinBalance;
+  final bool isFree;
   const PaymentSheet({
     required this.advisorID,
     required this.advisorName,
@@ -27,6 +28,7 @@ class PaymentSheet extends StatelessWidget {
     required this.fromTime,
     required this.duration,
     required this.isCoinBalance,
+    required this.isFree,
     super.key,
   });
 
@@ -46,7 +48,7 @@ class PaymentSheet extends StatelessWidget {
                   fromTime: fromTime,
                   duration: duration,
                   appuse: null,
-                  isFree: false,
+                  isFree: isFree,
                 )
               : const LoadPSPApps(),
         ),
@@ -57,6 +59,7 @@ class PaymentSheet extends StatelessWidget {
         duration: duration,
         advisorName: advisorName,
         isCoinBalance: isCoinBalance,
+        isFree: isFree,
       ),
     );
   }
@@ -70,6 +73,7 @@ class _BookingMandatePage extends StatelessWidget {
     required this.fromTime,
     required this.duration,
     required this.isCoinBalance,
+    required this.isFree,
   });
   final String advisorID;
   final String advisorName;
@@ -77,6 +81,7 @@ class _BookingMandatePage extends StatelessWidget {
   final String fromTime;
   final num duration;
   final bool isCoinBalance;
+  final bool isFree;
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +102,9 @@ class _BookingMandatePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Select Payment Application',
+                    amount == 0 || isFree
+                        ? 'Confirming Booking'
+                        : 'Select Payment Application',
                     style: TextStyles.sourceSansSB.body1,
                   ),
                 ],

@@ -305,6 +305,23 @@ class _LiveCardWidgetState extends State<LiveCardWidget> {
                           UiConstants.kTextColor,
                         ),
                       ),
+                      if (widget.status == 'live')
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding8,
+                            vertical: SizeConfig.padding6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: UiConstants.kBackgroundColor,
+                            borderRadius: BorderRadius.circular(
+                              SizeConfig.roundness5,
+                            ),
+                          ),
+                          child: Text(
+                            'Join Now',
+                            style: TextStyles.sourceSansSB.body4,
+                          ),
+                        ),
                       if (widget.status == 'upcoming')
                         GestureDetector(
                           onTap: (widget.notifyOn ?? false)

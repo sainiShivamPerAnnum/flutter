@@ -158,17 +158,18 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Selector<MeetingStore, Tuple2<List<HMSMessage>, int>>(
-                    selector: (_, meetingStore) => Tuple2(
-                      meetingStore.messages,
-                      meetingStore.messages.length,
+                  if (!_isExpanded)
+                    Selector<MeetingStore, Tuple2<List<HMSMessage>, int>>(
+                      selector: (_, meetingStore) => Tuple2(
+                        meetingStore.messages,
+                        meetingStore.messages.length,
+                      ),
+                      builder: (context, data, _) {
+                        _scrollToEnd();
+                        return _buildComments(_scrollController, data.item1);
+                      },
                     ),
-                    builder: (context, data, _) {
-                      _scrollToEnd();
-                      return _buildComments(_scrollController, data.item1);
-                    },
-                  ),
-                  if (widget.role != 'broadcaster')
+                  if (widget.role != 'broadcaster' && !_isExpanded)
                     Padding(
                       padding: EdgeInsets.only(right: SizeConfig.padding8),
                       child: ChatActionButtons(

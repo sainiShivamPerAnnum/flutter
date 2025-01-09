@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/bookings/new_booking.dart';
 import 'package:felloapp/core/model/bookings/payment_polling.dart';
@@ -138,7 +136,7 @@ class ExpertsRepository extends BaseRepo {
   }) async {
     try {
       final response = await APIService.instance.getData(
-        'booking/available-slots',
+        'booking/v1/available-slots',
         queryParams: {
           "duration": duration,
           "advisorId": advisorId,

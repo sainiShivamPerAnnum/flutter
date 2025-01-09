@@ -13,6 +13,7 @@ import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,7 +50,7 @@ class BookCallSheetView extends StatelessWidget {
           )..add(
               LoadBookingDates(
                 advisorID,
-                int.tryParse(duration ?? "30") ?? 30,
+                int.tryParse(duration ?? "15") ?? 15,
                 scheduledOn,
               ),
             ),
@@ -135,21 +136,31 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
               state.isFree,
             );
           } else if (state is PricingData) {
-            return _buildPaymentSummary(context, state, widget.advisorId);
+            return _buildPaymentSummary(
+              context,
+              state,
+              widget.advisorId,
+              state.isFree,
+            );
           } else {
-            return NewErrorPage(
-              onTryAgain: () {
-                BlocProvider.of<BookingBloc>(
-                  context,
-                  listen: false,
-                ).add(
-                  LoadBookingDates(
-                    widget.advisorId,
-                    int.tryParse(widget.duration ?? "30") ?? 30,
-                    widget.scheduledOn,
-                  ),
-                );
-              },
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                NewErrorPage(
+                  onTryAgain: () {
+                    BlocProvider.of<BookingBloc>(
+                      context,
+                      listen: false,
+                    ).add(
+                      LoadBookingDates(
+                        widget.advisorId,
+                        int.tryParse(widget.duration ?? "30") ?? 30,
+                        widget.scheduledOn,
+                      ),
+                    );
+                  },
+                ),
+              ],
             );
           }
         },
@@ -168,17 +179,33 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
     final selectedDate = loadedState?.selectedDate;
     final selectedDuration = loadedState?.selectedDuration;
     final selectedTime = loadedState?.selectedTime;
-    final duration = [
+    final currentDurations =
+        (selectedDate != null && schedule?.slots?[selectedDate] != null)
+            ? schedule!.slots![selectedDate]!.keys.toList()
+            : [];
+    final durations = [
       {"name": '15 Mins', "value": 15},
       {"name": '30 Mins', "value": 30},
       {"name": '45 Mins', "value": 45},
       {"name": '1 hour', "value": 60},
     ];
+    final filteredDurations = durations.where((duration) {
+      final valueAsString = duration['value'].toString();
+      final matchesCurrentDurations = currentDurations.contains(valueAsString);
+      final isAllowedForFree =
+          !isFree || (duration['value'] == 15 || duration['value'] == 30);
+      return matchesCurrentDurations && isAllowedForFree;
+    }).toList();
     final dates = schedule?.slots?.keys.toList() ?? [];
-    final currentTimes =
-        (selectedDate != null && schedule?.slots?[selectedDate] != null)
-            ? schedule!.slots![selectedDate]!.map((e) => e.fromTime).toList()
-            : [];
+    final currentTimes = (selectedDate != null &&
+            schedule?.slots?[selectedDate] != null &&
+            selectedDuration != null &&
+            schedule?.slots?[selectedDate]?[selectedDuration.toString()] !=
+                null)
+        ? schedule!.slots![selectedDate]![selectedDuration.toString()]!
+            .map((slot) => slot.fromTime)
+            .toList()
+        : [];
 
     return dates.isEmpty
         ? Column(
@@ -394,7 +421,7 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                     if (!widget.isEdit)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: duration.take(isFree ? 2 : 4).map((e) {
+                        children: filteredDurations.map((e) {
                           return Padding(
                             padding:
                                 EdgeInsets.only(right: SizeConfig.padding12),
@@ -420,9 +447,8 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                       style: TextStyles.sourceSansSB.body2,
                     ),
                     SizedBox(height: SizeConfig.padding16),
-                    Container(
-                      constraints:
-                          BoxConstraints(maxHeight: SizeConfig.padding252),
+                    SizedBox(
+                      height: SizeConfig.padding70,
                       child: GridView.builder(
                         shrinkWrap: true,
                         itemCount: currentTimes.length,
@@ -494,16 +520,16 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                               );
                               context.read<BookingBloc>().add(event);
                             } else if (state.isFree) {
-                              final event = SubmitPaymentRequest(
-                                reddem: false,
-                                advisorId: widget.advisorId,
-                                amount: 0,
-                                fromTime: state.selectedTime!,
-                                duration: state.selectedDuration,
-                                appuse: null,
-                                isFree: true,
-                              );
-                              context.read<PaymentBloc>().add(event);
+                              context.read<BookingBloc>().add(
+                                    GetPricing(
+                                      state.selectedDuration,
+                                      widget.advisorId,
+                                      state.selectedDate!,
+                                      state.selectedTime!,
+                                      widget.advisorName,
+                                      isFree: true,
+                                    ),
+                                  );
                             } else {
                               context.read<BookingBloc>().add(
                                     GetPricing(
@@ -669,6 +695,7 @@ Widget _buildPaymentSummary(
   BuildContext context,
   PricingData state,
   String advisorId,
+  bool isFree,
 ) {
   return Column(
     mainAxisSize: MainAxisSize.min,
@@ -688,7 +715,7 @@ Widget _buildPaymentSummary(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'Payment Summary',
+                  isFree ? "Call Confirmation" : 'Payment Summary',
                   style: TextStyles.sourceSansSB.body1,
                 ),
               ],
@@ -799,9 +826,20 @@ Widget _buildPaymentSummary(
               padding: EdgeInsets.all(SizeConfig.padding18),
               child: Column(
                 children: [
-                  _buildSummaryRow('Call Duration', '${state.duration} Mins'),
+                  _buildSummary(
+                    'Call Duration',
+                    '${state.duration} Mins',
+                  ),
                   _buildDottedDivider(),
-                  _buildSummaryRow('Price', '₹${state.price}'),
+                  _buildSummaryRow(
+                    'Price',
+                    '₹${state.price}',
+                    isFree: isFree,
+                    subText: 'Free',
+                    textColor: isFree
+                        ? UiConstants.kTextColor.withOpacity(.6)
+                        : UiConstants.kTextColor,
+                  ),
                   _buildDottedDivider(),
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 300),
@@ -819,18 +857,31 @@ Widget _buildPaymentSummary(
                                 'Reward Points',
                                 '-${state.coinBalanceUse}',
                                 textColor: UiConstants.teal3,
+                                isFree: isFree,
                               ),
                               _buildDottedDivider(),
                             ],
                           )
                         : const SizedBox.shrink(),
                   ),
-                  _buildSummaryRow('GST (18%)', '₹${state.gst}'),
+                  _buildSummaryRow(
+                    'GST (18%)',
+                    '₹${state.gst}',
+                    isFree: isFree,
+                    subText: '₹0',
+                    textColor: isFree
+                        ? UiConstants.kTextColor.withOpacity(.6)
+                        : UiConstants.kTextColor,
+                  ),
                   _buildDottedDivider(),
                   _buildSummaryRow(
                     'Net Payable',
                     '₹${state.totalPayable}',
-                    isBold: true,
+                    isFinalValue: true,
+                    isFree: isFree,
+                    textColor: isFree
+                        ? UiConstants.kTabBorderColor
+                        : UiConstants.kTextColor,
                   ),
                 ],
               ),
@@ -838,47 +889,124 @@ Widget _buildPaymentSummary(
           ],
         ),
       ),
+      SizedBox(
+        height: SizeConfig.padding18,
+      ),
+      const Divider(
+        color: UiConstants.greyVarient,
+      ),
       Padding(
-        padding: EdgeInsets.all(SizeConfig.padding18),
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () {
-              AppState.backButtonDispatcher!.didPopRoute();
-              AppState.screenStack.add(ScreenItem.modalsheet);
-              BaseUtil.openModalBottomSheet(
-                isScrollControlled: true,
-                enableDrag: false,
-                isBarrierDismissible: false,
-                addToScreenStack: false,
-                content: PaymentSheet(
-                  isCoinBalance: state.reedem,
-                  advisorID: state.advisorId,
-                  amount: state.totalPayable,
-                  fromTime: state.time,
-                  duration: state.duration,
-                  advisorName: state.advisorName,
-                ),
-                backgroundColor: UiConstants.kBackgroundColor,
-                hapticVibrate: true,
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: UiConstants.kTextColor,
-              padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.padding16,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-              ),
-            ),
-            child: Text(
-              'Make Payment',
-              style:
-                  TextStyles.sourceSans.body3.colour(UiConstants.kTextColor4),
-            ),
-          ),
+        padding: EdgeInsets.all(SizeConfig.padding18).copyWith(
+          bottom: SizeConfig.padding40,
         ),
+        child: isFree
+            ? Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        AppState.backButtonDispatcher!.didPopRoute();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: UiConstants.greyVarient,
+                        padding: EdgeInsets.symmetric(
+                          vertical: SizeConfig.padding16,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness8),
+                        ),
+                      ),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyles.sourceSans.body3,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: SizeConfig.padding12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        AppState.backButtonDispatcher!.didPopRoute();
+                        AppState.screenStack.add(ScreenItem.modalsheet);
+                        BaseUtil.openModalBottomSheet(
+                          isScrollControlled: true,
+                          enableDrag: false,
+                          isBarrierDismissible: false,
+                          addToScreenStack: false,
+                          content: PaymentSheet(
+                            isCoinBalance: state.reedem,
+                            advisorID: state.advisorId,
+                            amount: 0,
+                            fromTime: state.time,
+                            duration: state.duration,
+                            advisorName: state.advisorName,
+                            isFree: true,
+                          ),
+                          backgroundColor: UiConstants.kBackgroundColor,
+                          hapticVibrate: true,
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: UiConstants.kTextColor,
+                        padding: EdgeInsets.symmetric(
+                          vertical: SizeConfig.padding16,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness8),
+                        ),
+                      ),
+                      child: Text(
+                        'Confirm',
+                        style: TextStyles.sourceSans.body3
+                            .colour(UiConstants.kTextColor4),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    AppState.backButtonDispatcher!.didPopRoute();
+                    AppState.screenStack.add(ScreenItem.modalsheet);
+                    BaseUtil.openModalBottomSheet(
+                      isScrollControlled: true,
+                      enableDrag: false,
+                      isBarrierDismissible: false,
+                      addToScreenStack: false,
+                      content: PaymentSheet(
+                        isCoinBalance: state.reedem,
+                        advisorID: state.advisorId,
+                        amount: state.totalPayable,
+                        fromTime: state.time,
+                        duration: state.duration,
+                        advisorName: state.advisorName,
+                        isFree: false,
+                      ),
+                      backgroundColor: UiConstants.kBackgroundColor,
+                      hapticVibrate: true,
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: UiConstants.kTextColor,
+                    padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.padding16,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness8),
+                    ),
+                  ),
+                  child: Text(
+                    'Make Payment',
+                    style: TextStyles.sourceSans.body3
+                        .colour(UiConstants.kTextColor4),
+                  ),
+                ),
+              ),
       ),
     ],
   );
@@ -940,7 +1068,74 @@ Widget _buildCoinsRow({
 Widget _buildSummaryRow(
   String label,
   String value, {
-  bool isBold = false,
+  bool isFinalValue = false,
+  Color textColor = UiConstants.kTextColor,
+  Color subTextColor = UiConstants.kTextColor,
+  bool isFree = false,
+  String? subText,
+}) {
+  return Padding(
+    padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: isFinalValue
+              ? TextStyles.sourceSansSB.body2.colour(
+                  UiConstants.textGray70,
+                )
+              : TextStyles.sourceSans.body3.colour(
+                  UiConstants.textGray70,
+                ),
+        ),
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          transitionBuilder: (child, animation) => FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              if (isFree && subText != null)
+                Padding(
+                  padding: EdgeInsets.only(right: SizeConfig.padding6),
+                  child: Text(
+                    subText,
+                    style: TextStyles.sourceSansSB.body2.colour(subTextColor),
+                  ),
+                ),
+              Text(
+                isFinalValue && isFree ? 'FREE' : value,
+                key: ValueKey(value),
+                style: isFinalValue
+                    ? TextStyles.sourceSansSB.body2.colour(textColor).copyWith(
+                          decoration: isFree && !isFinalValue
+                              ? TextDecoration.lineThrough
+                              : null,
+                          decorationColor: UiConstants.kTextColor,
+                        )
+                    : TextStyles.sourceSans.body3.colour(textColor).copyWith(
+                          decoration: isFree && !isFinalValue
+                              ? TextDecoration.lineThrough
+                              : null,
+                          decorationColor: UiConstants.kTextColor,
+                        ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildSummary(
+  String label,
+  String value, {
+  bool isFinalValue = false,
   Color textColor = UiConstants.kTextColor,
 }) {
   return Padding(
@@ -950,7 +1145,7 @@ Widget _buildSummaryRow(
       children: [
         Text(
           label,
-          style: isBold
+          style: isFinalValue
               ? TextStyles.sourceSansSB.body2.colour(
                   UiConstants.textGray70,
                 )
@@ -967,7 +1162,7 @@ Widget _buildSummaryRow(
           child: Text(
             value,
             key: ValueKey(value),
-            style: isBold
+            style: isFinalValue
                 ? TextStyles.sourceSansSB.body2.colour(textColor)
                 : TextStyles.sourceSans.body3.colour(textColor),
           ),

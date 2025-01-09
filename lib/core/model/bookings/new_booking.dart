@@ -4,7 +4,7 @@ part 'new_booking.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Schedule {
-  Map<String, List<TimeSlot>>? slots;
+  Map<String, Map<String, List<TimeSlot>>>? slots;
   bool? hasFreeCall;
 
   Schedule({this.slots, this.hasFreeCall});
