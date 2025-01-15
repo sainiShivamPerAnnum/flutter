@@ -237,7 +237,7 @@ class UiConstants {
   static Color kGoldProBorder = const Color(0xffFFD979).withOpacity(0.2);
   static Color kGoldProBgColor = const Color(0xff323232);
   static Color kGoldProPrimaryDark2 = const Color(0xffB17518);
-  static Color kamber =Colors.amber;
+  static Color kamber = Colors.amber;
 
   static const grey1 = Color(0xFFA9C6D6);
   static const grey2 = Color(0xFF627F8E);
@@ -255,6 +255,7 @@ class UiConstants {
   static const teal4 = Color(0xFF01656B);
   static const teal5 = Color(0xFF023C40);
   static const teal6 = Color(0xff1CA98F);
+  static const teal7 = Color(0xff297264);
 
   static const blue3 = Color(0xff93B5FE);
 

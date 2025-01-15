@@ -8,6 +8,7 @@ import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
+import 'package:felloapp/feature/fixedDeposit/fd_main_view.dart';
 import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -378,8 +379,8 @@ class FelloBalanceScreen extends StatelessWidget {
                     onTap: () {
                       if (title == "Fello Flo") {
                         AppState.delegate!.appState.currentAction = PageAction(
-                          page: P2PHomePageConfig,
-                          widget: const P2PHomePage(),
+                          page: FdHomePageConfig,
+                          widget: const FdMainView(),
                           state: PageState.addWidget,
                         );
                       }

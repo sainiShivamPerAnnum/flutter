@@ -10,6 +10,7 @@ import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/clientComms_repo.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/repository/experts_repo.dart';
+import 'package:felloapp/core/repository/fixed_deposit_repo.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/internal_ops_repo.dart';
@@ -237,6 +238,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(ClientCommsRepo.new);
   locator.registerLazySingleton(ReportRepository.new);
   locator.registerLazySingleton(RpsRepository.new);
+  locator.registerLazySingleton(FdRepository.new);
   locator.registerLazySingleton(() => FcmHandlerV2(locator()));
   locator.registerLazySingleton<StoriesRepository>(
     () => StoriesRepository(locator()),

@@ -531,4 +531,5 @@ class Assets {
   static const String tick = "assets/images/icons/tick.png";
   static const String experts = "assets/images/experts.png";
   static const String noSlots = "assets/lotties/no_slots.json";
+  static const String fdIcon = "assets/images/fd_icon.png";
 }
