@@ -915,33 +915,33 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           page: RootPageConfig,
         );
 
-        await Future.delayed(const Duration(milliseconds: 100));
+        // await Future.delayed(const Duration(milliseconds: 100));
 
-        if (entryScreen == 'MOST_INVESTED' && baseUser?.favAsset != null) {
-          final type = baseUser?.favAsset == 'AUGGOLD99'
-              ? InvestmentType.AUGGOLD99
-              : InvestmentType.LENDBOXP2P;
-          if (type == InvestmentType.LENDBOXP2P) {
-            AppState.delegate!.appState.currentAction = PageAction(
-              page: P2PHomePageConfig,
-              widget: const P2PHomePage(),
-              state: PageState.addWidget,
-            );
-          } else {
-            AppState.delegate!.appState.currentAction = PageAction(
-              state: PageState.addWidget,
-              page: SaveAssetsViewConfig,
-              widget: AssetSectionView(
-                type: type,
-              ),
-            );
-          }
-          return;
-        }
+        // if (entryScreen == 'MOST_INVESTED' && baseUser?.favAsset != null) {
+        //   final type = baseUser?.favAsset == 'AUGGOLD99'
+        //       ? InvestmentType.AUGGOLD99
+        //       : InvestmentType.LENDBOXP2P;
+        //   if (type == InvestmentType.LENDBOXP2P) {
+        //     AppState.delegate!.appState.currentAction = PageAction(
+        //       page: P2PHomePageConfig,
+        //       widget: const P2PHomePage(),
+        //       state: PageState.addWidget,
+        //     );
+        //   } else {
+        //     AppState.delegate!.appState.currentAction = PageAction(
+        //       state: PageState.addWidget,
+        //       page: SaveAssetsViewConfig,
+        //       widget: AssetSectionView(
+        //         type: type,
+        //       ),
+        //     );
+        //   }
+        //   return;
+        // }
 
-        AppState.delegate!.parseRoute(
-          Uri.parse(entryScreen),
-        );
+        // AppState.delegate!.parseRoute(
+        //   Uri.parse(entryScreen),
+        // );
       }
     } catch (e) {
       return BaseUtil.showNegativeAlert(

@@ -33,12 +33,22 @@ class Salutation extends StatelessWidget {
         child: PropertyChangeConsumer<UserService, UserServiceProperties>(
           properties: const [UserServiceProperties.myName],
           builder: (context, model, child) {
-            return Text(
-              "Hi ${(model!.baseUser!.kycName!.isNotEmpty ? model.baseUser!.kycName! : model.baseUser!.name!.isNotEmpty ? model.baseUser!.name! : "User").trim().split(' ').first.capitalize()}",
-              style: textStyle ??
-                  TextStyles.rajdhaniSB.title3.colour(Colors.white),
-              overflow: TextOverflow.fade,
-              maxLines: 1,
+            return RichText(
+              textAlign: TextAlign.start,
+              text: TextSpan(
+                style: textStyle ??
+                    TextStyles.rajdhaniSB.title3.colour(Colors.white),
+                children: [
+                  const TextSpan(
+                    text: "Hello, ",
+                  ),
+                  TextSpan(
+                    text:
+                        "${(model!.baseUser!.kycName!.isNotEmpty ? model.baseUser!.kycName! : model.baseUser!.name!.isNotEmpty ? model.baseUser!.name! : "User").trim().split(' ').first.capitalize()}!",
+                    style: textStyle!.copyWith(color: UiConstants.primaryColor),
+                  )
+                ],
+              ),
             );
           },
         ),

@@ -7,7 +7,11 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/blog_model.dart';
+import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
 import 'package:felloapp/core/model/event_model.dart';
+import 'package:felloapp/core/model/experts/experts_home.dart';
+import 'package:felloapp/core/model/live/live_home.dart';
+// import 'package:felloapp/core/model/top_expert_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
@@ -19,6 +23,7 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/consultant_card.dart';
 import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/tambola_mini_info_card.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -26,11 +31,17 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/finance/blogs/all_blogs_view.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
+import 'package:felloapp/ui/pages/hometabs/home/cards_new.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/elements/help_fab.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/experts.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/first_free_call.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/live.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/past_bookings.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/upcoming_bookings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/ticket_components.dart/ticket_pendingAction.dart';
 import 'package:felloapp/ui/pages/power_play/root_card.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -43,13 +54,14 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/model/quick_links_model.dart';
 import 'save_components/instant_save_card.dart';
 import 'save_components/quiz_section.dart';
 
-class SaveViewModel extends BaseViewModel {
+class SaveViewModel extends ChangeNotifier {
   S? locale;
 
   SaveViewModel({this.locale}) {
@@ -90,6 +102,11 @@ class SaveViewModel extends BaseViewModel {
   late final PageController offersController = PageController(initialPage: 0);
   List<EventModel>? _ongoingEvents;
   List<BlogPostModel>? _blogPosts;
+  List<Booking> _upcomingBookings = [];
+  List<Booking> _pastBookings = [];
+  List<Expert> _topExperts = [];
+  LiveHome? _liveData;
+  bool _freeCallAvailable = false;
   List<BlogPostModelByCategory>? _blogPostsByCategory;
   bool _isLoading = true;
   bool _isChallenegsLoading = true;
@@ -130,6 +147,12 @@ class SaveViewModel extends BaseViewModel {
 
   List<BlogPostModel>? get blogPosts => _blogPosts;
 
+  List<Booking> get upcomingBookings => _upcomingBookings;
+  List<Booking> get pastBookings => _pastBookings;
+  List<Expert> get topExperts => _topExperts;
+  LiveHome? get liveData => _liveData;
+  bool get freeCallAvailable => _freeCallAvailable;
+
   List<BlogPostModelByCategory>? get blogPostsByCategory =>
       _blogPostsByCategory;
 
@@ -166,6 +189,31 @@ class SaveViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  set upcomingBookings(List<Booking> value) {
+    _upcomingBookings = value;
+    notifyListeners();
+  }
+
+  set pastBookings(List<Booking> value) {
+    _pastBookings = value;
+    notifyListeners();
+  }
+
+  set topExperts(List<Expert> value) {
+    _topExperts = value;
+    notifyListeners();
+  }
+
+  set liveData(LiveHome? value) {
+    _liveData = value;
+    notifyListeners();
+  }
+
+  set freeCallAvailable(bool value) {
+    _freeCallAvailable = value;
+    notifyListeners();
+  }
+
   set blogPosts(List<BlogPostModel>? value) {
     _blogPosts = value;
     notifyListeners();
@@ -186,11 +234,27 @@ class SaveViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> pullRefresh() async {
+    await Future.wait([
+      _userCoinService.getUserCoinBalance(),
+      _userService.getUserFundWalletData(),
+      getUpcomingBooking(),
+      getPastBooking(),
+      getTopExperts(),
+      getLiveData(),
+    ]);
+    _txnHistoryService.signOut();
+  }
+
   Future<void> init() async {
     // _baseUtil.fetchUserAugmontDetail();
     // baseProvider = BaseUtil();
     await _userService.getUserFundWalletData();
     await _userCoinService.getUserCoinBalance();
+    await getUpcomingBooking();
+    await getPastBooking();
+    await getTopExperts();
+    await getLiveData();
     await locator<SubService>().init();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -238,26 +302,30 @@ class SaveViewModel extends BaseViewModel {
 
   List<Widget> getSaveViewItems(SaveViewModel smodel) {
     List<Widget> saveViewItems = [];
-    saveViewItems.addAll([
-      Selector<CardActionsNotifier, bool>(
-        selector: (p0, p1) => p1.isVerticalView,
-        builder: (context, value, child) => AnimatedContainer(
-          curve: Curves.easeIn,
-          duration: const Duration(milliseconds: 300),
-          height: SizeConfig.screenWidth! * (value ? 1.54 : 0.8),
-        ),
-      ),
-    ]);
-
     for (final key in DynamicUiUtils.saveViewOrder[1]) {
       switch (key) {
+        case 'PBL':
+          saveViewItems.add(const PortfolioCard());
+          break;
         case "QL":
           saveViewItems.add(const QuickLinks());
           break;
         case "TM":
           saveViewItems.add(const TambolaMiniInfoCard());
           break;
-
+        case "LV":
+          saveViewItems.add(
+            const TopLive(),
+          );
+          break;
+        case "EXP":
+          saveViewItems.add(
+            const Experts(),
+          );
+          break;
+        case "SN":
+          saveViewItems.add(const ConsultationWidget());
+          break;
         case "PP":
           saveViewItems.add(const PowerPlayCard());
           break;
@@ -274,22 +342,29 @@ class SaveViewModel extends BaseViewModel {
           saveViewItems.add(const AutosaveCard());
           break;
         case 'CH':
-          saveViewItems.add(Campaigns(model: smodel));
+          saveViewItems.add(const Campaigns());
           break;
         case 'BL':
-          saveViewItems.add(Blogs(model: smodel));
+          saveViewItems.add(const Blogs());
+          break;
+        case 'UPB':
+          saveViewItems.add(const UpcomingBookingsComponent());
+          break;
+        case 'PB':
+          saveViewItems.add(const PastBookingsComponent());
+          break;
+        case 'FC':
+          saveViewItems.add(const FirstFreeCall());
           break;
       }
     }
-
-    saveViewItems.addAll([
-      SizedBox(height: SizeConfig.padding32),
-      const SaveAssetsFooter(),
-      const HelpFooter(),
-      SizedBox(
-        height: SizeConfig.navBarHeight * 0.5,
-      )
-    ]);
+    saveViewItems.addAll(
+      [
+        SizedBox(
+          height: SizeConfig.navBarHeight * 0.5,
+        ),
+      ],
+    );
     return saveViewItems;
   }
 
@@ -303,6 +378,43 @@ class SaveViewModel extends BaseViewModel {
     }
 
     isChallengesLoading = false;
+  }
+
+  Future<void> getUpcomingBooking() async {
+    final response = await _saveRepo.getUpcomingBookings();
+    if (response.isSuccess()) {
+      upcomingBookings = response.model ?? [];
+    } else {
+      print(response.errorMessage);
+    }
+  }
+
+  Future<void> getPastBooking() async {
+    final response = await _saveRepo.getPastBookings();
+    if (response.isSuccess()) {
+      pastBookings = response.model ?? [];
+    } else {
+      print(response.errorMessage);
+    }
+  }
+
+  Future<void> getTopExperts() async {
+    final response = await _saveRepo.getTopExpertsData();
+    if (response.isSuccess()) {
+      topExperts = response.model?.$1 ?? [];
+      freeCallAvailable = response.model?.$2 ?? false;
+    } else {
+      print(response.errorMessage);
+    }
+  }
+
+  Future<void> getLiveData() async {
+    final response = await _saveRepo.getLiveHomeData();
+    if (response.isSuccess()) {
+      liveData = response.model;
+    } else {
+      print(response.errorMessage);
+    }
   }
 
   Future<void> getSaveViewBlogs() async {
@@ -321,7 +433,6 @@ class SaveViewModel extends BaseViewModel {
     blogPosts = response.model;
     blogPosts!.sort((a, b) => a.acf!.categories!.compareTo(b.acf!.categories!));
     _blogPostsByCategory = getAllBlogsByCategory();
-    print(blogPosts!.length);
     updateIsLoading(false);
     notifyListeners();
   }
@@ -438,13 +549,15 @@ class SaveViewModel extends BaseViewModel {
 
   void trackChallengeTapped(String bannerUri, String actionUri, int order) {
     _analyticsService.track(
-        eventName: AnalyticsEvents.offerBannerTapped,
-        properties: AnalyticsProperties.getDefaultPropertiesMap(
-            extraValuesMap: {
-              "banner_uri": bannerUri,
-              "order": order,
-              "action_uri": actionUri
-            }));
+      eventName: AnalyticsEvents.offerBannerTapped,
+      properties: AnalyticsProperties.getDefaultPropertiesMap(
+        extraValuesMap: {
+          "banner_uri": bannerUri,
+          "Sequence": order,
+          "action_uri": actionUri
+        },
+      ),
+    );
   }
 
   void trackBannerClickEvent(int orderNumber) {
@@ -481,48 +594,62 @@ class QuickLinks extends StatelessWidget {
       AppConfig.getValue(AppConfigKey.quickActions),
     );
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          margin: EdgeInsets.only(
-              top: SizeConfig.padding24, bottom: SizeConfig.padding8),
-          width: SizeConfig.screenWidth,
-          child: Row(
-            children: List.generate(
-              quickLinks.length,
-              (index) => Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    Haptic.vibrate();
-                    AppState.delegate!
-                        .parseRoute(Uri.parse(quickLinks[index].deeplink));
-                    locator<AnalyticsService>().track(
-                      eventName: AnalyticsEvents.iconTrayTapped,
-                      properties: {'icon': quickLinks[index].name},
-                    );
-                  },
-                  child: Column(
-                    children: [
-                      _QuickLinkAvatar(quickLinksModel: quickLinks[index]),
-                      SizedBox(height: SizeConfig.padding8),
-                      Text(
-                        quickLinks[index].name,
-                        style:
-                            TextStyles.sourceSansSB.body3.colour(Colors.white),
-                      )
-                    ],
+    return Container(
+      margin: EdgeInsets.only(
+        top: SizeConfig.padding24,
+        bottom: SizeConfig.padding20,
+        left: SizeConfig.padding20,
+        right: SizeConfig.padding20,
+      ),
+      width: SizeConfig.screenWidth,
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        children: List.generate(
+          quickLinks.length,
+          (index) => GestureDetector(
+            onTap: () {
+              Haptic.vibrate();
+              AppState.delegate!
+                  .parseRoute(Uri.parse(quickLinks[index].deeplink));
+              locator<AnalyticsService>().track(
+                eventName: AnalyticsEvents.iconTrayTapped,
+                properties: {'icon': quickLinks[index].name},
+              );
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.padding12,
+              ),
+              width: SizeConfig.padding76,
+              decoration: BoxDecoration(
+                color: UiConstants.greyVarient,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(
+                    SizeConfig.padding8,
                   ),
                 ),
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: SizeConfig.padding32,
+                    height: SizeConfig.padding32,
+                    child: AppImage(
+                      quickLinks[index].asset,
+                    ),
+                  ),
+                  SizedBox(height: SizeConfig.padding10),
+                  Text(
+                    quickLinks[index].name,
+                    style: TextStyles.sourceSansSB.body4.colour(Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ),
           ),
         ),
-        SizedBox(
-          height: SizeConfig.padding10,
-        ),
-        const TicketsPendingAction()
-      ],
+      ),
     );
   }
 }

@@ -1,0 +1,148 @@
+///Package imports
+
+///Project imports
+import 'package:felloapp/feature/hms_room_kit/lib/src/model/peer_track_node.dart';
+// import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/grid_layouts/five_tile_layout.dart';
+import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/grid_layouts/four_tile_layout.dart';
+import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/grid_layouts/listenable_peer_widget.dart';
+// import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/grid_layouts/six_tile_layout.dart';
+import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/grid_layouts/three_tile_layout.dart';
+import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/grid_layouts/two_tile_layout.dart';
+import 'package:felloapp/util/styles/styles.dart';
+import 'package:flutter/cupertino.dart';
+
+///This renders the tile layout for different peers based on the number of peers in the room
+class GridLayout extends StatefulWidget {
+  final int numberOfTiles;
+  final int index;
+  final List<PeerTrackNode> peerTracks;
+
+  const GridLayout(
+      {super.key,
+      required this.numberOfTiles,
+      required this.index,
+      required this.peerTracks});
+
+  @override
+  State<GridLayout> createState() => _GridLayoutState();
+}
+
+class _GridLayoutState extends State<GridLayout> {
+  int tilesToBeRendered = 0;
+  int tileStartingIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    ///Here we check how many tiles we need to render
+    ///So if still there are 4 or more tiles to be rendered then we render 4 tiles
+    ///else we render the remaining tiles
+    ///
+    ///This is done to decide which layout we need to render
+    if (4 * (widget.index + 1) > widget.numberOfTiles) {
+      tilesToBeRendered = widget.numberOfTiles - 4 * (widget.index);
+    } else {
+      tilesToBeRendered = 4;
+    }
+
+    ///This contains the starting index of tile to be rendered
+    tileStartingIndex = 4 * widget.index;
+
+    ///Here we render the tile layout based on how many tiles we need to render
+    ///If we need to render 1 tile then we render the [ListenablePeerWidget]
+    ///If we need to render 2 tiles then we render the [TwoTileLayout]
+    ///If we need to render 3 tiles then we render the [ThreeTileLayout]
+    ///If we need to render 4 tiles then we render the [FourTileLayout]
+    ///If we need to render 5 tiles then we render the [FiveTileLayout]
+    ///If we need to render 6 tiles then we render the [SixTileLayout]
+    switch (tilesToBeRendered % 4) {
+      case 1:
+        return ListenablePeerWidget(
+          peerTracks: widget.peerTracks,
+          index: tileStartingIndex,
+        );
+
+      case 2:
+        return TwoTileLayout(
+          peerTracks: widget.peerTracks,
+          startIndex: tileStartingIndex,
+        );
+
+      case 3:
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding20,
+          ).copyWith(
+            top: SizeConfig.padding46,
+            bottom: SizeConfig.padding325,
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  UiConstants.kTextColor.withOpacity(.04),
+                  UiConstants.kBackgroundColor.withOpacity(.04),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.center,
+              ),
+            ),
+            child: ThreeTileLayout(
+              peerTracks: widget.peerTracks,
+              startIndex: tileStartingIndex,
+            ),
+          ),
+        );
+
+      case 0:
+      case 4:
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding20,
+          ).copyWith(
+            top: SizeConfig.padding46,
+            bottom: SizeConfig.padding325,
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  UiConstants.kTextColor.withOpacity(.04),
+                  UiConstants.kBackgroundColor.withOpacity(.04),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.center,
+              ),
+            ),
+            child: FourTileLayout(
+              peerTracks: widget.peerTracks,
+              startIndex: tileStartingIndex,
+            ),
+          ),
+        );
+    }
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.padding20,
+      ).copyWith(
+        top: SizeConfig.padding46,
+        bottom: SizeConfig.padding325,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              UiConstants.kTextColor.withOpacity(.04),
+              UiConstants.kBackgroundColor.withOpacity(.04),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.center,
+          ),
+        ),
+        child: FourTileLayout(
+          peerTracks: widget.peerTracks,
+          startIndex: tileStartingIndex,
+        ),
+      ),
+    );
+  }
+}

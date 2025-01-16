@@ -41,6 +41,7 @@ enum AppConfigKey {
   quickActions,
   canChangePostMaturityPreference,
   enableJourney,
+  enabled_psp_apps_booking,
 }
 
 extension AppConfigKeys on String {
@@ -83,6 +84,8 @@ extension AppConfigKeys on String {
         return AppConfigKey.active_pg_android;
       case 'enabledPspApps':
         return AppConfigKey.enabled_psp_apps;
+      case 'enabledPspAppsBooking':
+        return AppConfigKey.enabled_psp_apps_booking;
       case 'appShareMessage':
         return AppConfigKey.appShareMessage;
       case 'minPrincipleForPrize':
@@ -107,7 +110,7 @@ extension AppConfigKeys on String {
         return AppConfigKey.youtube_videos;
       case 'ticketsYoutubeVideos':
         return AppConfigKey.tickets_youtube_videos;
-      case "appReferralMessage":
+      case "appReferralMessageV1":
         return AppConfigKey.app_referral_message;
       case "enableTruecallerLogin":
         return AppConfigKey.enable_truecaller_login;
@@ -115,7 +118,7 @@ extension AppConfigKeys on String {
         return AppConfigKey.payment_brief_view;
       case "quizConfig":
         return AppConfigKey.quiz_config;
-      case "revampedReferralsConfig":
+      case "revampedReferralsConfigV1":
         return AppConfigKey.revamped_referrals_config;
       case 'useNewUrlUserOps':
         return AppConfigKey.useNewUrlUserOps;

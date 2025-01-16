@@ -55,15 +55,15 @@ class AssetSelectionPage extends StatelessWidget {
   final bool isTicketsFlow;
   final bool isFromGlobal;
 
-  bool _showHappyHour() {
-    if (locator<RootController>().currentNavBarItemModel ==
-        RootController.tambolaNavBar) {
-      return (locator<TambolaService>().bestTickets?.data?.totalTicketCount ??
-              0) >
-          0;
-    }
-    return true;
-  }
+  // bool _showHappyHour() {
+  //   if (locator<RootController>().currentNavBarItemModel ==
+  //       RootController.tambolaNavBar) {
+  //     return (locator<TambolaService>().bestTickets?.data?.totalTicketCount ??
+  //             0) >
+  //         0;
+  //   }
+  //   return true;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -143,6 +143,7 @@ class AssetSelectionPage extends StatelessWidget {
                     : AppBar(
                         elevation: 0,
                         backgroundColor: Colors.transparent,
+                           surfaceTintColor: Colors.transparent,
                         leading: IconButton(
                           icon: const Icon(
                             Icons.arrow_back_ios,
@@ -197,12 +198,7 @@ class AssetSelectionPage extends StatelessWidget {
                 : Consumer<AppState>(
                     builder: (ctx, m, child) {
                       return AnimatedContainer(
-                        height: !(locator<RootController>()
-                                        .currentNavBarItemModel ==
-                                    RootController.journeyNavBarItem ||
-                                !_showHappyHour())
-                            ? SizeConfig.navBarHeight
-                            : 0,
+                        height  : SizeConfig.navBarHeight,
                         alignment: Alignment.bottomCenter,
                         duration: const Duration(milliseconds: 400),
                         child: HappyHourBanner(

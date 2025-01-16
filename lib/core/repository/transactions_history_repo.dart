@@ -1,7 +1,5 @@
 // ignore_for_file: equal_keys_in_map
 
-import 'dart:developer';
-
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/sip_transaction_model.dart';
@@ -59,7 +57,6 @@ class TransactionHistoryRepository extends BaseRepo {
       );
 
       final responseData = response["data"];
-      log("Transactions data: $responseData");
       responseData["transactions"].forEach((e) {
         events.add(UserTransaction.fromMap(e, e["id"]));
       });
@@ -129,7 +126,6 @@ class TransactionHistoryRepository extends BaseRepo {
       );
 
       final responseData = response["data"];
-      log("Transactions data: $responseData");
       responseData["transactions"].forEach((e) {
         events.add(UserTransaction.fromMap(e, e["id"]));
       });

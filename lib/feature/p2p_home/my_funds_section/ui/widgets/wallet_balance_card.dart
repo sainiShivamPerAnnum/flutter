@@ -1,18 +1,13 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
-import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
+import 'package:felloapp/feature/p2p_home/rps/view/learn_more.dart';
+import 'package:felloapp/feature/p2p_home/rps/view/view_rps.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_flexi.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WalletBalanceCard extends StatelessWidget {
   const WalletBalanceCard({
@@ -23,96 +18,120 @@ class WalletBalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = locator<S>();
-    return GestureDetector(
-      onTap: () {
-        final transactionBloc = context.read<TransactionBloc>();
-        AppState.delegate!.appState.currentAction = PageAction(
-          state: PageState.addWidget,
-          widget: FlexiBalanceView(
-            onWithDrawalSubitted: () {
-              fundBloc.reset();
-              transactionBloc.reset();
-            },
-          ),
-          page: FlexiBalancePageConfig,
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: UiConstants.grey5,
-          borderRadius: BorderRadius.circular(
-            SizeConfig.roundness12,
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        color: UiConstants.grey5,
+        borderRadius: BorderRadius.circular(
+          SizeConfig.roundness12,
         ),
-        padding: EdgeInsets.symmetric(
-          vertical: SizeConfig.padding12,
-          horizontal: SizeConfig.padding18,
-        ),
-        child: Row(
-          children: [
-            const AppImage(
-              Assets.p2pWallet,
-              width: 60,
-              height: 60,
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        locale.wallet,
-                        style: TextStyles.rajdhaniSB.body1,
-                      ),
-                      const Icon(
-                        Icons.chevron_right_rounded,
-                        color: Colors.white,
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding8,
-                  ),
-                  Text(
-                    locale.walletInterest(8),
-                    style: TextStyles.sourceSans.body3.copyWith(
-                      color: UiConstants.grey1,
-                    ),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding12,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        locale.walletCurrentValueLabel,
-                        style: TextStyles.sourceSans.body3,
-                      ),
-                      Text(
-                        locale.amount(
-                          BaseUtil.formatCompactRupees(locator<UserService>()
-                              .userPortfolio
-                              .flo
-                              .flexi
-                              .balance
-                              .toDouble()),
+      ),
+      padding: EdgeInsets.symmetric(
+        vertical: SizeConfig.padding12,
+        horizontal: SizeConfig.padding18,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'View your repayments against your deposits',
+                  style: TextStyles.sourceSansSB.body2,
+                  maxLines: 2,
+                ),
+                SizedBox(
+                  height: SizeConfig.padding8,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    OutlinedButton(
+                      onPressed: () {
+                        AppState.delegate!.appState.currentAction = PageAction(
+                          state: PageState.addWidget,
+                          widget: const LearmMoreOnRPS(),
+                          page: RpsLearnMorePageConfig,
+                        );
+                      },
+                      style: ButtonStyle(
+                        minimumSize: WidgetStateProperty.all(
+                          const Size(0, 0),
                         ),
-                        style: TextStyles.sourceSansSB.body1,
-                      )
-                    ],
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
+                        padding: WidgetStateProperty.all(
+                          EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding12,
+                            vertical: SizeConfig.padding6,
+                          ),
+                        ),
+                        side: WidgetStateProperty.all(
+                          const BorderSide(
+                            color: UiConstants.kTextColor,
+                            width: 1.0,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                        shape: WidgetStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(SizeConfig.roundness5),
+                            ),
+                            side: const BorderSide(
+                              color: UiConstants.kTextColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        'Learn More',
+                        style: TextStyles.sourceSansSB.body4
+                            .colour(UiConstants.kTextColor),
+                      ),
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding14,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        AppState.delegate!.appState.currentAction = PageAction(
+                          state: PageState.addWidget,
+                          widget: const RpsView(),
+                          page: FlexiBalancePageConfig,
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding12,
+                          vertical: SizeConfig.padding6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: UiConstants.kTextColor,
+                          borderRadius: BorderRadius.circular(
+                            SizeConfig.roundness5,
+                          ),
+                        ),
+                        child: Text(
+                          'View Now',
+                          style: TextStyles.sourceSansSB.body4.colour(
+                            UiConstants.kTextColor4,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: SizeConfig.padding16,
+          ),
+          AppImage(
+            Assets.rpsSvg,
+            width: SizeConfig.padding82,
+            height: SizeConfig.padding64,
+          ),
+        ],
       ),
     );
   }

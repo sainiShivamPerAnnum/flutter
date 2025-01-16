@@ -568,6 +568,11 @@ class AppNegativeBtn extends StatelessWidget {
               width: 1,
             ),
           ),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+            ),
+          ),
         ),
         child: Text(
           btnText.toUpperCase(),

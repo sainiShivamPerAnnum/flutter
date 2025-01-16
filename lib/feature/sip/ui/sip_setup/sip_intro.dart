@@ -57,9 +57,11 @@ class _SipIntroViewState extends State<SipIntroView> {
             icon: const Icon(
               Icons.chevron_left,
               size: 32,
+              color: UiConstants.kTextColor,
             ),
           ),
           backgroundColor: UiConstants.kTextColor4,
+          surfaceTintColor: UiConstants.kTextColor4,
           title: Text(locale.siptitle),
           titleTextStyle: TextStyles.rajdhaniSB.title4.setHeight(1.3),
           centerTitle: true,

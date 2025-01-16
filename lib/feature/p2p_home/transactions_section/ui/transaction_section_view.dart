@@ -6,7 +6,6 @@ import 'package:felloapp/feature/p2p_home/home/widgets/no_transaction_widget.dar
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
-import 'package:felloapp/feature/p2p_home/ui/shared/footer.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transaction_details_view.dart';
@@ -224,22 +223,22 @@ class _TransactionSectionState extends State<TransactionSection>
               )
             ],
           ),
-          BlocBuilder<SIPTransactionBloc,
-              PaginationState<SubscriptionTransactionModel, int, Object>>(
-            builder: (context, transState) {
-              return BlocBuilder<TransactionBloc,
-                  PaginationState<UserTransaction, int, Object>>(
-                builder: (context, state) {
-                  return (state.entries.isNotEmpty &&
-                              _tabController.index == 0) ||
-                          (transState.entries.isNotEmpty &&
-                              _tabController.index == 1)
-                      ? const Footer()
-                      : const SizedBox.shrink();
-                },
-              );
-            },
-          ),
+          // BlocBuilder<SIPTransactionBloc,
+          //     PaginationState<SubscriptionTransactionModel, int, Object>>(
+          //   builder: (context, transState) {
+          //     return BlocBuilder<TransactionBloc,
+          //         PaginationState<UserTransaction, int, Object>>(
+          //       builder: (context, state) {
+          //         return (state.entries.isNotEmpty &&
+          //                     _tabController.index == 0) ||
+          //                 (transState.entries.isNotEmpty &&
+          //                     _tabController.index == 1)
+          //             ? const Footer()
+          //             : const SizedBox.shrink();
+          //       },
+          //     );
+          //   },
+          // ),
           // StreamBuilder(
           //   stream: StreamGroup.merge([
           //     context.watch<TransactionBloc>().stream,

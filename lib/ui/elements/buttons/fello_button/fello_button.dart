@@ -88,7 +88,7 @@ class _FelloButtonState extends State<FelloButton> {
                 }
                 BaseUtil.showNoInternetAlert();
               },
-              style: ElevatedButton.styleFrom(primary: Colors.grey),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
               child: Opacity(
                 opacity: 0.7,
                 child: Text(widget.defaultButtonText ?? locale.btn),

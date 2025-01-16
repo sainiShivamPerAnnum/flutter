@@ -1,3 +1,4 @@
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_tickets/components/tickets_banners_section.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_tickets/components/tickets_mulitplier_section.dart';
@@ -8,8 +9,10 @@ import 'package:felloapp/feature/tambola/src/ui/widgets/next_week_info_card.dart
 import 'package:felloapp/feature/tambola/src/ui/widgets/past_week_winners_section.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/ticket_section.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -47,36 +50,44 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseView<TambolaHomeTicketsViewModel>(
-        onModelReady: (model) => model.init(),
-        onModelDispose: (model) => model.dispose(),
-        builder: (context, model, child) {
-          return model.state == ViewState.Busy
-              ? const Center(
-                  child: FullScreenLoader(),
-                )
-              : Stack(
-                  children: [
-                    ListView(
-                      padding: EdgeInsets.only(
-                        top: SizeConfig.padding16,
-                        bottom: SizeConfig.navBarHeight,
-                      ),
-                      controller: RootController.controller,
-                      children: const [
-                        TambolaRewardLottieStrip(),
-                        TicketsPicksWidget(),
-                        TicketSection(),
-                        NextWeekTicketInfo(),
-                        TicketsOffersSection(),
-                        TicketMultiplierOptionsWidget(),
-                        TicketsRewardSection(),
-                        TambolaLeaderboardView(),
-                        TermsAndConditions(url: Constants.tambolatnc),
-                      ],
-                    ),
+    return BaseScaffold(
+      resizeToAvoidBottomInset: false,
+      showBackgroundGrid: true,
+      appBar: const FAppBar(
+        title: "Tambola",
+        showHelpButton: true,
+        type: FaqsType.tambola,
+        showCoinBar: false,
+        showAvatar: false,
+        leadingPadding: false,
+      ),
+      body: BaseView<TambolaHomeTicketsViewModel>(
+          onModelReady: (model) => model.init(),
+          onModelDispose: (model) => model.dispose(),
+          builder: (context, model, child) {
+            return model.state == ViewState.Busy
+                ? const Center(
+                    child: FullScreenLoader(),
+                  )
+                : ListView(
+                  padding: EdgeInsets.only(
+                    top: SizeConfig.padding16,
+                    bottom: SizeConfig.navBarHeight,
+                  ),
+                  controller: RootController.controller,
+                  children: const [
+                    TambolaRewardLottieStrip(),
+                    TicketsPicksWidget(),
+                    TicketSection(),
+                    NextWeekTicketInfo(),
+                    TicketsOffersSection(),
+                    TicketMultiplierOptionsWidget(),
+                    TicketsRewardSection(),
+                    TambolaLeaderboardView(),
+                    TermsAndConditions(url: Constants.tambolatnc),
                   ],
                 );
-        });
+          }),
+    );
   }
 }

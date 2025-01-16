@@ -14,6 +14,7 @@ import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart'
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
@@ -21,17 +22,18 @@ import 'package:felloapp/navigator/router/route_parser.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcaseview.dart';
 
 import 'core/service/notifier_services/user_coin_service.dart';
 import 'feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
@@ -51,12 +53,15 @@ class MyApp extends HookWidget {
     final backButtonDispatcher =
         useMemoized(() => FelloBackButtonDispatcher(delegate));
 
-    useMemoized(() {
-      AppState.backButtonDispatcher = backButtonDispatcher;
-      AppState.delegate = delegate;
-      delegate.setNewRoutePath(SplashPageConfig);
-      return null;
-    }, const []);
+    useMemoized(
+      () {
+        AppState.backButtonDispatcher = backButtonDispatcher;
+        AppState.delegate = delegate;
+        delegate.setNewRoutePath(SplashPageConfig);
+        return null;
+      },
+      const [],
+    );
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -66,10 +71,16 @@ class MyApp extends HookWidget {
       ),
       child: MultiProvider(
         providers: [
+          BlocProvider(
+            create: (_) =>
+                PreloadBloc()..add(const PreloadEvent.getVideosFromApi()),
+          ),
           Provider(create: (_) => SipCubit()),
           Provider(create: (_) => locator<TransactionBloc>()),
           Provider(create: (_) => locator<MyFundsBloc>()),
           Provider(create: (_) => locator<SIPTransactionBloc>()),
+          ChangeNotifierProvider(
+              create: (_) => locator<SaveViewModel>(),),
           ChangeNotifierProvider(create: (_) => locator<ConnectivityService>()),
           ChangeNotifierProvider(create: (_) => locator<DBModel>()),
           ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
@@ -85,9 +96,11 @@ class MyApp extends HookWidget {
           ChangeNotifierProvider(create: (_) => locator<BankAndPanService>()),
           ChangeNotifierProvider(create: (_) => locator<TambolaService>()),
           ChangeNotifierProvider(
-              create: (_) => locator<AugmontTransactionService>()),
+            create: (_) => locator<AugmontTransactionService>(),
+          ),
           ChangeNotifierProvider(
-              create: (_) => locator<LendboxTransactionService>()),
+            create: (_) => locator<LendboxTransactionService>(),
+          ),
           ChangeNotifierProvider(create: (_) => locator<PowerPlayService>()),
           ChangeNotifierProvider(
             create: (_) => locator<ScratchCardService>(),
@@ -101,10 +114,7 @@ class MyApp extends HookWidget {
           child: MaterialApp.router(
             title: Constants.APP_NAME,
             builder: (context, child) {
-              return ShowCaseWidget(
-                enableAutoScroll: true,
-                builder: Builder(builder: (context) => child!),
-              );
+              return child!;
             },
             theme: FelloTheme.darkMode(),
             debugShowCheckedModeBanner: false,

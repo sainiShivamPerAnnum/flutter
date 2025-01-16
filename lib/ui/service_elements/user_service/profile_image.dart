@@ -117,7 +117,7 @@ class _CirclePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = color ?? Colors.transparent
-      ..strokeWidth = 1
+      ..strokeWidth = 3
       ..style = PaintingStyle.stroke;
 
     Offset c = Offset(
@@ -125,7 +125,7 @@ class _CirclePainter extends CustomPainter {
       size.width / 2,
     );
 
-    canvas.drawCircle(c, 22, paint);
+    canvas.drawCircle(c, 18, paint);
   }
 
   @override

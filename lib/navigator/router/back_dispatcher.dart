@@ -12,6 +12,9 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_store.dart';
+import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/bottom_sheets/leave_session_bottom_sheet.dart';
+import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
@@ -31,6 +34,8 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter Imports
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate? _routerDelegate;
@@ -74,6 +79,39 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     AppToasts.flushbar?.dismiss();
     if (AppState.screenStack.last == ScreenItem.loader) {
       return Future.value(true);
+    }
+    if (AppState.isInLiveStream &&
+        AppState.screenStack.last != ScreenItem.dialog &&
+        AppState.screenStack.last != ScreenItem.modalsheet &&
+        (AppState.delegate!.currentConfiguration?.path ?? '') ==
+            '/livePreview') {
+      BaseUtil.openModalBottomSheet(
+        addToScreenStack: true,
+        isScrollControlled: true,
+        isBarrierDismissible: true,
+        backgroundColor: UiConstants.bg,
+        content: ChangeNotifierProvider.value(
+          value: locator<MeetingStore>(),
+          child: const LeaveSessionBottomSheet(),
+        ),
+      );
+      return Future.value(true);
+    }
+    if ((AppState.delegate!.currentConfiguration?.path ?? '') ==
+            '/shorts-internal' &&
+        AppState.screenStack.last != ScreenItem.modalsheet) {
+      BlocProvider.of<PreloadBloc>(
+        _routerDelegate!.navigatorKey.currentContext!,
+        listen: false,
+      ).add(
+        const PreloadEvent.disposeProfileControllers(),
+      );
+      BlocProvider.of<PreloadBloc>(
+        _routerDelegate!.navigatorKey.currentContext!,
+        listen: false,
+      ).add(
+        const PreloadEvent.disposeLiveStreamController(),
+      );
     }
     // _journeyService.checkForMilestoneLevelChange();
     if (locator<BackButtonActions>().isTransactionCancelled) {

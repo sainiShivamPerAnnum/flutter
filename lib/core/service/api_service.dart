@@ -150,7 +150,6 @@ class APIService implements API {
         data: body,
         apiName: apiName,
       );
-
       if (decryptData) {
         final data = await _decryptData(response.data);
         log("decryptData  ${data!}");
@@ -225,6 +224,8 @@ class APIService implements API {
     final responseJson = response?.data;
     switch (response?.statusCode) {
       case 200:
+        return responseJson;
+      case 201:
         return responseJson;
       case 400:
         throw BadRequestException(responseJson['message']);

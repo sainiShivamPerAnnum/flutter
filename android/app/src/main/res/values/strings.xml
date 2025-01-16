@@ -1,6 +1,7 @@
 <resources>
-    <string name="facebook_app_id">251100614291797</string>
+    <string name="facebook_app_id">482721491504595</string>
     <string name="fb_login_protocol_scheme">fb251100614291797</string>
+    <string name="facebook_client_token">a7644f25c9abe18eff60114199505801</string>
     <string name="webengage_code">in~76aa370</string>
     <!-- ProdTrucaller Playstore key -->
     <string name="partnerKey">m6855fhdidngxw7n6hyo2skc8ghlvdchs2-5fkqxdg4</string>

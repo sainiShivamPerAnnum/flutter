@@ -4,6 +4,7 @@ import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/feature/p2p_home/home/widgets/percentage_chip.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
+import 'package:felloapp/feature/p2p_home/rps/view/view_rps.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -202,35 +203,64 @@ class TransactionCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  transaction.lbMap.maturityPref == '1'
-                      ? locale.reInvestOnMaturity
-                      : isNewAsset
-                          ? locale.movesToVault
-                          : 'Moves to P2P Wallet',
+                  'To be paid as per the Repayment Schedule',
                   style: TextStyles.sourceSans.body4.copyWith(
                     color: UiConstants.textGray60,
                   ),
                 ),
-                Text(
-                  transaction.lbMap.maturityPref == '1'
-                      ? isNewAsset
-                          ? locale.extraReturns(
-                              assetInformation.reinvestInterestGain,
-                            )
-                          : locale.reinvestInSamePlan
-                      : isNewAsset
-                          ? locale.loosingReturns(
-                              assetInformation.reinvestInterestGain,
-                            )
-                          : locale.withdrawMaturity,
-                  style: TextStyles.sourceSans.body4.copyWith(
-                    color: transaction.lbMap.maturityPref == '1'
-                        ? UiConstants.yellow2
-                        : UiConstants.peach2,
+                GestureDetector(
+                  onTap: () {
+                    AppState.delegate!.appState.currentAction = PageAction(
+                      state: PageState.addWidget,
+                      widget: const RpsView(),
+                      page: FlexiBalancePageConfig,
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      Text(
+                        'View RPS',
+                        style: TextStyles.sourceSans.body4.copyWith(
+                          color: UiConstants.kTextColor,
+                        ),
+                      ),
+                      Icon(
+                        Icons.chevron_right,
+                        size: SizeConfig.body4,
+                        color: UiConstants.kTextColor,
+                      ),
+                    ],
                   ),
-                )
+                ),
+                // Text(
+                //   transaction.lbMap.maturityPref == '1'
+                //       ? locale.reInvestOnMaturity
+                //       : isNewAsset
+                //           ? locale.movesToVault
+                //           : 'Moves to P2P Wallet',
+
+                //   ),
+                // ),
+                // Text(
+                //   transaction.lbMap.maturityPref == '1'
+                //       ? isNewAsset
+                //           ? locale.extraReturns(
+                //               assetInformation.reinvestInterestGain,
+                //             )
+                //           : locale.reinvestInSamePlan
+                //       : isNewAsset
+                //           ? locale.loosingReturns(
+                //               assetInformation.reinvestInterestGain,
+                //             )
+                //           : locale.withdrawMaturity,
+                //   style: TextStyles.sourceSans.body4.copyWith(
+                //     color: transaction.lbMap.maturityPref == '1'
+                //         ? UiConstants.yellow2
+                //         : UiConstants.peach2,
+                //   ),
+                // )
               ],
-            )
+            ),
           ],
         ),
       ),

@@ -8,9 +8,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
-import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class OnboardingViewModel extends BaseViewModel {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
@@ -43,26 +41,6 @@ class OnboardingViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  List<Widget> assetWidgets = [
-    SvgPicture.asset(
-      "assets/svg/partner_assets_frame.svg",
-      width: SizeConfig.screenWidth! * 0.9,
-    ),
-    Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: List.generate(Assets.assetList2OnBoarding.length, (index) {
-        return SvgPicture.asset(
-          Assets.assetList2OnBoarding[index],
-          height: SizeConfig.screenWidth! * 0.1,
-          width: SizeConfig.screenWidth! * 0.1,
-          fit: BoxFit.cover,
-        );
-      }),
-    ),
-    const SizedBox.shrink(),
-  ];
-
   List<List<String>>? get onboardingData => _onboardingData;
 
   set pageController(PageController? val) {
@@ -85,16 +63,19 @@ class OnboardingViewModel extends BaseViewModel {
     currentPage = 0;
     onboardingData = [
       [
-        "Grow your savings by 12% p.a.",
-        "By saving in safe and secure assets like Digital Gold and Fello Flo "
+        "Discuss finance with certified experts",
+        "Book one-on-one sessions with expert  advisors who understand your goals.",
+        Assets.onbaording1,
       ],
       [
-        "Get rewarded for Saving",
-        "Save and get free tickets and participate in the weekly draws",
+        "Ask Questions, Get Answers in Live Webinar",
+        "Ask Questions and Gain Insights by Joining live streams hosted by trusted advisors.",
+        Assets.onbaording2,
       ],
       [
-        "Become a Crorepati",
-        "Grab ₹1 crore and a Mahindra Thar by participating in weekly draws",
+        "Invest in Digital Gold to get safe Returns",
+        "Invest in trusted gold at market rates, powered by Augmont and get stable returns.",
+        Assets.onbaording3,
       ],
     ];
   }

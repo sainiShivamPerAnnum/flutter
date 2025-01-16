@@ -14,7 +14,9 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class LowerCaseTextFormatter extends TextInputFormatter {
   @override
@@ -57,37 +59,22 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
           shrinkWrap: true,
           children: [
             const LoginImage(),
-            SizedBox(height: SizeConfig.padding8),
-            Align(
-              alignment: Alignment.center,
-              child: Column(
-                children: [
-                  Text(
-                    locale.obEnterDetails,
-                    style: TextStyles.rajdhaniB.title2,
-                  ),
-                  Text(
-                    locale.obEnterDetailsTitle,
-                    style: TextStyles.body3.colour(UiConstants.kTextColor2),
-                  )
-                ],
-              ),
-            ),
-
-            SizedBox(height: SizeConfig.padding20),
-
-            //input
+            SizedBox(height: SizeConfig.padding68),
             Container(
-              margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins * 2),
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding25),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AppTextFieldLabel(locale.obNameLabel, leftPadding: 0),
+                  Text(
+                    'Enter your name',
+                    style: TextStyles.sourceSansSB.body1,
+                  ),
+                  SizedBox(height: SizeConfig.padding14),
                   Form(
                     key: model.formKey,
                     child: AppTextField(
                       key: const ValueKey("userNameTab"),
+                      fillColor: UiConstants.greyVarient,
                       textEditingController: model.nameController,
                       isEnabled: model.enabled,
                       maxLength: 15,
@@ -117,8 +104,12 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                       },
                     ),
                   ),
-                  SizedBox(height: SizeConfig.padding20),
-                  AppTextFieldLabel(locale.obGenderLabel, leftPadding: 0),
+                  SizedBox(height: SizeConfig.padding24),
+                  Text(
+                    'Gender',
+                    style: TextStyles.sourceSansSB.body1,
+                  ),
+                  SizedBox(height: SizeConfig.padding14),
                   Row(
                     children: List.generate(
                       3,
@@ -140,39 +131,43 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                                 });
                               },
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
+                                backgroundColor: WidgetStateProperty.all(
                                   model.genderValue == index
-                                      ? UiConstants.primaryColor
-                                          .withOpacity(0.1)
-                                      : UiConstants.kTextFieldColor,
+                                      ? UiConstants.kblue2.withOpacity(0.4)
+                                      : Colors.transparent,
                                 ),
-                                shape: MaterialStateProperty.all(
+                                side: WidgetStateProperty.all(
+                                  BorderSide(
+                                    style: BorderStyle.solid,
+                                    width: 1,
+                                    color: (model.genderValue == index)
+                                        ? UiConstants.primaryColor
+                                        : UiConstants.textGray60,
+                                  ),
+                                ),
+                                shape: WidgetStateProperty.all(
                                   RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(
-                                        SizeConfig.roundness8),
+                                      SizeConfig.roundness8,
+                                    ),
                                     side: BorderSide(
-                                        style: BorderStyle.solid,
-                                        width: 2,
-                                        color: (model.genderValue == index)
-                                            ? UiConstants.primaryColor
-                                            : Colors.black),
+                                      style: BorderStyle.solid,
+                                      width: 1,
+                                      color: (model.genderValue == index)
+                                          ? UiConstants.primaryColor
+                                          : UiConstants.textGray60,
+                                    ),
                                   ),
                                 ),
                               ),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.padding12,
-                                  vertical: SizeConfig.padding12,
-                                ),
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    model.genderOptions[index],
-                                    style: TextStyles.sourceSans.body3.colour(
-                                      (model.genderValue == index)
-                                          ? UiConstants.primaryColor
-                                          : UiConstants.kTextColor2,
-                                    ),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  model.genderOptions[index].toUpperCase(),
+                                  style: TextStyles.sourceSansSB.body6.colour(
+                                    (model.genderValue == index)
+                                        ? UiConstants.primaryColor
+                                        : UiConstants.textGray60,
                                   ),
                                 ),
                               ),
@@ -182,18 +177,19 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                       },
                     ),
                   ),
-                  SizedBox(height: SizeConfig.padding14),
+                  SizedBox(height: SizeConfig.padding24),
                   model.hasReferralCode
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: SizeConfig.padding10),
-                            AppTextFieldLabel(
+                            Text(
                               locale.refCodeOptional,
-                              leftPadding: 0,
+                              style: TextStyles.sourceSansSB.body1,
                             ),
+                            SizedBox(height: SizeConfig.padding14),
                             AppTextField(
                               key: const ValueKey("refferalCode"),
+                              fillColor: UiConstants.greyVarient,
                               textEditingController:
                                   model.referralCodeController,
                               onChanged: (val) {},
@@ -225,44 +221,76 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             MaterialButton(
+                              padding: EdgeInsets.zero,
                               onPressed: () {
                                 if (widget.loginModel.state == ViewState.Busy) {
                                   return;
                                 }
                                 model.hasReferralCode = true;
+                                Future.delayed(
+                                    const Duration(milliseconds: 500), () {
+                                  widget.loginModel.nameViewScrollController
+                                      .animateTo(
+                                    widget.loginModel.nameViewScrollController
+                                        .position.maxScrollExtent,
+                                    duration: const Duration(milliseconds: 500),
+                                    curve: Curves.easeIn,
+                                  );
+                                });
                               },
-                              child: Padding(
-                                padding: EdgeInsets.all(SizeConfig.padding8),
-                                child: Text(
-                                  locale.refHaveReferral,
-                                  key: const ValueKey("refferalTab"),
-                                  style: TextStyles.body2.bold
-                                      .colour(UiConstants.kPrimaryColor),
-                                  textAlign: TextAlign.center,
-                                ),
+                              child: Text(
+                                locale.refHaveReferral,
+                                key: const ValueKey("refferalTab"),
+                                style: TextStyles.body2.bold
+                                    .colour(UiConstants.kPrimaryColor),
+                                textAlign: TextAlign.center,
                               ),
                             ),
                           ],
-                        )
+                        ),
+                  SizedBox(
+                    height: model.hasReferralCode
+                        ? SizeConfig.padding30
+                        : SizeConfig.padding10,
+                  ),
+                  Consumer<LoginControllerViewModel>(
+                    builder: (context, model, child) {
+                      return SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () =>
+                              model.processScreenInput(model.currentPage),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(
+                                SizeConfig.padding325, SizeConfig.padding48),
+                            backgroundColor: UiConstants.kTextColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.roundness8),
+                            ),
+                          ),
+                          child: model.state == ViewState.Busy
+                              ? SizedBox(
+                                  width: SizeConfig.padding32,
+                                  child: SpinKitThreeBounce(
+                                    color: UiConstants.kTextColor4,
+                                    size: SizeConfig.padding20,
+                                  ),
+                                )
+                              : Text(
+                                  model.currentPage == LoginNameInputView.index
+                                      ? locale.obFinish
+                                      : locale.obNext,
+                                  style: TextStyles.sourceSansSB.body3
+                                      .colour(UiConstants.kTextColor4),
+                                ),
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
-
-            Container(
-              width: SizeConfig.screenWidth,
-              margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins * 2,
-                  vertical: SizeConfig.padding12),
-              alignment: Alignment.center,
-              child: Text(
-                locale.obIsOlder,
-                textAlign: TextAlign.center,
-                style: TextStyles.body3.colour(
-                  UiConstants.kTextColor2,
-                ),
-              ),
-            ),
-
             SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 100),
           ],
         );

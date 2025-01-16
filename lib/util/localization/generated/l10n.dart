@@ -7136,6 +7136,25 @@ class S {
     );
   }
 
+  /// `Event Added Successfully`
+  String get eventSuccess {
+    return Intl.message(
+      'Event Added Successfully',
+      name: 'eventSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get eventUpdateSuccess {
+    return Intl.message(
+      'Event Updated Successfully',
+      name: 'eventSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `1-2 business working days`
   String get businessDays {
     return Intl.message(
@@ -8311,6 +8330,15 @@ class S {
     return Intl.message(
       'Help & Support',
       name: 'helpAndSupport',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get support {
+    return Intl.message(
+      'Support',
+      name: 'support',
       desc: '',
       args: [],
     );

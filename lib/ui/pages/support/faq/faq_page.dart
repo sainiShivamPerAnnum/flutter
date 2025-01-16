@@ -15,7 +15,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart' as html;
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 
 class FAQPage extends StatelessWidget {
   final FaqsType type;
@@ -108,10 +108,6 @@ class FAQPage extends StatelessWidget {
 
   void showFaqBottomSheet(BuildContext context, FAQDataModel data) {
     final desc = data.description;
-    final style = html.Style(
-      color: Colors.white,
-      fontSize: html.FontSize(14),
-    );
 
     BaseUtil.openModalBottomSheet(
       backgroundColor: UiConstants.kBackgroundColor,
@@ -144,15 +140,22 @@ class FAQPage extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.pageHorizontalMargins / 2,
                       ),
-                      child: html.Html(
-                        style: {
-                          "html": style,
-                          "body": style,
-                          "p": style,
-                          "span": style,
-                          "ul": style,
+                      child: HtmlWidget(
+                        desc,
+                        textStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                        customStylesBuilder: (element) {
+                          if (element.localName == 'html' ||
+                              element.localName == 'body' ||
+                              element.localName == 'p' ||
+                              element.localName == 'span' ||
+                              element.localName == 'ul') {
+                            return {'color': 'white', 'font-size': '14px'};
+                          }
+                          return null;
                         },
-                        data: desc,
                       ),
                     ),
                   ],

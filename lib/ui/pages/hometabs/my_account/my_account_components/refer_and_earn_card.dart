@@ -65,7 +65,7 @@ class ReferEarnCard extends StatelessWidget {
                   blurRadius: 20,
                   offset: Offset(0, 14),
                   spreadRadius: 0,
-                )
+                ),
               ],
             ),
             child: Column(
@@ -105,7 +105,7 @@ class ReferEarnCard extends StatelessWidget {
                         SizedBox(
                           width: SizeConfig.screenWidth! * 0.44,
                           child:
-                              'Earn *₹${(AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest1k'] ?? 50) + (AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest10kflo12'] ?? 450)}* when your friend saves in 11% Flo'
+                              'Earn *${(AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest1k'] ?? 50) + (AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest10kflo12'] ?? 450)} coins* when your friend saves in Fello'
                                   .beautify(
                             style: TextStyles.sourceSans.body2
                                 .colour(Colors.white.withOpacity(0.8)),

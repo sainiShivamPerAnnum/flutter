@@ -1,4 +1,5 @@
 //Project Imports
+import 'dart:async';
 import 'dart:developer';
 
 // import 'package:apxor_flutter/observer.dart';
@@ -11,16 +12,22 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
+import 'package:felloapp/core/repository/live_repository.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/feature/fello_badges/ui/fello_badges_home.dart';
+import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
+import 'package:felloapp/feature/p2p_home/rps/view/view_rps.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
+import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
 import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_select_assset.dart';
+import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -75,6 +82,7 @@ import 'package:felloapp/util/styles/styles.dart';
 //Flutter Imports
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/enums/app_config_keys.dart';
 import '../../core/model/app_config_model.dart';
@@ -224,6 +232,17 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Splash:
           _addPageData(const LauncherView(), SplashPageConfig);
           break;
+        case Pages.THome:
+          if (locator<UserService>()
+                  .baseUser!
+                  .userPreferences
+                  .getPreference(Preferences.TAMBOLAONBOARDING) !=
+              1) {
+            AppState.delegate!.parseRoute(Uri.parse("ticketsIntro"));
+            return;
+          }
+          _addPageData(const TambolaHomeTicketsView(), THomePageConfig);
+          break;
         case Pages.Login:
           _addPageData(const LoginControllerView(), LoginPageConfig);
           break;
@@ -321,6 +340,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(const SettingsView(), SettingsViewPageConfig);
           break;
 
+        case Pages.FlexiBalaceView:
+          _addPageData(const RpsView(), FlexiBalancePageConfig);
+          break;
         case Pages.PowerPlayHome:
           _addPageData(const PowerPlayHome(), PowerPlayHomeConfig);
           break;
@@ -410,7 +432,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
             P2PHomePageConfig,
           );
           break;
-
         default:
           break;
       }
@@ -742,6 +763,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.SipMandateView:
         SipMandatePageConfig.currentPageAction = action;
         break;
+      case Pages.Live:
+        LivePageConfig.currentPageAction = action;
+        break;
+      case Pages.Expert:
+        AllExpertsPageConfig.currentPageAction = action;
+        break;
+      case Pages.AllShorts:
+        AllShortsPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -882,10 +912,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     }
   }
 
-  void screenCheck(
+  Future<void> screenCheck(
     String screenKey, [
     Map<String, String> queryParams = const {},
-  ]) {
+  ]) async {
     PageConfiguration? pageConfiguration;
 
     var rootController = locator<RootController>();
@@ -903,9 +933,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'play':
         pageConfiguration = PlayViewConfig;
-        break;
-      case 'win':
-        onTapItem(RootController.winNavBarItem);
         break;
 
       case 'profile':
@@ -984,6 +1011,66 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'augTxns':
         openTransactions(InvestmentType.AUGGOLD99);
         break;
+      case 'live':
+        final id = queryParams['id'];
+        if (id != null) {
+          await openLiveById(id);
+        } else if (rootController.navItems
+            .containsValue(RootController.liveNavBarItem)) {
+          onTapItem(RootController.liveNavBarItem);
+          break;
+        }
+        pageConfiguration = LivePageConfig;
+        break;
+      case 'bookings':
+        final id = queryParams['id'];
+        final name = queryParams['name'];
+        if (id != null && name != null) {
+          BaseUtil.openBookAdvisorSheet(
+            advisorId: id,
+            advisorName: name,
+            isEdit: false,
+          );
+        }
+        break;
+      case 'experts':
+        final id = queryParams['id'];
+        if (id != null) {
+          openExpertDetails(id);
+          break;
+        } else if (rootController.navItems
+            .containsValue(RootController.expertNavBarItem)) {
+          onTapItem(RootController.expertNavBarItem);
+          break;
+        }
+        pageConfiguration = AllExpertsPageConfig;
+        break;
+      case 'shorts':
+        final id = queryParams['id'];
+        if (id != null) {
+          final preloadBloc = BlocProvider.of<PreloadBloc>(
+            navigatorKey.currentContext!,
+          );
+          final switchCompleter = Completer<void>();
+          preloadBloc.add(
+            PreloadEvent.initializeFromDynamicLink(
+              videoId: id,
+              completer: switchCompleter,
+            ),
+          );
+          await switchCompleter.future;
+          if (rootController.navItems
+              .containsValue(RootController.shortsNavBarItem)) {
+            onTapItem(RootController.shortsNavBarItem);
+            break;
+          }
+        } else if (rootController.navItems
+            .containsValue(RootController.shortsNavBarItem)) {
+          onTapItem(RootController.shortsNavBarItem);
+          break;
+        }
+        pageConfiguration = AllShortsPageConfig;
+        break;
       case 'lboxTxns':
         openTransactions(InvestmentType.LENDBOXP2P);
         break;
@@ -991,11 +1078,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = ReferralDetailsPageConfig;
         break;
       case 'tambolaHome':
-        if (rootController.navItems
-            .containsValue(RootController.tambolaNavBar)) {
-          onTapItem(RootController.tambolaNavBar);
-          break;
-        }
+        // if (rootController.navItems
+        //     .containsValue(RootController.tambolaNavBar)) {
+        //   onTapItem(RootController.tambolaNavBar);
+        //   break;
+        // }
         pageConfiguration = THomePageConfig;
         break;
       case 'myWinnings':
@@ -1032,6 +1119,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       // BACKWARD COMPATIBILITY --END
       case 'pop':
         AppState.backButtonDispatcher!.didPopRoute();
+        break;
+      case 'rps':
+        pageConfiguration = FlexiBalancePageConfig;
         break;
       case "autosave":
         if (!(AppConfig.getValue(AppConfigKey.showNewAutosave) as bool)) break;
@@ -1181,6 +1271,90 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       widget: TransactionsHistory(investmentType: investmentType),
       page: TransactionsHistoryPageConfig,
     );
+  }
+
+  void openExpertDetails(String id) {
+    AppState.delegate!.appState.currentAction = PageAction(
+      page: ExpertDetailsPageConfig,
+      state: PageState.addWidget,
+      widget: ExpertsDetailsView(
+        advisorID: id,
+      ),
+    );
+  }
+
+  Future<void> openLiveById(String id) async {
+    final repository = locator<LiveRepository>();
+    final userService = locator<UserService>();
+    final advisorId = userService.baseUser!.advisorId;
+    final String? uid = userService.baseUser!.uid;
+    final String userName = (userService.baseUser!.kycName != null &&
+                userService.baseUser!.kycName!.isNotEmpty
+            ? userService.baseUser!.kycName
+            : userService.baseUser!.name) ??
+        "N/A";
+    final videoData = await repository.getEventById(id: id);
+    if (videoData.model != null && advisorId != null && advisorId != '') {
+      AppState.delegate!.appState.currentAction = PageAction(
+        page: LivePreviewPageConfig,
+        state: PageState.addWidget,
+        widget: HMSPrebuilt(
+          eventId: videoData.model!.id,
+          isLiked: false,
+          advisorId: advisorId,
+          advisorName: userName,
+          title: videoData.model!.topic ?? '',
+          description: videoData.model!.description ?? '',
+          onLeave: () async {
+            await AppState.backButtonDispatcher!.didPopRoute();
+          },
+          roomCode: videoData.model!.broadcasterCode,
+          options: HMSPrebuiltOptions(
+            userName: userName,
+            userId: uid,
+          ),
+        ),
+      );
+    } else if (videoData.model != null && videoData.model!.status == 'live') {
+      AppState.delegate!.appState.currentAction = PageAction(
+        page: LivePreviewPageConfig,
+        state: PageState.addWidget,
+        widget: HMSPrebuilt(
+          eventId: id,
+          isLiked: false,
+          roomCode: videoData.model!.guestCode,
+          advisorId: videoData.model!.advisorId,
+          advisorName: videoData.model!.advisorName,
+          title: videoData.model!.topic ?? '',
+          description: videoData.model!.description ?? '',
+          onLeave: () async {
+            await AppState.backButtonDispatcher!.didPopRoute();
+          },
+          options: HMSPrebuiltOptions(
+            userName: userName,
+            userId: uid,
+          ),
+        ),
+      );
+    } else if (videoData.model != null) {
+      if (videoData.model!.status == 'completed') {
+        BaseUtil.showNegativeAlert(
+          'Cannot Join Live Stream',
+          'The live stream has ended.',
+        );
+      } else if (videoData.model!.status == 'scheduled' ||
+          videoData.model!.status == 'upcoming') {
+        BaseUtil.showNegativeAlert(
+          'Cannot Join Live Stream',
+          'The live stream will start soon.',
+        );
+      } else if (videoData.model!.status == 'cancelled') {
+        BaseUtil.showNegativeAlert(
+          'Cannot Join Live Stream',
+          'The live stream has been cancelled.',
+        );
+      }
+    }
   }
 
   void openPowerPlayModalSheet() {

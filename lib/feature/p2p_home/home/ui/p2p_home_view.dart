@@ -103,9 +103,11 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       elevation: 0,
       leading: BackButton(
+        color: UiConstants.kTextColor,
         onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
       ),
       backgroundColor: UiConstants.kTambolaMidTextColor,
+      surfaceTintColor: UiConstants.kTambolaMidTextColor,
       title: Text(
         locale.felloP2P,
         style: TextStyles.rajdhani.title4.copyWith(
@@ -147,12 +149,14 @@ class _TabBar extends StatelessWidget {
       pinned: true,
       toolbarHeight: 0,
       backgroundColor: UiConstants.grey5,
+      surfaceTintColor: UiConstants.grey5,
       bottom: TabBar(
         indicatorColor: UiConstants.teal3,
         indicatorSize: TabBarIndicatorSize.tab,
         labelStyle: TextStyles.sourceSans.body2,
         labelColor: UiConstants.teal3,
         unselectedLabelColor: UiConstants.textGray70,
+         dividerColor: UiConstants.grey5,
         unselectedLabelStyle: TextStyles.sourceSans.body2,
         indicatorPadding: const EdgeInsets.symmetric(horizontal: 20),
         isScrollable: false,

@@ -92,9 +92,11 @@ class _SipFormAmountState extends State<SipFormAmount> {
             icon: const Icon(
               Icons.chevron_left,
               size: 32,
+              color: UiConstants.kTextColor,
             ),
           ),
           backgroundColor: UiConstants.bg,
+          surfaceTintColor: UiConstants.bg,
           title: Text(locale.siptitle),
           titleTextStyle: TextStyles.rajdhaniSB.title4.setHeight(1.3),
           centerTitle: true,

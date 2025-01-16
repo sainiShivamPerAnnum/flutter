@@ -86,6 +86,7 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
               ? AppBar(
                   elevation: 0,
                   backgroundColor: const Color(0XFF141414),
+                   surfaceTintColor: const Color(0XFF141414),
                 )
               : null,
           body: Stack(

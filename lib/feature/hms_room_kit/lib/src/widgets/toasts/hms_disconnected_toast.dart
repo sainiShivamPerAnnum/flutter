@@ -1,0 +1,52 @@
+///Package imports
+
+///Project imports
+import 'package:felloapp/feature/hms_room_kit/lib/src/layout_api/hms_theme_colors.dart';
+import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/common_widgets/hms_subheading_text.dart';
+import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/toasts/hms_toast.dart';
+import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/toasts/hms_toast_button.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+///[HMSDisconnectedToast] renders the toast when a user gets disconnected and the user needs to rejoin
+class HMSDisconnectedToast extends StatelessWidget {
+  final String errorDescription;
+  final Function? onLeavePressed;
+  const HMSDisconnectedToast(
+      {super.key,
+      this.onLeavePressed,
+      this.errorDescription = "Reconnection Failed"});
+
+  @override
+  Widget build(BuildContext context) {
+    return HMSToast(
+      leading: SvgPicture.asset(
+        "assets/hms/icons/end_warning.svg",
+        height: 24,
+        width: 24,
+        colorFilter: ColorFilter.mode(
+            HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
+      ),
+      subtitle: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.6,
+        child: HMSSubheadingText(
+          maxLines: 2,
+          text: errorDescription,
+          textColor: HMSThemeColors.onSurfaceHighEmphasis,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.1,
+        ),
+      ),
+      action: HMSToastButton(
+        buttonTitle: "Leave",
+        action: () {
+          if (onLeavePressed != null) {
+            onLeavePressed!();
+          }
+        },
+        buttonColor: HMSThemeColors.alertErrorDefault,
+        textColor: HMSThemeColors.alertErrorBrighter,
+      ),
+    );
+  }
+}

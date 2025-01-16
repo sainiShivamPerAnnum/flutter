@@ -160,7 +160,7 @@ class _FoundBugState extends State<FoundBug> {
                         ),
                         errorStyle: Theme.of(context)
                             .textTheme
-                            .headline6!
+                            .titleLarge!
                             .copyWith(
                                 height: -10,
                                 color: Colors.transparent,
@@ -292,7 +292,7 @@ class _FoundBugState extends State<FoundBug> {
                           ),
                           errorStyle: Theme.of(context)
                               .textTheme
-                              .headline6!
+                              .titleLarge!
                               .copyWith(
                                   height: -10,
                                   color: Colors.transparent,

@@ -21,7 +21,7 @@ class SettingsView extends StatelessWidget {
     return BaseView<SettingsViewModel>(
       onModelReady: (model) => model.init(),
       onModelDispose: (model) {},
-      builder: ((context, model, child) => Scaffold(
+      builder: (context, model, child) => Scaffold(
             backgroundColor: UiConstants.kBackgroundColor,
             appBar: AppBar(
               title: Text(
@@ -30,6 +30,7 @@ class SettingsView extends StatelessWidget {
               ),
               elevation: 0,
               backgroundColor: UiConstants.kSecondaryBackgroundColor,
+              surfaceTintColor: UiConstants.kSecondaryBackgroundColor,
             ),
             body: ListView(
               children: [
@@ -94,7 +95,7 @@ class SettingsView extends StatelessWidget {
                 ),
               ],
             ),
-          )),
+          ),
     );
   }
 }

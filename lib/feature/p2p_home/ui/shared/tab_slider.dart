@@ -25,6 +25,8 @@ class TabSlider<T> extends StatelessWidget {
       ),
       child: TabBar(
         controller: controller,
+        indicatorSize: TabBarIndicatorSize.tab,
+        dividerColor: Colors.transparent,
         splashFactory: NoSplash.splashFactory,
         splashBorderRadius: BorderRadius.circular(SizeConfig.padding32),
         labelStyle: TextStyles.sourceSansSB.body3.copyWith(

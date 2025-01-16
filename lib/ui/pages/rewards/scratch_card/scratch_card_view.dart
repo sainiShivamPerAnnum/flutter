@@ -16,9 +16,9 @@ class ScratchCardsView extends StatelessWidget {
   final ScratchCardService model;
 
   const ScratchCardsView({
+    required this.model,
     super.key,
     this.openFirst = false,
-    required this.model,
   });
 
   @override
@@ -29,13 +29,15 @@ class ScratchCardsView extends StatelessWidget {
       itemCount: model.allScratchCards.length,
       shrinkWrap: true,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisSpacing: SizeConfig.padding8,
-          childAspectRatio: 1 / 0.84,
-          crossAxisCount: 2,
-          mainAxisSpacing: 0),
+        crossAxisSpacing: SizeConfig.padding8,
+        childAspectRatio: 1 / 0.84,
+        crossAxisCount: 2,
+        mainAxisSpacing: 0,
+      ),
       padding: EdgeInsets.symmetric(
-          vertical: SizeConfig.padding16,
-          horizontal: SizeConfig.pageHorizontalMargins),
+        vertical: SizeConfig.padding16,
+        horizontal: SizeConfig.pageHorizontalMargins,
+      ),
       itemBuilder: (ctx, i) {
         return InkWell(
           onTap: () {
