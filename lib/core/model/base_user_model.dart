@@ -24,6 +24,8 @@ class BaseUser {
   bool? isIciciEnabled;
   bool? isAugmontEnabled;
   bool? isEmailVerified;
+  bool? isAdvisor;
+  String? advisorId;
   UserPreferences userPreferences;
   TimestampModel createdOn;
   String? appFlyerId;
@@ -71,6 +73,8 @@ class BaseUser {
   static const String fieldSubscriptionStatus = 'subsStatus';
   static const String fieldFavAsset = 'favAsset';
   static const String doesHaveSubscriptionTxn = 'doesHaveSubsTrxn';
+  static const String isAdv = 'isAdvisor';
+  static const String advId = 'advisorId';
 
   static const _$UserBadgeLevelEnumMap = {
     'GOOD': SuperFelloLevel.GOOD,
@@ -80,36 +84,39 @@ class BaseUser {
   };
 
   BaseUser(
-      this.uid,
-      this.mobile,
-      this.email,
-      this.name,
-      this.dob,
-      this.gender,
-      this.client_token,
-      this.isInvested,
-      this.isIciciOnboarded,
-      this.isAugmontOnboarded,
-      this.isSimpleKycVerified,
-      this.isKycVerified,
-      this.kycName,
-      this.pendingTxnId,
-      this.isIciciEnabled,
-      this.isAugmontEnabled,
-      this.username,
-      this.isEmailVerified,
-      this.isBlocked,
-      this.userPreferences,
-      this.createdOn,
-      this.appFlyerId,
-      this.avatarId,
-      this.isOldUser,
-      this.segments,
-      {this.superFelloLevel = SuperFelloLevel.NEW_FELLO,
-      this.minRedemptionAmt = 200,
-      this.subsStatus,
-      this.favAsset,
-      this.doesHaveSubscriptionTransaction = false});
+    this.uid,
+    this.mobile,
+    this.email,
+    this.name,
+    this.dob,
+    this.gender,
+    this.client_token,
+    this.isInvested,
+    this.isIciciOnboarded,
+    this.isAugmontOnboarded,
+    this.isSimpleKycVerified,
+    this.isKycVerified,
+    this.kycName,
+    this.pendingTxnId,
+    this.isIciciEnabled,
+    this.isAugmontEnabled,
+    this.username,
+    this.isEmailVerified,
+    this.isBlocked,
+    this.userPreferences,
+    this.createdOn,
+    this.appFlyerId,
+    this.avatarId,
+    this.isOldUser,
+    this.segments, {
+    this.superFelloLevel = SuperFelloLevel.NEW_FELLO,
+    this.minRedemptionAmt = 200,
+    this.subsStatus,
+    this.favAsset,
+    this.doesHaveSubscriptionTransaction = false,
+    this.isAdvisor = false,
+    this.advisorId,
+  });
 
   BaseUser.newUser(String id, String mobile)
       : this(
@@ -174,7 +181,9 @@ class BaseUser {
             subsStatus: data[fieldSubscriptionStatus],
             favAsset: data[fieldFavAsset],
             doesHaveSubscriptionTransaction:
-                data[doesHaveSubscriptionTxn] ?? false);
+                data[doesHaveSubscriptionTxn] ?? false,
+            isAdvisor: data[isAdv] ?? false,
+            advisorId: data[advId] ?? '');
 
   bool hasIncompleteDetails() {
     return (mobile?.isEmpty ?? true) || (name?.isEmpty ?? true);

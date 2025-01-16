@@ -97,23 +97,26 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
       showCoinBar: false,
       showAvatar: false,
       leadingPadding: false,
-      action: Row(children: [
-        Selector2<UserService, ScratchCardService, Tuple2<Portfolio?, int>>(
-          builder: (context, value, child) => FelloInfoBar(
-            svgAsset: Assets.scratchCard,
-            size: SizeConfig.padding16,
-            child: "₹${value.item1?.rewards.toInt() ?? 0}",
-            onPressed: () {
-              Haptic.vibrate();
-              AppState.delegate!.parseRoute(Uri.parse("myWinnings"));
-            },
-            mark: value.item2 > 0,
-          ),
-          selector: (p0, userService, scratchCardService) => Tuple2(
+      action: Row(
+        children: [
+          Selector2<UserService, ScratchCardService, Tuple2<Portfolio?, int>>(
+            builder: (context, value, child) => FelloInfoBar(
+              svgAsset: Assets.scratchCard,
+              size: SizeConfig.padding16,
+              child: " ${value.item1?.rewards.toInt() ?? 0} coins",
+              onPressed: () {
+                Haptic.vibrate();
+                AppState.delegate!.parseRoute(Uri.parse("myWinnings"));
+              },
+              mark: value.item2 > 0,
+            ),
+            selector: (p0, userService, scratchCardService) => Tuple2(
               userService.userPortfolio,
-              scratchCardService.unscratchedTicketsCount),
-        ),
-      ]),
+              scratchCardService.unscratchedTicketsCount,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -65,6 +65,7 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
                 onTap: widget.model.handleTabSwitch,
                 labelStyle: TextStyles.sourceSansSB.body3,
                 labelColor: Colors.black,
+                indicatorSize: TabBarIndicatorSize.tab,
                 unselectedLabelStyle: TextStyles.sourceSansSB.body3,
                 unselectedLabelColor: Colors.white,
                 indicator: BoxDecoration(

@@ -1,66 +1,59 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/ui/elements/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class Blogs extends StatelessWidget {
-  final SaveViewModel model;
-  const Blogs({required this.model, Key? key}) : super(key: key);
+  const Blogs({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
-    return Column(
-      children: [
-        SizedBox(height: SizeConfig.padding14),
-        GestureDetector(
-          onTap: model.navigateToViewAllBlogs,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const TitleSubtitleContainer(
-                title: "Fin-gyan by Fello",
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  right: SizeConfig.padding12,
-                  bottom: SizeConfig.padding12,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: SizeConfig.padding2),
-                      child: Text(
-                        locale.btnSeeAll,
-                        style: TextStyles.rajdhaniSB.body2,
-                      ),
+    return Consumer<SaveViewModel>(
+      builder: (_, model, __) {
+        return Column(
+          children: [
+            SizedBox(height: SizeConfig.padding14),
+            GestureDetector(
+              onTap: model.navigateToViewAllBlogs,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const TitleSubtitleContainer(
+                    title: "Fin-gyan",
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      right: SizeConfig.padding12,
                     ),
-                    SvgPicture.asset(
-                      Assets.chevRonRightArrow,
-                      height: SizeConfig.padding24,
-                      width: SizeConfig.padding24,
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-        SaveBlogSection(model: model),
-      ],
+                    child: Row(
+                      children: [
+                        Text(
+                          'VIEW ALL',
+                          style: TextStyles.sourceSansSB.body3,
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                          size: SizeConfig.body3,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SaveBlogSection(model: model),
+          ],
+        );
+      },
     );
   }
 }
@@ -71,12 +64,13 @@ class SaveBlogSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("BUILD: blog build method called");
     return Padding(
       padding: EdgeInsets.only(
-          left: SizeConfig.padding24, top: SizeConfig.padding10),
+        left: SizeConfig.padding20,
+        top: SizeConfig.padding10,
+      ),
       child: SizedBox(
-        height: SizeConfig.screenWidth! * 0.4,
+        height: SizeConfig.padding252,
         child: model.isLoading
             ? ListView.builder(
                 itemCount: 2,
@@ -128,8 +122,9 @@ class SaveBlogSection extends StatelessWidget {
                             model.trackBannerClickEvent(index);
 
                             model.navigateToBlogWebView(
-                                model.blogPosts![index].slug,
-                                model.blogPosts![index].acf!.categories);
+                              model.blogPosts![index].slug,
+                              model.blogPosts![index].acf!.categories,
+                            );
                           },
                           title: model.blogPosts![index].acf!.categories!,
                           description: model.blogPosts![index].title!.rendered!,
@@ -170,6 +165,7 @@ class _BlogWebViewState extends State<BlogWebView> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: UiConstants.kBackgroundColor3,
+        surfaceTintColor: UiConstants.kBackgroundColor3,
         leading: const FelloAppBarBackButton(),
         centerTitle: true,
         title:
@@ -202,16 +198,83 @@ class SaveBlogTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: SizeConfig.screenWidth! * 0.4,
         width: SizeConfig.screenWidth! - SizeConfig.padding54,
         decoration: BoxDecoration(
-          image: DecorationImage(
-              image: CachedNetworkImageProvider(imageUrl!),
-              fit: BoxFit.cover,
-              alignment: Alignment.centerLeft),
-          borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+          borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+          color: UiConstants.greyVarient,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              alignment: AlignmentDirectional.center,
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: SizeConfig.padding152,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.roundness8),
+                      topRight: Radius.circular(SizeConfig.roundness8),
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.roundness8),
+                      topRight: Radius.circular(SizeConfig.roundness8),
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: imageUrl!,
+                      fit: BoxFit.fill,
+                      fadeInCurve: Curves.easeIn,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.all(SizeConfig.padding16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: SizeConfig.padding4),
+                  // Title
+                  Text(
+                    title ?? '',
+                    style: TextStyles.sourceSansSB.body2.colour(
+                      UiConstants.kTextColor,
+                    ),
+                  ),
+                  SizedBox(height: SizeConfig.padding4),
+
+                  // Subtitle
+                  Text(
+                    description ?? '',
+                    style: TextStyles.sourceSans.body4.colour(
+                      UiConstants.kTextColor5,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
+
+    //    Container(
+    //     height: SizeConfig.screenWidth! * 0.4,
+    //     width: SizeConfig.screenWidth! - SizeConfig.padding54,
+    //     decoration: BoxDecoration(
+    //       image: DecorationImage(
+    //           image: CachedNetworkImageProvider(imageUrl!),
+    //           fit: BoxFit.cover,
+    //           alignment: Alignment.centerLeft),
+    //       borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+    //     ),
+    //   ),
+    // );
   }
 }

@@ -186,6 +186,7 @@ class GoldProBuyOverView extends StatelessWidget {
             },
           ),
           backgroundColor: Colors.transparent,
+                surfaceTintColor: Colors.transparent,
           elevation: 0,
           centerTitle: true,
           title: Row(

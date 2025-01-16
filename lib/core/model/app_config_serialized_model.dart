@@ -1,3 +1,4 @@
+import 'package:felloapp/core/model/support/social_items.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'app_config_serialized_model.g.dart';
@@ -70,6 +71,12 @@ class AppConfigV2Data {
 
   @JsonKey(name: "p2p_v2", fromJson: _convertP2PV2)
   final Map<String, LendboxAssetConfiguration> lbV2;
+  final String rpsDisclaimer;
+  final List<Map<String, String>> rpsLearnMore;
+  final List<SocialItems> socialLinks;
+  final List<SocialVideo> socialVideos;
+  final String contactDetails;
+  final String socialBtnTxt;
 
   final List<String> youtubeVideos;
 
@@ -79,11 +86,11 @@ class AppConfigV2Data {
   @JsonKey(name: "powerplayConfig")
   final PowerPlayConfig? powerPlayConfig;
 
-  final RevampedReferralsConfig? revampedReferralsConfig;
+  final RevampedReferralsConfig? revampedReferralsConfigV1;
 
   final QuizConfig? quizConfig;
 
-  final String appReferralMessage;
+  final String appReferralMessageV1;
 
   final bool paymentBriefView;
 
@@ -102,6 +109,8 @@ class AppConfigV2Data {
   final Map<String, dynamic> features;
 
   const AppConfigV2Data({
+    this.contactDetails = "support@fello.in",
+    this.socialBtnTxt = "Raise a Ticket",
     this.loginAssetUrl = '',
     this.invalidateBefore = 0,
     this.autosaveActive = false,
@@ -129,9 +138,9 @@ class AppConfigV2Data {
     this.ticketsYoutubeVideos = const [],
     this.ticketsCategories,
     this.powerPlayConfig,
-    this.revampedReferralsConfig,
+    this.revampedReferralsConfigV1,
     this.quizConfig,
-    this.appReferralMessage = '',
+    this.appReferralMessageV1 = '',
     this.paymentBriefView = false,
     this.useNewUrlUserOps = false,
     this.overrideUrls,
@@ -140,6 +149,11 @@ class AppConfigV2Data {
     this.goldProInterest = 0,
     this.quickActions = const [],
     this.features = const {},
+    this.socialLinks = const [],
+    this.socialVideos = const [],
+    this.rpsDisclaimer =
+        'This repayment schedule is estimated based on past performance of the loans mapped to you. Past performance is not a guarantee of future returns. Actual repayment amount received will depend on repayments made by the borrowers.',
+    this.rpsLearnMore = const [],
   });
 
   factory AppConfigV2Data.fromJson(Map<String, dynamic> json) =>

@@ -13,7 +13,7 @@
 	</array>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.in.fello.felloappiOS.dev.CTNotificationGroup</string>
+		<string>group.in.fello.felloappiOS.dev.CTNotifications</string>
 	</array>
 </dict>
 </plist>

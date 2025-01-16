@@ -67,6 +67,8 @@ class UiConstants {
   static const Color kTextColor2 = Color(0xFF919193);
   static const Color kTextColor3 = Color(0xFFA7A7A8);
   static const Color kTextColor4 = Color(0xFF000000);
+  static const Color kTextColor5 = Color(0xffA2A0A2);
+  static const Color kTextColor6 = Color(0xffCACBCC);
 
   static const Color kYellowTextColor = Color(0xFFFEF5DC);
   static const Color kTealTextColor = Color(0xFFA5FCE7);
@@ -119,6 +121,9 @@ class UiConstants {
   static const Color kInfoBackgroundColor = Color(0xFF121212);
   static const Color kSipBackgroundColor = Color(0xFF1C272B);
   static const Color kErrorBorderColor = Colors.red;
+  static const Color kred1 = Color(0xffEB5757);
+  static const Color kblue1 = Color(0xff1ABCC5);
+  static const Color kblue2 = Color(0xff01656B);
 
   static const Color kFAQsAnswerColor = Color(0xFFA9C6D6);
 
@@ -128,7 +133,7 @@ class UiConstants {
   static const Color kDarkBoxColor = Color(0xFF3B3B3B);
   // Recharge Modal Sheet
   static const Color kRechargeModalSheetAmountSectionBackgroundColor =
-      Color(0xFF1B262C);
+      Color(0xFF232326);
 
   static const Color kpurpleTicketColor = Color(0xFFCEC5FF);
 
@@ -232,12 +237,14 @@ class UiConstants {
   static Color kGoldProBorder = const Color(0xffFFD979).withOpacity(0.2);
   static Color kGoldProBgColor = const Color(0xff323232);
   static Color kGoldProPrimaryDark2 = const Color(0xffB17518);
+  static Color kamber =Colors.amber;
 
   static const grey1 = Color(0xFFA9C6D6);
   static const grey2 = Color(0xFF627F8E);
   static const grey3 = Color(0xFF151D22);
   static const grey4 = Color(0xFF323232);
   static const grey5 = Color(0xFF1A1A1A);
+  static const grey6 = Color(0xff49494B);
 
   static const yellow3 = Color(0xFFFFD979);
   static const yellow2 = Color(0xFFFFE9B1);
@@ -264,6 +271,7 @@ class UiConstants {
 
   static const greyDivider = Color(0xFF7F86A3);
   static const rewardsCardColor = Color(0xff212B31);
+  static const greyVarient = Color(0xff2D3135);
 }
 
 extension ColorExtension on String {

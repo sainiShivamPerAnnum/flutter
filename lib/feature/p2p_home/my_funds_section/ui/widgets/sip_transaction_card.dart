@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/model/sip_transaction_model.dart';
 import 'package:felloapp/feature/p2p_home/home/widgets/percentage_chip.dart';
+import 'package:felloapp/feature/p2p_home/rps/view/view_rps.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -169,19 +170,48 @@ class SIPTransactionCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  transaction.nextDue,
+                  'To be paid as per the Repayment Schedule',
                   style: TextStyles.sourceSans.body4.copyWith(
                     color: UiConstants.textGray60,
                   ),
                 ),
-                Text(
-                  assetInformation.maturityPeriodText,
-                  style: TextStyles.sourceSans.body4.copyWith(
-                    color: UiConstants.grey1,
+                GestureDetector(
+                  onTap: () {
+                    AppState.delegate!.appState.currentAction = PageAction(
+                      state: PageState.addWidget,
+                      widget: const RpsView(),
+                      page: FlexiBalancePageConfig,
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      Text(
+                        'View RPS',
+                        style: TextStyles.sourceSans.body4.copyWith(
+                          color: UiConstants.textGray60,
+                        ),
+                      ),
+                      Icon(
+                        Icons.chevron_right,
+                        size: SizeConfig.body4,
+                      ),
+                    ],
                   ),
-                )
+                ),
+                // Text(
+                //   transaction.nextDue,
+                //   style: TextStyles.sourceSans.body4.copyWith(
+                //     color: UiConstants.textGray60,
+                //   ),
+                // ),
+                // Text(
+                //   assetInformation.maturityPeriodText,
+                //   style: TextStyles.sourceSans.body4.copyWith(
+                //     color: UiConstants.grey1,
+                //   ),
+                // )
               ],
-            )
+            ),
           ],
         ),
       ),

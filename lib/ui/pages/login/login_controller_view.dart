@@ -6,19 +6,16 @@ import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
-import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
-import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/svg.dart';
 
 class LoginControllerView extends StatefulWidget {
   final int? initPage;
@@ -43,14 +40,10 @@ class _LoginControllerViewState extends State<LoginControllerView> {
       onModelDispose: (model) => model.exit(),
       builder: (ctx, model, child) {
         dev.log(model.currentPage.toString());
-        return Scaffold(
+        return BaseScaffold(
           resizeToAvoidBottomInset: false,
           body: Stack(
             children: <Widget>[
-              const NewSquareBackground(
-                backgroundColor:
-                    UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-              ),
               SingleChildScrollView(
                 reverse: true,
                 child: Column(
@@ -90,39 +83,42 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                   ),
                 ),
               ),
-              if (keyboardIsOpen)
-                Positioned(
-                  bottom: MediaQuery.of(context).viewInsets.bottom,
-                  child: GestureDetector(
-                    onTap: () => model.processScreenInput(model.currentPage),
-                    child: Container(
-                      key: const ValueKey("LoginCTA"),
-                      //key: K.loginNextCTAKey,
-                      width: SizeConfig.screenWidth,
-                      height: SizeConfig.padding54,
-                      color: UiConstants.kArrowButtonBackgroundColor,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins,
-                      ),
-                      alignment: Alignment.centerRight,
-                      child: model.state == ViewState.Busy
-                          ? SizedBox(
-                              width: SizeConfig.padding32,
-                              child: SpinKitThreeBounce(
-                                color: UiConstants.primaryColor,
-                                size: SizeConfig.padding20,
-                              ),
-                            )
-                          : Text(
-                              model.currentPage == LoginNameInputView.index
-                                  ? locale.obFinish
-                                  : locale.obNext,
-                              style: TextStyles.rajdhaniB.body1
-                                  .colour(UiConstants.primaryColor),
-                            ),
-                    ),
-                  ),
-                ),
+              // if (keyboardIsOpen)
+              //   Positioned(
+              //     bottom: MediaQuery.of(context).viewInsets.bottom,
+              //     child: GestureDetector(
+              //       onTap: () => {
+              //         print({'_formKey.currentStat', model.currentPage}),
+              //         model.processScreenInput(model.currentPage),
+              //       },
+              //       child: Container(
+              //         key: const ValueKey("LoginCTA"),
+              //         //key: K.loginNextCTAKey,
+              //         width: SizeConfig.screenWidth,
+              //         height: SizeConfig.padding54,
+              //         color: UiConstants.kArrowButtonBackgroundColor,
+              //         padding: EdgeInsets.symmetric(
+              //           horizontal: SizeConfig.pageHorizontalMargins,
+              //         ),
+              //         alignment: Alignment.centerRight,
+              //         child: model.state == ViewState.Busy
+              //             ? SizedBox(
+              //                 width: SizeConfig.padding32,
+              //                 child: SpinKitThreeBounce(
+              //                   color: UiConstants.primaryColor,
+              //                   size: SizeConfig.padding20,
+              //                 ),
+              //               )
+              //             : Text(
+              //                 model.currentPage == LoginNameInputView.index
+              //                     ? locale.obFinish
+              //                     : locale.obNext,
+              //                 style: TextStyles.rajdhaniB.body1
+              //                     .colour(UiConstants.primaryColor),
+              //               ),
+              //       ),
+              //     ),
+              //   ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
@@ -139,83 +135,66 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                               locale.obLoading,
                               style: TextStyles.rajdhani.body0
                                   .colour(UiConstants.primaryColor),
-                            )
+                            ),
                           ],
                         )
                       : const SizedBox(),
                 ),
               ),
-              if (model.currentPage == 0 &&
-                  !keyboardIsOpen &&
+              if (!keyboardIsOpen &&
                   model.state == ViewState.Idle &&
                   !model.loginUsingTrueCaller)
                 Positioned(
-                  bottom: 0,
-                  child: SizedBox(
+                  bottom: SizeConfig.padding30,
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: SizeConfig.padding25),
                     key: const ValueKey("TermsAndConditions"),
                     width: SizeConfig.screenWidth,
-                    child: Column(
+                    height: SizeConfig.padding58,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            vertical: SizeConfig.padding16,
-                            horizontal: SizeConfig.padding20,
-                          ),
-                          decoration: BoxDecoration(
-                            color: UiConstants.kBackgroundColor3,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(SizeConfig.roundness12),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AppImage(
+                              Assets.sebi_new,
+                              width: SizeConfig.padding36,
                             ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/svg/dual_star.svg",
-                                width: SizeConfig.padding20,
-                              ),
-                              SizedBox(
-                                width: SizeConfig.padding14,
-                              ),
-                              Text(
-                                locale.obJoinUsBottomTitle,
-                                style: TextStyles.sourceSans.body4,
-                              )
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(
-                            SizeConfig.padding10,
-                            SizeConfig.padding16,
-                            SizeConfig.padding10,
-                            0,
-                          ),
-                          child: RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: locale.obAgreeText,
-                                  style: TextStyles.sourceSans.body3
-                                      .colour(UiConstants.kTextColor2),
-                                ),
-                                TextSpan(
-                                  text: locale.obTermsofService,
-                                  style: TextStyles.sourceSans.body3.underline
-                                      .colour(UiConstants.kTextColor),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      model.onTermsAndConditionsClicked();
-                                    },
-                                ),
-                              ],
+                            Text(
+                              'SEBI Registered Experts',
+                              style: TextStyles.sourceSans.body6,
+                              maxLines: 2,
                             ),
-                          ),
+                          ],
                         ),
-                        SizedBox(
-                          height: SizeConfig.screenWidth! * 0.1 +
-                              MediaQuery.of(context).viewInsets.bottom,
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AppImage(
+                              Assets.rbi,
+                              width: SizeConfig.padding30,
+                            ),
+                            Text(
+                              'RBI Regulated',
+                              style: TextStyles.sourceSans.body6,
+                            ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AppImage(
+                              Assets.amfi,
+                              width: SizeConfig.padding24,
+                            ),
+                            Text(
+                              'AMFI Certified Experts',
+                              style: TextStyles.sourceSans.body6,
+                            ),
+                          ],
                         ),
                       ],
                     ),

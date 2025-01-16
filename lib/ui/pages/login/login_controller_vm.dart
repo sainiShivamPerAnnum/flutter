@@ -17,7 +17,6 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/feature_flag_service/feature_flag_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -92,6 +91,8 @@ class LoginControllerViewModel extends BaseViewModel {
   ValueNotifier<double?>? _pageNotifier;
   StreamSubscription? streamSubscription;
   static List<Widget> _pages = [];
+  ScrollController phoneScrollController = ScrollController();
+  ScrollController otpScrollController = ScrollController();
   ScrollController nameViewScrollController = ScrollController();
 
 //Getters and Setters
@@ -161,6 +162,22 @@ class LoginControllerViewModel extends BaseViewModel {
               properties: {'mobile': userMobile},
             );
             _verificationId = '+91${userMobile!}';
+            await _controller!.animateToPage(
+              LoginOtpView.index,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeInToLinear,
+            );
+            setState(ViewState.Idle);
+            Future.delayed(const Duration(seconds: 1), () {
+              _otpScreenKey.currentState!.model!.otpFocusNode.requestFocus();
+            });
+            Future.delayed(const Duration(milliseconds: 500), () {
+              otpScrollController.animateTo(
+                otpScrollController.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeIn,
+              );
+            });
             await _verifyPhone();
           }
           break;
@@ -608,25 +625,25 @@ class LoginControllerViewModel extends BaseViewModel {
       page: RootPageConfig,
     );
 
-    final ff = locator<FeatureFlagService>();
+    // final ff = locator<FeatureFlagService>();
 
-    final variant = ff.evaluateFeature(
-      FeatureFlagService.newUserVariant,
-      defaultValue: 'b',
-    );
+    // final variant = ff.evaluateFeature(
+    //   FeatureFlagService.newUserVariant,
+    //   defaultValue: 'b',
+    // );
 
-    if (_isSignup && variant == 'a') {
-      await Future.delayed(const Duration(milliseconds: 10));
-      appStateProvider.currentAction = PageAction(
-        state: PageState.addPage,
-        page: AssetPrefPageConfig,
-      );
-    }
+    // if (_isSignup && variant == 'a') {
+    //   await Future.delayed(const Duration(milliseconds: 10));
+    //   appStateProvider.currentAction = PageAction(
+    //     state: PageState.addPage,
+    //     page: AssetPrefPageConfig,
+    //   );
+    // }
 
-    if (_isSignup && variant == 'b') {
-      await Future.delayed(const Duration(milliseconds: 10));
-      AppState.delegate!.screenCheck('stories');
-    }
+    // if (_isSignup && variant == 'b') {
+    //   await Future.delayed(const Duration(milliseconds: 10));
+    //   AppState.delegate!.screenCheck('stories');
+    // }
 
     BaseUtil.showPositiveAlert(
       'Sign In Complete',
@@ -672,16 +689,6 @@ class LoginControllerViewModel extends BaseViewModel {
     if (res.isSuccess()) {
       if (baseProvider!.isOtpResendCount == 0) {
         ///this is the first time that the otp was requested
-
-        await _controller!.animateToPage(
-          LoginOtpView.index,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInToLinear,
-        );
-        setState(ViewState.Idle);
-        Future.delayed(const Duration(seconds: 1), () {
-          _otpScreenKey.currentState!.model!.otpFocusNode.requestFocus();
-        });
       } else {
         ///the otp was requested to be resent
         _otpScreenKey.currentState!.model!.onOtpResendConfirmed(true);
@@ -877,6 +884,8 @@ class LoginControllerViewModel extends BaseViewModel {
   exit() {
     _controller!.removeListener(_pageListener);
     _controller!.dispose();
+    phoneScrollController.dispose();
+    otpScrollController.dispose();
     nameViewScrollController.dispose();
     streamSubscription?.cancel();
   }

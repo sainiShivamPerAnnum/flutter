@@ -62,6 +62,7 @@ const String CampaignViewPath = '/campaignViewPath';
 const String SaveAssetViewPath = '/saveAssetViewPath';
 const String SellConfirmationViewPath = '/sellConfirmationViewPath';
 const String ViewAllBlogsViewPath = '/viewAllBlogsViewPath';
+const String ScheduleCallViewPath = '/scheduleCallViewPath';
 const String AllParticipantsWinnersTopReferersPath =
     "/allParticipantsWinnersTopReferersPath";
 const String RedeemSucessfulScreenPath = "/RedeemSucessfulScreenPath";
@@ -118,6 +119,20 @@ const String SipStatusPage = '/sip/status';
 const String SipMandateViewPath = '/sip/mandateView';
 const String P2PHomeViewPath = '/p2p/homeView';
 const String flexiBalanceViewPath = "/flexiBalanceViewPath";
+const String balanceViewPath = "/balanceViewPath";
+
+const String liveSectionViewPath = "/live";
+const String expertSectionViewPath = "/experts";
+const String shortsSectionViewPath = "/shorts";
+const String shortsByIdViewPath = "/shorts";
+const String livePreviewSectionViewPath = "/livePreview";
+const String expertDetailsViewPath = "/expertDetails";
+const String tellUsAboutYourselfViewPath = "/tellUsAboutYourself";
+const String meettingChatViewPath = "/meetingChat";
+const String shortsViewPath = "/shorts-internal";
+const String viewAllVideosViewPath = "/events";
+const String rewardsHistoryViewPath = "/rewards-history";
+const String rpsLearnMoreViewPath = "/rps-learnMore";
 
 enum Pages {
   Splash,
@@ -182,6 +197,7 @@ enum Pages {
   SaveAssetView,
   SellConfirmationView,
   ViewAllBlogsView,
+  ScheduleCallView,
   AllParticipantsWinnersTopReferrersView,
   RedeemSuccessfulScreenView,
   SharePriceScreenView,
@@ -231,7 +247,22 @@ enum Pages {
   P2PHomeView,
 
   //p2pv2
-  FlexiBalaceView
+  FlexiBalaceView,
+  BalanceView,
+
+  Live,
+  Expert,
+  AllShorts,
+  ShortsById,
+
+  LivePreview,
+  ExpertDetails,
+  TellUsAboutYourself,
+  meettingChat,
+  Shorts,
+  AllEvents,
+  RewardsHistory,
+  RPSLearnMore,
 }
 
 class PageConfiguration {
@@ -679,6 +710,13 @@ PageConfiguration ViewAllBlogsViewConfig = PageConfiguration(
   name: "View All Blogs View",
 );
 
+PageConfiguration ScheduleCallViewConfig = PageConfiguration(
+  key: 'ScheduleCallView',
+  path: ScheduleCallViewPath,
+  uiPage: Pages.ScheduleCallView,
+  name: "Schedule Call View",
+);
+
 PageConfiguration AllParticipantsWinnersTopReferrersConfig = PageConfiguration(
   key: 'AllParticipantsWinnersTopReferersView',
   path: AllParticipantsWinnersTopReferersPath,
@@ -935,4 +973,82 @@ PageConfiguration FlexiBalancePageConfig = PageConfiguration(
   path: flexiBalanceViewPath,
   uiPage: Pages.FlexiBalaceView,
   name: "Flexi Balance View",
+);
+PageConfiguration BalancePageConfig = PageConfiguration(
+  key: 'balanceViewPath',
+  path: balanceViewPath,
+  uiPage: Pages.BalanceView,
+  name: "Balance View",
+);
+
+PageConfiguration LivePageConfig = PageConfiguration(
+  key: 'LiveViewPath',
+  path: liveSectionViewPath,
+  uiPage: Pages.Live,
+  name: "Live Section",
+);
+
+PageConfiguration LivePreviewPageConfig = PageConfiguration(
+  key: 'LivePreviewViewPath',
+  path: livePreviewSectionViewPath,
+  uiPage: Pages.LivePreview,
+  name: "Live Section Preview",
+);
+PageConfiguration ExpertDetailsPageConfig = PageConfiguration(
+  key: 'expertDetailsViewPath',
+  path: expertDetailsViewPath,
+  uiPage: Pages.ExpertDetails,
+  name: "Expert Details",
+);
+PageConfiguration TellUsAboutYourselfPageConfig = PageConfiguration(
+  key: 'tellUsAboutYourselfViewPath',
+  path: tellUsAboutYourselfViewPath,
+  uiPage: Pages.TellUsAboutYourself,
+  name: "Tell us about yourself.",
+);
+
+PageConfiguration MeetingChatPageConfig = PageConfiguration(
+  key: 'meettingChatViewPath',
+  path: meettingChatViewPath,
+  uiPage: Pages.meettingChat,
+  name: "Meeting chat.",
+);
+
+PageConfiguration ShortsPageConfig = PageConfiguration(
+  key: 'shortsViewPath',
+  path: shortsViewPath,
+  uiPage: Pages.Shorts,
+  name: "Shorts page.",
+);
+
+PageConfiguration AllEventsPageConfig = PageConfiguration(
+  key: 'viewAllVideosViewPath',
+  path: viewAllVideosViewPath,
+  uiPage: Pages.AllEvents,
+  name: "All Videos",
+);
+PageConfiguration AllExpertsPageConfig = PageConfiguration(
+  key: 'expertSectionViewPath',
+  path: expertSectionViewPath,
+  uiPage: Pages.Expert,
+  name: "All Experts",
+);
+PageConfiguration AllShortsPageConfig = PageConfiguration(
+  key: 'shortsSectionViewPath',
+  path: shortsSectionViewPath,
+  uiPage: Pages.AllShorts,
+  name: "All Shorts",
+);
+PageConfiguration RewardsHistoryPageConfig = PageConfiguration(
+  key: 'rewardsHistoryViewPath',
+  path: rewardsHistoryViewPath,
+  uiPage: Pages.RewardsHistory,
+  name: "All Rewards History",
+);
+
+PageConfiguration RpsLearnMorePageConfig = PageConfiguration(
+  key: 'RpsLearnMorePageConfig',
+  path: rpsLearnMoreViewPath,
+  uiPage: Pages.RPSLearnMore,
+  name: "RPS Learn More",
 );

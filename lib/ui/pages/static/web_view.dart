@@ -67,6 +67,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: UiConstants.kBackgroundColor,
+        surfaceTintColor: UiConstants.kBackgroundColor,
+        leading: const BackButton(
+          color: UiConstants.kTextColor,
+        ),
         actions: [
           if (viewLoader)
             Row(

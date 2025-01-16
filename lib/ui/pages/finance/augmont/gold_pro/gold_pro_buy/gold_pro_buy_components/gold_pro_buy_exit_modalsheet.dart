@@ -78,6 +78,7 @@ class _GoldProBuyExitModalSheetState extends State<GoldProBuyExitModalSheet> {
                   (index) => RadioListTile(
                         toggleable: true,
                         activeColor: UiConstants.primaryColor,
+                        tileColor: UiConstants.kTextColor,
                         selected: true,
                         value: index,
                         groupValue: _selectedIndex,

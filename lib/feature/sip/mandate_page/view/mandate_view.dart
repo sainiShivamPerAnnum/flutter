@@ -68,9 +68,11 @@ class _SipMandatePage extends StatelessWidget {
           icon: const Icon(
             Icons.chevron_left,
             size: 32,
+            color: UiConstants.kTextColor,
           ),
         ),
         backgroundColor: UiConstants.bg,
+        surfaceTintColor: UiConstants.bg,
         title: Text(locale.siptitle),
         titleTextStyle: TextStyles.rajdhaniSB.title4.setHeight(1.3),
         centerTitle: true,
@@ -211,17 +213,20 @@ class SelectUPIApplicationSection extends StatelessWidget {
     required this.onSelectApplication,
     super.key,
     this.upiApps = const [],
+    this.showHeading = true,
   });
 
   final List<ApplicationMeta> upiApps;
   final locale = locator<S>();
   final ValueChanged<ApplicationMeta> onSelectApplication;
+  final bool showHeading;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        if(showHeading)
         Text(
           locale.mandateStep1,
           style: TextStyles.rajdhaniSB.body1,

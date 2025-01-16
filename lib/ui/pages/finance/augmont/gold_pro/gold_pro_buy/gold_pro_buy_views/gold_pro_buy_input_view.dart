@@ -26,8 +26,11 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class GoldProBuyInputView extends StatelessWidget {
-  const GoldProBuyInputView(
-      {required this.model, required this.txnService, super.key});
+  const GoldProBuyInputView({
+    required this.model,
+    required this.txnService,
+    super.key,
+  });
 
   final GoldProBuyViewModel model;
   final AugmontTransactionService txnService;
@@ -94,10 +97,14 @@ class GoldProBuyInputView extends StatelessWidget {
           children: [
             AppBar(
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios),
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white.withOpacity(0.4),
+                ),
                 onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
               ),
               backgroundColor: Colors.transparent,
+              surfaceTintColor: Colors.transparent,
               elevation: 0,
               centerTitle: true,
               title: Row(
@@ -119,209 +126,228 @@ class GoldProBuyInputView extends StatelessWidget {
             Expanded(
               child: Column(
                 children: [
-                  SizedBox(height: SizeConfig.padding16),
-                  Text(
-                    "Select value to save in ${Constants.ASSET_GOLD_STAKE}",
-                    style: TextStyles.rajdhani.body1.colour(Colors.white),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                    padding: EdgeInsets.all(SizeConfig.padding16),
-                    decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness16),
-                      color: UiConstants.kBackgroundColor2,
-                    ),
+                  SingleChildScrollView(
                     child: Column(
                       children: [
+                        SizedBox(height: SizeConfig.padding16),
                         Text(
-                          "Gold Value",
-                          style:
-                              TextStyles.rajdhaniM.body2.colour(Colors.white54),
+                          "Select value to save in ${Constants.ASSET_GOLD_STAKE}",
+                          style: TextStyles.rajdhani.body1.colour(Colors.white),
                         ),
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              backgroundColor: Colors.black,
-                              child: IconButton(
-                                color: Colors.white,
-                                icon: const Icon(Icons.remove),
-                                onPressed: () {
-                                  FocusScope.of(context).unfocus();
-                                  model.decrementGoldBalance();
-                                },
+                        Container(
+                          margin:
+                              EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                          padding: EdgeInsets.all(SizeConfig.padding16),
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness16),
+                            color: UiConstants.kBackgroundColor2,
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                "Gold Value",
+                                style: TextStyles.rajdhaniM.body2
+                                    .colour(Colors.white54),
                               ),
-                            ),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              Row(
                                 children: [
-                                  AnimatedContainer(
-                                    width: (SizeConfig.padding22 +
-                                                SizeConfig.padding1) *
-                                            model.goldFieldController.text
-                                                .replaceAll('.', "")
-                                                .length +
-                                        (model.goldFieldController.text
-                                                .contains('.')
-                                            ? SizeConfig.padding6
-                                            : 0),
-                                    duration: const Duration(seconds: 0),
-                                    curve: Curves.easeIn,
-                                    child: TextField(
-                                      maxLength: 3,
-                                      controller: model.goldFieldController,
-                                      keyboardType: TextInputType.number,
-                                      onChanged: model.onTextFieldValueChanged,
-                                      inputFormatters: [
-                                        TextInputFormatter.withFunction(
-                                            (oldValue, newValue) {
-                                          var decimalSeparator = NumberFormat()
-                                              .symbols
-                                              .DECIMAL_SEP;
-                                          var r = RegExp(r'^\d*(\' +
-                                              decimalSeparator +
-                                              r'\d*)?$');
-                                          return r.hasMatch(newValue.text)
-                                              ? newValue
-                                              : oldValue;
-                                        })
-                                      ],
-                                      decoration: const InputDecoration(
-                                        counter: Offstage(),
-                                        focusedBorder: InputBorder.none,
-                                        border: InputBorder.none,
-                                        enabledBorder: InputBorder.none,
-                                        disabledBorder: InputBorder.none,
-                                        isDense: true,
-                                      ),
-                                      style: TextStyles.rajdhaniBL.title1
-                                          .colour(Colors.white),
+                                  CircleAvatar(
+                                    backgroundColor: Colors.black,
+                                    child: IconButton(
+                                      color: Colors.white,
+                                      icon: const Icon(Icons.remove),
+                                      onPressed: () {
+                                        FocusScope.of(context).unfocus();
+                                        model.decrementGoldBalance();
+                                      },
                                     ),
                                   ),
-                                  Text(
-                                    "gms",
-                                    style: TextStyles.sourceSansB.body0
-                                        .colour(Colors.white),
-                                  )
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        AnimatedContainer(
+                                          width: (SizeConfig.padding22 +
+                                                      SizeConfig.padding1) *
+                                                  model.goldFieldController.text
+                                                      .replaceAll('.', "")
+                                                      .length +
+                                              (model.goldFieldController.text
+                                                      .contains('.')
+                                                  ? SizeConfig.padding6
+                                                  : 0),
+                                          duration: const Duration(seconds: 0),
+                                          curve: Curves.easeIn,
+                                          child: TextField(
+                                            maxLength: 3,
+                                            controller:
+                                                model.goldFieldController,
+                                            keyboardType: TextInputType.number,
+                                            onChanged:
+                                                model.onTextFieldValueChanged,
+                                            inputFormatters: [
+                                              TextInputFormatter.withFunction(
+                                                  (oldValue, newValue) {
+                                                var decimalSeparator =
+                                                    NumberFormat()
+                                                        .symbols
+                                                        .DECIMAL_SEP;
+                                                var r = RegExp(
+                                                  r'^\d*(\' +
+                                                      decimalSeparator +
+                                                      r'\d*)?$',
+                                                );
+                                                return r.hasMatch(newValue.text)
+                                                    ? newValue
+                                                    : oldValue;
+                                              }),
+                                            ],
+                                            decoration: const InputDecoration(
+                                              counter: Offstage(),
+                                              focusedBorder: InputBorder.none,
+                                              border: InputBorder.none,
+                                              enabledBorder: InputBorder.none,
+                                              disabledBorder: InputBorder.none,
+                                              isDense: true,
+                                            ),
+                                            style: TextStyles.rajdhaniBL.title1
+                                                .colour(Colors.white),
+                                          ),
+                                        ),
+                                        Text(
+                                          "gms",
+                                          style: TextStyles.sourceSansB.body0
+                                              .colour(Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  CircleAvatar(
+                                    backgroundColor: Colors.black,
+                                    child: IconButton(
+                                      icon: const Icon(Icons.add),
+                                      color: Colors.white,
+                                      onPressed: () {
+                                        FocusScope.of(context).unfocus();
+                                        model.incrementGoldBalance();
+                                      },
+                                    ),
+                                  ),
                                 ],
                               ),
-                            ),
-                            CircleAvatar(
-                              backgroundColor: Colors.black,
-                              child: IconButton(
-                                icon: const Icon(Icons.add),
-                                color: Colors.white,
-                                onPressed: () {
-                                  FocusScope.of(context).unfocus();
-                                  model.incrementGoldBalance();
-                                },
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins),
-                    child: Column(
-                      children: [
-                        Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: List.generate(
-                              model.chipsList.length,
-                              (index) => GoldProChoiceChip(
-                                index: index,
-                                chipValue: "${model.chipsList[index].value}g",
-                                isBest: model.chipsList[index].isBest,
-                                isSelected: index == model.selectedChipIndex,
-                                onTap: () => model.onChipSelected(index),
-                              ),
-                            )),
-                        SizedBox(
-                          width: SizeConfig.screenWidth!,
-                          child: Slider(
-                            value: model.sliderValue,
-                            onChanged: model.updateSliderValue,
-                            // divisions: 4,
-                            inactiveColor: Colors.grey,
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  Card(
-                    margin: EdgeInsets.symmetric(
-                      vertical: SizeConfig.padding16,
-                      horizontal: SizeConfig.padding16,
-                    ),
-                    color: UiConstants.kBackgroundColor2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness16),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(
-                        SizeConfig.padding10,
-                        SizeConfig.padding14,
-                        SizeConfig.padding14,
-                        SizeConfig.padding14,
-                      ),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            Assets.goldAsset,
-                            width: SizeConfig.padding50,
+                        Container(
+                          margin: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.pageHorizontalMargins,
                           ),
-                          SizedBox(
-                            width: SizeConfig.padding4,
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Expected Returns in 5Y",
-                                      style:
-                                          TextStyles.body2.colour(Colors.white),
-                                    ),
-                                    Text(
-                                      "₹${"${model.expectedGoldReturns.toInt()}".formatToIndianNumberSystem()}*",
-                                      style: TextStyles.sourceSansB.body1
-                                          .colour(Colors.white),
-                                    ),
-                                  ],
+                          child: Column(
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: List.generate(
+                                  model.chipsList.length,
+                                  (index) => GoldProChoiceChip(
+                                    index: index,
+                                    chipValue:
+                                        "${model.chipsList[index].value}g",
+                                    isBest: model.chipsList[index].isBest,
+                                    isSelected:
+                                        index == model.selectedChipIndex,
+                                    onTap: () => model.onChipSelected(index),
+                                  ),
                                 ),
-                                SizedBox(height: SizeConfig.padding4),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "with Gold Pro",
-                                      style:
-                                          TextStyles.body4.colour(Colors.grey),
-                                    ),
-                                    Text(
-                                      "  with extra ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% returns",
-                                      style:
-                                          TextStyles.body4.colour(Colors.grey),
-                                    )
-                                  ],
-                                )
+                              ),
+                              SizedBox(
+                                width: SizeConfig.screenWidth!,
+                                child: Slider(
+                                  value: model.sliderValue,
+                                  onChanged: model.updateSliderValue,
+                                  // divisions: 4,
+                                  inactiveColor: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Card(
+                          margin: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding16,
+                            horizontal: SizeConfig.padding16,
+                          ),
+                          color: UiConstants.kBackgroundColor2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness16),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(
+                              SizeConfig.padding10,
+                              SizeConfig.padding14,
+                              SizeConfig.padding14,
+                              SizeConfig.padding14,
+                            ),
+                            child: Row(
+                              children: [
+                                SvgPicture.asset(
+                                  Assets.goldAsset,
+                                  width: SizeConfig.padding50,
+                                ),
+                                SizedBox(
+                                  width: SizeConfig.padding4,
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "Expected Returns in 5Y",
+                                            style: TextStyles.body2
+                                                .colour(Colors.white),
+                                          ),
+                                          Text(
+                                            "₹${"${model.expectedGoldReturns.toInt()}".formatToIndianNumberSystem()}*",
+                                            style: TextStyles.sourceSansB.body1
+                                                .colour(Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: SizeConfig.padding4),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "with Gold Pro",
+                                            style: TextStyles.body4
+                                                .colour(Colors.grey),
+                                          ),
+                                          Text(
+                                            "  with extra ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% returns",
+                                            style: TextStyles.body4
+                                                .colour(Colors.grey),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                   const Spacer(),
@@ -329,8 +355,9 @@ class GoldProBuyInputView extends StatelessWidget {
                     padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(SizeConfig.roundness16),
-                          topRight: Radius.circular(SizeConfig.roundness16)),
+                        topLeft: Radius.circular(SizeConfig.roundness16),
+                        topRight: Radius.circular(SizeConfig.roundness16),
+                      ),
                       color: UiConstants.grey5,
                     ),
                     child: model.state == ViewState.Busy
@@ -347,6 +374,7 @@ class GoldProBuyInputView extends StatelessWidget {
                                       "Alert!",
                                       style: TextStyles.rajdhaniB.body0
                                           .colour(Colors.white),
+                                      textAlign: TextAlign.center,
                                     ),
                                     SizedBox(height: SizeConfig.padding10),
                                     model.unavailabilityText.beautify(
@@ -355,64 +383,68 @@ class GoldProBuyInputView extends StatelessWidget {
                                       boldStyle: TextStyles.sourceSansB.body2
                                           .colour(Colors.white),
                                       alignment: TextAlign.center,
-                                    )
+                                    ),
                                   ],
                                 ),
                               )
-                            : Column(mainAxisSize: MainAxisSize.min, children: [
-                                LeaseAmount(
-                                  model: model,
-                                ),
-                                SizedBox(
-                                  height: SizeConfig.padding8,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Current Gold Balance",
-                                      style: TextStyles.sourceSans.body3.colour(
-                                        UiConstants.grey1,
+                            : Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  LeaseAmount(
+                                    model: model,
+                                  ),
+                                  SizedBox(
+                                    height: SizeConfig.padding8,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Current Gold Balance",
+                                        style:
+                                            TextStyles.sourceSans.body3.colour(
+                                          UiConstants.grey1,
+                                        ),
+                                      ),
+                                      Text(
+                                        "${BaseUtil.digitPrecision(model.currentGoldBalance, 4, true)}gms",
+                                        style: TextStyles.sourceSansSB.body2,
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: SizeConfig.padding8,
+                                  ),
+                                  const GoldProLeaseCompanyDetailsStrip(),
+                                  SizedBox(height: SizeConfig.padding10),
+                                  Consumer<BankAndPanService>(
+                                    builder: (context, panService, child) =>
+                                        ReactivePositiveAppButton(
+                                      onPressed: () {
+                                        panService.isKYCVerified
+                                            ? model.onProceedTapped()
+                                            : model.onCompleteKycTapped();
+                                      },
+                                      child: _buildButtonLabel(
+                                        panService.isKYCVerified,
+                                        model.additionalGoldBalance == 0,
                                       ),
                                     ),
-                                    Text(
-                                      "${BaseUtil.digitPrecision(model.currentGoldBalance, 4, true)}gms",
-                                      style: TextStyles.sourceSansSB.body2,
-                                    )
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: SizeConfig.padding8,
-                                ),
-                                const GoldProLeaseCompanyDetailsStrip(),
-                                SizedBox(height: SizeConfig.padding10),
-                                Consumer<BankAndPanService>(
-                                  builder: (context, panService, child) =>
-                                      ReactivePositiveAppButton(
-                                    onPressed: () {
-                                      panService.isKYCVerified
-                                          ? model.onProceedTapped()
-                                          : model.onCompleteKycTapped();
-                                    },
-                                    child: _buildButtonLabel(
-                                      panService.isKYCVerified,
-                                      model.additionalGoldBalance == 0,
-                                    ),
                                   ),
-                                ),
-                              ]),
-                  )
+                                ],
+                              ),
+                  ),
                 ],
               ),
-            )
+            ),
           ],
         ),
         CustomKeyboardSubmitButton(
           onSubmit: () {
             FocusScope.of(context).unfocus();
           },
-        )
+        ),
       ],
     );
   }
@@ -428,109 +460,117 @@ class GoldProLeaseCompanyDetailsStrip extends StatelessWidget {
     return Selector<AugmontTransactionService, GoldProSchemeModel?>(
       selector: (p0, p1) => p1.goldProScheme,
       builder: (ctx, scheme, child) => GestureDetector(
-          onTap: () {
-            if (scheme != null) {
-              BaseUtil.openModalBottomSheet(
-                  isBarrierDismissible: true,
-                  addToScreenStack: true,
-                  backgroundColor: UiConstants.kBackgroundColor2,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(SizeConfig.roundness16),
-                    topRight: Radius.circular(SizeConfig.roundness16),
-                  ),
-                  hapticVibrate: true,
-                  content: WillPopScope(
-                    onWillPop: () async {
-                      AppState.removeOverlay();
-                      return Future.value(true);
-                    },
-                    child: Container(
-                      margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                      child: scheme != null
-                          ? Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                ListTile(
-                                  leading: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 1, color: Colors.white),
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness12),
-                                      image: DecorationImage(
-                                        image: NetworkImage(scheme.logo),
-                                        fit: BoxFit.cover,
+        onTap: () {
+          if (scheme != null) {
+            BaseUtil.openModalBottomSheet(
+              isBarrierDismissible: true,
+              addToScreenStack: true,
+              backgroundColor: UiConstants.kBackgroundColor2,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.roundness16),
+                topRight: Radius.circular(SizeConfig.roundness16),
+              ),
+              hapticVibrate: true,
+              content: WillPopScope(
+                onWillPop: () async {
+                  AppState.removeOverlay();
+                  return Future.value(true);
+                },
+                child: Container(
+                  margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                  child: scheme != null
+                      ? Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ListTile(
+                              leading: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 1,
+                                    color: Colors.white,
+                                  ),
+                                  borderRadius: BorderRadius.circular(
+                                    SizeConfig.roundness12,
+                                  ),
+                                  image: DecorationImage(
+                                    image: NetworkImage(scheme.logo),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                height: SizeConfig.padding54,
+                                width: SizeConfig.padding54,
+                              ),
+                              title: Text(
+                                scheme.jewellerUserAccountName,
+                                style: TextStyles.sourceSansB.body1
+                                    .colour(Colors.white),
+                              ),
+                              subtitle: Text(
+                                "Estd. ${scheme.yearOfOperation}",
+                                style: TextStyles.body3
+                                    .colour(UiConstants.kFAQsAnswerColor),
+                              ),
+                            ),
+                            ListTile(
+                              title: Text(
+                                "Business Type:",
+                                style: TextStyles.body3.colour(Colors.white60),
+                              ),
+                              trailing: Text(
+                                "Wholesaler, Manufacturer",
+                                style: TextStyles.body3
+                                    .colour(UiConstants.kFAQsAnswerColor),
+                              ),
+                            ),
+                            if (scheme.description.isNotEmpty)
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.padding12,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "Description:",
+                                      style: TextStyles.body3
+                                          .colour(Colors.white60),
+                                    ),
+                                    SizedBox(width: SizeConfig.padding20),
+                                    Expanded(
+                                      child: Text(
+                                        scheme.description
+                                            .checkOverFlow(maxLength: 100),
+                                        style: TextStyles.body3.colour(
+                                          UiConstants.kFAQsAnswerColor,
+                                        ),
+                                        maxLines: 5,
+                                        textAlign: TextAlign.end,
                                       ),
                                     ),
-                                    height: SizeConfig.padding54,
-                                    width: SizeConfig.padding54,
-                                  ),
-                                  title: Text(
-                                    scheme.jewellerUserAccountName,
-                                    style: TextStyles.sourceSansB.body1
-                                        .colour(Colors.white),
-                                  ),
-                                  subtitle: Text(
-                                    "Estd. ${scheme.yearOfOperation}",
-                                    style: TextStyles.body3
-                                        .colour(UiConstants.kFAQsAnswerColor),
-                                  ),
+                                  ],
                                 ),
-                                ListTile(
-                                  title: Text(
-                                    "Business Type:",
-                                    style:
-                                        TextStyles.body3.colour(Colors.white60),
-                                  ),
-                                  trailing: Text(
-                                    "Wholesaler, Manufacturer",
-                                    style: TextStyles.body3
-                                        .colour(UiConstants.kFAQsAnswerColor),
-                                  ),
-                                ),
-                                if (scheme.description.isNotEmpty)
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: SizeConfig.padding12),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "Description:",
-                                          style: TextStyles.body3
-                                              .colour(Colors.white60),
-                                        ),
-                                        SizedBox(width: SizeConfig.padding20),
-                                        Expanded(
-                                          child: Text(
-                                            scheme.description
-                                                .checkOverFlow(maxLength: 100),
-                                            style: TextStyles.body3.colour(
-                                                UiConstants.kFAQsAnswerColor),
-                                            maxLines: 5,
-                                            textAlign: TextAlign.end,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                              ],
-                            )
-                          : const Center(
-                              child: CircularProgressIndicator.adaptive()),
-                    ),
-                  ));
-            }
-          },
-          child: InfoRow(
-              text: "Leasing to ",
-              child: Text(
-                (scheme?.jewellerUserAccountName ?? "-").toUpperCase(),
-                textAlign: TextAlign.end,
-                style: TextStyles.sourceSans.body2.copyWith(
-                  color: UiConstants.textGray70,
-                  height: 1,
+                              ),
+                          ],
+                        )
+                      : const Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        ),
                 ),
-              ))),
+              ),
+            );
+          }
+        },
+        child: InfoRow(
+          text: "Leasing to ",
+          child: Text(
+            (scheme?.jewellerUserAccountName ?? "-").toUpperCase(),
+            textAlign: TextAlign.end,
+            style: TextStyles.sourceSans.body2.copyWith(
+              color: UiConstants.textGray70,
+              height: 1,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

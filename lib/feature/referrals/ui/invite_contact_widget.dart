@@ -339,7 +339,7 @@ class PermissionModalSheet extends StatelessWidget {
                     SizedBox(
                       // width: SizeConfig.padding88,
                       child: Text(
-                        "₹$rewardsFromReferrals rewards",
+                        rewardsFromReferrals,
                         textAlign: TextAlign.center,
                         style: TextStyles.sourceSans.body3.colour(Colors.white),
                       ),
@@ -417,7 +417,7 @@ class PermissionModalSheet extends StatelessWidget {
                         AnalyticsProperties.getTotalReferralCount(),
                     'Data point 1': '${usersFromReferrals.toString()} Users',
                     'Data point 2': '$referrersCount Referrals',
-                    'Data point 3': '₹$rewardsFromReferrals rewards',
+                    'Data point 3': '$rewardsFromReferrals rewards',
                   },
                 );
               },

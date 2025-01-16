@@ -336,8 +336,8 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                               locator<AnalyticsService>().track(
                                   eventName:
                                       AnalyticsEvents.completeTutorialTapped);
-                              AppState.delegate!.onSilentTapItem(
-                                  RootController.tambolaNavBar);
+                              // AppState.delegate!.onSilentTapItem(
+                              //     RootController.tambolaNavBar);
                             });
                           },
                           child: Text(

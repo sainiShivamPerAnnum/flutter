@@ -14,7 +14,7 @@ class FelloTheme {
       primarySwatch: UiConstants.kPrimaryColor,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       colorScheme: const ColorScheme.light(primary: UiConstants.primaryColor),
-      textTheme: GoogleFonts.sourceSansProTextTheme(),
+      textTheme: GoogleFonts.sourceSans3TextTheme(),
       chipTheme: ChipThemeData(
         backgroundColor: UiConstants.primaryLight.withOpacity(0.4),
       ),

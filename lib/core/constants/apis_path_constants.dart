@@ -171,7 +171,7 @@ class ApiPath {
 
   static String getReferralCode(String? uid) => "/user/referral/$uid";
 
-  static String getReferralHistory(String? uid) => "/referrals/$uid";
+  static String getReferralHistory(String? uid) => "/v1/referrals/$uid";
 
   //Journey
   static const kJourney = "/journey";
@@ -182,6 +182,13 @@ class ApiPath {
 
   // lendbox
   static String createLbWithdrawal(String? uid) => "/user/$uid/withdrawal";
+  static String events = "/events";
+  static String updateEvent(String? uid) => "/events/$uid";
+  static String getUpcomingAdvisorBooking(String? uid) =>
+      "/booking/advisor/upcoming/$uid";
+
+  static String getPastAdvisorBooking(String? uid) =>
+      "/booking/advisor/past/$uid";
 
   static String lbWithdrawableQuantity(String? uid) =>
       "/user/$uid/lb/withdrawable";
@@ -258,4 +265,5 @@ class ApiPath {
   static const String felloBadges = "/super-fello";
 
   static const String badgesLeaderBoard = "/super-fello/leaderboard";
+  static const String rpsPath = "/withdrawal/rps";
 }

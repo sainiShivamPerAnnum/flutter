@@ -623,9 +623,10 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 //-------------------------------|-HELPER METHODS-START-|---------------------------------
 
   userIsAtJourneyScreen() {
-    return AppState.screenStack.length == 1 &&
-        _rootController.currentNavBarItemModel ==
-            RootController.journeyNavBarItem;
+    return true;
+    // return AppState.screenStack.length == 1 &&
+    //     _rootController.currentNavBarItemModel ==
+    //         RootController.journeyNavBarItem;
   }
 
   setAvatarPostion() => avatarPosition = calculatePosition(0);

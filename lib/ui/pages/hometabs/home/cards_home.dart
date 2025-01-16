@@ -192,7 +192,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
     } else {
       BaseUtil.showNegativeAlert(
         "Not enough winnings",
-        "Winnings can only be redeemed after reaching ₹${referralService.minWithdrawPrizeAmt}",
+        "Winnings can only be redeemed after reaching ${referralService.minWithdrawPrizeAmt} coins",
       );
     }
   }

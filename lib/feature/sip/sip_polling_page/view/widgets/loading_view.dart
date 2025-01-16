@@ -45,6 +45,8 @@ class _SipPollingState extends State<SipPolling> {
         elevation: 0,
         backgroundColor:
             UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+            
+        surfaceTintColor: UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
         centerTitle: true,
         automaticallyImplyLeading: false,
         title: Row(

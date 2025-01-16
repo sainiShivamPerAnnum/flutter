@@ -20,6 +20,7 @@ class LendBoxAppBar extends StatelessWidget {
     return AppBar(
       elevation: 0,
       backgroundColor: Colors.transparent,
+                surfaceTintColor: Colors.transparent,
       leading: !isEnabled
           ? const SizedBox()
           : Container(

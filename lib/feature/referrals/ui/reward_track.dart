@@ -95,22 +95,22 @@ class RewardInfoBlock extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-            width: SizeConfig.padding32,
             height: (tooltipContent?.isNotEmpty ?? false)
                 ? null
                 : SizeConfig.padding25,
             child: (tooltipContent?.isNotEmpty ?? false)
                 ? Stack(
+                    alignment: AlignmentDirectional.center,
                     children: [
                       CustomPaint(
-                        size: Size(SizeConfig.padding34,
+                        size: Size(SizeConfig.padding62,
                             (SizeConfig.padding34 * 0.7).toDouble()),
                         painter: ToolTipCustomPainter(isComplete
                             ? const Color(0xff62E3C4).withOpacity(1.0)
                             : const Color(0xffB9B9B9)),
                       ),
-                      Align(
-                        alignment: Alignment.center,
+                      Positioned(
+                        top: 0,
                         child: Text(
                           tooltipContent ?? '',
                           style: TextStyles.sourceSans.body4.colour(isComplete

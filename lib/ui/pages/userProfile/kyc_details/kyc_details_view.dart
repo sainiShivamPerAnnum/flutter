@@ -44,8 +44,10 @@ class KYCDetailsView extends StatelessWidget {
               appBar: AppBar(
                 leading: BackButton(
                   onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
+                  color: Colors.white,
                 ),
                 backgroundColor: UiConstants.kTambolaMidTextColor,
+        surfaceTintColor:UiConstants.kTambolaMidTextColor,
                 title: Text(
                   locale.kycTitle.toUpperCase(),
                   style: TextStyles.sourceSansSB.title5,

@@ -5,6 +5,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/core/service/analytics/clever_tap_analytics.dart';
+import 'package:felloapp/core/service/analytics/facebook_analytics.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/core/service/analytics/singular_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
@@ -19,6 +20,7 @@ class AnalyticsService extends BaseAnalyticsService {
   static const appFlierKey = 'fyD5pxiiDw5DrwynP52oT9';
 
   final MixpanelAnalytics _mixpanel = locator<MixpanelAnalytics>();
+  final FacebookAnalytics _facebook = locator<FacebookAnalytics>();
   final AppFlyerAnalytics _appFlyer = locator<AppFlyerAnalytics>();
   final SingularAnalytics _singular = locator<SingularAnalytics>();
   final CleverTapAnalytics _cleverTap = locator<CleverTapAnalytics>();
@@ -32,6 +34,7 @@ class AnalyticsService extends BaseAnalyticsService {
     _singular.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     _cleverTap.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     _webengage.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
+    _facebook.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     // for daily session event
     DateTime now = DateTime.now();
     final lastDateOpened =
@@ -50,6 +53,7 @@ class AnalyticsService extends BaseAnalyticsService {
     _appFlyer.signOut();
     _singular.signOut();
     _cleverTap.signOut();
+    _facebook.signOut();
   }
 
   @override
@@ -58,6 +62,7 @@ class AnalyticsService extends BaseAnalyticsService {
     Map<String, dynamic>? properties,
     bool mixpanel = true,
     bool webEngage = true,
+    bool facebook = true,
     bool appFlyer = true,
     bool singular = true,
     bool cleverTap = true,
@@ -87,6 +92,9 @@ class AnalyticsService extends BaseAnalyticsService {
       }
       if (webEngage) {
         _webengage.track(eventName: eventName, properties: properties);
+      }
+      if (facebook) {
+        _facebook.track(eventName: eventName, properties: properties);
       }
     } catch (e) {
       String error = e as String ?? "Unable to track event: $eventName";

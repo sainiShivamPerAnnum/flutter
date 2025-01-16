@@ -1,0 +1,46 @@
+include: package:flutter_lints/flutter.yaml
+
+
+analyzer:
+  language: 
+    strict-casts: true
+
+linter:
+  rules:
+    - always_declare_return_types
+    - always_put_required_named_parameters_first
+    - always_require_non_null_named_parameters
+    - annotate_overrides
+    - avoid_annotating_with_dynamic
+    - avoid_field_initializers_in_const_classes
+    - avoid_null_checks_in_equality_operators
+    - avoid_unused_constructor_parameters
+    - camel_case_types
+    - constant_identifier_names
+    - empty_statements
+    - file_names
+    - invariant_booleans
+    - iterable_contains_unrelated_type
+    - lines_longer_than_80_chars
+    - no_duplicate_case_values
+    - non_constant_identifier_names
+    - prefer_const_constructors
+    - prefer_const_constructors_in_immutables
+    - prefer_const_declarations
+    - prefer_const_literals_to_create_immutables
+    - prefer_constructors_over_static_methods
+    - prefer_equal_for_default_values
+    - prefer_final_fields
+    - sort_unnamed_constructors_first
+    - unnecessary_const
+    - unnecessary_getters_setters
+    - unnecessary_lambdas
+    - unnecessary_new
+    - unnecessary_null_aware_assignments
+    - unnecessary_null_in_if_null_operators
+    - unnecessary_overrides
+    - unnecessary_parenthesis
+    - unnecessary_statements
+    - unnecessary_this
+    - void_checks
+    - require_trailing_commas

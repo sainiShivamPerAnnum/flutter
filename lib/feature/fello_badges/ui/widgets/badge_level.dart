@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart' as carousel;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/fello_badges_model.dart';
@@ -36,7 +36,7 @@ class _BadgeLevelState extends State<BadgeLevel> {
     const Color(0xFF394B71),
     UiConstants.kAutoSaveOnboardingTextColor,
   ];
-  late final CarouselController _carouselController;
+  late final carousel.CarouselController _carouselController;
 
   int _getIndex() {
     if (widget.currentLevel < 1) {
@@ -49,7 +49,7 @@ class _BadgeLevelState extends State<BadgeLevel> {
   @override
   void initState() {
     super.initState();
-    _carouselController = CarouselController();
+    _carouselController = carousel.CarouselController();
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
         Future.delayed(
@@ -76,8 +76,8 @@ class _BadgeLevelState extends State<BadgeLevel> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      child: CarouselSlider.builder(
-        options: CarouselOptions(
+      child: carousel.CarouselSlider.builder(
+        options: carousel.CarouselOptions(
           viewportFraction: .88,
           aspectRatio: .55,
           enableInfiniteScroll: false,

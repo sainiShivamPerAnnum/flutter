@@ -14,10 +14,6 @@
 	<string>$(APP_BUILD_NAME)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
 	<key>CFBundleIcons</key>
 	<dict>
 		<key>CFBundlePrimaryIcon</key>
@@ -30,6 +26,10 @@
 			<false/>
 		</dict>
 	</dict>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
 	<key>CFBundleLocalizations</key>
 	<array>
 		<string>en_US</string>
@@ -95,24 +95,24 @@
 			</array>
 		</dict>
 	</array>
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>CleverTapAccountID</key>
+	<string>$(CleverTapAccountID)</string>
+	<key>CleverTapRegion</key>
+	<string>in1</string>
+	<key>CleverTapToken</key>
+	<string>$(CleverTapToken)</string>
+	<key>FacebookAdvertiserIDCollectionEnabled</key>
+	<true/>
 	<key>FacebookAppID</key>
 	<string>251100614291797</string>
-	<key>FacebookDisplayName</key>
-	<string>fello_facebook_events</string>
 	<key>FacebookAutoLogAppEventsEnabled</key>
-	<true/>
-	<key>FacebookAdvertiserIDCollectionEnabled</key>
 	<true/>
 	<key>FacebookClientToken</key>
 	<string>6f9d18f671142554dff9da869d835363</string>
-	<key>CleverTapAccountID</key>
-	<string>$(CleverTapAccountID)</string>
-	<key>CleverTapToken</key>
-	<string>$(CleverTapToken)</string>
-	<key>CleverTapRegion</key>
-	<string>in1</string>
-	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FacebookDisplayName</key>
+	<string>fello_facebook_events</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<string>0</string>
 	<key>FirebaseDynamicLinksCustomDomains</key>
@@ -134,26 +134,32 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>{YourAppName} needs access to bluetooth to connect to nearby devices.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Access to Camera is requested. This is only required for choosing your profile picture and completing KYC Verification.</string>
+	<string>We need access to your camera for video calls and live interactions with experts. Rest assured, your privacy is our priority.</string>
+	<key>NSContactsIdentifierUsageDescription</key>
+	<string>We use contact identifiers to link records.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>We need access to your contacts to find and invite friends.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Why is my app authenticating using face id?</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Access to Microphone is requested. This is only required for completing KYC Verification.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Access to photos is requested. This is only required for choosing your profile picture and completing KYC Verification.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>{YourAppName} App wants to use your local network</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Your location helps us to verify you kYC details</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This app needs access to location when in the background.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs access to location when open.</string>
-	<key>NSContactsIdentifierUsageDescription</key>
-	<string>We use contact identifiers to link records.</string>
-	<key>NSContactsUsageDescription</key>
-	<string>We need access to your contacts to find and invite friends.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Fello requires microphone access to enable smooth audio communication during calls and live sessions with experts.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Access to photos is requested. This is only required for choosing your profile picture and completing KYC Verification.</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>We use user tracking to improve your experience and provide personalized content in our app. This helps us understand how you interact with our app and allows us to tailor our services to better suit your needs. Your data is handled securely and in accordance with our privacy policy.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -186,7 +192,5 @@
 	<string>$(WEBENGAGE_LICENSE_CODE)</string>
 	<key>WEGLogLevel</key>
 	<string>VERBOSE</string>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
 </dict>
 </plist>

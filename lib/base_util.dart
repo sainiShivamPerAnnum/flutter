@@ -31,6 +31,7 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/expert/booking_sheet.dart';
 import 'package:felloapp/feature/referrals/ui/referral_rating_sheet.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
@@ -455,6 +456,33 @@ class BaseUtil extends ChangeNotifier {
         entryPoint: entryPoint,
         quickCheckout: quickCheckout,
       ),
+    );
+  }
+
+  static dynamic openBookAdvisorSheet({
+    required String advisorId,
+    required String advisorName,
+    required bool isEdit,
+    String? duration,
+    DateTime? scheduledOn,
+    String? bookingId,
+  }) {
+    AppState.screenStack.add(ScreenItem.modalsheet);
+    return openModalBottomSheet(
+      isScrollControlled: true,
+      enableDrag: false,
+      isBarrierDismissible: false,
+      addToScreenStack: false,
+      content: BookCallSheetView(
+        advisorID: advisorId,
+        advisorName: advisorName,
+        isEdit: isEdit,
+        bookingId: bookingId,
+        duration: duration,
+        scheduledOn: scheduledOn,
+      ),
+      backgroundColor: UiConstants.kBackgroundColor,
+      hapticVibrate: true,
     );
   }
 
@@ -988,6 +1016,21 @@ class BaseUtil extends ChangeNotifier {
         : NumberFormat.compactCurrency(decimalDigits: 0, symbol: '');
 
     return formatter.format(value);
+  }
+
+  static String formatDateTime(DateTime dateTime) {
+    final DateFormat formatter = DateFormat('dd MMM yyyy, hh:mm a');
+    return formatter.format(dateTime);
+  }
+
+  static String formatDateTime2(DateTime dateTime) {
+    final DateFormat formatter = DateFormat('MMMM d, yyyy');
+    return formatter.format(dateTime);
+  }
+
+  static String formatTime(DateTime dateTime) {
+    final DateFormat formatter = DateFormat('hh:mm a');
+    return formatter.format(dateTime);
   }
 
   static Future<bool> isFirstTimeThisWeek() async {

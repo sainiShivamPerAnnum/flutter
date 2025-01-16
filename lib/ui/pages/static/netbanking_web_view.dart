@@ -62,6 +62,7 @@ class _NetBankingWebViewState extends State<NetBankingWebView>
     return Scaffold(
       appBar: AppBar(
         backgroundColor: UiConstants.kBackgroundColor,
+        surfaceTintColor:UiConstants.kBackgroundColor,
         actions: [
           TimerWidget(
             onTimerFinish: _onTimerCompleted,

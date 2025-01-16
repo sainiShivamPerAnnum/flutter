@@ -8,6 +8,8 @@ part of 'app_config_serialized_model.dart';
 
 AppConfigV2Data _$AppConfigV2DataFromJson(Map<String, dynamic> json) =>
     AppConfigV2Data(
+      contactDetails: json['contactDetails'] as String? ?? "support@fello.in",
+      socialBtnTxt: json['socialBtnTxt'] as String? ?? "Raise a Ticket",
       loginAssetUrl: json['loginAssetUrl'] as String? ?? '',
       invalidateBefore: json['invalidateBefore'] as num? ?? 0,
       autosaveActive: json['autosaveActive'] as bool? ?? false,
@@ -54,14 +56,14 @@ AppConfigV2Data _$AppConfigV2DataFromJson(Map<String, dynamic> json) =>
           ? null
           : PowerPlayConfig.fromJson(
               json['powerplayConfig'] as Map<String, dynamic>),
-      revampedReferralsConfig: json['revampedReferralsConfig'] == null
+      revampedReferralsConfigV1: json['revampedReferralsConfigV1'] == null
           ? null
           : RevampedReferralsConfig.fromJson(
-              json['revampedReferralsConfig'] as Map<String, dynamic>),
+              json['revampedReferralsConfigV1'] as Map<String, dynamic>),
       quizConfig: json['quizConfig'] == null
           ? null
           : QuizConfig.fromJson(json['quizConfig'] as Map<String, dynamic>),
-      appReferralMessage: json['appReferralMessage'] as String? ?? '',
+      appReferralMessageV1: json['appReferralMessageV1'] as String? ?? '',
       paymentBriefView: json['paymentBriefView'] as bool? ?? false,
       useNewUrlUserOps: json['useNewUrlUserOps'] as bool? ?? false,
       overrideUrls: json['overrideUrls'] == null
@@ -78,6 +80,20 @@ AppConfigV2Data _$AppConfigV2DataFromJson(Map<String, dynamic> json) =>
               .toList() ??
           const [],
       features: json['features'] as Map<String, dynamic>? ?? const {},
+      socialLinks: (json['socialLinks'] as List<dynamic>?)
+              ?.map((e) => SocialItems.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      socialVideos: (json['socialVideos'] as List<dynamic>?)
+              ?.map((e) => SocialVideo.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      rpsDisclaimer: json['rpsDisclaimer'] as String? ??
+          'This repayment schedule is estimated based on past performance of the loans mapped to you. Past performance is not a guarantee of future returns. Actual repayment amount received will depend on repayments made by the borrowers.',
+      rpsLearnMore: (json['rpsLearnMore'] as List<dynamic>?)
+              ?.map((e) => Map<String, String>.from(e as Map))
+              .toList() ??
+          const [],
     );
 
 LendboxAssetConfiguration _$LendboxAssetConfigurationFromJson(

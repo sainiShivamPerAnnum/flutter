@@ -45,7 +45,7 @@ class _ReferralHomeState extends State<ReferralHome> {
       AppConfigKey.revamped_referrals_config)['hero']['subtitle'];
 
   String get referralShareText =>
-      'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. Lets start saving and playing together! Share this code: *${referralService.refCode}* with your friends.\n';
+      'Hey I am gifting you ${AppConfig.getValue(AppConfigKey.referralBonus)} coins and ${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. Lets start saving and playing together! Share this code: *${referralService.refCode}* with your friends.\n';
 
   @override
   void initState() {
@@ -155,7 +155,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                                 .colour(Colors.white),
                           ),
                           TextSpan(
-                            text: '₹${model.referralAmount}',
+                            text: '${model.referralAmount} coins',
                             style: TextStyles.rajdhaniB.title1
                                 .colour(const Color(0xFFFFD979)),
                           ),
@@ -284,7 +284,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                                 style: TextStyles.rajdhaniSB.body2
                                     .colour(Colors.white)),
                             TextSpan(
-                                text: '₹${model.totalReferralWon}',
+                                text: '${model.totalReferralWon} coins',
                                 style: TextStyles.rajdhaniB.body2
                                     .colour(const Color(0xFFFFD979))),
                             TextSpan(

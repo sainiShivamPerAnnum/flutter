@@ -14,7 +14,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/service/notifier_services/user_service.dart';
 import '../../home/widgets/no_transaction_widget.dart';
-import '../../ui/shared/footer.dart';
 import 'widgets/widgets.dart';
 
 class MyFundSection extends StatefulWidget {
@@ -152,7 +151,7 @@ class _MyFundSectionState extends State<MyFundSection> {
                   )
                 ],
               ),
-              if (fundsBloc.state.entries.isNotEmpty) const Footer(),
+              // if (fundsBloc.state.entries.isNotEmpty) const Footer(),
             ],
           );
         },

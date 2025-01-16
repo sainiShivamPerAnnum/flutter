@@ -3,10 +3,12 @@ import 'package:felloapp/ui/elements/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ViewAllBlogsView extends StatelessWidget {
@@ -15,18 +17,21 @@ class ViewAllBlogsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return BaseView<SaveViewModel>(
-      onModelReady: (model) => model.getAllBlogs(),
-      builder: ((context, model, child) => Scaffold(
-            backgroundColor: UiConstants.kBackgroundColor,
-            appBar: AppBar(
-              leading: const FelloAppBarBackButton(),
-              elevation: 0,
-              backgroundColor: UiConstants.kBackgroundColor,
-              title: Text(locale.blogs, style: TextStyles.rajdhaniSB.title5),
-              centerTitle: false,
-            ),
-            body: Padding(
+    return ChangeNotifierProvider.value(
+      value: locator<SaveViewModel>()..getAllBlogs(),
+      builder: (context, child) => Scaffold(
+        backgroundColor: UiConstants.kBackgroundColor,
+        appBar: AppBar(
+          leading: const FelloAppBarBackButton(),
+          elevation: 0,
+          backgroundColor: UiConstants.kBackgroundColor,
+                surfaceTintColor: UiConstants.kBackgroundColor,
+          title: Text(locale.blogs, style: TextStyles.rajdhaniSB.title5),
+          centerTitle: false,
+        ),
+        body: Consumer<SaveViewModel>(
+          builder: (context, model, child) {
+            return Padding(
               padding: EdgeInsets.only(
                 top: SizeConfig.padding24,
               ),
@@ -57,8 +62,8 @@ class ViewAllBlogsView extends StatelessWidget {
                                         style: TextStyles.rajdhaniM.body2,
                                       ),
                                     ),
-                                    Container(
-                                      height: SizeConfig.screenWidth! * 0.4,
+                                    SizedBox(
+                                      height: SizeConfig.padding252,
                                       child: ListView.builder(
                                         itemCount: model
                                             .blogPostsByCategory![index]
@@ -102,7 +107,7 @@ class ViewAllBlogsView extends StatelessWidget {
                                     ),
                                     SizedBox(
                                       height: SizeConfig.padding16,
-                                    )
+                                    ),
                                   ],
                                 ),
                               );
@@ -111,8 +116,10 @@ class ViewAllBlogsView extends StatelessWidget {
                         ),
                 ],
               ),
-            ),
-          )),
+            );
+          },
+        ),
+      ),
     );
   }
 }
@@ -130,51 +137,52 @@ class BlogsLoadingShimmerWidget extends StatelessWidget {
           horizontal: SizeConfig.padding24,
         ),
         child: ListView.builder(
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: EdgeInsets.only(bottom: SizeConfig.padding16),
-                child: Container(
-                  width: SizeConfig.screenWidth,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Shimmer.fromColors(
+          itemCount: 5,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: EdgeInsets.only(bottom: SizeConfig.padding16),
+              child: SizedBox(
+                width: SizeConfig.screenWidth,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Shimmer.fromColors(
+                      baseColor: UiConstants.kUserRankBackgroundColor,
+                      highlightColor: UiConstants.kBackgroundColor,
+                      child: Container(
+                        color: Colors.black,
+                        height: SizeConfig.padding24,
+                        width: 100,
+                        margin: EdgeInsets.only(bottom: SizeConfig.padding12),
+                      ),
+                    ),
+                    ClipRRect(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness12),
+                      child: Shimmer.fromColors(
                         baseColor: UiConstants.kUserRankBackgroundColor,
                         highlightColor: UiConstants.kBackgroundColor,
                         child: Container(
-                          color: Colors.black,
-                          height: SizeConfig.padding24,
-                          width: 100,
-                          margin: EdgeInsets.only(bottom: SizeConfig.padding12),
-                        ),
-                      ),
-                      ClipRRect(
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness12),
-                        child: Shimmer.fromColors(
-                          baseColor: UiConstants.kUserRankBackgroundColor,
-                          highlightColor: UiConstants.kBackgroundColor,
-                          child: Container(
-                            height: SizeConfig.screenWidth! * 0.4,
-                            width: SizeConfig.screenWidth,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(
-                                SizeConfig.roundness12,
-                              ),
-                              color: Colors.black,
+                          height: SizeConfig.screenWidth! * 0.4,
+                          width: SizeConfig.screenWidth,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                              SizeConfig.roundness12,
                             ),
+                            color: Colors.black,
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: SizeConfig.padding16,
-                      )
-                    ],
-                  ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding16,
+                    ),
+                  ],
                 ),
-              );
-            }),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

@@ -1,0 +1,71 @@
+part of 'preload_bloc.dart';
+
+@freezed
+class PreloadEvent with _$PreloadEvent {
+  // const factory PreloadEvent.initialize() = _Initialize;
+  const factory PreloadEvent.initializeLiveStream(
+    VideoData video, {
+    Completer<void>? completer,
+  }) = _InitializeLiveStream;
+  const factory PreloadEvent.disposeLiveStreamController() =
+      _DisposeLiveStreamController;
+  const factory PreloadEvent.getVideosFromApi() = _GetVideosFromApi;
+  const factory PreloadEvent.setLoading() = _SetLoading;
+  const factory PreloadEvent.updateUrls(
+    List<VideoData> videos, {
+    Completer<void>? completer,
+  }) = _UpdateUrls;
+  const factory PreloadEvent.onVideoIndexChanged(int index) =
+      _OnVideoIndexChanged;
+  const factory PreloadEvent.pauseVideoAtIndex(int index) = _PauseVideoAtIndex;
+  const factory PreloadEvent.playVideoAtIndex(int index) = _PlayVideoAtIndex;
+  const factory PreloadEvent.updateConstants({
+    int? preloadLimit,
+    int? nextLimit,
+    int? latency,
+  }) = _UpdateConstants;
+
+  const factory PreloadEvent.addComment({
+    required String videoId,
+    required String comment,
+  }) = _AddComment;
+
+  const factory PreloadEvent.updateViewCount({
+    required String videoId,
+  }) = _UpdateViewCount;
+  const factory PreloadEvent.updateSeen({
+    required String videoId,
+  }) = _UpdateSeen;
+
+  const factory PreloadEvent.onError() = _ErrorPage;
+
+  const factory PreloadEvent.likeVideo({
+    required String videoId,
+  }) = _LikeVideo;
+  const factory PreloadEvent.toggleComments() = _ToggleComments;
+  const factory PreloadEvent.addCommentToState({
+    required String videoId,
+    required List<CommentData> comment,
+  }) = _AddCommentToState;
+  const factory PreloadEvent.switchToMainReels() = _SwitchToMainReels;
+  const factory PreloadEvent.switchToProfileReels({
+    Completer<void>? completer,
+  }) = _SwitchToProfileReels;
+  const factory PreloadEvent.initializeAtIndex({
+    required int index,
+    Completer<void>? completer,
+  }) = _InitializeAtIndex;
+  const factory PreloadEvent.initializeFromDynamicLink({
+    required String videoId,
+    Completer<void>? completer,
+  }) = _InitializeFromDynamicLink;
+  const factory PreloadEvent.updateKeyboardState({required bool state}) =
+      _UpdateKeyboardState;
+  const factory PreloadEvent.disposeProfileControllers() =
+      _DisposeProfileControllers;
+  const factory PreloadEvent.generateDynamicLink({required String videoId}) =
+      _GenerateDynamicLink;
+  const factory PreloadEvent.updateLoading({
+    required bool isLoading,
+  }) = _UpdateLoading;
+}

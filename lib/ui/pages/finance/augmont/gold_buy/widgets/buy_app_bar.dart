@@ -19,6 +19,7 @@ class RechargeModalSheetAppBar extends StatelessWidget {
       centerTitle: true,
       elevation: 0,
       backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
       leading: txnService.isGoldBuyInProgress
           ? const SizedBox()
           : IconButton(

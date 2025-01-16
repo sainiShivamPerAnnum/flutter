@@ -3,17 +3,20 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/advisor_repo.dart';
 import 'package:felloapp/core/repository/analytics_repo.dart';
 import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/clientComms_repo.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
+import 'package:felloapp/core/repository/experts_repo.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
+import 'package:felloapp/core/repository/live_repository.dart';
 import 'package:felloapp/core/repository/local/stories_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
@@ -21,6 +24,7 @@ import 'package:felloapp/core/repository/power_play_repo.dart';
 import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/report_repo.dart';
+import 'package:felloapp/core/repository/rps_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
 import 'package:felloapp/core/repository/sip_repo.dart';
@@ -31,6 +35,7 @@ import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/clever_tap_analytics.dart';
+import 'package:felloapp/core/service/analytics/facebook_analytics.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/core/service/analytics/singular_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
@@ -60,9 +65,13 @@ import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
+import 'package:felloapp/feature/hms_room_kit/lib/src/hmssdk_interactor.dart';
+import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_store.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
+import 'package:felloapp/feature/shorts/flutter_preload_videos.dart';
 import 'package:felloapp/feature/tambola/src/repos/tambola_repo.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_vm.dart';
@@ -150,6 +159,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(AnalyticsProperties.new);
   locator.registerLazySingleton(AnalyticsService.new);
   locator.registerLazySingleton(MixpanelAnalytics.new);
+  locator.registerLazySingleton(FacebookAnalytics.new);
   locator.registerLazySingleton(AppFlyerAnalytics.new);
   locator.registerLazySingleton(SingularAnalytics.new);
   locator.registerLazySingleton(CleverTapAnalytics.new);
@@ -219,17 +229,27 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(SipRepository.new);
   locator.registerLazySingleton(SaveRepo.new);
   locator.registerLazySingleton(LendboxRepo.new);
+  locator.registerLazySingleton(AdvisorRepo.new);
   locator.registerLazySingleton(PrizingRepo.new);
   locator.registerLazySingleton(UserStatsRepo.new);
   locator.registerLazySingleton(RootController.new);
   locator.registerLazySingleton(PowerPlayRepository.new);
   locator.registerLazySingleton(ClientCommsRepo.new);
   locator.registerLazySingleton(ReportRepository.new);
+  locator.registerLazySingleton(RpsRepository.new);
   locator.registerLazySingleton(() => FcmHandlerV2(locator()));
   locator.registerLazySingleton<StoriesRepository>(
     () => StoriesRepository(locator()),
   );
+  locator.registerLazySingleton(LiveRepository.new);
+  locator.registerLazySingleton(ExpertsRepository.new);
+  locator.registerLazySingleton(ShortsRepo.new);
+  locator.registerLazySingleton(HMSSDKInteractor.new);
+  locator.registerLazySingleton<MeetingStore>(
+    () => MeetingStore(hmsSDKInteractor: locator()),
+  );
 
+  locator.registerLazySingleton(() => AdvisorBloc(locator()));
   //ROOT
   locator.registerLazySingleton(CardActionsNotifier.new);
 
@@ -239,7 +259,7 @@ Future<void> setupLocator() async {
 
   /// Hometabs
   locator.registerFactory(PlayViewModel.new);
-  locator.registerFactory(SaveViewModel.new);
+  locator.registerLazySingleton(SaveViewModel.new);
   locator.registerFactory(MyAccountVM.new);
   locator.registerFactory(JourneyPageViewModel.new);
 

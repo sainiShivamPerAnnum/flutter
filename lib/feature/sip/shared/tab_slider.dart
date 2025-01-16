@@ -31,6 +31,8 @@ class TabSlider<T> extends StatelessWidget {
         unselectedLabelStyle: TextStyles.sourceSans.body3.colour(
           UiConstants.textGray70,
         ),
+        dividerColor: Colors.transparent,
+        indicatorSize: TabBarIndicatorSize.tab,
         labelColor: Colors.white,
         unselectedLabelColor: Colors.white,
         indicatorPadding: EdgeInsets.zero,

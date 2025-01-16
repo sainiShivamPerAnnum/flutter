@@ -58,6 +58,7 @@ class AppState extends ChangeNotifier {
   static bool isUpdateScreen = false;
   static bool isQuizInProgress = false;
   static bool isNetbankingInProgress = false;
+  static bool isLiveVideoInProgess = false;
 
   // static bool isDrawerOpened = false;
   static bool isUserSignedIn = false;
@@ -73,6 +74,7 @@ class AppState extends ChangeNotifier {
   static bool isFirstTimeAccountsOpened = false;
   static bool isFirstTimeTambolaOpened = false;
   static bool isGoldProBuyInProgress = false;
+  static bool isInLiveStream = false;
 
   // static bool isJourneyFirstTab = false;
   static bool isAutosaveFlow = false;
@@ -234,45 +236,31 @@ class AppState extends ChangeNotifier {
   }
 
   void trackEvent(int index) {
-    final ScratchCardService gtService = locator<ScratchCardService>();
     if (_rootController.currentNavBarItemModel ==
-        RootController.journeyNavBarItem) {
+        RootController.liveNavBarItem) {
       _analyticsService.track(
-          eventName: AnalyticsEvents.journeySection,
-          properties: AnalyticsProperties.getDefaultPropertiesMap());
+        eventName: AnalyticsEvents.liveClicked,
+      );
     } else if (_rootController.currentNavBarItemModel ==
-        RootController.saveNavBarItem) {
+        RootController.expertNavBarItem) {
       _analyticsService.track(
-          eventName: AnalyticsEvents.saveSection,
-          properties: AnalyticsProperties.getDefaultPropertiesMap());
+        eventName: AnalyticsEvents.expertClicked,
+      );
     } else if (_rootController.currentNavBarItemModel ==
-        RootController.playNavBarItem) {
+        RootController.advisortNavBarItem) {
       _analyticsService.track(
-          eventName: AnalyticsEvents.playSection,
-          properties:
-              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-            "Time left for draw Tambola (mins)":
-                AnalyticsProperties.getTimeLeftForTambolaDraw(),
-            "Tambola Tickets Owned":
-                AnalyticsProperties.getTambolaTicketCount(),
-          }));
+        eventName: AnalyticsEvents.advisorClicked,
+      );
     } else if (_rootController.currentNavBarItemModel ==
-        RootController.winNavBarItem) {
+        RootController.supportNavBarItem) {
       _analyticsService.track(
-          eventName: "Account section tapped",
-          properties:
-              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-            "Winnings Amount": AnalyticsProperties.getUserCurrentWinnings(),
-            "Unscratched Ticket Count": gtService.unscratchedTicketsCount,
-            "Scratched Ticket Count": (gtService.activeScratchCards.length) -
-                gtService.unscratchedTicketsCount,
-          }));
+        eventName: AnalyticsEvents.supportClicked,
+      );
     } else if (_rootController.currentNavBarItemModel ==
-        RootController.tambolaNavBar) {
-      _analyticsService.track(eventName: "Tambola tab tapped", properties: {
-        // "Ticket count": locator<TambolaService>().userWeeklyBoards?.length ?? 0,
-        "index": index
-      });
+        RootController.shortsNavBarItem) {
+      _analyticsService.track(
+        eventName: AnalyticsEvents.shortsClicked,
+      );
     }
   }
 

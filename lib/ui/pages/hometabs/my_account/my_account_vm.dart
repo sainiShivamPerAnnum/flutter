@@ -20,8 +20,6 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/user_avatars_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
-import 'package:felloapp/ui/pages/root/root_controller.dart';
-import 'package:felloapp/ui/pages/root/tutorial_keys.dart';
 import 'package:felloapp/ui/pages/static/profile_image.dart';
 import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
@@ -33,7 +31,6 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:showcaseview/showcaseview.dart';
 
 class MyAccountVM extends BaseViewModel {
   final UserService _userService = locator<UserService>();
@@ -95,9 +92,10 @@ class MyAccountVM extends BaseViewModel {
 
   void navigateToMyWinnings() {
     AppState.delegate!.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        page: MyWinningsPageConfig,
-        widget: const MyWinningsView());
+      state: PageState.addWidget,
+      page: MyWinningsPageConfig,
+      widget: const MyWinningsView(),
+    );
   }
 
   void navigateToRefer() {
@@ -121,7 +119,10 @@ class MyAccountVM extends BaseViewModel {
   }
 
   double calculateFillHeight(
-      double winningAmount, double containerHeight, int redeemAmount) {
+    double winningAmount,
+    double containerHeight,
+    int redeemAmount,
+  ) {
     double fillPercent = (winningAmount / redeemAmount) * 100;
     double heightToFill = (fillPercent / 100) * containerHeight;
 
@@ -165,20 +166,6 @@ class MyAccountVM extends BaseViewModel {
     );
   }
 
-  Future<void> showTutorial(BuildContext context) async {
-    Haptic.vibrate();
-    AppState.delegate!.onTapItem(RootController.saveNavBarItem);
-    // await AppState.backButtonDispatcher!.didPopRoute();
-    ShowCaseWidget.of(context).startShowCase([
-      TutorialKeys.tutorialkey1,
-      TutorialKeys.tutorialkey2,
-      TutorialKeys.tutorialkey3,
-      TutorialKeys.tutorialkey4,
-      TutorialKeys.tutorialkey5,
-      TutorialKeys.tutorialkey6
-    ]);
-  }
-
   Future<void> showCustomAvatarsDialog() async {
     await BaseUtil.openDialog(
       addToScreenStack: true,
@@ -200,14 +187,17 @@ class MyAccountVM extends BaseViewModel {
 
   Future<void> updateUserAvatar({String? avatarId}) async {
     final res = await _userRepo.updateUser(
-        dMap: {BaseUser.fldAvatarId: avatarId},
-        uid: _userService.baseUser!.uid);
+      dMap: {BaseUser.fldAvatarId: avatarId},
+      uid: _userService.baseUser!.uid,
+    );
     await AppState.backButtonDispatcher!.didPopRoute();
     if (res.isSuccess() && res.model!) {
       _userService.setMyAvatarId(avatarId);
 
       return BaseUtil.showPositiveAlert(
-          locale.updatedSuccessfully, locale.profileUpdated);
+        locale.updatedSuccessfully,
+        locale.profileUpdated,
+      );
     } else {
       BaseUtil.showNegativeAlert(locale.obSomeThingWentWrong, locale.tryLater);
     }
