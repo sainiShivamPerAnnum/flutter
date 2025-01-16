@@ -78,6 +78,7 @@ class _PeerTileState extends State<PeerTile> {
                   key: key,
                   decoration: BoxDecoration(
                     color: HMSThemeColors.backgroundDefault,
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   child: Semantics(
                     label:
@@ -107,7 +108,7 @@ class _PeerTileState extends State<PeerTile> {
                         NameAndNetwork(maxWidth: constraints.maxWidth),
                         const HandRaise(), //top left
                         const BRBTag(), //top left
-                        const AudioMuteStatus(), //top right
+                        // const AudioMuteStatus(), //top right
                         context.read<PeerTrackNode>().peer.isLocal
                             ? const LocalPeerMoreOption(
                                 isInsetTile: false,
@@ -128,15 +129,7 @@ class _PeerTileState extends State<PeerTile> {
                       "fl_${context.read<PeerTrackNode>().peer.name}_screen_share_tile",
                   child: LayoutBuilder(
                       builder: (context, BoxConstraints constraints) {
-                    return Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: HMSThemeColors.surfaceDim, width: 1.0),
-                            color: Colors.transparent,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10))),
-                        key: key,
-                        child: const ScreenshareTile());
+                    return Container(key: key, child: const ScreenshareTile());
                   }),
                 );
         }),

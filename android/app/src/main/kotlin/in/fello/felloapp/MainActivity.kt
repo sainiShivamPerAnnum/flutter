@@ -35,6 +35,9 @@ import android.database.Cursor
 import android.os.Build
 import android.provider.ContactsContract
 import com.clevertap.android.sdk.CleverTapAPI
+import live.hms.hmssdk_flutter.Constants
+import live.hms.hmssdk_flutter.methods.HMSPipAction
+//import android.content.res.Configuration
 
 
 class MainActivity : FlutterFragmentActivity() {
@@ -59,6 +62,28 @@ class MainActivity : FlutterFragmentActivity() {
         }
     }
 
+    override fun onUserLeaveHint() {
+    super.onUserLeaveHint()
+        // This should only work for android version above 8 since PIP is only supported after
+        // android 8 and will not be called after android 12 since it automatically gets handled by android.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            HMSPipAction.autoEnterPipMode(this)
+        }
+    }
+    //override fun onPictureInPictureModeChanged(
+    //isInPictureInPictureMode: Boolean,
+    //newConfig: Configuration
+    //) {
+    //    super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+    //    if (isInPictureInPictureMode) {
+    //        if (HMSPipAction.pipResult != null) {
+    //            HMSPipAction.pipResult?.success(true)
+    //            HMSPipAction.pipResult = null
+    //        }
+    //    } else {
+    //        Log.i("PIP Mode", "Exited PIP Mode")
+    //    }
+    //}
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         context = applicationContext
 //        flutterEngine.plugins.add(MyPlugin())

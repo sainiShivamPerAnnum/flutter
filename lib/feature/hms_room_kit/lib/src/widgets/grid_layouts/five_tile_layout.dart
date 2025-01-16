@@ -31,37 +31,49 @@ class FiveTileLayout extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Expanded(
-          child: Row(children: [
-            Expanded(
-              child: ListenablePeerWidget(
-                  index: startIndex, peerTracks: peerTracks),
-            ),
-            const SizedBox(
-              width: 2,
-            ),
-            Expanded(
-              child: ListenablePeerWidget(
-                  index: startIndex + 1, peerTracks: peerTracks),
-            ),
-          ]),
+          child: Row(
+            children: [
+              Expanded(
+                child: ListenablePeerWidget(
+                  index: startIndex,
+                  peerTracks: peerTracks,
+                ),
+              ),
+              const SizedBox(
+                width: 2,
+              ),
+              Expanded(
+                child: ListenablePeerWidget(
+                  index: startIndex + 1,
+                  peerTracks: peerTracks,
+                ),
+              ),
+            ],
+          ),
         ),
         const SizedBox(
           height: 2,
         ),
         Expanded(
-          child: Row(children: [
-            Expanded(
-              child: ListenablePeerWidget(
-                  index: startIndex + 2, peerTracks: peerTracks),
-            ),
-            const SizedBox(
-              width: 2,
-            ),
-            Expanded(
-              child: ListenablePeerWidget(
-                  index: startIndex + 3, peerTracks: peerTracks),
-            ),
-          ]),
+          child: Row(
+            children: [
+              Expanded(
+                child: ListenablePeerWidget(
+                  index: startIndex + 2,
+                  peerTracks: peerTracks,
+                ),
+              ),
+              const SizedBox(
+                width: 2,
+              ),
+              Expanded(
+                child: ListenablePeerWidget(
+                  index: startIndex + 3,
+                  peerTracks: peerTracks,
+                ),
+              ),
+            ],
+          ),
         ),
         const SizedBox(
           height: 2,
@@ -69,9 +81,12 @@ class FiveTileLayout extends StatelessWidget {
         Expanded(
           child: Padding(
             padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width / 4),
+              horizontal: MediaQuery.of(context).size.width / 4,
+            ),
             child: ListenablePeerWidget(
-                index: startIndex + 4, peerTracks: peerTracks),
+              index: startIndex + 4,
+              peerTracks: peerTracks,
+            ),
           ),
         ),
       ],

@@ -3,7 +3,7 @@ description: Game-based Investments
 
 publish_to: "none"
 
-version: 6.1.1+280
+version: 6.1.2+281
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -124,6 +124,7 @@ dependencies:
   vertical_scrollable_tabview: ^0.1.1
   scroll_to_index: ^3.0.1
   injectable: ^1.5.4
+  # flutter_branch_sdk: ^8.0.0
 
 
 

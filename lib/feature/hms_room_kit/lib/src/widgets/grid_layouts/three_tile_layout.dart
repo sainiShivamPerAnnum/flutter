@@ -8,13 +8,11 @@ import 'package:flutter/cupertino.dart';
 ///This widget renders three tiles on a page
 ///The three tiles are rendered in a 3x1 grid
 ///The tiles look like this
-/// ┌─────┐
-/// │  0  │
-/// ├─────┤
-/// │  1  │
-/// ├─────┤
-/// │  2  │
-/// └─────┘
+/// ╔═══════╦═══════╗
+/// ║   0   ║   1   ║
+/// ╠═══════╬═══════╣
+///     ║   2   ║
+///     ╚═══════╝
 class ThreeTileLayout extends StatelessWidget {
   final int startIndex;
   final List<PeerTrackNode> peerTracks;
@@ -30,21 +28,33 @@ class ThreeTileLayout extends StatelessWidget {
     return Column(
       children: [
         Expanded(
-          child:
-              ListenablePeerWidget(index: startIndex, peerTracks: peerTracks),
+          child: Row(children: [
+            Expanded(
+              child: ListenablePeerWidget(
+                  index: startIndex, peerTracks: peerTracks),
+            ),
+            const SizedBox(
+              width: 2,
+            ),
+            Expanded(
+              child: ListenablePeerWidget(
+                  index: startIndex + 1, peerTracks: peerTracks),
+            ),
+          ]),
         ),
         const SizedBox(
           height: 2,
         ),
         Expanded(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width / 5,
+            ),
             child: ListenablePeerWidget(
-                index: startIndex + 1, peerTracks: peerTracks)),
-        const SizedBox(
-          height: 2,
-        ),
-        Expanded(
-          child: ListenablePeerWidget(
-              index: startIndex + 2, peerTracks: peerTracks),
+              index: startIndex + 2,
+              peerTracks: peerTracks,
+            ),
+          ),
         ),
       ],
     );

@@ -47,8 +47,8 @@ final class BookingsLoaded extends BookingState {
     return BookingsLoaded(
       advisorId: advisorId ?? this.advisorId,
       schedule: schedule ?? this.schedule,
-      selectedDate: selectedDate ?? this.selectedDate,
-      selectedTime: selectedTime ?? this.selectedTime,
+      selectedDate: selectedDate,
+      selectedTime: selectedTime,
       selectedDuration: selectedDuration ?? this.selectedDuration,
       isFree: isFree ?? this.isFree,
     );
@@ -77,6 +77,7 @@ class PricingData extends BookingState {
   final bool reedem;
   final num coinBalanceUse;
   final bool isApplyingReedem;
+  final bool isFree;
 
   const PricingData({
     required this.advisorId,
@@ -90,6 +91,7 @@ class PricingData extends BookingState {
     required this.coinBalanceUse,
     this.reedem = false,
     this.isApplyingReedem = false,
+    this.isFree = false,
   });
   PricingData copyWith({
     String? advisorId,
@@ -103,6 +105,7 @@ class PricingData extends BookingState {
     bool? reedem,
     bool? isApplyingReedem,
     num? coinBalanceUse,
+    bool? isFree,
   }) {
     return PricingData(
       advisorId: advisorId ?? this.advisorId,
@@ -116,6 +119,7 @@ class PricingData extends BookingState {
       reedem: reedem ?? this.reedem,
       isApplyingReedem: isApplyingReedem ?? this.isApplyingReedem,
       coinBalanceUse: coinBalanceUse ?? this.coinBalanceUse,
+      isFree: isFree ?? this.isFree,
     );
   }
 
@@ -132,6 +136,7 @@ class PricingData extends BookingState {
         reedem,
         isApplyingReedem,
         coinBalanceUse,
+        isFree,
       ];
 }
 

@@ -4,6 +4,7 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
+// import 'package:felloapp/core/service/analytics/branch_analytics.dart';
 import 'package:felloapp/core/service/analytics/clever_tap_analytics.dart';
 import 'package:felloapp/core/service/analytics/facebook_analytics.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
@@ -25,6 +26,7 @@ class AnalyticsService extends BaseAnalyticsService {
   final SingularAnalytics _singular = locator<SingularAnalytics>();
   final CleverTapAnalytics _cleverTap = locator<CleverTapAnalytics>();
   final WebEngageAnalytics _webengage = locator<WebEngageAnalytics>();
+  // final BranchAnalytics _branch = locator<BranchAnalytics>();
   final CustomLogger _logger = locator<CustomLogger>();
 
   @override
@@ -35,6 +37,7 @@ class AnalyticsService extends BaseAnalyticsService {
     _cleverTap.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     _webengage.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     _facebook.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
+    // _branch.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     // for daily session event
     DateTime now = DateTime.now();
     final lastDateOpened =
@@ -54,6 +57,7 @@ class AnalyticsService extends BaseAnalyticsService {
     _singular.signOut();
     _cleverTap.signOut();
     _facebook.signOut();
+    // _branch.signOut();
   }
 
   @override
@@ -67,6 +71,7 @@ class AnalyticsService extends BaseAnalyticsService {
     bool singular = true,
     bool cleverTap = true,
     bool apxor = false,
+    bool branch = true,
   }) {
     try {
       if (FirebaseAuth.instance.currentUser != null) {
@@ -96,6 +101,9 @@ class AnalyticsService extends BaseAnalyticsService {
       if (facebook) {
         _facebook.track(eventName: eventName, properties: properties);
       }
+      // if (branch) {
+      //   _branch.track(eventName: eventName, properties: properties);
+      // }
     } catch (e) {
       String error = e as String ?? "Unable to track event: $eventName";
       _logger.e(error);
@@ -107,6 +115,7 @@ class AnalyticsService extends BaseAnalyticsService {
     _mixpanel.track(eventName: screen, properties: properties);
     _cleverTap.track(eventName: screen, properties: properties);
     _webengage.trackScreen(screen: screen, properties: properties);
+    // _branch.trackScreen(screen: screen, properties: properties);
   }
 
   Future<void> trackSignup(String? userId) async {
