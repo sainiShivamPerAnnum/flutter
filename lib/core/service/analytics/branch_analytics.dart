@@ -42,7 +42,7 @@ class BranchAnalytics extends BaseAnalyticsService {
     );
     if (properties != null) {
       properties.forEach((key, value) {
-        branchEvent.addCustomData(key, value);
+        branchEvent.addCustomData(key.toString(), value.toString());
       });
     }
 

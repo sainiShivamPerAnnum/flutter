@@ -20,8 +20,9 @@ Future<void> bootStrap(BootstrapCallBack bootStrapCallBack) async {
       await FlutterBranchSdk.init(
         useTestKey: FlavorConfig.isDevelopment() || FlavorConfig.isQA(),
       );
-      FlutterBranchSdk.validateSDKIntegration();
-
+      if (FlavorConfig.isDevelopment() || FlavorConfig.isQA()) {
+        FlutterBranchSdk.validateSDKIntegration();
+      }
       try {
         await SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp],
