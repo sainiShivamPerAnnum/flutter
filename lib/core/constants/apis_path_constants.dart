@@ -269,4 +269,6 @@ class ApiPath {
   static const String fdHome = "/fds";
   static const String fbDetails = "/details";
   static const String myFds = "/myfds";
+  static const String fdCalculation =
+      "/binvestt/portal/fixed-deposit/calculator";
 }

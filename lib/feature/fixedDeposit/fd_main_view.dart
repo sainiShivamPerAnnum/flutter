@@ -59,8 +59,7 @@ class _FdHomeViewState extends State<FdHomeView>
   Widget build(BuildContext context) {
     return BaseScaffold(
       appBar: const _AppBar(),
-      backgroundColor: UiConstants.bg,
-      showBackgroundGrid: false,
+      showBackgroundGrid: true,
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return <Widget>[

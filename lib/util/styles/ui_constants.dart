@@ -89,6 +89,7 @@ class UiConstants {
   static const Color kBackgroundDividerColor = Color(0xFF23272B);
   static const Color kDividerColorLight = Color(0xff3E3E3E);
   static const Color kGridLineColor = Color(0x32414145);
+  static const Color kChipColor = Color(0xff414145);
   static const Color kFirstRankPillerColor = Color(0xFFF2B826);
   static const Color kSecondRankPillerColor = Color(0x0f5371ee);
   static const Color kThirdRankPillerColor = Color(0xFF34C3A7);
@@ -124,6 +125,7 @@ class UiConstants {
   static const Color kred1 = Color(0xffEB5757);
   static const Color kblue1 = Color(0xff1ABCC5);
   static const Color kblue2 = Color(0xff01656B);
+  static const Color kblue3 = Color(0xff14A085);
 
   static const Color kFAQsAnswerColor = Color(0xFFA9C6D6);
 
@@ -245,6 +247,7 @@ class UiConstants {
   static const grey4 = Color(0xFF323232);
   static const grey5 = Color(0xFF1A1A1A);
   static const grey6 = Color(0xff49494B);
+  static const grey7 = Color(0xff3E4145);
 
   static const yellow3 = Color(0xFFFFD979);
   static const yellow2 = Color(0xFFFFE9B1);
@@ -261,6 +264,7 @@ class UiConstants {
 
   static const bg = Color(0xFF232326);
   static const bg1 = Color(0xff29292B);
+  static const bg2 = Color(0xff212B2D);
 
   static const textGray50 = Color(0xFF919193);
   static const textGray60 = Color(0xFFA7A7A8);

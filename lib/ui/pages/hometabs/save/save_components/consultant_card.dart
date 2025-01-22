@@ -5,34 +5,46 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 class ConsultationWidget extends StatelessWidget {
-  const ConsultationWidget({super.key});
+  const ConsultationWidget({
+    this.margin,
+    this.padding,
+    this.header,
+    this.zeroPadding,
+    this.bottomMargin,
+    super.key,
+  });
+  final EdgeInsets? margin;
+  final EdgeInsets? bottomMargin;
+  final EdgeInsets? padding;
+  final String? header;
+  final bool? zeroPadding;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        GestureDetector(
-          onTap: () {},
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TitleSubtitleContainer(
-                title: "Book your session",
-              ),
-            ],
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            TitleSubtitleContainer(
+              title: header ?? "Book your session",
+              zeroPadding: zeroPadding ?? false,
+            ),
+          ],
         ),
         Container(
-          margin: EdgeInsets.only(
-            top: SizeConfig.padding10,
-            left: SizeConfig.padding20,
-            right: SizeConfig.padding20,
-          ),
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding18,
-            vertical: SizeConfig.padding14,
-          ),
+          margin: margin ??
+              EdgeInsets.only(
+                top: SizeConfig.padding10,
+                left: SizeConfig.padding20,
+                right: SizeConfig.padding20,
+              ),
+          padding: padding ??
+              EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding18,
+                vertical: SizeConfig.padding14,
+              ),
           decoration: BoxDecoration(
             color: UiConstants.greyVarient,
             borderRadius: BorderRadius.only(
@@ -104,11 +116,12 @@ class ConsultationWidget extends StatelessWidget {
               bottomRight: Radius.circular(SizeConfig.roundness12),
             ),
           ),
-          margin: EdgeInsets.only(
-            bottom: SizeConfig.padding10,
-            left: SizeConfig.padding20,
-            right: SizeConfig.padding20,
-          ),
+          margin: bottomMargin ??
+              EdgeInsets.only(
+                bottom: SizeConfig.padding10,
+                left: SizeConfig.padding20,
+                right: SizeConfig.padding20,
+              ),
           padding: EdgeInsets.symmetric(
             vertical: SizeConfig.padding12,
           ),

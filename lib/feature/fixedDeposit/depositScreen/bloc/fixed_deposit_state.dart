@@ -11,22 +11,22 @@ class LoadingFdCalculator extends FixedDepositCalculatorState {
   List<Object?> get props => const [];
 }
 
-final class FdCalculatorLoaded extends FixedDepositCalculatorState {
-  final FdCalculator fdCalculatorData;
-  const FdCalculatorLoaded({
-    required this.fdCalculatorData,
+class FdCalculationResult extends FixedDepositCalculatorState {
+  final String totalInterest;
+  final String maturityAmount;
+  final double interestRate;
+
+  const FdCalculationResult({
+    required this.totalInterest,
+    required this.maturityAmount,
+    required this.interestRate,
   });
-  FixedDepositCalculatorState copyWith({
-    FdCalculator? fdCalculatorData,
-  }) {
-    return FdCalculatorLoaded(
-      fdCalculatorData: fdCalculatorData ?? this.fdCalculatorData,
-    );
-  }
 
   @override
   List<Object?> get props => [
-        fdCalculatorData,
+        totalInterest,
+        maturityAmount,
+        interestRate,
       ];
 }
 
@@ -36,5 +36,5 @@ class FCalculatorError extends FixedDepositCalculatorState {
   const FCalculatorError(this.message);
 
   @override
-  List<Object> get props => [message];
+  List<Object?> get props => [message];
 }

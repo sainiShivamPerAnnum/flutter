@@ -101,11 +101,14 @@ class __AllFdsState extends State<_AllFds> {
                               children: [
                                 Row(
                                   children: [
-                                    ClipOval(
-                                      child: AppImage(
-                                        finance.icon,
-                                        width: SizeConfig.padding48,
-                                        height: SizeConfig.padding48,
+                                    Hero(
+                                      tag: finance.id,
+                                      child: ClipOval(
+                                        child: AppImage(
+                                          finance.icon,
+                                          width: SizeConfig.padding48,
+                                          height: SizeConfig.padding48,
+                                        ),
                                       ),
                                     ),
                                     SizedBox(width: SizeConfig.padding14),
@@ -251,7 +254,9 @@ class __AllFdsState extends State<_AllFds> {
                                           AppState.delegate!.appState
                                               .currentAction = PageAction(
                                             page: FdCalulatorPageConfig,
-                                            widget: const FdCalculatorView(),
+                                            widget: FDDepositView(
+                                              fdData: state.fdData[index],
+                                            ),
                                             state: PageState.addWidget,
                                           );
                                         },

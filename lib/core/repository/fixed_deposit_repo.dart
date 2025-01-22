@@ -1,5 +1,6 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
-import 'package:felloapp/core/model/fixedDeposit/fd_deposit.dart';
+import 'package:felloapp/core/model/fixedDeposit/fd_calculator.dart';
+// import 'package:felloapp/core/model/fixedDeposit/fd_deposit.dart';
 import 'package:felloapp/core/model/fixedDeposit/fd_home.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -14,6 +15,10 @@ class FdRepository extends BaseRepo {
   final String _baseUrl = FlavorConfig.isDevelopment()
       ? "https://2fb48b39-dc60-4458-8004-8dcfb41d5ab6.mock.pstmn.io"
       : "https://sdypt3fcnh.execute-api.ap-south-1.amazonaws.com/prod";
+
+  final String _blostemUrl = FlavorConfig.isDevelopment()
+      ? "https://api.blostem.info"
+      : "https://api.blostem.info";
 
   static const _fd = 'fd';
 
@@ -59,20 +64,36 @@ class FdRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<FdCalculator>> individualFdData() async {
+  Future<ApiResponse<FDInterestModel>> fetchFdCalculation({
+    required num investmentAmount,
+    required num investmentPeriod,
+    required bool isSeniorCitizen,
+    required String payoutFrequency,
+    required bool isFemale,
+    required String issuerId,
+  }) async {
     try {
-      final response = await APIService.instance.getData(
-        ApiPath.fbDetails,
-        cBaseUrl: _baseUrl,
-        apiName: '$_fd/individualFdData',
+      final body = {
+        "investmentAmount": investmentAmount,
+        "investmentPeriod": investmentPeriod,
+        "isSeniorCitizen": isSeniorCitizen,
+        "payoutFrequency": payoutFrequency,
+        "isFemale": isFemale,
+        "issuerId": issuerId,
+      };
+      final response = await APIService.instance.postData(
+        ApiPath.fdCalculation,
+        cBaseUrl: _blostemUrl,
+        body: body,
+        apiName: '$_fd/fetchFdCalculation',
       );
-      // final responseData = response["data"];
-      return ApiResponse<FdCalculator>(
-        model: FdCalculator.fromJson(response),
+      final responseData = response["data"];
+      return ApiResponse<FDInterestModel>(
+        model: FDInterestModel.fromJson(responseData),
         code: 200,
       );
     } catch (e) {
-      _logger.e("individualFdData => ${e.toString()}");
+      _logger.e("fetchFdCalculation => ${e.toString()}");
       return ApiResponse.withError(
         e.toString(),
         400,
@@ -80,7 +101,7 @@ class FdRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<FdCalculator>> myFds() async {
+  Future<ApiResponse<AllFdsData>> myFds() async {
     try {
       final response = await APIService.instance.getData(
         ApiPath.myFds,
@@ -88,8 +109,8 @@ class FdRepository extends BaseRepo {
         apiName: '$_fd/myFds',
       );
       // final responseData = response["data"];
-      return ApiResponse<FdCalculator>(
-        model: FdCalculator.fromJson(response),
+      return ApiResponse<AllFdsData>(
+        model: AllFdsData.fromJson(response),
         code: 200,
       );
     } catch (e) {

@@ -135,6 +135,7 @@ const String rewardsHistoryViewPath = "/rewards-history";
 const String rpsLearnMoreViewPath = "/rps-learnMore";
 const String FdViewPath = '/fd/home';
 const String FdCalculatorViewPath = '/fd/calculator';
+const String FdDetailsViewPath = '/fd/details';
 
 enum Pages {
   Splash,
@@ -266,7 +267,8 @@ enum Pages {
   RewardsHistory,
   RPSLearnMore,
   FdHomeView,
-  FdCalculatorView
+  FdCalculatorView,
+  FdDetailsView,
 }
 
 class PageConfiguration {
@@ -1068,4 +1070,10 @@ PageConfiguration FdCalulatorPageConfig = PageConfiguration(
   path: FdCalculatorViewPath,
   uiPage: Pages.FdCalculatorView,
   name: 'Fd Calculator View Path',
+);
+PageConfiguration FdDetailsPageConfig = PageConfiguration(
+  key: 'FdDetailsPageConfig',
+  path: FdDetailsViewPath,
+  uiPage: Pages.FdDetailsView,
+  name: 'Fd Details View Path',
 );
