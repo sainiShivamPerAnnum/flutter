@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -97,7 +96,6 @@ class MultipleScratchCardsViewModel extends BaseViewModel {
   final ScratchCardRepository _scRepo = locator<ScratchCardRepository>();
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
-  final JourneyService _journeyService = locator<JourneyService>();
   final CustomLogger _logger = locator<CustomLogger>();
   final S locale = locator<S>();
 
@@ -208,7 +206,6 @@ class MultipleScratchCardsViewModel extends BaseViewModel {
         },
       );
       _performPostScratchProcessing(index);
-      _journeyService.updateRewardStatus(scratchCardList[index].prizeSubtype!);
     } catch (e) {
       AppState.isInstantGtViewInView = false;
       _logger.e(e);

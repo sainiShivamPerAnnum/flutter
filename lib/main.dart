@@ -1,7 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
@@ -80,12 +79,12 @@ class MyApp extends HookWidget {
           Provider(create: (_) => locator<MyFundsBloc>()),
           Provider(create: (_) => locator<SIPTransactionBloc>()),
           ChangeNotifierProvider(
-              create: (_) => locator<SaveViewModel>(),),
+            create: (_) => locator<SaveViewModel>(),
+          ),
           ChangeNotifierProvider(create: (_) => locator<ConnectivityService>()),
           ChangeNotifierProvider(create: (_) => locator<DBModel>()),
           ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
           ChangeNotifierProvider(create: (_) => appState),
-          ChangeNotifierProvider(create: (_) => locator<JourneyService>()),
           ChangeNotifierProvider(create: (_) => locator<LeaderboardService>()),
           ChangeNotifierProvider(create: (_) => locator<TxnHistoryService>()),
           ChangeNotifierProvider(create: (_) => locator<UserCoinService>()),

@@ -44,7 +44,6 @@ import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
-import 'package:felloapp/ui/pages/games/web/web_home/web_game_modal_sheet.dart';
 import 'package:felloapp/ui/pages/support/bug_report/ui/found_bug.dart';
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
@@ -300,21 +299,6 @@ class BaseUtil extends ChangeNotifier {
             _userService.userFundWallet?.augGoldQuantity ?? 0,
         "existing lease grams": _userService.userFundWallet?.wAugFdQty ?? 0
       },
-    );
-  }
-
-  static dynamic openGameModalSheet(String game) {
-    AppState.screenStack.add(ScreenItem.modalsheet);
-    return openModalBottomSheet(
-      isScrollControlled: true,
-      enableDrag: true,
-      isBarrierDismissible: true,
-      addToScreenStack: false,
-      content: WebGameModalSheet(
-        game: game,
-      ),
-      backgroundColor: UiConstants.gameCardColor,
-      hapticVibrate: true,
     );
   }
 

@@ -176,7 +176,7 @@ class ApiPath {
   //Journey
   static const kJourney = "/journey";
 
-  static String journeyStats(String? uid) => "/user/$uid/journey/stats";
+//   static String journeyStats(String? uid) => "/user/$uid/journey/stats";
 
   static String kSkipMilestone(String? uid) => "/user/$uid/skip/milestone";
 
@@ -266,9 +266,8 @@ class ApiPath {
 
   static const String badgesLeaderBoard = "/super-fello/leaderboard";
   static const String rpsPath = "/withdrawal/rps";
-  static const String fdHome = "/fds";
+  static const String fdHome = "/fd/templates";
   static const String fbDetails = "/details";
   static const String myFds = "/myfds";
-  static const String fdCalculation =
-      "/binvestt/portal/fixed-deposit/calculator";
+  static const String fdCalculation = "/fd/calculate";
 }

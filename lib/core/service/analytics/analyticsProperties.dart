@@ -1,7 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -12,7 +11,6 @@ class AnalyticsProperties {
   //Required depedencies
   static final UserService _userService = locator<UserService>();
   static final UserCoinService _userCoinService = locator<UserCoinService>();
-  static final JourneyService _journeyService = locator<JourneyService>();
   static final TxnHistoryService _txnHistoryService =
       locator<TxnHistoryService>();
   static final BaseUtil _baseUtil = locator<BaseUtil>();
@@ -111,29 +109,6 @@ class AnalyticsProperties {
   static double getUserCurrentWinnings() {
     double currentWinning = _userService.userFundWallet?.unclaimedBalance ?? 0;
     return currentWinning;
-  }
-
-  static String getJouneryCapsuleText() {
-    return _journeyService
-            .currentMilestoneList[_userService.userJourneyStats!.mlIndex! - 1]
-            .tooltip ??
-        "null";
-  }
-
-  static String getJourneyMileStoneText() {
-    return _journeyService
-            .currentMilestoneList[_userService.userJourneyStats!.mlIndex! - 1]
-            .steps[0]
-            .title ??
-        "null";
-  }
-
-  static String getJourneyMileStoneSubText() {
-    return _journeyService
-            .currentMilestoneList[_userService.userJourneyStats!.mlIndex! - 1]
-            .steps[0]
-            .subtitle ??
-        "null";
   }
 
   static String getTimeLeftForTambolaDraw() {

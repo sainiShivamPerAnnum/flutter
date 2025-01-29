@@ -352,7 +352,6 @@ class AugmontTransactionService extends BaseTransactionService
       unawaited(_userService.getUserFundWalletData());
       if (currentTransactionState == TransactionState.ongoing) {
         ScratchCardService.scratchCardsList = gtIds;
-        await _userService.getUserJourneyStats();
         AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;
         Haptic.vibrate();

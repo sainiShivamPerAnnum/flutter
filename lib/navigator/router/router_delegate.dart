@@ -39,9 +39,7 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_transactions/gold_pro_txns_view.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/my_account_view.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/stories/stories_page.dart';
@@ -327,9 +325,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
             ScratchCardsViewPageConfig,
           );
           break;
-        case Pages.JourneyView:
-          _addPageData(const JourneyView(), JourneyViewPageConfig);
-          break;
         case Pages.OnBoardingView:
           _addPageData(const OnBoardingView(), OnBoardingViewPageConfig);
           break;
@@ -362,9 +357,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.EarnMoreReturnsView:
           _addPageData(const EarnMoreReturns(), EarnMoreReturnsViewPageConfig);
-          break;
-        case Pages.PlayView:
-          _addPageData(const Play(), TransactionDetailsPageConfig);
           break;
         case Pages.GoldProDetailsView:
           _addPageData(
@@ -1237,9 +1229,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       appState.onItemTapped(
         DynamicUiUtils.navBar.indexWhere((element) => element == 'PL'),
       );
-    } else {
-      BaseUtil.openGameModalSheet(game);
-    }
+    } else {}
   }
 
   List<Story> _getStories() {

@@ -15,7 +15,6 @@ import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
-import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
 import 'package:felloapp/core/repository/live_repository.dart';
 import 'package:felloapp/core/repository/local/stories_repo.dart';
@@ -47,7 +46,6 @@ import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_v2/fcm_handler_v2.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/feature_flag_service/feature_flag_service.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -92,14 +90,8 @@ import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_vm.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transaction_history_vm.dart';
-import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
-import 'package:felloapp/ui/pages/games/web/web_home/web_home_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_vm.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset.vm.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/my_account_vm.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
@@ -183,7 +175,6 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(WinnerService.new);
   locator.registerLazySingleton(LeaderboardService.new);
   locator.registerLazySingleton(ScratchCardService.new);
-  locator.registerLazySingleton(JourneyService.new);
   locator.registerLazySingleton(GoogleSignInService.new);
   locator.registerLazySingleton(RazorpayService.new);
   locator.registerSingletonAsync(SharedPreferences.getInstance);
@@ -218,7 +209,6 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(BankingRepository.new);
   locator.registerLazySingleton(CouponRepository.new);
   locator.registerLazySingleton(PaytmRepository.new);
-  locator.registerLazySingleton(JourneyRepository.new);
   locator.registerLazySingleton(GameRepo.new);
   locator.registerLazySingleton(ReferralRepo.new);
   locator.registerLazySingleton(ScratchCardRepository.new);
@@ -260,10 +250,8 @@ Future<void> setupLocator() async {
   locator.registerFactory(RootViewModel.new);
 
   /// Hometabs
-  locator.registerFactory(PlayViewModel.new);
   locator.registerLazySingleton(SaveViewModel.new);
   locator.registerFactory(MyAccountVM.new);
-  locator.registerFactory(JourneyPageViewModel.new);
 
   /// VIEW MODELS
   locator.registerFactory(TransactionsHistoryViewModel.new);
@@ -279,8 +267,6 @@ Future<void> setupLocator() async {
   // locator.registerFactory(TambolaHomeViewModel.new);
   locator.registerFactory(TambolaHomeTicketsViewModel.new);
   locator.registerFactory(TambolaHomeDetailsViewModel.new);
-  locator.registerFactory(WebHomeViewModel.new);
-  locator.registerFactory(WebGameViewModel.new);
 
   locator.registerFactory(ReferralDetailsViewModel.new);
   locator.registerFactory(MyWinningsViewModel.new);
@@ -291,7 +277,6 @@ Future<void> setupLocator() async {
   locator.registerFactory(TopSaverViewModel.new);
   locator.registerFactory(CampaignRepo.new);
   locator.registerFactory(OnboardingViewModel.new);
-  locator.registerFactory(JourneyBannersViewModel.new);
   locator.registerFactory(FaqPageViewModel.new);
   locator.registerFactory(LendboxBuyViewModel.new);
   locator.registerFactory(LendboxWithdrawalViewModel.new);
@@ -309,7 +294,6 @@ Future<void> setupLocator() async {
   locator.registerFactory(MiniTransactionCardViewModel.new);
   locator.registerFactory(FelloCoinBarViewModel.new);
   locator.registerFactory(FAQCardViewModel.new);
-  locator.registerFactory(SourceAdaptiveAssetViewModel.new);
   locator.registerFactory(AssetPreferenceViewModel.new);
   locator.registerLazySingleton(WebEngageAnalytics.new);
 

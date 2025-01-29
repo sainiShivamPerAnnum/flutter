@@ -7,10 +7,10 @@ import 'package:felloapp/core/model/power_play_models/season_leaderboard_model.d
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
-import 'package:felloapp/ui/pages/games/web/reward_leaderboard/components/leaderboard_shimmer.dart';
 import 'package:felloapp/ui/pages/power_play/completed_match_details/completed_match_details_view.dart';
 import 'package:felloapp/ui/pages/power_play/season_leaderboard/season_leaderboard_vm.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/user_rank.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/winner_widget.dart';
 import 'package:felloapp/util/assets.dart';
@@ -122,7 +122,7 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return model.isLeaderboardLoading
-        ? const LeaderboardShimmer()
+        ? const FullScreenLoader()
         : ((model.leaderboard ?? []).isNotEmpty)
             ? NewLeaderBoardView(
                 scoreBoard: model.leaderboard,

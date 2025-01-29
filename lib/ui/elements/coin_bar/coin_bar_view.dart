@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/ui/modalsheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/service_elements/user_coin_service/coin_balance_text.dart';
@@ -41,7 +40,6 @@ class FelloCoinBar extends StatelessWidget {
       builder: (context, model, properties) {
         return GestureDetector(
           onTap: () {
-            if (JourneyService.isAvatarAnimationInProgress) return;
             _analytics.track(eventName: AnalyticsEvents.addFLCTokensTopRight);
             BaseUtil.openModalBottomSheet(
               addToScreenStack: true,

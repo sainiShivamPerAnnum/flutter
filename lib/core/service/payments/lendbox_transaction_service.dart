@@ -160,7 +160,6 @@ class LendboxTransactionService extends BaseTransactionService
       if (currentTransactionState == TransactionState.ongoing) {
         ScratchCardService.scratchCardsList = gtIds;
         // await _gtService.fetchAndVerifyScratchCardByID();
-        await _userService.getUserJourneyStats();
 
         AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;

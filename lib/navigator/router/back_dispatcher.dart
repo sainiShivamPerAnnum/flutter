@@ -23,7 +23,6 @@ import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/modalsheets/autosave_confirm_exit_modalsheet.dart';
 import 'package:felloapp/ui/modalsheets/autosave_survey_modalsheet.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_components/gold_pro_buy_exit_modalsheet.dart';
-import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
@@ -41,7 +40,6 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate? _routerDelegate;
   final CustomLogger? logger = locator<CustomLogger>();
   final UserService _userService = locator<UserService>();
-  final WebGameViewModel _webGameViewModel = locator<WebGameViewModel>();
   final AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
@@ -255,7 +253,6 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           AppState.isWebGameLInProgress = false;
           didPopRoute();
           didPopRoute();
-          _webGameViewModel.handleGameSessionEnd();
         },
         true,
       );
@@ -267,8 +264,6 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           AppState.isWebGamePInProgress = false;
           didPopRoute();
           didPopRoute();
-          _webGameViewModel.handleGameSessionEnd(
-              duration: const Duration(milliseconds: 500));
         },
         false,
       );

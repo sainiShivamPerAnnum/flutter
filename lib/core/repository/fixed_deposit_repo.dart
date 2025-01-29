@@ -12,14 +12,9 @@ import '../../util/custom_logger.dart';
 
 class FdRepository extends BaseRepo {
   final CustomLogger _logger = locator<CustomLogger>();
-  final String _baseUrl = FlavorConfig.isDevelopment()
-      ? "https://2fb48b39-dc60-4458-8004-8dcfb41d5ab6.mock.pstmn.io"
-      : "https://sdypt3fcnh.execute-api.ap-south-1.amazonaws.com/prod";
-
-  final String _blostemUrl = FlavorConfig.isDevelopment()
-      ? "https://api.blostem.info"
-      : "https://api.blostem.info";
-
+  final _baseUrl = FlavorConfig.isDevelopment()
+      ? 'https://advisors.fello-dev.net'
+      : 'https://advisors.fello-prod.net/';
   static const _fd = 'fd';
 
   Future<ApiResponse<List<AllFdsData>>> getAllFdsData() async {
@@ -83,7 +78,7 @@ class FdRepository extends BaseRepo {
       };
       final response = await APIService.instance.postData(
         ApiPath.fdCalculation,
-        cBaseUrl: _blostemUrl,
+        cBaseUrl: _baseUrl,
         body: body,
         apiName: '$_fd/fetchFdCalculation',
       );

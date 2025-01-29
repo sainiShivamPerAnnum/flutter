@@ -3,7 +3,6 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -55,7 +54,7 @@ class FelloAppBar extends StatelessWidget {
           backgroundColor: showAppBar
               ? UiConstants.kSecondaryBackgroundColor
               : Colors.transparent,
-              surfaceTintColor: showAppBar
+          surfaceTintColor: showAppBar
               ? UiConstants.kSecondaryBackgroundColor
               : Colors.transparent,
           actions: actions ?? [Container()],
@@ -74,8 +73,6 @@ class NotificationButton extends StatelessWidget {
         properties: const [UserServiceProperties.myNotificationStatus],
         builder: (context, model, property) => InkWell(
               onTap: () {
-                if (JourneyService.isAvatarAnimationInProgress) return;
-
                 Haptic.vibrate();
                 _analytics.track(
                     eventName: AnalyticsEvents.notificationsClicked,

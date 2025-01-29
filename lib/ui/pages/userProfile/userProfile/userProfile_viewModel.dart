@@ -9,7 +9,6 @@ import 'package:felloapp/core/enums/username_response_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
@@ -568,7 +567,6 @@ class UserProfileVM extends BaseViewModel {
                 _powerPlayService.dump();
                 _gtService.dump();
                 _tambolaRepo.dump();
-                locator<JourneyRepository>().dump();
                 _appstate.dump();
                 locator<SubService>().dump();
                 _tambolaService.dump();

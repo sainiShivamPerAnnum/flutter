@@ -2,7 +2,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -24,7 +23,6 @@ class GTInstantViewModel extends BaseViewModel {
   final ScratchCardService _gtService = locator<ScratchCardService>();
 
   // final PaytmService? _paytmService = locator<PaytmService>();
-  final JourneyService _journeyService = locator<JourneyService>();
   final MarketingEventHandlerService _marketingEventHandlerService =
       locator<MarketingEventHandlerService>();
 
@@ -148,7 +146,6 @@ class GTInstantViewModel extends BaseViewModel {
           },
         ),
       );
-      _journeyService.updateRewardStatus(scratchCard!.prizeSubtype!);
     } catch (e) {
       _logger.e(e);
       BaseUtil.showNegativeAlert(

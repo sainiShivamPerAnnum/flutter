@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
-import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/alert_model.dart';
@@ -19,20 +18,17 @@ import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
-import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/feature_flag_service/feature_flag_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
-import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/referral_alert_dailog.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
@@ -64,7 +60,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final CustomLogger _logger = locator<CustomLogger>();
   final UserRepository _userRepo = locator<UserRepository>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
-  final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final GetterRepository _gettersRepo = locator<GetterRepository>();
   final AppState _appState = locator<AppState>();
   final RootController _rootController = locator<RootController>();
@@ -460,7 +455,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       }
 
       if (baseUser != null) {
-        unawaited(getUserJourneyStats());
+        // unawaited(getUserJourneyStats());
         final res = await _gettersRepo.getPageConfigs();
         final quickSaveRes = await _gettersRepo.getQuickSave();
         if (res.isSuccess()) {
@@ -495,7 +490,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       await CacheService.invalidateAll();
       await FirebaseAuth.instance.signOut();
       await CacheManager.clearCacheMemory();
-      _journeyRepo.dump();
       // await _apiCacheManager!.clearCacheMemory();
       _logger.d("UserService signout called");
       _userFundWallet = null;
@@ -623,22 +617,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         print('Failed to update Home Screen widget: $e');
       }
     }
-  }
-
-  Future<bool> getUserJourneyStats() async {
-    // NOTE: CACHE REQUIRED, FOR CALLED FROM JOURUNY SERVICE AGAIN
-    if (baseUser != null) {
-      ApiResponse<UserJourneyStatsModel> res =
-          await _journeyRepo.getUserJourneyStats();
-      if (res.isSuccess()) {
-        userJourneyStats = res.model;
-        return true;
-      } else {
-        _logger.e("Error fetching User journey stats data");
-        return false;
-      }
-    }
-    return false;
   }
 
   void _compileUserWallet() {
