@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/shorts/shorts_v2.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/feature/advisor/advisor_root.dart';
 import 'package:felloapp/feature/expert/expert_root.dart';
@@ -117,7 +118,7 @@ class RootController {
         break;
       case "SH":
         navItems.putIfAbsent(
-          const ShortsVideoPage(),
+          const ShortsNewPage(),
           () => RootController.shortsNavBarItem,
         );
         break;
@@ -125,7 +126,9 @@ class RootController {
         final UserService userService = locator<UserService>();
         if (userService.baseUser?.isAdvisor ?? false) {
           navItems.putIfAbsent(
-              const AdvisorPage(), () => RootController.advisortNavBarItem,);
+            const AdvisorPage(),
+            () => RootController.advisortNavBarItem,
+          );
         } else {
           navItems.putIfAbsent(
             const SupportNewPage(),
