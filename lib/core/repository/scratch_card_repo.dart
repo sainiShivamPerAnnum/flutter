@@ -3,17 +3,14 @@ import 'dart:developer';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/app_environment.dart';
-import 'package:felloapp/core/model/daily_bonus_event_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/model/rewards_history.dart';
 import 'package:felloapp/core/model/rewardsquickLinks_model.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
-import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:felloapp/util/preference_helper.dart';
 
 class ScratchCardRepository extends BaseRepo {
   static const _rewards = 'rewards';
@@ -113,8 +110,7 @@ class ScratchCardRepository extends BaseRepo {
       }
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to skip milestone", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 
@@ -134,8 +130,7 @@ class ScratchCardRepository extends BaseRepo {
       return ApiResponse<ScratchCard>(model: scratchCard, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to fetch ticket", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 
@@ -161,8 +156,7 @@ class ScratchCardRepository extends BaseRepo {
           model: unscratchedScratchCards, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to fetch ticket", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 
@@ -219,8 +213,7 @@ class ScratchCardRepository extends BaseRepo {
       return ApiResponse<List<ScratchCard>>(model: tickets, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to fetch ticket", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 
@@ -247,73 +240,6 @@ class ScratchCardRepository extends BaseRepo {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
-
-  Future<ApiResponse<DailyAppCheckInEventModel>>
-      getDailyBonusEventDetails() async {
-    try {
-      //LOCAL CHECK IF EVENT IS AVAILABLE FOR THS USER
-      if (PreferenceHelper.getBool(
-              PreferenceHelper.CACHE_IS_DAILY_APP_BONUS_EVENT_ACTIVE,
-              def: true) ==
-          false) return ApiResponse.withError("Event Over for this user", 400);
-
-      //LOCAL CHECK IF REWARD FOR TODAY IS ALREADY CLAIMED
-      final int lastBonusClaimedDay = PreferenceHelper.getInt(
-          PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY);
-
-      if (lastBonusClaimedDay != 0 &&
-          lastBonusClaimedDay == DateTime.now().day) {
-        return ApiResponse.withError("Reward Claimed for today", 400);
-      }
-
-      //No local restrictions found here. claiming today's bonus
-      //FETCH EVENT DETAILS
-
-      final response = await APIService.instance.getData(
-        ApiPath.kDailyAppBonusEvent(
-          userService.baseUser!.uid!,
-        ),
-        cBaseUrl: AppEnvironment.instance.rewards,
-        apiName: '$_rewards/getDailyBonus',
-      );
-      log("DAILY APP : $response");
-      final responseData = DailyAppCheckInEventModel.fromMap(response["data"]);
-
-      //NETWORK CHECK IF EVENT OVER FOR THIS USER
-      if (responseData.currentDay >= 7) {
-        await PreferenceHelper.setBool(
-            PreferenceHelper.CACHE_IS_DAILY_APP_BONUS_EVENT_ACTIVE, false);
-        return ApiResponse.withError("Event over for this user", 400);
-      }
-
-      //NETWORK CHECK IF CLAIM WAS SUCCESSFUL OR NOT
-      //If a goldenTicket is received in response model, consider it as a claim
-      if (responseData.gtId.isEmpty) {
-        await PreferenceHelper.setInt(
-            PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY,
-            DateTime.now().day);
-        return ApiResponse.withError("Reward claimed for today", 400);
-      } else {
-        ScratchCardService.scratchCardId = responseData.gtId;
-        await PreferenceHelper.setInt(
-            PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY,
-            DateTime.now().day);
-        print("DAILY APP BOUNUS: claimed day cached is ${DateTime.now().day}");
-      }
-      //CHECK IF STREAK IS RESET
-      if (responseData.streakBreakMessage.isNotEmpty) {
-        responseData.showStreakBreakMessage = true;
-      }
-
-      //ALL GOOD, USER ELIGIBLE FOR DAILY APP REWARDS
-
-      return ApiResponse(model: responseData, code: 200);
-    } catch (e) {
-      logger.e(e.toString());
-      return ApiResponse.withError(e.toString(), 400);
-    }
-  }
-
   // Future<ApiResponse<DailyAppBonusClaimRewardModel>>
   //     claimDailyBonusEventDetails() async {
   //   try {

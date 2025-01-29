@@ -15,9 +15,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
@@ -56,7 +54,6 @@ class RootViewModel extends BaseViewModel {
   final FcmListener _fcmListener = locator<FcmListener>();
   final FcmHandler _fcmHandler = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
-  final UserCoinService _userCoinService = locator<UserCoinService>();
   final CustomLogger _logger = locator<CustomLogger>();
   final UserRepository _userRepo = locator<UserRepository>();
   final TambolaService _tambolaService = locator<TambolaService>();
@@ -84,8 +81,6 @@ class RootViewModel extends BaseViewModel {
 
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final ReferralService _referralService = locator<ReferralService>();
-  final MarketingEventHandlerService _marketingService =
-      locator<MarketingEventHandlerService>();
   final RootController _rootController = locator<RootController>();
 
   Future<void> onInit() async {
@@ -107,7 +102,6 @@ class RootViewModel extends BaseViewModel {
         _checkForAppUpdates();
         if (!await verifyUserBootupDetails()) return;
         // await showLastWeekOverview();
-        showMarketingCampings();
         await Future.wait([
           _referralService.verifyReferral(),
           _referralService.initDynamicLinks(),
@@ -150,20 +144,6 @@ class RootViewModel extends BaseViewModel {
       }).catchError((e) {
         _logger.e(e.toString());
       });
-    }
-  }
-
-  void showMarketingCampings() {
-    final isComplete = PreferenceHelper.getBool(
-      PreferenceHelper.isUserOnboardingComplete,
-      def: false,
-    );
-
-    if (AppState.isRootAvailableForIncomingTaskExecution && isComplete) {
-      Future.delayed(
-        const Duration(seconds: 2),
-        _marketingService.getCampaigns,
-      );
     }
   }
 
