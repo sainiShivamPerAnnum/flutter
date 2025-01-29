@@ -34,7 +34,6 @@ import android.content.ContentResolver
 import android.database.Cursor
 import android.os.Build
 import android.provider.ContactsContract
-import com.clevertap.android.sdk.CleverTapAPI
 
 
 class MainActivity : FlutterFragmentActivity() {
@@ -53,10 +52,6 @@ class MainActivity : FlutterFragmentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && intent.extras != null){
-            CleverTapAPI.getDefaultInstance(this)?.pushNotificationClickedEvent(intent!!.extras)
-        }
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {

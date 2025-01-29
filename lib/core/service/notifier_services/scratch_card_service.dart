@@ -11,7 +11,6 @@ import 'package:felloapp/core/model/rewardsquickLinks_model.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
-import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -37,12 +36,11 @@ class ScratchCardService
   final ScratchCardRepository _gtRepo = locator<ScratchCardRepository>();
   final UserService _userService = locator<UserService>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
-  final AppFlyerAnalytics _appFlyer = locator<AppFlyerAnalytics>();
   S locale = locator<S>();
 
   bool isLastPageForScratchCards = false;
   bool _isFetchingScratchCards = false;
-  int scratchCardsListLastIndex =0;
+  int scratchCardsListLastIndex = 0;
 
   bool get isFetchingScratchCards => _isFetchingScratchCards;
 
@@ -261,28 +259,6 @@ class ScratchCardService
         ticket.gtType != null &&
         ticket.timestamp != null) return true;
     return false;
-  }
-
-  Future shareScratchCard(ScratchCard ticket) async {
-    {
-      try {
-        String? url;
-        final link = await _appFlyer.inviteLink();
-        if (link['status'] == 'success') {
-          url = link['payload']['userInviteUrl'];
-          url ??= link['payload']['userInviteURL'];
-        }
-
-        if (url != null) {
-          caputure(
-              'Hey, I won ${ticket.rewardArr!.length > 1 ? "these prizes" : "this prize"} on Fello! \nLet\'s save and play together: $url');
-        }
-      } catch (e) {
-        _logger.e(e.toString());
-        BaseUtil.showNegativeAlert(
-            locale.errorOccured, locale.obPleaseTryAgain);
-      }
-    }
   }
 
   caputure(String shareMessage) {

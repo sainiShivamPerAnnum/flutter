@@ -33,10 +33,8 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/analytics/clever_tap_analytics.dart';
 import 'package:felloapp/core/service/analytics/facebook_analytics.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
-import 'package:felloapp/core/service/analytics/singular_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/cache_service.dart';
@@ -120,8 +118,6 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../core/service/analytics/appflyer_analytics.dart';
-
 GetIt locator = GetIt.instance;
 
 Future<void> setupLocator() async {
@@ -151,9 +147,6 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(AnalyticsService.new);
   locator.registerLazySingleton(MixpanelAnalytics.new);
   locator.registerLazySingleton(FacebookAnalytics.new);
-  locator.registerLazySingleton(AppFlyerAnalytics.new);
-  locator.registerLazySingleton(SingularAnalytics.new);
-  locator.registerLazySingleton(CleverTapAnalytics.new);
 
   locator.registerLazySingleton(InternalOpsService.new);
   locator.registerLazySingleton(BankAndPanService.new);

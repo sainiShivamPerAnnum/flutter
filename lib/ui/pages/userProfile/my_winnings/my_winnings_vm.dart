@@ -7,28 +7,23 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/dialogs/share-card.dart';
-import 'package:felloapp/ui/elements/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +42,6 @@ class MyWinningsViewModel extends BaseViewModel {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
   final PrizingRepo _prizingRepo = locator<PrizingRepo>();
-  final AppFlyerAnalytics _appFlyer = locator<AppFlyerAnalytics>();
   final ScratchCardService _gtService = locator<ScratchCardService>();
   S locale = locator<S>();
 
@@ -150,135 +144,9 @@ class MyWinningsViewModel extends BaseViewModel {
     }
   }
 
-  void showConfirmDialog(PrizeClaimChoice choice) {
-    BaseUtil.openDialog(
-      addToScreenStack: true,
-      isBarrierDismissible: false,
-      hapticVibrate: true,
-      content: FelloConfirmationDialog(
-        result: (res) async {
-          if (res) {
-            claim(choice, _userService.userFundWallet!.unclaimedBalance);
-          }
-        },
-        showCrossIcon: true,
-        assetpng: choice == PrizeClaimChoice.AMZ_VOUCHER
-            ? Assets.amazonGiftVoucher
-            : Assets.augmontShare,
-        title: "Confirmation",
-        subtitle: choice == PrizeClaimChoice.AMZ_VOUCHER
-            ? "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService.userFundWallet!.unclaimedBalance, 2, false)} as an Amazon gift voucher?"
-            : "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService.userFundWallet!.unclaimedBalance, 2, false)} as Digital Gold?",
-        accept: "Yes",
-        reject: "No",
-        acceptColor: UiConstants.primaryColor,
-        rejectColor: Colors.grey.withOpacity(0.3),
-        onReject: AppState.backButtonDispatcher!.didPopRoute,
-      ),
-    );
-  }
-
-  showSuccessPrizeWithdrawalDialog(
-    PrizeClaimChoice choice,
-    String subtitle,
-  ) async {
-    AppState.screenStack.add(ScreenItem.dialog);
-    unawaited(showDialog(
-        context: AppState.delegate!.navigatorKey.currentContext!,
-        builder: (ctx) {
-          return Stack(
-            children: [
-              FelloConfirmationDialog(
-                result: (res) async {
-                  if (res) {
-                    try {
-                      String? url;
-                      final link = await _appFlyer.inviteLink();
-                      if (link['status'] == 'success') {
-                        url = link['payload']['userInviteUrl'];
-                        url ??= link['payload']['userInviteURL'];
-                      }
-
-                      if (url != null) {
-                        capture(
-                            'Hey, I won ₹${_userService.userFundWallet!.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
-                      }
-                    } catch (e) {
-                      _logger.e(e.toString());
-                      BaseUtil.showNegativeAlert(
-                          locale.errorOccured, locale.tryLater);
-                    }
-                  }
-                },
-                content: Column(
-                  children: [
-                    SizedBox(height: SizeConfig.screenHeight! * 0.02),
-                    SizedBox(
-                      height: SizeConfig.screenHeight! * 0.38,
-                      width: SizeConfig.screenWidth,
-                      child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: RepaintBoundary(
-                          key: imageKey,
-                          child: ShareCard(
-                            dpUrl: _userService.myUserDpUrl,
-                            claimChoice: choice,
-                            prizeAmount:
-                                _userService.userFundWallet!.prizeBalance,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: SizeConfig.screenHeight! * 0.02),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        locale.btnCongratulations,
-                        style: TextStyles.title2.bold,
-                      ),
-                    ),
-                    SizedBox(height: SizeConfig.padding16),
-                    getSubtitleWidget(subtitle),
-                    SizedBox(height: SizeConfig.screenHeight! * 0.03),
-                  ],
-                ),
-                showCrossIcon: true,
-                accept: locale.share,
-                reject: locale.obDone,
-                acceptColor: UiConstants.primaryColor,
-                rejectColor: Colors.grey[300],
-                onReject: AppState.backButtonDispatcher!.didPopRoute,
-              ),
-            ],
-          );
-        }));
-  }
-
   void shareOnWhatsapp() {
     _logger.i("Whatsapp share triggered");
     AppState.backButtonDispatcher!.didPopRoute();
-  }
-
-  void claim(PrizeClaimChoice choice, double claimPrize) {
-    _registerClaimChoice(choice).then((flag) {
-      AppState.backButtonDispatcher!.didPopRoute();
-      if (flag) {
-        showSuccessPrizeWithdrawalDialog(
-            choice, choice == PrizeClaimChoice.AMZ_VOUCHER ? "amazon" : "gold");
-      }
-    });
-
-    _analyticsService
-        .track(eventName: AnalyticsEvents.redeemWinningsTapped, properties: {
-      "total Winnings amount":
-          _userService.userFundWallet!.unclaimedBalance ?? 0,
-      "Token Balance": AnalyticsProperties.getTokens(),
-      "Total Invested Amount": AnalyticsProperties.getGoldInvestedAmount() +
-          AnalyticsProperties.getFelloFloAmount(),
-      "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),
-      "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
-      "Amount invested in Flo": AnalyticsProperties.getFelloFloAmount(),
-    });
   }
 
 // SET AND GET CLAIM CHOICE

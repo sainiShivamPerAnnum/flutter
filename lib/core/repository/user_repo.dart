@@ -14,7 +14,6 @@ import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
-import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
@@ -33,7 +32,6 @@ import 'package:flutter/material.dart';
 import 'base_repo.dart';
 
 class UserRepository extends BaseRepo {
-  final AppFlyerAnalytics _appsFlyerService = locator<AppFlyerAnalytics>();
   final CustomLogger _logger = locator<CustomLogger>();
   final Api _api = locator<Api>();
   final ApiPath _apiPaths = locator<ApiPath>();
@@ -83,7 +81,6 @@ class UserRepository extends BaseRepo {
           BaseUser.fldUsername: baseUser.username,
           BaseUser.fldAvatarId: baseUser.avatarId,
           BaseUser.fldUserPrefs: {"tn": 1, "al": 0},
-          BaseUser.fldAppFlyerId: await _appsFlyerService.appFlyerId,
           BaseUser.fldReferralCode: BaseUtil.manualReferralCode ?? '',
         }
       };

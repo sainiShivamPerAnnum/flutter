@@ -2,12 +2,9 @@ import 'package:app_install_date/app_install_date_imp.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
-import 'package:felloapp/core/service/analytics/clever_tap_analytics.dart';
 import 'package:felloapp/core/service/analytics/facebook_analytics.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
-import 'package:felloapp/core/service/analytics/singular_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/constants.dart';
@@ -21,18 +18,12 @@ class AnalyticsService extends BaseAnalyticsService {
 
   final MixpanelAnalytics _mixpanel = locator<MixpanelAnalytics>();
   final FacebookAnalytics _facebook = locator<FacebookAnalytics>();
-  final AppFlyerAnalytics _appFlyer = locator<AppFlyerAnalytics>();
-  final SingularAnalytics _singular = locator<SingularAnalytics>();
-  final CleverTapAnalytics _cleverTap = locator<CleverTapAnalytics>();
   final WebEngageAnalytics _webengage = locator<WebEngageAnalytics>();
   final CustomLogger _logger = locator<CustomLogger>();
 
   @override
   Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
     await _mixpanel.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
-    _appFlyer.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
-    _singular.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
-    _cleverTap.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     _webengage.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     _facebook.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     // for daily session event
@@ -50,9 +41,6 @@ class AnalyticsService extends BaseAnalyticsService {
   void signOut() {
     _mixpanel.signOut();
     _webengage.signOut();
-    _appFlyer.signOut();
-    _singular.signOut();
-    _cleverTap.signOut();
     _facebook.signOut();
   }
 
@@ -81,15 +69,6 @@ class AnalyticsService extends BaseAnalyticsService {
       if (mixpanel) {
         _mixpanel.track(eventName: eventName, properties: properties);
       }
-      if (appFlyer) {
-        _appFlyer.track(eventName: eventName, properties: properties);
-      }
-      if (singular) {
-        _singular.track(eventName: eventName, properties: properties);
-      }
-      if (cleverTap) {
-        _cleverTap.track(eventName: eventName, properties: properties);
-      }
       if (webEngage) {
         _webengage.track(eventName: eventName, properties: properties);
       }
@@ -105,7 +84,6 @@ class AnalyticsService extends BaseAnalyticsService {
   @override
   void trackScreen({String? screen, Map<String, dynamic>? properties}) {
     _mixpanel.track(eventName: screen, properties: properties);
-    _cleverTap.track(eventName: screen, properties: properties);
     _webengage.trackScreen(screen: screen, properties: properties);
   }
 
@@ -164,6 +142,5 @@ class AnalyticsService extends BaseAnalyticsService {
 
   void trackUninstall(String token) {
     //only singular does this
-    _singular.connectFcm(token);
   }
 }

@@ -97,14 +97,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  appsflyer_sdk:
-    dependency: "direct main"
-    description:
-      name: appsflyer_sdk
-      sha256: bba6e9302f4ebac2e45a1b149874fca8b340d145e4c1011286d4776bf6e9ad4c
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.9.3"
   archive:
     dependency: transitive
     description:
@@ -289,14 +281,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.2"
-  clevertap_plugin:
-    dependency: "direct main"
-    description:
-      name: clevertap_plugin
-      sha256: a848156c877b037572b6d2b9a30e5aa5c8078b63f4ca8aa33cbd9c3f2b6b1883
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.8.1"
   clock:
     dependency: transitive
     description:
@@ -1969,14 +1953,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
-  singular_flutter_sdk:
-    dependency: "direct main"
-    description:
-      name: singular_flutter_sdk
-      sha256: c99657c482d3e8d0e2f9e1b92f74ebdddfc4f48c0bfab0cd5ae94c64a5b42923
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.13"
   sky_engine:
     dependency: transitive
     description: flutter
