@@ -569,7 +569,6 @@ class LoginControllerViewModel extends BaseViewModel {
 
     BaseAnalytics.logUserProfile(userService.baseUser!);
     unawaited(fcmListener!.setupFcm());
-    unawaited(locator<GameRepo>().getGameTiers());
     logger.i("Calling analytics init for new onboarded user");
     unawaited(
       _analyticsService.login(

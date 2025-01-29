@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/ttl.dart';
@@ -7,7 +5,6 @@ import 'package:felloapp/core/model/badges_leader_board_model.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/core/model/fello_facts_model.dart';
-import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/last_week_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
@@ -91,22 +88,6 @@ class CampaignRepo extends BaseRepo {
         e.toString(),
         400,
       );
-    }
-  }
-
-  Future<ApiResponse<HappyHourCampign>> getHappyHourCampaign() async {
-    try {
-      final response = await APIService.instance.getData(
-        ApiPath.happyHour,
-        cBaseUrl: _baseUrl,
-        apiName: "$_campaigns/happyHour",
-      );
-
-      return ApiResponse<HappyHourCampign>(
-          model: HappyHourCampign.fromJson(response), code: 200);
-    } catch (e) {
-      logger.e(e.toString());
-      return ApiResponse.withError(e.toString(), 400);
     }
   }
 

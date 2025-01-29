@@ -1,7 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
-import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -30,7 +29,6 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
 
   @override
   void closeTimer() {
-    locator<MarketingEventHandlerService>().getHappyHourCampaign();
     super.closeTimer();
   }
 

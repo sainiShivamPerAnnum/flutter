@@ -71,25 +71,6 @@ class GameRepo extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<GameTiers>> getGameTiers() async {
-    try {
-      final response = await APIService.instance.getData(
-        '/games/tiers',
-        cBaseUrl: _baseUrl,
-        apiName: "$_games/tiers",
-      );
-
-      gameTiers = GameTiers.fromJson(response);
-      return ApiResponse<GameTiers>(model: gameTier, code: 200);
-    } catch (e) {
-      logger.e("Unable to fetch games ${e.toString()}");
-
-      allgames = [];
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to fetch games", 400);
-    }
-  }
-
   ApiResponse<String> getGameToken({required String? gameName}) {
     String res = getGameApiToken(gameName);
     return ApiResponse(model: res, code: 200);

@@ -471,8 +471,6 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future<void> updateUser() async {
-    unawaited(locator<MarketingEventHandlerService>().getHappyHourCampaign());
-
     if (_userService.userSegments.contains("NEW_USER")) {
       await CacheService.invalidateByKey(CacheKeys.USER);
       await _userService.setBaseUser();

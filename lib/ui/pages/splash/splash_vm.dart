@@ -106,8 +106,6 @@ class LauncherViewModel extends BaseViewModel {
           _analyticsService.login(
               isOnBoarded: true, baseUser: userService.baseUser),
         ]);
-
-        unawaited(locator<GameRepo>().getGameTiers());
         _referralService.init();
         _baseUtil.init();
         unawaited(_fcmListener.setupFcm());
