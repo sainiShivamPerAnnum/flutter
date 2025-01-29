@@ -17,7 +17,6 @@ import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
@@ -25,8 +24,6 @@ import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
-import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
-import 'package:felloapp/feature/live/bloc/live_bloc.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
@@ -40,8 +37,6 @@ import 'package:felloapp/ui/elements/bottom_nav_bar/quick_save_modal_sheet.dart'
 import 'package:felloapp/ui/modalsheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
-import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
-import 'package:felloapp/ui/service_elements/last_week/last_week_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -51,7 +46,6 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:firebase_instance_id/firebase_instance_id.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_app_update/in_app_update.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
@@ -629,20 +623,6 @@ class RootViewModel extends BaseViewModel {
               (AppState.screenStack.last != ScreenItem.dialog ||
                   AppState.screenStack.last != ScreenItem.modalsheet)) {
             AppState.isRootAvailableForIncomingTaskExecution = false;
-            unawaited(BaseUtil.openModalBottomSheet(
-              addToScreenStack: true,
-              backgroundColor: UiConstants.gameCardColor,
-              content: LastWeekUi(
-                model: response.model!.data!,
-                fromRoot: true,
-                callCampaign: true,
-                lastWeekViewModel: locator<LastWeekViewModel>(),
-              ),
-              hapticVibrate: true,
-              isScrollControlled: true,
-              isBarrierDismissible: false,
-            ));
-
             fetchCampaign = false;
           } else {
             await PreferenceHelper.setInt(PreferenceHelper.LAST_WEEK_NUMBER, 0);

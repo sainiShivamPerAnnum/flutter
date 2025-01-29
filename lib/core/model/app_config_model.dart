@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 
@@ -20,7 +18,6 @@ class AppConfig {
   });
 
   factory AppConfig.instance(Map<String, dynamic> json) {
-    log("APP CONFIG ${json.toString()}");
     _instance = AppConfig._fromJson(json);
     try {
       AppConfigV2.init(json);

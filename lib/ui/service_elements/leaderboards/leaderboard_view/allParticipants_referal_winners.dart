@@ -1,9 +1,7 @@
 import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
-import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -18,18 +16,11 @@ class AllParticipantsWinnersTopReferrers extends StatelessWidget {
       this.appBarTitle,
       Key? key})
       : super(key: key);
-  final GameRepo _gamesRepo = locator<GameRepo>();
   final bool isForTopReferrers;
   final List<Winners>? winners;
   final List<ScoreBoard>? referralLeaderBoard;
   final bool showPoints;
   final String? appBarTitle;
-
-  getGameName(String? gameCode) {
-    return _gamesRepo.games!
-        .firstWhere((game) => game.gameCode == gameCode)
-        .gameName;
-  }
 
   dynamic getPoints(double points) {
     if (points > points.toInt()) {
@@ -179,12 +170,6 @@ class AllParticipantsWinnersTopReferrers extends StatelessWidget {
                                                   style: TextStyles
                                                       .sourceSans.body2
                                                       .colour(Colors.white)),
-                                              Text(
-                                                getGameName(
-                                                    winners![i].gameType),
-                                                style: TextStyles.body4.colour(
-                                                    UiConstants.kTextColor2),
-                                              ),
                                               SizedBox(
                                                   height: SizeConfig.padding4),
                                             ],

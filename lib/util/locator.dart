@@ -11,7 +11,6 @@ import 'package:felloapp/core/repository/clientComms_repo.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/repository/experts_repo.dart';
 import 'package:felloapp/core/repository/fixed_deposit_repo.dart';
-import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
@@ -116,7 +115,6 @@ import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/settings/settings_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_viewModel.dart';
-import 'package:felloapp/ui/service_elements/last_week/last_week_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:get_it/get_it.dart';
@@ -209,7 +207,6 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(BankingRepository.new);
   locator.registerLazySingleton(CouponRepository.new);
   locator.registerLazySingleton(PaytmRepository.new);
-  locator.registerLazySingleton(GameRepo.new);
   locator.registerLazySingleton(ReferralRepo.new);
   locator.registerLazySingleton(ScratchCardRepository.new);
   locator.registerLazySingleton(TransactionHistoryRepository.new);
@@ -285,7 +282,6 @@ Future<void> setupLocator() async {
   locator.registerFactory(LeaderBoardViewModel.new);
   locator.registerFactory(CompletedMatchDetailsVM.new);
   locator.registerFactory(SeasonLeaderboardViewModel.new);
-  locator.registerFactory(LastWeekViewModel.new);
   //GOLDPRO
   locator.registerFactory(GoldProDetailsViewModel.new);
   locator.registerFactory(GoldProBuyViewModel.new);

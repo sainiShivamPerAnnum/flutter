@@ -29,7 +29,6 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/expert/booking_sheet.dart';
 import 'package:felloapp/feature/referrals/ui/referral_rating_sheet.dart';
@@ -44,7 +43,6 @@ import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
-import 'package:felloapp/ui/pages/support/bug_report/ui/found_bug.dart';
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
 import 'package:felloapp/util/assets.dart';
@@ -1076,20 +1074,6 @@ class BaseUtil extends ChangeNotifier {
     Duration difference = endDate.difference(now);
     int remaining = difference.inDays;
     return remaining;
-  }
-
-  void showFoundBugSheet() {
-    Haptic.vibrate();
-
-    BaseUtil.openModalBottomSheet(
-      addToScreenStack: true,
-      enableDrag: false,
-      hapticVibrate: true,
-      isBarrierDismissible: true,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      content: const FoundBug(),
-    );
   }
 
   int getTicketCountForTransaction(double investment) =>

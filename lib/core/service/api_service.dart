@@ -110,8 +110,7 @@ class APIService implements API {
 
       if (decryptData) {
         final data = await _decryptData(response.data);
-        log("decryptData  ${data!}");
-        return json.decode(data);
+        return json.decode(data!);
       }
 
       return returnResponse(response);
@@ -152,8 +151,7 @@ class APIService implements API {
       );
       if (decryptData) {
         final data = await _decryptData(response.data);
-        log("decryptData  ${data!}");
-        return json.decode(data);
+        return json.decode(data!);
       }
 
       return returnResponse(response);

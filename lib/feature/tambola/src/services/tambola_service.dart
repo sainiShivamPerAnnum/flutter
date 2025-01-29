@@ -7,7 +7,6 @@ import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/model/tambola_offers_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
-import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
 import 'package:felloapp/core/service/cache_service.dart';
@@ -32,7 +31,6 @@ class TambolaService extends ChangeNotifier {
   final TambolaRepo _tambolaRepo = locator<TambolaRepo>();
   final ScratchCardRepository _scRepo = locator<ScratchCardRepository>();
   final WinnerService _winnerService = locator<WinnerService>();
-  final GameRepo _gameRepo = locator<GameRepo>();
   final GetterRepository _getterRepo = locator<GetterRepository>();
   final UserService _userService = locator<UserService>();
 
@@ -203,17 +201,6 @@ class TambolaService extends ChangeNotifier {
     await fetchWeeklyPicks();
     await getBestTambolaTickets(forced: true);
     unawaited(getTambolaTickets(limit: 1));
-  }
-
-  Future<bool> getGameDetails() async {
-    final gameRes =
-        await _gameRepo.getGameByCode(gameCode: Constants.GAME_TYPE_TAMBOLA);
-    if (gameRes.isSuccess()) {
-      tambolaGameData = gameRes.model;
-      return true;
-    } else {
-      return false;
-    }
   }
 
   Future<int> getTambolaTicketsCount() async {

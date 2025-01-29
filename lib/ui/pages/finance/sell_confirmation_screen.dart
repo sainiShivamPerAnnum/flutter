@@ -2,14 +2,12 @@ import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
-import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/withdraw_warning_screen.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/bank_details_card.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -103,8 +101,6 @@ class _SellConfirmationViewState extends State<SellConfirmationView> {
                   onClose: () {
                     showWarningScreen.value = false;
                   },
-                  viewModel: WithDrawGameViewModel.fromGames(
-                      locator<GameRepo>().gameTier, widget.amount),
                   type: widget.investmentType,
                   withdrawableQuantity: widget.grams,
                   totalAmount: widget.amount,
@@ -114,7 +110,7 @@ class _SellConfirmationViewState extends State<SellConfirmationView> {
                   backgroundColor: UiConstants.kBackgroundColor,
                   appBar: AppBar(
                       backgroundColor: UiConstants.kBackgroundColor,
-                       surfaceTintColor: UiConstants.kBackgroundColor,
+                      surfaceTintColor: UiConstants.kBackgroundColor,
                       elevation: 0),
                   body: SafeArea(
                     child: Container(

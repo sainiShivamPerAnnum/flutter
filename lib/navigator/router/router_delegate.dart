@@ -11,7 +11,6 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
-import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/live_repository.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
@@ -70,9 +69,7 @@ import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_view.dart'
 import 'package:felloapp/ui/pages/userProfile/verify_email.dart';
 import 'package:felloapp/ui/service_elements/quiz/quiz_web_view.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
@@ -857,10 +854,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         final segment = uri.pathSegments[i];
         if (segment.startsWith('d-', 0)) {
           dialogCheck(segment.split('-').last);
-        } else if (segment.startsWith('GM_')) {
-          openWebGame(
-            segment,
-          );
         } else if (segment.startsWith('c-', 0)) {
           appState.scrollHome(num.tryParse(segment.split('-').last) as int);
         } else {
@@ -915,10 +908,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     switch (screenKey) {
       case 'super-fello':
         pageConfiguration = FelloBadgeHomeViewPageConfig;
-
-      case 'journey':
-        pageConfiguration = JourneyViewPageConfig;
-        break;
       case 'save':
         onTapItem(RootController.saveNavBarItem);
 
@@ -956,12 +945,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           page: P2PHomePageConfig,
           widget: const P2PHomePage(),
         );
-        break;
-
-      case 'quickTour':
-        // Future.delayed(const Duration(seconds: 2),
-        //     SpotLightController.instance.startQuickTour);
-
         break;
 
       case 'kycVerify':
@@ -1090,27 +1073,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = BlockedUserPageConfig;
         break;
       // BACKWARD COMPATIBILITY --START
-      case 'footballHome':
-        openWebGame(Constants.GAME_TYPE_FOOTBALL);
-        break;
-      case 'candyFiestaHome':
-        openWebGame(Constants.GAME_TYPE_CANDYFIESTA);
-        break;
-      case 'cricketHome':
-        openWebGame(Constants.GAME_TYPE_CRICKET);
-        break;
-      case 'poolHome':
-        openWebGame(Constants.GAME_TYPE_POOLCLUB);
-        break;
-      case 'bowlingHome':
-        openWebGame(Constants.GAME_TYPE_BOWLING);
-        break;
-      case 'bottleFlipHome':
-        openWebGame(Constants.GAME_TYPE_BOTTLEFLIP);
-        break;
       // BACKWARD COMPATIBILITY --END
       case 'pop':
-        AppState.backButtonDispatcher!.didPopRoute();
+        await AppState.backButtonDispatcher!.didPopRoute();
         break;
       case 'rps':
         pageConfiguration = FlexiBalancePageConfig;
@@ -1206,30 +1171,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
     appState.setCurrentTabIndex =
         rootController.navItems.values.toList().indexOf(item);
-  }
-
-  void openWebGame(String game) {
-    bool isLocked = false;
-    double netWorth = locator<UserService>().userPortfolio.augmont.principle +
-        (locator<UserService>().userPortfolio.flo.principle);
-    for (final i in locator<GameRepo>().gameTier.data) {
-      for (final j in i!.games) {
-        if (j!.gameCode == game) {
-          isLocked = netWorth < i.minInvestmentToUnlock;
-          break;
-        }
-      }
-    }
-
-    if (isLocked) {
-      BaseUtil.showNegativeAlert(
-        'Game is locked for you',
-        'Save more in Gold or Flo to unlock the game and complete the milestone',
-      );
-      appState.onItemTapped(
-        DynamicUiUtils.navBar.indexWhere((element) => element == 'PL'),
-      );
-    } else {}
   }
 
   List<Story> _getStories() {
