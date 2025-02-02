@@ -47,11 +47,6 @@ import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding_main/onboarding_main_view.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
-import 'package:felloapp/ui/pages/power_play/how_it_works/how_it_works_view.dart';
-import 'package:felloapp/ui/pages/power_play/leaderboard/widgets/prize_distribution_sheet.dart';
-import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_home_view.dart';
-import 'package:felloapp/ui/pages/power_play/season_leaderboard/season_leaderboard_view.dart';
-import 'package:felloapp/ui/pages/power_play/welcome_page/power_play_welcome_page.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
@@ -60,20 +55,17 @@ import 'package:felloapp/ui/pages/static/earn_more_returns_view.dart';
 import 'package:felloapp/ui/pages/static/web_view.dart';
 import 'package:felloapp/ui/pages/support/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/support/referral_policy_page.dart';
-import 'package:felloapp/ui/pages/support/support.dart';
 import 'package:felloapp/ui/pages/userProfile/bank_details/bank_details_view.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/pages/userProfile/settings/settings_view.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/userProfile/verify_email.dart';
-import 'package:felloapp/ui/service_elements/quiz/quiz_web_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
-import 'package:felloapp/util/styles/styles.dart';
 //Flutter Imports
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -296,9 +288,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.VerifyEmail:
           _addPageData(const VerifyEmail(), VerifyEmailPageConfig);
           break;
-        case Pages.Support:
-          _addPageData(const SupportPage(), SupportPageConfig);
-          break;
         case Pages.Notifications:
           _addPageData(const NotificationsPage(), NotificationsConfig);
           break;
@@ -335,23 +324,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.FlexiBalaceView:
           _addPageData(const RpsView(), FlexiBalancePageConfig);
           break;
-        case Pages.PowerPlayHome:
-          _addPageData(const PowerPlayHome(), PowerPlayHomeConfig);
-          break;
-
-        case Pages.PowerPlayHowItWorks:
-          _addPageData(const HowItWorks(), pageConfig);
-          break;
-        case Pages.PowerPlaySeasonLeaderboard:
-          _addPageData(
-            const SeasonLeaderboard(),
-            PowerPlaySeasonLeaderboardDetailsConfig,
-          );
-          break;
-
-        case Pages.PowerPlayFTUX:
-          _addPageData(const PowerPlayWelcomePage(), pageConfig);
-          break;
         case Pages.EarnMoreReturnsView:
           _addPageData(const EarnMoreReturns(), EarnMoreReturnsViewPageConfig);
           break;
@@ -369,9 +341,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.GoldProTxnsView:
           _addPageData(const GoldProTxnsView(), GoldProTxnsViewPageConfig);
-          break;
-        case Pages.QuizWebView:
-          _addPageData(const QuizWebView(), QuizWebViewConfig);
           break;
         case Pages.TicketsIntroViewPath:
           _addPageData(const TicketsIntroView(), TicketsIntroViewPageConfig);
@@ -1102,9 +1071,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'powerPlayHome':
         pageConfiguration = PowerPlayHomeConfig;
         break;
-      case 'powerPlayPrizes':
-        openPowerPlayModalSheet();
-        break;
       case "earnMoreReturns":
         pageConfiguration = EarnMoreReturnsViewPageConfig;
         break;
@@ -1286,21 +1252,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         );
       }
     }
-  }
-
-  void openPowerPlayModalSheet() {
-    BaseUtil.openModalBottomSheet(
-      isBarrierDismissible: true,
-      addToScreenStack: true,
-      backgroundColor: UiConstants.kGoldProBgColor,
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(SizeConfig.roundness32),
-        topRight: Radius.circular(SizeConfig.roundness32),
-      ),
-      isScrollControlled: true,
-      hapticVibrate: true,
-      content: const PrizeDistributionSheet(),
-    );
   }
 
   bool checkForRatingDialog() {

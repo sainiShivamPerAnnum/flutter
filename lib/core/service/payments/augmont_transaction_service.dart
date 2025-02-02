@@ -10,7 +10,6 @@ import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/gold_pro_models/gold_pro_scheme_model.dart';
 import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
-import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
@@ -19,7 +18,6 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
-import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -376,17 +374,10 @@ class AugmontTransactionService extends BaseTransactionService
               if (txnStatus.data!.fd!.status ==
                   Constants.GOLD_PRO_TXN_STATUS_ACTIVE) {
                 await locator<BaseUtil>().updateUser();
-                PowerPlayService.powerPlayDepositFlow = false;
-                MatchData? liveMatchData =
-                    locator<PowerPlayService>().liveMatchData;
                 unawaited(_userService.getUserFundWalletData());
                 unawaited(_userService.updatePortFolio());
                 unawaited(
                     _txnHistoryService.getGoldProTransactions(forced: true));
-                if (liveMatchData != null) {
-                  unawaited(locator<PowerPlayService>()
-                      .getUserTransactionHistory(matchData: liveMatchData));
-                }
                 transactionResponseModel = value.model;
                 currentTxnTambolaTicketsCount = value.model!.data!.tickets!;
                 currentTxnScratchCardCount =
@@ -414,15 +405,8 @@ class AugmontTransactionService extends BaseTransactionService
               }
             } else {
               await locator<BaseUtil>().updateUser();
-              PowerPlayService.powerPlayDepositFlow = false;
-              MatchData? liveMatchData =
-                  locator<PowerPlayService>().liveMatchData;
               unawaited(_userService.getUserFundWalletData());
               unawaited(_userService.updatePortFolio());
-              if (liveMatchData != null) {
-                unawaited(locator<PowerPlayService>()
-                    .getUserTransactionHistory(matchData: liveMatchData));
-              }
               transactionResponseModel = value.model;
               currentTxnTambolaTicketsCount = value.model!.data!.tickets!;
               currentTxnScratchCardCount =

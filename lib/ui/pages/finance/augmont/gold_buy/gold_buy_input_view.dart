@@ -5,7 +5,6 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
-import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -14,7 +13,6 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/buy_app_bar.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/buy_nav_bar.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/enter_amount_view.dart';
-import 'package:felloapp/ui/pages/finance/banner_widget.dart';
 import 'package:felloapp/ui/pages/finance/gold_coupon_widget.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/locator.dart';
@@ -84,7 +82,6 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
   @override
   Widget build(BuildContext context) {
     final AnalyticsService analyticsService = locator<AnalyticsService>();
-    final banner = widget.model.assetOptionsModel!.data.banner;
     return Stack(
       children: [
         Column(
@@ -130,15 +127,6 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
                 }
               },
             ),
-            if (banner != null) ...[
-              SizedBox(height: SizeConfig.padding24),
-              BannerWidget(
-                model: banner,
-                happyHourCampign: locator.isRegistered<HappyHourCampign>()
-                    ? locator<HappyHourCampign>()
-                    : null,
-              ),
-            ],
             if (widget.model.animationController != null)
               EnterAmountView(
                 model: widget.model,

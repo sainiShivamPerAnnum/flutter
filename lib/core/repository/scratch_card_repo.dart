@@ -87,33 +87,6 @@ class ScratchCardRepository extends BaseRepo {
     }
   }
 
-  //Skip milestone
-  Future<ApiResponse<bool>> skipMilestone() async {
-    try {
-      final Map<String, int?> body = {
-        "mlIndex": userService.userJourneyStats!.mlIndex
-      };
-      final queryParams = {"uid": userService.baseUser!.uid};
-      final response = await APIService.instance.postData(
-        ApiPath.kSkipMilestone(userService.baseUser!.uid),
-        cBaseUrl: AppEnvironment.instance.rewards,
-        body: body,
-        queryParams: queryParams,
-        apiName: '$_rewards/skipMilestone',
-      );
-      if (response != null) {
-        final responseData = response["data"];
-        logger.d("Response from skip milestone API: $responseData");
-        return ApiResponse(model: true, code: 200);
-      } else {
-        return ApiResponse(model: false, code: 400);
-      }
-    } catch (e) {
-      logger.e(e.toString());
-      return ApiResponse.withError(e.toString(), 400);
-    }
-  }
-
   Future<ApiResponse<ScratchCard>> getGTByPrizeSubtype(
       String? prizeSubtype) async {
     try {

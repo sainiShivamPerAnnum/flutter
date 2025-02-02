@@ -14,16 +14,13 @@ import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
-import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
-import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -246,21 +243,6 @@ class LendboxBuyViewModel extends BaseViewModel
       (element) => element.fundType == floAssetType,
     );
     _txnService.floAssetType = floAssetType;
-    final HappyHourCampign? happyHourModel =
-        locator.isRegistered<HappyHourCampign>()
-            ? locator<HappyHourCampign>()
-            : null;
-    if (happyHourModel?.data?.forAssets != null) {
-      try {
-        showHappyHour =
-            locator<MarketingEventHandlerService>().showHappyHourBanner &&
-                happyHourModel!.data!.forAssets!.contains(floAssetType);
-      } catch (e) {
-        showHappyHour = false;
-      }
-    } else {
-      showHappyHour = false;
-    }
     animationController = AnimationController(
       vsync: vsync,
       duration: const Duration(milliseconds: 500),
@@ -456,7 +438,7 @@ class LendboxBuyViewModel extends BaseViewModel
       eventName: AnalyticsEvents.saveCheckout,
       properties: AnalyticsProperties.getDefaultPropertiesMap(
         extraValuesMap: {
-          "iplPrediction": PowerPlayService.powerPlayDepositFlow,
+          "iplPrediction": false,
           "Asset": floAssetType,
           "Amount Entered": amountController?.text,
           "Best flag": assetOptionsModel?.data.userOptions
@@ -549,13 +531,6 @@ class LendboxBuyViewModel extends BaseViewModel
     }
 
     final int tambolaCost = AppConfig.getValue(AppConfigKey.tambola_cost);
-    final HappyHourCampign? happyHourModel =
-        locator.isRegistered<HappyHourCampign>()
-            ? locator<HappyHourCampign>()
-            : null;
-
-    final num minAmount =
-        num.tryParse(happyHourModel?.data?.minAmount.toString() ?? '0') ?? 0;
 
     if (parsedFloAmount < tambolaCost) {
       totalTickets = 0;
@@ -566,11 +541,6 @@ class LendboxBuyViewModel extends BaseViewModel
     numberOfTambolaTickets =
         (parsedFloAmount ~/ tambolaCost) * tambolaMultiplier;
     totalTickets = numberOfTambolaTickets!;
-
-    happyHourTickets =
-        showHappyHour && happyHourModel?.data?.rewards?[0].type == 'tt'
-            ? happyHourModel!.data!.rewards![0].value
-            : null;
 
     if (parsedFloAmount >= minAmount && happyHourTickets != null) {
       totalTickets = (numberOfTambolaTickets!) + happyHourTickets!;

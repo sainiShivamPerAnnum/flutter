@@ -86,22 +86,6 @@ class AnalyticsProperties {
     return _userService.baseUser!.isSimpleKycVerified ?? false;
   }
 
-  static int getCurrentLevel() {
-    return _userService?.userJourneyStats?.level ?? -1;
-  }
-
-  static int getCurrentMilestone() {
-    return _userService?.userJourneyStats?.mlIndex ?? -1;
-  }
-
-  static int getMileStonesCompleted() {
-    if ((_userService?.userJourneyStats?.mlIndex ?? 0) > 1) {
-      return _userService.userJourneyStats!.mlIndex! - 1;
-    } else {
-      return 0;
-    }
-  }
-
   static int getTokens() {
     return _userCoinService?.flcBalance ?? 0;
   }
@@ -136,9 +120,6 @@ class AnalyticsProperties {
       "Grams of Gold owned": getGoldQuantityInGrams(),
       "Amount Invested in Flo": getFelloFloAmount(),
       "KYC Verified": isKYCVerified(),
-      "Level": getCurrentLevel(),
-      "MileStones Completed": getMileStonesCompleted(),
-      "Current Milestone": getCurrentMilestone(),
       "Token Balance": getTokens(),
     };
 

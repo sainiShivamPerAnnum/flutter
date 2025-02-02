@@ -22,9 +22,9 @@ class MyFixedDepositBloc
   ) async {
     emitter(const LoadingMyDeposits());
     try {
-      final data = await _fdRepository.getAllFdsData();
+      final data = await _fdRepository.myFds();
       if (data.isSuccess()) {
-        emitter(FdDepositsLoaded(fdData: data.model ?? []));
+        emitter(FdDepositsLoaded(fdData: []));
       } else {
         emitter(FdMyDepositsError(data.errorMessage.toString()));
       }

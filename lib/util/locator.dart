@@ -1,6 +1,5 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/advisor_repo.dart';
@@ -19,7 +18,6 @@ import 'package:felloapp/core/repository/live_repository.dart';
 import 'package:felloapp/core/repository/local/stories_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
-import 'package:felloapp/core/repository/power_play_repo.dart';
 import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/report_repo.dart';
@@ -42,13 +40,10 @@ import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_v2/fcm_handler_v2.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/feature_flag_service/feature_flag_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
-import 'package:felloapp/core/service/notifier_services/prize_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -58,7 +53,6 @@ import 'package:felloapp/core/service/payments/augmont_transaction_service.dart'
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
-import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
@@ -77,7 +71,6 @@ import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/elements/faq_card/faq_card_vm.dart';
 import 'package:felloapp/ui/pages/asset_prefs/asset_pref_vm.dart';
-import 'package:felloapp/ui/pages/campaigns/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_details_vm.dart';
@@ -96,10 +89,6 @@ import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_vm.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_vm.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding_main/onboarding_main_vm.dart';
-import 'package:felloapp/ui/pages/power_play/completed_match_details/completed_match_details_vm.dart';
-import 'package:felloapp/ui/pages/power_play/leaderboard/view_model/leaderboard_view_model.dart';
-import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
-import 'package:felloapp/ui/pages/power_play/season_leaderboard/season_leaderboard_vm.dart';
 import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_vm.dart';
 import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_vm.dart';
 import 'package:felloapp/ui/pages/rewards/multiple_scratch_cards/multiple_scratch_cards_vm.dart';
@@ -132,11 +121,6 @@ Future<void> setupLocator() async {
     await db.initialize();
     return db;
   });
-  locator.registerLazySingleton<FeatureFlagService>(
-    () => FeatureFlagService.init(
-      features: AppConfig.toRaw,
-    ),
-  );
   locator.registerLazySingleton(Api.new);
 
   locator.registerLazySingleton(FcmHandlerDataPayloads.new);
@@ -162,16 +146,13 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(LendboxTransactionService.new);
   locator.registerLazySingleton(TxnHistoryService.new);
   locator.registerLazySingleton(TambolaService.new);
-  locator.registerLazySingleton(PrizeService.new);
   locator.registerLazySingleton(WinnerService.new);
-  locator.registerLazySingleton(LeaderboardService.new);
   locator.registerLazySingleton(ScratchCardService.new);
   locator.registerLazySingleton(GoogleSignInService.new);
   locator.registerLazySingleton(RazorpayService.new);
   locator.registerSingletonAsync(SharedPreferences.getInstance);
   locator.registerLazySingleton(MarketingEventHandlerService.new);
   locator.registerLazySingleton(SubService.new);
-  locator.registerLazySingleton(PowerPlayService.new);
   locator.registerLazySingleton(
     () => TransactionBloc(
       transactionHistoryRepo: locator(),
@@ -214,7 +195,6 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(PrizingRepo.new);
   locator.registerLazySingleton(UserStatsRepo.new);
   locator.registerLazySingleton(RootController.new);
-  locator.registerLazySingleton(PowerPlayRepository.new);
   locator.registerLazySingleton(ClientCommsRepo.new);
   locator.registerLazySingleton(ReportRepository.new);
   locator.registerLazySingleton(RpsRepository.new);
@@ -264,17 +244,12 @@ Future<void> setupLocator() async {
   locator.registerFactory(GTDetailedViewModel.new);
   locator.registerFactory(GTInstantViewModel.new);
   locator.registerFactory(MultipleScratchCardsViewModel.new);
-  locator.registerFactory(TopSaverViewModel.new);
   locator.registerFactory(CampaignRepo.new);
   locator.registerFactory(OnboardingViewModel.new);
   locator.registerFactory(FaqPageViewModel.new);
   locator.registerFactory(LendboxBuyViewModel.new);
   locator.registerFactory(LendboxWithdrawalViewModel.new);
   locator.registerFactory(SettingsViewModel.new);
-  locator.registerFactory(PowerPlayHomeViewModel.new);
-  locator.registerFactory(LeaderBoardViewModel.new);
-  locator.registerFactory(CompletedMatchDetailsVM.new);
-  locator.registerFactory(SeasonLeaderboardViewModel.new);
   //GOLDPRO
   locator.registerFactory(GoldProDetailsViewModel.new);
   locator.registerFactory(GoldProBuyViewModel.new);

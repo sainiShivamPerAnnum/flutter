@@ -18,7 +18,6 @@ import 'package:felloapp/core/service/notifier_services/scratch_card_service.dar
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
-import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
@@ -81,7 +80,6 @@ class UserProfileVM extends BaseViewModel {
   final TambolaService _tambolaService = locator<TambolaService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final TransactionBloc _transactionBloc = locator<TransactionBloc>();
-  final AdvisorBloc _advisorBloc = locator<AdvisorBloc>();
   final MyFundsBloc _myFundsBloc = locator<MyFundsBloc>();
   final SIPTransactionBloc _sipTransactionBloc = locator<SIPTransactionBloc>();
   final S _locale = locator<S>();
@@ -91,8 +89,6 @@ class UserProfileVM extends BaseViewModel {
   final BankAndPanService _bankAndKycService = locator<BankAndPanService>();
   final DBModel? dbProvider = locator<DBModel>();
   final ScratchCardService _gtService = locator<ScratchCardService>();
-  final PowerPlayService _powerPlayService = locator<PowerPlayService>();
-
   final MarketingEventHandlerService _marketingService =
       locator<MarketingEventHandlerService>();
   final TambolaRepo _tambolaRepo = locator<TambolaRepo>();
@@ -564,7 +560,6 @@ class UserProfileVM extends BaseViewModel {
                 _txnHistoryService.signOut();
                 _analyticsService.signOut();
                 _bankAndKycService.dump();
-                _powerPlayService.dump();
                 _gtService.dump();
                 _tambolaRepo.dump();
                 _appstate.dump();

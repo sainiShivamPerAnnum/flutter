@@ -11,7 +11,6 @@ import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/core/model/live/live_home.dart';
-// import 'package:felloapp/core/model/top_expert_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
@@ -23,23 +22,21 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/consultant_card.dart';
 import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/tambola_mini_info_card.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/finance/blogs/all_blogs_view.dart';
 import 'package:felloapp/ui/pages/hometabs/home/cards_new.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/consultant_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/experts.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/first_free_call.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/live.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/past_bookings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/upcoming_bookings.dart';
-import 'package:felloapp/ui/pages/power_play/root_card.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/util/assets.dart';
@@ -51,8 +48,6 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/model/quick_links_model.dart';
-import 'save_components/instant_save_card.dart';
-import 'save_components/quiz_section.dart';
 
 class SaveViewModel extends ChangeNotifier {
   S? locale;
@@ -318,18 +313,6 @@ class SaveViewModel extends ChangeNotifier {
           break;
         case "SN":
           saveViewItems.add(const ConsultationWidget());
-          break;
-        case "PP":
-          saveViewItems.add(const PowerPlayCard());
-          break;
-        case "AST":
-          saveViewItems.add(const MiniAssetsGroupSection());
-          break;
-        case "QZ":
-          saveViewItems.add(const QuizSection());
-          break;
-        case "INST_SAVE":
-          saveViewItems.add(const InstantSaveCard());
           break;
         case 'NAS':
           saveViewItems.add(const AutosaveCard());

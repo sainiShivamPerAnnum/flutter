@@ -15,7 +15,6 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
-import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_leader_model.dart';
@@ -38,7 +37,6 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/modalsheets/confirm_exit_modal.dart';
-import 'package:felloapp/ui/modalsheets/happy_hour_modal.dart';
 import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_view.dart';
@@ -1246,22 +1244,6 @@ class BaseUtil extends ChangeNotifier {
   set isUpiInfoMissing(bool? value) {
     _isUpiInfoMissing = value;
     notifyListeners();
-  }
-
-  Future showHappyHourDialog(
-    HappyHourCampign model, {
-    bool isComingFromSave = false,
-  }) async {
-    return openModalBottomSheet(
-      backgroundColor: Colors.transparent,
-      addToScreenStack: true,
-      hapticVibrate: true,
-      content: HappyHourModel(
-        model: model,
-        isComingFromSave: isComingFromSave,
-      ),
-      isBarrierDismissible: true,
-    );
   }
 }
 

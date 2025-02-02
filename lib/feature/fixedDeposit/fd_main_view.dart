@@ -1,17 +1,13 @@
 import 'package:felloapp/core/enums/faqTypes.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/fixedDeposit/fundsSection/fd_funds.dart';
+import 'package:felloapp/feature/fixedDeposit/myDeposits/my_deposits.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/lazy_load_indexed_stack.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../core/constants/analytics_events_constants.dart';
-import '../../../../core/service/analytics/analytics_service.dart';
 
 class FdMainView extends StatelessWidget {
   const FdMainView({super.key});
@@ -139,10 +135,7 @@ class _FdHomeViewState extends State<FdHomeView>
           index: _currentIndex,
           children: [
             const ALLfdsSection(),
-            Container(
-              color: Colors.red,
-              height: 200,
-            ),
+            const MyDepositsSection(),
             Container(
               color: Colors.blue,
               height: 200,
@@ -191,22 +184,6 @@ class _TabBar extends StatelessWidget {
 
   final List<String> tabs;
   final TabController controller;
-
-  void trackFelloFloTabChanged(String changedTab) {
-    final totalInvestment =
-        locator<UserService>().userPortfolio.flo.balance.toDouble();
-    final props = {
-      "new_tab": changedTab,
-      "total_invested": totalInvestment,
-      "kyc_verified": locator<UserService>().baseUser!.isSimpleKycVerified,
-    };
-
-    locator<AnalyticsService>().track(
-      eventName: AnalyticsEvents.felloFloTabChanged,
-      properties: props,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -225,9 +202,6 @@ class _TabBar extends StatelessWidget {
         unselectedLabelStyle: TextStyles.sourceSans.body2,
         indicatorPadding: const EdgeInsets.symmetric(horizontal: 20),
         isScrollable: false,
-        onTap: (value) {
-          trackFelloFloTabChanged(tabs[value]);
-        },
         tabs: tabs.map((e) => Tab(text: e)).toList(),
       ),
     );

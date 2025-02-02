@@ -13,20 +13,16 @@ import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
-import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
-import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
-import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -284,23 +280,6 @@ class GoldBuyViewModel extends BaseViewModel
     setState(ViewState.Busy);
     await initAndSetPreferredPaymentOption();
     isBuyInProgess = _augTxnService.isGoldBuyInProgress;
-    final HappyHourCampign? happyHourModel =
-        locator.isRegistered<HappyHourCampign>()
-            ? locator<HappyHourCampign>()
-            : null;
-    if (happyHourModel?.data?.forAssets != null) {
-      try {
-        showHappyHour =
-            locator<MarketingEventHandlerService>().showHappyHourBanner &&
-                happyHourModel!.data!.forAssets!.contains(
-                  'AUGGOLD99',
-                );
-      } catch (e) {
-        showHappyHour = false;
-      }
-    } else {
-      showHappyHour = false;
-    }
     animationController = AnimationController(
         vsync: vsync, duration: const Duration(milliseconds: 500));
     await getAssetOptionsModel(entryPoint: entryPoint);
@@ -460,7 +439,7 @@ class GoldBuyViewModel extends BaseViewModel
 
   void trackCheckOutEvent([String errorMessage = '']) {
     _augTxnService.currentTransactionAnalyticsDetails = {
-      "iplPrediction": PowerPlayService.powerPlayDepositFlow,
+      "iplPrediction": false,
       "Asset": "Gold",
       "Coupon Code":
           appliedCoupon != null ? appliedCoupon?.code : "Not Applied",
@@ -789,44 +768,6 @@ class GoldBuyViewModel extends BaseViewModel
       addSpecialCoupon = true;
       showCoupons = true;
     }
-  }
-
-  String showHappyHourSubtitle() {
-    final int tambolaCost = AppConfig.getValue(AppConfigKey.tambola_cost);
-    final HappyHourCampign? happyHourModel =
-        locator.isRegistered<HappyHourCampign>()
-            ? locator<HappyHourCampign>()
-            : null;
-
-    final int parsedGoldAmount =
-        int.tryParse(goldAmountController?.text ?? '0') ?? 0;
-    final num minAmount =
-        num.tryParse(happyHourModel?.data?.minAmount.toString() ?? "0") ?? 0;
-
-    if (parsedGoldAmount < tambolaCost) {
-      totalTickets = 0;
-      showInfoIcon = false;
-      return "";
-    }
-
-    numberOfTambolaTickets = parsedGoldAmount ~/ tambolaCost;
-    totalTickets = numberOfTambolaTickets;
-
-    showHappyHour
-        ? happyHourTickets = (happyHourModel?.data != null &&
-                happyHourModel?.data?.rewards?[0].type == 'tt')
-            ? happyHourModel?.data!.rewards![0].value
-            : null
-        : happyHourTickets = null;
-
-    if (parsedGoldAmount >= minAmount && happyHourTickets != null) {
-      totalTickets = numberOfTambolaTickets! + happyHourTickets!;
-      showInfoIcon = true;
-    } else {
-      showInfoIcon = false;
-    }
-
-    return "+$totalTickets Tickets";
   }
 }
 

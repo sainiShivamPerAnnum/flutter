@@ -8,7 +8,6 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/quick_save_model.dart';
@@ -20,7 +19,6 @@ import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
-import 'package:felloapp/core/service/feature_flag_service/feature_flag_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
@@ -91,7 +89,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String? _email;
 
   UserFundWallet? _userFundWallet;
-  UserJourneyStatsModel? _userJourneyStats;
   UserBootUpDetailsModel? userBootUp;
   DynamicUI? pageConfigs;
   QuickSaveModel? quickSaveModel;
@@ -162,8 +159,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   UserFundWallet? get userFundWallet => _userFundWallet;
 
-  UserJourneyStatsModel? get userJourneyStats => _userJourneyStats;
-
   set firebaseUser(User? firebaseUser) => _firebaseUser = firebaseUser;
 
   void setMyUserDpUrl(String url) {
@@ -226,19 +221,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _userFundWallet = wallet;
     notifyListeners(UserServiceProperties.myUserFund);
     _logger.d("Wallet updated in userservice, property listeners notified");
-  }
-
-  set userJourneyStats(UserJourneyStatsModel? stats) {
-    if (stats?.prizeSubtype != _userJourneyStats?.prizeSubtype) {
-      ScratchCardService.previousPrizeSubtype =
-          _userJourneyStats?.prizeSubtype ?? '';
-    }
-    _userJourneyStats = stats;
-    notifyListeners(UserServiceProperties.myJourneyStats);
-    _logger
-        .d("Journey Stats updated in userservice, property listeners notified");
-    _logger.d(
-        "Previous PrizeSubtype : ${ScratchCardService.previousPrizeSubtype}  Current PrizeSubtype: ${_userJourneyStats?.prizeSubtype} ");
   }
 
   set augGoldPrinciple(double principle) {
@@ -408,30 +390,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         spinComplete = lastSpin.day == DateTime.now().day &&
             lastSpin.month == DateTime.now().month;
       }
-
-      bool firstLaunch = true;
-      final lastOpenIso =
-          PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_APP_OPEN);
-      if (lastOpenIso.isNotEmpty) {
-        final lastOpenTime = TimestampModel.fromIsoString(lastOpenIso).toDate();
-        firstLaunch = !(lastOpenTime.day == DateTime.now().day &&
-            lastOpenTime.month == DateTime.now().month);
-      }
-
-      final dateTime = DateTime.now();
-      locator<FeatureFlagService>().updateAttributes(attributes: {
-        'day': dateTime.day.toString(),
-        'mobile': _baseUser?.mobile ?? '',
-        'time': dateTime.hour,
-        'segments': _baseUser?.segments ?? [],
-        // To featureflag service that sip has been setup in past or not.
-        'subsStatus': (_baseUser?.doesHaveSubscriptionTransaction ?? false)
-            ? "ACTIVE"
-            : "IDLE",
-        'spinCompleted': spinComplete,
-        'firstLaunch': firstLaunch,
-      });
-
       if (baseUser != null) {
         // unawaited(getUserJourneyStats());
         final res = await _gettersRepo.getPageConfigs();
@@ -842,20 +800,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
               PageAction(state: PageState.replaceAll, page: RootPageConfig);
         }
       } else {
-        final ffService = locator<FeatureFlagService>();
-
-        final variant = ffService.evaluateFeature(
-          FeatureFlagService.newUserVariant,
-          defaultValue: 'a',
-        );
-
-        ffService.updateAttributes(
-          attributes: {
-            'newUserVariant': variant,
-            'hasCompletedOnboarding': _hasCompletedOnboarding,
-          },
-        );
-
         AppState.delegate!.appState.currentAction = PageAction(
           state: PageState.replaceAll,
           page: RootPageConfig,

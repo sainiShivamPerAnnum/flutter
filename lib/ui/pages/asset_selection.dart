@@ -5,21 +5,15 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
-import 'package:felloapp/core/enums/marketing_event_handler_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/app_config_serialized_model.dart';
-import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/onboarding/tickets_tutorial_slot_machine_view.dart';
-import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/widgets/star_custom_painter.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/save_banner.dart';
-import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -30,8 +24,6 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AssetSelectionPage extends StatelessWidget {
@@ -143,7 +135,7 @@ class AssetSelectionPage extends StatelessWidget {
                     : AppBar(
                         elevation: 0,
                         backgroundColor: Colors.transparent,
-                           surfaceTintColor: Colors.transparent,
+                        surfaceTintColor: Colors.transparent,
                         leading: IconButton(
                           icon: const Icon(
                             Icons.arrow_back_ios,
@@ -184,31 +176,6 @@ class AssetSelectionPage extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ),
-      bottomNavigationBar: PropertyChangeProvider<MarketingEventHandlerService,
-          MarketingEventsHandlerProperties>(
-        value: locator<MarketingEventHandlerService>(),
-        child: PropertyChangeConsumer<MarketingEventHandlerService,
-            MarketingEventsHandlerProperties>(
-          properties: const [MarketingEventsHandlerProperties.HappyHour],
-          builder: (context, state, _) {
-            return !state!.showHappyHourBanner
-                ? const SizedBox()
-                : Consumer<AppState>(
-                    builder: (ctx, m, child) {
-                      return AnimatedContainer(
-                        height  : SizeConfig.navBarHeight,
-                        alignment: Alignment.bottomCenter,
-                        duration: const Duration(milliseconds: 400),
-                        child: HappyHourBanner(
-                          model: locator<HappyHourCampign>(),
-                          isComingFromSave: true,
-                        ),
-                      );
-                    },
-                  );
-          },
         ),
       ),
     );

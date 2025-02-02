@@ -82,7 +82,7 @@ class FdRepository extends BaseRepo {
         body: body,
         apiName: '$_fd/fetchFdCalculation',
       );
-      final responseData = response["data"];
+      final responseData = response;
       return ApiResponse<FDInterestModel>(
         model: FDInterestModel.fromJson(responseData),
         code: 200,

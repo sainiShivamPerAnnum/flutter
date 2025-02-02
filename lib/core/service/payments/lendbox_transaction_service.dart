@@ -7,7 +7,6 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
-import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
@@ -17,7 +16,6 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/payments/transaction_service_mixin.dart';
-import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
@@ -107,13 +105,6 @@ class LendboxTransactionService extends BaseTransactionService
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
-            PowerPlayService.powerPlayDepositFlow = false;
-            MatchData? liveMatchData =
-                locator<PowerPlayService>().liveMatchData;
-            if (liveMatchData != null) {
-              unawaited(locator<PowerPlayService>()
-                  .getUserTransactionHistory(matchData: liveMatchData));
-            }
             currentTxnTambolaTicketsCount = value.model!.data!.tickets!;
             currentTxnScratchCardCount = value.model?.data?.gtIds?.length ?? 0;
             await locator<BaseUtil>().updateUser();

@@ -10,8 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared: 
-    path: ../shared
   flutter_screenutil: ^5.9.0
   google_fonts: ^6.1.0
   flutter_svg: ^2.0.5

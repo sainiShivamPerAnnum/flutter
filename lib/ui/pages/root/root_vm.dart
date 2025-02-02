@@ -18,7 +18,6 @@ import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
-import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
@@ -59,7 +58,6 @@ class RootViewModel extends BaseViewModel {
   final TambolaService _tambolaService = locator<TambolaService>();
   final ScratchCardService _gtService = locator<ScratchCardService>();
   final BankAndPanService _bankAndKycService = locator<BankAndPanService>();
-  final PowerPlayService _powerPlayService = locator<PowerPlayService>();
   final TransactionBloc _transactionBloc = locator<TransactionBloc>();
   final MyFundsBloc _myFundsBloc = locator<MyFundsBloc>();
   final SIPTransactionBloc _sipTransactionBloc = locator<SIPTransactionBloc>();
@@ -477,7 +475,6 @@ class RootViewModel extends BaseViewModel {
               _analyticsService.signOut();
               _bankAndKycService.dump();
               _subscriptionService.dispose();
-              _powerPlayService.dump();
               _transactionBloc.dispose();
               _myFundsBloc.dispose();
               _sipTransactionBloc.dispose();

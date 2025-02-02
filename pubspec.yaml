@@ -151,7 +151,6 @@ flutter:
     - assets/lotties/nav/
     - assets/hms/
     - assets/hms/icons/
-    - shorebird.yaml
 
 flutter_intl:
   main_locale: en_US
