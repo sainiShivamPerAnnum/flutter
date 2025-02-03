@@ -23,7 +23,6 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
-import 'package:felloapp/feature/tambola/src/ui/widgets/tambola_mini_info_card.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/finance/blogs/all_blogs_view.dart';
@@ -117,19 +116,8 @@ class SaveViewModel extends ChangeNotifier {
 
   final String fetchBlogUrl =
       'https://felloblog815893968.wpcomstaging.com/wp-json/wp/v2/blog/';
-
-  List<String> boxAssetsGold = [
-    "assets/svg/single_gold_bar_asset.svg",
-    Assets.singleCoinAsset,
-    Assets.goldSecure,
-  ];
   List<String> boxTitllesGold = [];
   List<String> boxTitllesFlo = [];
-  List<String> boxAssetsFlo = [
-    Assets.star,
-    Assets.singleCoinAsset,
-    Assets.flatIsland,
-  ];
 
   List<EventModel>? get ongoingEvents => _ongoingEvents;
 
@@ -297,9 +285,6 @@ class SaveViewModel extends ChangeNotifier {
           break;
         case "QL":
           saveViewItems.add(const QuickLinks());
-          break;
-        case "TM":
-          saveViewItems.add(const TambolaMiniInfoCard());
           break;
         case "LV":
           saveViewItems.add(

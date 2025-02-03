@@ -69,7 +69,7 @@ class _CallState extends State<Call> {
                             upcomingList: null,
                             recentList: null,
                             notificationState: null,
-                            onNotify:null,
+                            onNotify: null,
                           ),
                         );
                       },
@@ -183,7 +183,7 @@ Widget callContainer(
               width: SizeConfig.padding28,
               height: SizeConfig.padding28,
               child: Image.asset(
-                Assets.user,
+                Assets.cvtar5,
                 fit: BoxFit.cover,
               ),
             ),

@@ -19,7 +19,6 @@ import 'package:felloapp/core/service/notifier_services/transaction_history_serv
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -129,18 +128,6 @@ class MyWinningsViewModel extends BaseViewModel {
         return UiConstants.tertiarySolid;
       default:
         return const Color(0xff11192B);
-    }
-  }
-
-  String getWinningHistoryLeadingImage(String subtype) {
-    switch (subtype) {
-      case "GOLD_CREDIT":
-        return Assets.augmontShare;
-      case "AMZ_VOUCHER":
-        return Assets.amazonGiftVoucher;
-        break;
-      default:
-        return Assets.felloRewards;
     }
   }
 

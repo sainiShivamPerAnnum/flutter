@@ -26,7 +26,6 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/redeem_sucessfull_screen.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -356,28 +355,6 @@ class ReferralService extends ChangeNotifier {
     _refUnlockAmt = BaseUtil.toInt(_refUnlock);
     _minWithdrawPrizeAmt = BaseUtil.toInt(_minWithdrawPrize);
     appShareMessage = AppConfig.getValue(AppConfigKey.appShareMessage);
-  }
-
-  dynamic getRedeemAsset(double walletBalnce) {
-    if (walletBalnce == 0) {
-      return Assets.prizeClaimAssets[0];
-    } else if (walletBalnce <= 10) {
-      return Assets.prizeClaimAssets[1];
-    } else if (walletBalnce > 10 && walletBalnce <= 20) {
-      return Assets.prizeClaimAssets[2];
-    } else if (walletBalnce > 20 && walletBalnce <= 30) {
-      return Assets.prizeClaimAssets[3];
-    } else if (walletBalnce > 30 && walletBalnce <= 40) {
-      return Assets.prizeClaimAssets[4];
-    } else if (walletBalnce > 40 && walletBalnce <= 50) {
-      return Assets.prizeClaimAssets[5];
-    } else if (walletBalnce > 50 && walletBalnce <= 100) {
-      return Assets.prizeClaimAssets[6];
-    } else if (walletBalnce > 100 && walletBalnce <= minWithdrawPrizeAmt! - 1) {
-      return Assets.prizeClaimAssets[7];
-    } else if (walletBalnce >= minWithdrawPrizeAmt!) {
-      return Assets.prizeClaimAssets[8];
-    }
   }
 
   showConfirmDialog(PrizeClaimChoice choice) {
