@@ -15,7 +15,6 @@ class Assets {
   static const String phonePe = 'assets/vectors/psp/phone_pe.svg';
 
   static const String noTransaction = "assets/vectors/no-transactions.png";
-  static const String augmontShare = "images/augmont-share.png";
   static const String referralIcon = "assets/vectors/icons/referral_icon.svg";
 
   //APPBAR
@@ -23,10 +22,6 @@ class Assets {
   static const String alerts = "assets/vectors/icons/alerts.svg";
   static const String token = "assets/vectors/icons/token.svg";
   static const String ticketTilted = "assets/vectors/ticket_tilted.svg";
-
-  static const String prizeRankOne = "assets/vectors/rank_first.svg";
-  static const String prizeRankTwo = "assets/vectors/rank_second.svg";
-  static const String prizeRankThird = "assets/vectors/rank_third.svg";
 
 // ONBOARDING
   static const String truecaller = "assets/images/truecaller.png";
@@ -154,7 +149,6 @@ class Assets {
   static String journeyIcon = "assets/vectors/icons/journeyIcon.svg";
 
   static String multiAvatars = "assets/vectors/multiAvatars.svg";
-  static String multiRealAvatars = "assets/images/cus_photos.png";
   static String arrow = "assets/vectors/arrow.svg";
   static const String infoWhyPan =
       'Your PAN Card is used as your unique ID to set up your investment profile in different assets';

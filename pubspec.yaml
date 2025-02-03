@@ -135,7 +135,6 @@ flutter:
 
   assets:
     - images/
-    - images/Tambola/
     - resources/augmont/fello-augmont-invoice.html
     - resources/fello-email-verification.html
     - resources/public.key
@@ -148,7 +147,6 @@ flutter:
     - assets/vectors/icons/
     - assets/vectors/userAvatars/
     - assets/lotties/
-    - assets/lotties/nav/
     - assets/hms/
     - assets/hms/icons/
 
