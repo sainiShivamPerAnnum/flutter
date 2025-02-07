@@ -10,6 +10,10 @@ class PreloadEvent with _$PreloadEvent {
   const factory PreloadEvent.disposeLiveStreamController() =
       _DisposeLiveStreamController;
   const factory PreloadEvent.getVideosFromApi() = _GetVideosFromApi;
+  const factory PreloadEvent.getCategoryVideos({
+    required int direction,
+    Completer<void>? completer,
+  }) = _GetCategoryVideos;
   const factory PreloadEvent.setLoading() = _SetLoading;
   const factory PreloadEvent.updateUrls(
     List<VideoData> videos, {

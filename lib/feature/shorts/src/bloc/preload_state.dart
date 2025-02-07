@@ -26,10 +26,13 @@ class PreloadState with _$PreloadState {
     required ReelContext currentContext,
     required bool keyboardVisible,
     required bool showComments,
+    required int currentCategoryIndex,
+    required List<String> categories,
     String? errorMessage,
     VideoPlayerController? liveStreamController,
     PageController? livePageController,
   }) = _PreloadState;
+  const PreloadState._();
 
   factory PreloadState.initial() => PreloadState(
         mainVideos: [],
@@ -49,8 +52,29 @@ class PreloadState with _$PreloadState {
         showComments: true,
         liveStreamController: null,
         errorMessage: null,
-        mainPageController: PageController(initialPage: 0,keepPage: true,),
-        profilePageController: PageController(initialPage: 0,keepPage: true,),
+        mainPageController: PageController(
+          initialPage: 0,
+          keepPage: true,
+        ),
+        profilePageController: PageController(
+          initialPage: 0,
+          keepPage: true,
+        ),
         livePageController: null,
+        currentCategoryIndex: 0,
+        categories: [],
       );
+
+  List<VideoData> get currentVideos {
+    switch (currentContext) {
+      case ReelContext.main:
+        return mainVideos;
+      case ReelContext.profile:
+        return profileVideos;
+      case ReelContext.liveStream:
+        return liveVideo;
+      default:
+        return [];
+    }
+  }
 }

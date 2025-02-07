@@ -29,18 +29,6 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
   PreloadBloc() : super(PreloadState.initial()) {
     on(_mapEventToState);
   }
-  List<VideoData> get currentVideos {
-    switch (state.currentContext) {
-      case ReelContext.main:
-        return state.mainVideos;
-      case ReelContext.profile:
-        return state.profileVideos;
-      case ReelContext.liveStream:
-        return state.liveVideo;
-      default:
-        return [];
-    }
-  }
 
   Future<void> _mapEventToState(
     PreloadEvent event,
@@ -103,15 +91,18 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         } else {
           if (state.currentContext == ReelContext.main) {
             await Share.share(
-                "Hi,\nCheck out this quick finance tip from Fello: ${state.mainVideos[state.focusedIndex].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url");
+              "Hi,\nCheck out this quick finance tip from Fello: ${state.mainVideos[state.focusedIndex].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url",
+            );
             emit(state.copyWith(isShareAlreadyClicked: false));
           } else if (state.currentContext == ReelContext.profile) {
             await Share.share(
-                "Hi,\nCheck out this quick finance tip from Fello: ${state.profileVideos[state.profileVideoIndex].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url");
+              "Hi,\nCheck out this quick finance tip from Fello: ${state.profileVideos[state.profileVideoIndex].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url",
+            );
             emit(state.copyWith(isShareAlreadyClicked: false));
           } else {
             await Share.share(
-                "Hi,\nCheck out this quick finance tip from Fello: ${state.liveVideo[0].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url");
+              "Hi,\nCheck out this quick finance tip from Fello: ${state.liveVideo[0].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url",
+            );
             emit(state.copyWith(isShareAlreadyClicked: false));
           }
         }
@@ -232,12 +223,50 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           );
         }
       },
+      getCategoryVideos: (e) async {
+        emit(
+          state.copyWith(
+            currentContext: ReelContext.main,
+            mainVideos: [],
+            focusedIndex: 0,
+            isLoading: !state.isLoading,
+          ),
+        );
+        if (e.direction > 0) {
+          // Swipe right - next category
+          emit(
+            state.copyWith(
+              currentCategoryIndex: 1,
+            ),
+          );
+        } else {
+          // Swipe left - previous category
+          // int index =
+          //     (state.currentCategoryIndex - 1) % state.categories.length;
+          emit(
+            state.copyWith(
+              currentCategoryIndex: 0,
+            ),
+          );
+        }
+        await _stopAndDisposeVideoControllers();
+
+        final data = await repository.getVideos(page: 1);
+        final List<VideoData> urls = data.model ?? [];
+        state.mainVideos.addAll(urls);
+
+        await _initializeControllerAtIndex(0);
+        await _initializeControllerAtIndex(1);
+        _playControllerAtIndex(0);
+        e.completer?.complete();
+        add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
+      },
       onVideoIndexChanged: (e) async {
         final bool shouldFetch =
             (e.index + VideoPreloadConstants.kPreloadLimit) %
                         VideoPreloadConstants.kNextLimit ==
                     0 &&
-                currentVideos.length ==
+                state.currentVideos.length ==
                     e.index + VideoPreloadConstants.kPreloadLimit &&
                 state.currentContext == ReelContext.main;
 
@@ -466,9 +495,9 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
   }
 
   Future<void> _initializeControllerAtIndex(int index) async {
-    if (currentVideos.length > index && index >= 0) {
+    if (state.currentVideos.length > index && index >= 0) {
       final VideoPlayerController controller = VideoPlayerController.networkUrl(
-        Uri.parse(currentVideos[index].url),
+        Uri.parse(state.currentVideos[index].url),
       );
       if (state.currentContext == ReelContext.main) {
         state.controllers[index] = controller;
@@ -479,15 +508,16 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       await controller.setLooping(true);
       await controller.setVolume(1);
       add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
-      final comments = await repository.getComments(currentVideos[index].id);
+      final comments =
+          await repository.getComments(state.currentVideos[index].id);
       add(
         PreloadEvent.addCommentToState(
-          videoId: currentVideos[index].id,
+          videoId: state.currentVideos[index].id,
           comment: comments.model ?? [],
         ),
       );
-      _addProgressListener(controller, currentVideos[index].id);
-      _addSeenListener(controller, currentVideos[index].id);
+      _addProgressListener(controller, state.currentVideos[index].id);
+      _addSeenListener(controller, state.currentVideos[index].id);
       log('🚀🚀🚀 INITIALIZED $index for context ${state.currentContext}');
     }
   }
@@ -535,7 +565,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
   }
 
   void _playControllerAtIndex(int index) {
-    if (currentVideos.length > index && index >= 0) {
+    if (state.currentVideos.length > index && index >= 0) {
       final controller = state.currentContext == ReelContext.main
           ? state.controllers[index]
           : state.profileControllers[index];
@@ -546,7 +576,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
   }
 
   void _stopControllerAtIndex(int index) {
-    if (currentVideos.length > index && index >= 0) {
+    if (state.currentVideos.length > index && index >= 0) {
       final controller = state.currentContext == ReelContext.main
           ? state.controllers[index]
           : state.profileControllers[index];
@@ -558,7 +588,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
   }
 
   void _disposeControllerAtIndex(int index) {
-    if (currentVideos.length > index && index >= 0) {
+    if (state.currentVideos.length > index && index >= 0) {
       final controllersMap = state.currentContext == ReelContext.main
           ? state.controllers
           : state.profileControllers;
@@ -571,6 +601,18 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       }
       log('🚀🚀🚀 DISPOSED $index for context ${state.currentContext}');
     }
+  }
+
+  Future<void> _stopAndDisposeVideoControllers() async {
+    final controllersCopy =
+        Map<int, VideoPlayerController>.from(state.controllers);
+    for (final entry in controllersCopy.entries) {
+      final controller = entry.value;
+      await controller.pause();
+      await controller.seekTo(const Duration());
+      await controller.dispose();
+    }
+    state.controllers.clear();
   }
 
   Future<void> _stopAndDisposeProfileControllers() async {
