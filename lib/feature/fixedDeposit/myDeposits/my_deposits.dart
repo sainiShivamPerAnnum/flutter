@@ -57,7 +57,7 @@ class _InvestmentDetails extends StatelessWidget {
                   ),
                   SliverList(delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                      final fdData = state.fdData[index];
+                      final fdData = state.fdData;
                       _buildInvestmentSection('Current', {
                         'current': '51,567.54',
                         'avgXirr': '9.2% p.a.',

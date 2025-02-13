@@ -2,6 +2,7 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/fixedDeposit/fd_calculator.dart';
 // import 'package:felloapp/core/model/fixedDeposit/fd_deposit.dart';
 import 'package:felloapp/core/model/fixedDeposit/fd_home.dart';
+import 'package:felloapp/core/model/fixedDeposit/my_fds.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -96,16 +97,16 @@ class FdRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<AllFdsData>> myFds() async {
+  Future<ApiResponse<UserFdPortfolio>> myFds() async {
     try {
       final response = await APIService.instance.getData(
         ApiPath.myFds,
         cBaseUrl: _baseUrl,
         apiName: '$_fd/myFds',
       );
-      // final responseData = response["data"];
-      return ApiResponse<AllFdsData>(
-        model: AllFdsData.fromJson(response),
+      final responseData = response["data"];
+      return ApiResponse<UserFdPortfolio>(
+        model: UserFdPortfolio.fromJson(responseData),
         code: 200,
       );
     } catch (e) {

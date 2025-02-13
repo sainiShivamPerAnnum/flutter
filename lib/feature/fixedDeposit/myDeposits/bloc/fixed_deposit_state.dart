@@ -12,12 +12,12 @@ class LoadingMyDeposits extends MyFixedDepositState {
 }
 
 final class FdDepositsLoaded extends MyFixedDepositState {
-  final List<AllFdsData> fdData;
+  final UserFdPortfolio fdData;
   const FdDepositsLoaded({
     required this.fdData,
   });
   MyFixedDepositState copyWith({
-    List<AllFdsData>? fdData,
+    UserFdPortfolio? fdData,
   }) {
     return FdDepositsLoaded(
       fdData: fdData ?? this.fdData,

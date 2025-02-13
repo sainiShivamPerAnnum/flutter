@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:felloapp/core/model/fixedDeposit/fd_home.dart';
+import 'package:felloapp/core/model/fixedDeposit/my_fds.dart';
 import 'package:felloapp/core/repository/fixed_deposit_repo.dart';
 
 part 'fixed_deposit_state.dart';
@@ -24,7 +24,7 @@ class MyFixedDepositBloc
     try {
       final data = await _fdRepository.myFds();
       if (data.isSuccess()) {
-        emitter(FdDepositsLoaded(fdData: []));
+        emitter(FdDepositsLoaded(fdData: data.model!));
       } else {
         emitter(FdMyDepositsError(data.errorMessage.toString()));
       }

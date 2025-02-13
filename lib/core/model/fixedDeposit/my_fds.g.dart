@@ -6,6 +6,55 @@ part of 'my_fds.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+UserFdPortfolio _$UserFdPortfolioFromJson(Map<String, dynamic> json) =>
+    UserFdPortfolio(
+      portfolio: (json['portfolio'] as List<dynamic>)
+          .map((e) => PortfolioModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      otherStatuses: json['otherStatuses'] as List<dynamic>,
+      summary: SummaryModel.fromJson(json['summary'] as Map<String, dynamic>),
+    );
+
+PortfolioModel _$PortfolioModelFromJson(Map<String, dynamic> json) =>
+    PortfolioModel(
+      issuerId: json['issuerId'] as String,
+      issuer: json['issuer'] as String,
+      roi: (json['roi'] as num).toDouble(),
+      investedAmount: (json['investedAmount'] as num).toDouble(),
+      currentAmount: (json['currentAmount'] as num).toDouble(),
+      tenure: json['tenure'] as int?,
+      individualFDs: (json['individualFDs'] as List<dynamic>)
+          .map((e) => IndividualFDModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+IndividualFDModel _$IndividualFDModelFromJson(Map<String, dynamic> json) =>
+    IndividualFDModel(
+      applicationId: json['applicationId'] as String,
+      depositAmount: (json['depositAmount'] as num).toDouble(),
+      tenure: json['tenure'] as int?,
+      roi: (json['roi'] as num).toDouble(),
+      maturityDate: DateTime.parse(json['maturityDate'] as String),
+      depositDate: DateTime.parse(json['depositDate'] as String),
+      interestPayoutFrequency: json['interestPayoutFrequency'] as String,
+      status: json['status'] as String,
+      bankDetails: (json['bankDetails'] as List<dynamic>)
+          .map((e) => BankDetails.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+BankDetails _$BankDetailsFromJson(Map<String, dynamic> json) => BankDetails(
+      bankName: json['bankName'] as String,
+      accountNumber: json['accountNumber'] as String,
+    );
+
+SummaryModel _$SummaryModelFromJson(Map<String, dynamic> json) => SummaryModel(
+      totalInvestedAmount: (json['totalInvestedAmount'] as num).toDouble(),
+      totalCurrentAmount: (json['totalCurrentAmount'] as num).toDouble(),
+      totalReturns: (json['totalReturns'] as num).toDouble(),
+      averageXIRR: (json['averageXIRR'] as num).toDouble(),
+    );
+
 InvestmentModel _$InvestmentModelFromJson(Map<String, dynamic> json) =>
     InvestmentModel(
       current: json['current'] as String,
