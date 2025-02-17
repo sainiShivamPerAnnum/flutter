@@ -266,4 +266,8 @@ class ApiPath {
 
   static const String badgesLeaderBoard = "/super-fello/leaderboard";
   static const String rpsPath = "/withdrawal/rps";
+
+  static const shortsHome = "videos/shorts/homepage";
+  static const shortsCategory = "videos/search-category-shorts";
+  static const searchShorts = "videos/search";
 }

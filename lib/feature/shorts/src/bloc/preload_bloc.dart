@@ -42,6 +42,38 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           latency: e.latency,
         );
       },
+      updateThemes: (e) {
+        emit(
+          state.copyWith(
+            categories: e.categories,
+            theme: e.theme,
+            currentCategoryIndex: e.index,
+          ),
+        );
+        e.completer?.complete();
+      },
+      toggleVolume: (e) {
+        final controller = state.controllers[state.focusedIndex];
+        if (controller != null && controller.value.isPlaying) {
+          if (controller.value.volume == 0) {
+            controller.setVolume(
+              1.0,
+            );
+            emit(
+              state.copyWith(
+                muted: false,
+              ),
+            );
+          } else {
+            controller.setVolume(0.0);
+            emit(
+              state.copyWith(
+                muted: true,
+              ),
+            );
+          }
+        }
+      },
       updateLoading: (e) {
         emit(
           state.copyWith(isLoading: e.isLoading),
@@ -226,39 +258,51 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       getCategoryVideos: (e) async {
         emit(
           state.copyWith(
+            initialVideo: e.initailVideo,
             currentContext: ReelContext.main,
             mainVideos: [],
             focusedIndex: 0,
             isLoading: !state.isLoading,
           ),
         );
+        int index;
         if (e.direction > 0) {
-          // Swipe right - next category
-          emit(
-            state.copyWith(
-              currentCategoryIndex: 1,
-            ),
-          );
+          index = (state.currentCategoryIndex + 1) % state.categories.length;
+        } else if (e.direction < 0) {
+          index = (state.currentCategoryIndex - 1 + state.categories.length) %
+              state.categories.length;
         } else {
-          // Swipe left - previous category
-          // int index =
-          //     (state.currentCategoryIndex - 1) % state.categories.length;
-          emit(
-            state.copyWith(
-              currentCategoryIndex: 0,
-            ),
-          );
+          index = state.currentCategoryIndex;
         }
+
+        emit(
+          state.copyWith(
+            currentCategoryIndex: index,
+          ),
+        );
+
         await _stopAndDisposeVideoControllers();
+        e.completer?.complete();
 
-        final data = await repository.getVideos(page: 1);
-        final List<VideoData> urls = data.model ?? [];
-        state.mainVideos.addAll(urls);
+        final data = await repository.getVideosByCategory(
+          category: state.categories[state.currentCategoryIndex],
+          theme: state.theme,
+        );
 
+        final List<VideoData> urls = data.model?.videos ?? [];
+
+        state.mainVideos.clear();
+
+        if (e.initailVideo != null) {
+          state.mainVideos.add(e.initailVideo!);
+        }
+        List<VideoData> videosToAdd =
+            urls.where((video) => video.id != e.initailVideo?.id).toList();
+        state.mainVideos.addAll(videosToAdd);
         await _initializeControllerAtIndex(0);
         await _initializeControllerAtIndex(1);
         _playControllerAtIndex(0);
-        e.completer?.complete();
+
         add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
       },
       onVideoIndexChanged: (e) async {
@@ -271,21 +315,32 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                 state.currentContext == ReelContext.main;
 
         if (shouldFetch) {
-          final response = await repository.getVideos(
+          final response = await repository.getVideosByCategory(
+            category: state.categories[state.currentCategoryIndex],
+            theme: state.theme,
             page: (e.index + VideoPreloadConstants.preloadLimit) ~/ 10 + 1,
           );
-          final List<VideoData> urls = response.model ?? [];
-          if (urls.length < 10) {
-            // If we reach the end of the list, start from the beginning
-            final resetResponse = await repository.getVideos(page: 1);
-            List<VideoData> resetUrls = resetResponse.model ?? [];
-            if (resetUrls.isNotEmpty) {
-              urls.addAll(resetUrls);
-            }
-            add(PreloadEvent.updateUrls(urls));
-          } else {
-            add(PreloadEvent.updateUrls(urls));
-          }
+          final List<VideoData> urls = response.model?.videos ?? [];
+          List<VideoData> videosToAdd = urls
+              .where((video) => video.id != state.initialVideo?.id)
+              .toList();
+          // if (urls.length < 10) {
+          //   // If we reach the end of the list, start from the beginning
+          //   final resetResponse = await repository.getVideosByCategory(
+          //     category: state.categories[state.currentCategoryIndex],
+          //     theme: state.theme,
+          //     page: 1,
+          //   );
+          //   List<VideoData> resetUrls = resetResponse.model?.videos ?? [];
+          //   if (resetUrls.isNotEmpty) {
+          //     urls.addAll(resetUrls);
+          //   }
+          //   add(PreloadEvent.updateUrls(urls));
+          // }
+          // else {
+          //   add(PreloadEvent.updateUrls(urls));
+          // }
+          add(PreloadEvent.updateUrls(videosToAdd));
         }
         final index = state.currentContext == ReelContext.main
             ? state.focusedIndex
@@ -476,6 +531,18 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           await state.liveStreamController!.dispose();
           state.livePageController!.dispose();
         }
+      },
+      disposeMainStreamController: (e) async {
+        for (final entry in state.controllers.entries) {
+          final controller = entry.value;
+          await controller.pause();
+          await controller.seekTo(const Duration());
+          await controller.dispose();
+          state.mainPageController.dispose();
+        }
+        state.controllers
+            .clear(); // Clear the map after disposing all controllers
+        log('🚀🚀🚀 All controllers stopped and disposed');
       },
     );
   }

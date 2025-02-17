@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ShimmerReelsButtons extends StatelessWidget {
@@ -6,26 +7,46 @@ class ShimmerReelsButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      right: 16,
-      left: 16,
-      bottom: 50,
+    return SizedBox(
+      height: 1.sh,
       child: Shimmer.fromColors(
         baseColor: Colors.black.withOpacity(0.2),
         highlightColor: Colors.black.withOpacity(0.4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            _shimmerCircle(50),
-            const SizedBox(height: 16),
-            _shimmerCircle(50),
-            const SizedBox(height: 16),
-            _shimmerCircle(50),
-            const SizedBox(height: 16),
-            _shimmerCircle(50),
-            const SizedBox(height: 16),
-            _shimmerRectangle(50, 550),
-          ],
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              const Spacer(),
+              _shimmerCircle(50.r),
+              SizedBox(height: 10.h),
+              _shimmerCircle(50.r),
+              SizedBox(height: 10.h),
+              _shimmerCircle(50.r),
+              SizedBox(height: 10.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _shimmerRectangle(
+                    40.h,
+                    0.75.sw,
+                  ),
+                  _shimmerCircle(50.r),
+                ],
+              ),
+              SizedBox(
+                height: 20.h,
+              ),
+              _shimmerRectangle(
+                5.h,
+                0.95.sw,
+              ),
+              SizedBox(
+                height: 5.h,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -46,9 +67,12 @@ class ShimmerReelsButtons extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         shape: BoxShape.rectangle,
         color: Colors.white,
+        borderRadius: BorderRadius.all(
+          Radius.circular(4.r),
+        ),
       ),
     );
   }

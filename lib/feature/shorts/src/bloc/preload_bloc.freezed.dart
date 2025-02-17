@@ -21,6 +21,9 @@ mixin _$PreloadEvent {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -28,6 +31,7 @@ mixin _$PreloadEvent {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -53,6 +57,9 @@ mixin _$PreloadEvent {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -60,6 +67,7 @@ mixin _$PreloadEvent {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -85,6 +93,9 @@ mixin _$PreloadEvent {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -92,6 +103,7 @@ mixin _$PreloadEvent {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -211,6 +223,9 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -218,6 +233,7 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -246,6 +262,9 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -253,6 +272,7 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -281,6 +301,9 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -288,6 +311,7 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -371,6 +395,9 @@ class _$DisposeLiveStreamControllerImpl
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -378,6 +405,7 @@ class _$DisposeLiveStreamControllerImpl
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -406,6 +434,9 @@ class _$DisposeLiveStreamControllerImpl
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -413,6 +444,7 @@ class _$DisposeLiveStreamControllerImpl
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -441,6 +473,9 @@ class _$DisposeLiveStreamControllerImpl
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -448,6 +483,7 @@ class _$DisposeLiveStreamControllerImpl
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -478,6 +514,333 @@ class _$DisposeLiveStreamControllerImpl
 abstract class _DisposeLiveStreamController implements PreloadEvent {
   const factory _DisposeLiveStreamController() =
       _$DisposeLiveStreamControllerImpl;
+}
+
+/// @nodoc
+abstract class _$$DisposeMainStreamControllerImplCopyWith<$Res> {
+  factory _$$DisposeMainStreamControllerImplCopyWith(
+          _$DisposeMainStreamControllerImpl value,
+          $Res Function(_$DisposeMainStreamControllerImpl) then) =
+      __$$DisposeMainStreamControllerImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$DisposeMainStreamControllerImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$DisposeMainStreamControllerImpl>
+    implements _$$DisposeMainStreamControllerImplCopyWith<$Res> {
+  __$$DisposeMainStreamControllerImplCopyWithImpl(
+      _$DisposeMainStreamControllerImpl _value,
+      $Res Function(_$DisposeMainStreamControllerImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$DisposeMainStreamControllerImpl
+    implements _DisposeMainStreamController {
+  const _$DisposeMainStreamControllerImpl();
+
+  @override
+  String toString() {
+    return 'PreloadEvent.disposeMainStreamController()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DisposeMainStreamControllerImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
+    required TResult Function(_GetVideosFromApi value) getVideosFromApi,
+    required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_SetLoading value) setLoading,
+    required TResult Function(_UpdateUrls value) updateUrls,
+    required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
+    required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
+    required TResult Function(_ErrorPage value) onError,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_ToggleComments value) toggleComments,
+    required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_InitializeFromDynamicLink value)
+        initializeFromDynamicLink,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
+    required TResult Function(_DisposeProfileControllers value)
+        disposeProfileControllers,
+    required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
+    required TResult Function(_UpdateLoading value) updateLoading,
+  }) {
+    return disposeMainStreamController(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
+    TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_SetLoading value)? setLoading,
+    TResult? Function(_UpdateUrls value)? updateUrls,
+    TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
+    TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
+    TResult? Function(_ErrorPage value)? onError,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_ToggleComments value)? toggleComments,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_InitializeFromDynamicLink value)?
+        initializeFromDynamicLink,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult? Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+    TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
+    TResult? Function(_UpdateLoading value)? updateLoading,
+  }) {
+    return disposeMainStreamController?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
+    TResult Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_SetLoading value)? setLoading,
+    TResult Function(_UpdateUrls value)? updateUrls,
+    TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
+    TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
+    TResult Function(_ErrorPage value)? onError,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_ToggleComments value)? toggleComments,
+    TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_InitializeFromDynamicLink value)?
+        initializeFromDynamicLink,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+    TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
+    TResult Function(_UpdateLoading value)? updateLoading,
+    required TResult orElse(),
+  }) {
+    if (disposeMainStreamController != null) {
+      return disposeMainStreamController(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _DisposeMainStreamController implements PreloadEvent {
+  const factory _DisposeMainStreamController() =
+      _$DisposeMainStreamControllerImpl;
+}
+
+/// @nodoc
+abstract class _$$ToggleVolumeImplCopyWith<$Res> {
+  factory _$$ToggleVolumeImplCopyWith(
+          _$ToggleVolumeImpl value, $Res Function(_$ToggleVolumeImpl) then) =
+      __$$ToggleVolumeImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$ToggleVolumeImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$ToggleVolumeImpl>
+    implements _$$ToggleVolumeImplCopyWith<$Res> {
+  __$$ToggleVolumeImplCopyWithImpl(
+      _$ToggleVolumeImpl _value, $Res Function(_$ToggleVolumeImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$ToggleVolumeImpl implements _ToggleVolume {
+  const _$ToggleVolumeImpl();
+
+  @override
+  String toString() {
+    return 'PreloadEvent.toggleVolume()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$ToggleVolumeImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
+    required TResult Function(_GetVideosFromApi value) getVideosFromApi,
+    required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_SetLoading value) setLoading,
+    required TResult Function(_UpdateUrls value) updateUrls,
+    required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
+    required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
+    required TResult Function(_ErrorPage value) onError,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_ToggleComments value) toggleComments,
+    required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_InitializeFromDynamicLink value)
+        initializeFromDynamicLink,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
+    required TResult Function(_DisposeProfileControllers value)
+        disposeProfileControllers,
+    required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
+    required TResult Function(_UpdateLoading value) updateLoading,
+  }) {
+    return toggleVolume(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
+    TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_SetLoading value)? setLoading,
+    TResult? Function(_UpdateUrls value)? updateUrls,
+    TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
+    TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
+    TResult? Function(_ErrorPage value)? onError,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_ToggleComments value)? toggleComments,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_InitializeFromDynamicLink value)?
+        initializeFromDynamicLink,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult? Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+    TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
+    TResult? Function(_UpdateLoading value)? updateLoading,
+  }) {
+    return toggleVolume?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
+    TResult Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_SetLoading value)? setLoading,
+    TResult Function(_UpdateUrls value)? updateUrls,
+    TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
+    TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
+    TResult Function(_ErrorPage value)? onError,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_ToggleComments value)? toggleComments,
+    TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_InitializeFromDynamicLink value)?
+        initializeFromDynamicLink,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+    TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
+    TResult Function(_UpdateLoading value)? updateLoading,
+    required TResult orElse(),
+  }) {
+    if (toggleVolume != null) {
+      return toggleVolume(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _ToggleVolume implements PreloadEvent {
+  const factory _ToggleVolume() = _$ToggleVolumeImpl;
 }
 
 /// @nodoc
@@ -521,6 +884,9 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -528,6 +894,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -556,6 +923,9 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -563,6 +933,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -591,6 +962,9 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -598,6 +972,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -635,7 +1010,8 @@ abstract class _$$GetCategoryVideosImplCopyWith<$Res> {
           $Res Function(_$GetCategoryVideosImpl) then) =
       __$$GetCategoryVideosImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({int direction, Completer<void>? completer});
+  $Res call(
+      {VideoData? initailVideo, int direction, Completer<void>? completer});
 }
 
 /// @nodoc
@@ -649,10 +1025,15 @@ class __$$GetCategoryVideosImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? initailVideo = freezed,
     Object? direction = null,
     Object? completer = freezed,
   }) {
     return _then(_$GetCategoryVideosImpl(
+      initailVideo: freezed == initailVideo
+          ? _value.initailVideo
+          : initailVideo // ignore: cast_nullable_to_non_nullable
+              as VideoData?,
       direction: null == direction
           ? _value.direction
           : direction // ignore: cast_nullable_to_non_nullable
@@ -668,8 +1049,11 @@ class __$$GetCategoryVideosImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$GetCategoryVideosImpl implements _GetCategoryVideos {
-  const _$GetCategoryVideosImpl({required this.direction, this.completer});
+  const _$GetCategoryVideosImpl(
+      {required this.initailVideo, required this.direction, this.completer});
 
+  @override
+  final VideoData? initailVideo;
   @override
   final int direction;
   @override
@@ -677,7 +1061,7 @@ class _$GetCategoryVideosImpl implements _GetCategoryVideos {
 
   @override
   String toString() {
-    return 'PreloadEvent.getCategoryVideos(direction: $direction, completer: $completer)';
+    return 'PreloadEvent.getCategoryVideos(initailVideo: $initailVideo, direction: $direction, completer: $completer)';
   }
 
   @override
@@ -685,6 +1069,8 @@ class _$GetCategoryVideosImpl implements _GetCategoryVideos {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GetCategoryVideosImpl &&
+            (identical(other.initailVideo, initailVideo) ||
+                other.initailVideo == initailVideo) &&
             (identical(other.direction, direction) ||
                 other.direction == direction) &&
             (identical(other.completer, completer) ||
@@ -692,7 +1078,8 @@ class _$GetCategoryVideosImpl implements _GetCategoryVideos {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, direction, completer);
+  int get hashCode =>
+      Object.hash(runtimeType, initailVideo, direction, completer);
 
   @JsonKey(ignore: true)
   @override
@@ -707,6 +1094,9 @@ class _$GetCategoryVideosImpl implements _GetCategoryVideos {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -714,6 +1104,7 @@ class _$GetCategoryVideosImpl implements _GetCategoryVideos {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -742,6 +1133,9 @@ class _$GetCategoryVideosImpl implements _GetCategoryVideos {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -749,6 +1143,7 @@ class _$GetCategoryVideosImpl implements _GetCategoryVideos {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -777,6 +1172,9 @@ class _$GetCategoryVideosImpl implements _GetCategoryVideos {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -784,6 +1182,7 @@ class _$GetCategoryVideosImpl implements _GetCategoryVideos {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -813,9 +1212,11 @@ class _$GetCategoryVideosImpl implements _GetCategoryVideos {
 
 abstract class _GetCategoryVideos implements PreloadEvent {
   const factory _GetCategoryVideos(
-      {required final int direction,
+      {required final VideoData? initailVideo,
+      required final int direction,
       final Completer<void>? completer}) = _$GetCategoryVideosImpl;
 
+  VideoData? get initailVideo;
   int get direction;
   Completer<void>? get completer;
   @JsonKey(ignore: true)
@@ -864,6 +1265,9 @@ class _$SetLoadingImpl implements _SetLoading {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -871,6 +1275,7 @@ class _$SetLoadingImpl implements _SetLoading {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -899,6 +1304,9 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -906,6 +1314,7 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -934,6 +1343,9 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -941,6 +1353,7 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -1056,6 +1469,9 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -1063,6 +1479,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -1091,6 +1508,9 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -1098,6 +1518,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -1126,6 +1547,9 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -1133,6 +1557,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -1239,6 +1664,9 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -1246,6 +1674,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -1274,6 +1703,9 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -1281,6 +1713,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -1309,6 +1742,9 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -1316,6 +1752,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -1421,6 +1858,9 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -1428,6 +1868,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -1456,6 +1897,9 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -1463,6 +1907,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -1491,6 +1936,9 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -1498,6 +1946,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -1602,6 +2051,9 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -1609,6 +2061,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -1637,6 +2090,9 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -1644,6 +2100,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -1672,6 +2129,9 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -1679,6 +2139,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -1712,6 +2173,247 @@ abstract class _PlayVideoAtIndex implements PreloadEvent {
   int get index;
   @JsonKey(ignore: true)
   _$$PlayVideoAtIndexImplCopyWith<_$PlayVideoAtIndexImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$UpdateThemesImplCopyWith<$Res> {
+  factory _$$UpdateThemesImplCopyWith(
+          _$UpdateThemesImpl value, $Res Function(_$UpdateThemesImpl) then) =
+      __$$UpdateThemesImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {String theme,
+      List<String> categories,
+      int index,
+      Completer<void>? completer});
+}
+
+/// @nodoc
+class __$$UpdateThemesImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$UpdateThemesImpl>
+    implements _$$UpdateThemesImplCopyWith<$Res> {
+  __$$UpdateThemesImplCopyWithImpl(
+      _$UpdateThemesImpl _value, $Res Function(_$UpdateThemesImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? theme = null,
+    Object? categories = null,
+    Object? index = null,
+    Object? completer = freezed,
+  }) {
+    return _then(_$UpdateThemesImpl(
+      theme: null == theme
+          ? _value.theme
+          : theme // ignore: cast_nullable_to_non_nullable
+              as String,
+      categories: null == categories
+          ? _value._categories
+          : categories // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      index: null == index
+          ? _value.index
+          : index // ignore: cast_nullable_to_non_nullable
+              as int,
+      completer: freezed == completer
+          ? _value.completer
+          : completer // ignore: cast_nullable_to_non_nullable
+              as Completer<void>?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$UpdateThemesImpl implements _UpdateThemes {
+  const _$UpdateThemesImpl(
+      {required this.theme,
+      required final List<String> categories,
+      required this.index,
+      this.completer})
+      : _categories = categories;
+
+  @override
+  final String theme;
+  final List<String> _categories;
+  @override
+  List<String> get categories {
+    if (_categories is EqualUnmodifiableListView) return _categories;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_categories);
+  }
+
+  @override
+  final int index;
+  @override
+  final Completer<void>? completer;
+
+  @override
+  String toString() {
+    return 'PreloadEvent.updateThemes(theme: $theme, categories: $categories, index: $index, completer: $completer)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UpdateThemesImpl &&
+            (identical(other.theme, theme) || other.theme == theme) &&
+            const DeepCollectionEquality()
+                .equals(other._categories, _categories) &&
+            (identical(other.index, index) || other.index == index) &&
+            (identical(other.completer, completer) ||
+                other.completer == completer));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, theme,
+      const DeepCollectionEquality().hash(_categories), index, completer);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UpdateThemesImplCopyWith<_$UpdateThemesImpl> get copyWith =>
+      __$$UpdateThemesImplCopyWithImpl<_$UpdateThemesImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
+    required TResult Function(_GetVideosFromApi value) getVideosFromApi,
+    required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_SetLoading value) setLoading,
+    required TResult Function(_UpdateUrls value) updateUrls,
+    required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
+    required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
+    required TResult Function(_ErrorPage value) onError,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_ToggleComments value) toggleComments,
+    required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_InitializeFromDynamicLink value)
+        initializeFromDynamicLink,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
+    required TResult Function(_DisposeProfileControllers value)
+        disposeProfileControllers,
+    required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
+    required TResult Function(_UpdateLoading value) updateLoading,
+  }) {
+    return updateThemes(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
+    TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_SetLoading value)? setLoading,
+    TResult? Function(_UpdateUrls value)? updateUrls,
+    TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
+    TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
+    TResult? Function(_ErrorPage value)? onError,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_ToggleComments value)? toggleComments,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_InitializeFromDynamicLink value)?
+        initializeFromDynamicLink,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult? Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+    TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
+    TResult? Function(_UpdateLoading value)? updateLoading,
+  }) {
+    return updateThemes?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
+    TResult Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_SetLoading value)? setLoading,
+    TResult Function(_UpdateUrls value)? updateUrls,
+    TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
+    TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
+    TResult Function(_ErrorPage value)? onError,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_ToggleComments value)? toggleComments,
+    TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_InitializeFromDynamicLink value)?
+        initializeFromDynamicLink,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+    TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
+    TResult Function(_UpdateLoading value)? updateLoading,
+    required TResult orElse(),
+  }) {
+    if (updateThemes != null) {
+      return updateThemes(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _UpdateThemes implements PreloadEvent {
+  const factory _UpdateThemes(
+      {required final String theme,
+      required final List<String> categories,
+      required final int index,
+      final Completer<void>? completer}) = _$UpdateThemesImpl;
+
+  String get theme;
+  List<String> get categories;
+  int get index;
+  Completer<void>? get completer;
+  @JsonKey(ignore: true)
+  _$$UpdateThemesImplCopyWith<_$UpdateThemesImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1803,6 +2505,9 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -1810,6 +2515,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -1838,6 +2544,9 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -1845,6 +2554,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -1873,6 +2583,9 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -1880,6 +2593,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -1996,6 +2710,9 @@ class _$AddCommentImpl implements _AddComment {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -2003,6 +2720,7 @@ class _$AddCommentImpl implements _AddComment {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -2031,6 +2749,9 @@ class _$AddCommentImpl implements _AddComment {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -2038,6 +2759,7 @@ class _$AddCommentImpl implements _AddComment {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -2066,6 +2788,9 @@ class _$AddCommentImpl implements _AddComment {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -2073,6 +2798,7 @@ class _$AddCommentImpl implements _AddComment {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -2180,6 +2906,9 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -2187,6 +2916,7 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -2215,6 +2945,9 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -2222,6 +2955,7 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -2250,6 +2984,9 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -2257,6 +2994,7 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -2361,6 +3099,9 @@ class _$UpdateSeenImpl implements _UpdateSeen {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -2368,6 +3109,7 @@ class _$UpdateSeenImpl implements _UpdateSeen {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -2396,6 +3138,9 @@ class _$UpdateSeenImpl implements _UpdateSeen {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -2403,6 +3148,7 @@ class _$UpdateSeenImpl implements _UpdateSeen {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -2431,6 +3177,9 @@ class _$UpdateSeenImpl implements _UpdateSeen {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -2438,6 +3187,7 @@ class _$UpdateSeenImpl implements _UpdateSeen {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -2515,6 +3265,9 @@ class _$ErrorPageImpl implements _ErrorPage {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -2522,6 +3275,7 @@ class _$ErrorPageImpl implements _ErrorPage {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -2550,6 +3304,9 @@ class _$ErrorPageImpl implements _ErrorPage {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -2557,6 +3314,7 @@ class _$ErrorPageImpl implements _ErrorPage {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -2585,6 +3343,9 @@ class _$ErrorPageImpl implements _ErrorPage {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -2592,6 +3353,7 @@ class _$ErrorPageImpl implements _ErrorPage {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -2690,6 +3452,9 @@ class _$LikeVideoImpl implements _LikeVideo {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -2697,6 +3462,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -2725,6 +3491,9 @@ class _$LikeVideoImpl implements _LikeVideo {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -2732,6 +3501,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -2760,6 +3530,9 @@ class _$LikeVideoImpl implements _LikeVideo {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -2767,6 +3540,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -2844,6 +3618,9 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -2851,6 +3628,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -2879,6 +3657,9 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -2886,6 +3667,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -2914,6 +3696,9 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -2921,6 +3706,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -3036,6 +3822,9 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -3043,6 +3832,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -3071,6 +3861,9 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -3078,6 +3871,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -3106,6 +3900,9 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -3113,6 +3910,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -3193,6 +3991,9 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -3200,6 +4001,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -3228,6 +4030,9 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -3235,6 +4040,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -3263,6 +4069,9 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -3270,6 +4079,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -3371,6 +4181,9 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -3378,6 +4191,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -3406,6 +4220,9 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -3413,6 +4230,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -3441,6 +4259,9 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -3448,6 +4269,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -3562,6 +4384,9 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -3569,6 +4394,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -3597,6 +4423,9 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -3604,6 +4433,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -3632,6 +4462,9 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -3639,6 +4472,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -3758,6 +4592,9 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -3765,6 +4602,7 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -3793,6 +4631,9 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -3800,6 +4641,7 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -3828,6 +4670,9 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -3835,6 +4680,7 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -3942,6 +4788,9 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -3949,6 +4798,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -3977,6 +4827,9 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -3984,6 +4837,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -4012,6 +4866,9 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -4019,6 +4876,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -4100,6 +4958,9 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -4107,6 +4968,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -4135,6 +4997,9 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -4142,6 +5007,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -4170,6 +5036,9 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -4177,6 +5046,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -4276,6 +5146,9 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -4283,6 +5156,7 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -4311,6 +5185,9 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -4318,6 +5195,7 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -4346,6 +5224,9 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -4353,6 +5234,7 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -4458,6 +5340,9 @@ class _$UpdateLoadingImpl implements _UpdateLoading {
     required TResult Function(_InitializeLiveStream value) initializeLiveStream,
     required TResult Function(_DisposeLiveStreamController value)
         disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
     required TResult Function(_SetLoading value) setLoading,
@@ -4465,6 +5350,7 @@ class _$UpdateLoadingImpl implements _UpdateLoading {
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
     required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
     required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
     required TResult Function(_UpdateViewCount value) updateViewCount,
@@ -4493,6 +5379,9 @@ class _$UpdateLoadingImpl implements _UpdateLoading {
     TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult? Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult? Function(_SetLoading value)? setLoading,
@@ -4500,6 +5389,7 @@ class _$UpdateLoadingImpl implements _UpdateLoading {
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
@@ -4528,6 +5418,9 @@ class _$UpdateLoadingImpl implements _UpdateLoading {
     TResult Function(_InitializeLiveStream value)? initializeLiveStream,
     TResult Function(_DisposeLiveStreamController value)?
         disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
     TResult Function(_SetLoading value)? setLoading,
@@ -4535,6 +5428,7 @@ class _$UpdateLoadingImpl implements _UpdateLoading {
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
     TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
     TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
     TResult Function(_UpdateViewCount value)? updateViewCount,
@@ -4574,6 +5468,7 @@ abstract class _UpdateLoading implements PreloadEvent {
 
 /// @nodoc
 mixin _$PreloadState {
+  VideoData? get initialVideo => throw _privateConstructorUsedError;
   List<VideoData> get mainVideos => throw _privateConstructorUsedError;
   List<VideoData> get profileVideos => throw _privateConstructorUsedError;
   List<VideoData> get liveVideo => throw _privateConstructorUsedError;
@@ -4595,8 +5490,10 @@ mixin _$PreloadState {
   ReelContext get currentContext => throw _privateConstructorUsedError;
   bool get keyboardVisible => throw _privateConstructorUsedError;
   bool get showComments => throw _privateConstructorUsedError;
+  bool get muted => throw _privateConstructorUsedError;
   int get currentCategoryIndex => throw _privateConstructorUsedError;
   List<String> get categories => throw _privateConstructorUsedError;
+  String get theme => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
   VideoPlayerController? get liveStreamController =>
       throw _privateConstructorUsedError;
@@ -4631,7 +5528,8 @@ abstract class $PreloadStateCopyWith<$Res> {
       _$PreloadStateCopyWithImpl<$Res, PreloadState>;
   @useResult
   $Res call(
-      {List<VideoData> mainVideos,
+      {VideoData? initialVideo,
+      List<VideoData> mainVideos,
       List<VideoData> profileVideos,
       List<VideoData> liveVideo,
       Map<int, VideoPlayerController> controllers,
@@ -4648,8 +5546,10 @@ abstract class $PreloadStateCopyWith<$Res> {
       ReelContext currentContext,
       bool keyboardVisible,
       bool showComments,
+      bool muted,
       int currentCategoryIndex,
       List<String> categories,
+      String theme,
       String? errorMessage,
       VideoPlayerController? liveStreamController,
       PageController? livePageController});
@@ -4668,6 +5568,7 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? initialVideo = freezed,
     Object? mainVideos = null,
     Object? profileVideos = null,
     Object? liveVideo = null,
@@ -4685,13 +5586,19 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
     Object? currentContext = null,
     Object? keyboardVisible = null,
     Object? showComments = null,
+    Object? muted = null,
     Object? currentCategoryIndex = null,
     Object? categories = null,
+    Object? theme = null,
     Object? errorMessage = freezed,
     Object? liveStreamController = freezed,
     Object? livePageController = freezed,
   }) {
     return _then(_value.copyWith(
+      initialVideo: freezed == initialVideo
+          ? _value.initialVideo
+          : initialVideo // ignore: cast_nullable_to_non_nullable
+              as VideoData?,
       mainVideos: null == mainVideos
           ? _value.mainVideos
           : mainVideos // ignore: cast_nullable_to_non_nullable
@@ -4760,6 +5667,10 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
           ? _value.showComments
           : showComments // ignore: cast_nullable_to_non_nullable
               as bool,
+      muted: null == muted
+          ? _value.muted
+          : muted // ignore: cast_nullable_to_non_nullable
+              as bool,
       currentCategoryIndex: null == currentCategoryIndex
           ? _value.currentCategoryIndex
           : currentCategoryIndex // ignore: cast_nullable_to_non_nullable
@@ -4768,6 +5679,10 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
           ? _value.categories
           : categories // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      theme: null == theme
+          ? _value.theme
+          : theme // ignore: cast_nullable_to_non_nullable
+              as String,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -4793,7 +5708,8 @@ abstract class _$$PreloadStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<VideoData> mainVideos,
+      {VideoData? initialVideo,
+      List<VideoData> mainVideos,
       List<VideoData> profileVideos,
       List<VideoData> liveVideo,
       Map<int, VideoPlayerController> controllers,
@@ -4810,8 +5726,10 @@ abstract class _$$PreloadStateImplCopyWith<$Res>
       ReelContext currentContext,
       bool keyboardVisible,
       bool showComments,
+      bool muted,
       int currentCategoryIndex,
       List<String> categories,
+      String theme,
       String? errorMessage,
       VideoPlayerController? liveStreamController,
       PageController? livePageController});
@@ -4828,6 +5746,7 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? initialVideo = freezed,
     Object? mainVideos = null,
     Object? profileVideos = null,
     Object? liveVideo = null,
@@ -4845,13 +5764,19 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
     Object? currentContext = null,
     Object? keyboardVisible = null,
     Object? showComments = null,
+    Object? muted = null,
     Object? currentCategoryIndex = null,
     Object? categories = null,
+    Object? theme = null,
     Object? errorMessage = freezed,
     Object? liveStreamController = freezed,
     Object? livePageController = freezed,
   }) {
     return _then(_$PreloadStateImpl(
+      initialVideo: freezed == initialVideo
+          ? _value.initialVideo
+          : initialVideo // ignore: cast_nullable_to_non_nullable
+              as VideoData?,
       mainVideos: null == mainVideos
           ? _value.mainVideos
           : mainVideos // ignore: cast_nullable_to_non_nullable
@@ -4920,6 +5845,10 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
           ? _value.showComments
           : showComments // ignore: cast_nullable_to_non_nullable
               as bool,
+      muted: null == muted
+          ? _value.muted
+          : muted // ignore: cast_nullable_to_non_nullable
+              as bool,
       currentCategoryIndex: null == currentCategoryIndex
           ? _value.currentCategoryIndex
           : currentCategoryIndex // ignore: cast_nullable_to_non_nullable
@@ -4928,6 +5857,10 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
           ? _value.categories
           : categories // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      theme: null == theme
+          ? _value.theme
+          : theme // ignore: cast_nullable_to_non_nullable
+              as String,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -4948,7 +5881,8 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
 
 class _$PreloadStateImpl extends _PreloadState {
   _$PreloadStateImpl(
-      {required this.mainVideos,
+      {required this.initialVideo,
+      required this.mainVideos,
       required this.profileVideos,
       required this.liveVideo,
       required this.controllers,
@@ -4965,13 +5899,17 @@ class _$PreloadStateImpl extends _PreloadState {
       required this.currentContext,
       required this.keyboardVisible,
       required this.showComments,
+      required this.muted,
       required this.currentCategoryIndex,
       required this.categories,
+      required this.theme,
       this.errorMessage,
       this.liveStreamController,
       this.livePageController})
       : super._();
 
+  @override
+  final VideoData? initialVideo;
   @override
   final List<VideoData> mainVideos;
   @override
@@ -5007,9 +5945,13 @@ class _$PreloadStateImpl extends _PreloadState {
   @override
   final bool showComments;
   @override
+  final bool muted;
+  @override
   final int currentCategoryIndex;
   @override
   final List<String> categories;
+  @override
+  final String theme;
   @override
   final String? errorMessage;
   @override
@@ -5019,7 +5961,7 @@ class _$PreloadStateImpl extends _PreloadState {
 
   @override
   String toString() {
-    return 'PreloadState(mainVideos: $mainVideos, profileVideos: $profileVideos, liveVideo: $liveVideo, controllers: $controllers, mainPageController: $mainPageController, link: $link, shareLinkInProgress: $shareLinkInProgress, isShareAlreadyClicked: $isShareAlreadyClicked, profileControllers: $profileControllers, profilePageController: $profilePageController, focusedIndex: $focusedIndex, profileVideoIndex: $profileVideoIndex, isLoading: $isLoading, videoComments: $videoComments, currentContext: $currentContext, keyboardVisible: $keyboardVisible, showComments: $showComments, currentCategoryIndex: $currentCategoryIndex, categories: $categories, errorMessage: $errorMessage, liveStreamController: $liveStreamController, livePageController: $livePageController)';
+    return 'PreloadState(initialVideo: $initialVideo, mainVideos: $mainVideos, profileVideos: $profileVideos, liveVideo: $liveVideo, controllers: $controllers, mainPageController: $mainPageController, link: $link, shareLinkInProgress: $shareLinkInProgress, isShareAlreadyClicked: $isShareAlreadyClicked, profileControllers: $profileControllers, profilePageController: $profilePageController, focusedIndex: $focusedIndex, profileVideoIndex: $profileVideoIndex, isLoading: $isLoading, videoComments: $videoComments, currentContext: $currentContext, keyboardVisible: $keyboardVisible, showComments: $showComments, muted: $muted, currentCategoryIndex: $currentCategoryIndex, categories: $categories, theme: $theme, errorMessage: $errorMessage, liveStreamController: $liveStreamController, livePageController: $livePageController)';
   }
 
   @override
@@ -5027,6 +5969,8 @@ class _$PreloadStateImpl extends _PreloadState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PreloadStateImpl &&
+            (identical(other.initialVideo, initialVideo) ||
+                other.initialVideo == initialVideo) &&
             const DeepCollectionEquality()
                 .equals(other.mainVideos, mainVideos) &&
             const DeepCollectionEquality()
@@ -5059,10 +6003,12 @@ class _$PreloadStateImpl extends _PreloadState {
                 other.keyboardVisible == keyboardVisible) &&
             (identical(other.showComments, showComments) ||
                 other.showComments == showComments) &&
+            (identical(other.muted, muted) || other.muted == muted) &&
             (identical(other.currentCategoryIndex, currentCategoryIndex) ||
                 other.currentCategoryIndex == currentCategoryIndex) &&
             const DeepCollectionEquality()
                 .equals(other.categories, categories) &&
+            (identical(other.theme, theme) || other.theme == theme) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage) &&
             (identical(other.liveStreamController, liveStreamController) ||
@@ -5074,6 +6020,7 @@ class _$PreloadStateImpl extends _PreloadState {
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
+        initialVideo,
         const DeepCollectionEquality().hash(mainVideos),
         const DeepCollectionEquality().hash(profileVideos),
         const DeepCollectionEquality().hash(liveVideo),
@@ -5091,8 +6038,10 @@ class _$PreloadStateImpl extends _PreloadState {
         currentContext,
         keyboardVisible,
         showComments,
+        muted,
         currentCategoryIndex,
         const DeepCollectionEquality().hash(categories),
+        theme,
         errorMessage,
         liveStreamController,
         livePageController
@@ -5135,7 +6084,8 @@ class _$PreloadStateImpl extends _PreloadState {
 
 abstract class _PreloadState extends PreloadState {
   factory _PreloadState(
-      {required final List<VideoData> mainVideos,
+      {required final VideoData? initialVideo,
+      required final List<VideoData> mainVideos,
       required final List<VideoData> profileVideos,
       required final List<VideoData> liveVideo,
       required final Map<int, VideoPlayerController> controllers,
@@ -5152,13 +6102,17 @@ abstract class _PreloadState extends PreloadState {
       required final ReelContext currentContext,
       required final bool keyboardVisible,
       required final bool showComments,
+      required final bool muted,
       required final int currentCategoryIndex,
       required final List<String> categories,
+      required final String theme,
       final String? errorMessage,
       final VideoPlayerController? liveStreamController,
       final PageController? livePageController}) = _$PreloadStateImpl;
   _PreloadState._() : super._();
 
+  @override
+  VideoData? get initialVideo;
   @override
   List<VideoData> get mainVideos;
   @override
@@ -5194,9 +6148,13 @@ abstract class _PreloadState extends PreloadState {
   @override
   bool get showComments;
   @override
+  bool get muted;
+  @override
   int get currentCategoryIndex;
   @override
   List<String> get categories;
+  @override
+  String get theme;
   @override
   String? get errorMessage;
   @override

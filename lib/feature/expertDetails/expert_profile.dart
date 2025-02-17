@@ -485,7 +485,9 @@ Widget _buildLiveTab(List<VideoData> recentlive, BuildContext context) {
                             await AppState.backButtonDispatcher!.didPopRoute();
                             return false;
                           },
-                          child: const ShortsVideoPage(),
+                          child: const ShortsVideoPage(
+                            categories: [],
+                          ),
                         ),
                       ),
                     );
@@ -497,7 +499,7 @@ Widget _buildLiveTab(List<VideoData> recentlive, BuildContext context) {
                   advisorId: video.advisorId,
                   category: video.category?.join(', ') ?? '',
                   bgImage: video.thumbnail,
-                  liveCount: video.viewCount,
+                  liveCount: video.views.toInt(),
                   duration: video.duration.toString(),
                 ),
               );
@@ -767,7 +769,9 @@ Widget _buildTabOneData(List<VideoData> shortsData, String name) {
                         await AppState.backButtonDispatcher!.didPopRoute();
                         return false;
                       },
-                      child: const ShortsVideoPage(),
+                      child: const ShortsVideoPage(
+                        categories: [],
+                      ),
                     ),
                   ),
                 );

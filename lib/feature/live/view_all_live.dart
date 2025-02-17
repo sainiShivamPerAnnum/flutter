@@ -159,7 +159,9 @@ class _ViewAllLiveState extends State<ViewAllLive> {
                                   .didPopRoute();
                               return false;
                             },
-                            child: const ShortsVideoPage(),
+                            child: const ShortsVideoPage(
+                              categories: [],
+                            ),
                           ),
                         ),
                       );
@@ -172,7 +174,7 @@ class _ViewAllLiveState extends State<ViewAllLive> {
                     bgImage: item.thumbnail,
                     startTime: item.timeStamp,
                     duration: item.duration,
-                    liveCount: item.viewCount,
+                    liveCount: item.views.toInt(),
                   ),
                 ),
               for (final AdvisorCall call in widget.advisorUpcoming ?? [])

@@ -223,7 +223,9 @@ class PastScheduleCard extends StatelessWidget {
                                     .didPopRoute();
                                 return false;
                               },
-                              child: const ShortsVideoPage(),
+                              child: const ShortsVideoPage(
+                                categories: [],
+                              ),
                             ),
                           ),
                         );

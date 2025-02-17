@@ -9,6 +9,7 @@ enum ReelContext {
 @Freezed(makeCollectionsUnmodifiable: false)
 class PreloadState with _$PreloadState {
   factory PreloadState({
+    required VideoData? initialVideo,
     required List<VideoData> mainVideos,
     required List<VideoData> profileVideos,
     required List<VideoData> liveVideo,
@@ -26,8 +27,10 @@ class PreloadState with _$PreloadState {
     required ReelContext currentContext,
     required bool keyboardVisible,
     required bool showComments,
+    required bool muted,
     required int currentCategoryIndex,
     required List<String> categories,
+    required String theme,
     String? errorMessage,
     VideoPlayerController? liveStreamController,
     PageController? livePageController,
@@ -35,6 +38,7 @@ class PreloadState with _$PreloadState {
   const PreloadState._();
 
   factory PreloadState.initial() => PreloadState(
+        initialVideo: null,
         mainVideos: [],
         profileVideos: [],
         liveVideo: [],
@@ -52,6 +56,7 @@ class PreloadState with _$PreloadState {
         showComments: true,
         liveStreamController: null,
         errorMessage: null,
+        theme: '',
         mainPageController: PageController(
           initialPage: 0,
           keepPage: true,
@@ -63,6 +68,7 @@ class PreloadState with _$PreloadState {
         livePageController: null,
         currentCategoryIndex: 0,
         categories: [],
+        muted: false,
       );
 
   List<VideoData> get currentVideos {

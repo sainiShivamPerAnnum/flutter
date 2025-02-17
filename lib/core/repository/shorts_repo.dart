@@ -1,0 +1,109 @@
+import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/model/shorts/shorts_home.dart';
+import 'package:felloapp/core/repository/base_repo.dart';
+import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/flavor_config.dart';
+
+class ShortsRepository extends BaseRepo {
+  static const _shorts = 'shorts';
+
+  final _baseUrl = FlavorConfig.isDevelopment()
+      ? 'https://advisors.fello-dev.net/'
+      : 'https://advisors.fello-prod.net/';
+
+  Future<ApiResponse<ShortsHome>> getShortsHomeData() async {
+    try {
+      final response = await APIService.instance.getData(
+        ApiPath.shortsHome,
+        cBaseUrl: _baseUrl,
+        apiName: '$_shorts/getShortsHomeData',
+      );
+      final responseData = response["data"];
+      return ApiResponse<ShortsHome>(
+        model: ShortsHome.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<ShortsHome>> applyQuery({required String query}) async {
+    try {
+      final params = {"query": query, "type": "shorts"};
+      final response = await APIService.instance.getData(
+        ApiPath.searchShorts,
+        cBaseUrl: _baseUrl,
+        apiName: '$_shorts/applyQuery',
+        queryParams: params,
+      );
+      final responseData = response["data"];
+      return ApiResponse<ShortsHome>(
+        model: ShortsHome.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<ShortsHome>> applyCategory({required String query}) async {
+    try {
+      final params = {
+        "query": query,
+      };
+      final response = await APIService.instance.getData(
+        ApiPath.shortsCategory,
+        cBaseUrl: _baseUrl,
+        apiName: '$_shorts/applyCategory',
+        queryParams: params,
+      );
+      final responseData = response["data"];
+      return ApiResponse<ShortsHome>(
+        model: ShortsHome.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<PaginatedShorts>> getPaginatedResponse({
+    required String theme,
+    int page = 1,
+    int limit = 10,
+    String? query,
+  }) async {
+    try {
+      final queryParameters = {
+        'page': page.toString(),
+        'limit': limit.toString(),
+        'theme': theme,
+      };
+      if (query != null) {
+        queryParameters.addAll(
+          {
+            "query": query,
+          },
+        );
+      }
+      final response = await APIService.instance.getData(
+        'videos/search-shorts-theme',
+        cBaseUrl: _baseUrl,
+        apiName: 'ShortsRepo/getPaginatedResponse',
+        queryParams: queryParameters,
+      );
+      final responseData = response["data"];
+      return ApiResponse<PaginatedShorts>(
+        model: PaginatedShorts.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+}

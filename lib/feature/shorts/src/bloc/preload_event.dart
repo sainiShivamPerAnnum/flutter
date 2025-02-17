@@ -9,8 +9,12 @@ class PreloadEvent with _$PreloadEvent {
   }) = _InitializeLiveStream;
   const factory PreloadEvent.disposeLiveStreamController() =
       _DisposeLiveStreamController;
+  const factory PreloadEvent.disposeMainStreamController() =
+      _DisposeMainStreamController;
+  const factory PreloadEvent.toggleVolume() = _ToggleVolume;
   const factory PreloadEvent.getVideosFromApi() = _GetVideosFromApi;
   const factory PreloadEvent.getCategoryVideos({
+    required VideoData? initailVideo,
     required int direction,
     Completer<void>? completer,
   }) = _GetCategoryVideos;
@@ -23,6 +27,12 @@ class PreloadEvent with _$PreloadEvent {
       _OnVideoIndexChanged;
   const factory PreloadEvent.pauseVideoAtIndex(int index) = _PauseVideoAtIndex;
   const factory PreloadEvent.playVideoAtIndex(int index) = _PlayVideoAtIndex;
+  const factory PreloadEvent.updateThemes({
+    required String theme,
+    required List<String> categories,
+    required int index,
+    Completer<void>? completer,
+  }) = _UpdateThemes;
   const factory PreloadEvent.updateConstants({
     int? preloadLimit,
     int? nextLimit,

@@ -18,6 +18,7 @@ class VideoWidget extends StatefulWidget {
   final bool isLoading;
   final VideoPlayerController controller;
   final String userName;
+  final String expertProfileImage;
   final String videoTitle;
   final String description;
   final String advisorId;
@@ -41,6 +42,7 @@ class VideoWidget extends StatefulWidget {
   const VideoWidget({
     required this.isLoading,
     required this.controller,
+    required this.expertProfileImage,
     required this.userName,
     required this.videoTitle,
     required this.isLikedByUser,
@@ -71,7 +73,7 @@ class VideoWidget extends StatefulWidget {
 class VideoWidgetState extends State<VideoWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  late Animation<double> _iconPositionAnimation;
+  // late Animation<double> _iconPositionAnimation;
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _commentController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -83,11 +85,11 @@ class VideoWidgetState extends State<VideoWidget>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    _iconPositionAnimation =
-        Tween<double>(begin: 120.h, end: 210.h).animate(_animationController)
-          ..addListener(() {
-            setState(() {});
-          });
+    // _iconPositionAnimation =
+    //     Tween<double>(begin: 20.h, end: 110.h).animate(_animationController)
+    //       ..addListener(() {
+    //         setState(() {});
+    //       });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToEnd();
     });
@@ -133,7 +135,7 @@ class VideoWidgetState extends State<VideoWidget>
         },
       ),
       child: Stack(
-        alignment: Alignment.center,
+        alignment: Alignment.bottomCenter,
         children: [
           Positioned.fill(
             child: AspectRatio(
@@ -162,40 +164,8 @@ class VideoWidgetState extends State<VideoWidget>
               ),
             ),
           ),
-          if (widget.showUserName)
-            Positioned(
-              top: 10.h,
-              left: 20.w,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5.r)),
-                  color: Colors.black45,
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.person,
-                      size: 12.sp,
-                      color: Colors.white,
-                    ),
-                    SizedBox(
-                      width: 4.w,
-                    ),
-                    Text(
-                      widget.userName,
-                      style: GoogleFonts.sourceSans3(
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white,
-                        fontSize: 12.sp,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
           Positioned(
-            bottom: _iconPositionAnimation.value,
+            bottom: 30.h,
             right: 10.w,
             child: Visibility(
               visible: !widget.isKeyBoardOpen,
@@ -203,49 +173,117 @@ class VideoWidgetState extends State<VideoWidget>
               child: AnimatedOpacity(
                 duration: const Duration(milliseconds: 200),
                 opacity: widget.isKeyBoardOpen ? 0 : 1,
-                child: _buildIconColumn(
-                  widget.onShare,
-                  widget.onLike,
-                  widget.onBook,
-                  widget.onCommentToggle,
-                  widget.isLikedByUser,
-                  widget.commentsVisibility,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (widget.showUserName)
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 2.w,
+                              vertical: 2.h,
+                            ),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: SizeConfig.padding16,
+                                  backgroundImage: NetworkImage(
+                                    widget.expertProfileImage,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 8.w,
+                                ),
+                                Text(
+                                  widget.userName,
+                                  style: GoogleFonts.sourceSans3(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                    fontSize: 14.sp,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 12.w,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color:
+                                        const Color(0xffA2A0A2).withOpacity(.3),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(4.r),
+                                    ),
+                                    border: Border.all(
+                                      width: 1.h,
+                                      color: const Color(0xffA6A6AC)
+                                          .withOpacity(.2),
+                                    ),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 16.w,
+                                    vertical: 4.h,
+                                  ),
+                                  child: Text(
+                                    'Follow',
+                                    style: GoogleFonts.sourceSans3(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                      fontSize: 12.sp,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ExpandableWidget(
+                          title: widget.videoTitle,
+                          leadingIcon: Icons.info,
+                          expandedText: widget.description,
+                          backgroundColor: Colors.black45,
+                          textColor: Colors.white,
+                          onExpansionChanged: _toggleExpansion,
+                        ),
+                      ],
+                    ),
+                    _buildIconColumn(
+                      widget.onShare,
+                      widget.onLike,
+                      widget.onBook,
+                      widget.onCommentToggle,
+                      widget.isLikedByUser,
+                      widget.commentsVisibility,
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 100),
-            bottom: _iconPositionAnimation.value,
-            left: 15.w,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              constraints: BoxConstraints(
-                maxWidth: 240.w,
-              ),
-              height: (widget.comments == null ||
-                      widget.comments!.isEmpty ||
-                      !widget.commentsVisibility ||
-                      widget.isKeyBoardOpen)
-                  ? 0
-                  : 130.h,
-              child: _buildComments(_scrollController),
-            ),
-          ),
-          Positioned(
-            bottom: widget.isKeyBoardOpen &&
-                    widget.currentContext != ReelContext.main
-                ? 55.h
-                : 70.h,
-            child: ExpandableWidget(
-              title: widget.videoTitle,
-              leadingIcon: Icons.info,
-              expandedText: widget.description,
-              backgroundColor: Colors.black45,
-              textColor: Colors.white,
-              onExpansionChanged: _toggleExpansion,
-            ),
-          ),
+          // AnimatedPositioned(
+          //   duration: const Duration(milliseconds: 100),
+          //   bottom: _iconPositionAnimation.value,
+          //   left: 15.w,
+          //   child: AnimatedContainer(
+          //     duration: const Duration(milliseconds: 200),
+          //     constraints: BoxConstraints(
+          //       maxWidth: 240.w,
+          //     ),
+          //     height: (widget.comments == null ||
+          //             widget.comments!.isEmpty ||
+          //             !widget.commentsVisibility ||
+          //             widget.isKeyBoardOpen)
+          //         ? 0
+          //         : 130.h,
+          //     child: _buildComments(_scrollController),
+          //   ),
+          // ),
+          // Positioned(
+          //   bottom: widget.isKeyBoardOpen &&
+          //           widget.currentContext != ReelContext.main
+          //       ? 55.h
+          //       : 70.h,
+          //   child:
+          // ),
           AnimatedPositioned(
             duration: const Duration(milliseconds: 200),
             bottom: widget.isKeyBoardOpen
@@ -258,43 +296,43 @@ class VideoWidgetState extends State<VideoWidget>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextField(
-                    controller: _commentController,
-                    style: TextStyle(color: Colors.white, fontSize: 12.sp),
-                    decoration: InputDecoration(
-                      hintText: 'Add a comment',
-                      hintStyle: const TextStyle(color: Colors.white70),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.r),
-                        borderSide: const BorderSide(color: Colors.white),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.white),
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          Icons.send,
-                          color: Colors.white,
-                          size: 14.sp,
-                        ),
-                        onPressed: () {
-                          if (_commentController.text.trim() != '') {
-                            widget.onCommented(_commentController.text.trim());
-                            _commentController.clear();
-                            _scrollToEnd();
-                            FocusScope.of(context).unfocus();
-                          }
-                        },
-                      ),
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 4.h, horizontal: 12.w),
-                    ),
-                  ),
+                  // TextField(
+                  //   controller: _commentController,
+                  //   style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                  //   decoration: InputDecoration(
+                  //     hintText: 'Add a comment',
+                  //     hintStyle: const TextStyle(color: Colors.white70),
+                  //     border: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.circular(10.r),
+                  //       borderSide: const BorderSide(color: Colors.white),
+                  //     ),
+                  //     enabledBorder: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.circular(10),
+                  //       borderSide: const BorderSide(color: Colors.white),
+                  //     ),
+                  //     focusedBorder: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.circular(10),
+                  //       borderSide: const BorderSide(color: Colors.white),
+                  //     ),
+                  //     suffixIcon: IconButton(
+                  //       icon: Icon(
+                  //         Icons.send,
+                  //         color: Colors.white,
+                  //         size: 14.sp,
+                  //       ),
+                  //       onPressed: () {
+                  //         if (_commentController.text.trim() != '') {
+                  //           widget.onCommented(_commentController.text.trim());
+                  //           _commentController.clear();
+                  //           _scrollToEnd();
+                  //           FocusScope.of(context).unfocus();
+                  //         }
+                  //       },
+                  //     ),
+                  //     contentPadding:
+                  //         EdgeInsets.symmetric(vertical: 4.h, horizontal: 12.w),
+                  //   ),
+                  // ),
                   SizedBox(
                     height: 10.h,
                   ),
@@ -330,6 +368,28 @@ class VideoWidgetState extends State<VideoWidget>
   ) {
     return Column(
       children: [
+        if (widget.showLikeButton)
+          Column(
+            children: [
+              IconButton(
+                icon: AppImage(
+                  Assets.video_like,
+                  color: isLiked ? Colors.red : Colors.white,
+                  height: 20.r,
+                  width: 20.r,
+                ),
+                onPressed: onLike,
+              ),
+              Text(
+                'Save',
+                style: GoogleFonts.sourceSans3(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
         if (widget.showShareButton)
           Column(
             children: [
@@ -344,28 +404,6 @@ class VideoWidgetState extends State<VideoWidget>
               ),
               Text(
                 'Share',
-                style: GoogleFonts.sourceSans3(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        if (widget.showLikeButton)
-          Column(
-            children: [
-              IconButton(
-                icon: AppImage(
-                  Assets.video_like,
-                  color: isLiked ? Colors.red : Colors.white,
-                  height: 20.r,
-                  width: 20.r,
-                ),
-                onPressed: onLike,
-              ),
-              Text(
-                'Like',
                 style: GoogleFonts.sourceSans3(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w400,
@@ -401,7 +439,7 @@ class VideoWidgetState extends State<VideoWidget>
           children: [
             IconButton(
               icon: AppImage(
-                commentVisibility ? Assets.remove_comment : Assets.add_comment,
+                Assets.add_comment,
                 color: Colors.white,
                 height: 20.r,
                 width: 20.r,

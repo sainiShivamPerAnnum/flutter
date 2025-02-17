@@ -427,7 +427,9 @@ Widget buildRecentSection(
                         await AppState.backButtonDispatcher!.didPopRoute();
                         return false;
                       },
-                      child: const ShortsVideoPage(),
+                      child: const ShortsVideoPage(
+                        categories: [],
+                      ),
                     ),
                   ),
                 );
@@ -462,7 +464,7 @@ Widget buildRecentSection(
               category: (recentData[i].category ?? []).join(', '),
               bgImage: recentData[i].thumbnail,
               maxWidth: recentData.length == 1 ? SizeConfig.padding350 : null,
-              liveCount: recentData[i].viewCount,
+              liveCount: recentData[i].views.toInt(),
               duration: recentData[i].duration.toString(),
             ),
           ),

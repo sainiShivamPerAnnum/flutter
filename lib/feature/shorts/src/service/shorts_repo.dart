@@ -1,3 +1,4 @@
+import 'package:felloapp/core/model/shorts/shorts_home.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -10,6 +11,36 @@ class ShortsRepo {
   static final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://advisors.fello-dev.net/'
       : 'https://advisors.fello-prod.net/';
+
+  Future<ApiResponse<PaginatedShorts>> getVideosByCategory({
+    required String category,
+    required String theme,
+    int page = 1,
+    int limit = 10,
+  }) async {
+    try {
+      final queryParameters = {
+        'page': page.toString(),
+        'limit': limit.toString(),
+        'category': category,
+        'theme': theme,
+      };
+
+      final response = await APIService.instance.getData(
+        'videos/theme-category-paginated',
+        cBaseUrl: _baseUrl,
+        apiName: 'ShortsRepo/getVideosByCategory',
+        queryParams: queryParameters,
+      );
+      final responseData = response["data"];
+      return ApiResponse<PaginatedShorts>(
+        model: PaginatedShorts.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
 
   // Updated getVideos function
   Future<ApiResponse<List<VideoData>>> getVideos({
@@ -58,7 +89,7 @@ class ShortsRepo {
         queryParams: queryParameters,
       );
       final responseData = response["data"][0];
-      
+
       return ApiResponse<VideoData>(
         model: VideoData.fromJson(responseData),
         code: 200,
@@ -153,6 +184,7 @@ class ShortsRepo {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
+
   Future<ApiResponse<void>> updateSeen(
     String videoId,
   ) async {
@@ -168,12 +200,13 @@ class ShortsRepo {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
+
   Future<ApiResponse<String>> dynamicLink({
     required String id,
   }) async {
     final query = {
       "type": "shorts",
-       "id": id,
+      "id": id,
     };
     try {
       final response = await APIService.instance.postData(
