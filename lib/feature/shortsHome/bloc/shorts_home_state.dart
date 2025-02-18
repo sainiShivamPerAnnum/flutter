@@ -13,14 +13,18 @@ class LoadingShortsDetails extends ShortsHomeState {
 
 final class ShortsHomeData extends ShortsHomeState {
   final ShortsHome shortsHome;
+  final String query;
   const ShortsHomeData({
     required this.shortsHome,
+    required this.query,
   });
   ShortsHomeState copyWith({
     ShortsHome? shortsHome,
+    String? query,
   }) {
     return ShortsHomeData(
       shortsHome: shortsHome ?? this.shortsHome,
+      query: query ?? this.query,
     );
   }
 

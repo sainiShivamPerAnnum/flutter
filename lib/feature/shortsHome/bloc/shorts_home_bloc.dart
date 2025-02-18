@@ -27,7 +27,7 @@ class ShortsHomeBloc extends Bloc<ShortsHomeEvents, ShortsHomeState> {
 
     final data = await _shortsRepository.getShortsHomeData();
     if (data.isSuccess()) {
-      emitter(ShortsHomeData(shortsHome: data.model!));
+      emitter(ShortsHomeData(shortsHome: data.model!, query: ''));
     } else {
       emitter(LoadingShortsFailed(errorMessage: data.errorMessage));
     }
@@ -37,13 +37,19 @@ class ShortsHomeBloc extends Bloc<ShortsHomeEvents, ShortsHomeState> {
     SearchShorts event,
     Emitter<ShortsHomeState> emitter,
   ) async {
-    emitter(const LoadingShortsDetails());
-
-    final data = await _shortsRepository.applyQuery(query: event.query);
-    if (data.isSuccess()) {
-      emitter(ShortsHomeData(shortsHome: data.model!));
-    } else {
-      emitter(LoadingShortsFailed(errorMessage: data.errorMessage));
+    if (event.query.trim() != '') {
+      emitter(const LoadingShortsDetails());
+      final data = await _shortsRepository.applyQuery(query: event.query);
+      if (data.isSuccess()) {
+        emitter(
+          ShortsHomeData(
+            shortsHome: ShortsHome(allCategories: [], shorts: data.model!),
+            query: event.query.trim(),
+          ),
+        );
+      } else {
+        emitter(LoadingShortsFailed(errorMessage: data.errorMessage));
+      }
     }
   }
 
@@ -55,7 +61,12 @@ class ShortsHomeBloc extends Bloc<ShortsHomeEvents, ShortsHomeState> {
 
     final data = await _shortsRepository.applyCategory(query: event.query);
     if (data.isSuccess()) {
-      emitter(ShortsHomeData(shortsHome: data.model!));
+      emitter(
+        ShortsHomeData(
+          shortsHome: ShortsHome(allCategories: [], shorts: data.model!),
+          query: event.query.trim(),
+        ),
+      );
     } else {
       emitter(LoadingShortsFailed(errorMessage: data.errorMessage));
     }

@@ -9,14 +9,12 @@ import 'package:felloapp/feature/shortsHome/bloc/shorts_home_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/bottom_nav_bar/bottom_nav_bar.dart';
-import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/bloc_pagination/pagination_bloc.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,6 +38,14 @@ class _ShortsScreen extends StatefulWidget {
 }
 
 class _ShortsScreenState extends State<_ShortsScreen> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -112,45 +118,75 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                   ),
                   SizedBox(
                     height: 38.h,
-                    child: TextField(
-                      onSubmitted: (query) {
-                        BlocProvider.of<ShortsHomeBloc>(context)
-                            .add(SearchShorts(query));
+                    child: BlocBuilder<ShortsHomeBloc, ShortsHomeState>(
+                      builder: (context, state) {
+                        if (state is ShortsHomeData) {
+                          _controller.text = state.query;
+                        }
+                        return TextField(
+                          controller: _controller,
+                          onSubmitted: (query) {
+                            BlocProvider.of<ShortsHomeBloc>(context)
+                                .add(SearchShorts(query));
+                          },
+                          textAlign: TextAlign.justify,
+                          style: const TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                            hintText: "Search",
+                            hintStyle: TextStyles.sourceSans.body3
+                                .colour(UiConstants.kTextColor.withOpacity(.7)),
+                            filled: true,
+                            fillColor: const Color(0xffD9D9D9).withOpacity(.04),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.r),
+                              borderSide: BorderSide(
+                                color: const Color(0xffCACBCC).withOpacity(.07),
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.r),
+                              borderSide: BorderSide(
+                                color: const Color(0xffCACBCC).withOpacity(.07),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.r),
+                              borderSide: BorderSide(
+                                color: const Color(0xffCACBCC).withOpacity(.07),
+                              ),
+                            ),
+                            suffixIcon: (state is ShortsHomeData)
+                                ? state.query != ""
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          BlocProvider.of<ShortsHomeBloc>(
+                                            context,
+                                            listen: false,
+                                          ).add(const LoadHomeData());
+                                        },
+                                        child: Icon(
+                                          Icons.close,
+                                          color: UiConstants.kTextColor
+                                              .withOpacity(.7),
+                                        ),
+                                      )
+                                    : Icon(
+                                        Icons.search,
+                                        color: UiConstants.kTextColor
+                                            .withOpacity(.7),
+                                      )
+                                : Icon(
+                                    Icons.search,
+                                    color:
+                                        UiConstants.kTextColor.withOpacity(.7),
+                                  ),
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 12.h,
+                              horizontal: 16.w,
+                            ),
+                          ),
+                        );
                       },
-                      style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        hintText: "Search",
-                        hintStyle: TextStyles.sourceSans.body3
-                            .colour(UiConstants.kTextColor.withOpacity(.7)),
-                        filled: true,
-                        fillColor: const Color(0xffD9D9D9).withOpacity(.04),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.r),
-                          borderSide: BorderSide(
-                            color: const Color(0xffCACBCC).withOpacity(.07),
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.r),
-                          borderSide: BorderSide(
-                            color: const Color(0xffCACBCC).withOpacity(.07),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.r),
-                          borderSide: BorderSide(
-                            color: const Color(0xffCACBCC).withOpacity(.07),
-                          ),
-                        ),
-                        suffixIcon: Icon(
-                          Icons.search,
-                          color: UiConstants.kTextColor.withOpacity(.7),
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 12.h,
-                          horizontal: 16.w,
-                        ),
-                      ),
                     ),
                   ),
                   SizedBox(
@@ -166,92 +202,95 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                   ShortsHomeData() => Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height: 12.h,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.w),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children: [
-                                      for (final theme
-                                          in state.shortsHome.allCategories)
-                                        Row(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                BaseUtil.showPositiveAlert(
-                                                  'Hello',
-                                                  'hi',
-                                                );
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: const Color(0xffD9D9D9)
-                                                      .withOpacity(.1),
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(
-                                                      6.r,
+                        if (state.shortsHome.allCategories.isNotEmpty)
+                          SizedBox(
+                            height: 12.h,
+                          ),
+                        if (state.shortsHome.allCategories.isNotEmpty)
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20.w),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: [
+                                        for (final theme
+                                            in state.shortsHome.allCategories)
+                                          Row(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  BlocProvider.of<
+                                                      ShortsHomeBloc>(
+                                                    context,
+                                                  ).add(ApplyCategory(theme));
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color:
+                                                        const Color(0xffD9D9D9)
+                                                            .withOpacity(.1),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(
+                                                        6.r,
+                                                      ),
+                                                    ),
+                                                    border: Border.all(
+                                                      color: const Color(
+                                                              0xffCACBCC)
+                                                          .withOpacity(.07),
                                                     ),
                                                   ),
-                                                  border: Border.all(
-                                                    color:
-                                                        const Color(0xffCACBCC)
-                                                            .withOpacity(.07),
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 16.w,
+                                                    vertical: 8.h,
+                                                  ),
+                                                  child: Text(
+                                                    theme,
+                                                    style: TextStyles
+                                                        .sourceSansM.body4,
                                                   ),
                                                 ),
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 16.w,
-                                                  vertical: 8.h,
-                                                ),
-                                                child: Text(
-                                                  theme,
-                                                  style: TextStyles
-                                                      .sourceSansM.body4,
-                                                ),
                                               ),
-                                            ),
-                                            SizedBox(width: 8.w),
-                                          ],
-                                        ),
-                                    ],
+                                              SizedBox(width: 8.w),
+                                            ],
+                                          ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  margin: EdgeInsets.only(
-                                    left: 12.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        const Color(0xffD9D9D9).withOpacity(.1),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                        6.r,
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: Container(
+                                    margin: EdgeInsets.only(
+                                      left: 12.w,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xffD9D9D9)
+                                          .withOpacity(.1),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(
+                                          6.r,
+                                        ),
+                                      ),
+                                      border: Border.all(
+                                        color: const Color(0xffCACBCC)
+                                            .withOpacity(.07),
                                       ),
                                     ),
-                                    border: Border.all(
-                                      color: const Color(0xffCACBCC)
-                                          .withOpacity(.07),
+                                    padding: EdgeInsets.all(8.r),
+                                    child: const Icon(
+                                      Icons.bookmark_border_rounded,
+                                      color: UiConstants.kTextColor,
                                     ),
                                   ),
-                                  padding: EdgeInsets.all(8.r),
-                                  child: const Icon(
-                                    Icons.bookmark_border_rounded,
-                                    color: UiConstants.kTextColor,
-                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
                         SizedBox(
                           height: 8.h,
                         ),

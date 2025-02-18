@@ -30,7 +30,8 @@ class ShortsRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<ShortsHome>> applyQuery({required String query}) async {
+  Future<ApiResponse<List<ShortsThemeData>>> applyQuery(
+      {required String query}) async {
     try {
       final params = {"query": query, "type": "shorts"};
       final response = await APIService.instance.getData(
@@ -39,9 +40,16 @@ class ShortsRepository extends BaseRepo {
         apiName: '$_shorts/applyQuery',
         queryParams: params,
       );
-      final responseData = response["data"];
-      return ApiResponse<ShortsHome>(
-        model: ShortsHome.fromJson(responseData),
+      final responseData = response["data"]["themes"];
+      final List<ShortsThemeData> data = (responseData as List)
+          .map(
+            (item) => ShortsThemeData.fromJson(
+              item,
+            ),
+          )
+          .toList();
+      return ApiResponse<List<ShortsThemeData>>(
+        model: data,
         code: 200,
       );
     } catch (e) {
@@ -50,7 +58,9 @@ class ShortsRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<ShortsHome>> applyCategory({required String query}) async {
+  Future<ApiResponse<List<ShortsThemeData>>> applyCategory({
+    required String query,
+  }) async {
     try {
       final params = {
         "query": query,
@@ -62,8 +72,15 @@ class ShortsRepository extends BaseRepo {
         queryParams: params,
       );
       final responseData = response["data"];
-      return ApiResponse<ShortsHome>(
-        model: ShortsHome.fromJson(responseData),
+      final List<ShortsThemeData> data = (responseData as List)
+          .map(
+            (item) => ShortsThemeData.fromJson(
+              item,
+            ),
+          )
+          .toList();
+      return ApiResponse<List<ShortsThemeData>>(
+        model: data,
         code: 200,
       );
     } catch (e) {
