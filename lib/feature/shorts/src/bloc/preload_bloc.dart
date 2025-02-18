@@ -256,6 +256,9 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         }
       },
       getCategoryVideos: (e) async {
+        final PageController pageController = PageController(
+          initialPage: 0,
+        );
         emit(
           state.copyWith(
             initialVideo: e.initailVideo,
@@ -263,6 +266,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             mainVideos: [],
             focusedIndex: 0,
             isLoading: !state.isLoading,
+            mainPageController: pageController,
           ),
         );
         int index;

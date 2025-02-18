@@ -131,7 +131,7 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
           }
           return Stack(
             children: [
-              const ShimmerReelsButtons(),
+              if (!state.showComments) const ShimmerReelsButtons(),
               GestureDetector(
                 onHorizontalDragUpdate: (details) {
                   if (widget.categories.isNotEmpty) {

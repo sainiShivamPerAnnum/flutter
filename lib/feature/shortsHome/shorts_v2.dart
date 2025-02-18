@@ -16,6 +16,7 @@ import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/bloc_pagination/pagination_bloc.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,72 +57,106 @@ class _ShortsScreenState extends State<_ShortsScreen> {
         physics: const AlwaysScrollableScrollPhysics(),
         child: Column(
           children: [
-            SizedBox(height: SizeConfig.padding14),
-            Padding(
+            Container(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [UiConstants.bg, Color(0xff212B2D)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+              child: Column(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  SizedBox(height: 12.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const TitleSubtitleContainer(
-                        title: "Shorts",
-                        zeroPadding: true,
-                        largeFont: true,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Shorts',
+                            style: TextStyles.sourceSansSB.body1,
+                          ),
+                          Text(
+                            'Learn investing with quick and insightful shorts',
+                            style: TextStyles.sourceSans.body3.colour(
+                              UiConstants.kTextColor.withOpacity(.7),
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        'Learn investing with quick and insightful shorts',
-                        style: TextStyles.sourceSans.body3.colour(
-                          UiConstants.kTextColor.withOpacity(.7),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: UiConstants.grey5,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(
+                                SizeConfig.roundness12,
+                              ),
+                            ),
+                          ),
+                          padding: EdgeInsets.all(SizeConfig.padding10),
+                          child: const Icon(
+                            Icons.notifications_rounded,
+                            color: UiConstants.kTextColor,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: UiConstants.grey5,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            SizeConfig.roundness12,
+                  SizedBox(
+                    height: 24.h,
+                  ),
+                  SizedBox(
+                    height: 38.h,
+                    child: TextField(
+                      onSubmitted: (query) {
+                        BlocProvider.of<ShortsHomeBloc>(context)
+                            .add(SearchShorts(query));
+                      },
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        hintText: "Search",
+                        hintStyle: TextStyles.sourceSans.body3
+                            .colour(UiConstants.kTextColor.withOpacity(.7)),
+                        filled: true,
+                        fillColor: const Color(0xffD9D9D9).withOpacity(.04),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                          borderSide: BorderSide(
+                            color: const Color(0xffCACBCC).withOpacity(.07),
                           ),
                         ),
-                      ),
-                      padding: EdgeInsets.all(SizeConfig.padding10),
-                      child: const Icon(
-                        Icons.notifications,
-                        color: UiConstants.kTextColor,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                          borderSide: BorderSide(
+                            color: const Color(0xffCACBCC).withOpacity(.07),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                          borderSide: BorderSide(
+                            color: const Color(0xffCACBCC).withOpacity(.07),
+                          ),
+                        ),
+                        suffixIcon: Icon(
+                          Icons.search,
+                          color: UiConstants.kTextColor.withOpacity(.7),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 12.h,
+                          horizontal: 16.w,
+                        ),
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: 24.h,
+                  ),
                 ],
-              ),
-            ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20.w),
-              child: TextField(
-                onSubmitted: (query) {
-                  BlocProvider.of<ShortsHomeBloc>(context)
-                      .add(SearchShorts(query));
-                },
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  hintText: "Search",
-                  hintStyle: TextStyle(
-                    color: UiConstants.kTextColor.withOpacity(.7),
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[800],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
               ),
             ),
             BlocBuilder<ShortsHomeBloc, ShortsHomeState>(
@@ -131,7 +166,9 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                   ShortsHomeData() => Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Category Chips
+                        SizedBox(
+                          height: 12.h,
+                        ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.w),
                           child: Row(
@@ -148,17 +185,38 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                             GestureDetector(
                                               onTap: () {
                                                 BaseUtil.showPositiveAlert(
-                                                    'Hello', 'hi');
+                                                  'Hello',
+                                                  'hi',
+                                                );
                                               },
-                                              child: Chip(
-                                                label: Text(theme),
-                                                backgroundColor:
-                                                    Colors.grey[800],
-                                                labelStyle: TextStyle(
-                                                    color: Colors.white),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: const Color(0xffD9D9D9)
+                                                      .withOpacity(.1),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(
+                                                      6.r,
+                                                    ),
+                                                  ),
+                                                  border: Border.all(
+                                                    color:
+                                                        const Color(0xffCACBCC)
+                                                            .withOpacity(.07),
+                                                  ),
+                                                ),
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 16.w,
+                                                  vertical: 8.h,
+                                                ),
+                                                child: Text(
+                                                  theme,
+                                                  style: TextStyles
+                                                      .sourceSansM.body4,
+                                                ),
                                               ),
                                             ),
-                                            SizedBox(width: 8),
+                                            SizedBox(width: 8.w),
                                           ],
                                         ),
                                     ],
@@ -169,24 +227,33 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                 onTap: () {},
                                 child: Container(
                                   margin: EdgeInsets.only(
-                                      left: SizeConfig.padding12),
+                                    left: 12.w,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: Colors.grey[800],
+                                    color:
+                                        const Color(0xffD9D9D9).withOpacity(.1),
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(
-                                        SizeConfig.roundness12,
+                                        6.r,
                                       ),
                                     ),
+                                    border: Border.all(
+                                      color: const Color(0xffCACBCC)
+                                          .withOpacity(.07),
+                                    ),
                                   ),
-                                  padding: EdgeInsets.all(SizeConfig.padding10),
+                                  padding: EdgeInsets.all(8.r),
                                   child: const Icon(
-                                    Icons.bookmark,
+                                    Icons.bookmark_border_rounded,
                                     color: UiConstants.kTextColor,
                                   ),
                                 ),
                               ),
                             ],
                           ),
+                        ),
+                        SizedBox(
+                          height: 8.h,
                         ),
                         ListView.builder(
                           shrinkWrap: true,
@@ -337,7 +404,8 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                                       UiConstants.greyVarient,
                                                   borderRadius:
                                                       BorderRadius.circular(
-                                                          8.r),
+                                                    8.r,
+                                                  ),
                                                 ),
                                                 margin:
                                                     EdgeInsets.only(right: 8.w),
@@ -426,7 +494,8 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                                                     .ellipsis,
                                                           ),
                                                           SizedBox(
-                                                              height: 12.h),
+                                                            height: 12.h,
+                                                          ),
                                                           Text(
                                                             theme.videos[i]
                                                                 .categoryV1,

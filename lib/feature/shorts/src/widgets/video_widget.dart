@@ -1,9 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/shorts/flutter_preload_videos.dart';
 import 'package:felloapp/feature/shorts/src/service/comment_data.dart';
 import 'package:felloapp/feature/shorts/src/widgets/expandable_widget.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -11,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:keyboard_detection/keyboard_detection.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:video_player/video_player.dart';
 
@@ -137,153 +141,138 @@ class VideoWidgetState extends State<VideoWidget>
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          Positioned.fill(
-            child: AspectRatio(
-              aspectRatio: widget.controller.value.aspectRatio,
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: SizedBox(
-                  width: widget.controller.value.size.width,
-                  height: widget.controller.value.size.height,
-                  child: VideoPlayer(widget.controller),
+          Align(
+            alignment: AlignmentDirectional.topCenter,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
+              height: widget.commentsVisibility ? .53.sh : 1.sh,
+              child: AspectRatio(
+                aspectRatio: widget.controller.value.aspectRatio,
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: SizedBox(
+                    width: widget.controller.value.size.width,
+                    height: widget.controller.value.size.height,
+                    child: VideoPlayer(widget.controller),
+                  ),
                 ),
               ),
             ),
           ),
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    UiConstants.kTextColor4.withOpacity(.8),
-                    UiConstants.kTextColor4.withOpacity(0),
-                  ],
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.center,
+          if (!widget.commentsVisibility)
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      UiConstants.kTextColor4.withOpacity(.8),
+                      UiConstants.kTextColor4.withOpacity(0),
+                    ],
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.center,
+                  ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            bottom: 30.h,
-            right: 10.w,
-            child: Visibility(
-              visible: !widget.isKeyBoardOpen,
-              replacement: const SizedBox.shrink(),
-              child: AnimatedOpacity(
-                duration: const Duration(milliseconds: 200),
-                opacity: widget.isKeyBoardOpen ? 0 : 1,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (widget.showUserName)
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 2.w,
-                              vertical: 2.h,
-                            ),
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: SizeConfig.padding16,
-                                  backgroundImage: NetworkImage(
-                                    widget.expertProfileImage,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 8.w,
-                                ),
-                                Text(
-                                  widget.userName,
-                                  style: GoogleFonts.sourceSans3(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                    fontSize: 14.sp,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 12.w,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color:
-                                        const Color(0xffA2A0A2).withOpacity(.3),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(4.r),
-                                    ),
-                                    border: Border.all(
-                                      width: 1.h,
-                                      color: const Color(0xffA6A6AC)
-                                          .withOpacity(.2),
+          if (!widget.commentsVisibility)
+            Positioned(
+              bottom: 30.h,
+              right: 10.w,
+              child: Visibility(
+                visible: !widget.isKeyBoardOpen,
+                replacement: const SizedBox.shrink(),
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 200),
+                  opacity: widget.isKeyBoardOpen ? 0 : 1,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (widget.showUserName)
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 4.w,
+                                vertical: 2.h,
+                              ),
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: SizeConfig.padding16,
+                                    backgroundImage: NetworkImage(
+                                      widget.expertProfileImage,
                                     ),
                                   ),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 16.w,
-                                    vertical: 4.h,
+                                  SizedBox(
+                                    width: 8.w,
                                   ),
-                                  child: Text(
-                                    'Follow',
+                                  Text(
+                                    widget.userName,
                                     style: GoogleFonts.sourceSans3(
                                       fontWeight: FontWeight.w600,
                                       color: Colors.white,
-                                      fontSize: 12.sp,
+                                      fontSize: 14.sp,
                                     ),
                                   ),
-                                ),
-                              ],
+                                  SizedBox(
+                                    width: 12.w,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xffA2A0A2)
+                                          .withOpacity(.3),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(4.r),
+                                      ),
+                                      border: Border.all(
+                                        width: 1.h,
+                                        color: const Color(0xffA6A6AC)
+                                            .withOpacity(.2),
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 16.w,
+                                      vertical: 4.h,
+                                    ),
+                                    child: Text(
+                                      'Follow',
+                                      style: GoogleFonts.sourceSans3(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                        fontSize: 12.sp,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
+                          SizedBox(
+                            height: 14.h,
                           ),
-                        ExpandableWidget(
-                          title: widget.videoTitle,
-                          leadingIcon: Icons.info,
-                          expandedText: widget.description,
-                          backgroundColor: Colors.black45,
-                          textColor: Colors.white,
-                          onExpansionChanged: _toggleExpansion,
-                        ),
-                      ],
-                    ),
-                    _buildIconColumn(
-                      widget.onShare,
-                      widget.onLike,
-                      widget.onBook,
-                      widget.onCommentToggle,
-                      widget.isLikedByUser,
-                      widget.commentsVisibility,
-                    ),
-                  ],
+                          ExpandableWidget(
+                            title: widget.videoTitle,
+                            leadingIcon: Icons.info,
+                            expandedText: widget.description,
+                            backgroundColor: Colors.black45,
+                            textColor: Colors.white,
+                            onExpansionChanged: _toggleExpansion,
+                          ),
+                        ],
+                      ),
+                      _buildIconColumn(
+                        widget.onShare,
+                        widget.onLike,
+                        widget.onBook,
+                        widget.onCommentToggle,
+                        widget.isLikedByUser,
+                        widget.commentsVisibility,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          // AnimatedPositioned(
-          //   duration: const Duration(milliseconds: 100),
-          //   bottom: _iconPositionAnimation.value,
-          //   left: 15.w,
-          //   child: AnimatedContainer(
-          //     duration: const Duration(milliseconds: 200),
-          //     constraints: BoxConstraints(
-          //       maxWidth: 240.w,
-          //     ),
-          //     height: (widget.comments == null ||
-          //             widget.comments!.isEmpty ||
-          //             !widget.commentsVisibility ||
-          //             widget.isKeyBoardOpen)
-          //         ? 0
-          //         : 130.h,
-          //     child: _buildComments(_scrollController),
-          //   ),
-          // ),
-          // Positioned(
-          //   bottom: widget.isKeyBoardOpen &&
-          //           widget.currentContext != ReelContext.main
-          //       ? 55.h
-          //       : 70.h,
-          //   child:
-          // ),
           AnimatedPositioned(
             duration: const Duration(milliseconds: 200),
             bottom: widget.isKeyBoardOpen
@@ -296,43 +285,6 @@ class VideoWidgetState extends State<VideoWidget>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // TextField(
-                  //   controller: _commentController,
-                  //   style: TextStyle(color: Colors.white, fontSize: 12.sp),
-                  //   decoration: InputDecoration(
-                  //     hintText: 'Add a comment',
-                  //     hintStyle: const TextStyle(color: Colors.white70),
-                  //     border: OutlineInputBorder(
-                  //       borderRadius: BorderRadius.circular(10.r),
-                  //       borderSide: const BorderSide(color: Colors.white),
-                  //     ),
-                  //     enabledBorder: OutlineInputBorder(
-                  //       borderRadius: BorderRadius.circular(10),
-                  //       borderSide: const BorderSide(color: Colors.white),
-                  //     ),
-                  //     focusedBorder: OutlineInputBorder(
-                  //       borderRadius: BorderRadius.circular(10),
-                  //       borderSide: const BorderSide(color: Colors.white),
-                  //     ),
-                  //     suffixIcon: IconButton(
-                  //       icon: Icon(
-                  //         Icons.send,
-                  //         color: Colors.white,
-                  //         size: 14.sp,
-                  //       ),
-                  //       onPressed: () {
-                  //         if (_commentController.text.trim() != '') {
-                  //           widget.onCommented(_commentController.text.trim());
-                  //           _commentController.clear();
-                  //           _scrollToEnd();
-                  //           FocusScope.of(context).unfocus();
-                  //         }
-                  //       },
-                  //     ),
-                  //     contentPadding:
-                  //         EdgeInsets.symmetric(vertical: 4.h, horizontal: 12.w),
-                  //   ),
-                  // ),
                   SizedBox(
                     height: 10.h,
                   ),
@@ -353,6 +305,24 @@ class VideoWidgetState extends State<VideoWidget>
               ),
             ),
           ),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            height: widget.commentsVisibility ? .40.sh : 0,
+            transform: Matrix4.translationValues(
+              0,
+              widget.commentsVisibility ? 0 : 50,
+              0,
+            ),
+            decoration: BoxDecoration(
+              color: const Color(0xff232326),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.r),
+                topRight: Radius.circular(20.r),
+              ),
+            ),
+            child: _buildComments(_scrollController, widget.onCommentToggle),
+          ),
         ],
       ),
     );
@@ -372,11 +342,10 @@ class VideoWidgetState extends State<VideoWidget>
           Column(
             children: [
               IconButton(
-                icon: AppImage(
-                  Assets.video_like,
-                  color: isLiked ? Colors.red : Colors.white,
-                  height: 20.r,
-                  width: 20.r,
+                icon: Icon(
+                  isLiked ? Icons.bookmark : Icons.bookmark_border_rounded,
+                  color: Colors.white,
+                  size: 25.r,
                 ),
                 onPressed: onLike,
               ),
@@ -460,127 +429,299 @@ class VideoWidgetState extends State<VideoWidget>
     );
   }
 
-  Widget _buildComments(ScrollController scrollController) {
-    return (widget.comments == null || widget.comments!.isEmpty)
-        ? const SizedBox.shrink()
-        : SingleChildScrollView(
-            reverse: true,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ListView.builder(
-                  controller: scrollController,
-                  shrinkWrap: true,
-                  padding: EdgeInsets.zero,
-                  itemCount: widget.comments!.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildComments(
+    ScrollController scrollController,
+    VoidCallback onCommentToggle,
+  ) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding20,
+          ).copyWith(
+            top: SizeConfig.padding12,
+          ),
+          child: Stack(
+            alignment: AlignmentDirectional.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Comments',
+                    style: TextStyles.sourceSansSB.body1,
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: onCommentToggle,
+                    child: Icon(
+                      Icons.close,
+                      size: SizeConfig.body1,
+                      color: UiConstants.kTextColor,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        Divider(
+          color: const Color(0xffA2A0A2).withOpacity(.3),
+        ),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 12.w,
+            ).copyWith(top: 10.h),
+            child: widget.comments == null
+                ? const SizedBox.shrink()
+                : SingleChildScrollView(
+                    reverse: true,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CircleAvatar(
-                              radius: SizeConfig.padding10,
-                              backgroundColor: Colors.black,
-                              child: widget.comments![index].avatarId != '' &&
-                                      widget.comments![index].avatarId !=
-                                          'CUSTOM'
-                                  ? ClipOval(
-                                      child: SizedBox(
-                                        width: 2 * SizeConfig.padding10,
-                                        height: 2 * SizeConfig.padding10,
-                                        child: AppImage(
-                                          "assets/vectors/userAvatars/${widget.comments![index].avatarId}.svg",
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    )
-                                  : (widget.comments![index].avatarId != '' &&
-                                          widget.comments![index].avatarId ==
-                                              'CUSTOM' &&
-                                          widget.comments![index].dpUrl != '')
-                                      ? ClipOval(
-                                          child: SizedBox(
-                                            width: 2 * SizeConfig.padding10,
-                                            height: 2 * SizeConfig.padding10,
-                                            child: CachedNetworkImage(
-                                              imageUrl:
-                                                  widget.comments![index].dpUrl,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        )
-                                      : ClipOval(
-                                          child: SizedBox(
-                                            width: 2 * SizeConfig.padding10,
-                                            height: 2 * SizeConfig.padding10,
-                                            child: Image.asset(
-                                              Assets.profilePic,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                            ),
-                            SizedBox(
-                              width: SizeConfig.padding6,
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  bottom: SizeConfig.padding2,
-                                ),
-                                child: Column(
+                        ListView.builder(
+                          controller: scrollController,
+                          shrinkWrap: true,
+                          padding: EdgeInsets.zero,
+                          itemCount: widget.comments?.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          widget.comments![index].name,
-                                          style: TextStyles.sourceSansSB.body4,
-                                          maxLines: 1,
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: SizeConfig.padding4,
-                                          ),
-                                          child: const Icon(
-                                            Icons.circle,
-                                            size: 4,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        Text(
-                                          timeago.format(
-                                            DateTime.parse(
-                                              widget.comments![index].createdAt,
-                                            ),
-                                          ),
-                                          style: TextStyles.sourceSans.body4,
-                                        ),
-                                      ],
+                                    CircleAvatar(
+                                      radius: SizeConfig.padding10,
+                                      backgroundColor: Colors.black,
+                                      child: widget.comments?[index].avatarId !=
+                                                  '' &&
+                                              widget.comments?[index]
+                                                      .avatarId !=
+                                                  'CUSTOM'
+                                          ? ClipOval(
+                                              child: SizedBox(
+                                                width: 2 * SizeConfig.padding10,
+                                                height:
+                                                    2 * SizeConfig.padding10,
+                                                child: AppImage(
+                                                  "assets/vectors/userAvatars/${widget.comments?[index].avatarId}.svg",
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            )
+                                          : (widget.comments?[index].avatarId !=
+                                                      '' &&
+                                                  widget.comments?[index]
+                                                          .avatarId ==
+                                                      'CUSTOM' &&
+                                                  widget.comments?[index]
+                                                          .dpUrl !=
+                                                      '')
+                                              ? ClipOval(
+                                                  child: SizedBox(
+                                                    width: 2 *
+                                                        SizeConfig.padding10,
+                                                    height: 2 *
+                                                        SizeConfig.padding10,
+                                                    child: CachedNetworkImage(
+                                                      imageUrl: widget
+                                                              .comments?[index]
+                                                              .dpUrl ??
+                                                          '',
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                )
+                                              : ClipOval(
+                                                  child: SizedBox(
+                                                    width: 2 *
+                                                        SizeConfig.padding10,
+                                                    height: 2 *
+                                                        SizeConfig.padding10,
+                                                    child: Image.asset(
+                                                      Assets.profilePic,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
                                     ),
-                                    Text(
-                                      widget.comments![index].comment,
-                                      style: TextStyles.sourceSans.body4,
-                                      maxLines: 4,
-                                      overflow: TextOverflow.ellipsis,
+                                    SizedBox(
+                                      width: SizeConfig.padding6,
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                          bottom: SizeConfig.padding2,
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  widget.comments?[index]
+                                                          .name ??
+                                                      '',
+                                                  style: TextStyles
+                                                      .sourceSansSB.body4,
+                                                  maxLines: 1,
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal:
+                                                        SizeConfig.padding4,
+                                                  ),
+                                                  child: const Icon(
+                                                    Icons.circle,
+                                                    size: 4,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  timeago.format(
+                                                    DateTime.parse(
+                                                      widget.comments?[index]
+                                                              .createdAt ??
+                                                          DateTime.now()
+                                                              .toString(),
+                                                    ),
+                                                  ),
+                                                  style: TextStyles
+                                                      .sourceSans.body4,
+                                                ),
+                                              ],
+                                            ),
+                                            Text(
+                                              widget.comments?[index].comment ??
+                                                  '',
+                                              style:
+                                                  TextStyles.sourceSans.body4,
+                                              maxLines: 4,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10.h,
+                                SizedBox(
+                                  height: 10.h,
+                                ),
+                              ],
+                            );
+                          },
                         ),
                       ],
-                    );
-                  },
+                    ),
+                  ),
+          ),
+        ),
+        Divider(
+          color: const Color(0xffA2A0A2).withOpacity(.3),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 12.w,
+          ).copyWith(top: 10.h, bottom: 20.h),
+          child: Row(
+            children: [
+              PropertyChangeConsumer<UserService, UserServiceProperties>(
+                properties: const [
+                  UserServiceProperties.myUserDpUrl,
+                  UserServiceProperties.myAvatarId,
+                ],
+                builder: (context, model, properties) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: UiConstants.primaryColor,
+                        width: 2.r,
+                      ),
+                    ),
+                    child: CircleAvatar(
+                      key: const ValueKey(Constants.PROFILE),
+                      radius: 16.r,
+                      backgroundColor: Colors.black,
+                      backgroundImage: (model!.avatarId != null &&
+                              model.avatarId == 'CUSTOM' &&
+                              model.myUserDpUrl != null &&
+                              model.myUserDpUrl!.isNotEmpty)
+                          ? CachedNetworkImageProvider(
+                              model.myUserDpUrl!,
+                            )
+                          : const AssetImage(
+                              Assets.profilePic,
+                            ) as ImageProvider<Object>?,
+                      child:
+                          model.avatarId != null && model.avatarId != 'CUSTOM'
+                              ? AppImage(
+                                  "assets/vectors/userAvatars/${model.avatarId}.svg",
+                                  fit: BoxFit.cover,
+                                )
+                              : const SizedBox(),
+                    ),
+                  );
+                },
+              ),
+              SizedBox(
+                width: 12.w,
+              ),
+              Expanded(
+                child: TextField(
+                  controller: _commentController,
+                  style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                  decoration: InputDecoration(
+                    hintText: 'Leave your thoughts here',
+                    hintStyle: const TextStyle(color: Color(0xffA2A0A2)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.r),
+                      borderSide: const BorderSide(color: Color(0xff414145)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.r),
+                      borderSide: const BorderSide(color: Color(0xff414145)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.r),
+                      borderSide: const BorderSide(color: Color(0xff414145)),
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        Icons.send,
+                        color: const Color(0xffA6A6AC),
+                        size: 14.sp,
+                      ),
+                      onPressed: () {
+                        if (_commentController.text.trim() != '') {
+                          widget.onCommented(_commentController.text.trim());
+                          _commentController.clear();
+                          _scrollToEnd();
+                          FocusScope.of(context).unfocus();
+                        }
+                      },
+                    ),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 4.h, horizontal: 12.w),
+                  ),
                 ),
-              ],
-            ),
-          );
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }

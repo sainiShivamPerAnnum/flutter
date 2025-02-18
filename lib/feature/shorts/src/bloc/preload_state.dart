@@ -53,7 +53,7 @@ class PreloadState with _$PreloadState {
         videoComments: {},
         currentContext: ReelContext.main,
         keyboardVisible: false,
-        showComments: true,
+        showComments: false,
         liveStreamController: null,
         errorMessage: null,
         theme: '',
