@@ -35,16 +35,16 @@ class GoldProDetailsViewModel extends BaseViewModel {
     "Is Gold Pro a legal investment option?"
   ];
   List<String?> faqResponses = [
-    "Gold Pro is a gold leasing scheme offered in partnership with Fello and Augmont (India's largest gold refinery). It allows users to securely lease their gold through the Fello app and earn interests of upto ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}%",
+    "Gold Pro is a gold leasing scheme offered in partnership with Fello and Auspicious (India's largest gold refinery). It allows users to securely lease their gold through the Fello app and earn interests of upto ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}%",
     "Any individual over 18 years with a valid PAN card and an active bank account can lease their digital gold on Gold Pro.",
     "The minimum quantity required for Gold Pro is 2 grams, while the maximum quantity is 10 grams.",
     "The maximum investment limit for Gold Pro is 10 grams.",
     "Yes, Gold Pro ensures security by leasing gold to reputable jeweller Divine Hira Jewellers Limited.",
-    "Yes, Gold Pro is a legal investment scheme powered by Augmont "
+    "Yes, Gold Pro is a legal investment scheme powered by Auspicious"
   ];
 
   void updateDetStatus(int i, bool val) {
-    detStatus[i] = val;
+    detStatus[i] = !detStatus[i];
     notifyListeners();
   }
 
