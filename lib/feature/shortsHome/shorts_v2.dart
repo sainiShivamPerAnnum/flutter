@@ -6,6 +6,7 @@ import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
 import 'package:felloapp/feature/shorts/video_page.dart';
 import 'package:felloapp/feature/shortsHome/bloc/pagination_bloc.dart';
 import 'package:felloapp/feature/shortsHome/bloc/shorts_home_bloc.dart';
+import 'package:felloapp/feature/shortsHome/widgets/more_options_sheet.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/bottom_nav_bar/bottom_nav_bar.dart';
@@ -240,8 +241,8 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                                     ),
                                                     border: Border.all(
                                                       color: const Color(
-                                                              0xffCACBCC)
-                                                          .withOpacity(.07),
+                                                        0xffCACBCC,
+                                                      ).withOpacity(.07),
                                                     ),
                                                   ),
                                                   padding: EdgeInsets.symmetric(
@@ -486,6 +487,9 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                                               ),
                                                             ),
                                                           ),
+                                                          buildMoreIcon(
+                                                            theme.videos[i].id,
+                                                          ),
                                                           buildPlayIcon(),
                                                           buildViewIndicator(
                                                             theme
@@ -580,11 +584,44 @@ class _ShortsScreenState extends State<_ShortsScreen> {
     );
   }
 
+  Widget buildMoreIcon(String id) {
+    return Align(
+      alignment: Alignment.topRight,
+      child: Padding(
+        padding: EdgeInsets.only(top: 10.h, right: 8.w),
+        child: GestureDetector(
+          onTap: () {
+            BaseUtil.openModalBottomSheet(
+              isScrollControlled: true,
+              enableDrag: true,
+              isBarrierDismissible: true,
+              addToScreenStack: false,
+              backgroundColor: UiConstants.kBackgroundColor,
+              hapticVibrate: true,
+              content: MoreOptionsSheet(id: id),
+            );
+          },
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            height: 24.r,
+            width: 24.r,
+            alignment: Alignment.center,
+            child: Icon(
+              Icons.more_vert_rounded,
+              color: Colors.white,
+              size: 18.r,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget buildPlayIcon() {
     return Align(
       alignment: Alignment.center,
       child: Container(
-        padding: EdgeInsets.all(SizeConfig.padding8),
+        padding: EdgeInsets.all(8.r),
         decoration: BoxDecoration(
           color: UiConstants.kTextColor.withOpacity(0.5),
           shape: BoxShape.circle,
