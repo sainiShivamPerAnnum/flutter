@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -91,12 +92,17 @@ class GoldProCard extends StatelessWidget {
                               style: TextStyles.sourceSans.body3
                                   .colour(UiConstants.KGoldProSecondary),
                             ),
-                            SizedBox(height: SizeConfig.padding16),
-                            SvgPicture.asset(
-                              Assets.augmontLogo,
-                              color: UiConstants.kGoldProPrimary,
-                              height: SizeConfig.padding12,
-                            )
+                            // SizedBox(height: SizeConfig.padding16),
+                            Text(
+                              "Auspicious",
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.KGoldProSecondary),
+                            ),
+                            // AppImage(
+                            //   Assets.augmontLogo,
+                            //   color: UiConstants.kGoldProPrimary,
+                            //   height: SizeConfig.title5,
+                            // )
                           ],
                         ),
                         const Spacer(),
