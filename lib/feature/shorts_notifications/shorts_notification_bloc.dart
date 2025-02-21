@@ -1,13 +1,16 @@
+import 'dart:async';
 import 'package:felloapp/core/model/shorts/shorts_notification.dart';
 import 'package:felloapp/core/repository/shorts_repo.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/bloc_pagination/bloc_pagination.dart';
 
-class ShortsNotificationBloc
+class ShortsNotificationWrapperBloc
     extends PaginationBloc<dynamic, ShortsNotification, int, Object> {
-  ShortsNotificationBloc({
+  final ShortsRepository _shortsRepository;
+  ShortsNotificationWrapperBloc({
     required ShortsRepository shortsRepository,
-  }) : super(
+  })  : _shortsRepository = shortsRepository,
+        super(
           initialPageReference: 1,
           resultConverterCallback: (result) {
             return result.notifications;
@@ -32,4 +35,25 @@ class ShortsNotificationBloc
             return result.page + 1;
           },
         );
+
+  final Set<String> unseenNotificationIds = {};
+
+  Future<void> batchUpdateNotifications(
+    List<String> notificationIds,
+  ) async {
+    await _shortsRepository.updateNotifications(notifications: notificationIds);
+    unseenNotificationIds.clear();
+  }
+
+  void trackUnseenNotification(String notificationId) {
+    unseenNotificationIds.add(notificationId);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (unseenNotificationIds.isNotEmpty) {
+      batchUpdateNotifications(unseenNotificationIds.toList());
+    }
+  }
 }

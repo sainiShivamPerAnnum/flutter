@@ -13,42 +13,44 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../util/bloc_pagination/pagination_bloc.dart';
 
-class ShortsNotificationPage extends StatelessWidget {
+class ShortsNotificationPage extends StatefulWidget {
   const ShortsNotificationPage({super.key});
 
   @override
+  State<ShortsNotificationPage> createState() => _ShortsNotificationPageState();
+}
+
+class _ShortsNotificationPageState extends State<ShortsNotificationPage> {
+  late final ShortsNotificationWrapperBloc _bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _bloc = ShortsNotificationWrapperBloc(
+      shortsRepository: locator(),
+    )..fetchFirstPage();
+  }
+
+  @override
+  void dispose() {
+    _bloc.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          ShortsNotificationBloc(shortsRepository: locator())..fetchFirstPage(),
-      child: const _ShortsNotification(),
+    return BlocProvider.value(
+      value: _bloc,
+      child: _ShortsNotification(),
     );
   }
 }
 
-class _ShortsNotification extends StatefulWidget {
-  const _ShortsNotification();
-
-  @override
-  State<_ShortsNotification> createState() => _ShortsNotificationState();
-}
-
-class _ShortsNotificationState extends State<_ShortsNotification> {
-  final Set<String> _unseenNotificationIds = {};
-  @override
-  void dispose() {
-    super.dispose();
-    if (_unseenNotificationIds.isNotEmpty) {
-      // context
-      //     .read<ShortsNotificationBloc>()
-      //     .add(UpdateUnseenNotifications(_unseenNotificationIds.toList()));
-      // context.read<ShortsNotificationBloc>().add(MarkNotificationsAsSeen());
-    }
-  }
-
+class _ShortsNotification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final shortsNotificationBloc = context.read<ShortsNotificationBloc>();
+    final shortsNotificationBloc =
+        context.read<ShortsNotificationWrapperBloc>();
     return RefreshIndicator.adaptive(
       onRefresh: () async {
         shortsNotificationBloc.reset();
@@ -68,7 +70,7 @@ class _ShortsNotificationState extends State<_ShortsNotification> {
           showAvatar: false,
           showCoinBar: false,
         ),
-        body: BlocBuilder<ShortsNotificationBloc,
+        body: BlocBuilder<ShortsNotificationWrapperBloc,
             PaginationState<dynamic, int, Object>>(
           builder: (context, state) {
             if (state.status.isFailedToLoadInitial) {
@@ -86,9 +88,38 @@ class _ShortsNotificationState extends State<_ShortsNotification> {
               );
             }
             if (shortsNotificationBloc.state.entries.isEmpty) {
-              return Padding(
-                padding: EdgeInsets.only(top: SizeConfig.padding82),
-                child: Text('No notifications'),
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    AppImage(
+                      Assets.noNotifications,
+                      height: 82.r,
+                      width: 82.r,
+                    ),
+                    SizedBox(
+                      height: 24.h,
+                    ),
+                    Text(
+                      'New notifications will show up here',
+                      style: TextStyles.sourceSansM.body0,
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 12.h,
+                    ),
+                    SizedBox(
+                      width: 294.w,
+                      child: Text(
+                        'You\'ll be notified when a new short is uploaded',
+                        style: TextStyles.sourceSans.body2
+                            .colour(UiConstants.kTextColor5),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
               );
             }
 
@@ -104,7 +135,8 @@ class _ShortsNotificationState extends State<_ShortsNotification> {
                           .state.entries[index] as nf.Notification;
                       final notificationIsSeen = notification.isSeen;
                       if (!notificationIsSeen) {
-                        _unseenNotificationIds.add(notification.advisorId);
+                        shortsNotificationBloc
+                            .trackUnseenNotification(notification.advisorId);
                       }
                       return shortsNotificationBloc.state.entries[index]
                               is nf.Notification

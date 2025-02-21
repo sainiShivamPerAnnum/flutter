@@ -53,8 +53,9 @@ class ThemeVideosBloc
             }
           },
           referenceConverterCallBack: (result, previousState, interrupter) {
-            if (result.page == result.totalPages - 1) {
+            if (previousState + 1 >= result.totalPages) {
               interrupter.call();
+              return result.page.toInt();
             }
             return (result.page + 1).toInt();
           },

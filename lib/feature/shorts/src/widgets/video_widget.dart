@@ -472,13 +472,33 @@ class VideoWidgetState extends State<VideoWidget>
         Divider(
           color: const Color(0xffA2A0A2).withOpacity(.3),
         ),
+        if (widget.comments == null ||
+            (widget.comments != null && widget.comments!.isEmpty))
+          SizedBox(
+            height: 152.h,
+            child: Center(
+              child: Text(
+                'No comments yet',
+                style:
+                    TextStyles.sourceSans.body2.colour(UiConstants.kTextColor5),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
         Expanded(
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: 12.w,
             ).copyWith(top: 10.h),
             child: widget.comments == null
-                ? const SizedBox.shrink()
+                ? Center(
+                    child: Text(
+                      'No comments yet',
+                      style: TextStyles.sourceSans.body2
+                          .colour(UiConstants.kTextColor5),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
                 : SingleChildScrollView(
                     reverse: true,
                     child: Column(

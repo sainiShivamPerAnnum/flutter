@@ -151,4 +151,28 @@ class ShortsRepository extends BaseRepo {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
+
+  Future<ApiResponse<bool>> updateNotifications({
+    List<String> notifications = const [],
+  }) async {
+    try {
+      final uid = userService.baseUser!.uid;
+      final queryParameters = {
+        'uid': uid,
+        'videoIds': [notifications],
+      };
+      await APIService.instance.postData(
+        'notifications/update-seen-uid',
+        cBaseUrl: _baseUrl,
+        apiName: 'ShortsRepo/updateNotifications',
+        queryParams: queryParameters,
+      );
+      return const ApiResponse<bool>(
+        model: true,
+        code: 200,
+      );
+    } catch (e) {
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
 }
