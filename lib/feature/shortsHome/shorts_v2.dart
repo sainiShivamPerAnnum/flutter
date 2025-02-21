@@ -7,6 +7,7 @@ import 'package:felloapp/feature/shorts/video_page.dart';
 import 'package:felloapp/feature/shortsHome/bloc/pagination_bloc.dart';
 import 'package:felloapp/feature/shortsHome/bloc/shorts_home_bloc.dart';
 import 'package:felloapp/feature/shortsHome/widgets/more_options_sheet.dart';
+import 'package:felloapp/feature/shorts_notifications/shorts_notifications.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/bottom_nav_bar/bottom_nav_bar.dart';
@@ -95,7 +96,14 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                         ],
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          AppState.delegate!.appState.currentAction =
+                              PageAction(
+                            page: ShortsNotificationPageConfig,
+                            state: PageState.addWidget,
+                            widget: const ShortsNotificationPage(),
+                          );
+                        },
                         child: Container(
                           decoration: BoxDecoration(
                             color: UiConstants.grey5,
@@ -593,9 +601,9 @@ class _ShortsScreenState extends State<_ShortsScreen> {
           onTap: () {
             BaseUtil.openModalBottomSheet(
               isScrollControlled: true,
-              enableDrag: true,
-              isBarrierDismissible: true,
-              addToScreenStack: false,
+              enableDrag: false,
+              isBarrierDismissible: false,
+              addToScreenStack: true,
               backgroundColor: UiConstants.kBackgroundColor,
               hapticVibrate: true,
               content: MoreOptionsSheet(id: id),

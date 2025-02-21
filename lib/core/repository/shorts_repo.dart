@@ -1,5 +1,6 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/shorts/shorts_home.dart';
+import 'package:felloapp/core/model/shorts/shorts_notification.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -117,6 +118,33 @@ class ShortsRepository extends BaseRepo {
       final responseData = response["data"];
       return ApiResponse<PaginatedShorts>(
         model: PaginatedShorts.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<ShortsNotification>> getShortsNotification({
+    int page = 1,
+    int limit = 10,
+  }) async {
+    try {
+      final uid = userService.baseUser!.uid;
+      final queryParameters = {
+        'userId': uid,
+        'page': page.toString(),
+        'limit': limit.toString(),
+      };
+      final response = await APIService.instance.getData(
+        'notifications/user-notifications',
+        cBaseUrl: _baseUrl,
+        apiName: 'ShortsRepo/getShortsNotification',
+        queryParams: queryParameters,
+      );
+      final responseData = response["data"];
+      return ApiResponse<ShortsNotification>(
+        model: ShortsNotification.fromJson(responseData),
         code: 200,
       );
     } catch (e) {

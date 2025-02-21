@@ -83,8 +83,7 @@ class RootController {
         // }
       } else {
         // Video goes out of view
-        if (state.controllers[state.focusedIndex] != null &&
-            state.controllers[state.focusedIndex]!.value.isPlaying) {
+        if (state.controllers[state.focusedIndex] != null) {
           AppState.backButtonDispatcher!.didPopRoute();
           BlocProvider.of<PreloadBloc>(
             AppState.delegate!.navigatorKey.currentContext!,

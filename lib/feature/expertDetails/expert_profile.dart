@@ -18,6 +18,7 @@ import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -470,9 +471,15 @@ Widget _buildLiveTab(List<VideoData> recentlive, BuildContext context) {
                         appBar: FAppBar(
                           backgroundColor: Colors.transparent,
                           centerTitle: true,
-                          titleWidget: Text(
-                            'Profile',
-                            style: TextStyles.rajdhaniSB.body1,
+                          leadingPadding: false,
+                          titleWidget: Expanded(
+                            child: MarqueeText(
+                              infoList: [
+                                recentlive[index].title,
+                              ],
+                              showBullet: false,
+                              style: TextStyles.rajdhaniSB.body1,
+                            ),
                           ),
                           leading: const BackButton(
                             color: Colors.white,

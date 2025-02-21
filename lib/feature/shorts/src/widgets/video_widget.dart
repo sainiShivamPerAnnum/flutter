@@ -77,7 +77,6 @@ class VideoWidget extends StatefulWidget {
 class VideoWidgetState extends State<VideoWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  // late Animation<double> _iconPositionAnimation;
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _commentController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -89,11 +88,6 @@ class VideoWidgetState extends State<VideoWidget>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    // _iconPositionAnimation =
-    //     Tween<double>(begin: 20.h, end: 110.h).animate(_animationController)
-    //       ..addListener(() {
-    //         setState(() {});
-    //       });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToEnd();
     });
@@ -146,14 +140,16 @@ class VideoWidgetState extends State<VideoWidget>
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 500),
               height: widget.commentsVisibility ? .53.sh : 1.sh,
-              child: AspectRatio(
-                aspectRatio: widget.controller.value.aspectRatio,
-                child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: SizedBox(
-                    width: widget.controller.value.size.width,
-                    height: widget.controller.value.size.height,
-                    child: VideoPlayer(widget.controller),
+              child: Center(
+                child: AspectRatio(
+                  aspectRatio: widget.controller.value.aspectRatio,
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: SizedBox(
+                      width: widget.controller.value.size.width,
+                      height: widget.controller.value.size.height,
+                      child: VideoPlayer(widget.controller),
+                    ),
                   ),
                 ),
               ),

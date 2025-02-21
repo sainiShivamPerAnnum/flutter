@@ -14,6 +14,7 @@ import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -205,11 +206,15 @@ class PastScheduleCard extends StatelessWidget {
                           state: PageState.addWidget,
                           widget: BaseScaffold(
                             appBar: FAppBar(
+                              leadingPadding: false,
                               backgroundColor: Colors.transparent,
                               centerTitle: true,
-                              titleWidget: Text(
-                                videoData.model!.title,
-                                style: TextStyles.rajdhaniSB.body1,
+                              titleWidget: Expanded(
+                                child: MarqueeText(
+                                  infoList: [videoData.model!.title],
+                                  showBullet: false,
+                                  style: TextStyles.rajdhaniSB.body1,
+                                ),
                               ),
                               leading: const BackButton(
                                 color: Colors.white,

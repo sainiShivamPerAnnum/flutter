@@ -160,10 +160,10 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         state.mainVideos.addAll(urls);
 
         /// Initialize 1st video
-        await _initializeControllerAtIndex(0);
+        await _initializeControllerAtIndex(0, state.muted);
 
         /// Initialize 2nd video
-        await _initializeControllerAtIndex(1);
+        await _initializeControllerAtIndex(1, state.muted);
         e.completer?.complete();
       },
       updateViewCount: (e) {
@@ -220,15 +220,15 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           );
         }
         e.completer?.complete();
-        await _initializeControllerAtIndex(e.index);
+        await _initializeControllerAtIndex(e.index, state.muted);
         final currentLength = state.currentContext == ReelContext.main
             ? state.mainVideos.length
             : state.profileVideos.length;
         if (e.index + 1 < currentLength) {
-          await _initializeControllerAtIndex(e.index + 1);
+          await _initializeControllerAtIndex(e.index + 1, state.muted);
         }
         if (e.index - 1 >= 0) {
-          await _initializeControllerAtIndex(e.index - 1);
+          await _initializeControllerAtIndex(e.index - 1, state.muted);
         }
       },
       getVideosFromApi: (e) async {
@@ -243,10 +243,10 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           }
 
           /// Initialize 1st video
-          await _initializeControllerAtIndex(0);
+          await _initializeControllerAtIndex(0, state.muted);
 
           /// Initialize 2nd video
-          await _initializeControllerAtIndex(1);
+          await _initializeControllerAtIndex(1, state.muted);
         } else {
           emit(
             state.copyWith(
@@ -271,9 +271,9 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         );
         int index;
         if (e.direction > 0) {
-          index = (state.currentCategoryIndex + 1) % state.categories.length;
+          index = (state.currentCategoryIndex - 1) % state.categories.length;
         } else if (e.direction < 0) {
-          index = (state.currentCategoryIndex - 1 + state.categories.length) %
+          index = (state.currentCategoryIndex + 1 + state.categories.length) %
               state.categories.length;
         } else {
           index = state.currentCategoryIndex;
@@ -303,8 +303,8 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         List<VideoData> videosToAdd =
             urls.where((video) => video.id != e.initailVideo?.id).toList();
         state.mainVideos.addAll(videosToAdd);
-        await _initializeControllerAtIndex(0);
-        await _initializeControllerAtIndex(1);
+        await _initializeControllerAtIndex(0, state.muted);
+        await _initializeControllerAtIndex(1, state.muted);
         _playControllerAtIndex(0);
 
         add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
@@ -350,9 +350,9 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             ? state.focusedIndex
             : state.profileVideoIndex;
         if (e.index > index) {
-          _playNext(e.index);
+          _playNext(e.index, state.muted);
         } else {
-          _playPrevious(e.index);
+          _playPrevious(e.index, state.muted);
         }
         if (state.currentContext == ReelContext.main) {
           emit(state.copyWith(focusedIndex: e.index));
@@ -519,7 +519,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         );
         await controller.initialize();
         await controller.setLooping(true);
-        await controller.setVolume(1);
+        await controller.setVolume(state.muted ? 0 : 1);
         await controller.play();
         add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
         final comments = await repository.getComments(e.video.id);
@@ -551,21 +551,21 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
     );
   }
 
-  void _playNext(int index) {
+  void _playNext(int index, bool muted) {
     _stopControllerAtIndex(index - 1);
     _disposeControllerAtIndex(index - 2);
     _playControllerAtIndex(index);
-    _initializeControllerAtIndex(index + 1);
+    _initializeControllerAtIndex(index + 1, muted);
   }
 
-  void _playPrevious(int index) {
+  void _playPrevious(int index, bool muted) {
     _stopControllerAtIndex(index + 1);
     _disposeControllerAtIndex(index + 2);
     _playControllerAtIndex(index);
-    _initializeControllerAtIndex(index - 1);
+    _initializeControllerAtIndex(index - 1, muted);
   }
 
-  Future<void> _initializeControllerAtIndex(int index) async {
+  Future<void> _initializeControllerAtIndex(int index, bool muted) async {
     if (state.currentVideos.length > index && index >= 0) {
       final VideoPlayerController controller = VideoPlayerController.networkUrl(
         Uri.parse(state.currentVideos[index].url),
@@ -577,7 +577,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       }
       await controller.initialize();
       await controller.setLooping(true);
-      await controller.setVolume(1);
+      await controller.setVolume(muted ? 0 : 1);
       add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
       final comments =
           await repository.getComments(state.currentVideos[index].id);

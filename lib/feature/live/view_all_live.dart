@@ -11,6 +11,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -143,9 +144,13 @@ class _ViewAllLiveState extends State<ViewAllLive> {
                           appBar: FAppBar(
                             backgroundColor: Colors.transparent,
                             centerTitle: true,
-                            titleWidget: Text(
-                              item.title,
-                              style: TextStyles.rajdhaniSB.body1,
+                            leadingPadding: false,
+                            titleWidget: Expanded(
+                              child: MarqueeText(
+                                infoList: [item.title],
+                                showBullet: false,
+                                style: TextStyles.rajdhaniSB.body1,
+                              ),
                             ),
                             leading: const BackButton(
                               color: Colors.white,

@@ -1,4 +1,5 @@
 import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -23,9 +24,9 @@ class MoreOptionsSheet extends StatelessWidget {
       children: [
         Container(
           padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding20,
+            horizontal: 10.w,
           ).copyWith(
-            top: SizeConfig.padding12,
+            top: 5.h,
           ),
           child: Stack(
             alignment: AlignmentDirectional.center,
@@ -44,11 +45,12 @@ class MoreOptionsSheet extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      AppState.backButtonDispatcher!.didPopRoute();
                     },
-                    child: Icon(
+                    icon: Icon(
                       Icons.close,
                       size: SizeConfig.body1,
                       color: UiConstants.kTextColor,
