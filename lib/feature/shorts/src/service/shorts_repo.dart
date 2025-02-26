@@ -205,9 +205,10 @@ class ShortsRepo extends BaseRepo {
     String theme,
     String category,
   ) async {
+    final uid = userService.baseUser!.uid;
     final String saveUrl = isSaved
         ? 'user-video-interactions/unsave/$videoId'
-        : 'user-video-interactions/$videoId';
+        : 'user-video-interactions/$uid';
     final requestBody = {
       "videoId": videoId,
       "category": category,
