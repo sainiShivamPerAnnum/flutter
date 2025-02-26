@@ -12,13 +12,13 @@ class LoadingSavedShortsDetails extends SavedShortsState {
 }
 
 final class SavedShortsData extends SavedShortsState {
-  final ShortsHome shortsHome;
+  final List<SavedShorts> shortsHome;
 
   const SavedShortsData({
     required this.shortsHome,
   });
   SavedShortsState copyWith({
-    ShortsHome? shortsHome,
+    List<SavedShorts>? shortsHome,
   }) {
     return SavedShortsData(
       shortsHome: shortsHome ?? this.shortsHome,

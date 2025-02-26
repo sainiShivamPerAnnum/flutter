@@ -12,9 +12,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class MoreOptionsSheet extends StatelessWidget {
   const MoreOptionsSheet({
     required this.id,
+    required this.isSaved,
+    required this.theme,
+    required this.category,
     super.key,
   });
   final String id;
+  final bool isSaved;
+  final String theme;
+  final String category;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +79,20 @@ class MoreOptionsSheet extends StatelessWidget {
               child: Column(
                 children: [
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      BlocProvider.of<PreloadBloc>(
+                        context,
+                        listen: false,
+                      ).add(
+                        PreloadEvent.saveVideo(
+                          isSaved: isSaved,
+                          videoId: id,
+                          theme: theme,
+                          category: category,
+                        ),
+                      );
+                      AppState.backButtonDispatcher!.didPopRoute();
+                    },
                     child: Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 18.w,
@@ -96,7 +115,7 @@ class MoreOptionsSheet extends StatelessWidget {
                             width: 12.w,
                           ),
                           Text(
-                            'Save',
+                            isSaved ? 'Unsave' : 'Save',
                             style: TextStyles.sourceSansM.body3,
                           ),
                         ],

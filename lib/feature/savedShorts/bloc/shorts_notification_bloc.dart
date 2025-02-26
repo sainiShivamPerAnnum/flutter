@@ -27,7 +27,7 @@ class ShortsNotificationBloc extends Bloc<SavedShortsEvents, SavedShortsState> {
     if (data.isSuccess()) {
       emitter(
         SavedShortsData(
-          shortsHome: ShortsHome(allCategories: [], shorts: data.model!),
+          shortsHome: data.model!,
         ),
       );
     } else {
@@ -45,7 +45,7 @@ class ShortsNotificationBloc extends Bloc<SavedShortsEvents, SavedShortsState> {
     );
     if (data.isSuccess()) {
       final currentState = state as SavedShortsData;
-      final updatedThemes = currentState.shortsHome.shorts.map((theme) {
+      final updatedThemes = currentState.shortsHome.map((theme) {
         if (theme.theme == event.theme) {
           return theme.copyWith(isNotificationOn: !event.isFollowed);
         }
@@ -53,10 +53,7 @@ class ShortsNotificationBloc extends Bloc<SavedShortsEvents, SavedShortsState> {
       }).toList();
       emitter(
         SavedShortsData(
-          shortsHome: ShortsHome(
-            allCategories: currentState.shortsHome.allCategories,
-            shorts: updatedThemes,
-          ),
+          shortsHome: updatedThemes,
         ),
       );
       if (event.isFollowed) {

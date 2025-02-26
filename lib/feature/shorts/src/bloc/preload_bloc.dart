@@ -487,51 +487,40 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       },
       saveVideo: (e) {
         if (state.currentContext == ReelContext.main) {
-          emit(
-            state.copyWith(
-              mainVideos: state.mainVideos.map((video) {
-                if (video.id == e.videoId) {
-                  unawaited(
-                    repository.addSave(
-                      video.isSaved,
-                      video.advisorId,
-                      video.id,
-                      e.theme,
-                      e.category,
-                    ),
-                  );
-                  return video.copyWith(
-                    isSaved: !video.isSaved,
-                  );
-                } else {
-                  return video;
-                }
-              }).toList(),
-            ),
-          );
-        } else if (state.currentContext == ReelContext.profile) {
-          emit(
-            state.copyWith(
-              profileVideos: state.profileVideos.map((video) {
-                if (video.id == e.videoId) {
-                  unawaited(
-                    repository.addSave(
-                      video.isSaved,
-                      video.advisorId,
-                      video.id,
-                      e.theme,
-                      e.category,
-                    ),
-                  );
-                  return video.copyWith(
-                    isSaved: !video.isSaved,
-                  );
-                } else {
-                  return video;
-                }
-              }).toList(),
-            ),
-          );
+          final videoExistsInMainList =
+              state.mainVideos.any((video) => video.id == e.videoId);
+          if (videoExistsInMainList) {
+            emit(
+              state.copyWith(
+                mainVideos: state.mainVideos.map((video) {
+                  if (video.id == e.videoId) {
+                    unawaited(
+                      repository.addSave(
+                        video.isSaved,
+                        e.videoId,
+                        e.theme,
+                        e.category,
+                      ),
+                    );
+                    return video.copyWith(
+                      isSaved: !video.isSaved,
+                    );
+                  } else {
+                    return video;
+                  }
+                }).toList(),
+              ),
+            );
+          } else {
+            unawaited(
+              repository.addSave(
+                e.isSaved,
+                e.videoId,
+                e.theme,
+                e.category,
+              ),
+            );
+          }
         }
         log('🚀🚀🚀 Video saved');
       },

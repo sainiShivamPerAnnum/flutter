@@ -201,7 +201,6 @@ class ShortsRepo extends BaseRepo {
 
   Future<ApiResponse<void>> addSave(
     bool isSaved,
-    String advisorId,
     String videoId,
     String theme,
     String category,

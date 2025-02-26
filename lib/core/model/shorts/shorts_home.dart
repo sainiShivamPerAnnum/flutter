@@ -72,6 +72,55 @@ class ShortsThemeData {
 }
 
 @_deserializable
+class SavedShorts {
+  final List<VideoData> videos;
+  final String theme;
+  final String themeName;
+  final num total;
+  final num page;
+  final int totalPages;
+  final bool isNotificationOn;
+  final bool isNotificationAllowed;
+
+  SavedShorts({
+    required this.videos,
+    required this.theme,
+    required this.themeName,
+    required this.total,
+    required this.page,
+    required this.totalPages,
+    this.isNotificationOn = false,
+    this.isNotificationAllowed = false,
+  });
+
+  factory SavedShorts.fromJson(Map<String, dynamic> json) =>
+      _$SavedShortsFromJson(json);
+
+  SavedShorts copyWith({
+    List<VideoData>? videos,
+    String? theme,
+    String? themeName,
+    num? total,
+    num? page,
+    int? totalPages,
+    bool? isNotificationOn,
+    bool? isNotificationAllowed,
+  }) {
+    return SavedShorts(
+      videos: videos ?? this.videos,
+      theme: theme ?? this.theme,
+      themeName: themeName ?? this.themeName,
+      total: total ?? this.total,
+      page: page ?? this.page,
+      totalPages: totalPages ?? this.totalPages,
+      isNotificationOn: isNotificationOn ?? this.isNotificationOn,
+      isNotificationAllowed:
+          isNotificationAllowed ?? this.isNotificationAllowed,
+    );
+  }
+}
+
+@_deserializable
 class PaginatedShorts {
   final List<VideoData> videos;
   final String theme;

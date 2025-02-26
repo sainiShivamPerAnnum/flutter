@@ -543,6 +543,11 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                                           ),
                                                           buildMoreIcon(
                                                             theme.videos[i].id,
+                                                            theme.videos[i]
+                                                                .isSaved,
+                                                            theme.theme,
+                                                            theme.videos[i]
+                                                                .categoryV1,
                                                           ),
                                                           buildPlayIcon(),
                                                           buildViewIndicator(
@@ -638,7 +643,7 @@ class _ShortsScreenState extends State<_ShortsScreen> {
     );
   }
 
-  Widget buildMoreIcon(String id) {
+  Widget buildMoreIcon(String id, bool isSaved, String theme, String category) {
     return Align(
       alignment: Alignment.topRight,
       child: Padding(
@@ -652,7 +657,12 @@ class _ShortsScreenState extends State<_ShortsScreen> {
               addToScreenStack: true,
               backgroundColor: UiConstants.kBackgroundColor,
               hapticVibrate: true,
-              content: MoreOptionsSheet(id: id),
+              content: MoreOptionsSheet(
+                id: id,
+                isSaved: isSaved,
+                theme: theme,
+                category: category,
+              ),
             );
           },
           behavior: HitTestBehavior.opaque,

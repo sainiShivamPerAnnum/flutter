@@ -228,6 +228,7 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                         theme: state.theme,
                                         category: state.categories[
                                             state.currentCategoryIndex],
+                                        isSaved: videos[index].isSaved,
                                       ),
                                     );
                                   },

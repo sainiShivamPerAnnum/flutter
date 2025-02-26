@@ -87,7 +87,7 @@ class ShortsRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<ShortsThemeData>>> getSaved() async {
+  Future<ApiResponse<List<SavedShorts>>> getSaved() async {
     try {
       final response = await APIService.instance.getData(
         ApiPath.getSaved,
@@ -95,14 +95,14 @@ class ShortsRepository extends BaseRepo {
         apiName: '$_shorts/getSaved',
       );
       final responseData = response["data"]["themes"];
-      final List<ShortsThemeData> data = (responseData as List)
+      final List<SavedShorts> data = (responseData as List)
           .map(
-            (item) => ShortsThemeData.fromJson(
+            (item) => SavedShorts.fromJson(
               item,
             ),
           )
           .toList();
-      return ApiResponse<List<ShortsThemeData>>(
+      return ApiResponse<List<SavedShorts>>(
         model: data,
         code: 200,
       );

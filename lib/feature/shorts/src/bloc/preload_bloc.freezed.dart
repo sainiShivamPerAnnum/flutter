@@ -3897,7 +3897,7 @@ abstract class _$$SaveVideoImplCopyWith<$Res> {
           _$SaveVideoImpl value, $Res Function(_$SaveVideoImpl) then) =
       __$$SaveVideoImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String videoId, String theme, String category});
+  $Res call({bool isSaved, String videoId, String theme, String category});
 }
 
 /// @nodoc
@@ -3911,11 +3911,16 @@ class __$$SaveVideoImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? isSaved = null,
     Object? videoId = null,
     Object? theme = null,
     Object? category = null,
   }) {
     return _then(_$SaveVideoImpl(
+      isSaved: null == isSaved
+          ? _value.isSaved
+          : isSaved // ignore: cast_nullable_to_non_nullable
+              as bool,
       videoId: null == videoId
           ? _value.videoId
           : videoId // ignore: cast_nullable_to_non_nullable
@@ -3936,8 +3941,13 @@ class __$$SaveVideoImplCopyWithImpl<$Res>
 
 class _$SaveVideoImpl implements _SaveVideo {
   const _$SaveVideoImpl(
-      {required this.videoId, required this.theme, required this.category});
+      {required this.isSaved,
+      required this.videoId,
+      required this.theme,
+      required this.category});
 
+  @override
+  final bool isSaved;
   @override
   final String videoId;
   @override
@@ -3947,7 +3957,7 @@ class _$SaveVideoImpl implements _SaveVideo {
 
   @override
   String toString() {
-    return 'PreloadEvent.saveVideo(videoId: $videoId, theme: $theme, category: $category)';
+    return 'PreloadEvent.saveVideo(isSaved: $isSaved, videoId: $videoId, theme: $theme, category: $category)';
   }
 
   @override
@@ -3955,6 +3965,7 @@ class _$SaveVideoImpl implements _SaveVideo {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SaveVideoImpl &&
+            (identical(other.isSaved, isSaved) || other.isSaved == isSaved) &&
             (identical(other.videoId, videoId) || other.videoId == videoId) &&
             (identical(other.theme, theme) || other.theme == theme) &&
             (identical(other.category, category) ||
@@ -3962,7 +3973,8 @@ class _$SaveVideoImpl implements _SaveVideo {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, videoId, theme, category);
+  int get hashCode =>
+      Object.hash(runtimeType, isSaved, videoId, theme, category);
 
   @JsonKey(ignore: true)
   @override
@@ -4100,10 +4112,12 @@ class _$SaveVideoImpl implements _SaveVideo {
 
 abstract class _SaveVideo implements PreloadEvent {
   const factory _SaveVideo(
-      {required final String videoId,
+      {required final bool isSaved,
+      required final String videoId,
       required final String theme,
       required final String category}) = _$SaveVideoImpl;
 
+  bool get isSaved;
   String get videoId;
   String get theme;
   String get category;
