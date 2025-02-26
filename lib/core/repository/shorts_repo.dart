@@ -31,8 +31,36 @@ class ShortsRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<ShortsThemeData>>> applyQuery(
-      {required String query}) async {
+  Future<ApiResponse<bool>> toggleNotification({
+    required String theme,
+    required bool isFollowed,
+  }) async {
+    final uid = userService.baseUser!.uid;
+    final apiPath = isFollowed ? ApiPath.unfollowTheme : ApiPath.followTheme;
+    try {
+      final body = {
+        "uid": uid,
+        "theme": theme,
+      };
+      await APIService.instance.postData(
+        apiPath,
+        cBaseUrl: _baseUrl,
+        apiName: '$_shorts/toggleNotification',
+        body: body,
+      );
+      return const ApiResponse<bool>(
+        model: true,
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<List<ShortsThemeData>>> applyQuery({
+    required String query,
+  }) async {
     try {
       final params = {"query": query, "type": "shorts"};
       final response = await APIService.instance.getData(
@@ -40,6 +68,31 @@ class ShortsRepository extends BaseRepo {
         cBaseUrl: _baseUrl,
         apiName: '$_shorts/applyQuery',
         queryParams: params,
+      );
+      final responseData = response["data"]["themes"];
+      final List<ShortsThemeData> data = (responseData as List)
+          .map(
+            (item) => ShortsThemeData.fromJson(
+              item,
+            ),
+          )
+          .toList();
+      return ApiResponse<List<ShortsThemeData>>(
+        model: data,
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<List<ShortsThemeData>>> getSaved() async {
+    try {
+      final response = await APIService.instance.getData(
+        ApiPath.getSaved,
+        cBaseUrl: _baseUrl,
+        apiName: '$_shorts/getSaved',
       );
       final responseData = response["data"]["themes"];
       final List<ShortsThemeData> data = (responseData as List)

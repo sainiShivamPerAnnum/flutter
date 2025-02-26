@@ -31,6 +31,7 @@ final class ShortsHomeData extends ShortsHomeState {
   @override
   List<Object?> get props => [
         shortsHome,
+        query,
       ];
 }
 

@@ -64,43 +64,49 @@ class MoreOptionsSheet extends StatelessWidget {
         Divider(
           color: const Color(0xffA2A0A2).withOpacity(.3),
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 12.w,
-          ).copyWith(top: 10.h, bottom: 20.h),
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 14.h),
-                decoration: BoxDecoration(
-                  color: UiConstants.greyVarient,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10.r),
+        BlocBuilder<PreloadBloc, PreloadState>(
+          builder: (context, state) {
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 12.w,
+              ).copyWith(top: 10.h, bottom: 20.h),
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 18.w,
+                        vertical: 14.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: UiConstants.greyVarient,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10.r),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.bookmark_border_rounded,
+                            size: 14.r,
+                            color: UiConstants.kTextColor,
+                          ),
+                          SizedBox(
+                            width: 12.w,
+                          ),
+                          Text(
+                            'Save',
+                            style: TextStyles.sourceSansM.body3,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.bookmark_border_rounded,
-                      size: 14.r,
-                      color: UiConstants.kTextColor,
-                    ),
-                    SizedBox(
-                      width: 12.w,
-                    ),
-                    Text(
-                      'Save',
-                      style: TextStyles.sourceSansM.body3,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 16.h,
-              ),
-              BlocBuilder<PreloadBloc, PreloadState>(
-                builder: (context, state) {
-                  return GestureDetector(
+                  SizedBox(
+                    height: 16.h,
+                  ),
+                  GestureDetector(
                     onTap: () {
                       if (state.isShareAlreadyClicked == false) {
                         BlocProvider.of<PreloadBloc>(
@@ -142,11 +148,11 @@ class MoreOptionsSheet extends StatelessWidget {
                         ],
                       ),
                     ),
-                  );
-                },
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         ),
       ],
     );

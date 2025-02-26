@@ -17,3 +17,9 @@ class ApplyCategory extends ShortsHomeEvents {
   final String query;
   const ApplyCategory(this.query);
 }
+
+class ToogleNotification extends ShortsHomeEvents {
+  final String theme;
+  final bool isFollowed;
+  const ToogleNotification(this.theme, this.isFollowed);
+}

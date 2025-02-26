@@ -26,6 +26,9 @@ class ShortsThemeData {
   final num total;
   final List<String> categories;
   final num page;
+  final int totalPages;
+  final bool isNotificationOn;
+  final bool isNotificationAllowed;
 
   ShortsThemeData({
     required this.videos,
@@ -34,10 +37,38 @@ class ShortsThemeData {
     required this.total,
     required this.categories,
     required this.page,
+    required this.totalPages,
+    this.isNotificationOn = false,
+    this.isNotificationAllowed = false,
   });
 
   factory ShortsThemeData.fromJson(Map<String, dynamic> json) =>
       _$ShortsThemeDataFromJson(json);
+
+  ShortsThemeData copyWith({
+    List<VideoData>? videos,
+    String? theme,
+    String? themeName,
+    num? total,
+    List<String>? categories,
+    num? page,
+    int? totalPages,
+    bool? isNotificationOn,
+    bool? isNotificationAllowed,
+  }) {
+    return ShortsThemeData(
+      videos: videos ?? this.videos,
+      theme: theme ?? this.theme,
+      themeName: themeName ?? this.themeName,
+      total: total ?? this.total,
+      categories: categories ?? this.categories,
+      page: page ?? this.page,
+      totalPages: totalPages ?? this.totalPages,
+      isNotificationOn: isNotificationOn ?? this.isNotificationOn,
+      isNotificationAllowed:
+          isNotificationAllowed ?? this.isNotificationAllowed,
+    );
+  }
 }
 
 @_deserializable

@@ -24,6 +24,9 @@ VideoData _$VideoDataFromJson(Map<String, dynamic> json) => VideoData(
               .toList() ??
           const [],
       isVideoLikedByUser: json['isVideoLikedByUser'] as bool? ?? false,
+      advisorImg: json['advisorImg'] as String? ?? '',
+      isSaved: json['isSaved'] as bool? ?? false,
+      isFollowed: json['isFollowed'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$VideoDataToJson(VideoData instance) => <String, dynamic>{
@@ -41,4 +44,7 @@ Map<String, dynamic> _$VideoDataToJson(VideoData instance) => <String, dynamic>{
       'duration': instance.duration,
       'isVideoLikedByUser': instance.isVideoLikedByUser,
       'categoryV1': instance.categoryV1,
+      'advisorImg': instance.advisorImg,
+      'isSaved': instance.isSaved,
+      'isFollowed': instance.isFollowed,
     };

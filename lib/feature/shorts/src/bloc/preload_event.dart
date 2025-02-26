@@ -56,6 +56,14 @@ class PreloadEvent with _$PreloadEvent {
   const factory PreloadEvent.likeVideo({
     required String videoId,
   }) = _LikeVideo;
+  const factory PreloadEvent.followAdvisor({
+    required String advisorId,
+  }) = _FollowAdvisor;
+  const factory PreloadEvent.saveVideo({
+    required String videoId,
+    required String theme,
+    required String category,
+  }) = _SaveVideo;
   const factory PreloadEvent.toggleComments() = _ToggleComments;
   const factory PreloadEvent.addCommentToState({
     required String videoId,

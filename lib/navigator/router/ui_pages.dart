@@ -133,7 +133,8 @@ const String shortsViewPath = "/shorts-internal";
 const String viewAllVideosViewPath = "/events";
 const String rewardsHistoryViewPath = "/rewards-history";
 const String rpsLearnMoreViewPath = "/rps-learnMore";
-const String shortsNotification = "/shorts-notification";
+const String shortsNotificationViewPath = "/shorts-notification";
+const String savedShortsViewPath = "/shorts-saved";
 
 enum Pages {
   Splash,
@@ -265,6 +266,7 @@ enum Pages {
   RewardsHistory,
   RPSLearnMore,
   ShortsNotification,
+  SavedShorts,
 }
 
 class PageConfiguration {
@@ -1057,7 +1059,14 @@ PageConfiguration RpsLearnMorePageConfig = PageConfiguration(
 
 PageConfiguration ShortsNotificationPageConfig = PageConfiguration(
   key: 'ShortsNotificationPageConfig',
-  path: shortsByIdViewPath,
+  path: shortsNotificationViewPath,
   uiPage: Pages.ShortsNotification,
   name: "Shorts Notification",
+);
+
+PageConfiguration SavedShortsPageConfig = PageConfiguration(
+  key: 'SavedShortsPageConfig',
+  path: savedShortsViewPath,
+  uiPage: Pages.SavedShorts,
+  name: "Saved Shorts",
 );

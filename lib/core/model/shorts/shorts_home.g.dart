@@ -27,6 +27,9 @@ ShortsThemeData _$ShortsThemeDataFromJson(Map<String, dynamic> json) =>
           .map((e) => e as String)
           .toList(),
       page: json['page'] as num,
+      totalPages: json['totalPages'] as int,
+      isNotificationOn: json['isNotificationOn'] as bool? ?? false,
+      isNotificationAllowed: json['isNotificationAllowed'] as bool? ?? false,
     );
 
 PaginatedShorts _$PaginatedShortsFromJson(Map<String, dynamic> json) =>

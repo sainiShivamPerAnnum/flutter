@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/feature/savedShorts/saved_shorts.dart';
 import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
 import 'package:felloapp/feature/shorts/video_page.dart';
 import 'package:felloapp/feature/shortsHome/bloc/pagination_bloc.dart';
@@ -272,7 +273,14 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    AppState.delegate!.appState.currentAction =
+                                        PageAction(
+                                      page: SavedShortsPageConfig,
+                                      state: PageState.addWidget,
+                                      widget: const SavedShortsPage(),
+                                    );
+                                  },
                                   child: Container(
                                     margin: EdgeInsets.only(
                                       left: 12.w,
@@ -314,9 +322,47 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                 Padding(
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 20.w),
-                                  child: Text(
-                                    theme.themeName,
-                                    style: TextStyles.sourceSansSB.body2,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        theme.themeName,
+                                        style: TextStyles.sourceSansSB.body2,
+                                      ),
+                                      if (theme.isNotificationAllowed)
+                                        GestureDetector(
+                                          onTap: () {
+                                            BlocProvider.of<ShortsHomeBloc>(
+                                              context,
+                                            ).add(
+                                              ToogleNotification(
+                                                theme.theme,
+                                                theme.isNotificationOn,
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            height: 24.r,
+                                            width: 24.r,
+                                            decoration: BoxDecoration(
+                                              color: UiConstants.kblue2
+                                                  .withOpacity(.4),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(4.r),
+                                              ),
+                                            ),
+                                            padding: EdgeInsets.all(6.r),
+                                            child: Icon(
+                                              theme.isNotificationOn
+                                                  ? Icons.check_rounded
+                                                  : Icons.notifications_rounded,
+                                              color: UiConstants.teal3,
+                                              size: 12.r,
+                                            ),
+                                          ),
+                                        ),
+                                    ],
                                   ),
                                 ),
                                 SizedBox(height: 14.h),
@@ -326,7 +372,7 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                     theme: theme.theme,
                                     themeName: theme.themeName,
                                     total: theme.total,
-                                    totalPages: theme.total,
+                                    totalPages: theme.totalPages,
                                     initialVideos: theme.videos,
                                   )..fetchFirstPage(),
                                   child: BlocBuilder<ThemeVideosBloc,

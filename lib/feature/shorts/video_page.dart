@@ -205,6 +205,32 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                   isKeyBoardOpen: state.keyboardVisible,
                                   commentsVisibility: state.showComments,
                                   currentContext: state.currentContext,
+                                  isFollowed: videos[index].isFollowed,
+                                  isSaved: videos[index].isSaved,
+                                  advisorImg: videos[index].advisorImg,
+                                  onFollow: () {
+                                    BlocProvider.of<PreloadBloc>(
+                                      context,
+                                      listen: false,
+                                    ).add(
+                                      PreloadEvent.followAdvisor(
+                                        advisorId: videos[index].advisorId,
+                                      ),
+                                    );
+                                  },
+                                  onSaved: () {
+                                    BlocProvider.of<PreloadBloc>(
+                                      context,
+                                      listen: false,
+                                    ).add(
+                                      PreloadEvent.saveVideo(
+                                        videoId: videos[index].id,
+                                        theme: state.theme,
+                                        category: state.categories[
+                                            state.currentCategoryIndex],
+                                      ),
+                                    );
+                                  },
                                   onCommentToggle: () {
                                     FocusScope.of(context).unfocus();
                                     BlocProvider.of<PreloadBloc>(

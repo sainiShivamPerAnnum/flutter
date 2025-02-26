@@ -36,12 +36,17 @@ class VideoWidget extends StatefulWidget {
   final VoidCallback onShare;
   final VoidCallback onLike;
   final VoidCallback onBook;
+  final VoidCallback onSaved;
+  final VoidCallback onFollow;
   final VoidCallback onCommentToggle;
   final Function(String comment) onCommented;
   final Function(bool isKeyBoardOpen) updateKeyboardState;
   final bool isLikedByUser;
   final bool isKeyBoardOpen;
   final ReelContext currentContext;
+  final bool isFollowed;
+  final bool isSaved;
+  final String advisorImg;
 
   const VideoWidget({
     required this.isLoading,
@@ -60,6 +65,11 @@ class VideoWidget extends StatefulWidget {
     required this.commentsVisibility,
     required this.onCommentToggle,
     required this.currentContext,
+    required this.isFollowed,
+    required this.isSaved,
+    required this.advisorImg,
+    required this.onFollow,
+    required this.onSaved,
     this.comments = const [],
     this.showUserName = true,
     this.showVideoTitle = true,
@@ -187,60 +197,65 @@ class VideoWidgetState extends State<VideoWidget>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (widget.showUserName)
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 4.w,
-                                vertical: 2.h,
-                              ),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: SizeConfig.padding16,
-                                    backgroundImage: NetworkImage(
-                                      widget.expertProfileImage,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 8.w,
-                                  ),
-                                  Text(
-                                    widget.userName,
-                                    style: GoogleFonts.sourceSans3(
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                      fontSize: 14.sp,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 12.w,
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xffA2A0A2)
-                                          .withOpacity(.3),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(4.r),
-                                      ),
-                                      border: Border.all(
-                                        width: 1.h,
-                                        color: const Color(0xffA6A6AC)
-                                            .withOpacity(.2),
+                            GestureDetector(
+                              onTap: widget.onFollow,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 4.w,
+                                  vertical: 2.h,
+                                ),
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: SizeConfig.padding16,
+                                      backgroundImage: NetworkImage(
+                                        widget.expertProfileImage,
                                       ),
                                     ),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 16.w,
-                                      vertical: 4.h,
+                                    SizedBox(
+                                      width: 8.w,
                                     ),
-                                    child: Text(
-                                      'Follow',
+                                    Text(
+                                      widget.userName,
                                       style: GoogleFonts.sourceSans3(
                                         fontWeight: FontWeight.w600,
                                         color: Colors.white,
-                                        fontSize: 12.sp,
+                                        fontSize: 14.sp,
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    SizedBox(
+                                      width: 12.w,
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xffA2A0A2)
+                                            .withOpacity(.3),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(4.r),
+                                        ),
+                                        border: Border.all(
+                                          width: 1.h,
+                                          color: const Color(0xffA6A6AC)
+                                              .withOpacity(.2),
+                                        ),
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 16.w,
+                                        vertical: 4.h,
+                                      ),
+                                      child: Text(
+                                        widget.isFollowed
+                                            ? 'Following'
+                                            : 'Follow',
+                                        style: GoogleFonts.sourceSans3(
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                          fontSize: 12.sp,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           SizedBox(
@@ -257,10 +272,13 @@ class VideoWidgetState extends State<VideoWidget>
                         ],
                       ),
                       _buildIconColumn(
+                        widget.currentContext,
                         widget.onShare,
+                        widget.onSaved,
                         widget.onLike,
                         widget.onBook,
                         widget.onCommentToggle,
+                        widget.isSaved,
                         widget.isLikedByUser,
                         widget.commentsVisibility,
                       ),
@@ -325,10 +343,13 @@ class VideoWidgetState extends State<VideoWidget>
   }
 
   Widget _buildIconColumn(
+    final ReelContext reelcontext,
     final VoidCallback onShare,
+    final VoidCallback onSave,
     final VoidCallback onLike,
     final VoidCallback onBook,
     final VoidCallback onToggleComment,
+    final bool isSaved,
     final bool isLiked,
     final bool commentVisibility,
   ) {
@@ -337,16 +358,28 @@ class VideoWidgetState extends State<VideoWidget>
         if (widget.showLikeButton)
           Column(
             children: [
-              IconButton(
-                icon: Icon(
-                  isLiked ? Icons.bookmark : Icons.bookmark_border_rounded,
-                  color: Colors.white,
-                  size: 25.r,
-                ),
-                onPressed: onLike,
-              ),
+              reelcontext == ReelContext.main
+                  ? IconButton(
+                      icon: Icon(
+                        isSaved
+                            ? Icons.bookmark
+                            : Icons.bookmark_border_rounded,
+                        color: Colors.white,
+                        size: 25.r,
+                      ),
+                      onPressed: onSave,
+                    )
+                  : IconButton(
+                      icon: AppImage(
+                        Assets.video_like,
+                        color: isLiked ? Colors.red : Colors.white,
+                        height: 20.r,
+                        width: 20.r,
+                      ),
+                      onPressed: onLike,
+                    ),
               Text(
-                'Save',
+                reelcontext == ReelContext.main ? 'Save' : 'Like',
                 style: GoogleFonts.sourceSans3(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w400,

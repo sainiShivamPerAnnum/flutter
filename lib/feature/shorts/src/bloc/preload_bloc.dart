@@ -292,6 +292,14 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           category: state.categories[state.currentCategoryIndex],
           theme: state.theme,
         );
+        if (!data.isSuccess()) {
+          emit(
+            state.copyWith(
+              errorMessage: "An error occurred while loading videos.",
+            ),
+          );
+          return;
+        }
 
         final List<VideoData> urls = data.model?.videos ?? [];
 
@@ -413,6 +421,119 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       },
       disposeProfileControllers: (e) {
         _stopAndDisposeProfileControllers();
+      },
+      followAdvisor: (e) {
+        if (state.currentContext == ReelContext.main) {
+          emit(
+            state.copyWith(
+              mainVideos: state.mainVideos.map((video) {
+                if (video.advisorId == e.advisorId) {
+                  unawaited(
+                    repository.followAdvisor(
+                      video.isFollowed,
+                      video.advisorId,
+                    ),
+                  );
+                  return video.copyWith(
+                    isFollowed: !video.isFollowed,
+                  );
+                } else {
+                  return video;
+                }
+              }).toList(),
+            ),
+          );
+        } else if (state.currentContext == ReelContext.profile) {
+          emit(
+            state.copyWith(
+              profileVideos: state.profileVideos.map((video) {
+                if (video.advisorId == e.advisorId) {
+                  unawaited(
+                    repository.followAdvisor(
+                      video.isFollowed,
+                      video.advisorId,
+                    ),
+                  );
+                  return video.copyWith(
+                    isFollowed: !video.isFollowed,
+                  );
+                } else {
+                  return video;
+                }
+              }).toList(),
+            ),
+          );
+        } else if (state.currentContext == ReelContext.liveStream) {
+          emit(
+            state.copyWith(
+              liveVideo: state.liveVideo.map((video) {
+                if (video.advisorId == e.advisorId) {
+                  unawaited(
+                    repository.followAdvisor(
+                      video.isFollowed,
+                      video.advisorId,
+                    ),
+                  );
+                  return video.copyWith(
+                    isFollowed: !video.isFollowed,
+                  );
+                } else {
+                  return video;
+                }
+              }).toList(),
+            ),
+          );
+        }
+      },
+      saveVideo: (e) {
+        if (state.currentContext == ReelContext.main) {
+          emit(
+            state.copyWith(
+              mainVideos: state.mainVideos.map((video) {
+                if (video.id == e.videoId) {
+                  unawaited(
+                    repository.addSave(
+                      video.isSaved,
+                      video.advisorId,
+                      video.id,
+                      e.theme,
+                      e.category,
+                    ),
+                  );
+                  return video.copyWith(
+                    isSaved: !video.isSaved,
+                  );
+                } else {
+                  return video;
+                }
+              }).toList(),
+            ),
+          );
+        } else if (state.currentContext == ReelContext.profile) {
+          emit(
+            state.copyWith(
+              profileVideos: state.profileVideos.map((video) {
+                if (video.id == e.videoId) {
+                  unawaited(
+                    repository.addSave(
+                      video.isSaved,
+                      video.advisorId,
+                      video.id,
+                      e.theme,
+                      e.category,
+                    ),
+                  );
+                  return video.copyWith(
+                    isSaved: !video.isSaved,
+                  );
+                } else {
+                  return video;
+                }
+              }).toList(),
+            ),
+          );
+        }
+        log('🚀🚀🚀 Video saved');
       },
       likeVideo: (e) async {
         final UserService userService = locator<UserService>();

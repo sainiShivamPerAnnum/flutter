@@ -508,7 +508,7 @@ class Assets {
 
   static const String video_share = "assets/svg/share_reel.svg";
   static const String book_call = "assets/svg/book_call.svg";
-  static const String video_like = "assets/svg/save_reel.svg";
+  static const String video_like = "assets/svg/like.svg";
   static const String confirm_payment = "assets/vectors/gif/confirm.gif";
   static const String pending_payment = "assets/vectors/gif/pending.gif";
   static const String failed_payment = "assets/vectors/gif/failed.gif";
@@ -533,4 +533,5 @@ class Assets {
   static const String noSlots = "assets/lotties/no_slots.json";
   static const String done = "assets/svg/done.svg";
   static const String noNotifications = "assets/svg/no_notifications.svg";
+  static const String noSaved = "assets/svg/no_saved.svg";
 }

@@ -18,6 +18,9 @@ class VideoData {
   final String duration;
   final bool isVideoLikedByUser;
   final String categoryV1;
+  final String advisorImg;
+  final bool isSaved;
+  final bool isFollowed;
 
   VideoData({
     required this.id,
@@ -34,6 +37,9 @@ class VideoData {
     this.categoryV1 = '',
     this.category = const [],
     this.isVideoLikedByUser = false,
+    this.advisorImg = '',
+    this.isSaved = false,
+    this.isFollowed = false,
   });
 
   // Method to generate VideoData instance from JSON
@@ -57,6 +63,8 @@ class VideoData {
     String? description,
     String? advisorId,
     String? categoryV1,
+    bool? isFollowed,
+    bool? isSaved,
   }) {
     return VideoData(
       id: id ?? this.id,
@@ -73,6 +81,8 @@ class VideoData {
       description: description ?? this.description,
       advisorId: advisorId ?? this.advisorId,
       isVideoLikedByUser: isVideoLikedByUser ?? this.isVideoLikedByUser,
+      isFollowed: isFollowed ?? this.isFollowed,
+      isSaved: isSaved ?? this.isSaved,
     );
   }
 }

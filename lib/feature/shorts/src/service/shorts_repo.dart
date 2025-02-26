@@ -1,13 +1,12 @@
 import 'package:felloapp/core/model/shorts/shorts_home.dart';
+import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:felloapp/util/locator.dart';
 import 'comment_data.dart';
 import 'video_data.dart';
 
-class ShortsRepo {
+class ShortsRepo extends BaseRepo {
   static final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://advisors.fello-dev.net/'
       : 'https://advisors.fello-prod.net/';
@@ -124,11 +123,15 @@ class ShortsRepo {
 
   // Updated addComment function
   Future<ApiResponse<void>> addComment(
-      String videoId, String userId, String name, String commentText) async {
+    String videoId,
+    String userId,
+    String name,
+    String commentText,
+  ) async {
     final String addCommentUrl = 'videos/comment/$videoId';
     try {
-      final String? avatarId = locator<UserService>().baseUser!.avatarId;
-      final String? dpUrl = locator<UserService>().myUserDpUrl;
+      final String? avatarId = userService.baseUser!.avatarId;
+      final String? dpUrl = userService.myUserDpUrl;
       await APIService.instance.postData(
         addCommentUrl,
         cBaseUrl: _baseUrl,
@@ -150,7 +153,10 @@ class ShortsRepo {
 
   // Updated addLike function
   Future<ApiResponse<void>> addLike(
-      bool isLiked, String videoId, String name) async {
+    bool isLiked,
+    String videoId,
+    String name,
+  ) async {
     final String likeUrl = 'videos/like/$videoId';
     try {
       await APIService.instance.postData(
@@ -162,6 +168,59 @@ class ShortsRepo {
           'name': name,
           'isLiked': isLiked,
         },
+      );
+      return const ApiResponse<void>(code: 200);
+    } catch (e) {
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<void>> followAdvisor(
+    bool isFollowed,
+    String advisorId,
+  ) async {
+    final uid = userService.baseUser!.uid;
+    final String followUrl = isFollowed
+        ? 'user-notify/unfollow-advisor'
+        : 'user-notify/follow-advisor';
+    try {
+      await APIService.instance.postData(
+        followUrl,
+        cBaseUrl: _baseUrl,
+        apiName: 'ShortsRepo/followAdvisor',
+        body: {
+          "uid": uid,
+          'advisorId': advisorId,
+        },
+      );
+      return const ApiResponse<void>(code: 200);
+    } catch (e) {
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<void>> addSave(
+    bool isSaved,
+    String advisorId,
+    String videoId,
+    String theme,
+    String category,
+  ) async {
+    final String saveUrl = isSaved
+        ? 'user-video-interactions/unsave/$videoId'
+        : 'user-video-interactions/$videoId';
+    final requestBody = {
+      "videoId": videoId,
+      "category": category,
+      "theme": theme,
+      "interactionType": "SAVED",
+    };
+    try {
+      await APIService.instance.postData(
+        saveUrl,
+        cBaseUrl: _baseUrl,
+        apiName: 'ShortsRepo/addSave',
+        body: isSaved ? null : requestBody,
       );
       return const ApiResponse<void>(code: 200);
     } catch (e) {
