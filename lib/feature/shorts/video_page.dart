@@ -12,6 +12,7 @@ import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_player/video_player.dart';
 
@@ -135,199 +136,220 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
             if (state.errorMessage != null) {
               return const NewErrorPage();
             }
-            return Stack(
-              children: [
-                if (!state.showComments) const ShimmerReelsButtons(),
-                GestureDetector(
-                  onHorizontalDragUpdate: (details) {
-                    if (widget.categories.isNotEmpty && !state.showComments) {
-                      setState(() {
-                        _horizontalDrag += details.delta.dx;
-                      });
+            return KeyboardListener(
+              focusNode: FocusNode(),
+              onKeyEvent: (event) {
+                if (event is KeyDownEvent) {
+                  if (event.logicalKey == LogicalKeyboardKey.audioVolumeUp ||
+                      event.logicalKey == LogicalKeyboardKey.audioVolumeDown) {
+                    if (state.muted) {
+                      final preloadBloc =
+                          BlocProvider.of<PreloadBloc>(context, listen: false);
+                      preloadBloc.add(const PreloadEvent.toggleVolume());
                     }
-                  },
-                  onVerticalDragEnd: (details) {
-                    final currentPage = pageController.page ?? 0;
-                    if (currentPage == state.mainVideos.length - 1 &&
-                        state.currentContext == ReelContext.main) {
-                      BaseUtil.openModalBottomSheet(
-                        isScrollControlled: true,
-                        enableDrag: true,
-                        isBarrierDismissible: true,
-                        addToScreenStack: false,
-                        backgroundColor: UiConstants.kBackgroundColor,
-                        hapticVibrate: true,
-                        content: AllShortsViewed(
-                          category:
-                              state.categories[state.currentCategoryIndex],
-                        ),
-                      );
-                    }
-                  },
-                  onHorizontalDragEnd: (details) {
-                    if (widget.categories.isNotEmpty && !state.showComments) {
-                      _onDragEnd();
-                    }
-                  },
-                  child: AnimatedBuilder(
-                    animation: _swipeAnimationController!,
-                    builder: (context, child) {
-                      return Transform.translate(
-                        offset: Offset(_horizontalDrag, 0),
-                        child: child,
-                      );
+                    return;
+                  }
+                }
+              },
+              child: Stack(
+                children: [
+                  if (!state.showComments) const ShimmerReelsButtons(),
+                  GestureDetector(
+                    onHorizontalDragUpdate: (details) {
+                      if (widget.categories.isNotEmpty && !state.showComments) {
+                        setState(() {
+                          _horizontalDrag += details.delta.dx;
+                        });
+                      }
                     },
-                    child: AnimatedOpacity(
-                      opacity: videos.isNotEmpty ? 1.0 : 0.0,
-                      duration: const Duration(milliseconds: 250),
-                      curve: Curves.decelerate,
-                      child: PageView.builder(
-                        controller: pageController,
-                        itemCount: videos.length,
-                        physics: state.keyboardVisible || state.showComments
-                            ? const NeverScrollableScrollPhysics()
-                            : const BouncingScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        onPageChanged: (index) {
-                          BlocProvider.of<PreloadBloc>(context, listen: false)
-                              .add(PreloadEvent.onVideoIndexChanged(index));
-                        },
-                        itemBuilder: (context, index) {
-                          final bool isLoading =
-                              state.isLoading && index == videos.length - 1;
-                          return activeControllers[index] == null
-                              ? const ShimmerReelsButtons()
-                              : VideoWidget(
-                                  isLoading: isLoading,
-                                  expertProfileImage: '',
-                                  controller: activeControllers[index]!,
-                                  userName: videos[index].author,
-                                  videoTitle: videos[index].title,
-                                  description: videos[index].description,
-                                  advisorId: videos[index].advisorId,
-                                  isKeyBoardOpen: state.keyboardVisible,
-                                  commentsVisibility: state.showComments,
-                                  currentContext: state.currentContext,
-                                  isFollowed: videos[index].isFollowed,
-                                  isSaved: videos[index].isSaved,
-                                  advisorImg: videos[index].advisorImg,
-                                  onFollow: () {
-                                    BlocProvider.of<PreloadBloc>(
-                                      context,
-                                      listen: false,
-                                    ).add(
-                                      PreloadEvent.followAdvisor(
-                                        advisorId: videos[index].advisorId,
-                                      ),
-                                    );
-                                  },
-                                  onSaved: () {
-                                    BlocProvider.of<PreloadBloc>(
-                                      context,
-                                      listen: false,
-                                    ).add(
-                                      PreloadEvent.saveVideo(
-                                        videoId: videos[index].id,
-                                        theme: state.theme,
-                                        category: state.categories[
-                                            state.currentCategoryIndex],
-                                        isSaved: videos[index].isSaved,
-                                      ),
-                                    );
-                                  },
-                                  onCommentToggle: () {
-                                    FocusScope.of(context).unfocus();
-                                    BlocProvider.of<PreloadBloc>(
-                                      context,
-                                      listen: false,
-                                    ).add(
-                                      const PreloadEvent.toggleComments(),
-                                    );
-                                  },
-                                  updateKeyboardState: (isKeyBoardOpen) {
-                                    BlocProvider.of<PreloadBloc>(
-                                      context,
-                                      listen: false,
-                                    ).add(
-                                      PreloadEvent.updateKeyboardState(
-                                        state: isKeyBoardOpen,
-                                      ),
-                                    );
-                                  },
-                                  onShare: () async {
-                                    FocusScope.of(context).unfocus();
-                                    if (state.isShareAlreadyClicked == false) {
+                    onVerticalDragEnd: (details) {
+                      if (details.velocity.pixelsPerSecond.dy > 0) {
+                        final currentPage = pageController.page ?? 0;
+                        if (currentPage == state.mainVideos.length - 1 &&
+                            state.currentContext == ReelContext.main) {
+                          BaseUtil.openModalBottomSheet(
+                            isScrollControlled: true,
+                            enableDrag: true,
+                            isBarrierDismissible: true,
+                            addToScreenStack: false,
+                            backgroundColor: UiConstants.kBackgroundColor,
+                            hapticVibrate: true,
+                            content: AllShortsViewed(
+                              category:
+                                  state.categories[state.currentCategoryIndex],
+                            ),
+                          );
+                        }
+                      }
+                    },
+                    onHorizontalDragEnd: (details) {
+                      if (widget.categories.isNotEmpty && !state.showComments) {
+                        _onDragEnd();
+                      }
+                    },
+                    child: AnimatedBuilder(
+                      animation: _swipeAnimationController!,
+                      builder: (context, child) {
+                        return Transform.translate(
+                          offset: Offset(_horizontalDrag, 0),
+                          child: child,
+                        );
+                      },
+                      child: AnimatedOpacity(
+                        opacity: videos.isNotEmpty ? 1.0 : 0.0,
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.decelerate,
+                        child: PageView.builder(
+                          controller: pageController,
+                          itemCount: videos.length,
+                          physics: state.keyboardVisible || state.showComments
+                              ? const NeverScrollableScrollPhysics()
+                              : const BouncingScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          onPageChanged: (index) {
+                            BlocProvider.of<PreloadBloc>(context, listen: false)
+                                .add(PreloadEvent.onVideoIndexChanged(index));
+                          },
+                          itemBuilder: (context, index) {
+                            final bool isLoading =
+                                state.isLoading && index == videos.length - 1;
+                            return activeControllers[index] == null
+                                ? const ShimmerReelsButtons()
+                                : VideoWidget(
+                                    isLoading: isLoading,
+                                    expertProfileImage: '',
+                                    controller: activeControllers[index]!,
+                                    userName: videos[index].author,
+                                    videoTitle: videos[index].title,
+                                    description: videos[index].description,
+                                    advisorId: videos[index].advisorId,
+                                    isKeyBoardOpen: state.keyboardVisible,
+                                    commentsVisibility: state.showComments,
+                                    currentContext: state.currentContext,
+                                    isFollowed: videos[index].isFollowed,
+                                    isSaved: videos[index].isSaved,
+                                    advisorImg: videos[index].advisorImg,
+                                    onFollow: () {
                                       BlocProvider.of<PreloadBloc>(
                                         context,
                                         listen: false,
                                       ).add(
-                                        PreloadEvent.generateDynamicLink(
+                                        PreloadEvent.followAdvisor(
+                                          advisorId: videos[index].advisorId,
+                                        ),
+                                      );
+                                    },
+                                    onSaved: () {
+                                      BlocProvider.of<PreloadBloc>(
+                                        context,
+                                        listen: false,
+                                      ).add(
+                                        PreloadEvent.saveVideo(
+                                          videoId: videos[index].id,
+                                          theme: state.theme,
+                                          category: state.categories[
+                                              state.currentCategoryIndex],
+                                          isSaved: videos[index].isSaved,
+                                        ),
+                                      );
+                                    },
+                                    onCommentToggle: () {
+                                      FocusScope.of(context).unfocus();
+                                      BlocProvider.of<PreloadBloc>(
+                                        context,
+                                        listen: false,
+                                      ).add(
+                                        const PreloadEvent.toggleComments(),
+                                      );
+                                    },
+                                    updateKeyboardState: (isKeyBoardOpen) {
+                                      BlocProvider.of<PreloadBloc>(
+                                        context,
+                                        listen: false,
+                                      ).add(
+                                        PreloadEvent.updateKeyboardState(
+                                          state: isKeyBoardOpen,
+                                        ),
+                                      );
+                                    },
+                                    onShare: () async {
+                                      FocusScope.of(context).unfocus();
+                                      if (state.isShareAlreadyClicked ==
+                                          false) {
+                                        BlocProvider.of<PreloadBloc>(
+                                          context,
+                                          listen: false,
+                                        ).add(
+                                          PreloadEvent.generateDynamicLink(
+                                            videoId: videos[index].id,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    onLike: () {
+                                      FocusScope.of(context).unfocus();
+                                      BlocProvider.of<PreloadBloc>(
+                                        context,
+                                        listen: false,
+                                      ).add(
+                                        PreloadEvent.likeVideo(
                                           videoId: videos[index].id,
                                         ),
                                       );
-                                    }
-                                  },
-                                  onLike: () {
-                                    FocusScope.of(context).unfocus();
-                                    BlocProvider.of<PreloadBloc>(
-                                      context,
-                                      listen: false,
-                                    ).add(
-                                      PreloadEvent.likeVideo(
-                                        videoId: videos[index].id,
-                                      ),
-                                    );
-                                  },
-                                  onCommented: (comment) {
-                                    BlocProvider.of<PreloadBloc>(
-                                      context,
-                                      listen: false,
-                                    ).add(
-                                      PreloadEvent.addComment(
-                                        videoId: videos[index].id,
-                                        comment: comment,
-                                      ),
-                                    );
-                                  },
-                                  onBook: () {
-                                    FocusScope.of(context).unfocus();
-                                    BaseUtil.openBookAdvisorSheet(
-                                      advisorId: videos[index].advisorId,
-                                      advisorName: videos[index].author,
-                                      isEdit: false,
-                                    );
-                                    locator<AnalyticsService>().track(
-                                      eventName:
-                                          AnalyticsEvents.shortsBookaCall,
-                                      properties: {},
-                                    );
-                                  },
-                                  showUserName: videos[index].author != "",
-                                  showVideoTitle: true,
-                                  showShareButton: true,
-                                  showLikeButton: true,
-                                  showBookButton: videos[index].advisorId != "",
-                                  comments: state
-                                      .videoComments[videos[index].id]?.reversed
-                                      .toList(),
-                                  isLikedByUser:
-                                      videos[index].isVideoLikedByUser,
-                                );
-                        },
+                                    },
+                                    onCommented: (comment) {
+                                      BlocProvider.of<PreloadBloc>(
+                                        context,
+                                        listen: false,
+                                      ).add(
+                                        PreloadEvent.addComment(
+                                          videoId: videos[index].id,
+                                          comment: comment,
+                                        ),
+                                      );
+                                    },
+                                    onBook: () {
+                                      FocusScope.of(context).unfocus();
+                                      BaseUtil.openBookAdvisorSheet(
+                                        advisorId: videos[index].advisorId,
+                                        advisorName: videos[index].author,
+                                        isEdit: false,
+                                      );
+                                      locator<AnalyticsService>().track(
+                                        eventName:
+                                            AnalyticsEvents.shortsBookaCall,
+                                        properties: {},
+                                      );
+                                    },
+                                    showUserName: videos[index].author != "",
+                                    showVideoTitle: true,
+                                    showShareButton: true,
+                                    showLikeButton: true,
+                                    showBookButton:
+                                        videos[index].advisorId != "",
+                                    comments: state
+                                        .videoComments[videos[index].id]
+                                        ?.reversed
+                                        .toList(),
+                                    isLikedByUser:
+                                        videos[index].isVideoLikedByUser,
+                                  );
+                          },
+                        ),
                       ),
                     ),
                   ),
-                ),
-                if (state.categories.isNotEmpty)
-                  DotIndicatorRow(
-                    currentPage: state.currentCategoryIndex,
-                    totalPages: widget.categories.length,
-                    categoryName: state.categories.isEmpty
-                        ? ''
-                        : state.categories[state.currentCategoryIndex],
-                    muted: state.muted,
-                  ),
-              ],
+                  if (state.categories.isNotEmpty)
+                    DotIndicatorRow(
+                      currentPage: state.currentCategoryIndex,
+                      totalPages: widget.categories.length,
+                      categoryName: state.categories.isEmpty
+                          ? ''
+                          : state.categories[state.currentCategoryIndex],
+                      muted: state.muted,
+                    ),
+                ],
+              ),
             );
           },
         ),

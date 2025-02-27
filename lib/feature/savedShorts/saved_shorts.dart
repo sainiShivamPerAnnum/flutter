@@ -9,7 +9,7 @@ import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 import 'package:felloapp/feature/shortsHome/widgets/more_options_sheet.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/elements/bottom_nav_bar/bottom_nav_bar.dart';
+import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -164,7 +164,6 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 16.h),
         ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -235,7 +234,7 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
                     },
                   ),
                 ),
-                SizedBox(height: 40.h),
+                SizedBox(height: 30.h),
               ],
             );
           },
@@ -299,17 +298,19 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
           page: ShortsPageConfig,
           state: PageState.addWidget,
           widget: BaseScaffold(
-            bottomNavigationBar: const BottomNavBar(),
+            appBar: FAppBar(
+              backgroundColor: Colors.transparent,
+              centerTitle: true,
+              titleWidget: Text('Saved', style: TextStyles.rajdhaniSB.body1),
+              leading: const BackButton(
+                color: Colors.white,
+              ),
+              showAvatar: false,
+              showCoinBar: false,
+            ),
             body: WillPopScope(
               onWillPop: () async {
                 await AppState.backButtonDispatcher!.didPopRoute();
-                preloadBloc.add(
-                  PreloadEvent.updateThemes(
-                    categories: [],
-                    theme: theme.theme,
-                    index: 0,
-                  ),
-                );
                 return false;
               },
               child: const ShortsVideoPage(

@@ -352,347 +352,430 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                 ],
                               ),
                             ),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              final theme = state.shortsHome.shorts[index];
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 20.w),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          theme.themeName,
-                                          style: TextStyles.sourceSansSB.body2,
+                          state.shortsHome.shorts.isEmpty
+                              ? Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        height: 170.h,
+                                      ),
+                                      Icon(
+                                        Icons.search_rounded,
+                                        size: 41.r,
+                                        color: Colors.white70,
+                                      ),
+                                      SizedBox(
+                                        height: 12.h,
+                                      ),
+                                      Text(
+                                        'No results found',
+                                        style: TextStyles.sourceSansM.body0,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      SizedBox(
+                                        height: 12.h,
+                                      ),
+                                      SizedBox(
+                                        width: 294.w,
+                                        child: Text(
+                                          'We found 0 results for your search “${_controller.text.trim()}”',
+                                          style: TextStyles.sourceSans.body2
+                                              .colour(UiConstants.kTextColor5),
+                                          textAlign: TextAlign.center,
                                         ),
-                                        if (theme.isNotificationAllowed)
-                                          GestureDetector(
-                                            onTap: () {
-                                              _searchFocusNode.unfocus();
-                                              BlocProvider.of<ShortsHomeBloc>(
-                                                context,
-                                              ).add(
-                                                ToogleNotification(
-                                                  theme.theme,
-                                                  theme.isNotificationOn,
-                                                ),
-                                              );
-                                            },
-                                            child: Container(
-                                              height: 24.r,
-                                              width: 24.r,
-                                              decoration: BoxDecoration(
-                                                color: UiConstants.kblue2
-                                                    .withOpacity(.4),
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(4.r),
-                                                ),
-                                              ),
-                                              padding: EdgeInsets.all(6.r),
-                                              child: Icon(
-                                                theme.isNotificationOn
-                                                    ? Icons.check_rounded
-                                                    : Icons
-                                                        .notifications_rounded,
-                                                color: UiConstants.teal3,
-                                                size: 12.r,
-                                              ),
-                                            ),
-                                          ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(height: 14.h),
-                                  BlocProvider(
-                                    create: (context) => ThemeVideosBloc(
-                                      shortsRepo: locator(),
-                                      theme: theme.theme,
-                                      themeName: theme.themeName,
-                                      total: theme.total,
-                                      totalPages: theme.totalPages,
-                                      initialVideos: theme.videos,
-                                    )..fetchFirstPage(),
-                                    child: BlocBuilder<ThemeVideosBloc,
-                                        PaginationState<dynamic, int, String>>(
-                                      builder: (context, themeState) {
-                                        final themeVideosBloc =
-                                            context.read<ThemeVideosBloc>();
-                                        return SizedBox(
-                                          height: 275.h,
-                                          child: ListView.builder(
-                                            physics:
-                                                const BouncingScrollPhysics(),
-                                            padding:
-                                                EdgeInsets.only(left: 20.w),
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: themeVideosBloc
-                                                .state.entries.length,
-                                            itemBuilder: (context, i) {
-                                              if (themeState.entries.length -
-                                                          1 ==
-                                                      i &&
-                                                  !themeState.status
-                                                      .isFetchingInitialPage &&
-                                                  !themeState.status
-                                                      .isFetchingSuccessive) {
-                                                themeVideosBloc.fetchNextPage();
-                                              }
-                                              if (themeState.status ==
-                                                  PaginationStatus
-                                                      .fetchingInitialPage) {
-                                                return const Center(
-                                                  child:
-                                                      CupertinoActivityIndicator(),
-                                                );
-                                              }
-                                              if (themeState.status ==
-                                                  PaginationStatus
-                                                      .failedToLoadInitialPage) {
-                                                return Center(
-                                                  child: Text(
-                                                    'Error: ${themeState.error}',
-                                                  ),
-                                                );
-                                              }
-                                              return GestureDetector(
-                                                onTap: () async {
-                                                  _searchFocusNode.unfocus();
-                                                  final preloadBloc =
-                                                      BlocProvider.of<
-                                                          PreloadBloc>(
-                                                    context,
-                                                  );
-                                                  final switchCompleter =
-                                                      Completer<void>();
-                                                  final themeCompleter =
-                                                      Completer<void>();
-                                                  final cate = theme
-                                                      .videos[i].categoryV1;
-                                                  final normalizedCategories =
-                                                      theme.categories
-                                                          .map(
-                                                            (category) => category
-                                                                .trim()
-                                                                .toLowerCase(),
-                                                          )
-                                                          .toList();
-                                                  final normalizedIndex =
-                                                      normalizedCategories
-                                                          .indexOf(
-                                                    cate.trim().toLowerCase(),
-                                                  );
-                                                  final List<String>
-                                                      reorderedCategories = [
-                                                    ...theme.categories,
-                                                  ];
-                                                  if (normalizedIndex != -1) {
-                                                    final clickedCategory =
-                                                        reorderedCategories
-                                                            .removeAt(
-                                                      normalizedIndex,
+                                )
+                              : ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    final theme =
+                                        state.shortsHome.shorts[index];
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 20.w),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                theme.themeName,
+                                                style: TextStyles
+                                                    .sourceSansSB.body2,
+                                              ),
+                                              if (theme.isNotificationAllowed)
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    _searchFocusNode.unfocus();
+                                                    BlocProvider.of<
+                                                        ShortsHomeBloc>(
+                                                      context,
+                                                    ).add(
+                                                      ToogleNotification(
+                                                        theme.theme,
+                                                        theme.isNotificationOn,
+                                                      ),
                                                     );
-                                                    reorderedCategories.insert(
-                                                      0,
-                                                      clickedCategory,
-                                                    );
-                                                  }
-
-                                                  preloadBloc.add(
-                                                    PreloadEvent.updateThemes(
-                                                      categories:
-                                                          reorderedCategories,
-                                                      theme: theme.theme,
-                                                      index: 0,
-                                                      completer: themeCompleter,
-                                                    ),
-                                                  );
-                                                  await themeCompleter.future;
-                                                  preloadBloc.add(
-                                                    PreloadEvent
-                                                        .getCategoryVideos(
-                                                      initailVideo:
-                                                          theme.videos[i],
-                                                      direction: 0,
-                                                      completer:
-                                                          switchCompleter,
-                                                    ),
-                                                  );
-                                                  await switchCompleter.future;
-                                                  AppState.delegate!.appState
-                                                          .currentAction =
-                                                      PageAction(
-                                                    page: ShortsPageConfig,
-                                                    state: PageState.addWidget,
-                                                    widget: BaseScaffold(
-                                                      bottomNavigationBar:
-                                                          const BottomNavBar(),
-                                                      body: WillPopScope(
-                                                        onWillPop: () async {
-                                                          await AppState
-                                                              .backButtonDispatcher!
-                                                              .didPopRoute();
-                                                          preloadBloc.add(
-                                                            PreloadEvent
-                                                                .updateThemes(
-                                                              categories: [],
-                                                              theme:
-                                                                  theme.theme,
-                                                              index: 0,
-                                                            ),
-                                                          );
-                                                          return false;
-                                                        },
-                                                        child: ShortsVideoPage(
-                                                          categories:
-                                                              reorderedCategories,
-                                                        ),
+                                                  },
+                                                  child: Container(
+                                                    height: 24.r,
+                                                    width: 24.r,
+                                                    decoration: BoxDecoration(
+                                                      color: UiConstants.kblue2
+                                                          .withOpacity(.4),
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                        Radius.circular(4.r),
                                                       ),
                                                     ),
-                                                  );
-                                                },
-                                                child: Container(
-                                                  width: 130.w,
-                                                  height: 275.h,
-                                                  decoration: BoxDecoration(
-                                                    color:
-                                                        UiConstants.greyVarient,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                      8.r,
+                                                    padding:
+                                                        EdgeInsets.all(6.r),
+                                                    child: Icon(
+                                                      theme.isNotificationOn
+                                                          ? Icons.check_rounded
+                                                          : Icons
+                                                              .notifications_rounded,
+                                                      color: UiConstants.teal3,
+                                                      size: 12.r,
                                                     ),
                                                   ),
-                                                  margin: EdgeInsets.only(
-                                                      right: 8.w),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Expanded(
-                                                        child: Stack(
-                                                          children: [
-                                                            Positioned.fill(
-                                                              child: Container(
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .only(
-                                                                    topLeft: Radius
-                                                                        .circular(
-                                                                      8.r,
-                                                                    ),
-                                                                    topRight: Radius
-                                                                        .circular(
-                                                                      8.r,
-                                                                    ),
+                                                ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(height: 14.h),
+                                        BlocProvider(
+                                          create: (context) => ThemeVideosBloc(
+                                            shortsRepo: locator(),
+                                            theme: theme.theme,
+                                            themeName: theme.themeName,
+                                            total: theme.total,
+                                            totalPages: theme.totalPages,
+                                            initialVideos: theme.videos,
+                                          )..fetchFirstPage(),
+                                          child: BlocBuilder<
+                                              ThemeVideosBloc,
+                                              PaginationState<dynamic, int,
+                                                  String>>(
+                                            builder: (context, themeState) {
+                                              final themeVideosBloc = context
+                                                  .read<ThemeVideosBloc>();
+                                              return SizedBox(
+                                                height: 275.h,
+                                                child: ListView.builder(
+                                                  physics:
+                                                      const BouncingScrollPhysics(),
+                                                  padding: EdgeInsets.only(
+                                                      left: 20.w),
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  itemCount: themeVideosBloc
+                                                      .state.entries.length,
+                                                  itemBuilder: (context, i) {
+                                                    if (themeState.entries
+                                                                    .length -
+                                                                1 ==
+                                                            i &&
+                                                        !themeState.status
+                                                            .isFetchingInitialPage &&
+                                                        !themeState.status
+                                                            .isFetchingSuccessive) {
+                                                      themeVideosBloc
+                                                          .fetchNextPage();
+                                                    }
+                                                    if (themeState.status ==
+                                                        PaginationStatus
+                                                            .fetchingInitialPage) {
+                                                      return const Center(
+                                                        child:
+                                                            CupertinoActivityIndicator(),
+                                                      );
+                                                    }
+                                                    if (themeState.status ==
+                                                        PaginationStatus
+                                                            .failedToLoadInitialPage) {
+                                                      return Center(
+                                                        child: Text(
+                                                          'Error: ${themeState.error}',
+                                                        ),
+                                                      );
+                                                    }
+                                                    return GestureDetector(
+                                                      onTap: () async {
+                                                        _searchFocusNode
+                                                            .unfocus();
+                                                        final preloadBloc =
+                                                            BlocProvider.of<
+                                                                PreloadBloc>(
+                                                          context,
+                                                        );
+                                                        final switchCompleter =
+                                                            Completer<void>();
+                                                        final themeCompleter =
+                                                            Completer<void>();
+                                                        final cate = theme
+                                                            .videos[i]
+                                                            .categoryV1;
+                                                        final normalizedCategories =
+                                                            theme.categories
+                                                                .map(
+                                                                  (category) =>
+                                                                      category
+                                                                          .trim()
+                                                                          .toLowerCase(),
+                                                                )
+                                                                .toList();
+                                                        final normalizedIndex =
+                                                            normalizedCategories
+                                                                .indexOf(
+                                                          cate
+                                                              .trim()
+                                                              .toLowerCase(),
+                                                        );
+                                                        final List<String>
+                                                            reorderedCategories =
+                                                            [
+                                                          ...theme.categories,
+                                                        ];
+                                                        if (normalizedIndex !=
+                                                            -1) {
+                                                          final clickedCategory =
+                                                              reorderedCategories
+                                                                  .removeAt(
+                                                            normalizedIndex,
+                                                          );
+                                                          reorderedCategories
+                                                              .insert(
+                                                            0,
+                                                            clickedCategory,
+                                                          );
+                                                        }
+
+                                                        preloadBloc.add(
+                                                          PreloadEvent
+                                                              .updateThemes(
+                                                            categories:
+                                                                reorderedCategories,
+                                                            theme: theme.theme,
+                                                            index: 0,
+                                                            completer:
+                                                                themeCompleter,
+                                                          ),
+                                                        );
+                                                        await themeCompleter
+                                                            .future;
+                                                        preloadBloc.add(
+                                                          PreloadEvent
+                                                              .getCategoryVideos(
+                                                            initailVideo:
+                                                                theme.videos[i],
+                                                            direction: 0,
+                                                            completer:
+                                                                switchCompleter,
+                                                          ),
+                                                        );
+                                                        await switchCompleter
+                                                            .future;
+                                                        AppState
+                                                                .delegate!
+                                                                .appState
+                                                                .currentAction =
+                                                            PageAction(
+                                                          page:
+                                                              ShortsPageConfig,
+                                                          state: PageState
+                                                              .addWidget,
+                                                          widget: BaseScaffold(
+                                                            bottomNavigationBar:
+                                                                const BottomNavBar(),
+                                                            body: WillPopScope(
+                                                              onWillPop:
+                                                                  () async {
+                                                                await AppState
+                                                                    .backButtonDispatcher!
+                                                                    .didPopRoute();
+                                                                preloadBloc.add(
+                                                                  PreloadEvent
+                                                                      .updateThemes(
+                                                                    categories: [],
+                                                                    theme: theme
+                                                                        .theme,
+                                                                    index: 0,
                                                                   ),
-                                                                  image:
-                                                                      DecorationImage(
-                                                                    image:
-                                                                        NetworkImage(
-                                                                      theme
-                                                                          .videos[
-                                                                              i]
-                                                                          .thumbnail,
-                                                                    ),
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                  ),
-                                                                ),
+                                                                );
+                                                                return false;
+                                                              },
+                                                              child:
+                                                                  ShortsVideoPage(
+                                                                categories:
+                                                                    reorderedCategories,
                                                               ),
                                                             ),
-                                                            buildMoreIcon(
-                                                              theme
-                                                                  .videos[i].id,
-                                                              theme.videos[i]
-                                                                  .isSaved,
-                                                              theme.theme,
-                                                              theme.videos[i]
-                                                                  .categoryV1,
-                                                            ),
-                                                            buildPlayIcon(),
-                                                            buildViewIndicator(
-                                                              theme.videos[i]
-                                                                  .views
-                                                                  .toDouble(),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                          horizontal: 10.w,
-                                                          vertical: 14.h,
-                                                        ),
+                                                          ),
+                                                        );
+                                                      },
+                                                      child: Container(
+                                                        width: 130.w,
+                                                        height: 275.h,
                                                         decoration:
                                                             BoxDecoration(
                                                           color: UiConstants
                                                               .greyVarient,
                                                           borderRadius:
-                                                              BorderRadius.only(
-                                                            bottomLeft:
-                                                                Radius.circular(
-                                                              8.r,
-                                                            ),
-                                                            bottomRight:
-                                                                Radius.circular(
-                                                              8.r,
-                                                            ),
+                                                              BorderRadius
+                                                                  .circular(
+                                                            8.r,
                                                           ),
                                                         ),
+                                                        margin: EdgeInsets.only(
+                                                            right: 8.w),
                                                         child: Column(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
                                                                   .start,
                                                           children: [
-                                                            Text(
-                                                              theme.videos[i]
-                                                                  .title,
-                                                              style: TextStyles
-                                                                  .sourceSansM
-                                                                  .body4,
-                                                              maxLines: 2,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
+                                                            Expanded(
+                                                              child: Stack(
+                                                                children: [
+                                                                  Positioned
+                                                                      .fill(
+                                                                    child:
+                                                                        Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.only(
+                                                                          topLeft:
+                                                                              Radius.circular(
+                                                                            8.r,
+                                                                          ),
+                                                                          topRight:
+                                                                              Radius.circular(
+                                                                            8.r,
+                                                                          ),
+                                                                        ),
+                                                                        image:
+                                                                            DecorationImage(
+                                                                          image:
+                                                                              NetworkImage(
+                                                                            theme.videos[i].thumbnail,
+                                                                          ),
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  buildMoreIcon(
+                                                                    theme
+                                                                        .videos[
+                                                                            i]
+                                                                        .id,
+                                                                    theme
+                                                                        .videos[
+                                                                            i]
+                                                                        .isSaved,
+                                                                    theme.theme,
+                                                                    theme
+                                                                        .videos[
+                                                                            i]
+                                                                        .categoryV1,
+                                                                  ),
+                                                                  buildPlayIcon(),
+                                                                  buildViewIndicator(
+                                                                    theme
+                                                                        .videos[
+                                                                            i]
+                                                                        .views
+                                                                        .toDouble(),
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
-                                                            SizedBox(
-                                                              height: 12.h,
-                                                            ),
-                                                            Text(
-                                                              theme.videos[i]
-                                                                  .categoryV1,
-                                                              style: TextStyles
-                                                                  .sourceSans
-                                                                  .body6,
+                                                            Container(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                horizontal:
+                                                                    10.w,
+                                                                vertical: 14.h,
+                                                              ),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: UiConstants
+                                                                    .greyVarient,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .only(
+                                                                  bottomLeft: Radius
+                                                                      .circular(
+                                                                    8.r,
+                                                                  ),
+                                                                  bottomRight:
+                                                                      Radius
+                                                                          .circular(
+                                                                    8.r,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    theme
+                                                                        .videos[
+                                                                            i]
+                                                                        .title,
+                                                                    style: TextStyles
+                                                                        .sourceSansM
+                                                                        .body4,
+                                                                    maxLines: 2,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height:
+                                                                        12.h,
+                                                                  ),
+                                                                  Text(
+                                                                    theme
+                                                                        .videos[
+                                                                            i]
+                                                                        .categoryV1,
+                                                                    style: TextStyles
+                                                                        .sourceSans
+                                                                        .body6,
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
                                                           ],
                                                         ),
                                                       ),
-                                                    ],
-                                                  ),
+                                                    );
+                                                  },
                                                 ),
                                               );
                                             },
                                           ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(height: 30.h),
-                                ],
-                              );
-                            },
-                            itemCount: state.shortsHome.shorts.length,
-                          ),
+                                        ),
+                                        SizedBox(height: 30.h),
+                                      ],
+                                    );
+                                  },
+                                  itemCount: state.shortsHome.shorts.length,
+                                ),
                         ],
                       ),
                     LoadingShortsFailed() => NewErrorPage(
