@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/savedShorts/saved_shorts.dart';
 import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
 import 'package:felloapp/feature/shorts/video_page.dart';
@@ -135,6 +137,9 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                               page: ShortsNotificationPageConfig,
                               state: PageState.addWidget,
                               widget: const ShortsNotificationPage(),
+                            );
+                            locator<AnalyticsService>().track(
+                              eventName: AnalyticsEvents.shortsNotication,
                             );
                           },
                           child: Container(

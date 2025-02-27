@@ -143,8 +143,14 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             );
             emit(state.copyWith(isShareAlreadyClicked: false));
           }
-          _analyticsService
-              .track(eventName: AnalyticsEvents.shortsShared, properties: {});
+          _analyticsService.track(
+            eventName: AnalyticsEvents.shortsShared,
+            properties: {
+              "shorts title": state.mainVideos[state.focusedIndex].title,
+              "shorts category": state.categories[state.currentCategoryIndex],
+              "shorts video list": state.theme,
+            },
+          );
         }
       },
       initializeFromDynamicLink: (e) async {
@@ -210,8 +216,15 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       },
       toggleComments: (e) {
         emit(state.copyWith(showComments: !state.showComments));
-        _analyticsService
-            .track(eventName: AnalyticsEvents.shortsComments, properties: {});
+        _analyticsService.track(
+          eventName: AnalyticsEvents.shortsComments,
+          properties: {
+            "expert name": state.mainVideos[state.focusedIndex].author,
+            "shorts title": state.mainVideos[state.focusedIndex].title,
+            "shorts category": state.categories[state.currentCategoryIndex],
+            "shorts video list": state.theme,
+          },
+        );
       },
       onError: (value) {
         emit(
@@ -306,7 +319,6 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         );
         _analyticsService.track(
           eventName: AnalyticsEvents.shortsHorizontalSwipe,
-          properties: {},
         );
         await _stopAndDisposeVideoControllers();
         e.completer?.complete();
@@ -350,7 +362,6 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                 state.currentContext == ReelContext.main;
         _analyticsService.track(
           eventName: AnalyticsEvents.shortsVerticalSwipe,
-          properties: {},
         );
         if (shouldFetch) {
           final response = await repository.getVideosByCategory(
@@ -515,8 +526,15 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             ),
           );
         }
-        _analyticsService
-            .track(eventName: AnalyticsEvents.shortsFollow, properties: {});
+        _analyticsService.track(
+          eventName: AnalyticsEvents.shortsFollow,
+          properties: {
+            "expert name": state.mainVideos[state.focusedIndex].author,
+            "shorts title": state.mainVideos[state.focusedIndex].title,
+            "shorts category": state.categories[state.currentCategoryIndex],
+            "shorts video list": state.theme,
+          },
+        );
       },
       saveVideo: (e) async {
         if (state.currentContext == ReelContext.main) {
@@ -668,8 +686,14 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             ),
           );
         }
-        _analyticsService
-            .track(eventName: AnalyticsEvents.shortsLiked, properties: {});
+        _analyticsService.track(
+          eventName: AnalyticsEvents.shortsLiked,
+          properties: {
+            "shorts title": state.mainVideos[state.focusedIndex].title,
+            "shorts category": state.categories[state.currentCategoryIndex],
+            "shorts video list": state.theme,
+          },
+        );
         log('🚀🚀🚀 Video liked');
       },
       addCommentToState: (e) {

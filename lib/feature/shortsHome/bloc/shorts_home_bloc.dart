@@ -114,7 +114,6 @@ class ShortsHomeBloc extends Bloc<ShortsHomeEvents, ShortsHomeState> {
       }
       _analyticsService.track(
         eventName: AnalyticsEvents.shortsSearched,
-        properties: {},
       );
     }
   }
@@ -138,7 +137,6 @@ class ShortsHomeBloc extends Bloc<ShortsHomeEvents, ShortsHomeState> {
     }
     _analyticsService.track(
       eventName: AnalyticsEvents.shortsFilterApplied,
-      properties: {},
     );
   }
 }

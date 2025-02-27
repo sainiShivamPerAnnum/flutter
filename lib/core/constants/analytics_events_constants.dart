@@ -413,4 +413,12 @@ class AnalyticsEvents {
   static const shortsFilterApplied = "Shorts filterAplied";
   static const shortsSearched = "Shorts searched";
   static const shortsNotication = "Shorts notifcation section";
+
+  static const homeJoinCall = "Home Join call";
+  static const homeEditCall = "Home Edit call ";
+  static const homeWebinarJoin = "Home Join Now - webinar";
+
+  static const expertsJoinCall = "Experts Join call";
+  static const expertsEditCall = "Experts Edit call ";
+  static const liveWebinarJoin = "Live Join Now - webinar";
 }

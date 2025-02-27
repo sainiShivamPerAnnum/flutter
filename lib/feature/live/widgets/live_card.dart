@@ -34,6 +34,7 @@ class LiveCardWidget extends StatefulWidget {
   final double? maxWidth;
   final String? eventId;
   final bool? isLiked;
+  final bool fromHome;
 
   const LiveCardWidget({
     required this.id,
@@ -44,6 +45,7 @@ class LiveCardWidget extends StatefulWidget {
     required this.category,
     required this.bgImage,
     required this.advisorId,
+    required this.fromHome,
     this.isLiked,
     this.onNotify,
     this.notifyOn,
@@ -153,6 +155,14 @@ class _LiveCardWidgetState extends State<LiveCardWidget> {
       onTap: widget.onTap ??
           () async {
             if (widget.status == 'live') {
+              locator<AnalyticsService>().track(
+                eventName: widget.fromHome
+                    ? AnalyticsEvents.homeJoinCall
+                    : AnalyticsEvents.expertsJoinCall,
+                properties: {
+                  "webinar ID": widget.id,
+                },
+              );
               if (widget.viewerCode != null) {
                 final String? name =
                     locator<UserService>().baseUser!.kycName!.isNotEmpty

@@ -318,7 +318,14 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                       locator<AnalyticsService>().track(
                                         eventName:
                                             AnalyticsEvents.shortsBookaCall,
-                                        properties: {},
+                                        properties: {
+                                          "shorts title": state
+                                              .mainVideos[state.focusedIndex]
+                                              .title,
+                                          "shorts category": state.categories[
+                                              state.currentCategoryIndex],
+                                          "shorts video list": state.theme,
+                                        },
                                       );
                                     },
                                     showUserName: videos[index].author != "",

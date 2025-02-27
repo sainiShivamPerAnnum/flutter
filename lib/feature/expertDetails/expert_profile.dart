@@ -450,6 +450,7 @@ Widget _buildLiveTab(List<VideoData> recentlive, BuildContext context) {
               return Padding(
                 padding: EdgeInsets.only(bottom: SizeConfig.padding16),
                 child: LiveCardWidget(
+                  fromHome: false,
                   id: video.id,
                   status: 'recent',
                   maxWidth: SizeConfig.padding350,

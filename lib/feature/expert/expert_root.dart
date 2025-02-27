@@ -275,6 +275,7 @@ class __ExpertHomeState extends State<_ExpertHome>
                                 width: upcomingBookings.length > 1
                                     ? SizeConfig.padding325
                                     : SizeConfig.padding350,
+                                fromHome: false,
                               ),
                             ),
                           ),

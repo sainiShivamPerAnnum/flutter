@@ -121,13 +121,14 @@ class __LiveHomeState extends State<_LiveHome> {
                               upcomingList: null,
                               recentList: null,
                               notificationState: null,
+                              fromHome: false,
                             ),
                           );
                         },
                         showViewAll: liveData.live.length > 1,
                       ),
                     ),
-                    buildLiveSection(liveData.live),
+                    buildLiveSection(liveData.live, false),
                     if (liveData.upcoming.isNotEmpty)
                       Padding(
                         padding: EdgeInsets.symmetric(
@@ -160,6 +161,7 @@ class __LiveHomeState extends State<_LiveHome> {
                                   liveList: null,
                                   upcomingList: liveData.upcoming,
                                   recentList: null,
+                                  fromHome: false,
                                 ),
                               ),
                             );
@@ -194,6 +196,7 @@ class __LiveHomeState extends State<_LiveHome> {
                                 upcomingList: null,
                                 notificationState: null,
                                 recentList: liveData.recent,
+                                fromHome: false,
                               ),
                             );
                           },
@@ -243,6 +246,7 @@ class __LiveHomeState extends State<_LiveHome> {
               ),
               child: LiveCardWidget(
                 id: upcomingData[i].id,
+                fromHome: false,
                 status: 'upcoming',
                 title: upcomingData[i].title,
                 subTitle: upcomingData[i].subtitle,
@@ -273,7 +277,7 @@ class __LiveHomeState extends State<_LiveHome> {
   }
 }
 
-Widget buildLiveSection(List<LiveStream> liveData) {
+Widget buildLiveSection(List<LiveStream> liveData, bool fromHome) {
   return (liveData.isEmpty)
       ? Container(
           padding: EdgeInsets.symmetric(
@@ -368,6 +372,7 @@ Widget buildLiveSection(List<LiveStream> liveData) {
                     viewerCode: live.viewerCode,
                     isLiked: live.isEventLikedByUser,
                     startTime: live.startTime,
+                    fromHome: fromHome,
                   ),
                 ),
             ],
@@ -396,6 +401,7 @@ Widget buildRecentSection(
             ),
             child: LiveCardWidget(
               id: recentData[i].id,
+              fromHome: false,
               onTap: () async {
                 final preloadBloc = BlocProvider.of<PreloadBloc>(context);
                 final switchCompleter = Completer<void>();

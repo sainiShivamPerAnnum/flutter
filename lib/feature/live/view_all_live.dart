@@ -30,6 +30,7 @@ class ViewAllLive extends StatefulWidget {
     required this.advisorPast,
     required this.onNotify,
     required this.notificationState,
+    required this.fromHome,
     super.key,
   });
   final Function(String id)? onNotify;
@@ -41,6 +42,7 @@ class ViewAllLive extends StatefulWidget {
   final List<AdvisorCall>? advisorUpcoming;
   final List<AdvisorCall>? advisorPast;
   final Map<String, bool>? notificationState;
+  final bool fromHome;
 
   @override
   State<ViewAllLive> createState() => _ViewAllLiveState();
@@ -88,6 +90,7 @@ class _ViewAllLiveState extends State<ViewAllLive> {
                     liveCount: item.liveCount,
                     advisorId: item.advisorId,
                     viewerCode: item.viewerCode,
+                    fromHome: widget.fromHome,
                   ),
                 ),
               for (final UpcomingStream item in widget.upcomingList ?? [])
@@ -95,6 +98,7 @@ class _ViewAllLiveState extends State<ViewAllLive> {
                   padding: EdgeInsets.only(bottom: SizeConfig.padding16),
                   child: LiveCardWidget(
                     id: item.id,
+                    fromHome: widget.fromHome,
                     maxWidth: SizeConfig.padding350,
                     status: widget.type,
                     title: item.title,
@@ -125,6 +129,7 @@ class _ViewAllLiveState extends State<ViewAllLive> {
                   padding: EdgeInsets.only(bottom: SizeConfig.padding16),
                   child: LiveCardWidget(
                     id: item.id,
+                    fromHome: widget.fromHome,
                     maxWidth: SizeConfig.padding350,
                     status: widget.type,
                     onTap: () async {
