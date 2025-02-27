@@ -40,6 +40,7 @@ mixin _$PreloadEvent {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -78,6 +79,7 @@ mixin _$PreloadEvent {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -116,6 +118,7 @@ mixin _$PreloadEvent {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -248,6 +251,7 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -289,6 +293,7 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -330,6 +335,7 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -426,6 +432,7 @@ class _$DisposeLiveStreamControllerImpl
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -467,6 +474,7 @@ class _$DisposeLiveStreamControllerImpl
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -508,6 +516,7 @@ class _$DisposeLiveStreamControllerImpl
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -598,6 +607,7 @@ class _$DisposeMainStreamControllerImpl
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -639,6 +649,7 @@ class _$DisposeMainStreamControllerImpl
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -680,6 +691,7 @@ class _$DisposeMainStreamControllerImpl
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -766,6 +778,7 @@ class _$ToggleVolumeImpl implements _ToggleVolume {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -807,6 +820,7 @@ class _$ToggleVolumeImpl implements _ToggleVolume {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -848,6 +862,7 @@ class _$ToggleVolumeImpl implements _ToggleVolume {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -933,6 +948,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -974,6 +990,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -1015,6 +1032,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -1149,6 +1167,7 @@ class _$GetCategoryVideosImpl implements _GetCategoryVideos {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -1190,6 +1209,7 @@ class _$GetCategoryVideosImpl implements _GetCategoryVideos {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -1231,6 +1251,7 @@ class _$GetCategoryVideosImpl implements _GetCategoryVideos {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -1326,6 +1347,7 @@ class _$SetLoadingImpl implements _SetLoading {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -1367,6 +1389,7 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -1408,6 +1431,7 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -1536,6 +1560,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -1577,6 +1602,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -1618,6 +1644,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -1737,6 +1764,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -1778,6 +1806,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -1819,6 +1848,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -1937,6 +1967,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -1978,6 +2009,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -2019,6 +2051,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -2136,6 +2169,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -2177,6 +2211,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -2218,6 +2253,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -2376,6 +2412,7 @@ class _$UpdateThemesImpl implements _UpdateThemes {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -2417,6 +2454,7 @@ class _$UpdateThemesImpl implements _UpdateThemes {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -2458,6 +2496,7 @@ class _$UpdateThemesImpl implements _UpdateThemes {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -2602,6 +2641,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -2643,6 +2683,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -2684,6 +2725,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -2813,6 +2855,7 @@ class _$AddCommentImpl implements _AddComment {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -2854,6 +2897,7 @@ class _$AddCommentImpl implements _AddComment {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -2895,6 +2939,7 @@ class _$AddCommentImpl implements _AddComment {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -3015,6 +3060,7 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -3056,6 +3102,7 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -3097,6 +3144,7 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -3214,6 +3262,7 @@ class _$UpdateSeenImpl implements _UpdateSeen {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -3255,6 +3304,7 @@ class _$UpdateSeenImpl implements _UpdateSeen {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -3296,6 +3346,7 @@ class _$UpdateSeenImpl implements _UpdateSeen {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -3386,6 +3437,7 @@ class _$ErrorPageImpl implements _ErrorPage {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -3427,6 +3479,7 @@ class _$ErrorPageImpl implements _ErrorPage {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -3468,6 +3521,7 @@ class _$ErrorPageImpl implements _ErrorPage {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -3579,6 +3633,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -3620,6 +3675,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -3661,6 +3717,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -3778,6 +3835,7 @@ class _$FollowAdvisorImpl implements _FollowAdvisor {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -3819,6 +3877,7 @@ class _$FollowAdvisorImpl implements _FollowAdvisor {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -3860,6 +3919,7 @@ class _$FollowAdvisorImpl implements _FollowAdvisor {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -4007,6 +4067,7 @@ class _$SaveVideoImpl implements _SaveVideo {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -4048,6 +4109,7 @@ class _$SaveVideoImpl implements _SaveVideo {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -4089,6 +4151,7 @@ class _$SaveVideoImpl implements _SaveVideo {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -4123,6 +4186,254 @@ abstract class _SaveVideo implements PreloadEvent {
   String get category;
   @JsonKey(ignore: true)
   _$$SaveVideoImplCopyWith<_$SaveVideoImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$AddInteractionImplCopyWith<$Res> {
+  factory _$$AddInteractionImplCopyWith(_$AddInteractionImpl value,
+          $Res Function(_$AddInteractionImpl) then) =
+      __$$AddInteractionImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {InteractionType interaction,
+      String videoId,
+      String theme,
+      String category});
+}
+
+/// @nodoc
+class __$$AddInteractionImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$AddInteractionImpl>
+    implements _$$AddInteractionImplCopyWith<$Res> {
+  __$$AddInteractionImplCopyWithImpl(
+      _$AddInteractionImpl _value, $Res Function(_$AddInteractionImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? interaction = freezed,
+    Object? videoId = null,
+    Object? theme = null,
+    Object? category = null,
+  }) {
+    return _then(_$AddInteractionImpl(
+      interaction: freezed == interaction
+          ? _value.interaction
+          : interaction // ignore: cast_nullable_to_non_nullable
+              as InteractionType,
+      videoId: null == videoId
+          ? _value.videoId
+          : videoId // ignore: cast_nullable_to_non_nullable
+              as String,
+      theme: null == theme
+          ? _value.theme
+          : theme // ignore: cast_nullable_to_non_nullable
+              as String,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$AddInteractionImpl implements _AddInteraction {
+  const _$AddInteractionImpl(
+      {required this.interaction,
+      required this.videoId,
+      required this.theme,
+      required this.category});
+
+  @override
+  final InteractionType interaction;
+  @override
+  final String videoId;
+  @override
+  final String theme;
+  @override
+  final String category;
+
+  @override
+  String toString() {
+    return 'PreloadEvent.addInteraction(interaction: $interaction, videoId: $videoId, theme: $theme, category: $category)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AddInteractionImpl &&
+            const DeepCollectionEquality()
+                .equals(other.interaction, interaction) &&
+            (identical(other.videoId, videoId) || other.videoId == videoId) &&
+            (identical(other.theme, theme) || other.theme == theme) &&
+            (identical(other.category, category) ||
+                other.category == category));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(interaction),
+      videoId,
+      theme,
+      category);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AddInteractionImplCopyWith<_$AddInteractionImpl> get copyWith =>
+      __$$AddInteractionImplCopyWithImpl<_$AddInteractionImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
+    required TResult Function(_GetVideosFromApi value) getVideosFromApi,
+    required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_SetLoading value) setLoading,
+    required TResult Function(_UpdateUrls value) updateUrls,
+    required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
+    required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
+    required TResult Function(_ErrorPage value) onError,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_FollowAdvisor value) followAdvisor,
+    required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
+    required TResult Function(_ToggleComments value) toggleComments,
+    required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_InitializeFromDynamicLink value)
+        initializeFromDynamicLink,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
+    required TResult Function(_DisposeProfileControllers value)
+        disposeProfileControllers,
+    required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
+    required TResult Function(_UpdateLoading value) updateLoading,
+  }) {
+    return addInteraction(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
+    TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_SetLoading value)? setLoading,
+    TResult? Function(_UpdateUrls value)? updateUrls,
+    TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
+    TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
+    TResult? Function(_ErrorPage value)? onError,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_FollowAdvisor value)? followAdvisor,
+    TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
+    TResult? Function(_ToggleComments value)? toggleComments,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_InitializeFromDynamicLink value)?
+        initializeFromDynamicLink,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult? Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+    TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
+    TResult? Function(_UpdateLoading value)? updateLoading,
+  }) {
+    return addInteraction?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
+    TResult Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_SetLoading value)? setLoading,
+    TResult Function(_UpdateUrls value)? updateUrls,
+    TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
+    TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
+    TResult Function(_ErrorPage value)? onError,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_FollowAdvisor value)? followAdvisor,
+    TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
+    TResult Function(_ToggleComments value)? toggleComments,
+    TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_InitializeFromDynamicLink value)?
+        initializeFromDynamicLink,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+    TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
+    TResult Function(_UpdateLoading value)? updateLoading,
+    required TResult orElse(),
+  }) {
+    if (addInteraction != null) {
+      return addInteraction(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _AddInteraction implements PreloadEvent {
+  const factory _AddInteraction(
+      {required final InteractionType interaction,
+      required final String videoId,
+      required final String theme,
+      required final String category}) = _$AddInteractionImpl;
+
+  InteractionType get interaction;
+  String get videoId;
+  String get theme;
+  String get category;
+  @JsonKey(ignore: true)
+  _$$AddInteractionImplCopyWith<_$AddInteractionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -4186,6 +4497,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -4227,6 +4539,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -4268,6 +4581,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -4396,6 +4710,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -4437,6 +4752,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -4478,6 +4794,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -4571,6 +4888,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -4612,6 +4930,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -4653,6 +4972,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -4767,6 +5087,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -4808,6 +5129,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -4849,6 +5171,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -4976,6 +5299,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -5017,6 +5341,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -5058,6 +5383,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -5190,6 +5516,7 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -5231,6 +5558,7 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -5272,6 +5600,7 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -5392,6 +5721,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -5433,6 +5763,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -5474,6 +5805,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -5568,6 +5900,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -5609,6 +5942,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -5650,6 +5984,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -5762,6 +6097,7 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -5803,6 +6139,7 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -5844,6 +6181,7 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,
@@ -5962,6 +6300,7 @@ class _$UpdateLoadingImpl implements _UpdateLoading {
     required TResult Function(_LikeVideo value) likeVideo,
     required TResult Function(_FollowAdvisor value) followAdvisor,
     required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
     required TResult Function(_ToggleComments value) toggleComments,
     required TResult Function(_AddCommentToState value) addCommentToState,
     required TResult Function(_SwitchToMainReels value) switchToMainReels,
@@ -6003,6 +6342,7 @@ class _$UpdateLoadingImpl implements _UpdateLoading {
     TResult? Function(_LikeVideo value)? likeVideo,
     TResult? Function(_FollowAdvisor value)? followAdvisor,
     TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
     TResult? Function(_ToggleComments value)? toggleComments,
     TResult? Function(_AddCommentToState value)? addCommentToState,
     TResult? Function(_SwitchToMainReels value)? switchToMainReels,
@@ -6044,6 +6384,7 @@ class _$UpdateLoadingImpl implements _UpdateLoading {
     TResult Function(_LikeVideo value)? likeVideo,
     TResult Function(_FollowAdvisor value)? followAdvisor,
     TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
     TResult Function(_ToggleComments value)? toggleComments,
     TResult Function(_AddCommentToState value)? addCommentToState,
     TResult Function(_SwitchToMainReels value)? switchToMainReels,

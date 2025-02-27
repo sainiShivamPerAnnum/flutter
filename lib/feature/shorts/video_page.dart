@@ -1,12 +1,15 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 import 'package:felloapp/feature/shorts/src/widgets/all_viewed_sheet.dart';
 import 'package:felloapp/feature/shorts/src/widgets/dot_indicator.dart';
 import 'package:felloapp/feature/shorts/src/widgets/loadinng_shimmer.dart';
 import 'package:felloapp/feature/shorts/src/widgets/video_widget.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -292,6 +295,11 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                       advisorId: videos[index].advisorId,
                                       advisorName: videos[index].author,
                                       isEdit: false,
+                                    );
+                                    locator<AnalyticsService>().track(
+                                      eventName:
+                                          AnalyticsEvents.shortsBookaCall,
+                                      properties: {},
                                     );
                                   },
                                   showUserName: videos[index].author != "",

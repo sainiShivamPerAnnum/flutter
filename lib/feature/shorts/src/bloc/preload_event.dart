@@ -65,6 +65,12 @@ class PreloadEvent with _$PreloadEvent {
     required String theme,
     required String category,
   }) = _SaveVideo;
+  const factory PreloadEvent.addInteraction({
+    required InteractionType interaction,
+    required String videoId,
+    required String theme,
+    required String category,
+  }) = _AddInteraction;
   const factory PreloadEvent.toggleComments() = _ToggleComments;
   const factory PreloadEvent.addCommentToState({
     required String videoId,

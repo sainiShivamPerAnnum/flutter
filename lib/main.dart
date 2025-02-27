@@ -15,6 +15,7 @@ import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
+import 'package:felloapp/feature/shortsHome/bloc/shorts_home_bloc.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
@@ -76,6 +77,9 @@ class MyApp extends HookWidget {
         splitScreenMode: false,
         child: MultiProvider(
           providers: [
+            BlocProvider(
+              create: (_) => ShortsHomeBloc(locator(), locator()),
+            ),
             BlocProvider(
               create: (_) => PreloadBloc(),
             ),

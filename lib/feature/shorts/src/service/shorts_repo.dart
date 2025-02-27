@@ -1,6 +1,7 @@
 import 'package:felloapp/core/model/shorts/shorts_home.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/feature/shorts/src/core/interaction_enum.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'comment_data.dart';
@@ -253,6 +254,33 @@ class ShortsRepo extends BaseRepo {
         countUrl,
         cBaseUrl: _baseUrl,
         apiName: 'ShortsRepo/updateSeen',
+      );
+      return const ApiResponse<void>(code: 200);
+    } catch (e) {
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<void>> updateInteraction({
+    required String videoId,
+    required String theme,
+    required String category,
+    required InteractionType interaction,
+  }) async {
+    final uid = userService.baseUser!.uid;
+    final String interactionUrl = 'user-video-interactions/$uid';
+    final requestBody = {
+      "videoId": videoId,
+      "category": category,
+      "theme": theme,
+      "interactionType": interaction.toString().toUpperCase(),
+    };
+    try {
+      await APIService.instance.postData(
+        interactionUrl,
+        cBaseUrl: _baseUrl,
+        apiName: 'ShortsRepo/updateInteraction',
+        body: requestBody,
       );
       return const ApiResponse<void>(code: 200);
     } catch (e) {

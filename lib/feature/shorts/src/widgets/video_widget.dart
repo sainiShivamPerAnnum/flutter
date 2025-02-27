@@ -491,10 +491,15 @@ class VideoWidgetState extends State<VideoWidget>
                 children: [
                   GestureDetector(
                     onTap: onCommentToggle,
-                    child: Icon(
-                      Icons.close,
-                      size: SizeConfig.body1,
-                      color: UiConstants.kTextColor,
+                    behavior: HitTestBehavior.opaque,
+                    child: SizedBox(
+                      height: 24.r,
+                      width: 24.r,
+                      child: Icon(
+                        Icons.close,
+                        size: 18.r,
+                        color: UiConstants.kTextColor,
+                      ),
                     ),
                   ),
                 ],

@@ -83,4 +83,17 @@ class PreloadState with _$PreloadState {
         return [];
     }
   }
+
+  VideoPlayerController? get currentController {
+    switch (currentContext) {
+      case ReelContext.main:
+        return controllers[focusedIndex];
+      case ReelContext.profile:
+        return profileControllers[profileVideoIndex];
+      case ReelContext.liveStream:
+        return liveStreamController;
+      default:
+        return null;
+    }
+  }
 }

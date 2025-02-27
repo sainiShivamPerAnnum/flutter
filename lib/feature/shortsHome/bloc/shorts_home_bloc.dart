@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/shorts/shorts_home.dart';
 import 'package:felloapp/core/repository/shorts_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 // import 'package:felloapp/util/debouncer.dart';
 
 part 'shorts_home_event.dart';
@@ -12,13 +14,16 @@ part 'shorts_home_state.dart';
 
 class ShortsHomeBloc extends Bloc<ShortsHomeEvents, ShortsHomeState> {
   final ShortsRepository _shortsRepository;
+  final AnalyticsService _analyticsService;
   ShortsHomeBloc(
     this._shortsRepository,
+    this._analyticsService,
   ) : super(const LoadingShortsDetails()) {
     on<LoadHomeData>(_onLoadShortsHomeData);
     on<SearchShorts>(_searchShorts);
     on<ApplyCategory>(_onCategoryApply);
     on<ToogleNotification>(_toggleNotification);
+    on<RefreshHomeData>(_onRefresh);
   }
   FutureOr<void> _onLoadShortsHomeData(
     LoadHomeData event,
@@ -26,6 +31,18 @@ class ShortsHomeBloc extends Bloc<ShortsHomeEvents, ShortsHomeState> {
   ) async {
     emitter(const LoadingShortsDetails());
 
+    final data = await _shortsRepository.getShortsHomeData();
+    if (data.isSuccess()) {
+      emitter(ShortsHomeData(shortsHome: data.model!, query: ''));
+    } else {
+      emitter(LoadingShortsFailed(errorMessage: data.errorMessage));
+    }
+  }
+
+  FutureOr<void> _onRefresh(
+    RefreshHomeData event,
+    Emitter<ShortsHomeState> emitter,
+  ) async {
     final data = await _shortsRepository.getShortsHomeData();
     if (data.isSuccess()) {
       emitter(ShortsHomeData(shortsHome: data.model!, query: ''));
@@ -95,6 +112,10 @@ class ShortsHomeBloc extends Bloc<ShortsHomeEvents, ShortsHomeState> {
       } else {
         emitter(LoadingShortsFailed(errorMessage: data.errorMessage));
       }
+      _analyticsService.track(
+        eventName: AnalyticsEvents.shortsSearched,
+        properties: {},
+      );
     }
   }
 
@@ -115,5 +136,9 @@ class ShortsHomeBloc extends Bloc<ShortsHomeEvents, ShortsHomeState> {
     } else {
       emitter(LoadingShortsFailed(errorMessage: data.errorMessage));
     }
+    _analyticsService.track(
+      eventName: AnalyticsEvents.shortsFilterApplied,
+      properties: {},
+    );
   }
 }

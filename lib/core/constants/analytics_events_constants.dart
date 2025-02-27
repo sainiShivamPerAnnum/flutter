@@ -398,4 +398,19 @@ class AnalyticsEvents {
   static const scheduleCategorySelect = "Schedule Live Category";
   static const scheduleTimeSelect = "Schedule Live Time";
   static const callUsNow = "Call us now";
+
+  static const shortsShared = " Shorts shared";
+  static const shortsLiked = "Shorts Like";
+  static const shortsBookaCall = "Shorts bookaCall";
+  static const shortsBookACallSelectData = "Shorts book a call selectDate";
+  static const shortsBookCallCancel = "Shorts book a call cancel";
+  static const shortsComments = "Shorts comment";
+  static const shortsFollow = "Shorts follow";
+  static const followAndLeave = "Shorts followAndLeave";
+  static const shortsProfileClick = "Shorts profileClick";
+  static const shortsHorizontalSwipe = "Shorts horizontalSwipe";
+  static const shortsVerticalSwipe = "Shorts verticalSwipe";
+  static const shortsFilterApplied = "Shorts filterAplied";
+  static const shortsSearched = "Shorts searched";
+  static const shortsNotication = "Shorts notifcation section";
 }

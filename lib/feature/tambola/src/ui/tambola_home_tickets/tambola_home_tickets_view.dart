@@ -54,7 +54,7 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
       resizeToAvoidBottomInset: false,
       showBackgroundGrid: true,
       appBar: const FAppBar(
-        title: "Tambola",
+        title: "Tickets",
         showHelpButton: true,
         type: FaqsType.tambola,
         showCoinBar: false,
@@ -70,23 +70,23 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
                     child: FullScreenLoader(),
                   )
                 : ListView(
-                  padding: EdgeInsets.only(
-                    top: SizeConfig.padding16,
-                    bottom: SizeConfig.navBarHeight,
-                  ),
-                  controller: RootController.controller,
-                  children: const [
-                    TambolaRewardLottieStrip(),
-                    TicketsPicksWidget(),
-                    TicketSection(),
-                    NextWeekTicketInfo(),
-                    TicketsOffersSection(),
-                    TicketMultiplierOptionsWidget(),
-                    TicketsRewardSection(),
-                    TambolaLeaderboardView(),
-                    TermsAndConditions(url: Constants.tambolatnc),
-                  ],
-                );
+                    padding: EdgeInsets.only(
+                      top: SizeConfig.padding16,
+                      bottom: SizeConfig.navBarHeight,
+                    ),
+                    controller: RootController.controller,
+                    children: const [
+                      TambolaRewardLottieStrip(),
+                      TicketsPicksWidget(),
+                      TicketSection(),
+                      NextWeekTicketInfo(),
+                      TicketsOffersSection(),
+                      TicketMultiplierOptionsWidget(),
+                      TicketsRewardSection(),
+                      TambolaLeaderboardView(),
+                      TermsAndConditions(url: Constants.tambolatnc),
+                    ],
+                  );
           }),
     );
   }

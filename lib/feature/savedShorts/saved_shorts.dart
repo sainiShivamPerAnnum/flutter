@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/shorts/shorts_home.dart';
 import 'package:felloapp/feature/savedShorts/bloc/shorts_notification_bloc.dart';
 import 'package:felloapp/feature/shorts/flutter_preload_videos.dart';
 import 'package:felloapp/feature/shorts/src/service/video_data.dart';
+import 'package:felloapp/feature/shortsHome/widgets/more_options_sheet.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/bottom_nav_bar/bottom_nav_bar.dart';
@@ -346,6 +347,12 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
                       ),
                     ),
                   ),
+                  buildMoreIcon(
+                    theme.videos[index].id,
+                    theme.videos[index].isSaved,
+                    theme.theme,
+                    theme.videos[index].categoryV1,
+                  ),
                   buildPlayIcon(),
                   buildViewIndicator(video.views.toDouble()),
                 ],
@@ -381,6 +388,44 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildMoreIcon(String id, bool isSaved, String theme, String category) {
+    return Align(
+      alignment: Alignment.topRight,
+      child: Padding(
+        padding: EdgeInsets.only(top: 10.h, right: 8.w),
+        child: GestureDetector(
+          onTap: () {
+            BaseUtil.openModalBottomSheet(
+              isScrollControlled: true,
+              enableDrag: false,
+              isBarrierDismissible: true,
+              addToScreenStack: true,
+              backgroundColor: UiConstants.kBackgroundColor,
+              hapticVibrate: true,
+              content: MoreOptionsSheet(
+                id: id,
+                isSaved: isSaved,
+                theme: theme,
+                category: category,
+              ),
+            );
+          },
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            height: 24.r,
+            width: 24.r,
+            alignment: Alignment.center,
+            child: Icon(
+              Icons.more_vert_rounded,
+              color: Colors.white,
+              size: 18.r,
+            ),
+          ),
         ),
       ),
     );

@@ -1,12 +1,17 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:bloc/bloc.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/shorts/src/core/interaction_enum.dart';
+import 'package:felloapp/feature/shortsHome/bloc/shorts_home_bloc.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:share_plus/share_plus.dart';
@@ -25,6 +30,7 @@ part 'preload_state.dart';
 @prod
 class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
   final repository = locator<ShortsRepo>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   PreloadBloc() : super(PreloadState.initial()) {
     on(_mapEventToState);
@@ -53,7 +59,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         e.completer?.complete();
       },
       toggleVolume: (e) {
-        final controller = state.controllers[state.focusedIndex];
+        final controller = state.currentController;
         if (controller != null && controller.value.isPlaying) {
           if (controller.value.volume == 0) {
             controller.setVolume(
@@ -137,6 +143,8 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             );
             emit(state.copyWith(isShareAlreadyClicked: false));
           }
+          _analyticsService
+              .track(eventName: AnalyticsEvents.shortsShared, properties: {});
         }
       },
       initializeFromDynamicLink: (e) async {
@@ -180,6 +188,16 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           ),
         );
       },
+      addInteraction: (e) {
+        unawaited(
+          repository.updateInteraction(
+            videoId: e.videoId,
+            theme: e.theme,
+            category: e.category,
+            interaction: e.interaction,
+          ),
+        );
+      },
       switchToProfileReels: (e) {
         emit(state.copyWith(currentContext: ReelContext.profile));
         e.completer?.complete();
@@ -192,6 +210,8 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       },
       toggleComments: (e) {
         emit(state.copyWith(showComments: !state.showComments));
+        _analyticsService
+            .track(eventName: AnalyticsEvents.shortsComments, properties: {});
       },
       onError: (value) {
         emit(
@@ -284,7 +304,10 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             currentCategoryIndex: index,
           ),
         );
-
+        _analyticsService.track(
+          eventName: AnalyticsEvents.shortsHorizontalSwipe,
+          properties: {},
+        );
         await _stopAndDisposeVideoControllers();
         e.completer?.complete();
 
@@ -325,7 +348,10 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                 state.currentVideos.length ==
                     e.index + VideoPreloadConstants.kPreloadLimit &&
                 state.currentContext == ReelContext.main;
-
+        _analyticsService.track(
+          eventName: AnalyticsEvents.shortsVerticalSwipe,
+          properties: {},
+        );
         if (shouldFetch) {
           final response = await repository.getVideosByCategory(
             category: state.categories[state.currentCategoryIndex],
@@ -421,6 +447,11 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       },
       disposeProfileControllers: (e) {
         _stopAndDisposeProfileControllers();
+        emit(
+          state.copyWith(
+            showComments: false,
+          ),
+        );
       },
       followAdvisor: (e) {
         if (state.currentContext == ReelContext.main) {
@@ -484,8 +515,10 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             ),
           );
         }
+        _analyticsService
+            .track(eventName: AnalyticsEvents.shortsFollow, properties: {});
       },
-      saveVideo: (e) {
+      saveVideo: (e) async {
         if (state.currentContext == ReelContext.main) {
           final videoExistsInMainList =
               state.mainVideos.any((video) => video.id == e.videoId);
@@ -502,6 +535,15 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                         e.category,
                       ),
                     );
+                    Future.delayed(
+                      const Duration(seconds: 1),
+                      () => BlocProvider.of<ShortsHomeBloc>(
+                        AppState.delegate!.navigatorKey.currentContext!,
+                        listen: false,
+                      ).add(
+                        const RefreshHomeData(),
+                      ),
+                    );
                     return video.copyWith(
                       isSaved: !video.isSaved,
                     );
@@ -512,13 +554,44 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
               ),
             );
           } else {
-            unawaited(
-              repository.addSave(
-                e.isSaved,
-                e.videoId,
-                e.theme,
-                e.category,
-              ),
+            final res = await repository.addSave(
+              e.isSaved,
+              e.videoId,
+              e.theme,
+              e.category,
+            );
+            if (res.isSuccess()) {
+              BaseUtil.showPositiveAlert(
+                'Success! Short Saved',
+                'This short has been added to your saved list. You can watch it later anytime!',
+              );
+
+              BlocProvider.of<ShortsHomeBloc>(
+                AppState.delegate!.navigatorKey.currentContext!,
+                listen: false,
+              ).add(
+                const RefreshHomeData(),
+              );
+            }
+          }
+        } else {
+          final res = await repository.addSave(
+            e.isSaved,
+            e.videoId,
+            e.theme,
+            e.category,
+          );
+          if (res.isSuccess()) {
+            BaseUtil.showPositiveAlert(
+              'Success! Short Saved',
+              'This short has been added to your saved list. You can watch it later anytime!',
+            );
+
+            BlocProvider.of<ShortsHomeBloc>(
+              AppState.delegate!.navigatorKey.currentContext!,
+              listen: false,
+            ).add(
+              const RefreshHomeData(),
             );
           }
         }
@@ -595,6 +668,8 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             ),
           );
         }
+        _analyticsService
+            .track(eventName: AnalyticsEvents.shortsLiked, properties: {});
         log('🚀🚀🚀 Video liked');
       },
       addCommentToState: (e) {
@@ -645,6 +720,11 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           await state.liveStreamController!.dispose();
           state.livePageController!.dispose();
         }
+        emit(
+          state.copyWith(
+            showComments: false,
+          ),
+        );
       },
       disposeMainStreamController: (e) async {
         for (final entry in state.controllers.entries) {
@@ -656,6 +736,11 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         }
         state.controllers
             .clear(); // Clear the map after disposing all controllers
+        emit(
+          state.copyWith(
+            showComments: false,
+          ),
+        );
         log('🚀🚀🚀 All controllers stopped and disposed');
       },
     );
@@ -699,6 +784,26 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       );
       _addProgressListener(controller, state.currentVideos[index].id);
       _addSeenListener(controller, state.currentVideos[index].id);
+      if (state.currentContext == ReelContext.main) {
+        _addSkippedListener(
+          controller,
+          state.currentVideos[index].id,
+          state.theme,
+          state.categories[state.currentCategoryIndex],
+        );
+        _addViewedListener(
+          controller,
+          state.currentVideos[index].id,
+          state.theme,
+          state.categories[state.currentCategoryIndex],
+        );
+        _addWatchedListener(
+          controller,
+          state.currentVideos[index].id,
+          state.theme,
+          state.categories[state.currentCategoryIndex],
+        );
+      }
       log('🚀🚀🚀 INITIALIZED $index for context ${state.currentContext}');
     }
   }
@@ -736,8 +841,107 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         // Remove this specific listener to prevent repeated events
         controller.removeListener(listener);
 
-        // Dispatch the event that 25% has been watched
+        // Dispatch the event that 90% has been watched
         add(PreloadEvent.updateSeen(videoId: videoId));
+      }
+    };
+
+    // Add the listener to the controller
+    controller.addListener(listener);
+  }
+
+  void _addWatchedListener(
+    VideoPlayerController controller,
+    String videoId,
+    String theme,
+    String category,
+  ) {
+    late VoidCallback listener;
+
+    listener = () {
+      final duration = controller.value.duration;
+      final position = controller.value.position;
+
+      if (duration.inMilliseconds > 0 &&
+          position.inMilliseconds >= duration.inMilliseconds * 0.60) {
+        // Remove this specific listener to prevent repeated events
+        controller.removeListener(listener);
+
+        // Dispatch the event that 60% has been watched
+        add(
+          PreloadEvent.addInteraction(
+            videoId: videoId,
+            interaction: InteractionType.watched,
+            theme: theme,
+            category: category,
+          ),
+        );
+      }
+    };
+
+    // Add the listener to the controller
+    controller.addListener(listener);
+  }
+
+  void _addSkippedListener(
+    VideoPlayerController controller,
+    String videoId,
+    String theme,
+    String category,
+  ) {
+    late VoidCallback listener;
+
+    listener = () {
+      final duration = controller.value.duration;
+      final position = controller.value.position;
+
+      if (duration.inMilliseconds > 0 &&
+          position.inMilliseconds >= duration.inMilliseconds * 0.05) {
+        // Remove this specific listener to prevent repeated events
+        controller.removeListener(listener);
+
+        // Dispatch the event that 5% has been watched
+        add(
+          PreloadEvent.addInteraction(
+            videoId: videoId,
+            interaction: InteractionType.skipped,
+            theme: theme,
+            category: category,
+          ),
+        );
+      }
+    };
+
+    // Add the listener to the controller
+    controller.addListener(listener);
+  }
+
+  void _addViewedListener(
+    VideoPlayerController controller,
+    String videoId,
+    String theme,
+    String category,
+  ) {
+    late VoidCallback listener;
+
+    listener = () {
+      final duration = controller.value.duration;
+      final position = controller.value.position;
+
+      if (duration.inMilliseconds > 0 &&
+          position.inMilliseconds >= duration.inMilliseconds * 0.10) {
+        // Remove this specific listener to prevent repeated events
+        controller.removeListener(listener);
+
+        // Dispatch the event that 10% has been watched
+        add(
+          PreloadEvent.addInteraction(
+            videoId: videoId,
+            interaction: InteractionType.viewed,
+            theme: theme,
+            category: category,
+          ),
+        );
       }
     };
 

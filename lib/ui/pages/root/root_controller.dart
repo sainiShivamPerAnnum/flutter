@@ -82,6 +82,7 @@ class RootController {
         //   ).add(PreloadEvent.playVideoAtIndex(state.focusedIndex));
         // }
       } else {
+        shortsScreenKey.currentState?.resetState();
         // Video goes out of view
         if (state.controllers[state.focusedIndex] != null) {
           AppState.backButtonDispatcher!.didPopRoute();

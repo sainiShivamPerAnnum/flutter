@@ -23,3 +23,7 @@ class ToogleNotification extends ShortsHomeEvents {
   final bool isFollowed;
   const ToogleNotification(this.theme, this.isFollowed);
 }
+
+class RefreshHomeData extends ShortsHomeEvents {
+  const RefreshHomeData();
+}
