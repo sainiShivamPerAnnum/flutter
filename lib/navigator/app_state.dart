@@ -176,6 +176,11 @@ class AppState extends ChangeNotifier {
         duration: const Duration(seconds: 1),
         curve: Curves.easeInCirc,
       );
+      RootController.autoScrollController.animateTo(
+        0,
+        duration: const Duration(seconds: 2),
+        curve: Curves.decelerate,
+      );
       return;
     }
     _rootController.onChange(_rootController.navItems.values.toList()[index]);

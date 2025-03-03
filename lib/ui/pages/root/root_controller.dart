@@ -15,6 +15,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 class RootController {
   static final liveNavBarItem = NavBarItemModel(
@@ -56,12 +57,21 @@ class RootController {
   Map<Widget, NavBarItemModel> navItems = {};
 
   static ScrollController controller = ScrollController();
+  static AutoScrollController autoScrollController = AutoScrollController();
 
   void onChange(NavBarItemModel model) {
     log("onChange ${model.title}");
     final currentContext = AppState.delegate!.navigatorKey.currentContext!;
     if (currentNavBarItemModel.title == model.title && controller.hasClients) {
       controller.animateTo(
+        0,
+        duration: const Duration(seconds: 2),
+        curve: Curves.decelerate,
+      );
+    }
+    if (currentNavBarItemModel.title == model.title &&
+        autoScrollController.hasClients) {
+      autoScrollController.animateTo(
         0,
         duration: const Duration(seconds: 2),
         curve: Curves.decelerate,

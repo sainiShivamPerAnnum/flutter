@@ -207,6 +207,9 @@ Future<void> setupLocator() async {
       subscriptionRepo: locator(),
     ),
   );
+  locator.registerLazySingleton(
+    PreloadBloc.new,
+  );
   // locator.registerLazySingleton(LendboxMaturityService.new);
 
   //Repository

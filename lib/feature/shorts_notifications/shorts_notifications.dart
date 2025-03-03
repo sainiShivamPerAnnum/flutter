@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../util/bloc_pagination/pagination_bloc.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class ShortsNotificationPage extends StatefulWidget {
   const ShortsNotificationPage({super.key});
@@ -136,7 +137,7 @@ class _ShortsNotification extends StatelessWidget {
                       final notificationIsSeen = notification.isSeen;
                       if (!notificationIsSeen) {
                         shortsNotificationBloc
-                            .trackUnseenNotification(notification.advisorId);
+                            .trackUnseenNotification(notification.videoId);
                       }
                       return shortsNotificationBloc.state.entries[index]
                               is nf.Notification
@@ -222,7 +223,11 @@ class _ShortsNotification extends StatelessWidget {
                                               ),
                                             ),
                                             Text(
-                                              notification.duration,
+                                              timeago.format(
+                                                DateTime.parse(
+                                                  notification.createdAt,
+                                                ),
+                                              ),
                                               style: TextStyles.sourceSans.body4
                                                   .colour(
                                                 const Color(0xffC2BDC2),

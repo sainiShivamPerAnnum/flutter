@@ -14,6 +14,7 @@ import 'package:felloapp/feature/shorts_notifications/shorts_notifications.dart'
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/bottom_nav_bar/bottom_nav_bar.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -96,6 +97,7 @@ class _ShortsScreenState extends State<_ShortsScreen> {
           return;
         },
         child: SingleChildScrollView(
+          controller: RootController.controller,
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
@@ -178,9 +180,21 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                   focusNode: _searchFocusNode,
                                   autofocus: false,
                                   onSubmitted: (query) {
-                                    BlocProvider.of<ShortsHomeBloc>(context)
-                                        .add(SearchShorts(query));
-                                    _searchFocusNode.unfocus();
+                                    if (query.trim().length >= 3) {
+                                      BlocProvider.of<ShortsHomeBloc>(context)
+                                          .add(SearchShorts(query));
+                                      _searchFocusNode.unfocus();
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'Please enter at least 3 characters',
+                                          ),
+                                          duration: Duration(seconds: 2),
+                                        ),
+                                      );
+                                    }
                                   },
                                   textAlign: TextAlign.justify,
                                   style: const TextStyle(color: Colors.white),
@@ -402,7 +416,7 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                       SizedBox(
                                         width: 294.w,
                                         child: Text(
-                                          'We found 0 results for your search “${_controller.text.trim()}”',
+                                          'We found 0 results for your search “${state.query}”',
                                           style: TextStyles.sourceSans.body2
                                               .colour(UiConstants.kTextColor5),
                                           textAlign: TextAlign.center,

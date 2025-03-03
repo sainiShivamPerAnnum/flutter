@@ -212,13 +212,13 @@ class ShortsRepository extends BaseRepo {
       final uid = userService.baseUser!.uid;
       final queryParameters = {
         'uid': uid,
-        'videoIds': [notifications],
+        'videoIds': notifications,
       };
       await APIService.instance.postData(
         'notifications/update-seen-uid',
         cBaseUrl: _baseUrl,
         apiName: 'ShortsRepo/updateNotifications',
-        queryParams: queryParameters,
+        body: queryParameters,
       );
       return const ApiResponse<bool>(
         model: true,

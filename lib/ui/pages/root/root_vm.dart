@@ -27,6 +27,7 @@ import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
+import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -48,7 +49,6 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:firebase_instance_id/firebase_instance_id.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_app_update/in_app_update.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
@@ -67,6 +67,7 @@ class RootViewModel extends BaseViewModel {
   final BankAndPanService _bankAndKycService = locator<BankAndPanService>();
   final PowerPlayService _powerPlayService = locator<PowerPlayService>();
   final TransactionBloc _transactionBloc = locator<TransactionBloc>();
+  final PreloadBloc preloadBloc = locator<PreloadBloc>();
   final MyFundsBloc _myFundsBloc = locator<MyFundsBloc>();
   final SIPTransactionBloc _sipTransactionBloc = locator<SIPTransactionBloc>();
   final AppState appState = locator<AppState>();
@@ -502,6 +503,7 @@ class RootViewModel extends BaseViewModel {
               _subscriptionService.dispose();
               _powerPlayService.dump();
               _transactionBloc.dispose();
+              preloadBloc.add(const PreloadEvent.reset());
               _myFundsBloc.dispose();
               _sipTransactionBloc.dispose();
               AppState.delegate!.appState.currentAction = PageAction(

@@ -15,7 +15,6 @@ import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
-import 'package:felloapp/feature/shortsHome/bloc/shorts_home_bloc.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
@@ -78,10 +77,7 @@ class MyApp extends HookWidget {
         child: MultiProvider(
           providers: [
             BlocProvider(
-              create: (_) => ShortsHomeBloc(locator(), locator()),
-            ),
-            BlocProvider(
-              create: (_) => PreloadBloc(),
+              create: (_) => locator<PreloadBloc>(),
             ),
             Provider(create: (_) => SipCubit()),
             Provider(create: (_) => locator<TransactionBloc>()),

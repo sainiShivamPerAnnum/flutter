@@ -11,6 +11,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/upcoming_bookings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
@@ -18,7 +19,6 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:vertical_scrollable_tabview/vertical_scrollable_tabview.dart';
 
 import '../../navigator/router/ui_pages.dart';
@@ -45,18 +45,11 @@ class _ExpertHome extends StatefulWidget {
 class __ExpertHomeState extends State<_ExpertHome>
     with SingleTickerProviderStateMixin {
   BuildContext? tabContext;
-  late AutoScrollController _autoScrollController;
   Map<String, GlobalKey> sectionKeys = {};
 
   @override
-  void initState() {
-    super.initState();
-    _autoScrollController = AutoScrollController();
-  }
-
-  @override
   void dispose() {
-    _autoScrollController.dispose();
+    RootController.autoScrollController.dispose();
     super.dispose();
   }
 
@@ -107,7 +100,7 @@ class __ExpertHomeState extends State<_ExpertHome>
                 builder: (context) {
                   tabContext = context;
                   return VerticalScrollableTabView(
-                    autoScrollController: _autoScrollController,
+                    autoScrollController: RootController.autoScrollController,
                     scrollbarThumbVisibility: false,
                     tabController: DefaultTabController.of(tabContext!),
                     listItemData: [

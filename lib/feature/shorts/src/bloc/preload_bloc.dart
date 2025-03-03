@@ -6,8 +6,6 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/shorts/src/core/interaction_enum.dart';
-import 'package:felloapp/feature/shortsHome/bloc/shorts_home_bloc.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +45,9 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           nextLimit: e.nextLimit,
           latency: e.latency,
         );
+      },
+      reset: (e) {
+        emit(PreloadState.initial());
       },
       updateThemes: (e) {
         emit(
@@ -610,15 +611,15 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                         e.category,
                       ),
                     );
-                    Future.delayed(
-                      const Duration(seconds: 1),
-                      () => BlocProvider.of<ShortsHomeBloc>(
-                        AppState.delegate!.navigatorKey.currentContext!,
-                        listen: false,
-                      ).add(
-                        const RefreshHomeData(),
-                      ),
-                    );
+                    // Future.delayed(
+                    //   const Duration(seconds: 1),
+                    //   () => BlocProvider.of<ShortsHomeBloc>(
+                    //     AppState.delegate!.navigatorKey.currentContext!,
+                    //     listen: false,
+                    //   ).add(
+                    //     const RefreshHomeData(),
+                    //   ),
+                    // );
                     return video.copyWith(
                       isSaved: !video.isSaved,
                     );
@@ -647,12 +648,12 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                   'This short has been added to your saved list. You can watch it later anytime!',
                 );
               }
-              BlocProvider.of<ShortsHomeBloc>(
-                AppState.delegate!.navigatorKey.currentContext!,
-                listen: false,
-              ).add(
-                const RefreshHomeData(),
-              );
+              // BlocProvider.of<ShortsHomeBloc>(
+              //   AppState.delegate!.navigatorKey.currentContext!,
+              //   listen: false,
+              // ).add(
+              //   const RefreshHomeData(),
+              // );
             }
           }
         } else {
@@ -675,12 +676,12 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
               );
             }
 
-            BlocProvider.of<ShortsHomeBloc>(
-              AppState.delegate!.navigatorKey.currentContext!,
-              listen: false,
-            ).add(
-              const RefreshHomeData(),
-            );
+            // BlocProvider.of<ShortsHomeBloc>(
+            //   AppState.delegate!.navigatorKey.currentContext!,
+            //   listen: false,
+            // ).add(
+            //   const RefreshHomeData(),
+            // );
           }
         }
         log('🚀🚀🚀 Video saved');

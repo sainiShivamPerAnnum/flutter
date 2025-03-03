@@ -31,6 +31,8 @@ class Notification {
   final String duration;
   final String categoryV1;
   final String advisorId;
+  final String videoId;
+  final String createdAt;
 
   Notification({
     required this.isSeen,
@@ -40,6 +42,8 @@ class Notification {
     required this.duration,
     required this.categoryV1,
     required this.advisorId,
+    required this.videoId,
+    required this.createdAt,
   });
 
   factory Notification.fromJson(Map<String, dynamic> json) =>

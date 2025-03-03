@@ -15,6 +15,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -83,6 +84,7 @@ class __LiveHomeState extends State<_LiveHome> {
               );
             }
             return SingleChildScrollView(
+              controller: RootController.controller,
               physics: const AlwaysScrollableScrollPhysics(),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),

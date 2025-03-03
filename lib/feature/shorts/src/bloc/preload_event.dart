@@ -55,7 +55,7 @@ class PreloadEvent with _$PreloadEvent {
   const factory PreloadEvent.updateSeen({
     required String videoId,
   }) = _UpdateSeen;
-
+  const factory PreloadEvent.reset() = _Reset;
   const factory PreloadEvent.onError() = _ErrorPage;
 
   const factory PreloadEvent.likeVideo({
