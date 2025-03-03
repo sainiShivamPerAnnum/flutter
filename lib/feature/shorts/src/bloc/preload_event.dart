@@ -18,6 +18,11 @@ class PreloadEvent with _$PreloadEvent {
     required int direction,
     Completer<void>? completer,
   }) = _GetCategoryVideos;
+  const factory PreloadEvent.getThemeVideos({
+    required VideoData? initailVideo,
+    required String theme,
+    Completer<void>? completer,
+  }) = _GetThemeVideos;
   const factory PreloadEvent.setLoading() = _SetLoading;
   const factory PreloadEvent.updateUrls(
     List<VideoData> videos, {

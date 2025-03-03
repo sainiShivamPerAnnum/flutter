@@ -25,6 +25,7 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 class EaseInFloatingActionButtonAnimator extends FloatingActionButtonAnimator {
@@ -365,6 +366,7 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                           child: _buildTabOneData(
                             shortsData,
                             expertDetails.name,
+                            context,
                           ),
                         ),
                         Padding(
@@ -487,15 +489,38 @@ Widget _buildLiveTab(List<VideoData> recentlive, BuildContext context) {
                           ),
                           showAvatar: false,
                           showCoinBar: false,
-                        ),
-                        body: WillPopScope(
-                          onWillPop: () async {
-                            await AppState.backButtonDispatcher!.didPopRoute();
-                            return false;
-                          },
-                          child: const ShortsVideoPage(
-                            categories: [],
+                          action: BlocBuilder<PreloadBloc, PreloadState>(
+                            builder: (context, preloadState) {
+                              return Padding(
+                                padding: EdgeInsets.only(right: 10.w),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    BlocProvider.of<PreloadBloc>(
+                                      context,
+                                      listen: false,
+                                    ).add(
+                                      const PreloadEvent.toggleVolume(),
+                                    );
+                                  },
+                                  behavior: HitTestBehavior.opaque,
+                                  child: SizedBox(
+                                    height: 24.r,
+                                    width: 24.r,
+                                    child: Icon(
+                                      !preloadState.muted
+                                          ? Icons.volume_up_rounded
+                                          : Icons.volume_off_rounded,
+                                      size: 21.r,
+                                      color: UiConstants.kTextColor,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
+                        ),
+                        body: const ShortsVideoPage(
+                          categories: [],
                         ),
                       ),
                     );
@@ -689,7 +714,11 @@ Widget _buildInfoTab(
   );
 }
 
-Widget _buildTabOneData(List<VideoData> shortsData, String name) {
+Widget _buildTabOneData(
+  List<VideoData> shortsData,
+  String name,
+  BuildContext context,
+) {
   return CustomScrollView(
     slivers: [
       if (shortsData.isEmpty)
@@ -771,15 +800,38 @@ Widget _buildTabOneData(List<VideoData> shortsData, String name) {
                       ),
                       showAvatar: false,
                       showCoinBar: false,
-                    ),
-                    body: WillPopScope(
-                      onWillPop: () async {
-                        await AppState.backButtonDispatcher!.didPopRoute();
-                        return false;
-                      },
-                      child: const ShortsVideoPage(
-                        categories: [],
+                      action: BlocBuilder<PreloadBloc, PreloadState>(
+                        builder: (context, preloadState) {
+                          return Padding(
+                            padding: EdgeInsets.only(right: 10.w),
+                            child: GestureDetector(
+                              onTap: () {
+                                BlocProvider.of<PreloadBloc>(
+                                  context,
+                                  listen: false,
+                                ).add(
+                                  const PreloadEvent.toggleVolume(),
+                                );
+                              },
+                              behavior: HitTestBehavior.opaque,
+                              child: SizedBox(
+                                height: 24.r,
+                                width: 24.r,
+                                child: Icon(
+                                  !preloadState.muted
+                                      ? Icons.volume_up_rounded
+                                      : Icons.volume_off_rounded,
+                                  size: 21.r,
+                                  color: UiConstants.kTextColor,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
+                    ),
+                    body: const ShortsVideoPage(
+                      categories: [],
                     ),
                   ),
                 );

@@ -12,9 +12,9 @@ import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_player/video_player.dart';
+import 'package:volume_watcher/volume_watcher.dart';
 
 import 'src/bloc/preload_bloc.dart';
 
@@ -104,53 +104,47 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: BlocListener<PreloadBloc, PreloadState>(
-        listenWhen: (previous, current) =>
-            previous.currentContext != current.currentContext &&
-            current.currentContext == ReelContext.main,
-        listener: (context, state) {
-          final mainPageController = state.mainPageController;
-          final focusedIndex = state.focusedIndex;
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            mainPageController.jumpToPage(focusedIndex);
-          });
-        },
-        child: BlocBuilder<PreloadBloc, PreloadState>(
-          builder: (context, state) {
-            final List<VideoData> videos = state.currentVideos;
-            final Map<int, VideoPlayerController> activeControllers =
-                state.currentContext == ReelContext.liveStream
-                    ? {
-                        0: state.liveStreamController!,
-                      }
-                    : state.currentContext == ReelContext.main
-                        ? state.controllers
-                        : state.profileControllers;
-            final PageController pageController =
-                state.currentContext == ReelContext.liveStream
-                    ? state.livePageController!
-                    : state.currentContext == ReelContext.main
-                        ? state.mainPageController
-                        : state.profilePageController;
-            if (state.errorMessage != null) {
-              return const NewErrorPage();
-            }
-            return KeyboardListener(
-              focusNode: FocusNode(),
-              onKeyEvent: (event) {
-                if (event is KeyDownEvent) {
-                  if (event.logicalKey == LogicalKeyboardKey.audioVolumeUp ||
-                      event.logicalKey == LogicalKeyboardKey.audioVolumeDown) {
-                    if (state.muted) {
-                      final preloadBloc =
-                          BlocProvider.of<PreloadBloc>(context, listen: false);
-                      preloadBloc.add(const PreloadEvent.toggleVolume());
+    return BlocListener<PreloadBloc, PreloadState>(
+      listenWhen: (previous, current) =>
+          previous.currentContext != current.currentContext &&
+          current.currentContext == ReelContext.main,
+      listener: (context, state) {
+        final mainPageController = state.mainPageController;
+        final focusedIndex = state.focusedIndex;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          mainPageController.jumpToPage(focusedIndex);
+        });
+      },
+      child: BlocBuilder<PreloadBloc, PreloadState>(
+        builder: (context, state) {
+          final List<VideoData> videos = state.currentVideos;
+          final Map<int, VideoPlayerController> activeControllers =
+              state.currentContext == ReelContext.liveStream
+                  ? {
+                      0: state.liveStreamController!,
                     }
-                    return;
-                  }
-                }
-              },
+                  : state.currentContext == ReelContext.main
+                      ? state.controllers
+                      : state.profileControllers;
+          final PageController pageController =
+              state.currentContext == ReelContext.liveStream
+                  ? state.livePageController!
+                  : state.currentContext == ReelContext.main
+                      ? state.mainPageController
+                      : state.profilePageController;
+          if (state.errorMessage != null) {
+            return const NewErrorPage();
+          }
+          return VolumeWatcher(
+            onVolumeChangeListener: (volume) {
+              final preloadBloc =
+                  BlocProvider.of<PreloadBloc>(context, listen: false);
+              final currentMutedState = preloadBloc.state.muted;
+              if (currentMutedState && volume > 0) {
+                preloadBloc.add(const PreloadEvent.toggleVolume());
+              }
+            },
+            child: SafeArea(
               child: Stack(
                 children: [
                   if (!state.showComments) const ShimmerReelsButtons(),
@@ -357,9 +351,9 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                     ),
                 ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

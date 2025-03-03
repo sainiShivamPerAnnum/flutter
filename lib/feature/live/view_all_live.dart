@@ -14,8 +14,10 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/enums/page_state_enum.dart';
 
@@ -162,16 +164,38 @@ class _ViewAllLiveState extends State<ViewAllLive> {
                             ),
                             showAvatar: false,
                             showCoinBar: false,
-                          ),
-                          body: WillPopScope(
-                            onWillPop: () async {
-                              await AppState.backButtonDispatcher!
-                                  .didPopRoute();
-                              return false;
-                            },
-                            child: const ShortsVideoPage(
-                              categories: [],
+                            action: BlocBuilder<PreloadBloc, PreloadState>(
+                              builder: (context, preloadState) {
+                                return Padding(
+                                  padding: EdgeInsets.only(right: 10.w),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      BlocProvider.of<PreloadBloc>(
+                                        context,
+                                        listen: false,
+                                      ).add(
+                                        const PreloadEvent.toggleVolume(),
+                                      );
+                                    },
+                                    behavior: HitTestBehavior.opaque,
+                                    child: SizedBox(
+                                      height: 24.r,
+                                      width: 24.r,
+                                      child: Icon(
+                                        !preloadState.muted
+                                            ? Icons.volume_up_rounded
+                                            : Icons.volume_off_rounded,
+                                        size: 21.r,
+                                        color: UiConstants.kTextColor,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
+                          ),
+                          body: const ShortsVideoPage(
+                            categories: [],
                           ),
                         ),
                       );

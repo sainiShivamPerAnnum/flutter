@@ -72,15 +72,6 @@ class RootController {
       final state = currentContext.read<PreloadBloc>().state;
       if (model.title == 'Shorts') {
         // Video comes into view
-        // BlocProvider.of<PreloadBloc>(currentContext)
-        //     .add(const PreloadEvent.switchToMainReels());
-        // if (state.controllers[state.focusedIndex] != null &&
-        //     state.controllers[state.focusedIndex]!.value.isInitialized) {
-        //   BlocProvider.of<PreloadBloc>(
-        //     currentContext,
-        //     listen: false,
-        //   ).add(PreloadEvent.playVideoAtIndex(state.focusedIndex));
-        // }
       } else {
         shortsScreenKey.currentState?.resetState();
         // Video goes out of view

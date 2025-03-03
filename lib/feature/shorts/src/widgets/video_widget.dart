@@ -1,9 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/feature/shorts/flutter_preload_videos.dart';
 import 'package:felloapp/feature/shorts/src/service/comment_data.dart';
 import 'package:felloapp/feature/shorts/src/widgets/expandable_widget.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -206,25 +210,41 @@ class VideoWidgetState extends State<VideoWidget>
                                 ),
                                 child: Row(
                                   children: [
-                                    CircleAvatar(
-                                      radius: SizeConfig.padding16,
-                                      backgroundImage: NetworkImage(
-                                        widget.expertProfileImage,
+                                    GestureDetector(
+                                      onTap: () {
+                                        AppState.delegate!.appState
+                                            .currentAction = PageAction(
+                                          page: ExpertDetailsPageConfig,
+                                          state: PageState.addWidget,
+                                          widget: ExpertsDetailsView(
+                                            advisorID: widget.advisorId,
+                                          ),
+                                        );
+                                      },
+                                      child: Row(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: SizeConfig.padding16,
+                                            backgroundImage: NetworkImage(
+                                              widget.expertProfileImage,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 8.w,
+                                          ),
+                                          Text(
+                                            widget.userName,
+                                            style: GoogleFonts.sourceSans3(
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white,
+                                              fontSize: 14.sp,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 12.w,
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: 8.w,
-                                    ),
-                                    Text(
-                                      widget.userName,
-                                      style: GoogleFonts.sourceSans3(
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                        fontSize: 14.sp,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 12.w,
                                     ),
                                     Container(
                                       decoration: BoxDecoration(
@@ -259,7 +279,7 @@ class VideoWidgetState extends State<VideoWidget>
                               ),
                             ),
                           SizedBox(
-                            height: 14.h,
+                            height: 8.h,
                           ),
                           ExpandableWidget(
                             title: widget.videoTitle,

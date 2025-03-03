@@ -100,6 +100,30 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     if ((AppState.delegate!.currentConfiguration?.path ?? '') ==
             '/shorts-internal' &&
         AppState.screenStack.last != ScreenItem.modalsheet) {
+      FocusScope.of(
+        _routerDelegate!.navigatorKey.currentContext!,
+      ).unfocus();
+
+      final preloadBloc = BlocProvider.of<PreloadBloc>(
+        _routerDelegate!.navigatorKey.currentContext!,
+        listen: false,
+      );
+      final preloadState = _routerDelegate!.navigatorKey.currentContext!
+          .read<PreloadBloc>()
+          .state;
+      if (preloadState.showComments) {
+        preloadBloc.add(
+          const PreloadEvent.toggleComments(),
+        );
+        return Future.value(true);
+      }
+      preloadBloc.add(
+        PreloadEvent.updateThemes(
+          categories: [],
+          theme: preloadState.theme,
+          index: 0,
+        ),
+      );
       BlocProvider.of<PreloadBloc>(
         _routerDelegate!.navigatorKey.currentContext!,
         listen: false,

@@ -12,6 +12,34 @@ class ShortsRepo extends BaseRepo {
       ? 'https://advisors.fello-dev.net/'
       : 'https://advisors.fello-prod.net/';
 
+  Future<ApiResponse<PaginatedShorts>> getVideosByTheme({
+    required String theme,
+    int page = 1,
+    int limit = 10,
+  }) async {
+    try {
+      final queryParameters = {
+        'page': page.toString(),
+        'limit': limit.toString(),
+        'theme': theme,
+      };
+
+      final response = await APIService.instance.getData(
+        'videos/search-shorts-theme',
+        cBaseUrl: _baseUrl,
+        apiName: 'ShortsRepo/getVideosByTheme',
+        queryParams: queryParameters,
+      );
+      final responseData = response["data"];
+      return ApiResponse<PaginatedShorts>(
+        model: PaginatedShorts.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
   Future<ApiResponse<PaginatedShorts>> getVideosByCategory({
     required String category,
     required String theme,

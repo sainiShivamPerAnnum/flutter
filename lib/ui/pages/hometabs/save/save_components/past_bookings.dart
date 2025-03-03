@@ -21,6 +21,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class PastBookingsComponent extends StatelessWidget {
@@ -221,16 +222,38 @@ class PastScheduleCard extends StatelessWidget {
                               ),
                               showAvatar: false,
                               showCoinBar: false,
-                            ),
-                            body: WillPopScope(
-                              onWillPop: () async {
-                                await AppState.backButtonDispatcher!
-                                    .didPopRoute();
-                                return false;
-                              },
-                              child: const ShortsVideoPage(
-                                categories: [],
+                              action: BlocBuilder<PreloadBloc, PreloadState>(
+                                builder: (context, preloadState) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(right: 10.w),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        BlocProvider.of<PreloadBloc>(
+                                          context,
+                                          listen: false,
+                                        ).add(
+                                          const PreloadEvent.toggleVolume(),
+                                        );
+                                      },
+                                      behavior: HitTestBehavior.opaque,
+                                      child: SizedBox(
+                                        height: 24.r,
+                                        width: 24.r,
+                                        child: Icon(
+                                          !preloadState.muted
+                                              ? Icons.volume_up_rounded
+                                              : Icons.volume_off_rounded,
+                                          size: 21.r,
+                                          color: UiConstants.kTextColor,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
+                            ),
+                            body: const ShortsVideoPage(
+                              categories: [],
                             ),
                           ),
                         );

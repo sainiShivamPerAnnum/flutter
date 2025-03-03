@@ -1,4 +1,5 @@
 import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,8 +52,11 @@ class DotIndicatorRow extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const BackButton(
+            BackButton(
               color: UiConstants.kTextColor,
+              onPressed: () async {
+                await AppState.backButtonDispatcher!.didPopRoute();
+              },
             ),
             Column(
               children: [
@@ -73,21 +77,26 @@ class DotIndicatorRow extends StatelessWidget {
                 ),
               ],
             ),
-            InkWell(
-              onTap: () {
-                BlocProvider.of<PreloadBloc>(
-                  context,
-                  listen: false,
-                ).add(
-                  const PreloadEvent.toggleVolume(),
-                );
-              },
-              child: Padding(
-                padding: EdgeInsets.only(right: 10.w),
-                child: Icon(
-                  !muted ? Icons.volume_up_rounded : Icons.volume_off_rounded,
-                  size: 21.r,
-                  color: UiConstants.kTextColor,
+            Padding(
+              padding: EdgeInsets.only(right: 10.w),
+              child: GestureDetector(
+                onTap: () {
+                  BlocProvider.of<PreloadBloc>(
+                    context,
+                    listen: false,
+                  ).add(
+                    const PreloadEvent.toggleVolume(),
+                  );
+                },
+                behavior: HitTestBehavior.opaque,
+                child: SizedBox(
+                  height: 24.r,
+                  width: 24.r,
+                  child: Icon(
+                    !muted ? Icons.volume_up_rounded : Icons.volume_off_rounded,
+                    size: 21.r,
+                    color: UiConstants.kTextColor,
+                  ),
                 ),
               ),
             ),

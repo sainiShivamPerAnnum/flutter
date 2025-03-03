@@ -323,10 +323,14 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         await _stopAndDisposeVideoControllers();
         e.completer?.complete();
 
-        final data = await repository.getVideosByCategory(
-          category: state.categories[state.currentCategoryIndex],
-          theme: state.theme,
-        );
+        final data = index == 0
+            ? await repository.getVideosByTheme(
+                theme: state.theme,
+              )
+            : await repository.getVideosByCategory(
+                category: state.categories[state.currentCategoryIndex],
+                theme: state.theme,
+              );
         if (!data.isSuccess()) {
           emit(
             state.copyWith(
@@ -352,6 +356,52 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
 
         add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
       },
+      getThemeVideos: (e) async {
+        final PageController pageController = PageController(
+          initialPage: 0,
+        );
+        emit(
+          state.copyWith(
+            initialVideo: e.initailVideo,
+            currentContext: ReelContext.main,
+            mainVideos: [],
+            focusedIndex: 0,
+            isLoading: !state.isLoading,
+            mainPageController: pageController,
+          ),
+        );
+        emit(
+          state.copyWith(
+            currentCategoryIndex: 0,
+          ),
+        );
+        await _stopAndDisposeVideoControllers();
+        e.completer?.complete();
+
+        final data = await repository.getVideosByTheme(
+          theme: state.theme,
+        );
+        if (!data.isSuccess()) {
+          emit(
+            state.copyWith(
+              errorMessage: "An error occurred while loading videos.",
+            ),
+          );
+          return;
+        }
+        final List<VideoData> urls = data.model?.videos ?? [];
+        state.mainVideos.clear();
+        if (e.initailVideo != null) {
+          state.mainVideos.add(e.initailVideo!);
+        }
+        List<VideoData> videosToAdd =
+            urls.where((video) => video.id != e.initailVideo?.id).toList();
+        state.mainVideos.addAll(videosToAdd);
+        await _initializeControllerAtIndex(0, state.muted);
+        await _initializeControllerAtIndex(1, state.muted);
+        _playControllerAtIndex(0);
+        add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
+      },
       onVideoIndexChanged: (e) async {
         final bool shouldFetch =
             (e.index + VideoPreloadConstants.kPreloadLimit) %
@@ -364,11 +414,18 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           eventName: AnalyticsEvents.shortsVerticalSwipe,
         );
         if (shouldFetch) {
-          final response = await repository.getVideosByCategory(
-            category: state.categories[state.currentCategoryIndex],
-            theme: state.theme,
-            page: (e.index + VideoPreloadConstants.preloadLimit) ~/ 10 + 1,
-          );
+          final response = state.currentCategoryIndex == 0
+              ? await repository.getVideosByTheme(
+                  theme: state.theme,
+                  page:
+                      (e.index + VideoPreloadConstants.preloadLimit) ~/ 10 + 1,
+                )
+              : await repository.getVideosByCategory(
+                  category: state.categories[state.currentCategoryIndex],
+                  theme: state.theme,
+                  page:
+                      (e.index + VideoPreloadConstants.preloadLimit) ~/ 10 + 1,
+                );
           final List<VideoData> urls = response.model?.videos ?? [];
           List<VideoData> videosToAdd = urls
               .where((video) => video.id != state.initialVideo?.id)
@@ -579,11 +636,17 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
               e.category,
             );
             if (res.isSuccess()) {
-              BaseUtil.showPositiveAlert(
-                'Success! Short Saved',
-                'This short has been added to your saved list. You can watch it later anytime!',
-              );
-
+              if (e.isSaved) {
+                BaseUtil.showPositiveAlert(
+                  'Success! Short Unsaved',
+                  'This short has been removed from your saved list. You can save it again anytime!',
+                );
+              } else {
+                BaseUtil.showPositiveAlert(
+                  'Success! Short Saved',
+                  'This short has been added to your saved list. You can watch it later anytime!',
+                );
+              }
               BlocProvider.of<ShortsHomeBloc>(
                 AppState.delegate!.navigatorKey.currentContext!,
                 listen: false,
@@ -600,10 +663,17 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             e.category,
           );
           if (res.isSuccess()) {
-            BaseUtil.showPositiveAlert(
-              'Success! Short Saved',
-              'This short has been added to your saved list. You can watch it later anytime!',
-            );
+            if (e.isSaved) {
+              BaseUtil.showPositiveAlert(
+                'Success! Short Unsaved',
+                'This short has been removed from your saved list. You can save it again anytime!',
+              );
+            } else {
+              BaseUtil.showPositiveAlert(
+                'Success! Short Saved',
+                'This short has been added to your saved list. You can watch it later anytime!',
+              );
+            }
 
             BlocProvider.of<ShortsHomeBloc>(
               AppState.delegate!.navigatorKey.currentContext!,

@@ -163,87 +163,98 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                     SizedBox(
                       height: 18.h,
                     ),
-                    SizedBox(
-                      height: 38.h,
-                      child: BlocBuilder<ShortsHomeBloc, ShortsHomeState>(
-                        builder: (context, state) {
-                          if (state is ShortsHomeData) {
-                            _controller.text = state.query;
-                          }
-                          return TextField(
-                            controller: _controller,
-                            focusNode: _searchFocusNode,
-                            autofocus: false,
-                            onSubmitted: (query) {
-                              BlocProvider.of<ShortsHomeBloc>(context)
-                                  .add(SearchShorts(query));
-                              _searchFocusNode.unfocus();
-                            },
-                            textAlign: TextAlign.justify,
-                            style: const TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
-                              hintText: "Search",
-                              hintStyle: TextStyles.sourceSans.body3.colour(
-                                  UiConstants.kTextColor.withOpacity(.7)),
-                              filled: true,
-                              fillColor:
-                                  const Color(0xffD9D9D9).withOpacity(.04),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.r),
-                                borderSide: BorderSide(
-                                  color:
-                                      const Color(0xffCACBCC).withOpacity(.07),
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.r),
-                                borderSide: BorderSide(
-                                  color:
-                                      const Color(0xffCACBCC).withOpacity(.07),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.r),
-                                borderSide: BorderSide(
-                                  color:
-                                      const Color(0xffCACBCC).withOpacity(.07),
-                                ),
-                              ),
-                              suffixIcon: (state is ShortsHomeData)
-                                  ? state.query != ""
-                                      ? GestureDetector(
-                                          onTap: () {
-                                            _controller.clear();
-                                            BlocProvider.of<ShortsHomeBloc>(
-                                              context,
-                                              listen: false,
-                                            ).add(const LoadHomeData());
-                                            _searchFocusNode.unfocus();
-                                          },
-                                          child: Icon(
-                                            Icons.close,
+                    BlocBuilder<ShortsHomeBloc, ShortsHomeState>(
+                      builder: (context, state) {
+                        if (state is ShortsHomeData) {
+                          return SizedBox(
+                            height: 38.h,
+                            child: BlocBuilder<ShortsHomeBloc, ShortsHomeState>(
+                              builder: (context, state) {
+                                if (state is ShortsHomeData) {
+                                  _controller.text = state.query;
+                                }
+                                return TextField(
+                                  controller: _controller,
+                                  focusNode: _searchFocusNode,
+                                  autofocus: false,
+                                  onSubmitted: (query) {
+                                    BlocProvider.of<ShortsHomeBloc>(context)
+                                        .add(SearchShorts(query));
+                                    _searchFocusNode.unfocus();
+                                  },
+                                  textAlign: TextAlign.justify,
+                                  style: const TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    hintText: "Search",
+                                    hintStyle:
+                                        TextStyles.sourceSans.body3.colour(
+                                      UiConstants.kTextColor.withOpacity(.7),
+                                    ),
+                                    filled: true,
+                                    fillColor: const Color(0xffD9D9D9)
+                                        .withOpacity(.04),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      borderSide: BorderSide(
+                                        color: const Color(0xffCACBCC)
+                                            .withOpacity(.07),
+                                      ),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      borderSide: BorderSide(
+                                        color: const Color(0xffCACBCC)
+                                            .withOpacity(.07),
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      borderSide: BorderSide(
+                                        color: const Color(0xffCACBCC)
+                                            .withOpacity(.07),
+                                      ),
+                                    ),
+                                    suffixIcon: (state is ShortsHomeData)
+                                        ? state.query != ""
+                                            ? GestureDetector(
+                                                onTap: () {
+                                                  _controller.clear();
+                                                  BlocProvider.of<
+                                                      ShortsHomeBloc>(
+                                                    context,
+                                                    listen: false,
+                                                  ).add(const LoadHomeData());
+                                                  _searchFocusNode.unfocus();
+                                                },
+                                                child: Icon(
+                                                  Icons.close,
+                                                  color: UiConstants.kTextColor
+                                                      .withOpacity(.7),
+                                                ),
+                                              )
+                                            : Icon(
+                                                Icons.search,
+                                                color: UiConstants.kTextColor
+                                                    .withOpacity(.7),
+                                              )
+                                        : Icon(
+                                            Icons.search,
                                             color: UiConstants.kTextColor
                                                 .withOpacity(.7),
                                           ),
-                                        )
-                                      : Icon(
-                                          Icons.search,
-                                          color: UiConstants.kTextColor
-                                              .withOpacity(.7),
-                                        )
-                                  : Icon(
-                                      Icons.search,
-                                      color: UiConstants.kTextColor
-                                          .withOpacity(.7),
+                                    contentPadding: EdgeInsets.symmetric(
+                                      vertical: 12.h,
+                                      horizontal: 16.w,
                                     ),
-                              contentPadding: EdgeInsets.symmetric(
-                                vertical: 12.h,
-                                horizontal: 16.w,
-                              ),
+                                  ),
+                                );
+                              },
                             ),
                           );
-                        },
-                      ),
+                        } else {
+                          return const SizedBox.shrink();
+                        }
+                      },
                     ),
                     SizedBox(
                       height: 18.h,
@@ -254,7 +265,12 @@ class _ShortsScreenState extends State<_ShortsScreen> {
               BlocBuilder<ShortsHomeBloc, ShortsHomeState>(
                 builder: (context, state) {
                   return switch (state) {
-                    LoadingShortsDetails() => const FullScreenLoader(),
+                    LoadingShortsDetails() => Padding(
+                        padding: EdgeInsets.only(
+                          top: 150.h,
+                        ),
+                        child: const FullScreenLoader(),
+                      ),
                     ShortsHomeData() => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -287,8 +303,8 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                                   child: Container(
                                                     decoration: BoxDecoration(
                                                       color: const Color(
-                                                              0xffD9D9D9)
-                                                          .withOpacity(.1),
+                                                        0xffD9D9D9,
+                                                      ).withOpacity(.1),
                                                       borderRadius:
                                                           BorderRadius.all(
                                                         Radius.circular(
@@ -365,7 +381,7 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       SizedBox(
-                                        height: 170.h,
+                                        height: 150.h,
                                       ),
                                       Icon(
                                         Icons.search_rounded,
@@ -564,7 +580,11 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                                             clickedCategory,
                                                           );
                                                         }
-
+                                                        reorderedCategories
+                                                            .insert(
+                                                          0,
+                                                          theme.themeName,
+                                                        );
                                                         preloadBloc.add(
                                                           PreloadEvent
                                                               .updateThemes(
@@ -580,10 +600,10 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                                             .future;
                                                         preloadBloc.add(
                                                           PreloadEvent
-                                                              .getCategoryVideos(
+                                                              .getThemeVideos(
                                                             initailVideo:
                                                                 theme.videos[i],
-                                                            direction: 0,
+                                                            theme: theme.theme,
                                                             completer:
                                                                 switchCompleter,
                                                           ),
@@ -602,28 +622,10 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                                           widget: BaseScaffold(
                                                             bottomNavigationBar:
                                                                 const BottomNavBar(),
-                                                            body: WillPopScope(
-                                                              onWillPop:
-                                                                  () async {
-                                                                await AppState
-                                                                    .backButtonDispatcher!
-                                                                    .didPopRoute();
-                                                                preloadBloc.add(
-                                                                  PreloadEvent
-                                                                      .updateThemes(
-                                                                    categories: [],
-                                                                    theme: theme
-                                                                        .theme,
-                                                                    index: 0,
-                                                                  ),
-                                                                );
-                                                                return false;
-                                                              },
-                                                              child:
-                                                                  ShortsVideoPage(
-                                                                categories:
-                                                                    reorderedCategories,
-                                                              ),
+                                                            body:
+                                                                ShortsVideoPage(
+                                                              categories:
+                                                                  reorderedCategories,
                                                             ),
                                                           ),
                                                         );
@@ -648,7 +650,9 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                                               CrossAxisAlignment
                                                                   .start,
                                                           children: [
-                                                            Expanded(
+                                                            AspectRatio(
+                                                              aspectRatio:
+                                                                  9 / 16,
                                                               child: Stack(
                                                                 children: [
                                                                   Positioned
@@ -744,7 +748,7 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                                                     style: TextStyles
                                                                         .sourceSansM
                                                                         .body4,
-                                                                    maxLines: 2,
+                                                                    maxLines: 1,
                                                                     overflow:
                                                                         TextOverflow
                                                                             .ellipsis,
@@ -783,13 +787,18 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                 ),
                         ],
                       ),
-                    LoadingShortsFailed() => NewErrorPage(
-                        onTryAgain: () {
-                          BlocProvider.of<ShortsHomeBloc>(
-                            context,
-                            listen: false,
-                          ).add(const LoadHomeData());
-                        },
+                    LoadingShortsFailed() => Padding(
+                        padding: EdgeInsets.only(
+                          top: 150.h,
+                        ),
+                        child: NewErrorPage(
+                          onTryAgain: () {
+                            BlocProvider.of<ShortsHomeBloc>(
+                              context,
+                              listen: false,
+                            ).add(const LoadHomeData());
+                          },
+                        ),
                       )
                   };
                 },

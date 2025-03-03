@@ -26,6 +26,7 @@ mixin _$PreloadEvent {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -65,6 +66,7 @@ mixin _$PreloadEvent {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -104,6 +106,7 @@ mixin _$PreloadEvent {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -237,6 +240,7 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -279,6 +283,7 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -321,6 +326,7 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -418,6 +424,7 @@ class _$DisposeLiveStreamControllerImpl
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -460,6 +467,7 @@ class _$DisposeLiveStreamControllerImpl
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -502,6 +510,7 @@ class _$DisposeLiveStreamControllerImpl
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -593,6 +602,7 @@ class _$DisposeMainStreamControllerImpl
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -635,6 +645,7 @@ class _$DisposeMainStreamControllerImpl
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -677,6 +688,7 @@ class _$DisposeMainStreamControllerImpl
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -764,6 +776,7 @@ class _$ToggleVolumeImpl implements _ToggleVolume {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -806,6 +819,7 @@ class _$ToggleVolumeImpl implements _ToggleVolume {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -848,6 +862,7 @@ class _$ToggleVolumeImpl implements _ToggleVolume {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -934,6 +949,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -976,6 +992,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -1018,6 +1035,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -1153,6 +1171,7 @@ class _$GetCategoryVideosImpl implements _GetCategoryVideos {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -1195,6 +1214,7 @@ class _$GetCategoryVideosImpl implements _GetCategoryVideos {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -1237,6 +1257,7 @@ class _$GetCategoryVideosImpl implements _GetCategoryVideos {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -1288,6 +1309,236 @@ abstract class _GetCategoryVideos implements PreloadEvent {
 }
 
 /// @nodoc
+abstract class _$$GetThemeVideosImplCopyWith<$Res> {
+  factory _$$GetThemeVideosImplCopyWith(_$GetThemeVideosImpl value,
+          $Res Function(_$GetThemeVideosImpl) then) =
+      __$$GetThemeVideosImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {VideoData? initailVideo, String theme, Completer<void>? completer});
+}
+
+/// @nodoc
+class __$$GetThemeVideosImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$GetThemeVideosImpl>
+    implements _$$GetThemeVideosImplCopyWith<$Res> {
+  __$$GetThemeVideosImplCopyWithImpl(
+      _$GetThemeVideosImpl _value, $Res Function(_$GetThemeVideosImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? initailVideo = freezed,
+    Object? theme = null,
+    Object? completer = freezed,
+  }) {
+    return _then(_$GetThemeVideosImpl(
+      initailVideo: freezed == initailVideo
+          ? _value.initailVideo
+          : initailVideo // ignore: cast_nullable_to_non_nullable
+              as VideoData?,
+      theme: null == theme
+          ? _value.theme
+          : theme // ignore: cast_nullable_to_non_nullable
+              as String,
+      completer: freezed == completer
+          ? _value.completer
+          : completer // ignore: cast_nullable_to_non_nullable
+              as Completer<void>?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$GetThemeVideosImpl implements _GetThemeVideos {
+  const _$GetThemeVideosImpl(
+      {required this.initailVideo, required this.theme, this.completer});
+
+  @override
+  final VideoData? initailVideo;
+  @override
+  final String theme;
+  @override
+  final Completer<void>? completer;
+
+  @override
+  String toString() {
+    return 'PreloadEvent.getThemeVideos(initailVideo: $initailVideo, theme: $theme, completer: $completer)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$GetThemeVideosImpl &&
+            (identical(other.initailVideo, initailVideo) ||
+                other.initailVideo == initailVideo) &&
+            (identical(other.theme, theme) || other.theme == theme) &&
+            (identical(other.completer, completer) ||
+                other.completer == completer));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, initailVideo, theme, completer);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$GetThemeVideosImplCopyWith<_$GetThemeVideosImpl> get copyWith =>
+      __$$GetThemeVideosImplCopyWithImpl<_$GetThemeVideosImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
+    required TResult Function(_GetVideosFromApi value) getVideosFromApi,
+    required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
+    required TResult Function(_SetLoading value) setLoading,
+    required TResult Function(_UpdateUrls value) updateUrls,
+    required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
+    required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
+    required TResult Function(_ErrorPage value) onError,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_FollowAdvisor value) followAdvisor,
+    required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
+    required TResult Function(_ToggleComments value) toggleComments,
+    required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_InitializeFromDynamicLink value)
+        initializeFromDynamicLink,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
+    required TResult Function(_DisposeProfileControllers value)
+        disposeProfileControllers,
+    required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
+    required TResult Function(_UpdateLoading value) updateLoading,
+  }) {
+    return getThemeVideos(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
+    TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
+    TResult? Function(_SetLoading value)? setLoading,
+    TResult? Function(_UpdateUrls value)? updateUrls,
+    TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
+    TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
+    TResult? Function(_ErrorPage value)? onError,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_FollowAdvisor value)? followAdvisor,
+    TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
+    TResult? Function(_ToggleComments value)? toggleComments,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_InitializeFromDynamicLink value)?
+        initializeFromDynamicLink,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult? Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+    TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
+    TResult? Function(_UpdateLoading value)? updateLoading,
+  }) {
+    return getThemeVideos?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
+    TResult Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
+    TResult Function(_SetLoading value)? setLoading,
+    TResult Function(_UpdateUrls value)? updateUrls,
+    TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
+    TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
+    TResult Function(_ErrorPage value)? onError,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_FollowAdvisor value)? followAdvisor,
+    TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
+    TResult Function(_ToggleComments value)? toggleComments,
+    TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_InitializeFromDynamicLink value)?
+        initializeFromDynamicLink,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+    TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
+    TResult Function(_UpdateLoading value)? updateLoading,
+    required TResult orElse(),
+  }) {
+    if (getThemeVideos != null) {
+      return getThemeVideos(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _GetThemeVideos implements PreloadEvent {
+  const factory _GetThemeVideos(
+      {required final VideoData? initailVideo,
+      required final String theme,
+      final Completer<void>? completer}) = _$GetThemeVideosImpl;
+
+  VideoData? get initailVideo;
+  String get theme;
+  Completer<void>? get completer;
+  @JsonKey(ignore: true)
+  _$$GetThemeVideosImplCopyWith<_$GetThemeVideosImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 abstract class _$$SetLoadingImplCopyWith<$Res> {
   factory _$$SetLoadingImplCopyWith(
           _$SetLoadingImpl value, $Res Function(_$SetLoadingImpl) then) =
@@ -1333,6 +1584,7 @@ class _$SetLoadingImpl implements _SetLoading {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -1375,6 +1627,7 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -1417,6 +1670,7 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -1546,6 +1800,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -1588,6 +1843,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -1630,6 +1886,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -1750,6 +2007,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -1792,6 +2050,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -1834,6 +2093,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -1953,6 +2213,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -1995,6 +2256,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -2037,6 +2299,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -2155,6 +2418,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -2197,6 +2461,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -2239,6 +2504,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -2398,6 +2664,7 @@ class _$UpdateThemesImpl implements _UpdateThemes {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -2440,6 +2707,7 @@ class _$UpdateThemesImpl implements _UpdateThemes {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -2482,6 +2750,7 @@ class _$UpdateThemesImpl implements _UpdateThemes {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -2627,6 +2896,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -2669,6 +2939,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -2711,6 +2982,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -2841,6 +3113,7 @@ class _$AddCommentImpl implements _AddComment {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -2883,6 +3156,7 @@ class _$AddCommentImpl implements _AddComment {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -2925,6 +3199,7 @@ class _$AddCommentImpl implements _AddComment {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -3046,6 +3321,7 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -3088,6 +3364,7 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -3130,6 +3407,7 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -3248,6 +3526,7 @@ class _$UpdateSeenImpl implements _UpdateSeen {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -3290,6 +3569,7 @@ class _$UpdateSeenImpl implements _UpdateSeen {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -3332,6 +3612,7 @@ class _$UpdateSeenImpl implements _UpdateSeen {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -3423,6 +3704,7 @@ class _$ErrorPageImpl implements _ErrorPage {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -3465,6 +3747,7 @@ class _$ErrorPageImpl implements _ErrorPage {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -3507,6 +3790,7 @@ class _$ErrorPageImpl implements _ErrorPage {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -3619,6 +3903,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -3661,6 +3946,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -3703,6 +3989,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -3821,6 +4108,7 @@ class _$FollowAdvisorImpl implements _FollowAdvisor {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -3863,6 +4151,7 @@ class _$FollowAdvisorImpl implements _FollowAdvisor {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -3905,6 +4194,7 @@ class _$FollowAdvisorImpl implements _FollowAdvisor {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -4053,6 +4343,7 @@ class _$SaveVideoImpl implements _SaveVideo {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -4095,6 +4386,7 @@ class _$SaveVideoImpl implements _SaveVideo {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -4137,6 +4429,7 @@ class _$SaveVideoImpl implements _SaveVideo {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -4213,13 +4506,13 @@ class __$$AddInteractionImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? interaction = freezed,
+    Object? interaction = null,
     Object? videoId = null,
     Object? theme = null,
     Object? category = null,
   }) {
     return _then(_$AddInteractionImpl(
-      interaction: freezed == interaction
+      interaction: null == interaction
           ? _value.interaction
           : interaction // ignore: cast_nullable_to_non_nullable
               as InteractionType,
@@ -4267,8 +4560,8 @@ class _$AddInteractionImpl implements _AddInteraction {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AddInteractionImpl &&
-            const DeepCollectionEquality()
-                .equals(other.interaction, interaction) &&
+            (identical(other.interaction, interaction) ||
+                other.interaction == interaction) &&
             (identical(other.videoId, videoId) || other.videoId == videoId) &&
             (identical(other.theme, theme) || other.theme == theme) &&
             (identical(other.category, category) ||
@@ -4276,12 +4569,8 @@ class _$AddInteractionImpl implements _AddInteraction {
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(interaction),
-      videoId,
-      theme,
-      category);
+  int get hashCode =>
+      Object.hash(runtimeType, interaction, videoId, theme, category);
 
   @JsonKey(ignore: true)
   @override
@@ -4301,6 +4590,7 @@ class _$AddInteractionImpl implements _AddInteraction {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -4343,6 +4633,7 @@ class _$AddInteractionImpl implements _AddInteraction {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -4385,6 +4676,7 @@ class _$AddInteractionImpl implements _AddInteraction {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -4483,6 +4775,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -4525,6 +4818,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -4567,6 +4861,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -4696,6 +4991,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -4738,6 +5034,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -4780,6 +5077,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -4874,6 +5172,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -4916,6 +5215,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -4958,6 +5258,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -5073,6 +5374,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -5115,6 +5417,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -5157,6 +5460,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -5285,6 +5589,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -5327,6 +5632,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -5369,6 +5675,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -5502,6 +5809,7 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -5544,6 +5852,7 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -5586,6 +5895,7 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -5707,6 +6017,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -5749,6 +6060,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -5791,6 +6103,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -5886,6 +6199,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -5928,6 +6242,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -5970,6 +6285,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -6083,6 +6399,7 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -6125,6 +6442,7 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -6167,6 +6485,7 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -6286,6 +6605,7 @@ class _$UpdateLoadingImpl implements _UpdateLoading {
     required TResult Function(_ToggleVolume value) toggleVolume,
     required TResult Function(_GetVideosFromApi value) getVideosFromApi,
     required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
     required TResult Function(_SetLoading value) setLoading,
     required TResult Function(_UpdateUrls value) updateUrls,
     required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
@@ -6328,6 +6648,7 @@ class _$UpdateLoadingImpl implements _UpdateLoading {
     TResult? Function(_ToggleVolume value)? toggleVolume,
     TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
     TResult? Function(_SetLoading value)? setLoading,
     TResult? Function(_UpdateUrls value)? updateUrls,
     TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
@@ -6370,6 +6691,7 @@ class _$UpdateLoadingImpl implements _UpdateLoading {
     TResult Function(_ToggleVolume value)? toggleVolume,
     TResult Function(_GetVideosFromApi value)? getVideosFromApi,
     TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
     TResult Function(_SetLoading value)? setLoading,
     TResult Function(_UpdateUrls value)? updateUrls,
     TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,

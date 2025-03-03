@@ -43,7 +43,7 @@ class ExpandableWidgetState extends State<ExpandableWidget> {
         curve: Curves.easeInOut,
         width: 0.8.sw,
         padding: EdgeInsets.symmetric(horizontal: 12.w),
-        height: _isExpanded ? 120.h : 35.h,
+        height: _isExpanded ? 120.h : 38.h,
         decoration: BoxDecoration(
           color: widget.backgroundColor,
           borderRadius: BorderRadius.circular(4.r),
