@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/shorts/shorts_home.dart';
-import 'package:felloapp/feature/savedShorts/bloc/shorts_notification_bloc.dart';
+import 'package:felloapp/feature/savedShorts/bloc/shorts_saved_bloc.dart';
 import 'package:felloapp/feature/shorts/flutter_preload_videos.dart';
 import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 import 'package:felloapp/feature/shortsHome/widgets/more_options_sheet.dart';
@@ -27,7 +27,7 @@ class SavedShortsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          ShortsNotificationBloc(locator())..add(const LoadSavedData()),
+          ShortsSavedBloc(locator())..add(const LoadSavedData()),
       child: _SavedShortsScreen(),
     );
   }
@@ -47,7 +47,7 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
         color: UiConstants.primaryColor,
         backgroundColor: Colors.black,
         onRefresh: () async {
-          BlocProvider.of<ShortsNotificationBloc>(
+          BlocProvider.of<ShortsSavedBloc>(
             context,
             listen: false,
           ).add(const LoadSavedData());
@@ -76,13 +76,16 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const BackButton(
-                              style: ButtonStyle(
+                            BackButton(
+                              style: const ButtonStyle(
                                 padding: WidgetStatePropertyAll(
                                   EdgeInsets.zero,
                                 ),
                               ),
                               color: UiConstants.kTextColor,
+                              onPressed: () {
+                                AppState.backButtonDispatcher!.didPopRoute();
+                              },
                             ),
                             Text(
                               'Saved',
@@ -100,7 +103,7 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
 
             // Content that scrolls under the header
             SliverToBoxAdapter(
-              child: BlocBuilder<ShortsNotificationBloc, SavedShortsState>(
+              child: BlocBuilder<ShortsSavedBloc, SavedShortsState>(
                 builder: (context, state) {
                   return switch (state) {
                     LoadingSavedShortsDetails() => const FullScreenLoader(),
@@ -109,7 +112,7 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
                         : _buildVideosContent(state),
                     LoadingSavedShortsFailed() => NewErrorPage(
                         onTryAgain: () {
-                          BlocProvider.of<ShortsNotificationBloc>(
+                          BlocProvider.of<ShortsSavedBloc>(
                             context,
                             listen: false,
                           ).add(const LoadSavedData());
@@ -182,36 +185,6 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
                         theme.themeName,
                         style: TextStyles.sourceSansSB.body2,
                       ),
-                      if (theme.isNotificationAllowed)
-                        GestureDetector(
-                          onTap: () {
-                            BlocProvider.of<ShortsNotificationBloc>(context)
-                                .add(
-                              ToogleNotification(
-                                theme.theme,
-                                theme.isNotificationOn,
-                              ),
-                            );
-                          },
-                          child: Container(
-                            height: 24.r,
-                            width: 24.r,
-                            decoration: BoxDecoration(
-                              color: UiConstants.kblue2.withOpacity(.4),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(4.r),
-                              ),
-                            ),
-                            padding: EdgeInsets.all(6.r),
-                            child: Icon(
-                              theme.isNotificationOn
-                                  ? Icons.check_rounded
-                                  : Icons.notifications_rounded,
-                              color: UiConstants.teal3,
-                              size: 12.r,
-                            ),
-                          ),
-                        ),
                     ],
                   ),
                 ),
@@ -437,6 +410,24 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
                 isSaved: isSaved,
                 theme: theme,
                 category: category,
+                onSave: () {
+                  BlocProvider.of<PreloadBloc>(
+                    context,
+                    listen: false,
+                  ).add(
+                    PreloadEvent.saveVideo(
+                      isSaved: isSaved,
+                      videoId: id,
+                      theme: theme,
+                      category: category,
+                    ),
+                  );
+                  BlocProvider.of<ShortsSavedBloc>(
+                    context,
+                    listen: false,
+                  ).add(RemoveSaved(id));
+                  AppState.backButtonDispatcher!.didPopRoute();
+                },
               ),
             );
           },

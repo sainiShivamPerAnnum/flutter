@@ -15,12 +15,14 @@ class MoreOptionsSheet extends StatelessWidget {
     required this.isSaved,
     required this.theme,
     required this.category,
+    this.onSave,
     super.key,
   });
   final String id;
   final bool isSaved;
   final String theme;
   final String category;
+  final VoidCallback? onSave;
 
   @override
   Widget build(BuildContext context) {
@@ -79,20 +81,8 @@ class MoreOptionsSheet extends StatelessWidget {
               child: Column(
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      BlocProvider.of<PreloadBloc>(
-                        context,
-                        listen: false,
-                      ).add(
-                        PreloadEvent.saveVideo(
-                          isSaved: isSaved,
-                          videoId: id,
-                          theme: theme,
-                          category: category,
-                        ),
-                      );
-                      AppState.backButtonDispatcher!.didPopRoute();
-                    },
+                    onTap: onSave ??
+                        () => AppState.backButtonDispatcher!.didPopRoute(),
                     child: Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 18.w,

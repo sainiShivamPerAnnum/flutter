@@ -23,7 +23,6 @@ class ShortsHomeBloc extends Bloc<ShortsHomeEvents, ShortsHomeState> {
     on<SearchShorts>(_searchShorts);
     on<ApplyCategory>(_onCategoryApply);
     on<ToogleNotification>(_toggleNotification);
-    on<RefreshHomeData>(_onRefresh);
   }
   FutureOr<void> _onLoadShortsHomeData(
     LoadHomeData event,
@@ -31,18 +30,6 @@ class ShortsHomeBloc extends Bloc<ShortsHomeEvents, ShortsHomeState> {
   ) async {
     emitter(const LoadingShortsDetails());
 
-    final data = await _shortsRepository.getShortsHomeData();
-    if (data.isSuccess()) {
-      emitter(ShortsHomeData(shortsHome: data.model!, query: ''));
-    } else {
-      emitter(LoadingShortsFailed(errorMessage: data.errorMessage));
-    }
-  }
-
-  FutureOr<void> _onRefresh(
-    RefreshHomeData event,
-    Emitter<ShortsHomeState> emitter,
-  ) async {
     final data = await _shortsRepository.getShortsHomeData();
     if (data.isSuccess()) {
       emitter(ShortsHomeData(shortsHome: data.model!, query: ''));

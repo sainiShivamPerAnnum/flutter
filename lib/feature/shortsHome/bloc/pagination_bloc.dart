@@ -5,7 +5,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/bloc_pagination/bloc_pagination.dart';
 
 class ThemeVideosBloc
-    extends PaginationBloc<dynamic, PaginatedShorts, int, String> {
+    extends PaginationBloc<VideoData, PaginatedShorts, int, String> {
   final String theme;
   final String themeName;
   final num totalPages;

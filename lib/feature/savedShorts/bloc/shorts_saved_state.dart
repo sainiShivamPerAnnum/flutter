@@ -1,4 +1,4 @@
-part of 'shorts_notification_bloc.dart';
+part of 'shorts_saved_bloc.dart';
 
 sealed class SavedShortsState extends Equatable {
   const SavedShortsState();

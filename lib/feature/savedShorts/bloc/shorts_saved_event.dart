@@ -1,4 +1,4 @@
-part of 'shorts_notification_bloc.dart';
+part of 'shorts_saved_bloc.dart';
 
 sealed class SavedShortsEvents {
   const SavedShortsEvents();
@@ -12,4 +12,11 @@ class ToogleNotification extends SavedShortsEvents {
   final String theme;
   final bool isFollowed;
   const ToogleNotification(this.theme, this.isFollowed);
+}
+
+class RemoveSaved extends SavedShortsEvents {
+  const RemoveSaved(
+    this.id,
+  );
+  final String id;
 }

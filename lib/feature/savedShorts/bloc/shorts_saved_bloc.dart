@@ -6,16 +6,17 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/shorts/shorts_home.dart';
 import 'package:felloapp/core/repository/shorts_repo.dart';
 
-part 'shorts_notification_event.dart';
-part 'shorts_notification_state.dart';
+part 'shorts_saved_event.dart';
+part 'shorts_saved_state.dart';
 
-class ShortsNotificationBloc extends Bloc<SavedShortsEvents, SavedShortsState> {
+class ShortsSavedBloc extends Bloc<SavedShortsEvents, SavedShortsState> {
   final ShortsRepository _shortsRepository;
-  ShortsNotificationBloc(
+  ShortsSavedBloc(
     this._shortsRepository,
   ) : super(const LoadingSavedShortsDetails()) {
     on<LoadSavedData>(_onLoadShortsHomeData);
     on<ToogleNotification>(_toggleNotification);
+    on<RemoveSaved>(_onRemoveShort);
   }
   FutureOr<void> _onLoadShortsHomeData(
     LoadSavedData event,
@@ -32,6 +33,24 @@ class ShortsNotificationBloc extends Bloc<SavedShortsEvents, SavedShortsState> {
       );
     } else {
       emitter(LoadingSavedShortsFailed(errorMessage: data.errorMessage));
+    }
+  }
+
+  FutureOr _onRemoveShort(
+    RemoveSaved event,
+    Emitter emitter,
+  ) async {
+    if (state is SavedShortsData) {
+      final currentState = state as SavedShortsData;
+      final updatedShortsHome = currentState.shortsHome
+          .where((short) => short.videos.every((video) => video.id != event.id))
+          .toList();
+
+      emitter(
+        SavedShortsData(
+          shortsHome: updatedShortsHome,
+        ),
+      );
     }
   }
 
