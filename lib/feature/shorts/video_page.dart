@@ -212,7 +212,8 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                 ? const ShimmerReelsButtons()
                                 : VideoWidget(
                                     isLoading: isLoading,
-                                    expertProfileImage: '',
+                                    expertProfileImage:
+                                        videos[index].advisorImg,
                                     controller: activeControllers[index]!,
                                     userName: videos[index].author,
                                     videoTitle: videos[index].title,
@@ -221,6 +222,7 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                     isKeyBoardOpen: state.keyboardVisible,
                                     commentsVisibility: state.showComments,
                                     currentContext: state.currentContext,
+                                    focusedIndex: state.focusedIndex,
                                     isFollowed:
                                         LocalActionsState.getAdvisorFollowed(
                                       videos[index].advisorId,
