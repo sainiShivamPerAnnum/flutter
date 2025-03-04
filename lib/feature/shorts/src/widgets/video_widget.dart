@@ -188,6 +188,7 @@ class VideoWidgetState extends State<VideoWidget>
             Positioned(
               bottom: 30.h,
               right: 10.w,
+              left: 10.w,
               child: Visibility(
                 visible: !widget.isKeyBoardOpen,
                 replacement: const SizedBox.shrink(),
@@ -196,14 +197,15 @@ class VideoWidgetState extends State<VideoWidget>
                   opacity: widget.isKeyBoardOpen ? 0 : 1,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           if (widget.showUserName)
                             Container(
                               padding: EdgeInsets.symmetric(
-                                horizontal: 4.w,
                                 vertical: 2.h,
                               ),
                               child: Row(
@@ -379,96 +381,140 @@ class VideoWidgetState extends State<VideoWidget>
           Column(
             children: [
               reelcontext == ReelContext.main
-                  ? IconButton(
-                      icon: Icon(
-                        isSaved
-                            ? Icons.bookmark
-                            : Icons.bookmark_border_rounded,
-                        color: Colors.white,
-                        size: 25.r,
+                  ? GestureDetector(
+                      onTap: onSave,
+                      child: Column(
+                        children: [
+                          Icon(
+                            isSaved
+                                ? Icons.bookmark
+                                : Icons.bookmark_border_rounded,
+                            color: Colors.white,
+                            size: 25.r,
+                          ),
+                          SizedBox(
+                            height: 4.h,
+                          ),
+                        ],
                       ),
-                      onPressed: onSave,
                     )
-                  : IconButton(
-                      icon: AppImage(
-                        Assets.video_like,
-                        color: isLiked ? Colors.red : Colors.white,
-                        height: 20.r,
-                        width: 20.r,
+                  : GestureDetector(
+                      onTap: onLike,
+                      child: Column(
+                        children: [
+                          AppImage(
+                            Assets.video_like,
+                            color: isLiked ? Colors.red : Colors.white,
+                            height: 20.r,
+                            width: 20.r,
+                          ),
+                          SizedBox(
+                            height: 4.h,
+                          ),
+                        ],
                       ),
-                      onPressed: onLike,
                     ),
               Text(
                 reelcontext == ReelContext.main ? 'Save' : 'Like',
                 style: GoogleFonts.sourceSans3(
                   fontSize: 12.sp,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w500,
                   color: Colors.white,
                 ),
+              ),
+              SizedBox(
+                height: 12.h,
               ),
             ],
           ),
         if (widget.showShareButton)
           Column(
             children: [
-              IconButton(
-                icon: AppImage(
-                  Assets.video_share,
-                  color: Colors.white,
-                  height: 20.r,
-                  width: 20.r,
+              GestureDetector(
+                onTap: onShare,
+                child: Column(
+                  children: [
+                    AppImage(
+                      Assets.video_share,
+                      color: Colors.white,
+                      height: 20.r,
+                      width: 20.r,
+                    ),
+                    SizedBox(
+                      height: 4.h,
+                    ),
+                  ],
                 ),
-                onPressed: onShare,
               ),
               Text(
                 'Share',
                 style: GoogleFonts.sourceSans3(
                   fontSize: 12.sp,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w500,
                   color: Colors.white,
                 ),
+              ),
+              SizedBox(
+                height: 12.h,
               ),
             ],
           ),
         if (widget.showBookButton)
           Column(
             children: [
-              IconButton(
-                icon: AppImage(
-                  Assets.book_call,
-                  color: Colors.white,
-                  height: 20.r,
-                  width: 20.r,
+              GestureDetector(
+                onTap: onBook,
+                child: Column(
+                  children: [
+                    AppImage(
+                      Assets.book_call,
+                      color: Colors.white,
+                      height: 20.r,
+                      width: 20.r,
+                    ),
+                    SizedBox(
+                      height: 4.h,
+                    ),
+                  ],
                 ),
-                onPressed: onBook,
               ),
               Text(
                 'Book a call',
                 style: GoogleFonts.sourceSans3(
                   fontSize: 12.sp,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w500,
                   color: Colors.white,
                 ),
+              ),
+              SizedBox(
+                height: 12.h,
               ),
             ],
           ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            IconButton(
-              icon: AppImage(
-                Assets.add_comment,
-                color: Colors.white,
-                height: 20.r,
-                width: 20.r,
+            GestureDetector(
+              onTap: onToggleComment,
+              child: Column(
+                children: [
+                  AppImage(
+                    Assets.add_comment,
+                    color: Colors.white,
+                    height: 20.r,
+                    width: 20.r,
+                  ),
+                  SizedBox(
+                    height: 4.h,
+                  ),
+                ],
               ),
-              onPressed: onToggleComment,
             ),
             Text(
               'Comments',
               style: GoogleFonts.sourceSans3(
                 fontSize: 12.sp,
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w500,
                 color: Colors.white,
               ),
             ),

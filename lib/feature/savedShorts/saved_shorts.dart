@@ -276,8 +276,11 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
               backgroundColor: Colors.transparent,
               centerTitle: true,
               titleWidget: Text('Saved', style: TextStyles.rajdhaniSB.body1),
-              leading: const BackButton(
+              leading: BackButton(
                 color: Colors.white,
+                onPressed: () {
+                  AppState.backButtonDispatcher!.didPopRoute();
+                },
               ),
               showAvatar: false,
               showCoinBar: false,

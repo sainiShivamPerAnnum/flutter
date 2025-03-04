@@ -25,4 +25,9 @@ Notification _$NotificationFromJson(Map<String, dynamic> json) => Notification(
       advisorId: json['advisorId'] as String,
       videoId: json['videoId'] as String,
       createdAt: json['createdAt'] as String,
+      isSaved: json['isSaved'] as bool,
+      theme: json['theme'] as String,
+      author: json['author'] as String,
+      isFollowed: json['isFollowed'] as bool,
+      videoUrl: json['videoUrl'] as String,
     );

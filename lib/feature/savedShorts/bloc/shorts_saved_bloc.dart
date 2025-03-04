@@ -5,7 +5,6 @@ import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/shorts/shorts_home.dart';
 import 'package:felloapp/core/repository/shorts_repo.dart';
-import 'package:felloapp/navigator/app_state.dart';
 
 part 'shorts_saved_event.dart';
 part 'shorts_saved_state.dart';

@@ -1,5 +1,13 @@
+import 'dart:async';
+
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/shorts/shorts_notification.dart' as nf;
+import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
+import 'package:felloapp/feature/shorts/src/service/video_data.dart';
+import 'package:felloapp/feature/shorts/video_page.dart';
 import 'package:felloapp/feature/shorts_notifications/shorts_notification_bloc.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
@@ -10,9 +18,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../../util/bloc_pagination/pagination_bloc.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class ShortsNotificationPage extends StatefulWidget {
   const ShortsNotificationPage({super.key});
@@ -75,7 +83,9 @@ class _ShortsNotification extends StatelessWidget {
             PaginationState<dynamic, int, Object>>(
           builder: (context, state) {
             if (state.status.isFailedToLoadInitial) {
-              return const NewErrorPage();
+              return NewErrorPage(
+                onTryAgain: shortsNotificationBloc.reset,
+              );
             }
 
             if (state.status.isFetchingInitialPage) {
@@ -141,151 +151,263 @@ class _ShortsNotification extends StatelessWidget {
                       }
                       return shortsNotificationBloc.state.entries[index]
                               is nf.Notification
-                          ? Container(
-                              padding: EdgeInsets.all(18.r),
-                              width: 1.sw,
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  left: notification.isSeen
-                                      ? const BorderSide(
-                                          color: UiConstants.primaryColor,
-                                          width: 0,
-                                        )
-                                      : BorderSide(
-                                          color: UiConstants.primaryColor,
-                                          width: 3.w,
-                                        ),
-                                  bottom: const BorderSide(
-                                    color: UiConstants.greyVarient,
-                                    width: 1.0,
+                          ? GestureDetector(
+                              onTap: () async {
+                                final preloadBloc =
+                                    BlocProvider.of<PreloadBloc>(
+                                  context,
+                                );
+                                final themeCompleter = Completer<void>();
+                                final updateUrlsCompleter = Completer<void>();
+                                preloadBloc.add(
+                                  const PreloadEvent.switchToMainReels(),
+                                );
+                                preloadBloc.add(
+                                  PreloadEvent.updateThemes(
+                                    categories: [],
+                                    theme: notification.theme,
+                                    index: 0,
+                                    completer: themeCompleter,
                                   ),
-                                ),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CircleAvatar(
-                                    radius: 18.r,
-                                    backgroundImage: NetworkImage(
-                                      notification.advisorProfilePhoto,
+                                );
+                                await themeCompleter.future;
+                                preloadBloc.add(
+                                  PreloadEvent.getThemeVideos(
+                                    initailVideo: VideoData(
+                                      id: notification.videoId,
+                                      thumbnail: '',
+                                      url: notification.videoUrl,
+                                      timeStamp: notification.createdAt,
+                                      title: notification.title,
+                                      subtitle: notification.subtitle,
+                                      views: 0,
+                                      duration: notification.duration,
+                                      description: notification.subtitle,
+                                      advisorId: notification.advisorId,
+                                      author: notification.author,
+                                      categoryV1: notification.categoryV1,
+                                      category: [],
+                                      isVideoLikedByUser: false,
+                                      advisorImg:
+                                          notification.advisorProfilePhoto,
+                                      isSaved: notification.isSaved,
+                                      isFollowed: notification.isFollowed,
+                                    ),
+                                    theme: notification.theme,
+                                    completer: updateUrlsCompleter,
+                                  ),
+                                );
+                                await updateUrlsCompleter.future;
+                                preloadBloc.add(
+                                  const PreloadEvent.playVideoAtIndex(0),
+                                );
+                                AppState.delegate!.appState.currentAction =
+                                    PageAction(
+                                  page: ShortsPageConfig,
+                                  state: PageState.addWidget,
+                                  widget: BaseScaffold(
+                                    appBar: FAppBar(
+                                      backgroundColor: Colors.transparent,
+                                      centerTitle: true,
+                                      titleWidget: Text(
+                                        'Notifications',
+                                        style: TextStyles.rajdhaniSB.body1,
+                                      ),
+                                      leading: const BackButton(
+                                        color: Colors.white,
+                                      ),
+                                      showAvatar: false,
+                                      showCoinBar: false,
+                                      action: BlocBuilder<PreloadBloc,
+                                          PreloadState>(
+                                        builder: (context, preloadState) {
+                                          return Padding(
+                                            padding:
+                                                EdgeInsets.only(right: 10.w),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                BlocProvider.of<PreloadBloc>(
+                                                  context,
+                                                  listen: false,
+                                                ).add(
+                                                  const PreloadEvent
+                                                      .toggleVolume(),
+                                                );
+                                              },
+                                              behavior: HitTestBehavior.opaque,
+                                              child: SizedBox(
+                                                height: 24.r,
+                                                width: 24.r,
+                                                child: Icon(
+                                                  !preloadState.muted
+                                                      ? Icons.volume_up_rounded
+                                                      : Icons
+                                                          .volume_off_rounded,
+                                                  size: 21.r,
+                                                  color: UiConstants.kTextColor,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    body: const ShortsVideoPage(
+                                      categories: [],
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: 10.w,
+                                );
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(18.r),
+                                width: 1.sw,
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    left: notification.isSeen
+                                        ? const BorderSide(
+                                            color: UiConstants.primaryColor,
+                                            width: 0,
+                                          )
+                                        : BorderSide(
+                                            color: UiConstants.primaryColor,
+                                            width: 3.w,
+                                          ),
+                                    bottom: const BorderSide(
+                                      color: UiConstants.greyVarient,
+                                      width: 1.0,
+                                    ),
                                   ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              notification.title,
-                                              style:
-                                                  TextStyles.sourceSansM.body3,
-                                            ),
-                                            if (!notification.isSeen)
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 18.r,
+                                      backgroundImage: NetworkImage(
+                                        notification.advisorProfilePhoto,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10.w,
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                notification.title,
+                                                style: TextStyles
+                                                    .sourceSansM.body3,
+                                              ),
+                                              if (!notification.isSeen)
+                                                Container(
+                                                  margin: EdgeInsets.symmetric(
+                                                    horizontal: 4.w,
+                                                  ),
+                                                  width: 6.r,
+                                                  height: 6.r,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: UiConstants
+                                                        .primaryColor,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                notification.categoryV1,
+                                                style: TextStyles
+                                                    .sourceSans.body4
+                                                    .colour(
+                                                  const Color(0xffC2BDC2),
+                                                ),
+                                              ),
                                               Container(
                                                 margin: EdgeInsets.symmetric(
                                                   horizontal: 4.w,
                                                 ),
-                                                width: 6.r,
-                                                height: 6.r,
+                                                width: 4.r,
+                                                height: 4.r,
                                                 decoration: const BoxDecoration(
-                                                  color:
-                                                      UiConstants.primaryColor,
+                                                  color: Color(0xffC2BDC2),
                                                   shape: BoxShape.circle,
                                                 ),
                                               ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              notification.categoryV1,
-                                              style: TextStyles.sourceSans.body4
-                                                  .colour(
-                                                const Color(0xffC2BDC2),
-                                              ),
-                                            ),
-                                            Container(
-                                              margin: EdgeInsets.symmetric(
-                                                horizontal: 4.w,
-                                              ),
-                                              width: 4.r,
-                                              height: 4.r,
-                                              decoration: const BoxDecoration(
-                                                color: Color(0xffC2BDC2),
-                                                shape: BoxShape.circle,
-                                              ),
-                                            ),
-                                            Text(
-                                              timeago.format(
-                                                DateTime.parse(
-                                                  notification.createdAt,
+                                              Text(
+                                                timeago.format(
+                                                  DateTime.parse(
+                                                    notification.createdAt,
+                                                  ),
                                                 ),
-                                              ),
-                                              style: TextStyles.sourceSans.body4
-                                                  .colour(
-                                                const Color(0xffC2BDC2),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 16.h,
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                            vertical: 16.h,
-                                            horizontal: 14.w,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: UiConstants.greyVarient,
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(8.r),
-                                            ),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              Icon(
-                                                Icons
-                                                    .play_circle_filled_rounded,
-                                                size: 30.r,
-                                                color: UiConstants.primaryColor,
-                                              ),
-                                              SizedBox(
-                                                width: 10.w,
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    notification.subtitle,
-                                                    style: TextStyles
-                                                        .sourceSansM.body4,
-                                                  ),
-                                                  Text(
-                                                    '${notification.duration} watch',
-                                                    style: TextStyles
-                                                        .sourceSans.body4
-                                                        .colour(
-                                                      const Color(0xffC2BDC2),
-                                                    ),
-                                                  ),
-                                                ],
+                                                style: TextStyles
+                                                    .sourceSans.body4
+                                                    .colour(
+                                                  const Color(0xffC2BDC2),
+                                                ),
                                               ),
                                             ],
                                           ),
-                                        ),
-                                      ],
+                                          SizedBox(
+                                            height: 16.h,
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: 16.h,
+                                              horizontal: 14.w,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: UiConstants.greyVarient,
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(8.r),
+                                              ),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons
+                                                      .play_circle_filled_rounded,
+                                                  size: 30.r,
+                                                  color:
+                                                      UiConstants.primaryColor,
+                                                ),
+                                                SizedBox(
+                                                  width: 10.w,
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      notification.subtitle,
+                                                      style: TextStyles
+                                                          .sourceSansM.body4,
+                                                    ),
+                                                    Text(
+                                                      '${notification.duration} watch',
+                                                      style: TextStyles
+                                                          .sourceSans.body4
+                                                          .colour(
+                                                        const Color(0xffC2BDC2),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             )
                           : const SizedBox.shrink();

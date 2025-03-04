@@ -41,8 +41,8 @@ class ExpandableWidgetState extends State<ExpandableWidget> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
-        width: 0.8.sw,
-        padding: EdgeInsets.symmetric(horizontal: 12.w),
+        width: 0.75.sw,
+        padding: EdgeInsets.symmetric(horizontal: 10.w),
         height: _isExpanded ? 120.h : 36.h,
         decoration: BoxDecoration(
           color: widget.backgroundColor,

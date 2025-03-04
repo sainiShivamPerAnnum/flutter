@@ -33,6 +33,11 @@ class Notification {
   final String advisorId;
   final String videoId;
   final String createdAt;
+  final bool isSaved;
+  final bool isFollowed;
+  final String theme;
+  final String author;
+  final String videoUrl;
 
   Notification({
     required this.isSeen,
@@ -44,6 +49,11 @@ class Notification {
     required this.advisorId,
     required this.videoId,
     required this.createdAt,
+    required this.isSaved,
+    required this.theme,
+    required this.author,
+    required this.isFollowed,
+    required this.videoUrl,
   });
 
   factory Notification.fromJson(Map<String, dynamic> json) =>

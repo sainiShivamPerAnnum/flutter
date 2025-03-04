@@ -93,7 +93,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         _stopControllerAtIndex(e.index);
       },
       playVideoAtIndex: (e) {
-        _playControllerAtIndex(e.index);
+        _playControllerAtIndex(e.index, state.muted);
       },
       switchToMainReels: (e) {
         emit(state.copyWith(currentContext: ReelContext.main));
@@ -356,7 +356,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         state.mainVideos.addAll(videosToAdd);
         await _initializeControllerAtIndex(0, state.muted);
         await _initializeControllerAtIndex(1, state.muted);
-        _playControllerAtIndex(0);
+        _playControllerAtIndex(0, state.muted);
 
         add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
       },
@@ -403,7 +403,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         state.mainVideos.addAll(videosToAdd);
         await _initializeControllerAtIndex(0, state.muted);
         await _initializeControllerAtIndex(1, state.muted);
-        _playControllerAtIndex(0);
+        _playControllerAtIndex(0, state.muted);
         add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
       },
       onVideoIndexChanged: (e) async {
@@ -527,6 +527,10 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       },
       followAdvisor: (e) {
         if (state.currentContext == ReelContext.main) {
+          final followed = LocalActionsState.getAdvisorFollowed(
+            e.advisorId,
+            e.isFollowed,
+          );
           unawaited(
             repository.followAdvisor(
               LocalActionsState.getAdvisorFollowed(
@@ -541,10 +545,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
               mainVideos: state.mainVideos.map((video) {
                 if (video.advisorId == e.advisorId) {
                   return video.copyWith(
-                    isFollowed: !LocalActionsState.getAdvisorFollowed(
-                      e.advisorId,
-                      e.isFollowed,
-                    ),
+                    isFollowed: !followed,
                   );
                 } else {
                   return video;
@@ -557,12 +558,13 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             !e.isFollowed,
           );
         } else if (state.currentContext == ReelContext.profile) {
+          final followed = LocalActionsState.getAdvisorFollowed(
+            e.advisorId,
+            e.isFollowed,
+          );
           unawaited(
             repository.followAdvisor(
-              LocalActionsState.getAdvisorFollowed(
-                e.advisorId,
-                e.isFollowed,
-              ),
+              followed,
               e.advisorId,
             ),
           );
@@ -571,10 +573,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
               profileVideos: state.profileVideos.map((video) {
                 if (video.advisorId == e.advisorId) {
                   return video.copyWith(
-                    isFollowed: !LocalActionsState.getAdvisorFollowed(
-                      e.advisorId,
-                      e.isFollowed,
-                    ),
+                    isFollowed: !followed,
                   );
                 } else {
                   return video;
@@ -587,12 +586,13 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             !e.isFollowed,
           );
         } else if (state.currentContext == ReelContext.liveStream) {
+          final followed = LocalActionsState.getAdvisorFollowed(
+            e.advisorId,
+            e.isFollowed,
+          );
           unawaited(
             repository.followAdvisor(
-              LocalActionsState.getAdvisorFollowed(
-                e.advisorId,
-                e.isFollowed,
-              ),
+              followed,
               e.advisorId,
             ),
           );
@@ -601,10 +601,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
               liveVideo: state.liveVideo.map((video) {
                 if (video.advisorId == e.advisorId) {
                   return video.copyWith(
-                    isFollowed: !LocalActionsState.getAdvisorFollowed(
-                      e.advisorId,
-                      e.isFollowed,
-                    ),
+                    isFollowed: !followed,
                   );
                 } else {
                   return video;
@@ -898,14 +895,14 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
   void _playNext(int index, bool muted) {
     _stopControllerAtIndex(index - 1);
     _disposeControllerAtIndex(index - 2);
-    _playControllerAtIndex(index);
+    _playControllerAtIndex(index, muted);
     _initializeControllerAtIndex(index + 1, muted);
   }
 
   void _playPrevious(int index, bool muted) {
     _stopControllerAtIndex(index + 1);
     _disposeControllerAtIndex(index + 2);
-    _playControllerAtIndex(index);
+    _playControllerAtIndex(index, muted);
     _initializeControllerAtIndex(index - 1, muted);
   }
 
@@ -1098,12 +1095,20 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
     controller.addListener(listener);
   }
 
-  void _playControllerAtIndex(int index) {
+  void _playControllerAtIndex(int index, bool muted) {
     if (state.currentVideos.length > index && index >= 0) {
       final controller = state.currentContext == ReelContext.main
           ? state.controllers[index]
           : state.profileControllers[index];
-
+      if (controller?.value.volume == 0 && !muted) {
+        controller?.setVolume(
+          1.0,
+        );
+      } else if (controller?.value.volume == 1 && muted) {
+        controller?.setVolume(
+          0.0,
+        );
+      }
       controller?.play();
       log('🚀🚀🚀 PLAYING $index for context ${state.currentContext}');
     }
