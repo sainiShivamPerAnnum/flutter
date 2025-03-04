@@ -4,6 +4,7 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/feature/shorts/src/core/interaction_enum.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/local_actions_state.dart';
 import 'comment_data.dart';
 import 'video_data.dart';
 
@@ -195,9 +196,10 @@ class ShortsRepo extends BaseRepo {
         body: {
           'id': videoId,
           'name': name,
-          'isLiked': isLiked,
+          'isLiked': !isLiked,
         },
       );
+      await LocalActionsState.setVideoLiked(videoId, !isLiked);
       return const ApiResponse<void>(code: 200);
     } catch (e) {
       return ApiResponse.withError(e.toString(), 400);
@@ -251,6 +253,7 @@ class ShortsRepo extends BaseRepo {
         apiName: 'ShortsRepo/addSave',
         body: isSaved ? null : requestBody,
       );
+      await LocalActionsState.setVideoSaved(videoId, !isSaved);
       return const ApiResponse<void>(code: 200);
     } catch (e) {
       return ApiResponse.withError(e.toString(), 400);

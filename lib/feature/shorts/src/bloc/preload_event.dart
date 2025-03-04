@@ -63,6 +63,7 @@ class PreloadEvent with _$PreloadEvent {
   }) = _LikeVideo;
   const factory PreloadEvent.followAdvisor({
     required String advisorId,
+    required bool isFollowed,
   }) = _FollowAdvisor;
   const factory PreloadEvent.saveVideo({
     required bool isSaved,

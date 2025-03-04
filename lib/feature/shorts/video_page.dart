@@ -9,6 +9,7 @@ import 'package:felloapp/feature/shorts/src/widgets/dot_indicator.dart';
 import 'package:felloapp/feature/shorts/src/widgets/loadinng_shimmer.dart';
 import 'package:felloapp/feature/shorts/src/widgets/video_widget.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
+import 'package:felloapp/util/local_actions_state.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -220,8 +221,15 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                     isKeyBoardOpen: state.keyboardVisible,
                                     commentsVisibility: state.showComments,
                                     currentContext: state.currentContext,
-                                    isFollowed: videos[index].isFollowed,
-                                    isSaved: videos[index].isSaved,
+                                    isFollowed:
+                                        LocalActionsState.getAdvisorFollowed(
+                                      videos[index].advisorId,
+                                      videos[index].isFollowed,
+                                    ),
+                                    isSaved: LocalActionsState.getVideoSaved(
+                                      videos[index].id,
+                                      videos[index].isSaved,
+                                    ),
                                     advisorImg: videos[index].advisorImg,
                                     onFollow: () {
                                       BlocProvider.of<PreloadBloc>(
@@ -230,6 +238,11 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                       ).add(
                                         PreloadEvent.followAdvisor(
                                           advisorId: videos[index].advisorId,
+                                          isFollowed: LocalActionsState
+                                              .getAdvisorFollowed(
+                                            videos[index].advisorId,
+                                            videos[index].isFollowed,
+                                          ),
                                         ),
                                       );
                                     },
@@ -243,7 +256,11 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                           theme: state.theme,
                                           category: state.categories[
                                               state.currentCategoryIndex],
-                                          isSaved: videos[index].isSaved,
+                                          isSaved:
+                                              LocalActionsState.getVideoSaved(
+                                            videos[index].id,
+                                            videos[index].isSaved,
+                                          ),
                                         ),
                                       );
                                     },
@@ -333,7 +350,10 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                         ?.reversed
                                         .toList(),
                                     isLikedByUser:
-                                        videos[index].isVideoLikedByUser,
+                                        LocalActionsState.getVideoLiked(
+                                      videos[index].id,
+                                      videos[index].isVideoLikedByUser,
+                                    ),
                                   );
                           },
                         ),

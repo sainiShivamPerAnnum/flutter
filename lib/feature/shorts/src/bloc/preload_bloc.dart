@@ -3,10 +3,13 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/shorts/src/core/interaction_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/local_actions_state.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -524,18 +527,24 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       },
       followAdvisor: (e) {
         if (state.currentContext == ReelContext.main) {
+          unawaited(
+            repository.followAdvisor(
+              LocalActionsState.getAdvisorFollowed(
+                e.advisorId,
+                e.isFollowed,
+              ),
+              e.advisorId,
+            ),
+          );
           emit(
             state.copyWith(
               mainVideos: state.mainVideos.map((video) {
                 if (video.advisorId == e.advisorId) {
-                  unawaited(
-                    repository.followAdvisor(
-                      video.isFollowed,
-                      video.advisorId,
-                    ),
-                  );
                   return video.copyWith(
-                    isFollowed: !video.isFollowed,
+                    isFollowed: !LocalActionsState.getAdvisorFollowed(
+                      e.advisorId,
+                      e.isFollowed,
+                    ),
                   );
                 } else {
                   return video;
@@ -543,19 +552,29 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
               }).toList(),
             ),
           );
+          LocalActionsState.setAdvisorFollowed(
+            e.advisorId,
+            !e.isFollowed,
+          );
         } else if (state.currentContext == ReelContext.profile) {
+          unawaited(
+            repository.followAdvisor(
+              LocalActionsState.getAdvisorFollowed(
+                e.advisorId,
+                e.isFollowed,
+              ),
+              e.advisorId,
+            ),
+          );
           emit(
             state.copyWith(
               profileVideos: state.profileVideos.map((video) {
                 if (video.advisorId == e.advisorId) {
-                  unawaited(
-                    repository.followAdvisor(
-                      video.isFollowed,
-                      video.advisorId,
-                    ),
-                  );
                   return video.copyWith(
-                    isFollowed: !video.isFollowed,
+                    isFollowed: !LocalActionsState.getAdvisorFollowed(
+                      e.advisorId,
+                      e.isFollowed,
+                    ),
                   );
                 } else {
                   return video;
@@ -563,25 +582,39 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
               }).toList(),
             ),
           );
+          LocalActionsState.setAdvisorFollowed(
+            e.advisorId,
+            !e.isFollowed,
+          );
         } else if (state.currentContext == ReelContext.liveStream) {
+          unawaited(
+            repository.followAdvisor(
+              LocalActionsState.getAdvisorFollowed(
+                e.advisorId,
+                e.isFollowed,
+              ),
+              e.advisorId,
+            ),
+          );
           emit(
             state.copyWith(
               liveVideo: state.liveVideo.map((video) {
                 if (video.advisorId == e.advisorId) {
-                  unawaited(
-                    repository.followAdvisor(
-                      video.isFollowed,
-                      video.advisorId,
-                    ),
-                  );
                   return video.copyWith(
-                    isFollowed: !video.isFollowed,
+                    isFollowed: !LocalActionsState.getAdvisorFollowed(
+                      e.advisorId,
+                      e.isFollowed,
+                    ),
                   );
                 } else {
                   return video;
                 }
               }).toList(),
             ),
+          );
+          LocalActionsState.setAdvisorFollowed(
+            e.advisorId,
+            !e.isFollowed,
           );
         }
         _analyticsService.track(
@@ -599,45 +632,62 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           final videoExistsInMainList =
               state.mainVideos.any((video) => video.id == e.videoId);
           if (videoExistsInMainList) {
-            emit(
-              state.copyWith(
-                mainVideos: state.mainVideos.map((video) {
-                  if (video.id == e.videoId) {
-                    unawaited(
-                      repository.addSave(
-                        video.isSaved,
-                        e.videoId,
-                        e.theme,
-                        e.category,
-                      ),
-                    );
-                    // Future.delayed(
-                    //   const Duration(seconds: 1),
-                    //   () => BlocProvider.of<ShortsHomeBloc>(
-                    //     AppState.delegate!.navigatorKey.currentContext!,
-                    //     listen: false,
-                    //   ).add(
-                    //     const RefreshHomeData(),
-                    //   ),
-                    // );
-                    return video.copyWith(
-                      isSaved: !video.isSaved,
-                    );
-                  } else {
-                    return video;
-                  }
-                }).toList(),
-              ),
-            );
-          } else {
-            final res = await repository.addSave(
+            final saved = LocalActionsState.getVideoSaved(
+              e.videoId,
               e.isSaved,
+            );
+            final res = await repository.addSave(
+              saved,
               e.videoId,
               e.theme,
               e.category,
             );
             if (res.isSuccess()) {
-              if (e.isSaved) {
+              emit(
+                state.copyWith(
+                  mainVideos: state.mainVideos.map((video) {
+                    if (video.id == e.videoId) {
+                      if ((AppState.delegate!.currentConfiguration?.path ??
+                                  '') !=
+                              '/shorts-internal' &&
+                          AppState.screenStack.last == ScreenItem.dialog) {
+                        AppState.backButtonDispatcher!.didPopRoute();
+                        if (saved) {
+                          BaseUtil.showPositiveAlert(
+                            'Success! Short Unsaved',
+                            'This short has been removed from your saved list. You can save it again anytime!',
+                          );
+                        } else {
+                          BaseUtil.showPositiveAlert(
+                            'Success! Short Saved',
+                            'This short has been added to your saved list. You can watch it later anytime!',
+                          );
+                        }
+                      }
+                      return video.copyWith(
+                        isSaved: !saved,
+                      );
+                    } else {
+                      return video;
+                    }
+                  }).toList(),
+                ),
+              );
+            }
+          } else {
+            final saved = LocalActionsState.getVideoSaved(
+              e.videoId,
+              e.isSaved,
+            );
+            final res = await repository.addSave(
+              saved,
+              e.videoId,
+              e.theme,
+              e.category,
+            );
+            if (res.isSuccess()) {
+              await AppState.backButtonDispatcher!.didPopRoute();
+              if (saved) {
                 BaseUtil.showPositiveAlert(
                   'Success! Short Unsaved',
                   'This short has been removed from your saved list. You can save it again anytime!',
@@ -648,23 +698,22 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                   'This short has been added to your saved list. You can watch it later anytime!',
                 );
               }
-              // BlocProvider.of<ShortsHomeBloc>(
-              //   AppState.delegate!.navigatorKey.currentContext!,
-              //   listen: false,
-              // ).add(
-              //   const RefreshHomeData(),
-              // );
             }
           }
         } else {
-          final res = await repository.addSave(
+          final saved = LocalActionsState.getVideoSaved(
+            e.videoId,
             e.isSaved,
+          );
+          final res = await repository.addSave(
+            saved,
             e.videoId,
             e.theme,
             e.category,
           );
           if (res.isSuccess()) {
-            if (e.isSaved) {
+            await AppState.backButtonDispatcher!.didPopRoute();
+            if (saved) {
               BaseUtil.showPositiveAlert(
                 'Success! Short Unsaved',
                 'This short has been removed from your saved list. You can save it again anytime!',
@@ -675,13 +724,6 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                 'This short has been added to your saved list. You can watch it later anytime!',
               );
             }
-
-            // BlocProvider.of<ShortsHomeBloc>(
-            //   AppState.delegate!.navigatorKey.currentContext!,
-            //   listen: false,
-            // ).add(
-            //   const RefreshHomeData(),
-            // );
           }
         }
         log('🚀🚀🚀 Video saved');
@@ -698,15 +740,19 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             state.copyWith(
               mainVideos: state.mainVideos.map((video) {
                 if (video.id == e.videoId) {
+                  final liked = LocalActionsState.getVideoLiked(
+                    e.videoId,
+                    video.isVideoLikedByUser,
+                  );
                   unawaited(
                     repository.addLike(
-                      !video.isVideoLikedByUser,
+                      liked,
                       e.videoId,
                       userName,
                     ),
                   );
                   return video.copyWith(
-                    isVideoLikedByUser: !video.isVideoLikedByUser,
+                    isVideoLikedByUser: !liked,
                   );
                 } else {
                   return video;
@@ -719,15 +765,19 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             state.copyWith(
               profileVideos: state.profileVideos.map((video) {
                 if (video.id == e.videoId) {
+                  final liked = LocalActionsState.getVideoLiked(
+                    e.videoId,
+                    video.isVideoLikedByUser,
+                  );
                   unawaited(
                     repository.addLike(
-                      !video.isVideoLikedByUser,
+                      liked,
                       e.videoId,
                       userName,
                     ),
                   );
                   return video.copyWith(
-                    isVideoLikedByUser: !video.isVideoLikedByUser,
+                    isVideoLikedByUser: !liked,
                   );
                 } else {
                   return video;
@@ -740,15 +790,19 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             state.copyWith(
               liveVideo: state.liveVideo.map((video) {
                 if (video.id == e.videoId) {
+                  final liked = LocalActionsState.getVideoLiked(
+                    e.videoId,
+                    video.isVideoLikedByUser,
+                  );
                   unawaited(
                     repository.addLike(
-                      !video.isVideoLikedByUser,
+                      liked,
                       e.videoId,
                       userName,
                     ),
                   );
                   return video.copyWith(
-                    isVideoLikedByUser: !video.isVideoLikedByUser,
+                    isVideoLikedByUser: !liked,
                   );
                 } else {
                   return video;

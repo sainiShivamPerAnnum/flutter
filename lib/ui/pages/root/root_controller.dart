@@ -86,7 +86,7 @@ class RootController {
         shortsScreenKey.currentState?.resetState();
         // Video goes out of view
         if (state.controllers[state.focusedIndex] != null) {
-          AppState.backButtonDispatcher!.didPopRoute();
+          // AppState.backButtonDispatcher!.didPopRoute();
           BlocProvider.of<PreloadBloc>(
             AppState.delegate!.navigatorKey.currentContext!,
             listen: false,

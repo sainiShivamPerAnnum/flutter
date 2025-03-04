@@ -201,52 +201,52 @@ class VideoWidgetState extends State<VideoWidget>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (widget.showUserName)
-                            GestureDetector(
-                              onTap: widget.onFollow,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 4.w,
-                                  vertical: 2.h,
-                                ),
-                                child: Row(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        AppState.delegate!.appState
-                                            .currentAction = PageAction(
-                                          page: ExpertDetailsPageConfig,
-                                          state: PageState.addWidget,
-                                          widget: ExpertsDetailsView(
-                                            advisorID: widget.advisorId,
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 4.w,
+                                vertical: 2.h,
+                              ),
+                              child: Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      AppState.delegate!.appState
+                                          .currentAction = PageAction(
+                                        page: ExpertDetailsPageConfig,
+                                        state: PageState.addWidget,
+                                        widget: ExpertsDetailsView(
+                                          advisorID: widget.advisorId,
+                                        ),
+                                      );
+                                    },
+                                    child: Row(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: SizeConfig.padding16,
+                                          backgroundImage: NetworkImage(
+                                            widget.expertProfileImage,
                                           ),
-                                        );
-                                      },
-                                      child: Row(
-                                        children: [
-                                          CircleAvatar(
-                                            radius: SizeConfig.padding16,
-                                            backgroundImage: NetworkImage(
-                                              widget.expertProfileImage,
-                                            ),
+                                        ),
+                                        SizedBox(
+                                          width: 8.w,
+                                        ),
+                                        Text(
+                                          widget.userName,
+                                          style: GoogleFonts.sourceSans3(
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                            fontSize: 14.sp,
                                           ),
-                                          SizedBox(
-                                            width: 8.w,
-                                          ),
-                                          Text(
-                                            widget.userName,
-                                            style: GoogleFonts.sourceSans3(
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.white,
-                                              fontSize: 14.sp,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 12.w,
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                        SizedBox(
+                                          width: 12.w,
+                                        ),
+                                      ],
                                     ),
-                                    Container(
+                                  ),
+                                  GestureDetector(
+                                    onTap: widget.onFollow,
+                                    child: Container(
                                       decoration: BoxDecoration(
                                         color: const Color(0xffA2A0A2)
                                             .withOpacity(.3),
@@ -274,8 +274,8 @@ class VideoWidgetState extends State<VideoWidget>
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           SizedBox(

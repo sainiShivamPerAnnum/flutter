@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/shorts/shorts_home.dart';
 import 'package:felloapp/core/repository/shorts_repo.dart';
+import 'package:felloapp/navigator/app_state.dart';
 
 part 'shorts_saved_event.dart';
 part 'shorts_saved_state.dart';
@@ -43,13 +44,25 @@ class ShortsSavedBloc extends Bloc<SavedShortsEvents, SavedShortsState> {
     if (state is SavedShortsData) {
       final currentState = state as SavedShortsData;
       final updatedShortsHome = currentState.shortsHome
-          .where((short) => short.videos.every((video) => video.id != event.id))
+          .map((short) {
+            final updatedVideos =
+                short.videos.where((video) => video.id != event.id).toList();
+            if (updatedVideos.isEmpty) {
+              return null;
+            }
+            return short.copyWith(videos: updatedVideos);
+          })
+          .whereType<SavedShorts>()
           .toList();
 
       emitter(
         SavedShortsData(
           shortsHome: updatedShortsHome,
         ),
+      );
+      BaseUtil.showPositiveAlert(
+        'Success! Short Unsaved',
+        'This short has been removed from your saved list. You can save it again anytime!',
       );
     }
   }

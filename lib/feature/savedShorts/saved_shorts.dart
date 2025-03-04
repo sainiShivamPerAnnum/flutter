@@ -14,6 +14,7 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/local_actions_state.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -407,7 +408,10 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
               hapticVibrate: true,
               content: MoreOptionsSheet(
                 id: id,
-                isSaved: isSaved,
+                isSaved: LocalActionsState.getVideoSaved(
+                  id,
+                  isSaved,
+                ),
                 theme: theme,
                 category: category,
                 onSave: () {
@@ -416,7 +420,10 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
                     listen: false,
                   ).add(
                     PreloadEvent.saveVideo(
-                      isSaved: isSaved,
+                      isSaved: LocalActionsState.getVideoSaved(
+                        id,
+                        isSaved,
+                      ),
                       videoId: id,
                       theme: theme,
                       category: category,
@@ -426,7 +433,6 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
                     context,
                     listen: false,
                   ).add(RemoveSaved(id));
-                  AppState.backButtonDispatcher!.didPopRoute();
                 },
               ),
             );

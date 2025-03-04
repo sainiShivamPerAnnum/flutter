@@ -11,6 +11,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/local_actions_state.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -220,7 +221,7 @@ Widget buildMoreIcon(
             hapticVibrate: true,
             content: MoreOptionsSheet(
               id: id,
-              isSaved: isSaved,
+              isSaved: LocalActionsState.getVideoSaved(id, isSaved),
               theme: theme,
               category: category,
               onSave: () {
@@ -243,7 +244,6 @@ Widget buildMoreIcon(
                     );
                   },
                 );
-                AppState.backButtonDispatcher!.didPopRoute();
               },
             ),
           );

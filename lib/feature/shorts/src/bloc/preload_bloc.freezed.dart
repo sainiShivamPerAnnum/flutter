@@ -4277,7 +4277,7 @@ abstract class _$$FollowAdvisorImplCopyWith<$Res> {
           _$FollowAdvisorImpl value, $Res Function(_$FollowAdvisorImpl) then) =
       __$$FollowAdvisorImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String advisorId});
+  $Res call({String advisorId, bool isFollowed});
 }
 
 /// @nodoc
@@ -4292,12 +4292,17 @@ class __$$FollowAdvisorImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? advisorId = null,
+    Object? isFollowed = null,
   }) {
     return _then(_$FollowAdvisorImpl(
       advisorId: null == advisorId
           ? _value.advisorId
           : advisorId // ignore: cast_nullable_to_non_nullable
               as String,
+      isFollowed: null == isFollowed
+          ? _value.isFollowed
+          : isFollowed // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -4305,14 +4310,17 @@ class __$$FollowAdvisorImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FollowAdvisorImpl implements _FollowAdvisor {
-  const _$FollowAdvisorImpl({required this.advisorId});
+  const _$FollowAdvisorImpl(
+      {required this.advisorId, required this.isFollowed});
 
   @override
   final String advisorId;
+  @override
+  final bool isFollowed;
 
   @override
   String toString() {
-    return 'PreloadEvent.followAdvisor(advisorId: $advisorId)';
+    return 'PreloadEvent.followAdvisor(advisorId: $advisorId, isFollowed: $isFollowed)';
   }
 
   @override
@@ -4321,11 +4329,13 @@ class _$FollowAdvisorImpl implements _FollowAdvisor {
         (other.runtimeType == runtimeType &&
             other is _$FollowAdvisorImpl &&
             (identical(other.advisorId, advisorId) ||
-                other.advisorId == advisorId));
+                other.advisorId == advisorId) &&
+            (identical(other.isFollowed, isFollowed) ||
+                other.isFollowed == isFollowed));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, advisorId);
+  int get hashCode => Object.hash(runtimeType, advisorId, isFollowed);
 
   @JsonKey(ignore: true)
   @override
@@ -4471,10 +4481,12 @@ class _$FollowAdvisorImpl implements _FollowAdvisor {
 }
 
 abstract class _FollowAdvisor implements PreloadEvent {
-  const factory _FollowAdvisor({required final String advisorId}) =
-      _$FollowAdvisorImpl;
+  const factory _FollowAdvisor(
+      {required final String advisorId,
+      required final bool isFollowed}) = _$FollowAdvisorImpl;
 
   String get advisorId;
+  bool get isFollowed;
   @JsonKey(ignore: true)
   _$$FollowAdvisorImplCopyWith<_$FollowAdvisorImpl> get copyWith =>
       throw _privateConstructorUsedError;
