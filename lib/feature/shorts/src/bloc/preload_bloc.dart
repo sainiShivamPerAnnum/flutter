@@ -942,12 +942,11 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       final duration = controller.value.duration;
       final position = controller.value.position;
 
-      if (duration.inMilliseconds > 0 &&
-          position.inMilliseconds >= duration.inMilliseconds * 0.25) {
+      if (duration.inMilliseconds > 0 && position.inMilliseconds >= 3 * 1000) {
         // Remove this specific listener to prevent repeated events
         controller.removeListener(listener);
 
-        // Dispatch the event that 25% has been watched
+        // Dispatch the event that 3sec has been watched
         add(PreloadEvent.updateViewCount(videoId: videoId));
       }
     };
@@ -964,11 +963,11 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       final position = controller.value.position;
 
       if (duration.inMilliseconds > 0 &&
-          position.inMilliseconds >= duration.inMilliseconds * 0.90) {
+          position.inMilliseconds >= duration.inMilliseconds * 0.50) {
         // Remove this specific listener to prevent repeated events
         controller.removeListener(listener);
 
-        // Dispatch the event that 90% has been watched
+        // Dispatch the event that 50% has been watched
         add(PreloadEvent.updateSeen(videoId: videoId));
       }
     };

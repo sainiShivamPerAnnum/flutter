@@ -1169,6 +1169,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case "quizHome":
         pageConfiguration = QuizWebViewConfig;
         break;
+      case "shortsNotification":
+        pageConfiguration = ShortsNotificationPageConfig;
+        break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration, queryParams: queryParams);
