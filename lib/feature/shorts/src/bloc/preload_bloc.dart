@@ -6,6 +6,7 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/shorts/src/core/analytics_manager.dart';
 import 'package:felloapp/feature/shorts/src/core/interaction_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -930,26 +931,6 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       );
       _addProgressListener(controller, state.currentVideos[index].id);
       _addSeenListener(controller, state.currentVideos[index].id);
-      if (state.currentContext == ReelContext.main) {
-        _addSkippedListener(
-          controller,
-          state.currentVideos[index].id,
-          state.theme,
-          state.categories[state.currentCategoryIndex],
-        );
-        _addViewedListener(
-          controller,
-          state.currentVideos[index].id,
-          state.theme,
-          state.categories[state.currentCategoryIndex],
-        );
-        _addWatchedListener(
-          controller,
-          state.currentVideos[index].id,
-          state.theme,
-          state.categories[state.currentCategoryIndex],
-        );
-      }
       log('🚀🚀🚀 INITIALIZED $index for context ${state.currentContext}');
     }
   }
@@ -996,105 +977,6 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
     controller.addListener(listener);
   }
 
-  void _addWatchedListener(
-    VideoPlayerController controller,
-    String videoId,
-    String theme,
-    String category,
-  ) {
-    late VoidCallback listener;
-
-    listener = () {
-      final duration = controller.value.duration;
-      final position = controller.value.position;
-
-      if (duration.inMilliseconds > 0 &&
-          position.inMilliseconds >= duration.inMilliseconds * 0.60) {
-        // Remove this specific listener to prevent repeated events
-        controller.removeListener(listener);
-
-        // Dispatch the event that 60% has been watched
-        add(
-          PreloadEvent.addInteraction(
-            videoId: videoId,
-            interaction: InteractionType.watched,
-            theme: theme,
-            category: category,
-          ),
-        );
-      }
-    };
-
-    // Add the listener to the controller
-    controller.addListener(listener);
-  }
-
-  void _addSkippedListener(
-    VideoPlayerController controller,
-    String videoId,
-    String theme,
-    String category,
-  ) {
-    late VoidCallback listener;
-
-    listener = () {
-      final duration = controller.value.duration;
-      final position = controller.value.position;
-
-      if (duration.inMilliseconds > 0 &&
-          position.inMilliseconds >= duration.inMilliseconds * 0.05) {
-        // Remove this specific listener to prevent repeated events
-        controller.removeListener(listener);
-
-        // Dispatch the event that 5% has been watched
-        add(
-          PreloadEvent.addInteraction(
-            videoId: videoId,
-            interaction: InteractionType.skipped,
-            theme: theme,
-            category: category,
-          ),
-        );
-      }
-    };
-
-    // Add the listener to the controller
-    controller.addListener(listener);
-  }
-
-  void _addViewedListener(
-    VideoPlayerController controller,
-    String videoId,
-    String theme,
-    String category,
-  ) {
-    late VoidCallback listener;
-
-    listener = () {
-      final duration = controller.value.duration;
-      final position = controller.value.position;
-
-      if (duration.inMilliseconds > 0 &&
-          position.inMilliseconds >= duration.inMilliseconds * 0.10) {
-        // Remove this specific listener to prevent repeated events
-        controller.removeListener(listener);
-
-        // Dispatch the event that 10% has been watched
-        add(
-          PreloadEvent.addInteraction(
-            videoId: videoId,
-            interaction: InteractionType.viewed,
-            theme: theme,
-            category: category,
-          ),
-        );
-      }
-    };
-
-    // Add the listener to the controller
-    controller.addListener(listener);
-  }
-
   void _playControllerAtIndex(int index, bool muted) {
     if (state.currentVideos.length > index && index >= 0) {
       final controller = state.currentContext == ReelContext.main
@@ -1133,6 +1015,16 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           : state.profileControllers;
 
       final controller = controllersMap[index];
+      // Only track analytics for main context
+      if (state.currentContext == ReelContext.main && controller != null) {
+        final currentVideo = state.mainVideos[index];
+        trackAnalytics(
+          controller,
+          currentVideo.id,
+          state.theme,
+          state.categories[state.currentCategoryIndex],
+        );
+      }
       controller?.removeListener(() {});
       controller?.dispose();
       if (controller != null) {

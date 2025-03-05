@@ -125,7 +125,7 @@ dependencies:
   scroll_to_index: ^3.0.1
   injectable: ^1.5.4
   flutter_branch_sdk: ^7.1.0
-  volume_watcher: ^2.0.1
+  volume_controller: ^2.0.8
 
 
 
