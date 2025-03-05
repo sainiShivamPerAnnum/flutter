@@ -43,6 +43,8 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
   @override
   Widget build(BuildContext context) {
     return BaseScaffold(
+      showBackgroundGrid: false,
+      backgroundColor: UiConstants.bg,
       body: RefreshIndicator(
         triggerMode: RefreshIndicatorTriggerMode.onEdge,
         color: UiConstants.primaryColor,
@@ -152,7 +154,7 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
             SizedBox(
               width: 294.w,
               child: Text(
-                'You can save reels from advisors and across various topics',
+                'You can save shorts from advisors and across various topics',
                 style:
                     TextStyles.sourceSans.body2.colour(UiConstants.kTextColor5),
                 textAlign: TextAlign.center,
@@ -272,6 +274,8 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
           page: ShortsPageConfig,
           state: PageState.addWidget,
           widget: BaseScaffold(
+            showBackgroundGrid: false,
+            backgroundColor: UiConstants.bg,
             appBar: FAppBar(
               backgroundColor: Colors.transparent,
               centerTitle: true,

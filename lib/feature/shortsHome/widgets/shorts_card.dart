@@ -92,6 +92,8 @@ class ShortsCard extends StatelessWidget {
           page: ShortsPageConfig,
           state: PageState.addWidget,
           widget: BaseScaffold(
+            showBackgroundGrid: false,
+            backgroundColor: UiConstants.bg,
             bottomNavigationBar: const BottomNavBar(),
             body: ShortsVideoPage(
               categories: reorderedCategories,
@@ -101,7 +103,6 @@ class ShortsCard extends StatelessWidget {
       },
       child: Container(
         width: 130.w,
-        height: 275.h,
         decoration: BoxDecoration(
           color: UiConstants.greyVarient,
           borderRadius: BorderRadius.circular(
@@ -176,7 +177,7 @@ class ShortsCard extends StatelessWidget {
                   Text(
                     videos[i].title,
                     style: TextStyles.sourceSansM.body4,
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(

@@ -489,7 +489,7 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                               final themeVideosBloc = context
                                                   .read<ThemeVideosBloc>();
                                               return SizedBox(
-                                                height: 275.h,
+                                                height: 288.h,
                                                 child: ListView.builder(
                                                   physics:
                                                       const BouncingScrollPhysics(),

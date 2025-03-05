@@ -416,7 +416,7 @@ Widget buildRecentSection(
                 );
                 await switchCompleter.future;
                 AppState.delegate!.appState.currentAction = PageAction(
-                  page: ShortsPageConfig,
+                  page: LiveShortsPageConfig,
                   state: PageState.addWidget,
                   widget: BaseScaffold(
                     appBar: FAppBar(
@@ -432,8 +432,11 @@ Widget buildRecentSection(
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                       ),
-                      leading: const BackButton(
+                      leading: BackButton(
                         color: Colors.white,
+                        onPressed: () {
+                          AppState.backButtonDispatcher!.didPopRoute();
+                        },
                       ),
                       showAvatar: false,
                       showCoinBar: false,

@@ -362,7 +362,7 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                     ),
                   ),
                 ),
-                if (state.categories.isNotEmpty)
+                if (widget.categories.isNotEmpty)
                   DotIndicatorRow(
                     currentPage: state.currentCategoryIndex,
                     totalPages: widget.categories.length,

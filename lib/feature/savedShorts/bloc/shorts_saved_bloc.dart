@@ -90,12 +90,12 @@ class ShortsSavedBloc extends Bloc<SavedShortsEvents, SavedShortsState> {
       if (event.isFollowed) {
         BaseUtil.showPositiveAlert(
           "Notifications turned off",
-          "You won't be notified when a new short is uploaded.",
+          "You won't be notified when new shorts is uploaded.",
         );
       } else {
         BaseUtil.showPositiveAlert(
           "Notifications turned on",
-          "You’ll be notified when a new short is uploaded!",
+          "You’ll be notified when new shorts is uploaded!",
         );
       }
     } else {

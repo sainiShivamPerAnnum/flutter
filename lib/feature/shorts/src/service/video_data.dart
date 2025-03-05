@@ -63,6 +63,7 @@ class VideoData {
     String? description,
     String? advisorId,
     String? categoryV1,
+    String? advisorImg,
     bool? isFollowed,
     bool? isSaved,
   }) {
@@ -80,6 +81,7 @@ class VideoData {
       duration: duration ?? this.duration,
       description: description ?? this.description,
       advisorId: advisorId ?? this.advisorId,
+      advisorImg: advisorImg ?? this.advisorImg,
       isVideoLikedByUser: isVideoLikedByUser ?? this.isVideoLikedByUser,
       isFollowed: isFollowed ?? this.isFollowed,
       isSaved: isSaved ?? this.isSaved,

@@ -1,16 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 // import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 // import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/feature/shorts/flutter_preload_videos.dart';
 import 'package:felloapp/feature/shorts/src/service/comment_data.dart';
 import 'package:felloapp/feature/shorts/src/widgets/expandable_widget.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 // import 'package:felloapp/navigator/app_state.dart';
 // import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -190,7 +197,6 @@ class VideoWidgetState extends State<VideoWidget>
           if (!widget.commentsVisibility)
             Positioned(
               bottom: 30.h,
-              right: 10.w,
               left: 10.w,
               child: Visibility(
                 visible: !widget.isKeyBoardOpen,
@@ -215,21 +221,28 @@ class VideoWidgetState extends State<VideoWidget>
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      // BlocProvider.of<PreloadBloc>(context,
-                                      //         listen: false)
-                                      //     .add(
+                                      // BlocProvider.of<PreloadBloc>(
+                                      //   context,
+                                      //   listen: false,
+                                      // ).add(
                                       //   PreloadEvent.pauseVideoAtIndex(
                                       //     widget.focusedIndex,
                                       //   ),
                                       // );
-                                      // AppState.delegate!.appState
-                                      //     .currentAction = PageAction(
-                                      //   page: ExpertDetailsPageConfig,
-                                      //   state: PageState.addWidget,
-                                      //   widget: ExpertsDetailsView(
-                                      //     advisorID: widget.advisorId,
-                                      //   ),
-                                      // );
+                                      locator<AnalyticsService>().track(
+                                        eventName:
+                                            AnalyticsEvents.shortsProfileClick,
+                                      );
+                                      AppState.backButtonDispatcher!
+                                          .didPopRoute();
+                                      AppState.delegate!.appState
+                                          .currentAction = PageAction(
+                                        page: ExpertDetailsPageConfig,
+                                        state: PageState.addWidget,
+                                        widget: ExpertsDetailsView(
+                                          advisorID: widget.advisorId,
+                                        ),
+                                      );
                                     },
                                     child: Row(
                                       children: [
@@ -385,151 +398,118 @@ class VideoWidgetState extends State<VideoWidget>
     final bool isLiked,
     final bool commentVisibility,
   ) {
+    Widget buildTouchTarget({
+      required Widget child,
+      required VoidCallback onTap,
+      String? label,
+    }) {
+      return GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 10.w,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              child,
+              SizedBox(
+                height: 4.h,
+              ),
+              if (label != null)
+                Text(
+                  label,
+                  style: GoogleFonts.sourceSans3(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
+        if (widget.showBookButton)
+          buildTouchTarget(
+            onTap: onBook,
+            label: 'Book a call',
+            child: AppImage(
+              Assets.book_call,
+              color: Colors.white,
+              height: 20.r,
+              width: 20.r,
+            ),
+          ),
+        if (widget.showBookButton)
+          SizedBox(
+            height: 18.h,
+          ),
         if (widget.showLikeButton)
           Column(
             children: [
               reelcontext == ReelContext.main
-                  ? GestureDetector(
+                  ? buildTouchTarget(
                       onTap: onSave,
-                      child: Column(
-                        children: [
-                          Icon(
-                            isSaved
-                                ? Icons.bookmark
-                                : Icons.bookmark_border_rounded,
-                            color: Colors.white,
-                            size: 25.r,
-                          ),
-                          SizedBox(
-                            height: 4.h,
-                          ),
-                        ],
-                      ),
+                      label: 'Save',
+                      child: isSaved
+                          ? Icon(
+                              Icons.bookmark,
+                              color: Colors.white,
+                              size: 24.r,
+                            )
+                          : AppImage(
+                              Assets.video_save,
+                              color: Colors.white,
+                              height: 20.r,
+                              width: 20.r,
+                            ),
                     )
-                  : GestureDetector(
+                  : buildTouchTarget(
                       onTap: onLike,
-                      child: Column(
-                        children: [
-                          AppImage(
-                            Assets.video_like,
-                            color: isLiked ? Colors.red : Colors.white,
-                            height: 20.r,
-                            width: 20.r,
-                          ),
-                          SizedBox(
-                            height: 4.h,
-                          ),
-                        ],
+                      label: 'Like',
+                      child: AppImage(
+                        Assets.video_like,
+                        color: isLiked ? Colors.red : Colors.white,
+                        height: 20.r,
+                        width: 20.r,
                       ),
                     ),
-              Text(
-                reelcontext == ReelContext.main ? 'Save' : 'Like',
-                style: GoogleFonts.sourceSans3(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
-              ),
-              SizedBox(
-                height: 12.h,
-              ),
             ],
           ),
-        if (widget.showShareButton)
-          Column(
-            children: [
-              GestureDetector(
-                onTap: onShare,
-                child: Column(
-                  children: [
-                    AppImage(
-                      Assets.video_share,
-                      color: Colors.white,
-                      height: 20.r,
-                      width: 20.r,
-                    ),
-                    SizedBox(
-                      height: 4.h,
-                    ),
-                  ],
-                ),
-              ),
-              Text(
-                'Share',
-                style: GoogleFonts.sourceSans3(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
-              ),
-              SizedBox(
-                height: 12.h,
-              ),
-            ],
+        if (widget.showLikeButton)
+          SizedBox(
+            height: 18.h,
           ),
-        if (widget.showBookButton)
-          Column(
-            children: [
-              GestureDetector(
-                onTap: onBook,
-                child: Column(
-                  children: [
-                    AppImage(
-                      Assets.book_call,
-                      color: Colors.white,
-                      height: 20.r,
-                      width: 20.r,
-                    ),
-                    SizedBox(
-                      height: 4.h,
-                    ),
-                  ],
-                ),
-              ),
-              Text(
-                'Book a call',
-                style: GoogleFonts.sourceSans3(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
-              ),
-              SizedBox(
-                height: 12.h,
-              ),
-            ],
+        buildTouchTarget(
+          onTap: onToggleComment,
+          label: 'Comments',
+          child: AppImage(
+            Assets.add_comment,
+            color: Colors.white,
+            height: 20.r,
+            width: 20.r,
           ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            GestureDetector(
-              onTap: onToggleComment,
-              child: Column(
-                children: [
-                  AppImage(
-                    Assets.add_comment,
-                    color: Colors.white,
-                    height: 20.r,
-                    width: 20.r,
-                  ),
-                  SizedBox(
-                    height: 4.h,
-                  ),
-                ],
-              ),
-            ),
-            Text(
-              'Comments',
-              style: GoogleFonts.sourceSans3(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
-              ),
-            ),
-          ],
         ),
+        SizedBox(
+          height: 18.h,
+        ),
+        if (widget.showShareButton)
+          buildTouchTarget(
+            onTap: onShare,
+            label: 'Share',
+            child: AppImage(
+              Assets.video_share,
+              color: Colors.white,
+              height: 20.r,
+              width: 20.r,
+            ),
+          ),
       ],
     );
   }

@@ -166,24 +166,40 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             mainVideos: [],
             profileVideos: [],
             liveVideo: [],
-            focusedIndex: 0,
-            profileVideoIndex: 0,
           ),
         );
+        final PageController pageController = PageController(
+          initialPage: 0,
+        );
+        if (state.currentContext == ReelContext.main) {
+          emit(
+            state.copyWith(
+              focusedIndex: 0,
+              mainPageController: pageController,
+            ),
+          );
+        } else {
+          emit(
+            state.copyWith(
+              profileVideoIndex: 0,
+              profilePageController: pageController,
+            ),
+          );
+        }
         final databyId = await repository.getVideoById(videoId: e.videoId);
-        final data = await repository.getVideos(page: 1);
-        final List<VideoData> urls = data.model ?? [];
+        e.completer?.complete();
+        // final data = await repository.getVideos(page: 1);
+        // final List<VideoData> urls = data.model ?? [];
         if (databyId.model != null) {
           state.mainVideos.add(databyId.model!);
         }
-        state.mainVideos.addAll(urls);
-
+        // state.mainVideos.addAll(urls);
         /// Initialize 1st video
         await _initializeControllerAtIndex(0, state.muted);
+        _playControllerAtIndex(0, state.muted);
 
         /// Initialize 2nd video
         await _initializeControllerAtIndex(1, state.muted);
-        e.completer?.complete();
       },
       updateViewCount: (e) {
         unawaited(
@@ -865,7 +881,10 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       disposeLiveStreamController: (e) async {
         if (state.liveStreamController != null) {
           await state.liveStreamController!.dispose();
-          state.livePageController!.dispose();
+          if (state.livePageController != null &&
+              state.livePageController!.hasClients) {
+            state.livePageController!.dispose();
+          }
         }
         emit(
           state.copyWith(
@@ -879,6 +898,9 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           await controller.pause();
           await controller.seekTo(const Duration());
           await controller.dispose();
+        }
+        if (state.mainPageController != null &&
+            state.mainPageController.hasClients) {
           state.mainPageController.dispose();
         }
         state.controllers
@@ -1061,6 +1083,9 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       await controller.pause();
       await controller.seekTo(const Duration());
       await controller.dispose();
+    }
+    if (state.profilePageController != null &&
+        state.profilePageController.hasClients) {
       state.profilePageController.dispose();
     }
     state.profileControllers
@@ -1075,6 +1100,9 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       await controller.pause();
       await controller.seekTo(const Duration()); // Reset to the beginning
       await controller.dispose();
+    }
+    if (state.mainPageController != null &&
+        state.mainPageController.hasClients) {
       state.mainPageController.dispose();
     }
     state.controllers.clear(); // Clear the map after disposing all controllers
@@ -1085,6 +1113,9 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       await controller.pause();
       await controller.seekTo(const Duration());
       await controller.dispose();
+    }
+    if (state.profilePageController != null &&
+        state.profilePageController.hasClients) {
       state.profilePageController.dispose();
     }
     state.profileControllers

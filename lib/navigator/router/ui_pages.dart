@@ -130,6 +130,8 @@ const String expertDetailsViewPath = "/expertDetails";
 const String tellUsAboutYourselfViewPath = "/tellUsAboutYourself";
 const String meettingChatViewPath = "/meetingChat";
 const String shortsViewPath = "/shorts-internal";
+const String profileShortsViewPath = "/profile-shorts-internal";
+const String liveShortsViewPath = "/live-shorts-internal";
 const String viewAllVideosViewPath = "/events";
 const String rewardsHistoryViewPath = "/rewards-history";
 const String rpsLearnMoreViewPath = "/rps-learnMore";
@@ -262,6 +264,8 @@ enum Pages {
   TellUsAboutYourself,
   meettingChat,
   Shorts,
+  ProfileShorts,
+  LiveShorts,
   AllEvents,
   RewardsHistory,
   RPSLearnMore,
@@ -1023,6 +1027,20 @@ PageConfiguration ShortsPageConfig = PageConfiguration(
   path: shortsViewPath,
   uiPage: Pages.Shorts,
   name: "Shorts page.",
+);
+
+PageConfiguration ProfileShortsPageConfig = PageConfiguration(
+  key: 'profileShortsViewPath',
+  path: profileShortsViewPath,
+  uiPage: Pages.ProfileShorts,
+  name: "Profile Shorts page.",
+);
+
+PageConfiguration LiveShortsPageConfig = PageConfiguration(
+  key: 'liveShortsViewPath',
+  path: liveShortsViewPath,
+  uiPage: Pages.LiveShorts,
+  name: "Live Shorts page.",
 );
 
 PageConfiguration AllEventsPageConfig = PageConfiguration(

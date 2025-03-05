@@ -468,7 +468,7 @@ Widget _buildLiveTab(List<VideoData> recentlive, BuildContext context) {
                     );
                     await switchCompleter.future;
                     AppState.delegate!.appState.currentAction = PageAction(
-                      page: ShortsPageConfig,
+                      page: LiveShortsPageConfig,
                       state: PageState.addWidget,
                       widget: BaseScaffold(
                         appBar: FAppBar(
@@ -484,8 +484,11 @@ Widget _buildLiveTab(List<VideoData> recentlive, BuildContext context) {
                               style: TextStyles.rajdhaniSB.body1,
                             ),
                           ),
-                          leading: const BackButton(
+                          leading: BackButton(
                             color: Colors.white,
+                            onPressed: () {
+                              AppState.backButtonDispatcher!.didPopRoute();
+                            },
                           ),
                           showAvatar: false,
                           showCoinBar: false,
@@ -787,7 +790,7 @@ Widget _buildTabOneData(
                 preloadBloc.add(PreloadEvent.playVideoAtIndex(index));
 
                 AppState.delegate!.appState.currentAction = PageAction(
-                  page: ShortsPageConfig,
+                  page: ProfileShortsPageConfig,
                   state: PageState.addWidget,
                   widget: BaseScaffold(
                     appBar: FAppBar(
@@ -795,8 +798,11 @@ Widget _buildTabOneData(
                       centerTitle: true,
                       titleWidget:
                           Text('Profile', style: TextStyles.rajdhaniSB.body1),
-                      leading: const BackButton(
+                      leading: BackButton(
                         color: Colors.white,
+                        onPressed: () {
+                          AppState.backButtonDispatcher!.didPopRoute();
+                        },
                       ),
                       showAvatar: false,
                       showCoinBar: false,

@@ -97,8 +97,12 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       );
       return Future.value(true);
     }
-    if ((AppState.delegate!.currentConfiguration?.path ?? '') ==
-            '/shorts-internal' &&
+    if (((AppState.delegate!.currentConfiguration?.path ?? '') ==
+                '/shorts-internal' ||
+            (AppState.delegate!.currentConfiguration?.path ?? '') ==
+                '/profile-shorts-internal' ||
+            (AppState.delegate!.currentConfiguration?.path ?? '') ==
+                '/live-shorts-internal') &&
         AppState.screenStack.last != ScreenItem.modalsheet) {
       FocusScope.of(
         _routerDelegate!.navigatorKey.currentContext!,

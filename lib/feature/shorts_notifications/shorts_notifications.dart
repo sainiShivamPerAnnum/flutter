@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/shorts/shorts_notification.dart' as nf;
 import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
-import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 import 'package:felloapp/feature/shorts/video_page.dart';
 import 'package:felloapp/feature/shorts_notifications/shorts_notification_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -65,6 +64,8 @@ class _ShortsNotification extends StatelessWidget {
         shortsNotificationBloc.reset();
       },
       child: BaseScaffold(
+        showBackgroundGrid: false,
+        backgroundColor: UiConstants.bg,
         appBar: FAppBar(
           backgroundColor: Colors.transparent,
           centerTitle: true,
@@ -123,7 +124,7 @@ class _ShortsNotification extends StatelessWidget {
                     SizedBox(
                       width: 294.w,
                       child: Text(
-                        'You\'ll be notified when a new short is uploaded',
+                        'You\'ll be notified when new shorts is uploaded',
                         style: TextStyles.sourceSans.body2
                             .colour(UiConstants.kTextColor5),
                         textAlign: TextAlign.center,
@@ -157,55 +158,21 @@ class _ShortsNotification extends StatelessWidget {
                                     BlocProvider.of<PreloadBloc>(
                                   context,
                                 );
-                                final themeCompleter = Completer<void>();
-                                final updateUrlsCompleter = Completer<void>();
+                                final switchCompleter = Completer<void>();
                                 preloadBloc.add(
-                                  const PreloadEvent.switchToMainReels(),
-                                );
-                                preloadBloc.add(
-                                  PreloadEvent.updateThemes(
-                                    categories: [],
-                                    theme: notification.theme,
-                                    index: 0,
-                                    completer: themeCompleter,
+                                  PreloadEvent.initializeFromDynamicLink(
+                                    videoId: notification.videoId,
+                                    completer: switchCompleter,
                                   ),
                                 );
-                                await themeCompleter.future;
-                                preloadBloc.add(
-                                  PreloadEvent.getThemeVideos(
-                                    initailVideo: VideoData(
-                                      id: notification.videoId,
-                                      thumbnail: '',
-                                      url: notification.videoUrl,
-                                      timeStamp: notification.createdAt,
-                                      title: notification.title,
-                                      subtitle: notification.subtitle,
-                                      views: 0,
-                                      duration: notification.duration,
-                                      description: notification.subtitle,
-                                      advisorId: notification.advisorId,
-                                      author: notification.author,
-                                      categoryV1: notification.categoryV1,
-                                      category: [],
-                                      isVideoLikedByUser: false,
-                                      advisorImg:
-                                          notification.advisorProfilePhoto,
-                                      isSaved: notification.isSaved,
-                                      isFollowed: notification.isFollowed,
-                                    ),
-                                    theme: notification.theme,
-                                    completer: updateUrlsCompleter,
-                                  ),
-                                );
-                                await updateUrlsCompleter.future;
-                                preloadBloc.add(
-                                  const PreloadEvent.playVideoAtIndex(0),
-                                );
+                                await switchCompleter.future;
                                 AppState.delegate!.appState.currentAction =
                                     PageAction(
                                   page: ShortsPageConfig,
                                   state: PageState.addWidget,
                                   widget: BaseScaffold(
+                                    showBackgroundGrid: false,
+                                    backgroundColor: UiConstants.bg,
                                     appBar: FAppBar(
                                       backgroundColor: Colors.transparent,
                                       centerTitle: true,
@@ -213,8 +180,12 @@ class _ShortsNotification extends StatelessWidget {
                                         'Notifications',
                                         style: TextStyles.rajdhaniSB.body1,
                                       ),
-                                      leading: const BackButton(
+                                      leading: BackButton(
                                         color: Colors.white,
+                                        onPressed: () {
+                                          AppState.backButtonDispatcher!
+                                              .didPopRoute();
+                                        },
                                       ),
                                       showAvatar: false,
                                       showCoinBar: false,

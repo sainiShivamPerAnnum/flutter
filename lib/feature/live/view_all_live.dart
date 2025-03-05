@@ -145,7 +145,7 @@ class _ViewAllLiveState extends State<ViewAllLive> {
                       );
                       await switchCompleter.future;
                       AppState.delegate!.appState.currentAction = PageAction(
-                        page: ShortsPageConfig,
+                        page: LiveShortsPageConfig,
                         state: PageState.addWidget,
                         widget: BaseScaffold(
                           appBar: FAppBar(
@@ -159,8 +159,11 @@ class _ViewAllLiveState extends State<ViewAllLive> {
                                 style: TextStyles.rajdhaniSB.body1,
                               ),
                             ),
-                            leading: const BackButton(
+                            leading: BackButton(
                               color: Colors.white,
+                              onPressed: () {
+                                AppState.backButtonDispatcher!.didPopRoute();
+                              },
                             ),
                             showAvatar: false,
                             showCoinBar: false,
