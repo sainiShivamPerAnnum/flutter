@@ -12,7 +12,7 @@ class Assets {
   static const String bulb = 'assets/vectors/icons/bulb.svg';
 
   static const String referGraphic = 'images/transfer.png';
-  static const String augmontGraphic = 'images/augmont.png';
+  static const String augmontGraphic = 'images/aug-logo.png';
   static const String winnersGraphic = 'images/winners-small.png';
   static const String strikeThroughGraphic = 'images/diagonal-strike.png';
   static const String onboardCollageGraphic =
@@ -121,7 +121,7 @@ class Assets {
   static const String monthlySaver = 'assets/svg/saver_of_month_card.svg';
   static const String flatIsland = 'assets/svg/flag_svg.svg';
   static const String flatFullFlagIsland = 'assets/svg/flatFullFlagIsland.svg';
-  static const String augmontLogo = 'assets/svg/augmont-white.svg';
+  static const String augmontLogo = 'images/aug-logo.png';
   static const String lendboxLogo = 'assets/svg/lendbox-white.svg';
   static const String idbiTrustee = 'assets/svg/idbi-trustee.svg';
   static const String digitalGold = "assets/svg/digitalgold.svg";
