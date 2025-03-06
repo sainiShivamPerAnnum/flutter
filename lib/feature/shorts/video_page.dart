@@ -298,10 +298,8 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                       context,
                                       listen: false,
                                     );
-                                    if (!preloadBloc
-                                            .state.shareLinkInProgress &&
-                                        !preloadBloc
-                                            .state.isShareAlreadyClicked) {
+                                    if (!state.shareLinkInProgress &&
+                                        !state.isShareAlreadyClicked) {
                                       preloadBloc.add(
                                         PreloadEvent.generateDynamicLink(
                                           videoId: videos[index].id,
