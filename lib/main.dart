@@ -32,6 +32,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -69,65 +70,72 @@ class MyApp extends HookWidget {
         statusBarIconBrightness: Brightness.dark,
         statusBarColor: Colors.transparent,
       ),
-      child: MultiProvider(
-        providers: [
-          BlocProvider(
-            create: (_) =>
-                PreloadBloc()..add(const PreloadEvent.getVideosFromApi()),
-          ),
-          Provider(create: (_) => SipCubit()),
-          Provider(create: (_) => locator<TransactionBloc>()),
-          Provider(create: (_) => locator<MyFundsBloc>()),
-          Provider(create: (_) => locator<SIPTransactionBloc>()),
-          ChangeNotifierProvider(
-              create: (_) => locator<SaveViewModel>(),),
-          ChangeNotifierProvider(create: (_) => locator<ConnectivityService>()),
-          ChangeNotifierProvider(create: (_) => locator<DBModel>()),
-          ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
-          ChangeNotifierProvider(create: (_) => appState),
-          ChangeNotifierProvider(create: (_) => locator<JourneyService>()),
-          ChangeNotifierProvider(create: (_) => locator<LeaderboardService>()),
-          ChangeNotifierProvider(create: (_) => locator<TxnHistoryService>()),
-          ChangeNotifierProvider(create: (_) => locator<UserCoinService>()),
-          ChangeNotifierProvider(create: (_) => locator<WinnerService>()),
-          ChangeNotifierProvider(create: (_) => locator<UserService>()),
-          ChangeNotifierProvider(create: (_) => locator<ReferralService>()),
-          ChangeNotifierProvider(create: (_) => locator<SubService>()),
-          ChangeNotifierProvider(create: (_) => locator<BankAndPanService>()),
-          ChangeNotifierProvider(create: (_) => locator<TambolaService>()),
-          ChangeNotifierProvider(
-            create: (_) => locator<AugmontTransactionService>(),
-          ),
-          ChangeNotifierProvider(
-            create: (_) => locator<LendboxTransactionService>(),
-          ),
-          ChangeNotifierProvider(create: (_) => locator<PowerPlayService>()),
-          ChangeNotifierProvider(
-            create: (_) => locator<ScratchCardService>(),
-          ),
-          ChangeNotifierProvider(
-            create: (_) => locator<CardActionsNotifier>(),
-          ),
-        ],
-        child: PropertyChangeProvider<UserService, UserServiceProperties>(
-          value: locator<UserService>(),
-          child: MaterialApp.router(
-            title: Constants.APP_NAME,
-            builder: (context, child) {
-              return child!;
-            },
-            theme: FelloTheme.darkMode(),
-            debugShowCheckedModeBanner: false,
-            backButtonDispatcher: backButtonDispatcher,
-            routerDelegate: delegate,
-            routeInformationParser: parser,
-            localizationsDelegates: const [
-              S.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate
-            ],
-            supportedLocales: S.delegate.supportedLocales,
+      child: ScreenUtilInit(
+        designSize: const Size(360, 690),
+        minTextAdapt: true,
+        splitScreenMode: false,
+        child: MultiProvider(
+          providers: [
+            BlocProvider(
+              create: (_) => locator<PreloadBloc>(),
+            ),
+            Provider(create: (_) => SipCubit()),
+            Provider(create: (_) => locator<TransactionBloc>()),
+            Provider(create: (_) => locator<MyFundsBloc>()),
+            Provider(create: (_) => locator<SIPTransactionBloc>()),
+            ChangeNotifierProvider(
+              create: (_) => locator<SaveViewModel>(),
+            ),
+            ChangeNotifierProvider(
+                create: (_) => locator<ConnectivityService>()),
+            ChangeNotifierProvider(create: (_) => locator<DBModel>()),
+            ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
+            ChangeNotifierProvider(create: (_) => appState),
+            ChangeNotifierProvider(create: (_) => locator<JourneyService>()),
+            ChangeNotifierProvider(
+                create: (_) => locator<LeaderboardService>()),
+            ChangeNotifierProvider(create: (_) => locator<TxnHistoryService>()),
+            ChangeNotifierProvider(create: (_) => locator<UserCoinService>()),
+            ChangeNotifierProvider(create: (_) => locator<WinnerService>()),
+            ChangeNotifierProvider(create: (_) => locator<UserService>()),
+            ChangeNotifierProvider(create: (_) => locator<ReferralService>()),
+            ChangeNotifierProvider(create: (_) => locator<SubService>()),
+            ChangeNotifierProvider(create: (_) => locator<BankAndPanService>()),
+            ChangeNotifierProvider(create: (_) => locator<TambolaService>()),
+            ChangeNotifierProvider(
+              create: (_) => locator<AugmontTransactionService>(),
+            ),
+            ChangeNotifierProvider(
+              create: (_) => locator<LendboxTransactionService>(),
+            ),
+            ChangeNotifierProvider(create: (_) => locator<PowerPlayService>()),
+            ChangeNotifierProvider(
+              create: (_) => locator<ScratchCardService>(),
+            ),
+            ChangeNotifierProvider(
+              create: (_) => locator<CardActionsNotifier>(),
+            ),
+          ],
+          child: PropertyChangeProvider<UserService, UserServiceProperties>(
+            value: locator<UserService>(),
+            child: MaterialApp.router(
+              title: Constants.APP_NAME,
+              builder: (context, child) {
+                return child!;
+              },
+              theme: FelloTheme.darkMode(),
+              debugShowCheckedModeBanner: false,
+              backButtonDispatcher: backButtonDispatcher,
+              routerDelegate: delegate,
+              routeInformationParser: parser,
+              localizationsDelegates: const [
+                S.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate
+              ],
+              supportedLocales: S.delegate.supportedLocales,
+            ),
           ),
         ),
       ),

@@ -52,6 +52,7 @@ class TopLive extends StatelessWidget {
                                     recentList: null,
                                     onNotify: null,
                                     notificationState: null,
+                                    fromHome: true,
                                   ),
                                 );
                               },
@@ -87,6 +88,7 @@ class TopLive extends StatelessWidget {
                                     recentList: liveData.recent,
                                     onNotify: null,
                                     notificationState: null,
+                                    fromHome: true,
                                   ),
                                 );
                               },
@@ -112,7 +114,7 @@ class TopLive extends StatelessWidget {
                           padding: EdgeInsets.only(
                             left: SizeConfig.padding20,
                           ),
-                          child: buildLiveSection(liveData.live),
+                          child: buildLiveSection(liveData.live, true),
                         ),
                       if (liveData.live.isEmpty)
                         Padding(

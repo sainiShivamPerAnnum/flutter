@@ -27,6 +27,7 @@ import 'package:felloapp/core/repository/report_repo.dart';
 import 'package:felloapp/core/repository/rps_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
+import 'package:felloapp/core/repository/shorts_repo.dart';
 import 'package:felloapp/core/repository/sip_repo.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
@@ -206,6 +207,9 @@ Future<void> setupLocator() async {
       subscriptionRepo: locator(),
     ),
   );
+  locator.registerLazySingleton(
+    PreloadBloc.new,
+  );
   // locator.registerLazySingleton(LendboxMaturityService.new);
 
   //Repository
@@ -239,6 +243,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(ClientCommsRepo.new);
   locator.registerLazySingleton(ReportRepository.new);
   locator.registerLazySingleton(RpsRepository.new);
+  locator.registerLazySingleton(ShortsRepository.new);
   locator.registerLazySingleton(() => FcmHandlerV2(locator()));
   locator.registerLazySingleton<StoriesRepository>(
     () => StoriesRepository(locator()),

@@ -18,12 +18,14 @@ import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 class EaseInFloatingActionButtonAnimator extends FloatingActionButtonAnimator {
@@ -364,6 +366,7 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                           child: _buildTabOneData(
                             shortsData,
                             expertDetails.name,
+                            context,
                           ),
                         ),
                         Padding(
@@ -449,6 +452,7 @@ Widget _buildLiveTab(List<VideoData> recentlive, BuildContext context) {
               return Padding(
                 padding: EdgeInsets.only(bottom: SizeConfig.padding16),
                 child: LiveCardWidget(
+                  fromHome: false,
                   id: video.id,
                   status: 'recent',
                   maxWidth: SizeConfig.padding350,
@@ -464,28 +468,62 @@ Widget _buildLiveTab(List<VideoData> recentlive, BuildContext context) {
                     );
                     await switchCompleter.future;
                     AppState.delegate!.appState.currentAction = PageAction(
-                      page: ShortsPageConfig,
+                      page: LiveShortsPageConfig,
                       state: PageState.addWidget,
                       widget: BaseScaffold(
                         appBar: FAppBar(
                           backgroundColor: Colors.transparent,
                           centerTitle: true,
-                          titleWidget: Text(
-                            'Profile',
-                            style: TextStyles.rajdhaniSB.body1,
+                          leadingPadding: false,
+                          titleWidget: Expanded(
+                            child: MarqueeText(
+                              infoList: [
+                                recentlive[index].title,
+                              ],
+                              showBullet: false,
+                              style: TextStyles.rajdhaniSB.body1,
+                            ),
                           ),
-                          leading: const BackButton(
+                          leading: BackButton(
                             color: Colors.white,
+                            onPressed: () {
+                              AppState.backButtonDispatcher!.didPopRoute();
+                            },
                           ),
                           showAvatar: false,
                           showCoinBar: false,
+                          action: BlocBuilder<PreloadBloc, PreloadState>(
+                            builder: (context, preloadState) {
+                              return Padding(
+                                padding: EdgeInsets.only(right: 10.w),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    BlocProvider.of<PreloadBloc>(
+                                      context,
+                                      listen: false,
+                                    ).add(
+                                      const PreloadEvent.toggleVolume(),
+                                    );
+                                  },
+                                  behavior: HitTestBehavior.opaque,
+                                  child: SizedBox(
+                                    height: 24.r,
+                                    width: 24.r,
+                                    child: Icon(
+                                      !preloadState.muted
+                                          ? Icons.volume_up_rounded
+                                          : Icons.volume_off_rounded,
+                                      size: 21.r,
+                                      color: UiConstants.kTextColor,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                        body: WillPopScope(
-                          onWillPop: () async {
-                            await AppState.backButtonDispatcher!.didPopRoute();
-                            return false;
-                          },
-                          child: const ShortsVideoPage(),
+                        body: const ShortsVideoPage(
+                          categories: [],
                         ),
                       ),
                     );
@@ -497,7 +535,7 @@ Widget _buildLiveTab(List<VideoData> recentlive, BuildContext context) {
                   advisorId: video.advisorId,
                   category: video.category?.join(', ') ?? '',
                   bgImage: video.thumbnail,
-                  liveCount: video.viewCount,
+                  liveCount: video.views.toInt(),
                   duration: video.duration.toString(),
                 ),
               );
@@ -679,7 +717,11 @@ Widget _buildInfoTab(
   );
 }
 
-Widget _buildTabOneData(List<VideoData> shortsData, String name) {
+Widget _buildTabOneData(
+  List<VideoData> shortsData,
+  String name,
+  BuildContext context,
+) {
   return CustomScrollView(
     slivers: [
       if (shortsData.isEmpty)
@@ -748,7 +790,7 @@ Widget _buildTabOneData(List<VideoData> shortsData, String name) {
                 preloadBloc.add(PreloadEvent.playVideoAtIndex(index));
 
                 AppState.delegate!.appState.currentAction = PageAction(
-                  page: ShortsPageConfig,
+                  page: ProfileShortsPageConfig,
                   state: PageState.addWidget,
                   widget: BaseScaffold(
                     appBar: FAppBar(
@@ -756,18 +798,46 @@ Widget _buildTabOneData(List<VideoData> shortsData, String name) {
                       centerTitle: true,
                       titleWidget:
                           Text('Profile', style: TextStyles.rajdhaniSB.body1),
-                      leading: const BackButton(
+                      leading: BackButton(
                         color: Colors.white,
+                        onPressed: () {
+                          AppState.backButtonDispatcher!.didPopRoute();
+                        },
                       ),
                       showAvatar: false,
                       showCoinBar: false,
+                      action: BlocBuilder<PreloadBloc, PreloadState>(
+                        builder: (context, preloadState) {
+                          return Padding(
+                            padding: EdgeInsets.only(right: 10.w),
+                            child: GestureDetector(
+                              onTap: () {
+                                BlocProvider.of<PreloadBloc>(
+                                  context,
+                                  listen: false,
+                                ).add(
+                                  const PreloadEvent.toggleVolume(),
+                                );
+                              },
+                              behavior: HitTestBehavior.opaque,
+                              child: SizedBox(
+                                height: 24.r,
+                                width: 24.r,
+                                child: Icon(
+                                  !preloadState.muted
+                                      ? Icons.volume_up_rounded
+                                      : Icons.volume_off_rounded,
+                                  size: 21.r,
+                                  color: UiConstants.kTextColor,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                    body: WillPopScope(
-                      onWillPop: () async {
-                        await AppState.backButtonDispatcher!.didPopRoute();
-                        return false;
-                      },
-                      child: const ShortsVideoPage(),
+                    body: const ShortsVideoPage(
+                      categories: [],
                     ),
                   ),
                 );

@@ -11,10 +11,13 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/enums/page_state_enum.dart';
 
@@ -29,6 +32,7 @@ class ViewAllLive extends StatefulWidget {
     required this.advisorPast,
     required this.onNotify,
     required this.notificationState,
+    required this.fromHome,
     super.key,
   });
   final Function(String id)? onNotify;
@@ -40,6 +44,7 @@ class ViewAllLive extends StatefulWidget {
   final List<AdvisorCall>? advisorUpcoming;
   final List<AdvisorCall>? advisorPast;
   final Map<String, bool>? notificationState;
+  final bool fromHome;
 
   @override
   State<ViewAllLive> createState() => _ViewAllLiveState();
@@ -87,6 +92,7 @@ class _ViewAllLiveState extends State<ViewAllLive> {
                     liveCount: item.liveCount,
                     advisorId: item.advisorId,
                     viewerCode: item.viewerCode,
+                    fromHome: widget.fromHome,
                   ),
                 ),
               for (final UpcomingStream item in widget.upcomingList ?? [])
@@ -94,6 +100,7 @@ class _ViewAllLiveState extends State<ViewAllLive> {
                   padding: EdgeInsets.only(bottom: SizeConfig.padding16),
                   child: LiveCardWidget(
                     id: item.id,
+                    fromHome: widget.fromHome,
                     maxWidth: SizeConfig.padding350,
                     status: widget.type,
                     title: item.title,
@@ -124,6 +131,7 @@ class _ViewAllLiveState extends State<ViewAllLive> {
                   padding: EdgeInsets.only(bottom: SizeConfig.padding16),
                   child: LiveCardWidget(
                     id: item.id,
+                    fromHome: widget.fromHome,
                     maxWidth: SizeConfig.padding350,
                     status: widget.type,
                     onTap: () async {
@@ -137,29 +145,60 @@ class _ViewAllLiveState extends State<ViewAllLive> {
                       );
                       await switchCompleter.future;
                       AppState.delegate!.appState.currentAction = PageAction(
-                        page: ShortsPageConfig,
+                        page: LiveShortsPageConfig,
                         state: PageState.addWidget,
                         widget: BaseScaffold(
                           appBar: FAppBar(
                             backgroundColor: Colors.transparent,
                             centerTitle: true,
-                            titleWidget: Text(
-                              item.title,
-                              style: TextStyles.rajdhaniSB.body1,
+                            leadingPadding: false,
+                            titleWidget: Expanded(
+                              child: MarqueeText(
+                                infoList: [item.title],
+                                showBullet: false,
+                                style: TextStyles.rajdhaniSB.body1,
+                              ),
                             ),
-                            leading: const BackButton(
+                            leading: BackButton(
                               color: Colors.white,
+                              onPressed: () {
+                                AppState.backButtonDispatcher!.didPopRoute();
+                              },
                             ),
                             showAvatar: false,
                             showCoinBar: false,
+                            action: BlocBuilder<PreloadBloc, PreloadState>(
+                              builder: (context, preloadState) {
+                                return Padding(
+                                  padding: EdgeInsets.only(right: 10.w),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      BlocProvider.of<PreloadBloc>(
+                                        context,
+                                        listen: false,
+                                      ).add(
+                                        const PreloadEvent.toggleVolume(),
+                                      );
+                                    },
+                                    behavior: HitTestBehavior.opaque,
+                                    child: SizedBox(
+                                      height: 24.r,
+                                      width: 24.r,
+                                      child: Icon(
+                                        !preloadState.muted
+                                            ? Icons.volume_up_rounded
+                                            : Icons.volume_off_rounded,
+                                        size: 21.r,
+                                        color: UiConstants.kTextColor,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
-                          body: WillPopScope(
-                            onWillPop: () async {
-                              await AppState.backButtonDispatcher!
-                                  .didPopRoute();
-                              return false;
-                            },
-                            child: const ShortsVideoPage(),
+                          body: const ShortsVideoPage(
+                            categories: [],
                           ),
                         ),
                       );
@@ -172,7 +211,7 @@ class _ViewAllLiveState extends State<ViewAllLive> {
                     bgImage: item.thumbnail,
                     startTime: item.timeStamp,
                     duration: item.duration,
-                    liveCount: item.viewCount,
+                    liveCount: item.views.toInt(),
                   ),
                 ),
               for (final AdvisorCall call in widget.advisorUpcoming ?? [])

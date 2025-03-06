@@ -1,12 +1,19 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:bloc/bloc.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/shorts/src/core/analytics_manager.dart';
+import 'package:felloapp/feature/shorts/src/core/interaction_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/local_actions_state.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:share_plus/share_plus.dart';
@@ -25,21 +32,10 @@ part 'preload_state.dart';
 @prod
 class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
   final repository = locator<ShortsRepo>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   PreloadBloc() : super(PreloadState.initial()) {
     on(_mapEventToState);
-  }
-  List<VideoData> get currentVideos {
-    switch (state.currentContext) {
-      case ReelContext.main:
-        return state.mainVideos;
-      case ReelContext.profile:
-        return state.profileVideos;
-      case ReelContext.liveStream:
-        return state.liveVideo;
-      default:
-        return [];
-    }
   }
 
   Future<void> _mapEventToState(
@@ -54,6 +50,41 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           latency: e.latency,
         );
       },
+      reset: (e) {
+        emit(PreloadState.initial());
+      },
+      updateThemes: (e) {
+        emit(
+          state.copyWith(
+            categories: e.categories,
+            theme: e.theme,
+            currentCategoryIndex: e.index,
+          ),
+        );
+        e.completer?.complete();
+      },
+      toggleVolume: (e) {
+        final controller = state.currentController;
+        if (controller != null && controller.value.isPlaying) {
+          if (controller.value.volume == 0) {
+            controller.setVolume(
+              1.0,
+            );
+            emit(
+              state.copyWith(
+                muted: false,
+              ),
+            );
+          } else {
+            controller.setVolume(0.0);
+            emit(
+              state.copyWith(
+                muted: true,
+              ),
+            );
+          }
+        }
+      },
       updateLoading: (e) {
         emit(
           state.copyWith(isLoading: e.isLoading),
@@ -63,57 +94,99 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         _stopControllerAtIndex(e.index);
       },
       playVideoAtIndex: (e) {
-        _playControllerAtIndex(e.index);
+        _playControllerAtIndex(e.index, state.muted);
       },
       switchToMainReels: (e) {
         emit(state.copyWith(currentContext: ReelContext.main));
       },
       generateDynamicLink: (e) async {
-        if (state.shareLinkInProgress || state.isShareAlreadyClicked) {
+        if (state.shareLinkInProgress) {
           return;
         }
-        Haptic.vibrate();
-        String? url;
         emit(
           state.copyWith(
             shareLinkInProgress: true,
             isShareAlreadyClicked: true,
           ),
         );
-        if (await BaseUtil.showNoInternetAlert()) return;
-        if (state.link[e.videoId] != null) {
-          url = state.link[e.videoId];
-        } else {
-          final databyId = await repository.dynamicLink(id: e.videoId);
-          if (databyId.isSuccess()) {
-            url = databyId.model;
-            emit(
-              state
-                  .copyWith(link: {e.videoId.toString(): databyId.model ?? ''}),
-            );
-          }
-        }
-        emit(state.copyWith(shareLinkInProgress: false));
-        if (url == null) {
-          BaseUtil.showNegativeAlert(
-            'Generating link failed',
-            'Please try after some time',
+        Haptic.vibrate();
+        String? url;
+        if (await BaseUtil.showNoInternetAlert()) {
+          emit(
+            state.copyWith(
+              shareLinkInProgress: false,
+              isShareAlreadyClicked: false,
+            ),
           );
-          emit(state.copyWith(isShareAlreadyClicked: false));
-        } else {
-          if (state.currentContext == ReelContext.main) {
-            await Share.share(
-                "Hi,\nCheck out this quick finance tip from Fello: ${state.mainVideos[state.focusedIndex].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url");
-            emit(state.copyWith(isShareAlreadyClicked: false));
-          } else if (state.currentContext == ReelContext.profile) {
-            await Share.share(
-                "Hi,\nCheck out this quick finance tip from Fello: ${state.profileVideos[state.profileVideoIndex].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url");
-            emit(state.copyWith(isShareAlreadyClicked: false));
+          return;
+        }
+
+        try {
+          if (state.link[e.videoId] != null) {
+            url = state.link[e.videoId];
           } else {
-            await Share.share(
-                "Hi,\nCheck out this quick finance tip from Fello: ${state.liveVideo[0].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url");
-            emit(state.copyWith(isShareAlreadyClicked: false));
+            final databyId = await repository.dynamicLink(id: e.videoId);
+            if (databyId.isSuccess()) {
+              url = databyId.model;
+              emit(
+                state.copyWith(
+                  link: {e.videoId.toString(): databyId.model ?? ''},
+                ),
+              );
+            }
           }
+          if (url == null) {
+            BaseUtil.showNegativeAlert(
+              'Generating link failed',
+              'Please try after some time',
+            );
+            emit(
+              state.copyWith(
+                shareLinkInProgress: false,
+                isShareAlreadyClicked: false,
+              ),
+            );
+            return;
+          }
+          String shareMessage;
+          if (state.currentContext == ReelContext.main) {
+            shareMessage =
+                "Hi,\nCheck out this quick finance tip from Fello: ${state.mainVideos[state.focusedIndex].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url";
+          } else if (state.currentContext == ReelContext.profile) {
+            shareMessage =
+                "Hi,\nCheck out this quick finance tip from Fello: ${state.profileVideos[state.profileVideoIndex].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url";
+          } else {
+            shareMessage =
+                "Hi,\nCheck out this quick finance tip from Fello: ${state.liveVideo[0].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url";
+          }
+          await Share.share(shareMessage);
+          _analyticsService.track(
+            eventName: AnalyticsEvents.shortsShared,
+            properties: {
+              "shorts title": state.currentVideos.isNotEmpty &&
+                      state.focusedIndex < state.currentVideos.length
+                  ? state.currentVideos[state.focusedIndex].title
+                  : 'Default Title',
+              "shorts category": state.categories.isNotEmpty &&
+                      state.currentCategoryIndex < state.categories.length
+                  ? state.categories[state.currentCategoryIndex]
+                  : 'Default Category',
+              "shorts video list":
+                  state.theme.isNotEmpty ? state.theme : 'Default Theme',
+            },
+          );
+        } catch (error) {
+          BaseUtil.showNegativeAlert(
+            'Share failed',
+            'An unexpected error occurred',
+          );
+        } finally {
+          emit(
+            state.copyWith(
+              shareLinkInProgress: false,
+              isShareAlreadyClicked: false,
+            ),
+          );
         }
       },
       initializeFromDynamicLink: (e) async {
@@ -124,24 +197,40 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             mainVideos: [],
             profileVideos: [],
             liveVideo: [],
-            focusedIndex: 0,
-            profileVideoIndex: 0,
           ),
         );
+        final PageController pageController = PageController(
+          initialPage: 0,
+        );
+        if (state.currentContext == ReelContext.main) {
+          emit(
+            state.copyWith(
+              focusedIndex: 0,
+              mainPageController: pageController,
+            ),
+          );
+        } else {
+          emit(
+            state.copyWith(
+              profileVideoIndex: 0,
+              profilePageController: pageController,
+            ),
+          );
+        }
         final databyId = await repository.getVideoById(videoId: e.videoId);
-        final data = await repository.getVideos(page: 1);
-        final List<VideoData> urls = data.model ?? [];
+        e.completer?.complete();
+        // final data = await repository.getVideos(page: 1);
+        // final List<VideoData> urls = data.model ?? [];
         if (databyId.model != null) {
           state.mainVideos.add(databyId.model!);
         }
-        state.mainVideos.addAll(urls);
-
+        // state.mainVideos.addAll(urls);
         /// Initialize 1st video
-        await _initializeControllerAtIndex(0);
+        await _initializeControllerAtIndex(0, state.muted);
+        _playControllerAtIndex(0, state.muted);
 
         /// Initialize 2nd video
-        await _initializeControllerAtIndex(1);
-        e.completer?.complete();
+        await _initializeControllerAtIndex(1, state.muted);
       },
       updateViewCount: (e) {
         unawaited(
@@ -149,11 +238,31 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             e.videoId,
           ),
         );
+        if (state.currentContext == ReelContext.main) {
+          unawaited(
+            repository.updateInteraction(
+              videoId: e.videoId,
+              theme: state.theme,
+              category: state.categories[state.currentCategoryIndex],
+              interaction: InteractionType.viewed,
+            ),
+          );
+        }
       },
       updateSeen: (e) {
         unawaited(
           repository.updateSeen(
             e.videoId,
+          ),
+        );
+      },
+      addInteraction: (e) {
+        unawaited(
+          repository.updateInteraction(
+            videoId: e.videoId,
+            theme: e.theme,
+            category: e.category,
+            interaction: e.interaction,
           ),
         );
       },
@@ -169,6 +278,22 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       },
       toggleComments: (e) {
         emit(state.copyWith(showComments: !state.showComments));
+        _analyticsService.track(
+          eventName: AnalyticsEvents.shortsComments,
+          properties: {
+            "expert name": state.mainVideos[state.focusedIndex].author,
+            "shorts title": state.currentVideos.isNotEmpty &&
+                    state.focusedIndex < state.currentVideos.length
+                ? state.currentVideos[state.focusedIndex].title
+                : 'Default Title',
+            "shorts category": state.categories.isNotEmpty &&
+                    state.currentCategoryIndex < state.categories.length
+                ? state.categories[state.currentCategoryIndex]
+                : 'Default Category',
+            "shorts video list":
+                state.theme.isNotEmpty ? state.theme : 'Default Theme',
+          },
+        );
       },
       onError: (value) {
         emit(
@@ -197,15 +322,15 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           );
         }
         e.completer?.complete();
-        await _initializeControllerAtIndex(e.index);
+        await _initializeControllerAtIndex(e.index, state.muted);
         final currentLength = state.currentContext == ReelContext.main
             ? state.mainVideos.length
             : state.profileVideos.length;
         if (e.index + 1 < currentLength) {
-          await _initializeControllerAtIndex(e.index + 1);
+          await _initializeControllerAtIndex(e.index + 1, state.muted);
         }
         if (e.index - 1 >= 0) {
-          await _initializeControllerAtIndex(e.index - 1);
+          await _initializeControllerAtIndex(e.index - 1, state.muted);
         }
       },
       getVideosFromApi: (e) async {
@@ -220,10 +345,10 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           }
 
           /// Initialize 1st video
-          await _initializeControllerAtIndex(0);
+          await _initializeControllerAtIndex(0, state.muted);
 
           /// Initialize 2nd video
-          await _initializeControllerAtIndex(1);
+          await _initializeControllerAtIndex(1, state.muted);
         } else {
           emit(
             state.copyWith(
@@ -232,39 +357,173 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           );
         }
       },
+      getCategoryVideos: (e) async {
+        final PageController pageController = PageController(
+          initialPage: 0,
+        );
+        emit(
+          state.copyWith(
+            initialVideo: e.initailVideo,
+            currentContext: ReelContext.main,
+            mainVideos: [],
+            focusedIndex: 0,
+            isLoading: !state.isLoading,
+            mainPageController: pageController,
+          ),
+        );
+        int index;
+        if (e.direction > 0) {
+          index = (state.currentCategoryIndex - 1) % state.categories.length;
+        } else if (e.direction < 0) {
+          index = (state.currentCategoryIndex + 1 + state.categories.length) %
+              state.categories.length;
+        } else {
+          index = state.currentCategoryIndex;
+        }
+
+        emit(
+          state.copyWith(
+            currentCategoryIndex: index,
+          ),
+        );
+        _analyticsService.track(
+          eventName: AnalyticsEvents.shortsHorizontalSwipe,
+        );
+        await _stopAndDisposeVideoControllers();
+        e.completer?.complete();
+
+        final data = index == 0
+            ? await repository.getVideosByTheme(
+                theme: state.theme,
+              )
+            : await repository.getVideosByCategory(
+                category: state.categories[state.currentCategoryIndex],
+                theme: state.theme,
+              );
+        if (!data.isSuccess()) {
+          emit(
+            state.copyWith(
+              errorMessage: "An error occurred while loading videos.",
+            ),
+          );
+          return;
+        }
+
+        final List<VideoData> urls = data.model?.videos ?? [];
+
+        state.mainVideos.clear();
+
+        if (e.initailVideo != null) {
+          state.mainVideos.add(e.initailVideo!);
+        }
+        List<VideoData> videosToAdd =
+            urls.where((video) => video.id != e.initailVideo?.id).toList();
+        state.mainVideos.addAll(videosToAdd);
+        await _initializeControllerAtIndex(0, state.muted);
+        await _initializeControllerAtIndex(1, state.muted);
+        _playControllerAtIndex(0, state.muted);
+
+        add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
+      },
+      getThemeVideos: (e) async {
+        final PageController pageController = PageController(
+          initialPage: 0,
+        );
+        emit(
+          state.copyWith(
+            initialVideo: e.initailVideo,
+            currentContext: ReelContext.main,
+            mainVideos: [],
+            focusedIndex: 0,
+            isLoading: !state.isLoading,
+            mainPageController: pageController,
+          ),
+        );
+        emit(
+          state.copyWith(
+            currentCategoryIndex: 0,
+          ),
+        );
+        await _stopAndDisposeVideoControllers();
+        e.completer?.complete();
+
+        final data = await repository.getVideosByTheme(
+          theme: state.theme,
+        );
+        if (!data.isSuccess()) {
+          emit(
+            state.copyWith(
+              errorMessage: "An error occurred while loading videos.",
+            ),
+          );
+          return;
+        }
+        final List<VideoData> urls = data.model?.videos ?? [];
+        state.mainVideos.clear();
+        if (e.initailVideo != null) {
+          state.mainVideos.add(e.initailVideo!);
+        }
+        List<VideoData> videosToAdd =
+            urls.where((video) => video.id != e.initailVideo?.id).toList();
+        state.mainVideos.addAll(videosToAdd);
+        await _initializeControllerAtIndex(0, state.muted);
+        await _initializeControllerAtIndex(1, state.muted);
+        _playControllerAtIndex(0, state.muted);
+        add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
+      },
       onVideoIndexChanged: (e) async {
         final bool shouldFetch =
             (e.index + VideoPreloadConstants.kPreloadLimit) %
                         VideoPreloadConstants.kNextLimit ==
                     0 &&
-                currentVideos.length ==
+                state.currentVideos.length ==
                     e.index + VideoPreloadConstants.kPreloadLimit &&
                 state.currentContext == ReelContext.main;
-
+        _analyticsService.track(
+          eventName: AnalyticsEvents.shortsVerticalSwipe,
+        );
         if (shouldFetch) {
-          final response = await repository.getVideos(
-            page: (e.index + VideoPreloadConstants.preloadLimit) ~/ 10 + 1,
-          );
-          final List<VideoData> urls = response.model ?? [];
-          if (urls.length < 10) {
-            // If we reach the end of the list, start from the beginning
-            final resetResponse = await repository.getVideos(page: 1);
-            List<VideoData> resetUrls = resetResponse.model ?? [];
-            if (resetUrls.isNotEmpty) {
-              urls.addAll(resetUrls);
-            }
-            add(PreloadEvent.updateUrls(urls));
-          } else {
-            add(PreloadEvent.updateUrls(urls));
-          }
+          final response = state.currentCategoryIndex == 0
+              ? await repository.getVideosByTheme(
+                  theme: state.theme,
+                  page:
+                      (e.index + VideoPreloadConstants.preloadLimit) ~/ 10 + 1,
+                )
+              : await repository.getVideosByCategory(
+                  category: state.categories[state.currentCategoryIndex],
+                  theme: state.theme,
+                  page:
+                      (e.index + VideoPreloadConstants.preloadLimit) ~/ 10 + 1,
+                );
+          final List<VideoData> urls = response.model?.videos ?? [];
+          List<VideoData> videosToAdd = urls
+              .where((video) => video.id != state.initialVideo?.id)
+              .toList();
+          // if (urls.length < 10) {
+          //   // If we reach the end of the list, start from the beginning
+          //   final resetResponse = await repository.getVideosByCategory(
+          //     category: state.categories[state.currentCategoryIndex],
+          //     theme: state.theme,
+          //     page: 1,
+          //   );
+          //   List<VideoData> resetUrls = resetResponse.model?.videos ?? [];
+          //   if (resetUrls.isNotEmpty) {
+          //     urls.addAll(resetUrls);
+          //   }
+          //   add(PreloadEvent.updateUrls(urls));
+          // }
+          // else {
+          //   add(PreloadEvent.updateUrls(urls));
+          // }
+          add(PreloadEvent.updateUrls(videosToAdd));
         }
         final index = state.currentContext == ReelContext.main
             ? state.focusedIndex
             : state.profileVideoIndex;
         if (e.index > index) {
-          _playNext(e.index);
+          _playNext(e.index, state.muted);
         } else {
-          _playPrevious(e.index);
+          _playPrevious(e.index, state.muted);
         }
         if (state.currentContext == ReelContext.main) {
           emit(state.copyWith(focusedIndex: e.index));
@@ -325,8 +584,235 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       },
       disposeProfileControllers: (e) {
         _stopAndDisposeProfileControllers();
+        emit(
+          state.copyWith(
+            showComments: false,
+          ),
+        );
+      },
+      followAdvisor: (e) {
+        if (state.currentContext == ReelContext.main) {
+          final followed = LocalActionsState.getAdvisorFollowed(
+            e.advisorId,
+            e.isFollowed,
+          );
+          unawaited(
+            repository.followAdvisor(
+              LocalActionsState.getAdvisorFollowed(
+                e.advisorId,
+                e.isFollowed,
+              ),
+              e.advisorId,
+            ),
+          );
+          emit(
+            state.copyWith(
+              mainVideos: state.mainVideos.map((video) {
+                if (video.advisorId == e.advisorId) {
+                  return video.copyWith(
+                    isFollowed: !followed,
+                  );
+                } else {
+                  return video;
+                }
+              }).toList(),
+            ),
+          );
+          LocalActionsState.setAdvisorFollowed(
+            e.advisorId,
+            !e.isFollowed,
+          );
+        } else if (state.currentContext == ReelContext.profile) {
+          final followed = LocalActionsState.getAdvisorFollowed(
+            e.advisorId,
+            e.isFollowed,
+          );
+          unawaited(
+            repository.followAdvisor(
+              followed,
+              e.advisorId,
+            ),
+          );
+          emit(
+            state.copyWith(
+              profileVideos: state.profileVideos.map((video) {
+                if (video.advisorId == e.advisorId) {
+                  return video.copyWith(
+                    isFollowed: !followed,
+                  );
+                } else {
+                  return video;
+                }
+              }).toList(),
+            ),
+          );
+          LocalActionsState.setAdvisorFollowed(
+            e.advisorId,
+            !e.isFollowed,
+          );
+        } else if (state.currentContext == ReelContext.liveStream) {
+          final followed = LocalActionsState.getAdvisorFollowed(
+            e.advisorId,
+            e.isFollowed,
+          );
+          unawaited(
+            repository.followAdvisor(
+              followed,
+              e.advisorId,
+            ),
+          );
+          emit(
+            state.copyWith(
+              liveVideo: state.liveVideo.map((video) {
+                if (video.advisorId == e.advisorId) {
+                  return video.copyWith(
+                    isFollowed: !followed,
+                  );
+                } else {
+                  return video;
+                }
+              }).toList(),
+            ),
+          );
+          LocalActionsState.setAdvisorFollowed(
+            e.advisorId,
+            !e.isFollowed,
+          );
+        }
+        _analyticsService.track(
+          eventName: AnalyticsEvents.shortsFollow,
+          properties: {
+            "expert name": state.mainVideos[state.focusedIndex].author,
+            "shorts title": state.currentVideos.isNotEmpty &&
+                    state.focusedIndex < state.currentVideos.length
+                ? state.currentVideos[state.focusedIndex].title
+                : 'Default Title',
+            "shorts category": state.categories.isNotEmpty &&
+                    state.currentCategoryIndex < state.categories.length
+                ? state.categories[state.currentCategoryIndex]
+                : 'Default Category',
+            "shorts video list":
+                state.theme.isNotEmpty ? state.theme : 'Default Theme',
+          },
+        );
+      },
+      saveVideo: (e) async {
+        if (state.currentContext == ReelContext.main) {
+          final videoExistsInMainList =
+              state.mainVideos.any((video) => video.id == e.videoId);
+          if (videoExistsInMainList) {
+            final saved = LocalActionsState.getVideoSaved(
+              e.videoId,
+              e.isSaved,
+            );
+            final res = await repository.addSave(
+              saved,
+              e.videoId,
+              e.theme,
+              e.category,
+            );
+            if (res.isSuccess()) {
+              emit(
+                state.copyWith(
+                  mainVideos: state.mainVideos.map((video) {
+                    if (video.id == e.videoId) {
+                      if ((AppState.delegate!.currentConfiguration?.path ??
+                                  '') !=
+                              '/shorts-internal' &&
+                          AppState.screenStack.last == ScreenItem.dialog) {
+                        AppState.backButtonDispatcher!.didPopRoute();
+                        if (saved) {
+                          BaseUtil.showPositiveAlert(
+                            'Success! Short Unsaved',
+                            'This short has been removed from your saved list. You can save it again anytime!',
+                          );
+                        } else {
+                          BaseUtil.showPositiveAlert(
+                            'Success! Short Saved',
+                            'This short has been added to your saved list. You can watch it later anytime!',
+                          );
+                        }
+                      }
+                      return video.copyWith(
+                        isSaved: !saved,
+                      );
+                    } else {
+                      return video;
+                    }
+                  }).toList(),
+                ),
+              );
+            }
+          } else {
+            final saved = LocalActionsState.getVideoSaved(
+              e.videoId,
+              e.isSaved,
+            );
+            final res = await repository.addSave(
+              saved,
+              e.videoId,
+              e.theme,
+              e.category,
+            );
+            if (res.isSuccess()) {
+              await AppState.backButtonDispatcher!.didPopRoute();
+              if (saved) {
+                BaseUtil.showPositiveAlert(
+                  'Success! Short Unsaved',
+                  'This short has been removed from your saved list. You can save it again anytime!',
+                );
+              } else {
+                BaseUtil.showPositiveAlert(
+                  'Success! Short Saved',
+                  'This short has been added to your saved list. You can watch it later anytime!',
+                );
+              }
+            }
+          }
+        } else {
+          final saved = LocalActionsState.getVideoSaved(
+            e.videoId,
+            e.isSaved,
+          );
+          final res = await repository.addSave(
+            saved,
+            e.videoId,
+            e.theme,
+            e.category,
+          );
+          if (res.isSuccess()) {
+            await AppState.backButtonDispatcher!.didPopRoute();
+            if (saved) {
+              BaseUtil.showPositiveAlert(
+                'Success! Short Unsaved',
+                'This short has been removed from your saved list. You can save it again anytime!',
+              );
+            } else {
+              BaseUtil.showPositiveAlert(
+                'Success! Short Saved',
+                'This short has been added to your saved list. You can watch it later anytime!',
+              );
+            }
+          }
+        }
+        log('🚀🚀🚀 Video saved');
       },
       likeVideo: (e) async {
+        _analyticsService.track(
+          eventName: AnalyticsEvents.shortsLiked,
+          properties: {
+            "shorts title": state.currentVideos.isNotEmpty &&
+                    state.focusedIndex < state.currentVideos.length
+                ? state.currentVideos[state.focusedIndex].title
+                : 'Default Title',
+            "shorts category": state.categories.isNotEmpty &&
+                    state.currentCategoryIndex < state.categories.length
+                ? state.categories[state.currentCategoryIndex]
+                : 'Default Category',
+            "shorts video list":
+                state.theme.isNotEmpty ? state.theme : 'Default Theme',
+          },
+        );
         final UserService userService = locator<UserService>();
         final String userName = (userService.baseUser!.kycName != null &&
                     userService.baseUser!.kycName!.isNotEmpty
@@ -338,15 +824,19 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             state.copyWith(
               mainVideos: state.mainVideos.map((video) {
                 if (video.id == e.videoId) {
+                  final liked = LocalActionsState.getVideoLiked(
+                    e.videoId,
+                    video.isVideoLikedByUser,
+                  );
                   unawaited(
                     repository.addLike(
-                      !video.isVideoLikedByUser,
+                      liked,
                       e.videoId,
                       userName,
                     ),
                   );
                   return video.copyWith(
-                    isVideoLikedByUser: !video.isVideoLikedByUser,
+                    isVideoLikedByUser: !liked,
                   );
                 } else {
                   return video;
@@ -359,15 +849,19 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             state.copyWith(
               profileVideos: state.profileVideos.map((video) {
                 if (video.id == e.videoId) {
+                  final liked = LocalActionsState.getVideoLiked(
+                    e.videoId,
+                    video.isVideoLikedByUser,
+                  );
                   unawaited(
                     repository.addLike(
-                      !video.isVideoLikedByUser,
+                      liked,
                       e.videoId,
                       userName,
                     ),
                   );
                   return video.copyWith(
-                    isVideoLikedByUser: !video.isVideoLikedByUser,
+                    isVideoLikedByUser: !liked,
                   );
                 } else {
                   return video;
@@ -380,15 +874,19 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             state.copyWith(
               liveVideo: state.liveVideo.map((video) {
                 if (video.id == e.videoId) {
+                  final liked = LocalActionsState.getVideoLiked(
+                    e.videoId,
+                    video.isVideoLikedByUser,
+                  );
                   unawaited(
                     repository.addLike(
-                      !video.isVideoLikedByUser,
+                      liked,
                       e.videoId,
                       userName,
                     ),
                   );
                   return video.copyWith(
-                    isVideoLikedByUser: !video.isVideoLikedByUser,
+                    isVideoLikedByUser: !liked,
                   );
                 } else {
                   return video;
@@ -431,7 +929,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         );
         await controller.initialize();
         await controller.setLooping(true);
-        await controller.setVolume(1);
+        await controller.setVolume(state.muted ? 0 : 1);
         await controller.play();
         add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
         final comments = await repository.getComments(e.video.id);
@@ -445,30 +943,58 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       disposeLiveStreamController: (e) async {
         if (state.liveStreamController != null) {
           await state.liveStreamController!.dispose();
-          state.livePageController!.dispose();
+          if (state.livePageController != null &&
+              state.livePageController!.hasClients) {
+            state.livePageController!.dispose();
+          }
         }
+        emit(
+          state.copyWith(
+            showComments: false,
+          ),
+        );
+      },
+      disposeMainStreamController: (e) async {
+        for (final entry in state.controllers.entries) {
+          final controller = entry.value;
+          await controller.pause();
+          await controller.seekTo(const Duration());
+          await controller.dispose();
+        }
+        if (state.mainPageController != null &&
+            state.mainPageController.hasClients) {
+          state.mainPageController.dispose();
+        }
+        state.controllers
+            .clear(); // Clear the map after disposing all controllers
+        emit(
+          state.copyWith(
+            showComments: false,
+          ),
+        );
+        log('🚀🚀🚀 All controllers stopped and disposed');
       },
     );
   }
 
-  void _playNext(int index) {
+  void _playNext(int index, bool muted) {
     _stopControllerAtIndex(index - 1);
     _disposeControllerAtIndex(index - 2);
-    _playControllerAtIndex(index);
-    _initializeControllerAtIndex(index + 1);
+    _playControllerAtIndex(index, muted);
+    _initializeControllerAtIndex(index + 1, muted);
   }
 
-  void _playPrevious(int index) {
+  void _playPrevious(int index, bool muted) {
     _stopControllerAtIndex(index + 1);
     _disposeControllerAtIndex(index + 2);
-    _playControllerAtIndex(index);
-    _initializeControllerAtIndex(index - 1);
+    _playControllerAtIndex(index, muted);
+    _initializeControllerAtIndex(index - 1, muted);
   }
 
-  Future<void> _initializeControllerAtIndex(int index) async {
-    if (currentVideos.length > index && index >= 0) {
+  Future<void> _initializeControllerAtIndex(int index, bool muted) async {
+    if (state.currentVideos.length > index && index >= 0) {
       final VideoPlayerController controller = VideoPlayerController.networkUrl(
-        Uri.parse(currentVideos[index].url),
+        Uri.parse(state.currentVideos[index].url),
       );
       if (state.currentContext == ReelContext.main) {
         state.controllers[index] = controller;
@@ -477,17 +1003,18 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       }
       await controller.initialize();
       await controller.setLooping(true);
-      await controller.setVolume(1);
+      await controller.setVolume(muted ? 0 : 1);
       add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
-      final comments = await repository.getComments(currentVideos[index].id);
+      final comments =
+          await repository.getComments(state.currentVideos[index].id);
       add(
         PreloadEvent.addCommentToState(
-          videoId: currentVideos[index].id,
+          videoId: state.currentVideos[index].id,
           comment: comments.model ?? [],
         ),
       );
-      _addProgressListener(controller, currentVideos[index].id);
-      _addSeenListener(controller, currentVideos[index].id);
+      _addProgressListener(controller, state.currentVideos[index].id);
+      _addSeenListener(controller, state.currentVideos[index].id);
       log('🚀🚀🚀 INITIALIZED $index for context ${state.currentContext}');
     }
   }
@@ -499,12 +1026,11 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       final duration = controller.value.duration;
       final position = controller.value.position;
 
-      if (duration.inMilliseconds > 0 &&
-          position.inMilliseconds >= duration.inMilliseconds * 0.25) {
+      if (duration.inMilliseconds > 0 && position.inMilliseconds >= 3 * 1000) {
         // Remove this specific listener to prevent repeated events
         controller.removeListener(listener);
 
-        // Dispatch the event that 25% has been watched
+        // Dispatch the event that 3sec has been watched
         add(PreloadEvent.updateViewCount(videoId: videoId));
       }
     };
@@ -521,12 +1047,18 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       final position = controller.value.position;
 
       if (duration.inMilliseconds > 0 &&
-          position.inMilliseconds >= duration.inMilliseconds * 0.90) {
+          position.inMilliseconds >= duration.inMilliseconds * 0.50) {
         // Remove this specific listener to prevent repeated events
         controller.removeListener(listener);
 
-        // Dispatch the event that 25% has been watched
+        // Dispatch the event that 50% has been watched
         add(PreloadEvent.updateSeen(videoId: videoId));
+        AnalyticsRetryManager.queueAnalyticsEvent(
+          videoId: videoId,
+          interaction: InteractionType.watched,
+          theme: state.theme,
+          category: state.categories[state.currentCategoryIndex],
+        );
       }
     };
 
@@ -534,19 +1066,27 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
     controller.addListener(listener);
   }
 
-  void _playControllerAtIndex(int index) {
-    if (currentVideos.length > index && index >= 0) {
+  void _playControllerAtIndex(int index, bool muted) {
+    if (state.currentVideos.length > index && index >= 0) {
       final controller = state.currentContext == ReelContext.main
           ? state.controllers[index]
           : state.profileControllers[index];
-
+      if (controller?.value.volume == 0 && !muted) {
+        controller?.setVolume(
+          1.0,
+        );
+      } else if (controller?.value.volume == 1 && muted) {
+        controller?.setVolume(
+          0.0,
+        );
+      }
       controller?.play();
       log('🚀🚀🚀 PLAYING $index for context ${state.currentContext}');
     }
   }
 
   void _stopControllerAtIndex(int index) {
-    if (currentVideos.length > index && index >= 0) {
+    if (state.currentVideos.length > index && index >= 0) {
       final controller = state.currentContext == ReelContext.main
           ? state.controllers[index]
           : state.profileControllers[index];
@@ -558,12 +1098,22 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
   }
 
   void _disposeControllerAtIndex(int index) {
-    if (currentVideos.length > index && index >= 0) {
+    if (state.currentVideos.length > index && index >= 0) {
       final controllersMap = state.currentContext == ReelContext.main
           ? state.controllers
           : state.profileControllers;
 
       final controller = controllersMap[index];
+      // Only track analytics for main context
+      if (state.currentContext == ReelContext.main && controller != null) {
+        final currentVideo = state.mainVideos[index];
+        trackAnalytics(
+          controller,
+          currentVideo.id,
+          state.theme,
+          state.categories[state.currentCategoryIndex],
+        );
+      }
       controller?.removeListener(() {});
       controller?.dispose();
       if (controller != null) {
@@ -571,6 +1121,18 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       }
       log('🚀🚀🚀 DISPOSED $index for context ${state.currentContext}');
     }
+  }
+
+  Future<void> _stopAndDisposeVideoControllers() async {
+    final controllersCopy =
+        Map<int, VideoPlayerController>.from(state.controllers);
+    for (final entry in controllersCopy.entries) {
+      final controller = entry.value;
+      await controller.pause();
+      await controller.seekTo(const Duration());
+      await controller.dispose();
+    }
+    state.controllers.clear();
   }
 
   Future<void> _stopAndDisposeProfileControllers() async {
@@ -589,6 +1151,9 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       await controller.pause();
       await controller.seekTo(const Duration());
       await controller.dispose();
+    }
+    if (state.profilePageController != null &&
+        state.profilePageController.hasClients) {
       state.profilePageController.dispose();
     }
     state.profileControllers
@@ -603,6 +1168,9 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       await controller.pause();
       await controller.seekTo(const Duration()); // Reset to the beginning
       await controller.dispose();
+    }
+    if (state.mainPageController != null &&
+        state.mainPageController.hasClients) {
       state.mainPageController.dispose();
     }
     state.controllers.clear(); // Clear the map after disposing all controllers
@@ -613,6 +1181,9 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
       await controller.pause();
       await controller.seekTo(const Duration());
       await controller.dispose();
+    }
+    if (state.profilePageController != null &&
+        state.profilePageController.hasClients) {
       state.profilePageController.dispose();
     }
     state.profileControllers

@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
@@ -53,6 +55,7 @@ class UpcomingBookingsComponent extends StatelessWidget {
                             width: upcomingBookings.length > 1
                                 ? SizeConfig.padding325
                                 : SizeConfig.padding350,
+                            fromHome: true,
                           ),
                         ),
                       ),
@@ -69,8 +72,14 @@ class UpcomingBookingsComponent extends StatelessWidget {
 class ScheduleCard extends StatelessWidget {
   final Booking booking;
   final double width;
+  final bool fromHome;
 
-  const ScheduleCard({required this.booking, required this.width, super.key});
+  const ScheduleCard({
+    required this.booking,
+    required this.width,
+    required this.fromHome,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -181,6 +190,14 @@ class ScheduleCard extends StatelessWidget {
                   children: [
                     TextButton(
                       onPressed: () {
+                        locator<AnalyticsService>().track(
+                          eventName: fromHome
+                              ? AnalyticsEvents.homeEditCall
+                              : AnalyticsEvents.expertsEditCall,
+                          properties: {
+                            "call ID": booking.bookingId,
+                          },
+                        );
                         if (_isEditButtonClickable()) {
                           BaseUtil.openBookAdvisorSheet(
                             advisorId: booking.advisorId,
@@ -208,6 +225,14 @@ class ScheduleCard extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
+                        locator<AnalyticsService>().track(
+                          eventName: fromHome
+                              ? AnalyticsEvents.homeJoinCall
+                              : AnalyticsEvents.expertsJoinCall,
+                          properties: {
+                            "call ID": booking.bookingId,
+                          },
+                        );
                         if (_isButtonClickable()) {
                           final String? name = locator<UserService>()
                                   .baseUser!

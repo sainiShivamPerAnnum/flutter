@@ -26,7 +26,7 @@ class ExpandableWidget extends StatefulWidget {
 
 class ExpandableWidgetState extends State<ExpandableWidget> {
   bool _isExpanded = false;
-  
+
   void _toggleExpanded() {
     setState(() {
       _isExpanded = !_isExpanded;
@@ -41,9 +41,9 @@ class ExpandableWidgetState extends State<ExpandableWidget> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
-        width: 0.95.sw,
-        padding: EdgeInsets.symmetric(horizontal: 12.w),
-        height: _isExpanded ? 120.h : 40.h,
+        width: 0.75.sw,
+        padding: EdgeInsets.symmetric(horizontal: 10.w),
+        height: _isExpanded ? 120.h : 36.h,
         decoration: BoxDecoration(
           color: widget.backgroundColor,
           borderRadius: BorderRadius.circular(4.r),
@@ -65,6 +65,7 @@ class ExpandableWidgetState extends State<ExpandableWidget> {
                   child: Text(
                     widget.title,
                     style: TextStyle(color: widget.textColor, fontSize: 12.sp),
+                    maxLines: 1,
                   ),
                 ),
                 IconButton(

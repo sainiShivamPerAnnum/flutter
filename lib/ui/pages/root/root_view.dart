@@ -1,7 +1,6 @@
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -9,14 +8,11 @@ import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:felloapp/ui/elements/dev_rel/flavor_banners.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/win_helpers.dart';
-import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/lazy_load_indexed_stack.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -51,39 +47,34 @@ class _RootState extends State<Root> {
       builder: (ctx, model, child) {
         return Stack(
           children: [
-            BaseScaffold(
-              resizeToAvoidBottomInset: false,
-              showBackgroundGrid: true,
-              body: Stack(
-                children: [
-                  Column(
+            Consumer<AppState>(
+              builder: (ctx, m, child) {
+                return BaseScaffold(
+                  resizeToAvoidBottomInset: false,
+                  showBackgroundGrid: m.getCurrentTabIndex == 3 ? false : true,
+                  backgroundColor:
+                      m.getCurrentTabIndex == 3 ? UiConstants.bg : null,
+                  body: Stack(
                     children: [
-                      const RootAppBar(),
-                      Consumer<AppState>(
-                        builder: (ctx, m, child) {
-                          if (m.getCurrentTabIndex == 0) {
-                            return const HeadAlerts();
-                          }
-                          return const SizedBox.shrink();
-                        },
-                      ),
-                      Expanded(
-                        child: Consumer<AppState>(
-                          builder: (ctx, m, child) {
-                            return LazyLoadIndexedStack(
+                      Column(
+                        children: [
+                          const RootAppBar(),
+                          if (m.getCurrentTabIndex == 0) const HeadAlerts(),
+                          Expanded(
+                            child: LazyLoadIndexedStack(
                               index: m.getCurrentTabIndex,
                               children: model.navBarItems.keys.toList(),
-                            );
-                          },
-                        ),
+                            ),
+                          ),
+                        ],
                       ),
+                      const DEVBanner(),
+                      const QABanner(),
                     ],
                   ),
-                  const DEVBanner(),
-                  const QABanner(),
-                ],
-              ),
-              bottomNavigationBar: const BottomNavBar(),
+                  bottomNavigationBar: const BottomNavBar(),
+                );
+              },
             ),
             const CircularAnim(),
             // Positioned.fill(

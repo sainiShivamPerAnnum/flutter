@@ -7,7 +7,6 @@ class VideoData {
   final String id;
   final String thumbnail;
   final String url;
-  final int viewCount;
   final String timeStamp;
   final List<String>? category;
   final String title;
@@ -18,22 +17,29 @@ class VideoData {
   final num views;
   final String duration;
   final bool isVideoLikedByUser;
+  final String categoryV1;
+  final String advisorImg;
+  final bool isSaved;
+  final bool isFollowed;
 
   VideoData({
     required this.id,
     required this.thumbnail,
     required this.url,
-    required this.viewCount,
     required this.timeStamp,
     required this.title,
-    required this.author,
     required this.subtitle,
     required this.views,
     required this.duration,
     required this.description,
     required this.advisorId,
-    this.category =const [],
+    this.author = '',
+    this.categoryV1 = '',
+    this.category = const [],
     this.isVideoLikedByUser = false,
+    this.advisorImg = '',
+    this.isSaved = false,
+    this.isFollowed = false,
   });
 
   // Method to generate VideoData instance from JSON
@@ -46,7 +52,6 @@ class VideoData {
     String? id,
     String? thumbnail,
     String? url,
-    int? viewCount,
     String? timeStamp,
     List<String>? category,
     String? title,
@@ -57,13 +62,17 @@ class VideoData {
     bool? isVideoLikedByUser,
     String? description,
     String? advisorId,
+    String? categoryV1,
+    String? advisorImg,
+    bool? isFollowed,
+    bool? isSaved,
   }) {
     return VideoData(
       id: id ?? this.id,
       thumbnail: thumbnail ?? this.thumbnail,
       url: url ?? this.url,
-      viewCount: viewCount ?? this.viewCount,
       timeStamp: timeStamp ?? this.timeStamp,
+      categoryV1: categoryV1 ?? this.categoryV1,
       category: category ?? this.category,
       title: title ?? this.title,
       author: author ?? this.author,
@@ -72,7 +81,10 @@ class VideoData {
       duration: duration ?? this.duration,
       description: description ?? this.description,
       advisorId: advisorId ?? this.advisorId,
+      advisorImg: advisorImg ?? this.advisorImg,
       isVideoLikedByUser: isVideoLikedByUser ?? this.isVideoLikedByUser,
+      isFollowed: isFollowed ?? this.isFollowed,
+      isSaved: isSaved ?? this.isSaved,
     );
   }
 }
