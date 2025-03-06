@@ -199,7 +199,6 @@ class ShortsRepo extends BaseRepo {
           'isLiked': !isLiked,
         },
       );
-      await LocalActionsState.setVideoLiked(videoId, !isLiked);
       return const ApiResponse<void>(code: 200);
     } catch (e) {
       return ApiResponse.withError(e.toString(), 400);
