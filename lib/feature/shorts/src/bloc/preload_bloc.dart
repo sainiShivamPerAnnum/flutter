@@ -162,7 +162,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         await _stopAndDisposeAllControllers();
         emit(
           state.copyWith(
-            currentContext: ReelContext.profile,
+            currentContext: ReelContext.main,
             mainVideos: [],
             profileVideos: [],
             liveVideo: [],

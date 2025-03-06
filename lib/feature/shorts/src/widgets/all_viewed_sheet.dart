@@ -76,18 +76,21 @@ class AllShortsViewed extends StatelessWidget {
             height: SizeConfig.padding12,
           ),
           Text(
-            'That’s all in $category!',
+            category.isEmpty
+                ? "Go to Shorts home for more content!"
+                : 'That’s all in $category!',
             style: TextStyles.sourceSansM.body0,
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding18),
-            child: Text(
-              'Swipe right to watch more.',
-              style:
-                  TextStyles.sourceSans.body2.colour(UiConstants.kTextColor5),
-              textAlign: TextAlign.center,
+          if (category.isNotEmpty)
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding18),
+              child: Text(
+                'Swipe right to watch more.',
+                style:
+                    TextStyles.sourceSans.body2.colour(UiConstants.kTextColor5),
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
           SizedBox(
             height: SizeConfig.padding12,
           ),

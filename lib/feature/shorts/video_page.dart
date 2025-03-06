@@ -190,7 +190,7 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                         onPageChanged: (index) {
                           BlocProvider.of<PreloadBloc>(context, listen: false)
                               .add(PreloadEvent.onVideoIndexChanged(index));
-                          if (pageController.page! > videos.length - 1 &&
+                          if (index > videos.length - 1 &&
                               state.currentContext == ReelContext.main) {
                             BaseUtil.openModalBottomSheet(
                               isScrollControlled: true,
@@ -200,8 +200,11 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                               backgroundColor: UiConstants.kBackgroundColor,
                               hapticVibrate: true,
                               content: AllShortsViewed(
-                                category: state
-                                    .categories[state.currentCategoryIndex],
+                                category: (state.categories != null &&
+                                        state.categories.isNotEmpty)
+                                    ? state
+                                        .categories[state.currentCategoryIndex]
+                                    : '',
                               ),
                             );
                             pageController.jumpToPage(
