@@ -458,10 +458,11 @@ class VideoWidgetState extends State<VideoWidget>
                       onTap: onSave,
                       label: 'Save',
                       child: isSaved
-                          ? Icon(
-                              Icons.bookmark,
+                          ? AppImage(
+                              Assets.video_save_filled,
                               color: Colors.white,
-                              size: 24.r,
+                              height: 20.r,
+                              width: 20.r,
                             )
                           : AppImage(
                               Assets.video_save,

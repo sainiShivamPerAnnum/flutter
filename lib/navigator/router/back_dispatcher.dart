@@ -103,7 +103,8 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
                 '/profile-shorts-internal' ||
             (AppState.delegate!.currentConfiguration?.path ?? '') ==
                 '/live-shorts-internal') &&
-        AppState.screenStack.last != ScreenItem.modalsheet) {
+        AppState.screenStack.last != ScreenItem.modalsheet &&
+        AppState.screenStack.last != ScreenItem.dialog) {
       FocusScope.of(
         _routerDelegate!.navigatorKey.currentContext!,
       ).unfocus();

@@ -507,6 +507,7 @@ class Assets {
       "https://d11q4cti75qmcp.cloudfront.net/imagekit/static/calender.png";
 
   static const String video_save = "assets/svg/save_reel.svg";
+  static const String video_save_filled = "assets/svg/like_shorts_filled.svg";
   static const String video_share = "assets/svg/share_reel.svg";
   static const String book_call = "assets/svg/book_call.svg";
   static const String video_like = "assets/svg/like.svg";

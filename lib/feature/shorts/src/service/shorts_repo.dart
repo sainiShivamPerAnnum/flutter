@@ -304,7 +304,7 @@ class ShortsRepo extends BaseRepo {
       "videoId": videoId,
       "category": category,
       "theme": theme,
-      "interactionType": interaction.toString().toUpperCase(),
+      "interactionType": interaction.name.toString().toUpperCase(),
     };
     try {
       await APIService.instance.postData(

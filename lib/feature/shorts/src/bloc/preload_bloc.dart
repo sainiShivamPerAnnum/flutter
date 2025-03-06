@@ -743,6 +743,14 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         log('🚀🚀🚀 Video saved');
       },
       likeVideo: (e) async {
+        _analyticsService.track(
+          eventName: AnalyticsEvents.shortsLiked,
+          properties: {
+            "shorts title": state.mainVideos[state.focusedIndex].title,
+            "shorts category": state.categories[state.currentCategoryIndex],
+            "shorts video list": state.theme,
+          },
+        );
         final UserService userService = locator<UserService>();
         final String userName = (userService.baseUser!.kycName != null &&
                     userService.baseUser!.kycName!.isNotEmpty
@@ -825,14 +833,6 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             ),
           );
         }
-        _analyticsService.track(
-          eventName: AnalyticsEvents.shortsLiked,
-          properties: {
-            "shorts title": state.mainVideos[state.focusedIndex].title,
-            "shorts category": state.categories[state.currentCategoryIndex],
-            "shorts video list": state.theme,
-          },
-        );
         log('🚀🚀🚀 Video liked');
       },
       addCommentToState: (e) {

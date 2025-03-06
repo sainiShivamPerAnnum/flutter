@@ -161,26 +161,6 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                       });
                     }
                   },
-                  onVerticalDragEnd: (details) {
-                    if (details.velocity.pixelsPerSecond.dy > 0) {
-                      final currentPage = pageController.page ?? 0;
-                      if (currentPage == state.mainVideos.length - 1 &&
-                          state.currentContext == ReelContext.main) {
-                        BaseUtil.openModalBottomSheet(
-                          isScrollControlled: true,
-                          enableDrag: true,
-                          isBarrierDismissible: true,
-                          addToScreenStack: false,
-                          backgroundColor: UiConstants.kBackgroundColor,
-                          hapticVibrate: true,
-                          content: AllShortsViewed(
-                            category:
-                                state.categories[state.currentCategoryIndex],
-                          ),
-                        );
-                      }
-                    }
-                  },
                   onHorizontalDragEnd: (details) {
                     if (widget.categories.isNotEmpty && !state.showComments) {
                       _onDragEnd();
@@ -200,7 +180,7 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                       curve: Curves.decelerate,
                       child: PageView.builder(
                         controller: pageController,
-                        itemCount: videos.length,
+                        itemCount: videos.length + 1,
                         physics: state.keyboardVisible || state.showComments
                             ? const NeverScrollableScrollPhysics()
                             : const BouncingScrollPhysics(),
@@ -208,6 +188,23 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                         onPageChanged: (index) {
                           BlocProvider.of<PreloadBloc>(context, listen: false)
                               .add(PreloadEvent.onVideoIndexChanged(index));
+                          if (pageController.page! > videos.length - 1) {
+                            BaseUtil.openModalBottomSheet(
+                              isScrollControlled: true,
+                              enableDrag: true,
+                              isBarrierDismissible: true,
+                              addToScreenStack: true,
+                              backgroundColor: UiConstants.kBackgroundColor,
+                              hapticVibrate: true,
+                              content: AllShortsViewed(
+                                category: state
+                                    .categories[state.currentCategoryIndex],
+                              ),
+                            );
+                            pageController.jumpToPage(
+                              videos.length - 1,
+                            );
+                          }
                         },
                         itemBuilder: (context, index) {
                           final bool isLoading =
@@ -340,6 +337,9 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                         "shorts category": state.categories[
                                             state.currentCategoryIndex],
                                         "shorts video list": state.theme,
+                                        "expert name": state
+                                            .mainVideos[state.focusedIndex]
+                                            .author,
                                       },
                                     );
                                   },

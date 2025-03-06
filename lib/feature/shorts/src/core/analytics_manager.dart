@@ -134,7 +134,7 @@ extension PreloadBlocAnalyticsRetry on PreloadBloc {
             theme: theme,
             category: category,
           );
-        }
+        } else
 
         // Skipped (less than 3 seconds)
         if (position.inMilliseconds < 3 * 1000) {
@@ -144,7 +144,7 @@ extension PreloadBlocAnalyticsRetry on PreloadBloc {
             theme: theme,
             category: category,
           );
-        }
+        } else
 
         // Viewed (more than 3 seconds)
         if (position.inMilliseconds >= 3 * 1000) {
