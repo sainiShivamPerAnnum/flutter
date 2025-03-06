@@ -221,17 +221,12 @@ class VideoWidgetState extends State<VideoWidget>
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      // BlocProvider.of<PreloadBloc>(
-                                      //   context,
-                                      //   listen: false,
-                                      // ).add(
-                                      //   PreloadEvent.pauseVideoAtIndex(
-                                      //     widget.focusedIndex,
-                                      //   ),
-                                      // );
                                       locator<AnalyticsService>().track(
                                         eventName:
                                             AnalyticsEvents.shortsProfileClick,
+                                        properties: {
+                                          "expert name": widget.userName,
+                                        },
                                       );
                                       AppState.backButtonDispatcher!
                                           .didPopRoute();
