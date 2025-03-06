@@ -970,6 +970,12 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
 
         // Dispatch the event that 3sec has been watched
         add(PreloadEvent.updateViewCount(videoId: videoId));
+        AnalyticsRetryManager.queueAnalyticsEvent(
+          videoId: videoId,
+          interaction: InteractionType.viewed,
+          theme: state.theme,
+          category: state.categories[state.currentCategoryIndex],
+        );
       }
     };
 
@@ -991,6 +997,12 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
 
         // Dispatch the event that 50% has been watched
         add(PreloadEvent.updateSeen(videoId: videoId));
+        AnalyticsRetryManager.queueAnalyticsEvent(
+          videoId: videoId,
+          interaction: InteractionType.watched,
+          theme: state.theme,
+          category: state.categories[state.currentCategoryIndex],
+        );
       }
     };
 

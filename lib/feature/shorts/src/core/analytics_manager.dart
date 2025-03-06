@@ -4,9 +4,8 @@ import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
 import 'package:felloapp/feature/shorts/src/core/interaction_enum.dart';
 import 'package:felloapp/feature/shorts/src/service/shorts_repo.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:video_player/video_player.dart';
 
 class AnalyticsRetryManager {
@@ -24,6 +23,28 @@ class AnalyticsRetryManager {
 
       // Retrieve existing queue
       List<Map<String, dynamic>> queue = _getExistingQueue(prefs);
+
+      // Check if an event for this videoId already exists
+      final existingEvent = queue.firstWhere(
+        (event) => event['videoId'] == videoId,
+        orElse: () => {}, // Return an empty map if not found
+      );
+
+      if (existingEvent.isNotEmpty) {
+        // If the existing event is 'skipped' and the new event is 'watched', overwrite it
+        if (existingEvent['interaction'] ==
+                InteractionType.skipped.toString() &&
+            interaction == InteractionType.watched) {
+          // Remove the skipped event and add the new watched event
+          queue.remove(existingEvent);
+        } else {
+          // If it's watched, do nothing (watched should not be overridden)
+          if (existingEvent['interaction'] ==
+              InteractionType.watched.toString()) {
+            return;
+          }
+        }
+      }
 
       // Add new event to queue
       queue.add({
@@ -126,31 +147,11 @@ extension PreloadBlocAnalyticsRetry on PreloadBloc {
 
     try {
       if (duration.inMilliseconds > 0) {
-        // 50% watched
-        if (position.inMilliseconds >= duration.inMilliseconds * 0.50) {
-          AnalyticsRetryManager.queueAnalyticsEvent(
-            videoId: videoId,
-            interaction: InteractionType.watched,
-            theme: theme,
-            category: category,
-          );
-        } else
-
         // Skipped (less than 3 seconds)
         if (position.inMilliseconds < 3 * 1000) {
           AnalyticsRetryManager.queueAnalyticsEvent(
             videoId: videoId,
             interaction: InteractionType.skipped,
-            theme: theme,
-            category: category,
-          );
-        } else
-
-        // Viewed (more than 3 seconds)
-        if (position.inMilliseconds >= 3 * 1000) {
-          AnalyticsRetryManager.queueAnalyticsEvent(
-            videoId: videoId,
-            interaction: InteractionType.viewed,
             theme: theme,
             category: category,
           );
