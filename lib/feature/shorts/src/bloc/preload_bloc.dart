@@ -819,16 +819,16 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                 ? userService.baseUser!.kycName
                 : userService.baseUser!.name) ??
             "N/A";
+        final liked = LocalActionsState.getVideoLiked(
+          e.videoId,
+          e.isLiked,
+        );
+        await LocalActionsState.setVideoLiked(e.videoId, !liked);
         if (state.currentContext == ReelContext.main) {
           emit(
             state.copyWith(
               mainVideos: state.mainVideos.map((video) {
                 if (video.id == e.videoId) {
-                  final liked = LocalActionsState.getVideoLiked(
-                    e.videoId,
-                    video.isVideoLikedByUser,
-                  );
-                  LocalActionsState.setVideoLiked(e.videoId, !liked);
                   unawaited(
                     repository.addLike(
                       liked,
@@ -850,11 +850,6 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             state.copyWith(
               profileVideos: state.profileVideos.map((video) {
                 if (video.id == e.videoId) {
-                  final liked = LocalActionsState.getVideoLiked(
-                    e.videoId,
-                    video.isVideoLikedByUser,
-                  );
-                  LocalActionsState.setVideoLiked(e.videoId, !liked);
                   unawaited(
                     repository.addLike(
                       liked,
@@ -876,11 +871,6 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             state.copyWith(
               liveVideo: state.liveVideo.map((video) {
                 if (video.id == e.videoId) {
-                  final liked = LocalActionsState.getVideoLiked(
-                    e.videoId,
-                    video.isVideoLikedByUser,
-                  );
-                  LocalActionsState.setVideoLiked(e.videoId, !liked);
                   unawaited(
                     repository.addLike(
                       liked,

@@ -315,6 +315,11 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                     ).add(
                                       PreloadEvent.likeVideo(
                                         videoId: videos[index].id,
+                                        isLiked:
+                                            LocalActionsState.getVideoLiked(
+                                          videos[index].id,
+                                          videos[index].isVideoLikedByUser,
+                                        ),
                                       ),
                                     );
                                   },

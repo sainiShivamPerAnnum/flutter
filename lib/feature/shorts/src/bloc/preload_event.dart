@@ -59,6 +59,7 @@ class PreloadEvent with _$PreloadEvent {
   const factory PreloadEvent.onError() = _ErrorPage;
 
   const factory PreloadEvent.likeVideo({
+    required bool isLiked,
     required String videoId,
   }) = _LikeVideo;
   const factory PreloadEvent.followAdvisor({

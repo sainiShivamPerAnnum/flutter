@@ -4070,7 +4070,7 @@ abstract class _$$LikeVideoImplCopyWith<$Res> {
           _$LikeVideoImpl value, $Res Function(_$LikeVideoImpl) then) =
       __$$LikeVideoImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String videoId});
+  $Res call({bool isLiked, String videoId});
 }
 
 /// @nodoc
@@ -4084,9 +4084,14 @@ class __$$LikeVideoImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? isLiked = null,
     Object? videoId = null,
   }) {
     return _then(_$LikeVideoImpl(
+      isLiked: null == isLiked
+          ? _value.isLiked
+          : isLiked // ignore: cast_nullable_to_non_nullable
+              as bool,
       videoId: null == videoId
           ? _value.videoId
           : videoId // ignore: cast_nullable_to_non_nullable
@@ -4098,14 +4103,16 @@ class __$$LikeVideoImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$LikeVideoImpl implements _LikeVideo {
-  const _$LikeVideoImpl({required this.videoId});
+  const _$LikeVideoImpl({required this.isLiked, required this.videoId});
 
+  @override
+  final bool isLiked;
   @override
   final String videoId;
 
   @override
   String toString() {
-    return 'PreloadEvent.likeVideo(videoId: $videoId)';
+    return 'PreloadEvent.likeVideo(isLiked: $isLiked, videoId: $videoId)';
   }
 
   @override
@@ -4113,11 +4120,12 @@ class _$LikeVideoImpl implements _LikeVideo {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LikeVideoImpl &&
+            (identical(other.isLiked, isLiked) || other.isLiked == isLiked) &&
             (identical(other.videoId, videoId) || other.videoId == videoId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, videoId);
+  int get hashCode => Object.hash(runtimeType, isLiked, videoId);
 
   @JsonKey(ignore: true)
   @override
@@ -4263,8 +4271,11 @@ class _$LikeVideoImpl implements _LikeVideo {
 }
 
 abstract class _LikeVideo implements PreloadEvent {
-  const factory _LikeVideo({required final String videoId}) = _$LikeVideoImpl;
+  const factory _LikeVideo(
+      {required final bool isLiked,
+      required final String videoId}) = _$LikeVideoImpl;
 
+  bool get isLiked;
   String get videoId;
   @JsonKey(ignore: true)
   _$$LikeVideoImplCopyWith<_$LikeVideoImpl> get copyWith =>
