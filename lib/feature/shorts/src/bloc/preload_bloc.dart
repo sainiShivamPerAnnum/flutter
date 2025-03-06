@@ -162,7 +162,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         await _stopAndDisposeAllControllers();
         emit(
           state.copyWith(
-            currentContext: ReelContext.main,
+            currentContext: ReelContext.profile,
             mainVideos: [],
             profileVideos: [],
             liveVideo: [],
@@ -207,6 +207,16 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             e.videoId,
           ),
         );
+        if (state.currentContext == ReelContext.main) {
+          unawaited(
+            repository.updateInteraction(
+              videoId: e.videoId,
+              theme: state.theme,
+              category: state.categories[state.currentCategoryIndex],
+              interaction: InteractionType.viewed,
+            ),
+          );
+        }
       },
       updateSeen: (e) {
         unawaited(
@@ -970,12 +980,6 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
 
         // Dispatch the event that 3sec has been watched
         add(PreloadEvent.updateViewCount(videoId: videoId));
-        AnalyticsRetryManager.queueAnalyticsEvent(
-          videoId: videoId,
-          interaction: InteractionType.viewed,
-          theme: state.theme,
-          category: state.categories[state.currentCategoryIndex],
-        );
       }
     };
 
