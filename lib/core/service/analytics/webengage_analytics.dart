@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -12,24 +14,30 @@ class WebEngageAnalytics extends BaseAnalyticsService {
   @override
   Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
     if (isOnBoarded != null && isOnBoarded && baseUser != null) {
-      _logger.d(baseUser);
       final nameParts = (baseUser.name ?? '').split(' ');
       final len = nameParts.length;
-      await WebEngagePlugin.userLogin(baseUser.uid!);
-      await WebEngagePlugin.setUserPhone(baseUser.mobile ?? '');
-      if (len > 0) await WebEngagePlugin.setUserFirstName(nameParts[0] ?? '');
-      if (len > 1)
-      await WebEngagePlugin.setUserLastName(nameParts[len - 1] ?? '');
-      await WebEngagePlugin.setUserEmail(baseUser.email ?? '');
-      await WebEngagePlugin.setUserBirthDate(baseUser.dob ?? '0');
-      await WebEngagePlugin.setUserGender(_getGender(baseUser.gender));
-      await WebEngagePlugin.setUserAttribute(
-        "Signed Up",
-        getSignupDate(baseUser.createdOn),
+      unawaited(WebEngagePlugin.userLogin(baseUser.uid!));
+      unawaited(WebEngagePlugin.setUserPhone(baseUser.mobile ?? ''));
+      if (len > 0) {
+        unawaited(WebEngagePlugin.setUserFirstName(nameParts[0]));
+      }
+      if (len > 1) {
+        unawaited(WebEngagePlugin.setUserLastName(nameParts[len - 1]));
+      }
+      unawaited(WebEngagePlugin.setUserEmail(baseUser.email ?? ''));
+      unawaited(WebEngagePlugin.setUserBirthDate(baseUser.dob ?? '0'));
+      unawaited(WebEngagePlugin.setUserGender(_getGender(baseUser.gender)));
+      unawaited(
+        WebEngagePlugin.setUserAttribute(
+          "Signed Up",
+          getSignupDate(baseUser.createdOn),
+        ),
       );
-      await WebEngagePlugin.setUserAttribute(
-        "KYC Verified",
-        baseUser.isSimpleKycVerified ?? false,
+      unawaited(
+        WebEngagePlugin.setUserAttribute(
+          "KYC Verified",
+          baseUser.isSimpleKycVerified ?? false,
+        ),
       );
       _logger.d("Analytics SERVICE :: User identify properties added.");
     }
