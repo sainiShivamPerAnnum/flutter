@@ -157,8 +157,8 @@ class _LiveCardWidgetState extends State<LiveCardWidget> {
             if (widget.status == 'live') {
               locator<AnalyticsService>().track(
                 eventName: widget.fromHome
-                    ? AnalyticsEvents.homeJoinCall
-                    : AnalyticsEvents.expertsJoinCall,
+                    ? AnalyticsEvents.homeWebinarJoin
+                    : AnalyticsEvents.liveWebinarJoin,
                 properties: {
                   "webinar ID": widget.id,
                 },

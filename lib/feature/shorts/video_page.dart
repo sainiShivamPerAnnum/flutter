@@ -180,7 +180,9 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                       curve: Curves.decelerate,
                       child: PageView.builder(
                         controller: pageController,
-                        itemCount: videos.length + 1,
+                        itemCount: state.currentContext == ReelContext.main
+                            ? videos.length + 1
+                            : videos.length,
                         physics: state.keyboardVisible || state.showComments
                             ? const NeverScrollableScrollPhysics()
                             : const BouncingScrollPhysics(),
@@ -188,7 +190,8 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                         onPageChanged: (index) {
                           BlocProvider.of<PreloadBloc>(context, listen: false)
                               .add(PreloadEvent.onVideoIndexChanged(index));
-                          if (pageController.page! > videos.length - 1) {
+                          if (pageController.page! > videos.length - 1 &&
+                              state.currentContext == ReelContext.main) {
                             BaseUtil.openModalBottomSheet(
                               isScrollControlled: true,
                               enableDrag: true,
