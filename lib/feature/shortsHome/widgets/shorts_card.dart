@@ -121,6 +121,7 @@ class ShortsCard extends StatelessWidget {
                 children: [
                   Positioned.fill(
                     child: Container(
+                      constraints: BoxConstraints(maxHeight: 130.h),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(

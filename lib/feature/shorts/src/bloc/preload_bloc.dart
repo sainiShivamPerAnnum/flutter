@@ -828,6 +828,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                     e.videoId,
                     video.isVideoLikedByUser,
                   );
+                  LocalActionsState.setVideoLiked(e.videoId, !liked);
                   unawaited(
                     repository.addLike(
                       liked,
@@ -853,6 +854,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                     e.videoId,
                     video.isVideoLikedByUser,
                   );
+                  LocalActionsState.setVideoLiked(e.videoId, !liked);
                   unawaited(
                     repository.addLike(
                       liked,
@@ -878,6 +880,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                     e.videoId,
                     video.isVideoLikedByUser,
                   );
+                  LocalActionsState.setVideoLiked(e.videoId, !liked);
                   unawaited(
                     repository.addLike(
                       liked,
