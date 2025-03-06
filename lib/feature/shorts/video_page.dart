@@ -293,11 +293,16 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                   },
                                   onShare: () async {
                                     FocusScope.of(context).unfocus();
-                                    if (state.isShareAlreadyClicked == false) {
-                                      BlocProvider.of<PreloadBloc>(
-                                        context,
-                                        listen: false,
-                                      ).add(
+                                    final preloadBloc =
+                                        BlocProvider.of<PreloadBloc>(
+                                      context,
+                                      listen: false,
+                                    );
+                                    if (!preloadBloc
+                                            .state.shareLinkInProgress &&
+                                        !preloadBloc
+                                            .state.isShareAlreadyClicked) {
+                                      preloadBloc.add(
                                         PreloadEvent.generateDynamicLink(
                                           videoId: videos[index].id,
                                         ),
@@ -338,11 +343,25 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                           AnalyticsEvents.shortsBookaCall,
                                       properties: {
                                         "shorts title": state
-                                            .mainVideos[state.focusedIndex]
-                                            .title,
-                                        "shorts category": state.categories[
-                                            state.currentCategoryIndex],
-                                        "shorts video list": state.theme,
+                                                    .currentVideos.isNotEmpty &&
+                                                state.focusedIndex <
+                                                    state.currentVideos.length
+                                            ? state
+                                                .currentVideos[
+                                                    state.focusedIndex]
+                                                .title
+                                            : 'Default Title',
+                                        "shorts category":
+                                            state.categories.isNotEmpty &&
+                                                    state.currentCategoryIndex <
+                                                        state.categories.length
+                                                ? state.categories[
+                                                    state.currentCategoryIndex]
+                                                : 'Default Category',
+                                        "shorts video list":
+                                            state.theme.isNotEmpty
+                                                ? state.theme
+                                                : 'Default Theme',
                                         "expert name": state
                                             .mainVideos[state.focusedIndex]
                                             .author,

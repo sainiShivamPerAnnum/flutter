@@ -100,61 +100,92 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         emit(state.copyWith(currentContext: ReelContext.main));
       },
       generateDynamicLink: (e) async {
-        if (state.shareLinkInProgress || state.isShareAlreadyClicked) {
+        if (state.shareLinkInProgress) {
           return;
         }
-        Haptic.vibrate();
-        String? url;
         emit(
           state.copyWith(
             shareLinkInProgress: true,
             isShareAlreadyClicked: true,
           ),
         );
-        if (await BaseUtil.showNoInternetAlert()) return;
-        if (state.link[e.videoId] != null) {
-          url = state.link[e.videoId];
-        } else {
-          final databyId = await repository.dynamicLink(id: e.videoId);
-          if (databyId.isSuccess()) {
-            url = databyId.model;
-            emit(
-              state
-                  .copyWith(link: {e.videoId.toString(): databyId.model ?? ''}),
-            );
-          }
-        }
-        emit(state.copyWith(shareLinkInProgress: false));
-        if (url == null) {
-          BaseUtil.showNegativeAlert(
-            'Generating link failed',
-            'Please try after some time',
+        Haptic.vibrate();
+        String? url;
+        if (await BaseUtil.showNoInternetAlert()) {
+          emit(
+            state.copyWith(
+              shareLinkInProgress: false,
+              isShareAlreadyClicked: false,
+            ),
           );
-          emit(state.copyWith(isShareAlreadyClicked: false));
-        } else {
-          if (state.currentContext == ReelContext.main) {
-            await Share.share(
-              "Hi,\nCheck out this quick finance tip from Fello: ${state.mainVideos[state.focusedIndex].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url",
-            );
-            emit(state.copyWith(isShareAlreadyClicked: false));
-          } else if (state.currentContext == ReelContext.profile) {
-            await Share.share(
-              "Hi,\nCheck out this quick finance tip from Fello: ${state.profileVideos[state.profileVideoIndex].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url",
-            );
-            emit(state.copyWith(isShareAlreadyClicked: false));
+          return;
+        }
+
+        try {
+          if (state.link[e.videoId] != null) {
+            url = state.link[e.videoId];
           } else {
-            await Share.share(
-              "Hi,\nCheck out this quick finance tip from Fello: ${state.liveVideo[0].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url",
-            );
-            emit(state.copyWith(isShareAlreadyClicked: false));
+            final databyId = await repository.dynamicLink(id: e.videoId);
+            if (databyId.isSuccess()) {
+              url = databyId.model;
+              emit(
+                state.copyWith(
+                  link: {e.videoId.toString(): databyId.model ?? ''},
+                ),
+              );
+            }
           }
+          if (url == null) {
+            BaseUtil.showNegativeAlert(
+              'Generating link failed',
+              'Please try after some time',
+            );
+            emit(
+              state.copyWith(
+                shareLinkInProgress: false,
+                isShareAlreadyClicked: false,
+              ),
+            );
+            return;
+          }
+          String shareMessage;
+          if (state.currentContext == ReelContext.main) {
+            shareMessage =
+                "Hi,\nCheck out this quick finance tip from Fello: ${state.mainVideos[state.focusedIndex].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url";
+          } else if (state.currentContext == ReelContext.profile) {
+            shareMessage =
+                "Hi,\nCheck out this quick finance tip from Fello: ${state.profileVideos[state.profileVideoIndex].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url";
+          } else {
+            shareMessage =
+                "Hi,\nCheck out this quick finance tip from Fello: ${state.liveVideo[0].description}\n👩‍💼 Connect with certified experts for more personalized advice.\n📽 Watch now: $url";
+          }
+          await Share.share(shareMessage);
           _analyticsService.track(
             eventName: AnalyticsEvents.shortsShared,
             properties: {
-              "shorts title": state.mainVideos[state.focusedIndex].title,
-              "shorts category": state.categories[state.currentCategoryIndex],
-              "shorts video list": state.theme,
+              "shorts title": state.currentVideos.isNotEmpty &&
+                      state.focusedIndex < state.currentVideos.length
+                  ? state.currentVideos[state.focusedIndex].title
+                  : 'Default Title',
+              "shorts category": state.categories.isNotEmpty &&
+                      state.currentCategoryIndex < state.categories.length
+                  ? state.categories[state.currentCategoryIndex]
+                  : 'Default Category',
+              "shorts video list":
+                  state.theme.isNotEmpty ? state.theme : 'Default Theme',
             },
+          );
+        } catch (error) {
+          BaseUtil.showNegativeAlert(
+            'Share failed',
+            'An unexpected error occurred',
+          );
+        } finally {
+          emit(
+            state.copyWith(
+              shareLinkInProgress: false,
+              isShareAlreadyClicked: false,
+            ),
           );
         }
       },
@@ -251,9 +282,16 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           eventName: AnalyticsEvents.shortsComments,
           properties: {
             "expert name": state.mainVideos[state.focusedIndex].author,
-            "shorts title": state.mainVideos[state.focusedIndex].title,
-            "shorts category": state.categories[state.currentCategoryIndex],
-            "shorts video list": state.theme,
+            "shorts title": state.currentVideos.isNotEmpty &&
+                    state.focusedIndex < state.currentVideos.length
+                ? state.currentVideos[state.focusedIndex].title
+                : 'Default Title',
+            "shorts category": state.categories.isNotEmpty &&
+                    state.currentCategoryIndex < state.categories.length
+                ? state.categories[state.currentCategoryIndex]
+                : 'Default Category',
+            "shorts video list":
+                state.theme.isNotEmpty ? state.theme : 'Default Theme',
           },
         );
       },
@@ -645,9 +683,16 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           eventName: AnalyticsEvents.shortsFollow,
           properties: {
             "expert name": state.mainVideos[state.focusedIndex].author,
-            "shorts title": state.mainVideos[state.focusedIndex].title,
-            "shorts category": state.categories[state.currentCategoryIndex],
-            "shorts video list": state.theme,
+            "shorts title": state.currentVideos.isNotEmpty &&
+                    state.focusedIndex < state.currentVideos.length
+                ? state.currentVideos[state.focusedIndex].title
+                : 'Default Title',
+            "shorts category": state.categories.isNotEmpty &&
+                    state.currentCategoryIndex < state.categories.length
+                ? state.categories[state.currentCategoryIndex]
+                : 'Default Category',
+            "shorts video list":
+                state.theme.isNotEmpty ? state.theme : 'Default Theme',
           },
         );
       },
@@ -756,9 +801,16 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         _analyticsService.track(
           eventName: AnalyticsEvents.shortsLiked,
           properties: {
-            "shorts title": state.mainVideos[state.focusedIndex].title,
-            "shorts category": state.categories[state.currentCategoryIndex],
-            "shorts video list": state.theme,
+            "shorts title": state.currentVideos.isNotEmpty &&
+                    state.focusedIndex < state.currentVideos.length
+                ? state.currentVideos[state.focusedIndex].title
+                : 'Default Title',
+            "shorts category": state.categories.isNotEmpty &&
+                    state.currentCategoryIndex < state.categories.length
+                ? state.categories[state.currentCategoryIndex]
+                : 'Default Category',
+            "shorts video list":
+                state.theme.isNotEmpty ? state.theme : 'Default Theme',
           },
         );
         final UserService userService = locator<UserService>();

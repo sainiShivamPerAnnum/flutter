@@ -122,11 +122,13 @@ class MoreOptionsSheet extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-                        if (state.isShareAlreadyClicked == false) {
-                          BlocProvider.of<PreloadBloc>(
-                            context,
-                            listen: false,
-                          ).add(
+                        final preloadBloc = BlocProvider.of<PreloadBloc>(
+                          context,
+                          listen: false,
+                        );
+                        if (!preloadBloc.state.shareLinkInProgress &&
+                            !preloadBloc.state.isShareAlreadyClicked) {
+                          preloadBloc.add(
                             PreloadEvent.generateDynamicLink(
                               videoId: id,
                             ),
