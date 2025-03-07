@@ -22,6 +22,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -156,228 +157,242 @@ class VideoWidgetState extends State<VideoWidget>
           widget.updateKeyboardState(value == KeyboardState.visible);
         },
       ),
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          Align(
-            alignment: AlignmentDirectional.topCenter,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 500),
-              height: widget.commentsVisibility ? .53.sh : 1.sh,
-              child: Center(
-                child: AspectRatio(
-                  aspectRatio: widget.controller.value.aspectRatio,
-                  child: FittedBox(
-                    fit: BoxFit.contain,
-                    child: SizedBox(
-                      width: widget.controller.value.size.width,
-                      height: widget.controller.value.size.height,
-                      child: VideoPlayer(widget.controller),
+      child: GestureDetector(
+        onTap: () {
+          if (widget.commentsVisibility) {
+            return widget.onCommentToggle();
+          } else {
+            BlocProvider.of<PreloadBloc>(
+              context,
+              listen: false,
+            ).add(
+              const PreloadEvent.toggleVolume(),
+            );
+          }
+        },
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Align(
+              alignment: AlignmentDirectional.topCenter,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 500),
+                height: widget.commentsVisibility ? .53.sh : 1.sh,
+                child: Center(
+                  child: AspectRatio(
+                    aspectRatio: widget.controller.value.aspectRatio,
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: SizedBox(
+                        width: widget.controller.value.size.width,
+                        height: widget.controller.value.size.height,
+                        child: VideoPlayer(widget.controller),
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-          if (!widget.commentsVisibility)
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      UiConstants.kTextColor4.withOpacity(.8),
-                      UiConstants.kTextColor4.withOpacity(0),
-                    ],
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.center,
+            if (!widget.commentsVisibility)
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        UiConstants.kTextColor4.withOpacity(.8),
+                        UiConstants.kTextColor4.withOpacity(0),
+                      ],
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.center,
+                    ),
                   ),
                 ),
               ),
-            ),
-          if (!widget.commentsVisibility)
-            Positioned(
-              bottom: 30.h,
-              left: 10.w,
-              child: Visibility(
-                visible: !widget.isKeyBoardOpen,
-                replacement: const SizedBox.shrink(),
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 200),
-                  opacity: widget.isKeyBoardOpen ? 0 : 1,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          if (widget.showUserName)
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 2.h,
-                              ),
-                              child: Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      locator<AnalyticsService>().track(
-                                        eventName:
-                                            AnalyticsEvents.shortsProfileClick,
-                                        properties: {
-                                          "expert name": widget.userName,
-                                        },
-                                      );
-                                      AppState.backButtonDispatcher!
-                                          .didPopRoute();
-                                      AppState.delegate!.appState
-                                          .currentAction = PageAction(
-                                        page: ExpertDetailsPageConfig,
-                                        state: PageState.addWidget,
-                                        widget: ExpertsDetailsView(
-                                          advisorID: widget.advisorId,
-                                        ),
-                                      );
-                                    },
-                                    child: Row(
-                                      children: [
-                                        CircleAvatar(
-                                          radius: SizeConfig.padding16,
-                                          backgroundImage: NetworkImage(
-                                            widget.expertProfileImage,
+            if (!widget.commentsVisibility)
+              Positioned(
+                bottom: 30.h,
+                left: 10.w,
+                child: Visibility(
+                  visible: !widget.isKeyBoardOpen,
+                  replacement: const SizedBox.shrink(),
+                  child: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 200),
+                    opacity: widget.isKeyBoardOpen ? 0 : 1,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            if (widget.showUserName)
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 2.h,
+                                ),
+                                child: Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        locator<AnalyticsService>().track(
+                                          eventName: AnalyticsEvents
+                                              .shortsProfileClick,
+                                          properties: {
+                                            "expert name": widget.userName,
+                                          },
+                                        );
+                                        AppState.backButtonDispatcher!
+                                            .didPopRoute();
+                                        AppState.delegate!.appState
+                                            .currentAction = PageAction(
+                                          page: ExpertDetailsPageConfig,
+                                          state: PageState.addWidget,
+                                          widget: ExpertsDetailsView(
+                                            advisorID: widget.advisorId,
+                                          ),
+                                        );
+                                      },
+                                      child: Row(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: SizeConfig.padding16,
+                                            backgroundImage: NetworkImage(
+                                              widget.expertProfileImage,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 8.w,
+                                          ),
+                                          Text(
+                                            widget.userName,
+                                            style: GoogleFonts.sourceSans3(
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white,
+                                              fontSize: 14.sp,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 12.w,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: widget.onFollow,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xffA2A0A2)
+                                              .withOpacity(.3),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(4.r),
+                                          ),
+                                          border: Border.all(
+                                            width: 1.h,
+                                            color: const Color(0xffA6A6AC)
+                                                .withOpacity(.2),
                                           ),
                                         ),
-                                        SizedBox(
-                                          width: 8.w,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 16.w,
+                                          vertical: 4.h,
                                         ),
-                                        Text(
-                                          widget.userName,
+                                        child: Text(
+                                          widget.isFollowed
+                                              ? 'Following'
+                                              : 'Follow',
                                           style: GoogleFonts.sourceSans3(
                                             fontWeight: FontWeight.w600,
                                             color: Colors.white,
-                                            fontSize: 14.sp,
+                                            fontSize: 12.sp,
                                           ),
                                         ),
-                                        SizedBox(
-                                          width: 12.w,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: widget.onFollow,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xffA2A0A2)
-                                            .withOpacity(.3),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(4.r),
-                                        ),
-                                        border: Border.all(
-                                          width: 1.h,
-                                          color: const Color(0xffA6A6AC)
-                                              .withOpacity(.2),
-                                        ),
-                                      ),
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 16.w,
-                                        vertical: 4.h,
-                                      ),
-                                      child: Text(
-                                        widget.isFollowed
-                                            ? 'Following'
-                                            : 'Follow',
-                                        style: GoogleFonts.sourceSans3(
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white,
-                                          fontSize: 12.sp,
-                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
+                            SizedBox(
+                              height: 8.h,
                             ),
-                          SizedBox(
-                            height: 8.h,
-                          ),
-                          ExpandableWidget(
-                            title: widget.videoTitle,
-                            leadingIcon: Icons.info,
-                            expandedText: widget.description,
-                            backgroundColor: Colors.black45,
-                            textColor: Colors.white,
-                            onExpansionChanged: _toggleExpansion,
-                          ),
-                        ],
-                      ),
-                      _buildIconColumn(
-                        widget.currentContext,
-                        widget.onShare,
-                        widget.onSaved,
-                        widget.onLike,
-                        widget.onBook,
-                        widget.onCommentToggle,
-                        widget.isSaved,
-                        widget.isLikedByUser,
-                        widget.commentsVisibility,
-                      ),
-                    ],
+                            ExpandableWidget(
+                              title: widget.videoTitle,
+                              leadingIcon: Icons.info,
+                              expandedText: widget.description,
+                              backgroundColor: Colors.black45,
+                              textColor: Colors.white,
+                              onExpansionChanged: _toggleExpansion,
+                            ),
+                          ],
+                        ),
+                        _buildIconColumn(
+                          widget.currentContext,
+                          widget.onShare,
+                          widget.onSaved,
+                          widget.onLike,
+                          widget.onBook,
+                          widget.onCommentToggle,
+                          widget.isSaved,
+                          widget.isLikedByUser,
+                          widget.commentsVisibility,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 200),
-            bottom: widget.isKeyBoardOpen
-                ? widget.currentContext != ReelContext.main
-                    ? MediaQuery.of(context).viewInsets.bottom
-                    : MediaQuery.of(context).viewInsets.bottom - 50.h
-                : 10.h,
-            child: SizedBox(
-              width: .95.sw,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  if (!widget.isKeyBoardOpen)
-                    ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(10.r)),
-                      child: VideoProgressIndicator(
-                        widget.controller,
-                        padding: EdgeInsets.zero,
-                        colors: const VideoProgressColors(
-                          playedColor: UiConstants.kTextColor,
-                          backgroundColor: Colors.grey,
-                        ),
-                        allowScrubbing: true,
-                      ),
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 200),
+              bottom: widget.isKeyBoardOpen
+                  ? widget.currentContext != ReelContext.main
+                      ? MediaQuery.of(context).viewInsets.bottom
+                      : MediaQuery.of(context).viewInsets.bottom - 50.h
+                  : 10.h,
+              child: SizedBox(
+                width: .95.sw,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: 10.h,
                     ),
-                ],
+                    if (!widget.isKeyBoardOpen)
+                      ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(10.r)),
+                        child: VideoProgressIndicator(
+                          widget.controller,
+                          padding: EdgeInsets.zero,
+                          colors: const VideoProgressColors(
+                            playedColor: UiConstants.kTextColor,
+                            backgroundColor: Colors.grey,
+                          ),
+                          allowScrubbing: true,
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
-          ),
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            height: widget.commentsVisibility ? .40.sh : 0,
-            transform: Matrix4.translationValues(
-              0,
-              widget.commentsVisibility ? 0 : 50,
-              0,
-            ),
-            decoration: BoxDecoration(
-              color: const Color(0xff232326),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20.r),
-                topRight: Radius.circular(20.r),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              height: widget.commentsVisibility ? .40.sh : 0,
+              transform: Matrix4.translationValues(
+                0,
+                widget.commentsVisibility ? 0 : 50,
+                0,
               ),
+              decoration: BoxDecoration(
+                color: const Color(0xff232326),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20.r),
+                  topRight: Radius.circular(20.r),
+                ),
+              ),
+              child: _buildComments(_scrollController, widget.onCommentToggle),
             ),
-            child: _buildComments(_scrollController, widget.onCommentToggle),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -565,7 +580,7 @@ class VideoWidgetState extends State<VideoWidget>
         if (widget.comments == null ||
             (widget.comments != null && widget.comments!.isEmpty))
           SizedBox(
-            height: 152.h,
+            height: 120.h,
             child: Center(
               child: Text(
                 'No comments yet',
