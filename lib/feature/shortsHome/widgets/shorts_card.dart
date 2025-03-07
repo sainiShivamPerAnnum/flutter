@@ -102,7 +102,10 @@ class ShortsCard extends StatelessWidget {
         );
       },
       child: Container(
-        width: 130.w,
+        // width: 130.w,
+        constraints: BoxConstraints(
+          maxWidth: 130.w,
+        ),
         decoration: BoxDecoration(
           color: UiConstants.greyVarient,
           borderRadius: BorderRadius.circular(
@@ -115,27 +118,29 @@ class ShortsCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AspectRatio(
-              aspectRatio: 9 / 16,
+            Expanded(
               child: Stack(
                 children: [
                   Positioned.fill(
-                    child: Container(
-                      constraints: BoxConstraints(maxHeight: 130.h),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(
-                            8.r,
+                    child: AspectRatio(
+                      aspectRatio: 9 / 16,
+                      child: Container(
+                        constraints: BoxConstraints(maxHeight: 130.h),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(
+                              8.r,
+                            ),
+                            topRight: Radius.circular(
+                              8.r,
+                            ),
                           ),
-                          topRight: Radius.circular(
-                            8.r,
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              videos[i].thumbnail,
+                            ),
+                            fit: BoxFit.cover,
                           ),
-                        ),
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            videos[i].thumbnail,
-                          ),
-                          fit: BoxFit.cover,
                         ),
                       ),
                     ),

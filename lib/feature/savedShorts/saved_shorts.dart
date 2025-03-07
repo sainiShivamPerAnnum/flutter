@@ -335,20 +335,29 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AspectRatio(
-              aspectRatio: 9 / 16,
+            Expanded(
               child: Stack(
                 children: [
                   Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(8.r),
-                          topRight: Radius.circular(8.r),
-                        ),
-                        image: DecorationImage(
-                          image: NetworkImage(video.thumbnail),
-                          fit: BoxFit.cover,
+                    child: AspectRatio(
+                      aspectRatio: 9 / 16,
+                      child: Container(
+                        constraints: BoxConstraints(maxHeight: 130.h),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(
+                              8.r,
+                            ),
+                            topRight: Radius.circular(
+                              8.r,
+                            ),
+                          ),
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              theme.videos[index].thumbnail,
+                            ),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
@@ -382,7 +391,7 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
                   Text(
                     video.title,
                     style: TextStyles.sourceSansM.body4,
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 12.h),

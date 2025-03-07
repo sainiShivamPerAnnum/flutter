@@ -7,8 +7,7 @@ class ExpandableWidget extends StatefulWidget {
   final String expandedText;
   final Color backgroundColor;
   final Color textColor;
-  final void Function()
-      onExpansionChanged; // Callback to notify about the expansion state change
+  final void Function() onExpansionChanged;
 
   const ExpandableWidget({
     required this.title,
@@ -27,68 +26,71 @@ class ExpandableWidget extends StatefulWidget {
 class ExpandableWidgetState extends State<ExpandableWidget> {
   bool _isExpanded = false;
 
-  void _toggleExpanded() {
-    setState(() {
-      _isExpanded = !_isExpanded;
-    });
-    widget.onExpansionChanged.call();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _toggleExpanded,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        width: 0.75.sw,
-        padding: EdgeInsets.symmetric(horizontal: 10.w),
-        height: _isExpanded ? 120.h : 36.h,
-        decoration: BoxDecoration(
-          color: widget.backgroundColor,
-          borderRadius: BorderRadius.circular(4.r),
+    return Container(
+      width: 0.75.sw,
+      decoration: BoxDecoration(
+        color: widget.backgroundColor,
+        borderRadius: BorderRadius.circular(4.r),
+      ),
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          dividerColor: Colors.transparent,
+          colorScheme: ColorScheme.dark(
+            primary: widget.textColor,
+          ),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  widget.leadingIcon,
-                  color: widget.textColor,
-                  size: 12.sp,
-                ),
-                SizedBox(width: 8.w),
-                Expanded(
-                  child: Text(
-                    widget.title,
-                    style: TextStyle(color: widget.textColor, fontSize: 12.sp),
-                    maxLines: 1,
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    _isExpanded ? Icons.expand_less : Icons.expand_more,
-                    color: widget.textColor,
-                    size: 16.sp,
-                  ),
-                  onPressed: _toggleExpanded,
-                ),
-              ],
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(4.r),
+          child: ExpansionTile(
+            initiallyExpanded: _isExpanded,
+            onExpansionChanged: (expanded) {
+              setState(() {
+                _isExpanded = expanded;
+              });
+              widget.onExpansionChanged.call();
+            },
+            tilePadding: EdgeInsets.symmetric(
+              horizontal: 10.w,
+              vertical: 0,
             ),
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
+            expandedCrossAxisAlignment: CrossAxisAlignment.start,
+            collapsedIconColor: widget.textColor,
+            iconColor: widget.textColor,
+            maintainState: true,
+            visualDensity: const VisualDensity(
+              horizontal: 0,
+              vertical: -4,
+            ),
+            leading: Icon(
+              widget.leadingIcon,
+              color: widget.textColor,
+              size: 12.sp,
+            ),
+            title: Text(
+              widget.title,
+              style: TextStyle(
+                color: widget.textColor,
+                fontSize: 12.sp,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
                 child: Text(
                   widget.expandedText,
-                  style: TextStyle(color: widget.textColor),
+                  style: TextStyle(
+                    color: widget.textColor,
+                    fontSize: 12.sp,
+                  ),
                   textAlign: TextAlign.start,
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
