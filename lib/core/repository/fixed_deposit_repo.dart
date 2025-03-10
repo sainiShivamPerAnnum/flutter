@@ -15,7 +15,7 @@ class FdRepository extends BaseRepo {
   final CustomLogger _logger = locator<CustomLogger>();
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://advisors.fello-dev.net'
-      : 'https://advisors.fello-prod.net/';
+      : 'https://advisors.fello-prod.net';
   static const _fd = 'fd';
 
   Future<ApiResponse<List<AllFdsData>>> getAllFdsData() async {
