@@ -4,6 +4,8 @@ import 'package:felloapp/ui/pages/onboarding/onboarding_main/onboarding_main_vm.
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class OnBoardingView extends StatefulWidget {
   const OnBoardingView({Key? key}) : super(key: key);
@@ -65,17 +67,17 @@ class _OnBoardingViewState extends State<OnBoardingView>
                   children: [
                     Padding(
                       padding: EdgeInsets.symmetric(
-                        vertical: SizeConfig.padding70,
-                      ),
+                        vertical: 40.h,
+                      ).copyWith(top: 60.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(
                           3,
                           (index) {
                             return Container(
-                              width: SizeConfig.padding22,
-                              height: SizeConfig.padding2,
-                              margin: const EdgeInsets.symmetric(horizontal: 3),
+                              width: 22.w,
+                              height: 2.h,
+                              margin: EdgeInsets.symmetric(horizontal: 3.w),
                               decoration: BoxDecoration(
                                 color: index <= model.indicatorPosition
                                     ? Colors.white
@@ -131,36 +133,41 @@ class _OnBoardingViewState extends State<OnBoardingView>
                                 child: Column(
                                   children: [
                                     SizedBox(
-                                      width: SizeConfig.padding325,
+                                      width: 325.w,
                                       child: Text(
                                         model.onboardingData![__].first,
-                                        style: TextStyles.sourceSansB.title3,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: SizeConfig.padding14,
-                                    ),
-                                    SizedBox(
-                                      width: SizeConfig.padding325,
-                                      child: Text(
-                                        model.onboardingData![__][1],
-                                        style:
-                                            TextStyles.sourceSans.body2.colour(
-                                          UiConstants.kTextColor5,
+                                        style: GoogleFonts.sourceSans3(
+                                          fontSize: 26.sp,
+                                          fontWeight: FontWeight.w700,
+                                          color: UiConstants.kTextColor,
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
                                     SizedBox(
-                                      height: SizeConfig.padding35,
+                                      height: 14.h,
                                     ),
                                     SizedBox(
-                                      width: SizeConfig.padding300,
-                                      height: SizeConfig.padding300,
+                                      width: 325.w,
+                                      child: Text(
+                                        model.onboardingData![__][1],
+                                        style: GoogleFonts.sourceSans3(
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: UiConstants.kTextColor5,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 35.h,
+                                    ),
+                                    SizedBox(
+                                      width: 300.w,
+                                      height: 300.h,
                                       child: AppImage(
                                         model.onboardingData![__][2],
-                                        fit: BoxFit.fill,
+                                        fit: BoxFit.contain,
                                       ),
                                     ),
                                   ],
@@ -181,7 +188,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
                       ],
                     ),
                     SizedBox(
-                      height: SizeConfig.padding40,
+                      height: 30.h,
                     ),
                   ],
                 ),
@@ -207,10 +214,10 @@ class _SignUpCTA extends StatelessWidget {
     return ElevatedButton(
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
-        minimumSize: Size(SizeConfig.padding325, SizeConfig.padding48),
+        minimumSize: Size(325.w, 48.h),
         backgroundColor: UiConstants.kTextColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+          borderRadius: BorderRadius.circular(8.r),
         ),
       ),
       child: Text(

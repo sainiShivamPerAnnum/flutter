@@ -351,9 +351,11 @@ class GoldProFaqs extends StatelessWidget {
                                 left: SizeConfig.pageHorizontalMargins,
                                 bottom: SizeConfig.padding20,
                               ),
-                              child: Text(model.faqHeaders[index] ?? "",
-                                  style: TextStyles.sourceSans.body2
-                                      .colour(Colors.white)),
+                              child: Text(
+                                model.faqHeaders[index] ?? "",
+                                style: TextStyles.sourceSans.body2
+                                    .colour(Colors.white),
+                              ),
                             ),
                             isExpanded: model.detStatus[index],
                             body: Container(
