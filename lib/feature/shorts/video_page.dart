@@ -30,156 +30,148 @@ class ShortsVideoPage extends StatefulWidget {
 class _ShortsVideoPageState extends State<ShortsVideoPage> {
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(360, 690),
-      minTextAdapt: true,
-      splitScreenMode: false,
-      builder: (_, child) {
-        return BlocListener<PreloadBloc, PreloadState>(
-          listenWhen: (previous, current) =>
-              previous.currentContext != current.currentContext &&
-              current.currentContext == ReelContext.main,
-          listener: (context, state) {
-            final mainPageController = state.mainPageController;
-            final focusedIndex = state.focusedIndex;
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              mainPageController.jumpToPage(focusedIndex);
-            });
-          },
-          child: BlocBuilder<PreloadBloc, PreloadState>(
-            builder: (context, state) {
-              final List<VideoData> videos =
-                  BlocProvider.of<PreloadBloc>(context).currentVideos;
-              final Map<int, VideoPlayerController> activeControllers =
-                  state.currentContext == ReelContext.liveStream
-                      ? {
-                          0: state.liveStreamController!,
-                        }
-                      : state.currentContext == ReelContext.main
-                          ? state.controllers
-                          : state.profileControllers;
-              final PageController pageController =
-                  state.currentContext == ReelContext.liveStream
-                      ? state.livePageController!
-                      : state.currentContext == ReelContext.main
-                          ? state.mainPageController
-                          : state.profilePageController;
-              if (state.errorMessage != null) {
-                return NewErrorPage(
-                  onTryAgain: () {
-                    BlocProvider.of<PreloadBloc>(
-                      context,
-                      listen: false,
-                    ).add(
-                      const PreloadEvent.getVideosFromApi(),
-                    );
-                  },
-                );
-              }
-              return PageView.builder(
-                controller: pageController,
-                itemCount: videos.length,
-                physics: state.keyboardVisible
-                    ? const NeverScrollableScrollPhysics()
-                    : const AlwaysScrollableScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                onPageChanged: (index) {
-                  BlocProvider.of<PreloadBloc>(context, listen: false)
-                      .add(PreloadEvent.onVideoIndexChanged(index));
-                },
-                itemBuilder: (context, index) {
-                  final bool isLoading =
-                      state.isLoading && index == videos.length - 1;
-                  return activeControllers[index] == null
-                      ? const FullScreenLoader()
-                      : VideoWidget(
-                          isLoading: isLoading,
-                          controller: activeControllers[index]!,
-                          userName: videos[index].author,
-                          videoTitle: videos[index].title,
-                          description: videos[index].description,
-                          advisorId: videos[index].advisorId,
-                          isKeyBoardOpen: state.keyboardVisible,
-                          commentsVisibility: state.showComments,
-                          currentContext: state.currentContext,
-                          onCommentToggle: () {
-                            FocusScope.of(context).unfocus();
-                            BlocProvider.of<PreloadBloc>(
-                              context,
-                              listen: false,
-                            ).add(
-                              const PreloadEvent.toggleComments(),
-                            );
-                          },
-                          updateKeyboardState: (isKeyBoardOpen) {
-                            BlocProvider.of<PreloadBloc>(
-                              context,
-                              listen: false,
-                            ).add(
-                              PreloadEvent.updateKeyboardState(
-                                state: isKeyBoardOpen,
-                              ),
-                            );
-                          },
-                          onShare: () async {
-                            FocusScope.of(context).unfocus();
-                            if (state.isShareAlreadyClicked == false) {
-                              BlocProvider.of<PreloadBloc>(
-                                context,
-                                listen: false,
-                              ).add(
-                                PreloadEvent.generateDynamicLink(
-                                  videoId: videos[index].id,
-                                ),
-                              );
-                            }
-                          },
-                          onLike: () {
-                            FocusScope.of(context).unfocus();
-                            BlocProvider.of<PreloadBloc>(
-                              context,
-                              listen: false,
-                            ).add(
-                              PreloadEvent.likeVideo(
-                                videoId: videos[index].id,
-                              ),
-                            );
-                          },
-                          onCommented: (comment) {
-                            BlocProvider.of<PreloadBloc>(
-                              context,
-                              listen: false,
-                            ).add(
-                              PreloadEvent.addComment(
-                                videoId: videos[index].id,
-                                comment: comment,
-                              ),
-                            );
-                          },
-                          onBook: () {
-                            FocusScope.of(context).unfocus();
-                            BaseUtil.openBookAdvisorSheet(
-                              advisorId: videos[index].advisorId,
-                              advisorName: videos[index].author,
-                              isEdit: false,
-                            );
-                          },
-                          showUserName: videos[index].author != "",
-                          showVideoTitle: true,
-                          showShareButton: true,
-                          showLikeButton: true,
-                          showBookButton: videos[index].advisorId != "",
-                          comments: state
-                              .videoComments[videos[index].id]?.reversed
-                              .toList(),
-                          isLikedByUser: videos[index].isVideoLikedByUser,
-                        );
-                },
-              );
-            },
-          ),
-        );
+    return BlocListener<PreloadBloc, PreloadState>(
+      listenWhen: (previous, current) =>
+          previous.currentContext != current.currentContext &&
+          current.currentContext == ReelContext.main,
+      listener: (context, state) {
+        final mainPageController = state.mainPageController;
+        final focusedIndex = state.focusedIndex;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          mainPageController.jumpToPage(focusedIndex);
+        });
       },
+      child: BlocBuilder<PreloadBloc, PreloadState>(
+        builder: (context, state) {
+          final List<VideoData> videos =
+              BlocProvider.of<PreloadBloc>(context).currentVideos;
+          final Map<int, VideoPlayerController> activeControllers =
+              state.currentContext == ReelContext.liveStream
+                  ? {
+                      0: state.liveStreamController!,
+                    }
+                  : state.currentContext == ReelContext.main
+                      ? state.controllers
+                      : state.profileControllers;
+          final PageController pageController =
+              state.currentContext == ReelContext.liveStream
+                  ? state.livePageController!
+                  : state.currentContext == ReelContext.main
+                      ? state.mainPageController
+                      : state.profilePageController;
+          if (state.errorMessage != null) {
+            return NewErrorPage(
+              onTryAgain: () {
+                BlocProvider.of<PreloadBloc>(
+                  context,
+                  listen: false,
+                ).add(
+                  const PreloadEvent.getVideosFromApi(),
+                );
+              },
+            );
+          }
+          return PageView.builder(
+            controller: pageController,
+            itemCount: videos.length,
+            physics: state.keyboardVisible
+                ? const NeverScrollableScrollPhysics()
+                : const AlwaysScrollableScrollPhysics(),
+            scrollDirection: Axis.vertical,
+            onPageChanged: (index) {
+              BlocProvider.of<PreloadBloc>(context, listen: false)
+                  .add(PreloadEvent.onVideoIndexChanged(index));
+            },
+            itemBuilder: (context, index) {
+              final bool isLoading =
+                  state.isLoading && index == videos.length - 1;
+              return activeControllers[index] == null
+                  ? const FullScreenLoader()
+                  : VideoWidget(
+                      isLoading: isLoading,
+                      controller: activeControllers[index]!,
+                      userName: videos[index].author,
+                      videoTitle: videos[index].title,
+                      description: videos[index].description,
+                      advisorId: videos[index].advisorId,
+                      isKeyBoardOpen: state.keyboardVisible,
+                      commentsVisibility: state.showComments,
+                      currentContext: state.currentContext,
+                      onCommentToggle: () {
+                        FocusScope.of(context).unfocus();
+                        BlocProvider.of<PreloadBloc>(
+                          context,
+                          listen: false,
+                        ).add(
+                          const PreloadEvent.toggleComments(),
+                        );
+                      },
+                      updateKeyboardState: (isKeyBoardOpen) {
+                        BlocProvider.of<PreloadBloc>(
+                          context,
+                          listen: false,
+                        ).add(
+                          PreloadEvent.updateKeyboardState(
+                            state: isKeyBoardOpen,
+                          ),
+                        );
+                      },
+                      onShare: () async {
+                        FocusScope.of(context).unfocus();
+                        if (state.isShareAlreadyClicked == false) {
+                          BlocProvider.of<PreloadBloc>(
+                            context,
+                            listen: false,
+                          ).add(
+                            PreloadEvent.generateDynamicLink(
+                              videoId: videos[index].id,
+                            ),
+                          );
+                        }
+                      },
+                      onLike: () {
+                        FocusScope.of(context).unfocus();
+                        BlocProvider.of<PreloadBloc>(
+                          context,
+                          listen: false,
+                        ).add(
+                          PreloadEvent.likeVideo(
+                            videoId: videos[index].id,
+                          ),
+                        );
+                      },
+                      onCommented: (comment) {
+                        BlocProvider.of<PreloadBloc>(
+                          context,
+                          listen: false,
+                        ).add(
+                          PreloadEvent.addComment(
+                            videoId: videos[index].id,
+                            comment: comment,
+                          ),
+                        );
+                      },
+                      onBook: () {
+                        FocusScope.of(context).unfocus();
+                        BaseUtil.openBookAdvisorSheet(
+                          advisorId: videos[index].advisorId,
+                          advisorName: videos[index].author,
+                          isEdit: false,
+                        );
+                      },
+                      showUserName: videos[index].author != "",
+                      showVideoTitle: true,
+                      showShareButton: true,
+                      showLikeButton: true,
+                      showBookButton: videos[index].advisorId != "",
+                      comments: state.videoComments[videos[index].id]?.reversed
+                          .toList(),
+                      isLikedByUser: videos[index].isVideoLikedByUser,
+                    );
+            },
+          );
+        },
+      ),
     );
   }
 }

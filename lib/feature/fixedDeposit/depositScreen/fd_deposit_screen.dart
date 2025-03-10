@@ -402,7 +402,7 @@ class __FDDepositViewState extends State<_FDDepositView> {
                                 padding: EdgeInsets.all(SizeConfig.padding8),
                                 child: Center(
                                   child: Text(
-                                    value.returns,
+                                    value.returns ?? '',
                                     style: TextStyles.sourceSans.body4,
                                   ),
                                 ),

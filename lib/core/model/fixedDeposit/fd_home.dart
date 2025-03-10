@@ -142,7 +142,7 @@ class LockInTenure {
 class FrequencyValue {
   final String label;
   final int months;
-  final String returns;
+  final String? returns;
   final String? seniorReturns;
 
   FrequencyValue({

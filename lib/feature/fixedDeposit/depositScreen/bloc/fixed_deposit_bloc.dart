@@ -15,6 +15,7 @@ class FDCalculatorBloc
     this._fdRepository,
   ) : super(const LoadingFdCalculator()) {
     on<UpdateFDVariables>(_onUpdateFDVariables);
+    on<OnProceed>(_onProceed);
   }
 
   FutureOr<void> _onUpdateFDVariables(
@@ -89,5 +90,29 @@ class FDCalculatorBloc
     //     emitter(FCalculatorError(e.toString()));
     //   }
     // });
+  }
+
+  FutureOr<void> _onProceed(
+    OnProceed event,
+    Emitter<FixedDepositCalculatorState> emitter,
+  ) async {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {});
+    await Future.delayed(const Duration(milliseconds: 300));
+    try {
+      emitter(const LoadingFdCalculator());
+      final response = await _fdRepository.getRedirectionUrl();
+
+      if (response.isSuccess() && response.model != null) {
+      } else {
+        emitter(
+          FCalculatorError(
+            response.errorMessage ?? 'Unknown error occurred',
+          ),
+        );
+      }
+    } catch (e) {
+      emitter(FCalculatorError(e.toString()));
+    }
   }
 }

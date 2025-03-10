@@ -77,6 +77,6 @@ FrequencyValue _$FrequencyValueFromJson(Map<String, dynamic> json) =>
     FrequencyValue(
       label: json['label'] as String,
       months: json['months'] as int,
-      returns: json['returns'] as String,
+      returns: json['returns'] as String?,
       seniorReturns: json['seniorReturns'] as String?,
     );

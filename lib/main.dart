@@ -28,6 +28,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -104,23 +105,28 @@ class MyApp extends HookWidget {
         ],
         child: PropertyChangeProvider<UserService, UserServiceProperties>(
           value: locator<UserService>(),
-          child: MaterialApp.router(
-            title: Constants.APP_NAME,
-            builder: (context, child) {
-              return child!;
-            },
-            theme: FelloTheme.darkMode(),
-            debugShowCheckedModeBanner: false,
-            backButtonDispatcher: backButtonDispatcher,
-            routerDelegate: delegate,
-            routeInformationParser: parser,
-            localizationsDelegates: const [
-              S.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: S.delegate.supportedLocales,
+          child: ScreenUtilInit(
+            designSize: const Size(390, 844),
+            minTextAdapt: true,
+            splitScreenMode: false,
+            child: MaterialApp.router(
+              title: Constants.APP_NAME,
+              builder: (context, child) {
+                return child!;
+              },
+              theme: FelloTheme.darkMode(),
+              debugShowCheckedModeBanner: false,
+              backButtonDispatcher: backButtonDispatcher,
+              routerDelegate: delegate,
+              routeInformationParser: parser,
+              localizationsDelegates: const [
+                S.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: S.delegate.supportedLocales,
+            ),
           ),
         ),
       ),

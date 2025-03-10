@@ -267,4 +267,5 @@ class ApiPath {
   static const String fdHome = "/fd/templates";
   static const String myFds = "/fd/portfolio";
   static const String fdCalculation = "/fd/calculate";
+  static const String fdRedirection = "/fd/redirection";
 }

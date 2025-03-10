@@ -1,10 +1,12 @@
+import 'package:felloapp/core/model/fixedDeposit/my_fds.dart';
 import 'package:felloapp/feature/fixedDeposit/myDeposits/bloc/fixed_deposit_bloc.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MyDepositsSection extends StatelessWidget {
   const MyDepositsSection({
@@ -50,22 +52,31 @@ class _InvestmentDetails extends StatelessWidget {
                       context,
                     ),
                   ),
+                  // Add the Summary Card at the top
+                  SliverToBoxAdapter(
+                    child: SummaryCard(summary: state.fdData.summary),
+                  ),
                   SliverToBoxAdapter(
                     child: SizedBox(
-                      height: SizeConfig.padding20,
+                      height: 20.h, // Use ScreenUtil for height
                     ),
                   ),
-                  SliverList(delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final fdData = state.fdData;
-                      _buildInvestmentSection('Current', {
-                        'current': '51,567.54',
-                        'avgXirr': '9.2% p.a.',
-                        'invested': '50,000',
-                        'tenure': '6 months',
-                      });
-                    },
-                  ))
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final fdData = state.fdData;
+                        final portfolio = fdData.portfolio[index];
+
+                        return _buildInvestmentSection(portfolio.issuer, {
+                          'current': portfolio.currentAmount,
+                          'avgXirr': portfolio.roi,
+                          'invested': portfolio.investedAmount,
+                          'tenure': portfolio.tenure,
+                        });
+                      },
+                      childCount: state.fdData.portfolio.length,
+                    ),
+                  ),
                 ],
               )
           };
@@ -75,39 +86,235 @@ class _InvestmentDetails extends StatelessWidget {
   }
 
   Widget _buildInvestmentSection(String title, Map<String, dynamic> data) {
-    return Card(
-      margin: EdgeInsets.all(8.0),
+    return Container(
+      margin:
+          EdgeInsets.symmetric(horizontal: 20.w), // Use ScreenUtil for width
+
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        color: UiConstants.greyVarient,
+      ),
       child: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            SizedBox(height: 8),
-            _buildDetailRow('Current', data['current']),
-            _buildDetailRow('Avg. XIRR', data['avgXirr']),
-            _buildDetailRow('Invested', data['invested']),
-            if (data.containsKey('netReturns'))
-              _buildDetailRow('Net returns', data['netReturns']),
-            if (data.containsKey('tenure'))
-              _buildDetailRow('Tenure', data['tenure']),
+            // Title with arrow on the right
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 18.sp, // Use ScreenUtil for font size
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Icon(Icons.arrow_forward_ios,
+                    size: 18.sp), // Use ScreenUtil for icon size
+              ],
+            ),
+            SizedBox(height: 16.h), // Use ScreenUtil for height
+
+            // Current amount and Avg. XIRR on the same row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      'Current',
+                      style: TextStyle(
+                          fontSize: 16.sp), // Use ScreenUtil for font size
+                    ),
+                    Text(
+                      '₹${data['current']}',
+                      style: TextStyle(
+                        fontSize: 16.sp, // Use ScreenUtil for font size
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      'Avg. XIRR',
+                      style: TextStyle(
+                          fontSize: 16.sp), // Use ScreenUtil for font size
+                    ),
+                    Text(
+                      '${data['avgXirr']}% p.a.',
+                      style: TextStyle(
+                        fontSize: 16.sp, // Use ScreenUtil for font size
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+
+            SizedBox(height: 16.h), // Use ScreenUtil for height
+
+            // Invested amount and Tenure on the same row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      'Invested',
+                      style: TextStyle(
+                          fontSize: 16.sp), // Use ScreenUtil for font size
+                    ),
+                    Text(
+                      '₹${data['invested']}',
+                      style: TextStyle(
+                        fontSize: 16.sp, // Use ScreenUtil for font size
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      'Tenure',
+                      style: TextStyle(
+                          fontSize: 16.sp), // Use ScreenUtil for font size
+                    ),
+                    Text(
+                      '${data['tenure']} months',
+                      style: TextStyle(
+                        fontSize: 16.sp, // Use ScreenUtil for font size
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
+}
 
-  Widget _buildDetailRow(String label, dynamic value) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: TextStyle(fontSize: 16)),
-          Text(value.toString(),
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        ],
+class SummaryCard extends StatelessWidget {
+  final SummaryModel summary;
+
+  const SummaryCard({super.key, required this.summary});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin:
+          EdgeInsets.symmetric(horizontal: 20.w), // Use ScreenUtil for width
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        color: UiConstants.greyVarient,
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Title for the summary card
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Summary',
+                  style: TextStyle(
+                    fontSize: 18.sp, // Use ScreenUtil for font size
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 16.h), // Use ScreenUtil for height
+
+            // Display the summary details in rows and columns
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      'Total Invested',
+                      style: TextStyle(
+                          fontSize: 16.sp), // Use ScreenUtil for font size
+                    ),
+                    Text(
+                      '₹${summary.totalInvestedAmount}',
+                      style: TextStyle(
+                        fontSize: 16.sp, // Use ScreenUtil for font size
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      'Total Current',
+                      style: TextStyle(
+                          fontSize: 16.sp), // Use ScreenUtil for font size
+                    ),
+                    Text(
+                      '₹${summary.totalCurrentAmount}',
+                      style: TextStyle(
+                        fontSize: 16.sp, // Use ScreenUtil for font size
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+            SizedBox(height: 16.h), // Use ScreenUtil for height
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      'Total Returns',
+                      style: TextStyle(
+                          fontSize: 16.sp), // Use ScreenUtil for font size
+                    ),
+                    Text(
+                      '₹${summary.totalReturns}',
+                      style: TextStyle(
+                        fontSize: 16.sp, // Use ScreenUtil for font size
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      'Avg. XIRR',
+                      style: TextStyle(
+                          fontSize: 16.sp), // Use ScreenUtil for font size
+                    ),
+                    Text(
+                      '${summary.averageXIRR}% p.a.',
+                      style: TextStyle(
+                        fontSize: 16.sp, // Use ScreenUtil for font size
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
