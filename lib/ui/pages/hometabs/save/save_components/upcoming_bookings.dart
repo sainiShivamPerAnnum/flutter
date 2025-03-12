@@ -53,8 +53,12 @@ class UpcomingBookingsComponentState extends State<UpcomingBookingsComponent> {
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const TitleSubtitleContainer(
-                      title: "Your upcoming calls",
+                    Padding(
+                      padding: EdgeInsets.only(left: 20.w),
+                      child: Text(
+                        "Your upcoming calls",
+                        style: TextStyles.sourceSansSB.body2,
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 20.w, top: 24.h),
@@ -90,8 +94,12 @@ class UpcomingBookingsComponentState extends State<UpcomingBookingsComponent> {
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const TitleSubtitleContainer(
-                      title: "You might be interested in",
+                    Padding(
+                      padding: EdgeInsets.only(left: 20.w),
+                      child: Text(
+                        "You might be interested in",
+                        style: TextStyles.sourceSansSB.body2,
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 20.w, top: 24.h),

@@ -101,12 +101,14 @@ class FundBreakdownDialog extends StatelessWidget {
                   const Divider(
                     color: Colors.grey,
                   ),
-                  BreakdownInfoTile(
-                    title: "Returns in Fello Flo",
-                    value: BaseUtil.formatIndianRupees(num.parse(
-                        BaseUtil.digitPrecision(portfolio.flo.absGain, 2, false)
-                            .toString())),
-                  ),
+                  if (portfolio.flo.balance != 0)
+                    BreakdownInfoTile(
+                      title: "Returns in Fello Flo",
+                      value: BaseUtil.formatIndianRupees(num.parse(
+                          BaseUtil.digitPrecision(
+                                  portfolio.flo.absGain, 2, false)
+                              .toString())),
+                    ),
                   BreakdownInfoTile(
                     title: "Returns in Digital Gold",
                     value: BaseUtil.formatIndianRupees(num.parse(

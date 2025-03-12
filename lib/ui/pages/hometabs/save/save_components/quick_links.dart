@@ -4,10 +4,10 @@ import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/quick_links_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -33,12 +33,16 @@ class QuickLinks extends StatelessWidget {
       padding: EdgeInsets.only(top: 20.h, bottom: 24.h),
       child: Column(
         children: [
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              TitleSubtitleContainer(
-                title: "In-house investment options",
+              Padding(
+                padding: EdgeInsets.only(left: 20.w),
+                child: Text(
+                  "In-house investment options",
+                  style: TextStyles.sourceSansSB.body2,
+                ),
               ),
             ],
           ),
@@ -55,9 +59,11 @@ class QuickLinks extends StatelessWidget {
                 quickLinks.length,
                 (index) => GestureDetector(
                   onTap: () {
-                    Haptic.vibrate();
-                    AppState.delegate!
-                        .parseRoute(Uri.parse(quickLinks[index].deeplink));
+                    if (quickLinks[index].deeplink != '') {
+                      Haptic.vibrate();
+                      AppState.delegate!
+                          .parseRoute(Uri.parse(quickLinks[index].deeplink));
+                    }
                     locator<AnalyticsService>().track(
                       eventName: AnalyticsEvents.iconTrayTapped,
                       properties: {'icon': quickLinks[index].name},

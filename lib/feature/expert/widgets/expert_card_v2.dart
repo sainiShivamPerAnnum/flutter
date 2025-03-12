@@ -12,6 +12,7 @@ import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -404,6 +405,7 @@ Widget introVideosIndicator(
       watchedColor: Colors.grey.withOpacity(0.5),
       unwatchedColor: Theme.of(context).primaryColor,
       strokeWidth: 2.5,
+      watchedStatuses: introVideos.map((video) => video.isSaved).toList(),
     ),
   );
 }
@@ -413,12 +415,14 @@ class StoryIndicatorPainter extends CustomPainter {
   final Color watchedColor;
   final Color unwatchedColor;
   final double strokeWidth;
+  final List<bool> watchedStatuses;
 
   StoryIndicatorPainter({
     required this.storyCount,
     required this.watchedColor,
     required this.unwatchedColor,
     required this.strokeWidth,
+    required this.watchedStatuses,
   });
 
   @override
@@ -432,40 +436,41 @@ class StoryIndicatorPainter extends CustomPainter {
     final radius = (size.width / 2) - (strokeWidth / 2);
 
     if (storyCount == 1) {
-      paint.color = unwatchedColor;
+      paint.color = watchedStatuses[0] ? watchedColor : unwatchedColor;
       canvas.drawCircle(center, radius, paint);
     } else {
       const double gapInRadians = 0.25;
       final double totalGapSpace = gapInRadians * storyCount;
       final double availableAngle = (2 * pi) - totalGapSpace;
       final double sweepAngle = availableAngle / storyCount;
+      double currentAngle = 0;
+
       for (int i = 0; i < storyCount; i++) {
-        double segmentCenterAngle;
-
-        if (storyCount == 2) {
-          segmentCenterAngle = i * pi;
-        } else {
-          segmentCenterAngle = -pi / 2 + (i * (2 * pi / storyCount));
-        }
-
-        double startAngle =
-            segmentCenterAngle - (sweepAngle / 2) - (gapInRadians / 16);
-
-        paint.color = unwatchedColor;
+        paint.color = watchedStatuses[i] ? watchedColor : unwatchedColor;
 
         canvas.drawArc(
           Rect.fromCircle(center: center, radius: radius),
-          startAngle,
+          currentAngle,
           sweepAngle,
           false,
           paint,
         );
+        currentAngle += sweepAngle + gapInRadians;
       }
     }
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    if (oldDelegate is StoryIndicatorPainter) {
+      return oldDelegate.storyCount != storyCount ||
+          oldDelegate.watchedColor != watchedColor ||
+          oldDelegate.unwatchedColor != unwatchedColor ||
+          oldDelegate.strokeWidth != strokeWidth ||
+          !listEquals(oldDelegate.watchedStatuses, watchedStatuses);
+    }
+    return true;
+  }
 }
 
 class ExpertTagsComponent extends StatelessWidget {

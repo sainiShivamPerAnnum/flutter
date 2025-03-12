@@ -7,7 +7,6 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/top_experts.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/locator.dart';
@@ -45,12 +44,16 @@ class ExpertsState extends State<Experts> {
           }
           return Column(
             children: [
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  TitleSubtitleContainer(
-                    title: "Our top advisors",
+                  Padding(
+                    padding: EdgeInsets.only(left: 20.w),
+                    child: Text(
+                      "Our top advisors",
+                      style: TextStyles.sourceSansSB.body2,
+                    ),
                   ),
                 ],
               ),
@@ -147,9 +150,11 @@ class TopExperts extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(left: 20.w),
       child: SizedBox(
+        width: 1.sw,
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
+            mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

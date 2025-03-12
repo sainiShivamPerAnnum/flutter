@@ -190,24 +190,32 @@ class FelloBalanceScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: SizeConfig.padding20),
-            buildInvestmentSection(
-              iconData: Assets.floAsset,
-              title: "Fello Flo",
-              asset: Assets.floAsset,
-              infoTitle1: "Flo Balance",
-              infoTitle2: "Invested",
-              secondaryColor: UiConstants.darkPrimaryColor3,
-              subtitle: "P2P Asset • upto 11% Returns",
-              onButtonPressed: () {
-                BaseUtil().openRechargeModalSheet(
-                  investmentType: InvestmentType.LENDBOXP2P,
-                );
-                trackSaveButtonAnalytics(
-                  InvestmentType.LENDBOXP2P,
-                );
-              },
-              onCardPressed: () => navigateToSaveAssetView(
-                InvestmentType.LENDBOXP2P,
+            Selector<UserService, Tuple2<Portfolio, UserFundWallet?>>(
+              builder: (_, value, child) => value.item1.flo.balance != 0
+                  ? buildInvestmentSection(
+                      iconData: Assets.floAsset,
+                      title: "Fello Flo",
+                      asset: Assets.floAsset,
+                      infoTitle1: "Flo Balance",
+                      infoTitle2: "Invested",
+                      secondaryColor: UiConstants.darkPrimaryColor3,
+                      subtitle: "P2P Asset • upto 11% Returns",
+                      onButtonPressed: () {
+                        BaseUtil().openRechargeModalSheet(
+                          investmentType: InvestmentType.LENDBOXP2P,
+                        );
+                        trackSaveButtonAnalytics(
+                          InvestmentType.LENDBOXP2P,
+                        );
+                      },
+                      onCardPressed: () => navigateToSaveAssetView(
+                        InvestmentType.LENDBOXP2P,
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+              selector: (_, userService) => Tuple2(
+                userService.userPortfolio,
+                userService.userFundWallet,
               ),
             ),
             buildInvestmentSection(

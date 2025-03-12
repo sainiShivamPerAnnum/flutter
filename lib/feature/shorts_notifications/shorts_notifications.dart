@@ -254,9 +254,22 @@ class _ShortsNotification extends StatelessWidget {
                                   children: [
                                     CircleAvatar(
                                       radius: 18.r,
-                                      backgroundImage: NetworkImage(
-                                        notification.advisorProfilePhoto,
-                                      ),
+                                      backgroundColor: Colors.transparent,
+                                      child: notification
+                                              .advisorProfilePhoto.isNotEmpty
+                                          ? ClipOval(
+                                              child: AppImage(
+                                                height: 32.r,
+                                                width: 32.r,
+                                                notification
+                                                    .advisorProfilePhoto,
+                                              ),
+                                            )
+                                          : AppImage(
+                                              height: 32.r,
+                                              width: 32.r,
+                                              Assets.logoWhite,
+                                            ),
                                     ),
                                     SizedBox(
                                       width: 10.w,

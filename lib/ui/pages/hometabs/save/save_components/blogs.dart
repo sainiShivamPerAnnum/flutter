@@ -32,8 +32,12 @@ class Blogs extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const TitleSubtitleContainer(
-                      title: "Fin-gyan",
+                    Padding(
+                      padding: EdgeInsets.only(left: 20.w),
+                      child: Text(
+                        "Fin-gyan",
+                        style: TextStyles.sourceSansSB.body2,
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(
@@ -43,12 +47,12 @@ class Blogs extends StatelessWidget {
                         children: [
                           Text(
                             'VIEW ALL',
-                            style: TextStyles.sourceSansSB.body3,
+                            style: TextStyles.sourceSans.body4,
                           ),
                           Icon(
                             Icons.arrow_forward_ios,
                             color: Colors.white,
-                            size: SizeConfig.body3,
+                            size: 10.r,
                           ),
                         ],
                       ),
