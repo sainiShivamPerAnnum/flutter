@@ -94,7 +94,7 @@ AppConfigV2Data _$AppConfigV2DataFromJson(Map<String, dynamic> json) =>
               ?.map((e) => Map<String, String>.from(e as Map))
               .toList() ??
           const [],
-      onboarding: (json['onboarding'] as List<dynamic>?)
+      onboarding: (json['signup_screens'] as List<dynamic>?)
               ?.map((e) => Onboarding.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [

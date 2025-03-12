@@ -34,6 +34,10 @@ Expert _$ExpertFromJson(Map<String, dynamic> json) => Expert(
       image: json['image'] as String,
       isFree: json['isFree'] as bool,
       advisorId: json['advisorId'] as String,
+      licenses: (json['licenses'] as List<dynamic>?)
+              ?.map((e) => License.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 UserInterestedAdvisor _$UserInterestedAdvisorFromJson(

@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 class CardComponent extends StatelessWidget {
   final String name;
   final String experience;
+  final String expertise;
   final String certification;
   final double rating;
   final String imageUrl;
@@ -18,6 +19,7 @@ class CardComponent extends StatelessWidget {
   const CardComponent({
     required this.name,
     required this.experience,
+    required this.expertise,
     required this.certification,
     required this.rating,
     required this.imageUrl,
@@ -87,7 +89,7 @@ class CardComponent extends StatelessWidget {
                           Positioned(
                             bottom: 8.h,
                             child: SizedBox(
-                              width: 148.w,
+                              width: 140.w,
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -120,7 +122,7 @@ class CardComponent extends StatelessWidget {
                                           width: 2.w,
                                         ),
                                         Text(
-                                          " 1 Years",
+                                          " $experience Years",
                                           style: TextStyles.sourceSans.body6,
                                         ),
                                       ],
@@ -153,7 +155,7 @@ class CardComponent extends StatelessWidget {
                                           width: 2.w,
                                         ),
                                         Text(
-                                          '${1}',
+                                          '$rating',
                                           style: TextStyles.sourceSans.body6,
                                         ),
                                       ],
@@ -180,14 +182,21 @@ class CardComponent extends StatelessWidget {
                           SizedBox(height: 10.h),
                           Row(
                             children: [
-                              Icon(Icons.access_time, size: 12.sp),
+                              AppImage(
+                                Assets.expertise,
+                                height: 12.h,
+                              ),
                               SizedBox(width: 4.w),
-                              Text(
-                                experience,
-                                style: GoogleFonts.sourceSans3(
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: UiConstants.kTextColor,
+                              Expanded(
+                                child: Text(
+                                  expertise,
+                                  style: GoogleFonts.sourceSans3(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: UiConstants.kTextColor,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],
@@ -195,15 +204,21 @@ class CardComponent extends StatelessWidget {
                           SizedBox(height: 5.h),
                           Row(
                             children: [
-                              Icon(Icons.star,
-                                  size: 12.sp, color: Colors.amber),
+                              AppImage(
+                                Assets.qualifications,
+                                height: 12.h,
+                              ),
                               SizedBox(width: 4.w),
-                              Text(
-                                rating.toString(),
-                                style: GoogleFonts.sourceSans3(
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: UiConstants.kTextColor,
+                              Expanded(
+                                child: Text(
+                                  certification.toString(),
+                                  style: GoogleFonts.sourceSans3(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: UiConstants.kTextColor,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],

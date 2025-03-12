@@ -54,7 +54,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
       },
       builder: (context, model, child) {
         return Scaffold(
-          backgroundColor: UiConstants.onboardingBackgroundColor,
+          backgroundColor: UiConstants.bg,
           body: NotificationListener<OverscrollIndicatorNotification>(
             onNotification: (n) {
               n.disallowIndicator();

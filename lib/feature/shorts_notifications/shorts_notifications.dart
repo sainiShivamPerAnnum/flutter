@@ -352,24 +352,32 @@ class _ShortsNotification extends StatelessWidget {
                                                 SizedBox(
                                                   width: 10.w,
                                                 ),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      notification.subtitle,
-                                                      style: TextStyles
-                                                          .sourceSansM.body4,
-                                                    ),
-                                                    Text(
-                                                      '${notification.duration} watch',
-                                                      style: TextStyles
-                                                          .sourceSans.body4
-                                                          .colour(
-                                                        const Color(0xffC2BDC2),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        notification.subtitle,
+                                                        style: TextStyles
+                                                            .sourceSansM.body4,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                       ),
-                                                    ),
-                                                  ],
+                                                      Text(
+                                                        '${notification.duration} watch',
+                                                        style: TextStyles
+                                                            .sourceSans.body4
+                                                            .colour(
+                                                          const Color(
+                                                            0xffC2BDC2,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ],
                                             ),

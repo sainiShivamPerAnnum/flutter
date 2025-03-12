@@ -85,94 +85,104 @@ class UpcomingBookingsComponentState extends State<UpcomingBookingsComponent> {
                     ),
                   ],
                 )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const TitleSubtitleContainer(
-                      title: "You might be interested in",
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 20.w, top: 24.h),
-                      child: SizedBox(
-                        height: 320.h,
-                        child: CarouselSlider.builder(
-                          itemCount: model.item2.length,
-                          itemBuilder: (context, index, realIndex) {
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                bottom: SizeConfig.padding16,
-                                right: SizeConfig.padding18,
-                              ),
-                              child: ExpertCardV2(
-                                isFree: false,
-                                expert: model.item2[index],
-                                onBookCall: () {
-                                  BaseUtil.openBookAdvisorSheet(
-                                    advisorId: model.item2[index].advisorId,
-                                    advisorName: model.item2[index].name,
-                                    isEdit: false,
-                                  );
-                                  analytics.track(
-                                    eventName: AnalyticsEvents.bookACall,
-                                    properties: {
-                                      "Expert ID": model.item2[index].advisorId,
-                                      "Expert name": model.item2[index].name,
+              : model.item2.isEmpty
+                  ? SizedBox.fromSize()
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const TitleSubtitleContainer(
+                          title: "You might be interested in",
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 20.w, top: 24.h),
+                          child: SizedBox(
+                            height: 320.h,
+                            child: CarouselSlider.builder(
+                              itemCount: model.item2.length,
+                              itemBuilder: (context, index, realIndex) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom: SizeConfig.padding16,
+                                    right: SizeConfig.padding18,
+                                  ),
+                                  child: ExpertCardV2(
+                                    isFree: false,
+                                    expert: model.item2[index],
+                                    onBookCall: () {
+                                      BaseUtil.openBookAdvisorSheet(
+                                        advisorId: model.item2[index].advisorId,
+                                        advisorName: model.item2[index].name,
+                                        isEdit: false,
+                                      );
+                                      analytics.track(
+                                        eventName: AnalyticsEvents.bookACall,
+                                        properties: {
+                                          "Expert ID":
+                                              model.item2[index].advisorId,
+                                          "Expert name":
+                                              model.item2[index].name,
+                                        },
+                                      );
                                     },
-                                  );
-                                },
-                                onTap: () {
-                                  AppState.delegate!.appState.currentAction =
-                                      PageAction(
-                                    page: ExpertDetailsPageConfig,
-                                    state: PageState.addWidget,
-                                    widget: ExpertsDetailsView(
-                                      advisorID: model.item2[index].advisorId,
-                                    ),
-                                  );
-                                  analytics.track(
-                                    eventName: "Suggested - Experts",
-                                    properties: {
-                                      "Expert sequence":
-                                          model.item2[index].advisorId,
-                                      "Expert name": model.item2[index].name,
+                                    onTap: () {
+                                      AppState.delegate!.appState
+                                          .currentAction = PageAction(
+                                        page: ExpertDetailsPageConfig,
+                                        state: PageState.addWidget,
+                                        widget: ExpertsDetailsView(
+                                          advisorID:
+                                              model.item2[index].advisorId,
+                                        ),
+                                      );
+                                      analytics.track(
+                                        eventName: "Suggested - Experts",
+                                        properties: {
+                                          "Expert sequence":
+                                              model.item2[index].advisorId,
+                                          "Expert name":
+                                              model.item2[index].name,
+                                        },
+                                      );
                                     },
-                                  );
+                                  ),
+                                );
+                              },
+                              options: CarouselOptions(
+                                height: double.infinity,
+                                enlargeCenterPage: false,
+                                enableInfiniteScroll: false,
+                                viewportFraction: 1,
+                                initialPage: 0,
+                                onPageChanged: (index, reason) {
+                                  setState(() {
+                                    _currentPage = index;
+                                  });
                                 },
                               ),
-                            );
-                          },
-                          options: CarouselOptions(
-                            height: double.infinity,
-                            enlargeCenterPage: false,
-                            enableInfiniteScroll: false,
-                            viewportFraction: 1,
-                            initialPage: 0,
-                            onPageChanged: (index, reason) {
-                              setState(() {
-                                _currentPage = index;
-                              });
-                            },
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    if (model.item2.length > 1)
-                      Padding(
-                        padding: EdgeInsets.only(top: SizeConfig.padding14),
-                        child: SmoothPageIndicator(
-                          controller: PageController(initialPage: _currentPage),
-                          count: model.item2.length,
-                          effect: ExpandingDotsEffect(
-                            activeDotColor: Colors.white,
-                            dotColor: Colors.grey,
-                            dotHeight: 6.h,
-                            dotWidth: 6.w,
+                        if (model.item2.length > 1)
+                          Center(
+                            child: Padding(
+                              padding:
+                                  EdgeInsets.only(top: SizeConfig.padding14),
+                              child: SmoothPageIndicator(
+                                controller:
+                                    PageController(initialPage: _currentPage),
+                                count: model.item2.length,
+                                effect: ExpandingDotsEffect(
+                                  activeDotColor: Colors.white,
+                                  dotColor: Colors.grey,
+                                  dotHeight: 6.h,
+                                  dotWidth: 6.w,
+                                ),
+                                onDotClicked: _carouselController.animateToPage,
+                              ),
+                            ),
                           ),
-                          onDotClicked: _carouselController.animateToPage,
-                        ),
-                      ),
-                  ],
-                );
+                      ],
+                    );
         },
       ),
     );

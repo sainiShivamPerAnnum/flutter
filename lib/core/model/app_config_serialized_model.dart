@@ -107,6 +107,7 @@ class AppConfigV2Data {
 
   final List<QuickAction> quickActions;
 
+  @JsonKey(name: "signup_screens")
   final List<Onboarding> onboarding;
 
   final Map<String, dynamic> features;

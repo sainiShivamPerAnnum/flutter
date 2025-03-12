@@ -38,6 +38,7 @@ class Expert {
   final String image;
   final bool isFree;
   final String advisorId;
+  final List<License> licenses;
 
   Expert({
     required this.name,
@@ -50,6 +51,7 @@ class Expert {
     required this.image,
     required this.isFree,
     required this.advisorId,
+    this.licenses = const [],
   });
 
   factory Expert.fromJson(Map<String, dynamic> json) => _$ExpertFromJson(json);

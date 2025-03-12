@@ -20,9 +20,14 @@ class QuickLinks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<QuickLinksModel> quickLinks = QuickLinksModel.fromJsonList(
-      AppConfig.getValue(AppConfigKey.quickActionsV2),
-    );
+    List<QuickLinksModel> quickLinks = [];
+    try {
+      quickLinks = QuickLinksModel.fromJsonList(
+        AppConfig.getValue(AppConfigKey.quickActionsV2),
+      );
+    } catch (e) {
+      return const SizedBox.shrink();
+    }
 
     return Padding(
       padding: EdgeInsets.only(top: 20.h, bottom: 24.h),
