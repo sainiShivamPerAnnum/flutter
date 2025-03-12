@@ -114,9 +114,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
                                         fit: BoxFit.contain,
                                       ),
                                     ),
-                                    SizedBox(
-                                      height: 24.h,
-                                    ),
+                                    const Spacer(),
                                     SizedBox(
                                       width: 335.w,
                                       child: Text(
