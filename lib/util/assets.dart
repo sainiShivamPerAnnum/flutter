@@ -536,4 +536,9 @@ class Assets {
   static const String done = "assets/svg/done.svg";
   static const String noNotifications = "assets/svg/no_notifications.svg";
   static const String noSaved = "assets/svg/no_saved.svg";
+  static const String expertise = "assets/svg/expertise.svg";
+  static const String qualifications = "assets/svg/qualifications.svg";
+  static const String rating = "assets/svg/rating.svg";
+  static const String experiencev2 = "assets/svg/experience_v2.svg";
+  static const String portfolio = "assets/svg/portfolio.svg";
 }

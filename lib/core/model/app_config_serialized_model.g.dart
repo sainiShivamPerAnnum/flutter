@@ -94,6 +94,26 @@ AppConfigV2Data _$AppConfigV2DataFromJson(Map<String, dynamic> json) =>
               ?.map((e) => Map<String, String>.from(e as Map))
               .toList() ??
           const [],
+      onboarding: (json['onboarding'] as List<dynamic>?)
+              ?.map((e) => Onboarding.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [
+            Onboarding(
+                title: "Discuss finance with certified experts",
+                subtitle:
+                    "Book one-on-one sessions with expert  advisors who understand your goals.",
+                image: Assets.onbaording1),
+            Onboarding(
+                title: "Ask Questions, Get Answers in Live Webinar",
+                subtitle:
+                    "Ask Questions and Gain Insights by Joining live streams hosted by trusted advisors.",
+                image: Assets.onbaording2),
+            Onboarding(
+                title: "Invest in Digital Gold to get safe Returns",
+                subtitle:
+                    "Invest in trusted gold at market rates, powered by Augmont and get stable returns.",
+                image: Assets.onbaording3)
+          ],
     );
 
 LendboxAssetConfiguration _$LendboxAssetConfigurationFromJson(
@@ -193,6 +213,12 @@ QuickAction _$QuickActionFromJson(Map<String, dynamic> json) => QuickAction(
       img: json['img'] as String? ?? '',
       deepLink: json['deeplink'] as String? ?? '',
       color: json['color'] as String? ?? '',
+    );
+
+Onboarding _$OnboardingFromJson(Map<String, dynamic> json) => Onboarding(
+      image: json['image'] as String? ?? '',
+      title: json['title'] as String? ?? '',
+      subtitle: json['subtitle'] as String? ?? '',
     );
 
 QuizConfig _$QuizConfigFromJson(Map<String, dynamic> json) => QuizConfig(

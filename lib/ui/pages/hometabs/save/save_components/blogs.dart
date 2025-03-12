@@ -6,6 +6,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -15,45 +16,51 @@ class Blogs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SaveViewModel>(
-      builder: (_, model, __) {
-        return Column(
-          children: [
-            SizedBox(height: SizeConfig.padding14),
-            GestureDetector(
-              onTap: model.navigateToViewAllBlogs,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const TitleSubtitleContainer(
-                    title: "Fin-gyan",
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      right: SizeConfig.padding12,
+    return Padding(
+      padding: EdgeInsets.only(
+        top: 20.h,
+        bottom: 24.h,
+      ),
+      child: Consumer<SaveViewModel>(
+        builder: (_, model, __) {
+          return Column(
+            children: [
+              SizedBox(height: SizeConfig.padding14),
+              GestureDetector(
+                onTap: model.navigateToViewAllBlogs,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const TitleSubtitleContainer(
+                      title: "Fin-gyan",
                     ),
-                    child: Row(
-                      children: [
-                        Text(
-                          'VIEW ALL',
-                          style: TextStyles.sourceSansSB.body3,
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.white,
-                          size: SizeConfig.body3,
-                        ),
-                      ],
+                    Padding(
+                      padding: EdgeInsets.only(
+                        right: SizeConfig.padding12,
+                      ),
+                      child: Row(
+                        children: [
+                          Text(
+                            'VIEW ALL',
+                            style: TextStyles.sourceSansSB.body3,
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.white,
+                            size: SizeConfig.body3,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SaveBlogSection(model: model),
-          ],
-        );
-      },
+              SaveBlogSection(model: model),
+            ],
+          );
+        },
+      ),
     );
   }
 }
@@ -65,10 +72,7 @@ class SaveBlogSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        left: SizeConfig.padding20,
-        top: SizeConfig.padding10,
-      ),
+      padding: EdgeInsets.only(left: 20.w, top: 24.h),
       child: SizedBox(
         height: SizeConfig.padding252,
         child: model.isLoading

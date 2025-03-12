@@ -1,0 +1,318 @@
+import 'package:felloapp/core/model/experts/experts_home.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/styles/styles.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class ExpertCardV2 extends StatelessWidget {
+  final UserInterestedAdvisor expert;
+  final VoidCallback onBookCall;
+  final VoidCallback onTap;
+  final bool isFree;
+
+  const ExpertCardV2({
+    required this.expert,
+    required this.onBookCall,
+    required this.onTap,
+    required this.isFree,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.all(18.r),
+            decoration: BoxDecoration(
+              color: UiConstants.greyVarient,
+              borderRadius: expert.expertiseTags.isEmpty
+                  ? BorderRadius.all(
+                      Radius.circular(10.r),
+                    )
+                  : BorderRadius.only(
+                      topLeft: Radius.circular(10.r),
+                      topRight: Radius.circular(10.r),
+                    ),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    ClipOval(
+                      child: SizedBox(
+                        width: 54.w,
+                        height: 54.h,
+                        child: AppImage(
+                          expert.image,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 8.w,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          expert.name,
+                          style: TextStyles.sourceSansSB.body2
+                              .colour(UiConstants.kTextColor),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          expert.description,
+                          style: TextStyles.sourceSans.body4
+                              .colour(UiConstants.kTextColor.withOpacity(.75)),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const Divider(
+                  color: UiConstants.grey6,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12.h),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        constraints: BoxConstraints(maxWidth: 134.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                AppImage(
+                                  Assets.expertise,
+                                  height: 12.r,
+                                  width: 12.r,
+                                ),
+                                SizedBox(width: 6.w),
+                                Expanded(
+                                  child: Text(
+                                    expert.expertise,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.sourceSans3(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: UiConstants.kTextColor
+                                          .withOpacity(.6),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 12.h),
+                            Row(
+                              children: [
+                                AppImage(
+                                  Assets.qualifications,
+                                  height: 12.r,
+                                  width: 12.r,
+                                ),
+                                SizedBox(width: 6.w),
+                                Expanded(
+                                  child: Text(
+                                    expert.qualifications,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.sourceSans3(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: UiConstants.kTextColor
+                                          .withOpacity(.6),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 40.w),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              AppImage(
+                                Assets.experiencev2,
+                                height: 12.r,
+                                width: 12.r,
+                              ),
+                              SizedBox(width: 6.w),
+                              Text(
+                                '${expert.experience} years',
+                                style: GoogleFonts.sourceSans3(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: UiConstants.kTextColor.withOpacity(.6),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 12.h),
+                          Row(
+                            children: [
+                              AppImage(
+                                Assets.rating,
+                                height: 12.r,
+                                width: 12.r,
+                              ),
+                              SizedBox(width: 6.w),
+                              Text(
+                                expert.rating.toString(),
+                                style: GoogleFonts.sourceSans3(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: UiConstants.kTextColor.withOpacity(.6),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(
+                  color: UiConstants.grey6,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 6.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                expert.rateNew,
+                                style: TextStyles.sourceSansSB.body3
+                                    .colour(UiConstants.kTextColor),
+                              ),
+                              if (isFree && expert.isFree) SizedBox(width: 4.w),
+                              if (isFree && expert.isFree)
+                                Text(
+                                  "Free",
+                                  style: TextStyles.sourceSansSB.body3
+                                      .colour(UiConstants.kTabBorderColor),
+                                ),
+                            ],
+                          ),
+                          GestureDetector(
+                            onTap: onBookCall,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 12.w,
+                                vertical: 8.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: UiConstants.kTextColor,
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
+                              child: Text(
+                                'Book a Call',
+                                style: TextStyles.sourceSansSB.body4
+                                    .colour(UiConstants.kTextColor4),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (expert.expertiseTags.isNotEmpty)
+            ExpertTagsComponent(
+              expertiseTags: expert.expertiseTags,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class ExpertTagsComponent extends StatelessWidget {
+  final List<String> expertiseTags;
+
+  const ExpertTagsComponent({required this.expertiseTags, Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    const maxVisibleTags = 4;
+    bool showMore = false;
+
+    if (expertiseTags.length > maxVisibleTags) {
+      showMore = true;
+    }
+
+    List<String> visibleTags = expertiseTags.take(maxVisibleTags).toList();
+
+    return Container(
+      width: 1.sw,
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 14.h),
+      decoration: BoxDecoration(
+        color: UiConstants.greyVarient.withOpacity(0.6),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(10.r),
+          bottomRight: Radius.circular(10.r),
+        ),
+      ),
+      child: Wrap(
+        spacing: 8.w,
+        runSpacing: 6.h,
+        alignment: WrapAlignment.start,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          Text(
+            'I can help with',
+            style: GoogleFonts.sourceSans3(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w400,
+              color: const Color(0xffA6A6AC),
+            ),
+          ),
+          ...visibleTags.map((tag) => tagContainer(label: tag)),
+          if (showMore)
+            tagContainer(label: '+${expertiseTags.length - 4} more'),
+        ],
+      ),
+    );
+  }
+
+  Widget tagContainer({required String label}) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+      decoration: BoxDecoration(
+        color: const Color(0xffA6A6AC).withOpacity(.11),
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: Text(
+        label,
+        style: GoogleFonts.sourceSans3(
+          fontSize: 10.sp,
+          fontWeight: FontWeight.w500,
+          color: const Color(0xffA6A6AC),
+        ),
+      ),
+    );
+  }
+}

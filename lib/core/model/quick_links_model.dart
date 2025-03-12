@@ -15,12 +15,16 @@ class QuickLinksModel {
   final String asset;
   final String deeplink;
   final Color color;
+  final String description;
+  final String? tag;
 
   const QuickLinksModel({
     required this.name,
     required this.asset,
     required this.deeplink,
     required this.color,
+    required this.description,
+    this.tag,
   });
 
   factory QuickLinksModel.fromMap(Map<String, dynamic> map) {
@@ -29,6 +33,8 @@ class QuickLinksModel {
       asset: map['img'] as String,
       deeplink: map['deeplink'] as String,
       color: (map['color'] as String).toColor()!,
+      description: map['description'] ?? '' as String?,
+      tag: map['tag'] as String?,
     );
   }
 
