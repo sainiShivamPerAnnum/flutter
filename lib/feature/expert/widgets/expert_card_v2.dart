@@ -319,10 +319,29 @@ class ExpertCardV2 extends StatelessWidget {
                         children: [
                           Row(
                             children: [
+                              if (expert.originalPrice != '')
+                                Text(
+                                  expert.originalPrice,
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(
+                                        UiConstants.kTextColor.withOpacity(
+                                          .6,
+                                        ),
+                                      )
+                                      .copyWith(
+                                        decoration: TextDecoration.lineThrough,
+                                        decorationColor:
+                                            UiConstants.kTextColor.withOpacity(
+                                          .6,
+                                        ),
+                                      ),
+                                ),
+                              if (expert.originalPrice != '')
+                                SizedBox(width: 4.w),
                               Text(
                                 expert.rateNew,
-                                style: TextStyles.sourceSansSB.body3
-                                    .colour(UiConstants.kTextColor),
+                                style: TextStyles.sourceSansM.body3
+                                    .colour(UiConstants.teal3),
                               ),
                               if (isFree && expert.isFree) SizedBox(width: 4.w),
                               if (isFree && expert.isFree)
@@ -457,7 +476,7 @@ class ExpertTagsComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const maxVisibleTags = 4;
+    const maxVisibleTags = 3;
     bool showMore = false;
 
     if (expertiseTags.length > maxVisibleTags) {
@@ -492,7 +511,7 @@ class ExpertTagsComponent extends StatelessWidget {
           ),
           ...visibleTags.map((tag) => tagContainer(label: tag)),
           if (showMore)
-            tagContainer(label: '+${expertiseTags.length - 4} more'),
+            tagContainer(label: '+${expertiseTags.length - 3} more'),
         ],
       ),
     );

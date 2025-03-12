@@ -71,6 +71,7 @@ class UserInterestedAdvisor {
   final bool isFree;
   final String advisorId;
   final List<License> licenses;
+  final String originalPrice;
   @JsonKey(name: 'intro_videos')
   final List<VideoData> introVideos;
   final List<String> expertiseTags;
@@ -87,6 +88,7 @@ class UserInterestedAdvisor {
     required this.image,
     required this.isFree,
     required this.advisorId,
+    this.originalPrice = '',
     this.licenses = const [],
     this.introVideos = const [],
     this.expertiseTags = const [],

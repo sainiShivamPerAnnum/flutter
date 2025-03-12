@@ -43,100 +43,93 @@ class ExpertsState extends State<Experts> {
               value.item1?.list.isNotEmpty == true) {
             selectedCategory = value.item1!.list[0];
           }
-          return value.item1 == null
-              ? SizedBox.fromSize()
-              : Column(
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        TitleSubtitleContainer(
-                          title: "Our top advisors",
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsets.only(top: 24.h, bottom: 20.h, left: 20.w),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: value.item1?.list.map((category) {
-                                return Padding(
-                                  padding: EdgeInsets.only(right: 8.w),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedCategory = category;
-                                      });
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: selectedCategory == category
-                                            ? const Color(0xff62E3C4)
-                                                .withOpacity(.1)
-                                            : const Color(0xffD9D9D9)
-                                                .withOpacity(.1),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(6.r),
-                                        ),
-                                        border: Border.all(
-                                          color: selectedCategory == category
-                                              ? const Color(0xff62E3C4)
-                                                  .withOpacity(.5)
-                                              : const Color(0xffCACBCC)
-                                                  .withOpacity(.07),
-                                        ),
-                                      ),
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 16.w,
-                                        vertical: 8.h,
-                                      ),
-                                      child: Text(
-                                        category,
-                                        style:
-                                            TextStyles.sourceSansM.body4.colour(
-                                          selectedCategory == category
-                                              ? const Color(0xff62E3C4)
-                                              : UiConstants.kTextColor,
-                                        ),
-                                      ),
-                                    ),
+          return Column(
+            children: [
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TitleSubtitleContainer(
+                    title: "Our top advisors",
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 24.h, bottom: 20.h, left: 20.w),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: value.item1?.list.map((category) {
+                          return Padding(
+                            padding: EdgeInsets.only(right: 8.w),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedCategory = category;
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: selectedCategory == category
+                                      ? const Color(0xff62E3C4).withOpacity(.1)
+                                      : const Color(0xffD9D9D9).withOpacity(.1),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(6.r),
                                   ),
-                                );
-                              }).toList() ??
-                              [],
-                        ),
-                      ),
-                    ),
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 500),
-                      child: value.item3
-                          ? Padding(
-                              padding: EdgeInsets.only(left: 20.w),
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: [
-                                    for (int i = 0; i < 3; i++)
-                                      const ShimmerCardComponent(),
-                                  ],
+                                  border: Border.all(
+                                    color: selectedCategory == category
+                                        ? const Color(0xff62E3C4)
+                                            .withOpacity(.5)
+                                        : const Color(0xffCACBCC)
+                                            .withOpacity(.07),
+                                  ),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 16.w,
+                                  vertical: 8.h,
+                                ),
+                                child: Text(
+                                  category,
+                                  style: TextStyles.sourceSansM.body4.colour(
+                                    selectedCategory == category
+                                        ? const Color(0xff62E3C4)
+                                        : UiConstants.kTextColor,
+                                  ),
                                 ),
                               ),
-                            )
-                          : value.item1 != null
-                              ? TopExperts(
-                                  topExperts:
-                                      value.item1!.values[selectedCategory] ??
-                                          [],
-                                  isFree: value.item2,
-                                  key: ValueKey(selectedCategory),
-                                )
-                              : const SizedBox.shrink(),
-                    ),
-                  ],
-                );
+                            ),
+                          );
+                        }).toList() ??
+                        [],
+                  ),
+                ),
+              ),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                child: value.item3
+                    ? Padding(
+                        padding: EdgeInsets.only(left: 20.w),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              for (int i = 0; i < 3; i++)
+                                const ShimmerCardComponent(),
+                            ],
+                          ),
+                        ),
+                      )
+                    : value.item1 != null
+                        ? TopExperts(
+                            topExperts:
+                                value.item1!.values[selectedCategory] ?? [],
+                            isFree: value.item2,
+                            key: ValueKey(selectedCategory),
+                          )
+                        : const SizedBox.shrink(),
+              ),
+            ],
+          );
         },
       ),
     );

@@ -7,6 +7,7 @@ import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/expert/widgets/expert_card_v2.dart';
+import 'package:felloapp/feature/expert/widgets/experts_card_shimmer_v2.dart';
 import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -41,10 +42,11 @@ class UpcomingBookingsComponentState extends State<UpcomingBookingsComponent> {
     return Padding(
       padding: EdgeInsets.only(top: 20.h, bottom: 24.h),
       child: Selector<SaveViewModel,
-          Tuple2<List<Booking>, List<UserInterestedAdvisor>>>(
-        selector: (_, model) => Tuple2(
+          Tuple3<List<Booking>, List<UserInterestedAdvisor>, bool>>(
+        selector: (_, model) => Tuple3(
           model.upcomingBookings,
           model.userInterestedAdvisors,
+          model.isTopAdvisorLoading,
         ),
         builder: (_, model, __) {
           return model.item1.isNotEmpty
@@ -85,104 +87,109 @@ class UpcomingBookingsComponentState extends State<UpcomingBookingsComponent> {
                     ),
                   ],
                 )
-              : model.item2.isEmpty
-                  ? SizedBox.fromSize()
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const TitleSubtitleContainer(
-                          title: "You might be interested in",
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 20.w, top: 24.h),
-                          child: SizedBox(
-                            height: 320.h,
-                            child: CarouselSlider.builder(
-                              itemCount: model.item2.length,
-                              itemBuilder: (context, index, realIndex) {
-                                return Padding(
-                                  padding: EdgeInsets.only(
-                                    bottom: SizeConfig.padding16,
-                                    right: SizeConfig.padding18,
-                                  ),
-                                  child: ExpertCardV2(
-                                    isFree: false,
-                                    expert: model.item2[index],
-                                    onBookCall: () {
-                                      BaseUtil.openBookAdvisorSheet(
-                                        advisorId: model.item2[index].advisorId,
-                                        advisorName: model.item2[index].name,
-                                        isEdit: false,
-                                      );
-                                      analytics.track(
-                                        eventName: AnalyticsEvents.bookACall,
-                                        properties: {
-                                          "Expert ID":
-                                              model.item2[index].advisorId,
-                                          "Expert name":
-                                              model.item2[index].name,
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const TitleSubtitleContainer(
+                      title: "You might be interested in",
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 20.w, top: 24.h),
+                      child: SizedBox(
+                        height: 320.h,
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 500),
+                          child: model.item3
+                              ? const ExpertCardV2Shimmer()
+                              : CarouselSlider.builder(
+                                  itemCount: model.item2.length,
+                                  itemBuilder: (context, index, realIndex) {
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                        bottom: SizeConfig.padding16,
+                                        right: SizeConfig.padding18,
+                                      ),
+                                      child: ExpertCardV2(
+                                        isFree: false,
+                                        expert: model.item2[index],
+                                        onBookCall: () {
+                                          BaseUtil.openBookAdvisorSheet(
+                                            advisorId:
+                                                model.item2[index].advisorId,
+                                            advisorName:
+                                                model.item2[index].name,
+                                            isEdit: false,
+                                          );
+                                          analytics.track(
+                                            eventName:
+                                                AnalyticsEvents.bookACall,
+                                            properties: {
+                                              "Expert ID":
+                                                  model.item2[index].advisorId,
+                                              "Expert name":
+                                                  model.item2[index].name,
+                                            },
+                                          );
                                         },
-                                      );
-                                    },
-                                    onTap: () {
-                                      AppState.delegate!.appState
-                                          .currentAction = PageAction(
-                                        page: ExpertDetailsPageConfig,
-                                        state: PageState.addWidget,
-                                        widget: ExpertsDetailsView(
-                                          advisorID:
-                                              model.item2[index].advisorId,
-                                        ),
-                                      );
-                                      analytics.track(
-                                        eventName: "Suggested - Experts",
-                                        properties: {
-                                          "Expert sequence":
-                                              model.item2[index].advisorId,
-                                          "Expert name":
-                                              model.item2[index].name,
+                                        onTap: () {
+                                          AppState.delegate!.appState
+                                              .currentAction = PageAction(
+                                            page: ExpertDetailsPageConfig,
+                                            state: PageState.addWidget,
+                                            widget: ExpertsDetailsView(
+                                              advisorID:
+                                                  model.item2[index].advisorId,
+                                            ),
+                                          );
+                                          analytics.track(
+                                            eventName: "Suggested - Experts",
+                                            properties: {
+                                              "Expert sequence":
+                                                  model.item2[index].advisorId,
+                                              "Expert name":
+                                                  model.item2[index].name,
+                                            },
+                                          );
                                         },
-                                      );
+                                      ),
+                                    );
+                                  },
+                                  options: CarouselOptions(
+                                    height: double.infinity,
+                                    enlargeCenterPage: false,
+                                    enableInfiniteScroll: false,
+                                    viewportFraction: 1,
+                                    initialPage: 0,
+                                    onPageChanged: (index, reason) {
+                                      setState(() {
+                                        _currentPage = index;
+                                      });
                                     },
                                   ),
-                                );
-                              },
-                              options: CarouselOptions(
-                                height: double.infinity,
-                                enlargeCenterPage: false,
-                                enableInfiniteScroll: false,
-                                viewportFraction: 1,
-                                initialPage: 0,
-                                onPageChanged: (index, reason) {
-                                  setState(() {
-                                    _currentPage = index;
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                        if (model.item2.length > 1)
-                          Center(
-                            child: Padding(
-                              padding:
-                                  EdgeInsets.only(top: SizeConfig.padding14),
-                              child: SmoothPageIndicator(
-                                controller:
-                                    PageController(initialPage: _currentPage),
-                                count: model.item2.length,
-                                effect: ExpandingDotsEffect(
-                                  activeDotColor: Colors.white,
-                                  dotColor: Colors.grey,
-                                  dotHeight: 6.h,
-                                  dotWidth: 6.w,
                                 ),
-                                onDotClicked: _carouselController.animateToPage,
-                              ),
+                        ),
+                      ),
+                    ),
+                    if (model.item2.length > 1)
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: SizeConfig.padding14),
+                          child: SmoothPageIndicator(
+                            controller:
+                                PageController(initialPage: _currentPage),
+                            count: model.item2.length,
+                            effect: ExpandingDotsEffect(
+                              activeDotColor: Colors.white,
+                              dotColor: Colors.grey,
+                              dotHeight: 6.h,
+                              dotWidth: 6.w,
                             ),
+                            onDotClicked: _carouselController.animateToPage,
                           ),
-                      ],
-                    );
+                        ),
+                      ),
+                  ],
+                );
         },
       ),
     );
