@@ -32,12 +32,12 @@ class _CampaignsState extends State<Campaigns> {
         model.isChallengesLoading,
       ),
       builder: (_, model, __) {
-        return Padding(
-          padding: EdgeInsets.only(top: 20.h, bottom: 24.h),
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 500),
-            child: model.item2
-                ? Shimmer.fromColors(
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 500),
+          child: model.item2
+              ? Padding(
+                  padding: EdgeInsets.only(top: 20.h, bottom: 24.h),
+                  child: Shimmer.fromColors(
                     baseColor: Colors.grey[800]!,
                     highlightColor: Colors.grey[600]!,
                     child: Container(
@@ -48,12 +48,15 @@ class _CampaignsState extends State<Campaigns> {
                         borderRadius: BorderRadius.circular(8.r),
                       ),
                     ),
-                  )
-                : Column(
+                  ),
+                )
+              : Padding(
+                  padding: EdgeInsets.only(top: 20.h, bottom: 24.h),
+                  child: Column(
                     key: const ValueKey<String>('Campaings'),
                     children: [
                       SizedBox(
-                        height: 330.h,
+                        height: 307.h,
                         child: CarouselSlider.builder(
                           carouselController: _carouselController,
                           itemCount: model.item1!.length,
@@ -125,7 +128,7 @@ class _CampaignsState extends State<Campaigns> {
                         ),
                     ],
                   ),
-          ),
+                ),
         );
       },
     );

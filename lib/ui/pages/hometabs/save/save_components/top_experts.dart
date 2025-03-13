@@ -178,6 +178,8 @@ class CardComponent extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                               color: UiConstants.kTextColor,
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           SizedBox(height: 10.h),
                           Row(

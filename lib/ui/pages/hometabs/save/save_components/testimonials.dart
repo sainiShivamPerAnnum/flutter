@@ -135,7 +135,7 @@ class Testimonials extends StatelessWidget {
                                                     CrossAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    '${testimonial.rating} ',
+                                                    '${testimonial.rating.toStringAsFixed(1)} ',
                                                     style: TextStyles
                                                         .sourceSansM.body4,
                                                   ),

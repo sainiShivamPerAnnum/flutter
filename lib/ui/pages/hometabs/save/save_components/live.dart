@@ -15,15 +15,15 @@ class TopLive extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 20.h, bottom: 24.h),
-      child: Selector<SaveViewModel, LiveHome?>(
-        builder: (_, liveData, __) {
-          return AnimatedSwitcher(
-            duration: const Duration(milliseconds: 500),
-            child: (liveData == null) || liveData.live.isEmpty
-                ? const SizedBox.shrink()
-                : Column(
+    return Selector<SaveViewModel, LiveHome?>(
+      builder: (_, liveData, __) {
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 500),
+          child: (liveData == null) || liveData.live.isEmpty
+              ? const SizedBox.shrink()
+              : Padding(
+                  padding: EdgeInsets.only(top: 20.h, bottom: 24.h),
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -85,10 +85,10 @@ class TopLive extends StatelessWidget {
                         ),
                     ],
                   ),
-          );
-        },
-        selector: (_, model) => model.liveData,
-      ),
+                ),
+        );
+      },
+      selector: (_, model) => model.liveData,
     );
   }
 }
