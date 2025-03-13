@@ -21,6 +21,7 @@ class VideoData {
   final String advisorImg;
   final bool isSaved;
   final bool isFollowed;
+  final bool isVideoSeenByUser;
 
   VideoData({
     required this.id,
@@ -40,6 +41,7 @@ class VideoData {
     this.advisorImg = '',
     this.isSaved = false,
     this.isFollowed = false,
+    this.isVideoSeenByUser = false,
   });
 
   // Method to generate VideoData instance from JSON

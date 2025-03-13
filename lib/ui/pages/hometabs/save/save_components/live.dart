@@ -33,7 +33,7 @@ class TopLive extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(left: 20.w),
                             child: Text(
-                              "Streaming Live",
+                              "Live webinar",
                               style: TextStyles.sourceSansSB.body2,
                             ),
                           ),

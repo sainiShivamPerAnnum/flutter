@@ -405,7 +405,8 @@ Widget introVideosIndicator(
       watchedColor: Colors.grey.withOpacity(0.5),
       unwatchedColor: Theme.of(context).primaryColor,
       strokeWidth: 2.5,
-      watchedStatuses: introVideos.map((video) => video.isSaved).toList(),
+      watchedStatuses:
+          introVideos.map((video) => video.isVideoSeenByUser).toList(),
     ),
   );
 }
