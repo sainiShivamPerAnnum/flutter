@@ -75,7 +75,7 @@ class TopLive extends StatelessWidget {
                             ),
                         ],
                       ),
-                      SizedBox(height: 14.h),
+                      SizedBox(height: 24.h),
                       if (liveData.live.isNotEmpty)
                         Padding(
                           padding: EdgeInsets.only(

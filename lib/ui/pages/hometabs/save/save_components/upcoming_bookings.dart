@@ -61,11 +61,8 @@ class UpcomingBookingsComponentState extends State<UpcomingBookingsComponent> {
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 20.w, top: 24.h),
-                      child: Container(
-                        height: SizeConfig.padding275,
-                        margin: EdgeInsets.only(
-                          top: SizeConfig.padding10,
-                        ),
+                      child: SizedBox(
+                        height: 290.h,
                         child: ListView.builder(
                           itemCount: model.item1.length,
                           scrollDirection: Axis.horizontal,
