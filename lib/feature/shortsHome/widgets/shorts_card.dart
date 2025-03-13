@@ -125,7 +125,7 @@ class ShortsCard extends StatelessWidget {
                     child: AspectRatio(
                       aspectRatio: 9 / 16,
                       child: Container(
-                        constraints: BoxConstraints(maxHeight: 130.h),
+                        constraints: BoxConstraints(maxHeight: 193.h),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(

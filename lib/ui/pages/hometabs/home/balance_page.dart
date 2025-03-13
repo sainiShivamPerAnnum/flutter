@@ -2,7 +2,9 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -190,8 +192,9 @@ class FelloBalanceScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: SizeConfig.padding20),
-            Selector<UserService, Tuple2<Portfolio, UserFundWallet?>>(
-              builder: (_, value, child) => value.item1.flo.balance != 0
+            Selector<UserService, BaseUser?>(
+              builder: (_, value, child) => value != null &&
+                      value.createdOn < TimestampModel.january2025()
                   ? buildInvestmentSection(
                       iconData: Assets.floAsset,
                       title: "Fello Flo",
@@ -213,10 +216,7 @@ class FelloBalanceScreen extends StatelessWidget {
                       ),
                     )
                   : const SizedBox.shrink(),
-              selector: (_, userService) => Tuple2(
-                userService.userPortfolio,
-                userService.userFundWallet,
-              ),
+              selector: (_, userService) => userService.baseUser,
             ),
             buildInvestmentSection(
               iconData: Assets.goldAsset,

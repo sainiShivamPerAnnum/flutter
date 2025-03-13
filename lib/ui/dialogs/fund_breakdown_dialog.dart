@@ -1,11 +1,14 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 class FundBreakdownDialog extends StatelessWidget {
   const FundBreakdownDialog({super.key});
@@ -13,8 +16,8 @@ class FundBreakdownDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseDialog(
-      content: Selector<UserService, Portfolio>(
-        builder: (context, portfolio, child) {
+      content: Selector<UserService, Tuple2<BaseUser?, Portfolio>>(
+        builder: (context, model, child) {
           return Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -39,7 +42,7 @@ class FundBreakdownDialog extends StatelessWidget {
                     Text("Fello Balance", style: TextStyles.rajdhaniSB.body1),
                 trailing: Text(
                   BaseUtil.formatIndianRupees(num.parse(BaseUtil.digitPrecision(
-                          portfolio.absolute.balance, 2, false)
+                          model.item2.absolute.balance, 2, false)
                       .toString())),
                   style: TextStyles.sourceSansB.body1,
                 ),
@@ -52,7 +55,7 @@ class FundBreakdownDialog extends StatelessWidget {
                   BaseUtil.formatIndianRupees(
                     num.parse(
                       BaseUtil.digitPrecision(
-                              portfolio.absolute.principle, 2, false)
+                              model.item2.absolute.principle, 2, false)
                           .toString(),
                     ),
                   ),
@@ -78,10 +81,10 @@ class FundBreakdownDialog extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          "(${BaseUtil.digitPrecision(portfolio.absolute.percGains, 2, false)}%) ",
+                          "(${BaseUtil.digitPrecision(model.item2.absolute.percGains, 2, false)}%) ",
                           style: TextStyles.body2.colour(
                               BaseUtil.digitPrecision(
-                                          portfolio.absolute.percGains,
+                                          model.item2.absolute.percGains,
                                           2,
                                           false) >=
                                       0
@@ -91,7 +94,7 @@ class FundBreakdownDialog extends StatelessWidget {
                         Text(
                           BaseUtil.formatIndianRupees(num.parse(
                               BaseUtil.digitPrecision(
-                                      portfolio.absolute.absGains, 2, false)
+                                      model.item2.absolute.absGains, 2, false)
                                   .toString())),
                           style: TextStyles.sourceSansSB.body2,
                         )
@@ -101,25 +104,26 @@ class FundBreakdownDialog extends StatelessWidget {
                   const Divider(
                     color: Colors.grey,
                   ),
-                  if (portfolio.flo.balance != 0)
+                  if (model.item1 != null &&
+                      model.item1!.createdOn < TimestampModel.january2025())
                     BreakdownInfoTile(
                       title: "Returns in Fello Flo",
                       value: BaseUtil.formatIndianRupees(num.parse(
                           BaseUtil.digitPrecision(
-                                  portfolio.flo.absGain, 2, false)
+                                  model.item2.flo.absGain, 2, false)
                               .toString())),
                     ),
                   BreakdownInfoTile(
                     title: "Returns in Digital Gold",
                     value: BaseUtil.formatIndianRupees(num.parse(
                         BaseUtil.digitPrecision(
-                                portfolio.augmont.absGains, 2, false)
+                                model.item2.augmont.absGains, 2, false)
                             .toString())),
                   ),
                   BreakdownInfoTile(
                     title: "Current Rewards",
                     value: num.parse(BaseUtil.digitPrecision(
-                                    portfolio.rewards, 2, false)
+                                    model.item2.rewards, 2, false)
                                 .toString())
                             .toInt()
                             .toString() +
@@ -128,7 +132,7 @@ class FundBreakdownDialog extends StatelessWidget {
                   BreakdownInfoTile(
                     title: "Total Rewards",
                     value: num.parse(BaseUtil.digitPrecision(
-                                    portfolio.lifeTimeRewards, 2, false)
+                                    model.item2.lifeTimeRewards, 2, false)
                                 .toString())
                             .toInt()
                             .toString() +
@@ -139,7 +143,7 @@ class FundBreakdownDialog extends StatelessWidget {
             ],
           );
         },
-        selector: (p0, p1) => p1.userPortfolio,
+        selector: (p0, p1) => Tuple2(p1.baseUser, p1.userPortfolio),
       ),
     );
   }

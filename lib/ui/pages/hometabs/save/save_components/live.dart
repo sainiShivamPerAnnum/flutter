@@ -4,10 +4,10 @@ import 'package:felloapp/feature/live/live_root.dart';
 import 'package:felloapp/feature/live/view_all_live.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class TopLive extends StatelessWidget {
@@ -15,24 +15,27 @@ class TopLive extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<SaveViewModel, LiveHome?>(
-      builder: (_, liveData, __) {
-        return (liveData == null)
-            ? const SizedBox.shrink()
-            : liveData.recent.isEmpty && liveData.live.isEmpty
+    return Padding(
+      padding: EdgeInsets.only(top: 20.h, bottom: 24.h),
+      child: Selector<SaveViewModel, LiveHome?>(
+        builder: (_, liveData, __) {
+          return AnimatedSwitcher(
+            duration: const Duration(milliseconds: 500),
+            child: (liveData == null) || liveData.live.isEmpty
                 ? const SizedBox.shrink()
                 : Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: SizeConfig.padding14),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          TitleSubtitleContainer(
-                            title: liveData.live.isNotEmpty
-                                ? liveData.sections.live.title
-                                : liveData.sections.recent.title,
+                          Padding(
+                            padding: EdgeInsets.only(left: 20.w),
+                            child: Text(
+                              "Streaming Live",
+                              style: TextStyles.sourceSansSB.body2,
+                            ),
                           ),
                           if (liveData.live.isNotEmpty &&
                               liveData.live.length > 1)
@@ -60,77 +63,32 @@ class TopLive extends StatelessWidget {
                                 children: [
                                   Text(
                                     'VIEW ALL',
-                                    style: TextStyles.sourceSansSB.body3,
+                                    style: TextStyles.sourceSans.body4,
                                   ),
                                   Icon(
                                     Icons.arrow_forward_ios,
                                     color: Colors.white,
-                                    size: SizeConfig.body3,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          if (liveData.live.isEmpty &&
-                              liveData.recent.length > 1)
-                            TextButton(
-                              onPressed: () {
-                                AppState.delegate!.appState.currentAction =
-                                    PageAction(
-                                  page: AllEventsPageConfig,
-                                  state: PageState.addWidget,
-                                  widget: ViewAllLive(
-                                    advisorPast: null,
-                                    advisorUpcoming: null,
-                                    type: 'recent',
-                                    appBarTitle: liveData.sections.recent.title,
-                                    liveList: null,
-                                    upcomingList: null,
-                                    recentList: liveData.recent,
-                                    onNotify: null,
-                                    notificationState: null,
-                                    fromHome: true,
-                                  ),
-                                );
-                              },
-                              child: Row(
-                                children: [
-                                  Text(
-                                    'VIEW ALL',
-                                    style: TextStyles.sourceSansSB.body3,
-                                  ),
-                                  Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: Colors.white,
-                                    size: SizeConfig.body3,
+                                    size: 10.r,
                                   ),
                                 ],
                               ),
                             ),
                         ],
                       ),
-                      SizedBox(height: SizeConfig.padding14),
+                      SizedBox(height: 14.h),
                       if (liveData.live.isNotEmpty)
                         Padding(
                           padding: EdgeInsets.only(
-                            left: SizeConfig.padding20,
+                            left: 20.w,
                           ),
                           child: buildLiveSection(liveData.live, true),
                         ),
-                      if (liveData.live.isEmpty)
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: SizeConfig.padding20,
-                          ),
-                          child: buildRecentSection(
-                            liveData.recent,
-                            context,
-                            true,
-                          ),
-                        ),
                     ],
-                  );
-      },
-      selector: (_, model) => model.liveData,
+                  ),
+          );
+        },
+        selector: (_, model) => model.liveData,
+      ),
     );
   }
 }
