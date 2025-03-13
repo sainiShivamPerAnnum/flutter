@@ -77,7 +77,7 @@ class SaveUi {
     return SaveUi(
         assets: List<String>.from(map['assets'].cast<String>() as List<String>),
         sections:
-            List<String>.from(map['sectionsv1'].cast<String>() as List<String>),
+            List<String>.from(map['sectionsv2'].cast<String>() as List<String>),
         sectionsNew: map['sectionsNew'] != null
             ? List<String>.from(
                 map['sectionsNew'].cast<String>() as List<String>)
