@@ -92,7 +92,9 @@ class ExpertsState extends State<Experts> {
                                   vertical: 8.h,
                                 ),
                                 child: Text(
-                                  category,
+                                  category.toLowerCase() == 'top'
+                                      ? 'All'
+                                      : category,
                                   style: TextStyles.sourceSansM.body4.colour(
                                     selectedCategory == category
                                         ? const Color(0xff62E3C4)

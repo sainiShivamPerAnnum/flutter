@@ -65,7 +65,7 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
                 children: [
                   SizedBox(height: MediaQuery.of(context).padding.top),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    padding: EdgeInsets.symmetric(horizontal: 10.w),
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
                         colors: [UiConstants.bg, Color(0xff212B2D)],

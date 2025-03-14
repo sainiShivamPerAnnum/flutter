@@ -59,14 +59,8 @@ class _RootState extends State<Root> {
               builder: (ctx, m, child) {
                 return BaseScaffold(
                   resizeToAvoidBottomInset: false,
-                  showBackgroundGrid:
-                      m.getCurrentTabIndex == 3 || m.getCurrentTabIndex == 0
-                          ? false
-                          : true,
-                  backgroundColor:
-                      m.getCurrentTabIndex == 3 || m.getCurrentTabIndex == 0
-                          ? UiConstants.bg
-                          : null,
+                  showBackgroundGrid: false,
+                  backgroundColor: UiConstants.bg,
                   body: Stack(
                     children: [
                       Column(

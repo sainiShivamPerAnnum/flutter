@@ -127,7 +127,8 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
       builder: (context, state) {
         if (state is LoadingExpertsDetails) {
           return const BaseScaffold(
-            showBackgroundGrid: true,
+            showBackgroundGrid: false,
+            backgroundColor: UiConstants.bg,
             body: Center(child: FullScreenLoader()),
           );
         }
@@ -137,7 +138,8 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
           final recentlive = state.recentLive;
           final shortsData = state.shortsData;
           return BaseScaffold(
-            showBackgroundGrid: true,
+            showBackgroundGrid: false,
+            backgroundColor: UiConstants.bg,
             floatingActionButtonAnimator: EaseInFloatingActionButtonAnimator(),
             floatingActionButton: GestureDetector(
               onTap: () {
@@ -381,6 +383,8 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
           );
         }
         return BaseScaffold(
+          showBackgroundGrid: false,
+          backgroundColor: UiConstants.bg,
           appBar: FAppBar(
             backgroundColor: Colors.transparent,
             centerTitle: true,
