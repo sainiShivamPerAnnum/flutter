@@ -266,6 +266,7 @@ class ApiPath {
   static const String rpsPath = "/withdrawal/rps";
   static const String fdHome = "/fd/templates";
   static const String myFds = "/fd/portfolio";
+  static const String fdTransactions = "/fd/transactions";
   static const String fdCalculation = "/fd/calculate";
   static const String fdRedirection = "/fd/redirection";
 }

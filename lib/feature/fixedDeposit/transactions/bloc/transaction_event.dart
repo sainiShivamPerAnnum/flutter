@@ -4,6 +4,13 @@ sealed class FixedDepositTransactionEvent {
   const FixedDepositTransactionEvent();
 }
 
-class LoadMyFDs extends FixedDepositTransactionEvent {
-  const LoadMyFDs();
+class LoadMyFDTransactions extends FixedDepositTransactionEvent {
+  const LoadMyFDTransactions();
+}
+
+class SwitchFilter extends FixedDepositTransactionEvent {
+  final String filter;
+  const SwitchFilter(
+    this.filter,
+  );
 }

@@ -1,6 +1,7 @@
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/feature/fixedDeposit/fundsSection/fd_funds.dart';
 import 'package:felloapp/feature/fixedDeposit/myDeposits/my_deposits.dart';
+import 'package:felloapp/feature/fixedDeposit/transactions/fd_transactions.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -134,13 +135,10 @@ class _FdHomeViewState extends State<FdHomeView>
         },
         body: LazyLoadIndexedStack(
           index: _currentIndex,
-          children: [
-            const ALLfdsSection(),
-            const MyDepositsSection(),
-            Container(
-              color: Colors.blue,
-              height: 200,
-            ),
+          children: const [
+            ALLfdsSection(),
+            MyDepositsSection(),
+            FdTransactions(),
           ],
         ),
       ),

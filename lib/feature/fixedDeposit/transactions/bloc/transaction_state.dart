@@ -12,21 +12,35 @@ class LoadingMyDeposits extends FixedDepositTransactionState {
 }
 
 final class FdDepositsLoaded extends FixedDepositTransactionState {
-  final UserFdPortfolio fdData;
+  final List<FDTransactionData> activeDeposits;
+  final List<FDTransactionData> maturedDeposits;
+  final String currentFilter;
   const FdDepositsLoaded({
-    required this.fdData,
+    required this.activeDeposits,
+    required this.maturedDeposits,
+    this.currentFilter = 'ACTIVE',
   });
+  List<FDTransactionData> get filteredDeposits {
+    return currentFilter == 'ACTIVE' ? activeDeposits : maturedDeposits;
+  }
+
   FixedDepositTransactionState copyWith({
-    UserFdPortfolio? fdData,
+    List<FDTransactionData>? activeDeposits,
+    List<FDTransactionData>? maturedDeposits,
+    String? currentFilter,
   }) {
     return FdDepositsLoaded(
-      fdData: fdData ?? this.fdData,
+      activeDeposits: activeDeposits ?? this.activeDeposits,
+      maturedDeposits: maturedDeposits ?? this.maturedDeposits,
+      currentFilter: currentFilter ?? this.currentFilter,
     );
   }
 
   @override
   List<Object?> get props => [
-        fdData,
+        activeDeposits,
+        maturedDeposits,
+        currentFilter,
       ];
 }
 

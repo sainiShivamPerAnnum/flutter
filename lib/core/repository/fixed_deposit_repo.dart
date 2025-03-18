@@ -2,6 +2,7 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/fixedDeposit/fd_calculator.dart';
 // import 'package:felloapp/core/model/fixedDeposit/fd_deposit.dart';
 import 'package:felloapp/core/model/fixedDeposit/fd_home.dart';
+import 'package:felloapp/core/model/fixedDeposit/fd_transaction.dart';
 import 'package:felloapp/core/model/fixedDeposit/my_fds.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -35,7 +36,7 @@ class FdRepository extends BaseRepo {
           final List<AllFdsData> fdData = (response['data'] as List)
               .map(
                 (item) => AllFdsData.fromJson(
-                  item,
+                  item as Map<String, dynamic>,
                 ),
               )
               .toList();
@@ -118,20 +119,24 @@ class FdRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<UserFdPortfolio>> fdTransactions() async {
+  Future<ApiResponse<List<FDTransactionData>>> fdTransactions() async {
     try {
       final response = await APIService.instance.getData(
-        ApiPath.myFds,
+        ApiPath.fdTransactions,
         cBaseUrl: _baseUrl,
-        apiName: '$_fd/myFds',
+        apiName: '$_fd/fdTransactions',
       );
-      final responseData = response["data"];
-      return ApiResponse<UserFdPortfolio>(
-        model: UserFdPortfolio.fromJson(responseData),
+      final List<FDTransactionData> responseData = (response['data'] as List)
+          .map(
+            (item) => FDTransactionData.fromJson(item as Map<String, dynamic>),
+          )
+          .toList();
+      return ApiResponse<List<FDTransactionData>>(
+        model: responseData,
         code: 200,
       );
     } catch (e) {
-      _logger.e("myFds => ${e.toString()}");
+      _logger.e("fdTransactions => ${e.toString()}");
       return ApiResponse.withError(
         e.toString(),
         400,

@@ -1,8 +1,9 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/feature/fixedDeposit/myDeposits/bloc/my_deposit_bloc.dart';
-import 'package:felloapp/feature/fixedDeposit/myDeposits/widgets/summary_card.dart';
+import 'package:felloapp/core/model/fixedDeposit/fd_transaction.dart';
+import 'package:felloapp/feature/fixedDeposit/transactions/bloc/transaction_bloc.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/util/extensions/string_extension.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +19,10 @@ class FdTransactions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => MyFixedDepositBloc(
+      create: (_) => FdTransactionBloc(
         locator(),
       )..add(
-          const LoadMyFDs(),
+          const LoadMyFDTransactions(),
         ),
       child: const _InvestmentDetails(),
     );
@@ -33,18 +34,18 @@ class _InvestmentDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final myfundsBloc = context.read<MyFixedDepositBloc>();
+    final myfundsBloc = context.read<FdTransactionBloc>();
     return RefreshIndicator.adaptive(
       onRefresh: () async {
-        myfundsBloc.add(const LoadMyFDs());
+        myfundsBloc.add(const LoadMyFDTransactions());
       },
-      child: BlocBuilder<MyFixedDepositBloc, MyFixedDepositState>(
+      child: BlocBuilder<FdTransactionBloc, FixedDepositTransactionState>(
         builder: (context, state) {
           return switch (state) {
             LoadingMyDeposits() => const FullScreenLoader(),
             FdMyDepositsError() => NewErrorPage(
                 onTryAgain: () {
-                  myfundsBloc.add(const LoadMyFDs());
+                  myfundsBloc.add(const LoadMyFDTransactions());
                 },
               ),
             FdDepositsLoaded() => CustomScrollView(
@@ -60,7 +61,33 @@ class _InvestmentDetails extends StatelessWidget {
                     ),
                   ),
                   SliverToBoxAdapter(
-                    child: SummaryCard(summary: state.fdData.summary),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          FilterButton(
+                            label: 'Active',
+                            isSelected: state.currentFilter == 'ACTIVE',
+                            onTap: () {
+                              context
+                                  .read<FdTransactionBloc>()
+                                  .add(const SwitchFilter('ACTIVE'));
+                            },
+                          ),
+                          SizedBox(width: 10.w),
+                          FilterButton(
+                            label: 'Matured',
+                            isSelected: state.currentFilter == 'MATURED',
+                            onTap: () {
+                              context
+                                  .read<FdTransactionBloc>()
+                                  .add(const SwitchFilter('MATURED'));
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                   SliverToBoxAdapter(
                     child: SizedBox(
@@ -71,7 +98,7 @@ class _InvestmentDetails extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
                       child: Text(
-                        'Fixed Deposits',
+                        state.currentFilter.capitalize(),
                         style: GoogleFonts.sourceSans3(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w600,
@@ -88,16 +115,13 @@ class _InvestmentDetails extends StatelessWidget {
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        final fdData = state.fdData;
-                        final portfolio = fdData.portfolio[index];
-                        return _buildInvestmentSection(portfolio.issuer, {
-                          'current': portfolio.currentAmount,
-                          'avgXirr': portfolio.roi,
-                          'invested': portfolio.investedAmount,
-                          'tenure': portfolio.tenure,
-                        });
+                        final fdData = state.filteredDeposits;
+                        final portfolio = fdData[index];
+                        return _buildInvestmentSection(
+                          portfolio,
+                        );
                       },
-                      childCount: state.fdData.portfolio.length,
+                      childCount: state.filteredDeposits.length,
                     ),
                   ),
                 ],
@@ -108,167 +132,106 @@ class _InvestmentDetails extends StatelessWidget {
     );
   }
 
-  Widget _buildInvestmentSection(String title, Map<String, dynamic> data) {
-    return Container(
+  Widget _buildInvestmentSection(FDTransactionData data) {
+    return Card(
+      color: UiConstants.greyVarient,
       margin: EdgeInsets.symmetric(horizontal: 20.w),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.r),
-        color: UiConstants.greyVarient,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: const Color(0xff292B2F),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10.r),
-                topRight: Radius.circular(10.r),
+      child: Padding(
+        padding: EdgeInsets.all(18.r),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '#${data.jid}',
+                    style: GoogleFonts.sourceSans3(
+                      color: UiConstants.kTextColor,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    'Deposit: ${BaseUtil.formatIndianRupees(data.depositAmount)}',
+                    style: GoogleFonts.sourceSans3(
+                      color: UiConstants.kTextColor.withOpacity(.75),
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
               ),
             ),
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 14.h),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  title,
+                  '${data.tenure ?? ''} months',
                   style: GoogleFonts.sourceSans3(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500,
-                    color: UiConstants.kTextColor,
+                    color: UiConstants.kTextColor.withOpacity(.75),
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
-                Icon(
-                  Icons.arrow_forward,
-                  size: 18.sp,
-                  color: UiConstants.kTextColor,
+                SizedBox(height: 4.h),
+                Text(
+                  '${data.roi}% XIRR',
+                  style: GoogleFonts.sourceSans3(
+                    color: UiConstants.kTextColor.withOpacity(.75),
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ],
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class FilterButton extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const FilterButton({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
+        decoration: BoxDecoration(
+          color: isSelected ? UiConstants.kTextColor : Colors.transparent,
+          borderRadius: BorderRadius.circular(100.r),
+          border: Border.all(
+            color: isSelected
+                ? UiConstants.kTextColor
+                : UiConstants.kTextColor.withOpacity(.6),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 14.h),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Current',
-                          style: GoogleFonts.sourceSans3(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w500,
-                            color: UiConstants.kTextColor.withOpacity(.5),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 4.h,
-                        ),
-                        Text(
-                          BaseUtil.formatIndianRupees(data['current']),
-                          style: GoogleFonts.sourceSans3(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                            color: UiConstants.kTextColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          'Avg. XIRR',
-                          style: GoogleFonts.sourceSans3(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w500,
-                            color: UiConstants.kTextColor.withOpacity(.5),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 4.h,
-                        ),
-                        Text(
-                          '${data['avgXirr']}% p.a.',
-                          style: GoogleFonts.sourceSans3(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                            color: UiConstants.teal3,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Divider(
-                  color: UiConstants.kTextColor.withOpacity(0.08),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Invested',
-                          style: GoogleFonts.sourceSans3(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w500,
-                            color: UiConstants.kTextColor.withOpacity(.5),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 4.h,
-                        ),
-                        Text(
-                          BaseUtil.formatIndianRupees(data['invested']),
-                          style: GoogleFonts.sourceSans3(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                            color: UiConstants.kTextColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          'Tenure',
-                          style: GoogleFonts.sourceSans3(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w500,
-                            color: UiConstants.kTextColor.withOpacity(.5),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 4.h,
-                        ),
-                        Text(
-                          '${data['tenure']} months',
-                          style: GoogleFonts.sourceSans3(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                            color: UiConstants.kTextColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
+        ),
+        child: Text(
+          label,
+          style: GoogleFonts.sourceSans3(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w500,
+            color: isSelected
+                ? UiConstants.greyVarient
+                : UiConstants.kTextColor.withOpacity(.6),
           ),
-        ],
+        ),
       ),
     );
   }
