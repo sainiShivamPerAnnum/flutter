@@ -139,16 +139,22 @@ class FdRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<String>> getRedirectionUrl() async {
+  Future<ApiResponse<String>> getRedirectionUrl({
+    required String? issuerId,
+  }) async {
     try {
+      final params = {
+        "issuerId": issuerId,
+      };
       final response = await APIService.instance.getData(
         ApiPath.fdRedirection,
         cBaseUrl: _baseUrl,
         apiName: '$_fd/getRedirectionUrl',
+        queryParams: issuerId != null ? params : null,
       );
       final responseData = response["data"];
       return ApiResponse<String>(
-        model: responseData,
+        model: responseData['url'],
         code: 200,
       );
     } catch (e) {

@@ -1,7 +1,4 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/static/netbanking_web_view.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -45,7 +42,7 @@ class _FdWebViewState extends State<FdWebView> {
       ..setBackgroundColor(const Color(0x00000000))
       ..setNavigationDelegate(
         NavigationDelegate(
-          // onUrlChange: (change) => widget.onUrlChanged?.call(change.url),
+          onUrlChange: (change) => (change.url),
           onNavigationRequest: (request) {
             final url = request.url;
             if (url.startsWith('upi:') ||
@@ -74,26 +71,13 @@ class _FdWebViewState extends State<FdWebView> {
     super.dispose();
   }
 
-  Future<void> _onTimerCompleted() async {
-    AppState.unblockNavigation();
-    AppState.unblockNavigation();
-    await AppState.backButtonDispatcher?.didPopRoute();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: UiConstants.kBackgroundColor,
-        surfaceTintColor: UiConstants.kBackgroundColor,
-        actions: [
-          TimerWidget(
-            onTimerFinish: _onTimerCompleted,
-          ),
-        ],
-      ),
-      body: WebViewWidget(
-        controller: controller!,
+    return SafeArea(
+      child: Scaffold(
+        body: WebViewWidget(
+          controller: controller!,
+        ),
       ),
     );
   }

@@ -11,6 +11,13 @@ class LoadingFdCalculator extends FixedDepositCalculatorState {
   List<Object?> get props => const [];
 }
 
+class ProccedingToDeposit extends FixedDepositCalculatorState {
+  const ProccedingToDeposit();
+
+  @override
+  List<Object?> get props => const [];
+}
+
 class FdCalculationResult extends FixedDepositCalculatorState {
   final String totalInterest;
   final String maturityAmount;

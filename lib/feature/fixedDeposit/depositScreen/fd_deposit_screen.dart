@@ -9,6 +9,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/consultant_card.
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -539,32 +540,50 @@ class __FDDepositViewState extends State<_FDDepositView> {
                     },
                   ),
                   SizedBox(height: SizeConfig.padding16),
-                  Container(
-                    width: double.infinity,
-                    height: SizeConfig.padding48,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(
-                          SizeConfig.roundness5,
+                  GestureDetector(
+                    onTap: () {
+                      context.read<FDCalculatorBloc>().add(
+                            OnProceed(
+                              issuerId: widget.fdData.id,
+                            ),
+                          );
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: SizeConfig.padding48,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            SizeConfig.roundness5,
+                          ),
                         ),
                       ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding12,
-                        vertical: SizeConfig.padding8,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Invest now',
-                            style: TextStyles.sourceSansSB.body3.colour(
-                              UiConstants.kTextColor4,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding12,
+                          vertical: SizeConfig.padding8,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            BlocBuilder<FDCalculatorBloc,
+                                FixedDepositCalculatorState>(
+                              builder: (context, state) {
+                                if (state is ProccedingToDeposit) {
+                                  return const CupertinoActivityIndicator();
+                                } else {
+                                  return Text(
+                                    'Invest now',
+                                    style: TextStyles.sourceSansSB.body3.colour(
+                                      UiConstants.kTextColor4,
+                                    ),
+                                  );
+                                }
+                              },
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
