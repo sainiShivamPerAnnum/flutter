@@ -1,4 +1,4 @@
-part of 'fixed_deposit_bloc.dart';
+part of 'deposit_calculator_bloc.dart';
 
 sealed class FDCalculatorEvents {
   const FDCalculatorEvents();

@@ -5,8 +5,8 @@ import 'package:equatable/equatable.dart';
 import 'package:felloapp/core/model/fixedDeposit/my_fds.dart';
 import 'package:felloapp/core/repository/fixed_deposit_repo.dart';
 
-part 'fixed_deposit_state.dart';
-part 'fixed_deposit_event.dart';
+part 'my_deposit_state.dart';
+part 'my_deposit_event.dart';
 
 class MyFixedDepositBloc
     extends Bloc<MyFixedDepositEvent, MyFixedDepositState> {

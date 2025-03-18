@@ -1,4 +1,4 @@
-part of 'fixed_deposit_bloc.dart';
+part of 'deposit_details_bloc.dart';
 
 sealed class FixedDepositDetailsState extends Equatable {
   const FixedDepositDetailsState();

@@ -118,6 +118,27 @@ class FdRepository extends BaseRepo {
     }
   }
 
+  Future<ApiResponse<UserFdPortfolio>> fdTransactions() async {
+    try {
+      final response = await APIService.instance.getData(
+        ApiPath.myFds,
+        cBaseUrl: _baseUrl,
+        apiName: '$_fd/myFds',
+      );
+      final responseData = response["data"];
+      return ApiResponse<UserFdPortfolio>(
+        model: UserFdPortfolio.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      _logger.e("myFds => ${e.toString()}");
+      return ApiResponse.withError(
+        e.toString(),
+        400,
+      );
+    }
+  }
+
   Future<ApiResponse<String>> getRedirectionUrl() async {
     try {
       final response = await APIService.instance.getData(

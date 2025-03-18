@@ -1,4 +1,4 @@
-part of 'fixed_deposit_bloc.dart';
+part of 'my_deposit_bloc.dart';
 
 sealed class MyFixedDepositEvent {
   const MyFixedDepositEvent();

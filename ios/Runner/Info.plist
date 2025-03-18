@@ -125,10 +125,11 @@
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+		<string>upi</string>
 		<string>phonepe</string>
-		<string>tez</string>
-		<string>paytm</string>
 		<string>gpay</string>
+		<string>paytm</string>
+		<string>tez</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

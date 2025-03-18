@@ -3,8 +3,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:felloapp/core/repository/fixed_deposit_repo.dart';
 
-part 'fixed_deposit_state.dart';
-part 'fixed_deposit_event.dart';
+part 'deposit_calculator_state.dart';
+part 'deposit_calculator_event.dart';
 
 class FDCalculatorBloc
     extends Bloc<FDCalculatorEvents, FixedDepositCalculatorState> {

@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/fixedDeposit/fd_home.dart';
-import 'package:felloapp/feature/fixedDeposit/depositScreen/bloc/fixed_deposit_bloc.dart';
+import 'package:felloapp/feature/fixedDeposit/depositScreen/bloc/deposit_calculator_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/consultant_card.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';

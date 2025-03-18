@@ -10,8 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MyDepositsSection extends StatelessWidget {
-  const MyDepositsSection({
+class FdTransactions extends StatelessWidget {
+  const FdTransactions({
     super.key,
   });
 
