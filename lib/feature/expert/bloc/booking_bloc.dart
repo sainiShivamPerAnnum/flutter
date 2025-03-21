@@ -43,6 +43,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     on<SelectDuration>(_onSelectDuration);
     on<EditBooking>(_editBooking);
     on<SelectReedem>(_useCoins);
+    on<ChangeMonth>(_onChangeMonth);
   }
   FutureOr<void> _onLoadBookingDates(
     LoadBookingDates event,
@@ -58,24 +59,45 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       duration: event.duration,
     );
     final availableDates = data.model?.slots?.keys.toList() ?? [];
+    if (availableDates.isEmpty) {
+      emitter(
+        BookingsLoaded(
+          advisorId: event.advisorId,
+          schedule: data.model,
+          isFree: data.model?.hasFreeCall ?? false,
+          selectedMonth: DateTime.now(),
+        ),
+      );
+      return;
+    }
     final firstDuration = data.model?.slots?.values.first.keys.first ?? '';
-    String? selectedDate;
 
+    final firstAvailableDate = availableDates.first;
+    final firstAvailableDateTime = DateTime.parse(firstAvailableDate);
+    final selectedMonth =
+        DateTime(firstAvailableDateTime.year, firstAvailableDateTime.month);
+
+    final filteredDates = availableDates.where((date) {
+      final dateTime = DateTime.parse(date);
+      return dateTime.month == selectedMonth.month;
+    }).toList();
+
+    String? selectedDate;
     if (event.scheduledOn != null) {
       final formattedScheduledOn = DateFormat('yyyy-MM-dd').format(
         event.scheduledOn!,
       );
 
-      if (availableDates.contains(formattedScheduledOn)) {
+      if (filteredDates.contains(formattedScheduledOn)) {
         selectedDate = formattedScheduledOn;
-      } else if (availableDates.isNotEmpty) {
-        selectedDate = availableDates.first;
+      } else if (filteredDates.isNotEmpty) {
+        selectedDate = filteredDates.first;
       }
-    } else if (availableDates.isNotEmpty) {
-      selectedDate = availableDates.first;
+    } else if (filteredDates.isNotEmpty) {
+      selectedDate = filteredDates.first;
     }
 
-    if (availableDates.isNotEmpty) {
+    if (filteredDates.isNotEmpty) {
       emitter(
         BookingsLoaded(
           advisorId: event.advisorId,
@@ -85,6 +107,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
               ? int.tryParse(firstDuration.toString()) ?? event.duration
               : event.duration,
           isFree: data.model?.hasFreeCall ?? false,
+          selectedMonth: selectedMonth,
         ),
       );
     } else {
@@ -93,6 +116,28 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           schedule: data.model,
           advisorId: event.advisorId,
           isFree: data.model?.hasFreeCall ?? false,
+          selectedMonth: DateTime.now(),
+        ),
+      );
+    }
+  }
+
+  void _onChangeMonth(ChangeMonth event, Emitter<BookingState> emitter) {
+    if (state is BookingsLoaded) {
+      final currentState = state as BookingsLoaded;
+      final availableDates = currentState.schedule?.slots?.keys.toList() ?? [];
+      final filteredDates = availableDates.where((date) {
+        final dateTime = DateTime.parse(date);
+        return dateTime.month == event.selectedMonth.month;
+      }).toList();
+      String? selectedDate;
+      if (filteredDates.isNotEmpty) {
+        selectedDate = filteredDates.first;
+      }
+      emitter(
+        currentState.copyWith(
+          selectedMonth: event.selectedMonth,
+          selectedDate: selectedDate,
         ),
       );
     }

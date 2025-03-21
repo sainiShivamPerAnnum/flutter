@@ -26,11 +26,13 @@ final class BookingsLoaded extends BookingState {
   final int selectedDuration;
   final String? selectedTime;
   final bool isFree;
+  final DateTime selectedMonth;
 
   const BookingsLoaded({
     required this.advisorId,
     required this.schedule,
     required this.isFree,
+    required this.selectedMonth,
     this.selectedDate,
     this.selectedTime,
     this.selectedDuration = 30,
@@ -43,6 +45,7 @@ final class BookingsLoaded extends BookingState {
     String? selectedTime,
     int? selectedDuration,
     bool? isFree,
+    DateTime? selectedMonth,
   }) {
     return BookingsLoaded(
       advisorId: advisorId ?? this.advisorId,
@@ -51,6 +54,7 @@ final class BookingsLoaded extends BookingState {
       selectedTime: selectedTime,
       selectedDuration: selectedDuration ?? this.selectedDuration,
       isFree: isFree ?? this.isFree,
+      selectedMonth: selectedMonth ?? this.selectedMonth,
     );
   }
 
@@ -62,6 +66,7 @@ final class BookingsLoaded extends BookingState {
         selectedTime,
         selectedDuration,
         isFree,
+        selectedMonth,
       ];
 }
 

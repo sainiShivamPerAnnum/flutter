@@ -16,6 +16,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
@@ -97,6 +98,12 @@ class _BookCallBottomSheet extends StatefulWidget {
 class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
   String? selectedDate;
   String? selectedTime;
+  final ScrollController _scrollController = ScrollController();
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,6 +140,7 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
               state.schedule,
               widget.advisorId,
               state.isFree,
+              _scrollController,
             );
           } else if (state is PricingData) {
             return _buildPaymentSummary(
@@ -172,12 +180,14 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
     Schedule? schedule,
     String advisorId,
     bool isFree,
+    ScrollController scrollController,
   ) {
     final state = context.read<BookingBloc>().state;
     BookingsLoaded? loadedState = state is BookingsLoaded ? state : null;
     final selectedDate = loadedState?.selectedDate;
     final selectedDuration = loadedState?.selectedDuration;
     final selectedTime = loadedState?.selectedTime;
+    final selectedMonth = loadedState?.selectedMonth ?? DateTime.now();
     final currentDurations =
         (selectedDate != null && schedule?.slots?[selectedDate] != null)
             ? schedule!.slots![selectedDate]!.keys.toList()
@@ -206,7 +216,34 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
             .toList()
         : [];
 
-    return dates.isEmpty
+    final availableDatesForMonth = dates.where((date) {
+      final dateTime = DateTime.parse(date);
+      return dateTime.month == selectedMonth.month;
+    }).toList();
+    void scrollToSelectedDate(String selectedDate) {
+      final index =
+          schedule?.slots?[selectedDate]?.keys.toList().indexOf(selectedDate);
+      if (index != null && index != -1) {
+        _scrollController.animateTo(
+          index * (10.w),
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+    }
+
+    void changeMonth(DateTime newMonth) {
+      final availableDatesForNewMonth = dates.where((date) {
+        final dateTime = DateTime.parse(date);
+        return dateTime.month == newMonth.month;
+      }).toList();
+      if (availableDatesForNewMonth.isNotEmpty) {
+        context.read<BookingBloc>().add(ChangeMonth(newMonth));
+        scrollToSelectedDate(newMonth.toString());
+      }
+    }
+
+    return availableDatesForMonth.isEmpty
         ? Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -376,6 +413,45 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                 color: UiConstants.greyVarient,
               ),
               Container(
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_left),
+                      onPressed: () {
+                        final prevMonth = DateTime(
+                          selectedMonth.year,
+                          selectedMonth.month - 1,
+                        );
+                        changeMonth(prevMonth);
+                      },
+                    ),
+                    AnimatedSwitcher(
+                      duration: Duration(milliseconds: 300),
+                      child: Text(
+                        DateFormat('MMMM yyyy').format(selectedMonth),
+                        style: TextStyles.sourceSansSB.body1,
+                        key: ValueKey(selectedMonth),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.arrow_right),
+                      onPressed: () {
+                        final nextMonth = DateTime(
+                          selectedMonth.year,
+                          selectedMonth.month + 1,
+                        );
+                        changeMonth(nextMonth);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(
+                color: UiConstants.greyVarient,
+              ),
+              Container(
                 padding: EdgeInsets.all(SizeConfig.padding18),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -385,25 +461,29 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                       style: TextStyles.sourceSansSB.body2,
                     ),
                     SizedBox(height: SizeConfig.padding16),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: dates.map((date) {
-                          return Padding(
-                            padding:
-                                EdgeInsets.only(right: SizeConfig.padding12),
-                            child: DateButton(
-                              date: date,
-                              isSelected: date == selectedDate,
-                              onTap: () {
-                                context
-                                    .read<BookingBloc>()
-                                    .add(SelectDate(date));
-                              },
-                            ),
-                          );
-                        }).toList(),
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 500),
+                      child: SingleChildScrollView(
+                        controller: scrollController,
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: dates.map((date) {
+                            return Padding(
+                              padding:
+                                  EdgeInsets.only(right: SizeConfig.padding12),
+                              child: DateButton(
+                                date: date,
+                                isSelected: date == selectedDate,
+                                onTap: () {
+                                  context
+                                      .read<BookingBloc>()
+                                      .add(SelectDate(date));
+                                },
+                              ),
+                            );
+                          }).toList(),
+                        ),
                       ),
                     ),
                     if (!widget.isEdit) SizedBox(height: SizeConfig.padding16),
