@@ -26,7 +26,6 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_rate_graph.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';

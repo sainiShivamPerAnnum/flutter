@@ -27,6 +27,7 @@ VideoData _$VideoDataFromJson(Map<String, dynamic> json) => VideoData(
       advisorImg: json['advisorImg'] as String? ?? '',
       isSaved: json['isSaved'] as bool? ?? false,
       isFollowed: json['isFollowed'] as bool? ?? false,
+      isVideoSeenByUser: json['isVideoSeenByUser'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$VideoDataToJson(VideoData instance) => <String, dynamic>{
@@ -47,4 +48,5 @@ Map<String, dynamic> _$VideoDataToJson(VideoData instance) => <String, dynamic>{
       'advisorImg': instance.advisorImg,
       'isSaved': instance.isSaved,
       'isFollowed': instance.isFollowed,
+      'isVideoSeenByUser': instance.isVideoSeenByUser,
     };

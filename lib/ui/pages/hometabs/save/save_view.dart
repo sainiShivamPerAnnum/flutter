@@ -43,7 +43,6 @@ class SaveViewWrapper extends StatefulWidget {
 }
 
 class _SaveViewWrapperState extends State<SaveViewWrapper> {
-  
   @override
   void dispose() {
     widget.model.dump();

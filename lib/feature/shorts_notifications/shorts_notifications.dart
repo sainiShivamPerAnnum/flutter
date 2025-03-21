@@ -254,9 +254,22 @@ class _ShortsNotification extends StatelessWidget {
                                   children: [
                                     CircleAvatar(
                                       radius: 18.r,
-                                      backgroundImage: NetworkImage(
-                                        notification.advisorProfilePhoto,
-                                      ),
+                                      backgroundColor: Colors.transparent,
+                                      child: notification
+                                              .advisorProfilePhoto.isNotEmpty
+                                          ? ClipOval(
+                                              child: AppImage(
+                                                height: 32.r,
+                                                width: 32.r,
+                                                notification
+                                                    .advisorProfilePhoto,
+                                              ),
+                                            )
+                                          : AppImage(
+                                              height: 32.r,
+                                              width: 32.r,
+                                              Assets.logoWhite,
+                                            ),
                                     ),
                                     SizedBox(
                                       width: 10.w,
@@ -352,24 +365,32 @@ class _ShortsNotification extends StatelessWidget {
                                                 SizedBox(
                                                   width: 10.w,
                                                 ),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      notification.subtitle,
-                                                      style: TextStyles
-                                                          .sourceSansM.body4,
-                                                    ),
-                                                    Text(
-                                                      '${notification.duration} watch',
-                                                      style: TextStyles
-                                                          .sourceSans.body4
-                                                          .colour(
-                                                        const Color(0xffC2BDC2),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        notification.subtitle,
+                                                        style: TextStyles
+                                                            .sourceSansM.body4,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                       ),
-                                                    ),
-                                                  ],
+                                                      Text(
+                                                        '${notification.duration} watch',
+                                                        style: TextStyles
+                                                            .sourceSans.body4
+                                                            .colour(
+                                                          const Color(
+                                                            0xffC2BDC2,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ],
                                             ),

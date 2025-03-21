@@ -125,7 +125,7 @@ class ShortsCard extends StatelessWidget {
                     child: AspectRatio(
                       aspectRatio: 9 / 16,
                       child: Container(
-                        constraints: BoxConstraints(maxHeight: 130.h),
+                        constraints: BoxConstraints(maxHeight: 193.h),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(
@@ -162,6 +162,7 @@ class ShortsCard extends StatelessWidget {
               ),
             ),
             Container(
+              height: 93.h,
               padding: EdgeInsets.symmetric(
                 horizontal: 10.w,
                 vertical: 14.h,
@@ -179,15 +180,13 @@ class ShortsCard extends StatelessWidget {
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     videos[i].title,
                     style: TextStyles.sourceSansM.body4,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(
-                    height: 12.h,
                   ),
                   Text(
                     videos[i].categoryV1,

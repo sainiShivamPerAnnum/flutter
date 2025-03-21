@@ -58,6 +58,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       duration: event.duration,
     );
     final availableDates = data.model?.slots?.keys.toList() ?? [];
+    final firstDuration = data.model?.slots?.values.first.keys.first ?? '';
     String? selectedDate;
 
     if (event.scheduledOn != null) {
@@ -80,7 +81,9 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           advisorId: event.advisorId,
           schedule: data.model,
           selectedDate: currentSelectedDate ?? selectedDate,
-          selectedDuration: event.duration,
+          selectedDuration: firstDuration != ''
+              ? int.tryParse(firstDuration.toString()) ?? event.duration
+              : event.duration,
           isFree: data.model?.hasFreeCall ?? false,
         ),
       );

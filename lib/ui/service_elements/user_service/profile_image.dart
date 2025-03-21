@@ -18,6 +18,7 @@ class ProfileImageSE extends StatefulWidget {
   final bool showBadge;
   final bool highLightNewUser;
   final EdgeInsetsGeometry? padding;
+  final double? strokeWidth;
 
   const ProfileImageSE({
     super.key,
@@ -26,6 +27,7 @@ class ProfileImageSE extends StatefulWidget {
     this.showBadge = false,
     this.highLightNewUser = false,
     this.padding,
+    this.strokeWidth = 3,
   });
 
   @override
@@ -63,7 +65,11 @@ class _ProfileImageSEState extends State<ProfileImageSE> {
             children: [
               CustomPaint(
                 painter: _CirclePainter(
-                  _getColorFromLevel(model.baseUser!.superFelloLevel),
+                  _getColorFromLevel(
+                    model.baseUser!.superFelloLevel,
+                  ),
+                  widget.radius,
+                  widget.strokeWidth,
                 ),
                 child: Padding(
                   padding: widget.padding ?? EdgeInsets.zero,
@@ -110,26 +116,31 @@ class _ProfileImageSEState extends State<ProfileImageSE> {
 
 class _CirclePainter extends CustomPainter {
   final Color? color;
+  final double? radius;
+  final double? strokeWidth;
 
-  const _CirclePainter(this.color);
+  const _CirclePainter(this.color, this.radius, this.strokeWidth);
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = color ?? Colors.transparent
-      ..strokeWidth = 3
+      ..strokeWidth = strokeWidth ?? 3
       ..style = PaintingStyle.stroke;
 
     Offset c = Offset(
       size.width / 2,
-      size.width / 2,
+      size.height / 2,
     );
 
-    canvas.drawCircle(c, 18, paint);
+    // Using the passed radius for drawing the circle
+    canvas.drawCircle(c, radius ?? 18, paint);
   }
 
   @override
   bool shouldRepaint(covariant _CirclePainter oldDelegate) {
-    return color != oldDelegate.color;
+    return color != oldDelegate.color ||
+        radius != oldDelegate.radius ||
+        strokeWidth != oldDelegate.strokeWidth;
   }
 }

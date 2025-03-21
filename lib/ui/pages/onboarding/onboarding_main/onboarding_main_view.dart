@@ -54,7 +54,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
       },
       builder: (context, model, child) {
         return Scaffold(
-          backgroundColor: UiConstants.onboardingBackgroundColor,
+          backgroundColor: UiConstants.bg,
           body: NotificationListener<OverscrollIndicatorNotification>(
             onNotification: (n) {
               n.disallowIndicator();
@@ -65,34 +65,8 @@ class _OnBoardingViewState extends State<OnBoardingView>
                 Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 40.h,
-                      ).copyWith(top: 60.h),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(
-                          3,
-                          (index) {
-                            return Container(
-                              width: 22.w,
-                              height: 2.h,
-                              margin: EdgeInsets.symmetric(horizontal: 3.w),
-                              decoration: BoxDecoration(
-                                color: index <= model.indicatorPosition
-                                    ? Colors.white
-                                    : Colors.transparent,
-                                border: Border.all(
-                                  color: index <= model.indicatorPosition
-                                      ? Colors.white
-                                      : UiConstants.greyVarient,
-                                ),
-                                shape: BoxShape.rectangle,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+                    SizedBox(
+                      height: 65.h,
                     ),
                     Expanded(
                       child: PageView.builder(
@@ -119,38 +93,47 @@ class _OnBoardingViewState extends State<OnBoardingView>
                           model.currentPage = val;
                         },
                         itemCount: 4,
-                        itemBuilder: (_, __) {
+                        itemBuilder: (_, index) {
                           return AnimatedBuilder(
                             animation: pageController!,
                             builder: (context, child) {
-                              if (pageValue == null || __ == 3) {
+                              if (pageValue == null || index == 3) {
                                 return const SizedBox.shrink();
                               }
-                              double scale =
-                                  1 - (pageController!.page! - __).abs() * 0.1;
+                              double scale = 1 -
+                                  (pageController!.page! - index).abs() * 0.1;
                               return Transform.scale(
                                 scale: scale,
                                 child: Column(
                                   children: [
                                     SizedBox(
-                                      width: 325.w,
+                                      width: 1.sw,
+                                      height: 390.h,
+                                      child: AppImage(
+                                        model.onboardingData![index].image,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    SizedBox(
+                                      width: 335.w,
                                       child: Text(
-                                        model.onboardingData![__].first,
+                                        model.onboardingData![index].title,
                                         style: GoogleFonts.sourceSans3(
-                                          fontSize: 26.sp,
-                                          fontWeight: FontWeight.w700,
+                                          fontSize: 24.sp,
+                                          fontWeight: FontWeight.w600,
                                           color: UiConstants.kTextColor,
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
                                     SizedBox(
-                                      height: 14.h,
+                                      height: 12.h,
                                     ),
                                     SizedBox(
-                                      width: 325.w,
+                                      width: 335.w,
                                       child: Text(
-                                        model.onboardingData![__][1],
+                                        model.onboardingData![index].subtitle,
                                         style: GoogleFonts.sourceSans3(
                                           fontSize: 16.sp,
                                           fontWeight: FontWeight.w400,
@@ -162,14 +145,6 @@ class _OnBoardingViewState extends State<OnBoardingView>
                                     SizedBox(
                                       height: 35.h,
                                     ),
-                                    SizedBox(
-                                      width: 300.w,
-                                      height: 300.h,
-                                      child: AppImage(
-                                        model.onboardingData![__][2],
-                                        fit: BoxFit.contain,
-                                      ),
-                                    ),
                                   ],
                                 ),
                               );
@@ -177,6 +152,35 @@ class _OnBoardingViewState extends State<OnBoardingView>
                             child: const SizedBox.shrink(),
                           );
                         },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 40.h,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          3,
+                          (index) {
+                            return Container(
+                              width: 22.w,
+                              height: 2.h,
+                              margin: EdgeInsets.symmetric(horizontal: 3.w),
+                              decoration: BoxDecoration(
+                                color: index <= model.indicatorPosition
+                                    ? Colors.white
+                                    : Colors.transparent,
+                                border: Border.all(
+                                  color: index <= model.indicatorPosition
+                                      ? Colors.white
+                                      : UiConstants.greyVarient,
+                                ),
+                                shape: BoxShape.rectangle,
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                     Row(
