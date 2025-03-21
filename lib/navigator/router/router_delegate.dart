@@ -1071,6 +1071,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
               page: ShortsPageConfig,
               state: PageState.addWidget,
               widget: BaseScaffold(
+                showBackgroundGrid: false,
+                backgroundColor: UiConstants.bg,
                 appBar: FAppBar(
                   backgroundColor: Colors.transparent,
                   centerTitle: true,
@@ -1136,6 +1138,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
             page: ShortsPageConfig,
             state: PageState.addWidget,
             widget: BaseScaffold(
+              showBackgroundGrid: false,
+              backgroundColor: UiConstants.bg,
               appBar: FAppBar(
                 backgroundColor: Colors.transparent,
                 centerTitle: true,

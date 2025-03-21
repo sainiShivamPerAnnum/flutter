@@ -60,7 +60,8 @@ class _OneOnOneChatState extends State<OneOnOneChat> {
   @override
   Widget build(BuildContext context) {
     return BaseScaffold(
-      showBackgroundGrid: true,
+      showBackgroundGrid: false,
+      backgroundColor: UiConstants.bg,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
@@ -151,123 +152,120 @@ class _OneOnOneChatState extends State<OneOnOneChat> {
       child: (comments == null || comments.isEmpty)
           ? const SizedBox.shrink()
           : SingleChildScrollView(
-            reverse: true,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ListView.builder(
-                  controller: scrollController,
-                  shrinkWrap: true,
-                  itemCount: comments.length,
-                  itemBuilder: (context, index) {
-                    var metaData = jsonDecode(
-                      comments[index].sender?.metadata != ''
-                          ? comments[index].sender?.metadata ??
-                              '{"avatar": "","dpurl":""}'
-                          : '{"avatar": "","dpurl":""}',
-                    );
-                    return Padding(
-                      padding:
-                          EdgeInsets.only(bottom: SizeConfig.padding18),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: SizeConfig.padding10,
-                            backgroundColor: Colors.black,
-                            child: metaData != null &&
-                                    metaData['avatar'] != '' &&
-                                    metaData['avatar'] != 'CUSTOM'
-                                ? ClipOval(
-                                    child: SizedBox(
-                                      width: 2 * SizeConfig.padding10,
-                                      height: 2 * SizeConfig.padding10,
-                                      child: SvgPicture.asset(
-                                        "assets/vectors/userAvatars/${metaData['avatar']}.svg",
-                                        fit: BoxFit.cover,
+              reverse: true,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ListView.builder(
+                    controller: scrollController,
+                    shrinkWrap: true,
+                    itemCount: comments.length,
+                    itemBuilder: (context, index) {
+                      var metaData = jsonDecode(
+                        comments[index].sender?.metadata != ''
+                            ? comments[index].sender?.metadata ??
+                                '{"avatar": "","dpurl":""}'
+                            : '{"avatar": "","dpurl":""}',
+                      );
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: SizeConfig.padding18),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CircleAvatar(
+                              radius: SizeConfig.padding10,
+                              backgroundColor: Colors.black,
+                              child: metaData != null &&
+                                      metaData['avatar'] != '' &&
+                                      metaData['avatar'] != 'CUSTOM'
+                                  ? ClipOval(
+                                      child: SizedBox(
+                                        width: 2 * SizeConfig.padding10,
+                                        height: 2 * SizeConfig.padding10,
+                                        child: SvgPicture.asset(
+                                          "assets/vectors/userAvatars/${metaData['avatar']}.svg",
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
+                                    )
+                                  : (metaData != null &&
+                                          metaData['avatar'] != '' &&
+                                          metaData!['avatar'] == 'CUSTOM' &&
+                                          metaData!['dpurl'] != '')
+                                      ? ClipOval(
+                                          child: SizedBox(
+                                            width: 2 * SizeConfig.padding10,
+                                            height: 2 * SizeConfig.padding10,
+                                            child: CachedNetworkImage(
+                                              imageUrl: metaData['dpurl'],
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        )
+                                      : ClipOval(
+                                          child: SizedBox(
+                                            width: 2 * SizeConfig.padding10,
+                                            height: 2 * SizeConfig.padding10,
+                                            child: Image.asset(
+                                              Assets.profilePic,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                            ),
+                            SizedBox(
+                              width: SizeConfig.padding6,
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    bottom: SizeConfig.padding2),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          comments[index].sender?.name ?? '',
+                                          style: TextStyles.sourceSansSB.body4,
+                                          maxLines: 1,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: SizeConfig.padding4,
+                                          ),
+                                          child: const Icon(
+                                            Icons.circle,
+                                            size: 4,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          timeago.format(
+                                            comments[index].time,
+                                          ),
+                                          style: TextStyles.sourceSans.body4,
+                                        ),
+                                      ],
                                     ),
-                                  )
-                                : (metaData != null &&
-                                        metaData['avatar'] != '' &&
-                                        metaData!['avatar'] == 'CUSTOM' &&
-                                        metaData!['dpurl'] != '')
-                                    ? ClipOval(
-                                        child: SizedBox(
-                                          width: 2 * SizeConfig.padding10,
-                                          height: 2 * SizeConfig.padding10,
-                                          child: CachedNetworkImage(
-                                            imageUrl: metaData['dpurl'],
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      )
-                                    : ClipOval(
-                                        child: SizedBox(
-                                          width: 2 * SizeConfig.padding10,
-                                          height: 2 * SizeConfig.padding10,
-                                          child: Image.asset(
-                                            Assets.profilePic,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                          ),
-                          SizedBox(
-                            width: SizeConfig.padding6,
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  bottom: SizeConfig.padding2),
-                              child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        comments[index].sender?.name ?? '',
-                                        style:
-                                            TextStyles.sourceSansSB.body4,
-                                        maxLines: 1,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: SizeConfig.padding4,
-                                        ),
-                                        child: const Icon(
-                                          Icons.circle,
-                                          size: 4,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      Text(
-                                        timeago.format(
-                                          comments[index].time,
-                                        ),
-                                        style: TextStyles.sourceSans.body4,
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    comments[index].message,
-                                    style: TextStyles.sourceSans.body4,
-                                    maxLines: 4,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
+                                    Text(
+                                      comments[index].message,
+                                      style: TextStyles.sourceSans.body4,
+                                      maxLines: 4,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ],
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
     );
   }
 }

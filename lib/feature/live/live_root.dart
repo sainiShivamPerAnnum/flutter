@@ -419,6 +419,8 @@ Widget buildRecentSection(
                   page: LiveShortsPageConfig,
                   state: PageState.addWidget,
                   widget: BaseScaffold(
+                    showBackgroundGrid: false,
+                    backgroundColor: UiConstants.bg,
                     appBar: FAppBar(
                       backgroundColor: Colors.transparent,
                       centerTitle: true,

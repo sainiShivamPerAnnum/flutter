@@ -44,7 +44,8 @@ class RewardsTransactions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseScaffold(
-      showBackgroundGrid: true,
+      showBackgroundGrid: false,
+      backgroundColor: UiConstants.bg,
       appBar: FAppBar(
         backgroundColor: Colors.transparent,
         centerTitle: true,

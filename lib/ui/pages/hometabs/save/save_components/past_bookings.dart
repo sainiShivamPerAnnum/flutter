@@ -206,6 +206,8 @@ class PastScheduleCard extends StatelessWidget {
                           page: ProfileShortsPageConfig,
                           state: PageState.addWidget,
                           widget: BaseScaffold(
+                            showBackgroundGrid: false,
+                            backgroundColor: UiConstants.bg,
                             appBar: FAppBar(
                               leadingPadding: false,
                               backgroundColor: Colors.transparent,
