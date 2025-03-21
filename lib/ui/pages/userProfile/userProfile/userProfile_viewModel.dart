@@ -23,6 +23,7 @@ import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
+import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
 import 'package:felloapp/feature/tambola/src/repos/tambola_repo.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -89,6 +90,8 @@ class UserProfileVM extends BaseViewModel {
   final BankAndPanService _bankAndKycService = locator<BankAndPanService>();
   final DBModel? dbProvider = locator<DBModel>();
   final ScratchCardService _gtService = locator<ScratchCardService>();
+  final PreloadBloc preloadBloc = locator<PreloadBloc>();
+
   final MarketingEventHandlerService _marketingService =
       locator<MarketingEventHandlerService>();
   final TambolaRepo _tambolaRepo = locator<TambolaRepo>();
@@ -552,6 +555,7 @@ class UserProfileVM extends BaseViewModel {
             }).then((flag) async {
               if (flag) {
                 _transactionBloc.dispose();
+                preloadBloc.add(const PreloadEvent.reset());
                 locator.resetLazySingleton<AdvisorBloc>();
                 _myFundsBloc.dispose();
                 _sipTransactionBloc.dispose();

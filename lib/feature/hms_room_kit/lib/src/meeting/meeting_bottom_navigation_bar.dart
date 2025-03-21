@@ -38,10 +38,11 @@ class _MeetingBottomNavigationBarState
   bool showControls = false;
   @override
   Widget build(BuildContext context) {
-    return Selector<MeetingStore, Tuple2<String?, MeetingMode>>(
-      selector: (p0, meetingStore) => Tuple2(
+    return Selector<MeetingStore, Tuple3<String?, MeetingMode, MeetingStore>>(
+      selector: (p0, meetingStore) => Tuple3(
         meetingStore.localPeer?.role.name,
         meetingStore.meetingMode,
+        meetingStore,
       ),
       builder: (_, value, __) {
         showControls = value.item1 != 'viewer-realtime';

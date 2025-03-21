@@ -130,12 +130,16 @@ const String expertDetailsViewPath = "/expertDetails";
 const String tellUsAboutYourselfViewPath = "/tellUsAboutYourself";
 const String meettingChatViewPath = "/meetingChat";
 const String shortsViewPath = "/shorts-internal";
+const String profileShortsViewPath = "/profile-shorts-internal";
+const String liveShortsViewPath = "/live-shorts-internal";
 const String viewAllVideosViewPath = "/events";
 const String rewardsHistoryViewPath = "/rewards-history";
 const String rpsLearnMoreViewPath = "/rps-learnMore";
 const String FdViewPath = '/fd/home';
 const String FdCalculatorViewPath = '/fd/calculator';
 const String FdDetailsViewPath = '/fd/details';
+const String shortsNotificationViewPath = "/shorts-notification";
+const String savedShortsViewPath = "/shorts-saved";
 
 enum Pages {
   Splash,
@@ -263,12 +267,16 @@ enum Pages {
   TellUsAboutYourself,
   meettingChat,
   Shorts,
+  ProfileShorts,
+  LiveShorts,
   AllEvents,
   RewardsHistory,
   RPSLearnMore,
   FdHomeView,
   FdCalculatorView,
   FdDetailsView,
+  ShortsNotification,
+  SavedShorts,
 }
 
 class PageConfiguration {
@@ -1027,6 +1035,20 @@ PageConfiguration ShortsPageConfig = PageConfiguration(
   name: "Shorts page.",
 );
 
+PageConfiguration ProfileShortsPageConfig = PageConfiguration(
+  key: 'profileShortsViewPath',
+  path: profileShortsViewPath,
+  uiPage: Pages.ProfileShorts,
+  name: "Profile Shorts page.",
+);
+
+PageConfiguration LiveShortsPageConfig = PageConfiguration(
+  key: 'liveShortsViewPath',
+  path: liveShortsViewPath,
+  uiPage: Pages.LiveShorts,
+  name: "Live Shorts page.",
+);
+
 PageConfiguration AllEventsPageConfig = PageConfiguration(
   key: 'viewAllVideosViewPath',
   path: viewAllVideosViewPath,
@@ -1076,4 +1098,17 @@ PageConfiguration FdDetailsPageConfig = PageConfiguration(
   path: FdDetailsViewPath,
   uiPage: Pages.FdDetailsView,
   name: 'Fd Details View Path',
+);
+PageConfiguration ShortsNotificationPageConfig = PageConfiguration(
+  key: 'ShortsNotificationPageConfig',
+  path: shortsNotificationViewPath,
+  uiPage: Pages.ShortsNotification,
+  name: "Shorts Notification",
+);
+
+PageConfiguration SavedShortsPageConfig = PageConfiguration(
+  key: 'SavedShortsPageConfig',
+  path: savedShortsViewPath,
+  uiPage: Pages.SavedShorts,
+  name: "Saved Shorts",
 );

@@ -136,7 +136,7 @@ class ExpertsRepository extends BaseRepo {
   }) async {
     try {
       final response = await APIService.instance.getData(
-        'booking/available-slots',
+        'booking/v1/available-slots',
         queryParams: {
           "duration": duration,
           "advisorId": advisorId,

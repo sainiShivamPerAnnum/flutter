@@ -22,7 +22,7 @@ class ScreenshareTileName extends StatelessWidget {
           return Container(
               constraints: BoxConstraints(maxWidth: maxWidth - 80),
               child: HMSSubheadingText(
-                text: "${data.item1.trim()}'s Screen",
+                text: "${data.item1.trim()} is presenting",
                 textColor: HMSThemeColors.onSurfaceHighEmphasis,
               ));
         });

@@ -1,24 +1,19 @@
 ///Dart imports
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/enums/meeting_mode.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_store.dart';
-import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/bottom_sheets/audio_settings_bottom_sheet.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/bottom_sheets/leave_session_bottom_sheet.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/common_widgets/hms_embedded_button.dart';
 
 ///Project imports
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/common_widgets/live_badge.dart';
-import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/styles.dart';
 
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -241,7 +236,12 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                                       }
                                   },
                                   isActive: true,
-                                  onColor: HMSThemeColors.backgroundDim,
+                                  enabledBorderColor:
+                                      UiConstants.kBackgroundColor,
+                                  disabledBorderColor:
+                                      UiConstants.kBackgroundColor,
+                                  onColor: UiConstants.kBackgroundColor,
+                                  offColor: UiConstants.kBackgroundColor,
                                   child: SvgPicture.asset(
                                     "assets/hms/icons/camera.svg",
                                     colorFilter: ColorFilter.mode(

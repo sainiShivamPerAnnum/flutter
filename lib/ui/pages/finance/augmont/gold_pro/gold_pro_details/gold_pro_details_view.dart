@@ -16,6 +16,7 @@ import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.da
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_hero_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_rate_graph.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/youtube_player_view.dart';
 import 'package:felloapp/util/assets.dart';
@@ -142,7 +143,7 @@ class GoldProDetailsView extends StatelessWidget {
                                                           SizeConfig.padding4,
                                                     ),
                                                     Text(
-                                                      "Lease your Gold with Augmont",
+                                                      "Lease your Gold with Auspicious",
                                                       style: TextStyles
                                                           .sourceSans.body2
                                                           .colour(UiConstants
@@ -262,13 +263,13 @@ class GoldProDetailsView extends StatelessWidget {
                     Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        Text("Powered by ",
+                        Text("Powered by Auspicious",
                             style: TextStyles.body3.colour(Colors.grey)),
-                        SvgPicture.asset(
-                          Assets.augmontLogo,
-                          color: Colors.grey,
-                          height: SizeConfig.body4,
-                        )
+                        // SvgPicture.asset(
+                        //   Assets.augmontLogo,
+                        //   color: Colors.grey,
+                        //   height: SizeConfig.body4,
+                        // )
                       ],
                     ),
                     Padding(
@@ -350,9 +351,11 @@ class GoldProFaqs extends StatelessWidget {
                                 left: SizeConfig.pageHorizontalMargins,
                                 bottom: SizeConfig.padding20,
                               ),
-                              child: Text(model.faqHeaders[index] ?? "",
-                                  style: TextStyles.sourceSans.body2
-                                      .colour(Colors.white)),
+                              child: Text(
+                                model.faqHeaders[index] ?? "",
+                                style: TextStyles.sourceSans.body2
+                                    .colour(Colors.white),
+                              ),
                             ),
                             isExpanded: model.detStatus[index],
                             body: Container(
@@ -472,7 +475,7 @@ class GoldProInterestBreakdownWidget extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                  flex: 4,
+                  flex: 5,
                   child: Column(
                     children: [
                       Wrap(
@@ -498,6 +501,13 @@ class GoldProInterestBreakdownWidget extends StatelessWidget {
                       )
                     ],
                   )),
+              const Expanded(
+                flex: 1,
+                child: Icon(
+                  Icons.add,
+                  color: UiConstants.kTextColor,
+                ),
+              ),
               Expanded(
                 flex: 6,
                 child: Column(
@@ -520,7 +530,7 @@ class GoldProInterestBreakdownWidget extends StatelessWidget {
                     Text(
                       model.goldProConfig?.data?.interestBreakDown?.extra
                               ?.subTitle ??
-                          'credited every 6 months',
+                          'credited every 1 year',
                       style: TextStyles.body3.colour(Colors.white),
                     )
                   ],

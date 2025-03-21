@@ -95,9 +95,38 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       );
       return Future.value(true);
     }
-    if ((AppState.delegate!.currentConfiguration?.path ?? '') ==
-            '/shorts-internal' &&
-        AppState.screenStack.last != ScreenItem.modalsheet) {
+    if (((AppState.delegate!.currentConfiguration?.path ?? '') ==
+                '/shorts-internal' ||
+            (AppState.delegate!.currentConfiguration?.path ?? '') ==
+                '/profile-shorts-internal' ||
+            (AppState.delegate!.currentConfiguration?.path ?? '') ==
+                '/live-shorts-internal') &&
+        AppState.screenStack.last != ScreenItem.modalsheet &&
+        AppState.screenStack.last != ScreenItem.dialog) {
+      FocusScope.of(
+        _routerDelegate!.navigatorKey.currentContext!,
+      ).unfocus();
+
+      final preloadBloc = BlocProvider.of<PreloadBloc>(
+        _routerDelegate!.navigatorKey.currentContext!,
+        listen: false,
+      );
+      final preloadState = _routerDelegate!.navigatorKey.currentContext!
+          .read<PreloadBloc>()
+          .state;
+      if (preloadState.showComments) {
+        preloadBloc.add(
+          const PreloadEvent.toggleComments(),
+        );
+        return Future.value(true);
+      }
+      preloadBloc.add(
+        PreloadEvent.updateThemes(
+          categories: [],
+          theme: preloadState.theme,
+          index: 0,
+        ),
+      );
       BlocProvider.of<PreloadBloc>(
         _routerDelegate!.navigatorKey.currentContext!,
         listen: false,
@@ -109,6 +138,12 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         listen: false,
       ).add(
         const PreloadEvent.disposeLiveStreamController(),
+      );
+      BlocProvider.of<PreloadBloc>(
+        _routerDelegate!.navigatorKey.currentContext!,
+        listen: false,
+      ).add(
+        const PreloadEvent.disposeMainStreamController(),
       );
     }
     // _journeyService.checkForMilestoneLevelChange();

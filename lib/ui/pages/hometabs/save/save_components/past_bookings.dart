@@ -14,12 +14,14 @@ import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class PastBookingsComponent extends StatelessWidget {
@@ -201,29 +203,60 @@ class PastScheduleCard extends StatelessWidget {
                         );
                         await switchCompleter.future;
                         AppState.delegate!.appState.currentAction = PageAction(
-                          page: ShortsPageConfig,
+                          page: ProfileShortsPageConfig,
                           state: PageState.addWidget,
                           widget: BaseScaffold(
                             appBar: FAppBar(
+                              leadingPadding: false,
                               backgroundColor: Colors.transparent,
                               centerTitle: true,
-                              titleWidget: Text(
-                                videoData.model!.title,
-                                style: TextStyles.rajdhaniSB.body1,
+                              titleWidget: Expanded(
+                                child: MarqueeText(
+                                  infoList: [videoData.model!.title],
+                                  showBullet: false,
+                                  style: TextStyles.rajdhaniSB.body1,
+                                ),
                               ),
-                              leading: const BackButton(
+                              leading: BackButton(
                                 color: Colors.white,
+                                onPressed: () {
+                                  AppState.backButtonDispatcher!.didPopRoute();
+                                },
                               ),
                               showAvatar: false,
                               showCoinBar: false,
+                              action: BlocBuilder<PreloadBloc, PreloadState>(
+                                builder: (context, preloadState) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(right: 10.w),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        BlocProvider.of<PreloadBloc>(
+                                          context,
+                                          listen: false,
+                                        ).add(
+                                          const PreloadEvent.toggleVolume(),
+                                        );
+                                      },
+                                      behavior: HitTestBehavior.opaque,
+                                      child: SizedBox(
+                                        height: 24.r,
+                                        width: 24.r,
+                                        child: Icon(
+                                          !preloadState.muted
+                                              ? Icons.volume_up_rounded
+                                              : Icons.volume_off_rounded,
+                                          size: 21.r,
+                                          color: UiConstants.kTextColor,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
-                            body: WillPopScope(
-                              onWillPop: () async {
-                                await AppState.backButtonDispatcher!
-                                    .didPopRoute();
-                                return false;
-                              },
-                              child: const ShortsVideoPage(),
+                            body: const ShortsVideoPage(
+                              categories: [],
                             ),
                           ),
                         );

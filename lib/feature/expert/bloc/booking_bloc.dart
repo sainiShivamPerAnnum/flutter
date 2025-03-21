@@ -58,6 +58,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       duration: event.duration,
     );
     final availableDates = data.model?.slots?.keys.toList() ?? [];
+    final firstDuration = data.model?.slots?.values.first.keys.first ?? '';
     String? selectedDate;
 
     if (event.scheduledOn != null) {
@@ -80,7 +81,9 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           advisorId: event.advisorId,
           schedule: data.model,
           selectedDate: currentSelectedDate ?? selectedDate,
-          selectedDuration: event.duration,
+          selectedDuration: firstDuration != ''
+              ? int.tryParse(firstDuration.toString()) ?? event.duration
+              : event.duration,
           isFree: data.model?.hasFreeCall ?? false,
         ),
       );
@@ -97,9 +100,21 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
 
   void _onSelectDate(SelectDate event, Emitter<BookingState> emitter) {
     if (state is BookingsLoaded) {
+      final currentState = state as BookingsLoaded;
+      final selectedDate = event.selectedDate;
+      final schedule = currentState.schedule;
+      final currentDurations = (schedule?.slots?[selectedDate] != null)
+          ? schedule!.slots![selectedDate]!.keys.map(int.parse).toList()
+          : [];
+      final selectedDuration =
+          currentDurations.contains(currentState.selectedDuration)
+              ? currentState.selectedDuration
+              : (currentDurations.isNotEmpty ? currentDurations.first : null);
+
       emitter(
-        (state as BookingsLoaded).copyWith(
-          selectedDate: event.selectedDate,
+        currentState.copyWith(
+          selectedDate: selectedDate,
+          selectedDuration: selectedDuration ?? currentState.selectedDuration,
           selectedTime: null,
         ),
       );
@@ -114,11 +129,11 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
 
   void _onSelectDuration(SelectDuration event, Emitter<BookingState> emitter) {
     if (state is BookingsLoaded) {
-      add(
-        LoadBookingDates(
-          (state as BookingsLoaded).advisorId,
-          event.selectDuration,
-          null,
+      emitter(
+        (state as BookingsLoaded).copyWith(
+          selectedDate: (state as BookingsLoaded).selectedDate,
+          selectedDuration: event.selectDuration,
+          selectedTime: null,
         ),
       );
       _analyticsService.track(
@@ -178,6 +193,8 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     if (state is BookingsLoaded) {
       emitter(
         (state as BookingsLoaded).copyWith(
+          selectedDate: (state as BookingsLoaded).selectedDate,
+          selectedDuration: (state as BookingsLoaded).selectedDuration,
           selectedTime: event.selectedTime,
         ),
       );
@@ -216,6 +233,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           totalPayable: response.model?.totalPrice ?? 0,
           reedem: false,
           coinBalanceUse: response.model?.coinBalanceUse ?? 0,
+          isFree: event.isFree,
         ),
       );
     } else {

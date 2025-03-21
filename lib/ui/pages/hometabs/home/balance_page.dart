@@ -2,7 +2,9 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -45,7 +47,8 @@ class FelloBalanceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseScaffold(
-      showBackgroundGrid: true,
+      showBackgroundGrid: false,
+      backgroundColor: UiConstants.bg,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
@@ -191,25 +194,31 @@ class FelloBalanceScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: SizeConfig.padding20),
-            buildInvestmentSection(
-              iconData: Assets.floAsset,
-              title: "Fello Flo",
-              asset: Assets.floAsset,
-              infoTitle1: "Flo Balance",
-              infoTitle2: "Invested",
-              secondaryColor: UiConstants.darkPrimaryColor3,
-              subtitle: "P2P Asset • upto 11% Returns",
-              onButtonPressed: () {
-                BaseUtil().openRechargeModalSheet(
-                  investmentType: InvestmentType.LENDBOXP2P,
-                );
-                trackSaveButtonAnalytics(
-                  InvestmentType.LENDBOXP2P,
-                );
-              },
-              onCardPressed: () => navigateToSaveAssetView(
-                InvestmentType.LENDBOXP2P,
-              ),
+            Selector<UserService, BaseUser?>(
+              builder: (_, value, child) => value != null &&
+                      value.createdOn < TimestampModel.january2025()
+                  ? buildInvestmentSection(
+                      iconData: Assets.floAsset,
+                      title: "Fello Flo",
+                      asset: Assets.floAsset,
+                      infoTitle1: "Flo Balance",
+                      infoTitle2: "Invested",
+                      secondaryColor: UiConstants.darkPrimaryColor3,
+                      subtitle: "P2P Asset • upto 11% Returns",
+                      onButtonPressed: () {
+                        BaseUtil().openRechargeModalSheet(
+                          investmentType: InvestmentType.LENDBOXP2P,
+                        );
+                        trackSaveButtonAnalytics(
+                          InvestmentType.LENDBOXP2P,
+                        );
+                      },
+                      onCardPressed: () => navigateToSaveAssetView(
+                        InvestmentType.LENDBOXP2P,
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+              selector: (_, userService) => userService.baseUser,
             ),
             buildInvestmentSection(
               iconData: Assets.goldAsset,

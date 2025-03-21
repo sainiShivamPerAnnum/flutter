@@ -62,4 +62,52 @@ class TimestampModel extends Timestamp {
     to = DateTime(to.year, to.month, to.day);
     return to.difference(from).inDays;
   }
+
+  factory TimestampModel.january2025() {
+    final dateTime = DateTime(2025, 1, 1);
+    final timestamp = Timestamp.fromDate(dateTime);
+    return TimestampModel(
+      seconds: timestamp.seconds,
+      nanoseconds: timestamp.nanoseconds,
+    );
+  }
+
+// Less than or equal to
+  bool operator <=(TimestampModel other) {
+    if (seconds < other.seconds) return true;
+    if (seconds > other.seconds) return false;
+    return nanoseconds <= other.nanoseconds;
+  }
+
+// Greater than or equal to
+  bool operator >=(TimestampModel other) {
+    if (seconds > other.seconds) return true;
+    if (seconds < other.seconds) return false;
+    return nanoseconds >= other.nanoseconds;
+  }
+
+// Less than
+  bool operator <(TimestampModel other) {
+    if (seconds < other.seconds) return true;
+    if (seconds > other.seconds) return false;
+    return nanoseconds < other.nanoseconds;
+  }
+
+// Greater than
+  bool operator >(TimestampModel other) {
+    if (seconds > other.seconds) return true;
+    if (seconds < other.seconds) return false;
+    return nanoseconds > other.nanoseconds;
+  }
+
+// Equals
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! TimestampModel) return false;
+    return seconds == other.seconds && nanoseconds == other.nanoseconds;
+  }
+
+  @override
+  int get hashCode => seconds.hashCode ^ nanoseconds.hashCode;
 }

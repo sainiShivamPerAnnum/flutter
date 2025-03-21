@@ -5,8 +5,8 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/advisor/advisor_root.dart';
 import 'package:felloapp/feature/expert/expert_root.dart';
 import 'package:felloapp/feature/live/live_root.dart';
-import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
-import 'package:felloapp/feature/shorts/video_page.dart';
+import 'package:felloapp/feature/shorts/flutter_preload_videos.dart';
+import 'package:felloapp/feature/shortsHome/shorts_v2.dart';
 import 'package:felloapp/feature/support-new/support_new.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
@@ -14,6 +14,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 class RootController {
   static const liveNavBarItem = NavBarItemModel(
@@ -51,6 +52,7 @@ class RootController {
   Map<Widget, NavBarItemModel> navItems = {};
 
   static ScrollController controller = ScrollController();
+  static AutoScrollController autoScrollController = AutoScrollController();
 
   void onChange(NavBarItemModel model) {
     log("onChange ${model.title}");
@@ -62,24 +64,24 @@ class RootController {
         curve: Curves.decelerate,
       );
     }
+    if (currentNavBarItemModel.title == model.title &&
+        autoScrollController.hasClients) {
+      autoScrollController.animateTo(
+        0,
+        duration: const Duration(seconds: 2),
+        curve: Curves.decelerate,
+      );
+    }
     currentNavBarItemModel = model;
     if (navItems.containsValue(shortsNavBarItem)) {
       final state = currentContext.read<PreloadBloc>().state;
       if (model.title == 'Shorts') {
         // Video comes into view
-        BlocProvider.of<PreloadBloc>(currentContext)
-            .add(const PreloadEvent.switchToMainReels());
-        if (state.controllers[state.focusedIndex] != null &&
-            state.controllers[state.focusedIndex]!.value.isInitialized) {
-          BlocProvider.of<PreloadBloc>(
-            currentContext,
-            listen: false,
-          ).add(PreloadEvent.playVideoAtIndex(state.focusedIndex));
-        }
       } else {
+        shortsScreenKey.currentState?.resetState();
         // Video goes out of view
-        if (state.controllers[state.focusedIndex] != null &&
-            state.controllers[state.focusedIndex]!.value.isPlaying) {
+        if (state.controllers[state.focusedIndex] != null) {
+          // AppState.backButtonDispatcher!.didPopRoute();
           BlocProvider.of<PreloadBloc>(
             AppState.delegate!.navigatorKey.currentContext!,
             listen: false,
@@ -111,7 +113,7 @@ class RootController {
         break;
       case "SH":
         navItems.putIfAbsent(
-          const ShortsVideoPage(),
+          const ShortsNewPage(),
           () => RootController.shortsNavBarItem,
         );
         break;

@@ -6,8 +6,8 @@ import 'package:felloapp/util/crashlytics_widget.dart';
 import 'package:felloapp/util/flavor_config.dart';
 
 Future<void> main() async {
+  FlavorConfig.configureProd();
   await bootStrap(() {
-    FlavorConfig.configureProd();
     return const CrashlyticsApp(
       child: MyApp(),
     );

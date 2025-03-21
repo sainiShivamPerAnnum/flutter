@@ -2,15 +2,15 @@ import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/blog_model.dart';
 import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/core/model/live/live_home.dart';
+import 'package:felloapp/core/model/testimonials_model.dart';
+// import 'package:felloapp/core/model/top_expert_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
@@ -30,23 +30,21 @@ import 'package:felloapp/ui/pages/hometabs/home/cards_new.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/consultant_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/experts.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/first_free_call.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/footer.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/live.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/past_bookings.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/quick_links.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/testimonials.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/upcoming_bookings.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../core/model/quick_links_model.dart';
 
 class SaveViewModel extends ChangeNotifier {
   S? locale;
@@ -84,20 +82,46 @@ class SaveViewModel extends ChangeNotifier {
   ];
   double _nonWithdrawableQnt = 0.0;
   double _withdrawableQnt = 0.0;
-  Timer? _timer;
-
-  late final PageController offersController = PageController(initialPage: 0);
   List<EventModel>? _ongoingEvents;
   List<BlogPostModel>? _blogPosts;
   List<Booking> _upcomingBookings = [];
   List<Booking> _pastBookings = [];
-  List<Expert> _topExperts = [];
+  ExpertsHome? _topExperts;
+  List<UserInterestedAdvisor> _userInterestedAdvisors = [];
   LiveHome? _liveData;
   bool _freeCallAvailable = false;
   List<BlogPostModelByCategory>? _blogPostsByCategory;
   bool _isLoading = true;
   bool _isChallenegsLoading = true;
+  bool _isTopAdvisorLoading = true;
   final List<String> _sellingReasons = [];
+  List<TestimonialsModel> _testimonials = [
+    TestimonialsModel(
+      userName: "Shivam Saini",
+      review:
+          "Throughout the planning and execution phase, they worked with me in a professional manner, answered all my questions patiently, and guided me through the whole process in a methodical way. Fello's expert advice made all the difference in my financial journey.",
+      createdAt: "2023-03-15T14:20:00Z",
+      avatarId: "AV1",
+      rating: 4,
+    ),
+    TestimonialsModel(
+      userName: "Aarti Sharma",
+      review:
+          "I am extremely happy with the financial advice I received from Fello. The team understood my goals and provided tailored solutions that really helped me get my finances on track. Their professional approach and dedication gave me peace of mind.",
+      createdAt: "2023-02-28T10:45:00Z",
+      avatarId: "AV2",
+      rating: 4.5,
+    ),
+    TestimonialsModel(
+      userName: "Ravi Kumar",
+      review:
+          "Fello's financial advisors helped me with investment strategies that have been extremely profitable. I appreciated their transparency and how they took the time to explain complex concepts in a way that was easy to understand.",
+      createdAt: "2023-03-01T16:30:00Z",
+      avatarId: "AV3",
+      rating: 5,
+    ),
+  ];
+
   String _selectedReasonForSelling = '';
   final Map<String, dynamic> _filteredList = {};
 
@@ -125,8 +149,11 @@ class SaveViewModel extends ChangeNotifier {
 
   List<Booking> get upcomingBookings => _upcomingBookings;
   List<Booking> get pastBookings => _pastBookings;
-  List<Expert> get topExperts => _topExperts;
+  List<UserInterestedAdvisor> get userInterestedAdvisors =>
+      _userInterestedAdvisors;
+  ExpertsHome? get topExperts => _topExperts;
   LiveHome? get liveData => _liveData;
+  List<TestimonialsModel> get testimonials => _testimonials;
   bool get freeCallAvailable => _freeCallAvailable;
 
   List<BlogPostModelByCategory>? get blogPostsByCategory =>
@@ -135,6 +162,7 @@ class SaveViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   bool get isChallengesLoading => _isChallenegsLoading;
+  bool get isTopAdvisorLoading => _isTopAdvisorLoading;
 
   List<String> get sellingReasons => _sellingReasons;
 
@@ -175,8 +203,18 @@ class SaveViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  set topExperts(List<Expert> value) {
+  set topExperts(ExpertsHome? value) {
     _topExperts = value;
+    notifyListeners();
+  }
+
+  set userInterestedAdvisors(List<UserInterestedAdvisor> value) {
+    _userInterestedAdvisors = value;
+    notifyListeners();
+  }
+
+  set testimonials(List<TestimonialsModel> value) {
+    _testimonials = value;
     notifyListeners();
   }
 
@@ -231,35 +269,17 @@ class SaveViewModel extends ChangeNotifier {
     await getPastBooking();
     await getTopExperts();
     await getLiveData();
+    await getCampaignEvents();
     await locator<SubService>().init();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _sellService.init();
-      getCampaignEvents().then((val) {
-        if ((ongoingEvents?.length ?? 0) > 1) {
-          _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-            if (currentPage < ongoingEvents!.length - 1) {
-              currentPage++;
-            } else {
-              currentPage = 0;
-            }
-            if (offersController.hasClients) {
-              offersController.animateToPage(
-                currentPage,
-                duration: const Duration(milliseconds: 350),
-                curve: Curves.easeIn,
-              );
-            }
-          });
-        }
-      });
       getSaveViewBlogs();
+      getTestimonials();
     });
   }
 
-  void dump() {
-    _timer?.cancel();
-  }
+  void dump() {}
 
   void updateIsLoading(bool value) {
     _isLoading = value;
@@ -268,7 +288,11 @@ class SaveViewModel extends ChangeNotifier {
 
   set isChallengesLoading(bool value) {
     _isChallenegsLoading = value;
-    print("ROOT: Challenges loading : $value");
+    notifyListeners();
+  }
+
+  set isTopAdvisorLoading(bool value) {
+    _isTopAdvisorLoading = value;
     notifyListeners();
   }
 
@@ -297,7 +321,7 @@ class SaveViewModel extends ChangeNotifier {
           );
           break;
         case "SN":
-          saveViewItems.add(const ConsultationWidget());
+          saveViewItems.add(const Testimonials());
           break;
         case 'NAS':
           saveViewItems.add(const AutosaveCard());
@@ -317,15 +341,14 @@ class SaveViewModel extends ChangeNotifier {
         case 'FC':
           saveViewItems.add(const FirstFreeCall());
           break;
+        case 'TST':
+          saveViewItems.add(const Testimonials());
+          break;
+        case 'FT':
+          saveViewItems.add(const SaveViewFooter());
+          break;
       }
     }
-    saveViewItems.addAll(
-      [
-        SizedBox(
-          height: SizeConfig.navBarHeight * 0.5,
-        ),
-      ],
-    );
     return saveViewItems;
   }
 
@@ -346,7 +369,16 @@ class SaveViewModel extends ChangeNotifier {
     if (response.isSuccess()) {
       upcomingBookings = response.model ?? [];
     } else {
-      print(response.errorMessage);
+      upcomingBookings = [];
+    }
+  }
+
+  Future<void> getTestimonials() async {
+    final response = await _saveRepo.getTestimonials();
+    if (response.isSuccess()) {
+      testimonials = response.model ?? [];
+    } else {
+      testimonials = [];
     }
   }
 
@@ -355,18 +387,20 @@ class SaveViewModel extends ChangeNotifier {
     if (response.isSuccess()) {
       pastBookings = response.model ?? [];
     } else {
-      print(response.errorMessage);
+      pastBookings = [];
     }
   }
 
   Future<void> getTopExperts() async {
     final response = await _saveRepo.getTopExpertsData();
     if (response.isSuccess()) {
-      topExperts = response.model?.$1 ?? [];
+      topExperts = response.model?.$1;
       freeCallAvailable = response.model?.$2 ?? false;
+      userInterestedAdvisors = response.model?.$1.userInterestedAdvisors ?? [];
     } else {
-      print(response.errorMessage);
+      topExperts = null;
     }
+    isTopAdvisorLoading = false;
   }
 
   Future<void> getLiveData() async {
@@ -383,7 +417,7 @@ class SaveViewModel extends ChangeNotifier {
     if (response.isSuccess()) {
       blogPosts = response.model;
     } else {
-      print(response.errorMessage);
+      blogPosts = [];
     }
     updateIsLoading(false);
   }
@@ -541,105 +575,5 @@ class SaveViewModel extends ChangeNotifier {
 
   Future<void> getGoldRatesGraphData() async {
     await _getterRepo.getGoldRatesGraphItems();
-  }
-}
-
-class QuickLinks extends StatelessWidget {
-  const QuickLinks({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final List<QuickLinksModel> quickLinks = QuickLinksModel.fromJsonList(
-      AppConfig.getValue(AppConfigKey.quickActions),
-    );
-
-    return Container(
-      margin: EdgeInsets.only(
-        top: SizeConfig.padding24,
-        bottom: SizeConfig.padding20,
-        left: SizeConfig.padding20,
-        right: SizeConfig.padding20,
-      ),
-      width: SizeConfig.screenWidth,
-      child: Wrap(
-        alignment: WrapAlignment.spaceBetween,
-        children: List.generate(
-          quickLinks.length,
-          (index) => GestureDetector(
-            onTap: () {
-              Haptic.vibrate();
-              AppState.delegate!
-                  .parseRoute(Uri.parse(quickLinks[index].deeplink));
-              locator<AnalyticsService>().track(
-                eventName: AnalyticsEvents.iconTrayTapped,
-                properties: {'icon': quickLinks[index].name},
-              );
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.padding12,
-              ),
-              width: SizeConfig.padding76,
-              decoration: BoxDecoration(
-                color: UiConstants.greyVarient,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(
-                    SizeConfig.padding8,
-                  ),
-                ),
-              ),
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: SizeConfig.padding32,
-                    height: SizeConfig.padding32,
-                    child: AppImage(
-                      quickLinks[index].asset,
-                    ),
-                  ),
-                  SizedBox(height: SizeConfig.padding10),
-                  Text(
-                    quickLinks[index].name,
-                    style: TextStyles.sourceSansSB.body4.colour(Colors.white),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _QuickLinkAvatar extends StatelessWidget {
-  const _QuickLinkAvatar({
-    required this.quickLinksModel,
-  });
-
-  final QuickLinksModel quickLinksModel;
-
-  @override
-  Widget build(BuildContext context) {
-    return CircleAvatar(
-      backgroundColor: quickLinksModel.color,
-      radius: SizeConfig.roundness32,
-      child: SizedBox(
-        width: quickLinksModel.asset == Assets.goldAsset ||
-                quickLinksModel.asset == Assets.floAsset
-            ? SizeConfig.padding56
-            : SizeConfig.padding36,
-        height: quickLinksModel.asset == Assets.goldAsset ||
-                quickLinksModel.asset == Assets.floAsset
-            ? SizeConfig.padding56
-            : SizeConfig.padding36,
-        child: AppImage(
-          quickLinksModel.asset,
-        ),
-      ),
-    );
   }
 }

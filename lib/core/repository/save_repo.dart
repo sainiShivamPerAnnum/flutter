@@ -3,6 +3,7 @@ import 'package:felloapp/core/model/blog_model.dart';
 import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/core/model/live/live_home.dart';
+import 'package:felloapp/core/model/testimonials_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/feature/shorts/src/service/video_data.dart';
@@ -63,6 +64,30 @@ class SaveRepo extends BaseRepo {
     }
   }
 
+  Future<ApiResponse<List<TestimonialsModel>>> getTestimonials() async {
+    try {
+      final response = await APIService.instance.getData(
+        'users/testimonials',
+        cBaseUrl: _baseUrl,
+        apiName: 'getTestimonials',
+      );
+      final responseData = response["data"];
+      final List<TestimonialsModel> upcomingBooking = (responseData as List)
+          .map(
+            (item) => TestimonialsModel.fromJson(
+              item,
+            ),
+          )
+          .toList();
+      return ApiResponse<List<TestimonialsModel>>(
+        model: upcomingBooking,
+        code: 200,
+      );
+    } catch (e) {
+      return const ApiResponse(code: 404, errorMessage: 'No Bookings Found');
+    }
+  }
+
   Future<ApiResponse<List<Booking>>> getPastBookings() async {
     try {
       final response = await APIService.instance.getData(
@@ -111,7 +136,7 @@ class SaveRepo extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<(List<Expert>, bool)>> getTopExpertsData() async {
+  Future<ApiResponse<(ExpertsHome, bool)>> getTopExpertsData() async {
     try {
       final response = await APIService.instance.getData(
         'advisors/sections',
@@ -120,15 +145,8 @@ class SaveRepo extends BaseRepo {
       );
       final responseData = response["data"];
       final allData = ExpertsHome.fromJson(responseData);
-      final List<Expert> topExperts = [];
-      allData.values.forEach((key, expertsList) {
-        if (key.toLowerCase() == 'top') {
-          topExperts.addAll(expertsList.take(3));
-        }
-      });
-
-      return ApiResponse<(List<Expert>, bool)>(
-        model: (topExperts, allData.isAnyFreeCallAvailable),
+      return ApiResponse<(ExpertsHome, bool)>(
+        model: (allData, allData.isAnyFreeCallAvailable),
         code: 200,
       );
     } catch (e) {

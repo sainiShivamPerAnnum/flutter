@@ -983,6 +983,18 @@ class BaseUtil extends ChangeNotifier {
     return formatter.format(value);
   }
 
+  static String formatShortNumber(double value) {
+    if (value >= 1000000000) {
+      return '${(value / 1000000000).toStringAsFixed(1)}B'; // Billion
+    } else if (value >= 1000000) {
+      return '${(value / 1000000).toStringAsFixed(1)}M'; // Million
+    } else if (value >= 1000) {
+      return '${(value / 1000).toStringAsFixed(1)}K'; // Thousand
+    } else {
+      return value.toStringAsFixed(0); // Less than 1000
+    }
+  }
+
   static String formatCompactRupees(num value) {
     late NumberFormat formatter;
     formatter = value > 99999

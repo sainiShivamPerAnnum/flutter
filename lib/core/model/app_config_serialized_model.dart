@@ -1,4 +1,5 @@
 import 'package:felloapp/core/model/support/social_items.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'app_config_serialized_model.g.dart';
@@ -106,6 +107,9 @@ class AppConfigV2Data {
 
   final List<QuickAction> quickActions;
 
+  @JsonKey(name: "signup_screens")
+  final List<Onboarding> onboarding;
+
   final Map<String, dynamic> features;
 
   const AppConfigV2Data({
@@ -154,6 +158,26 @@ class AppConfigV2Data {
     this.rpsDisclaimer =
         'This repayment schedule is estimated based on past performance of the loans mapped to you. Past performance is not a guarantee of future returns. Actual repayment amount received will depend on repayments made by the borrowers.',
     this.rpsLearnMore = const [],
+    this.onboarding = const [
+      Onboarding(
+        title: "Discuss finance with certified experts",
+        subtitle:
+            "Book one-on-one sessions with expert  advisors who understand your goals.",
+        image: Assets.onbaording1,
+      ),
+      Onboarding(
+        title: "Ask Questions, Get Answers in Live Webinar",
+        subtitle:
+            "Ask Questions and Gain Insights by Joining live streams hosted by trusted advisors.",
+        image: Assets.onbaording2,
+      ),
+      Onboarding(
+        title: "Invest in Digital Gold to get safe Returns",
+        subtitle:
+            "Invest in trusted gold at market rates, powered by Augmont and get stable returns.",
+        image: Assets.onbaording3,
+      ),
+    ],
   });
 
   factory AppConfigV2Data.fromJson(Map<String, dynamic> json) =>
@@ -384,6 +408,21 @@ class QuickAction {
 
   factory QuickAction.fromJson(Map<String, dynamic> json) =>
       _$QuickActionFromJson(json);
+}
+
+@_deserializable
+class Onboarding {
+  final String image;
+  final String title;
+  final String subtitle;
+  const Onboarding({
+    this.image = '',
+    this.title = '',
+    this.subtitle = '',
+  });
+
+  factory Onboarding.fromJson(Map<String, dynamic> json) =>
+      _$OnboardingFromJson(json);
 }
 
 @_deserializable

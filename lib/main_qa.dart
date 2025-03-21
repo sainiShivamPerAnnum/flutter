@@ -4,8 +4,8 @@ import 'package:felloapp/util/flavor_config.dart';
 // import 'package:device_preview/device_preview.dart';
 
 Future<void> main() async {
+  FlavorConfig.configureQa();
   await bootStrap(() {
-    FlavorConfig.configureQa();
     return const MyApp();
   });
 }

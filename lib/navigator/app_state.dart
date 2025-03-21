@@ -166,12 +166,20 @@ class AppState extends ChangeNotifier {
         return;
       }
     }
+    while (AppState.screenStack.length > 1) {
+      AppState.backButtonDispatcher!.didPopRoute();
+    }
     if (index == _rootIndex) {
       Haptic.vibrate();
       RootController.controller.animateTo(
         0,
         duration: const Duration(seconds: 1),
         curve: Curves.easeInCirc,
+      );
+      RootController.autoScrollController.animateTo(
+        0,
+        duration: const Duration(seconds: 2),
+        curve: Curves.decelerate,
       );
       return;
     }

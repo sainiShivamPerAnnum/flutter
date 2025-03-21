@@ -94,6 +94,14 @@
 				<string>fb251100614291797</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>flutterbranchsdk</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
@@ -193,5 +201,12 @@
 	<string>$(WEBENGAGE_LICENSE_CODE)</string>
 	<key>WEGLogLevel</key>
 	<string>VERBOSE</string>
+	<key>branch_key</key>
+	<dict>
+		<key>live</key>
+		<string>key_live_csoWD6RATwGjPguLQUB9yihlBDfKPiL2</string>
+		<key>test</key>
+		<string>key_test_czo8B2RFHFTeSluRPHB7NibpCxhKKjXe</string>
+	</dict>
 </dict>
 </plist>

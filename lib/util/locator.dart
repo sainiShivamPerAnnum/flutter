@@ -24,6 +24,7 @@ import 'package:felloapp/core/repository/report_repo.dart';
 import 'package:felloapp/core/repository/rps_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
+import 'package:felloapp/core/repository/shorts_repo.dart';
 import 'package:felloapp/core/repository/sip_repo.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
@@ -31,6 +32,7 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/analytics/branch_analytics.dart';
 import 'package:felloapp/core/service/analytics/facebook_analytics.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
@@ -131,6 +133,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(AnalyticsService.new);
   locator.registerLazySingleton(MixpanelAnalytics.new);
   locator.registerLazySingleton(FacebookAnalytics.new);
+  locator.registerLazySingleton(BranchAnalytics.new);
 
   locator.registerLazySingleton(InternalOpsService.new);
   locator.registerLazySingleton(BankAndPanService.new);
@@ -168,6 +171,9 @@ Future<void> setupLocator() async {
       subscriptionRepo: locator(),
     ),
   );
+  locator.registerLazySingleton(
+    PreloadBloc.new,
+  );
   // locator.registerLazySingleton(LendboxMaturityService.new);
 
   //Repository
@@ -199,6 +205,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(ReportRepository.new);
   locator.registerLazySingleton(RpsRepository.new);
   locator.registerLazySingleton(FdRepository.new);
+  locator.registerLazySingleton(ShortsRepository.new);
   locator.registerLazySingleton(() => FcmHandlerV2(locator()));
   locator.registerLazySingleton<StoriesRepository>(
     () => StoriesRepository(locator()),
