@@ -25,6 +25,8 @@ class MarqueeText extends StatelessWidget {
       backDuration: Duration(seconds: infoList.length * 2),
       direction: Axis.horizontal,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
         children: List.generate(
           infoList.length,
           (index) => Container(

@@ -9,8 +9,6 @@ import 'package:felloapp/feature/shortsHome/bloc/pagination_bloc.dart';
 import 'package:felloapp/feature/shortsHome/widgets/more_options_sheet.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/elements/bottom_nav_bar/bottom_nav_bar.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/local_actions_state.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -91,13 +89,10 @@ class ShortsCard extends StatelessWidget {
         AppState.delegate!.appState.currentAction = PageAction(
           page: ShortsPageConfig,
           state: PageState.addWidget,
-          widget: BaseScaffold(
-            showBackgroundGrid: false,
-            backgroundColor: UiConstants.bg,
-            bottomNavigationBar: const BottomNavBar(),
-            body: ShortsVideoPage(
-              categories: reorderedCategories,
-            ),
+          widget: ShortsVideoPage(
+            categories: reorderedCategories,
+            showAppBar: false,
+            showBottomNavigation: true,
           ),
         );
       },

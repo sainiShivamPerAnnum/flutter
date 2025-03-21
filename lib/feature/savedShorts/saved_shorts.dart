@@ -9,7 +9,6 @@ import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 import 'package:felloapp/feature/shortsHome/widgets/more_options_sheet.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -273,54 +272,11 @@ class _SavedShortsScreenState extends State<_SavedShortsScreen> {
         AppState.delegate!.appState.currentAction = PageAction(
           page: ShortsPageConfig,
           state: PageState.addWidget,
-          widget: BaseScaffold(
-            showBackgroundGrid: false,
-            backgroundColor: UiConstants.bg,
-            appBar: FAppBar(
-              backgroundColor: Colors.transparent,
-              centerTitle: true,
-              titleWidget: Text('Saved', style: TextStyles.rajdhaniSB.body1),
-              leading: BackButton(
-                color: Colors.white,
-                onPressed: () {
-                  AppState.backButtonDispatcher!.didPopRoute();
-                },
-              ),
-              showAvatar: false,
-              showCoinBar: false,
-              action: BlocBuilder<PreloadBloc, PreloadState>(
-                builder: (context, preloadState) {
-                  return Padding(
-                    padding: EdgeInsets.only(right: 10.w),
-                    child: GestureDetector(
-                      onTap: () {
-                        BlocProvider.of<PreloadBloc>(
-                          context,
-                          listen: false,
-                        ).add(
-                          const PreloadEvent.toggleVolume(),
-                        );
-                      },
-                      behavior: HitTestBehavior.opaque,
-                      child: SizedBox(
-                        height: 24.r,
-                        width: 24.r,
-                        child: Icon(
-                          !preloadState.muted
-                              ? Icons.volume_up_rounded
-                              : Icons.volume_off_rounded,
-                          size: 21.r,
-                          color: UiConstants.kTextColor,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            body: const ShortsVideoPage(
-              categories: [],
-            ),
+          widget: const ShortsVideoPage(
+            categories: [],
+            showAppBar: true,
+            title: 'Saved',
+            showBottomNavigation: false,
           ),
         );
       },

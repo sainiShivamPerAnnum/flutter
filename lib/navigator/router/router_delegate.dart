@@ -32,7 +32,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
-import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/pages/asset_prefs/asset_prefs.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_view.dart';
@@ -53,7 +52,6 @@ import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/earn_more_returns_view.dart';
 import 'package:felloapp/ui/pages/static/web_view.dart';
 import 'package:felloapp/ui/pages/support/freshdesk_help.dart';
@@ -64,18 +62,15 @@ import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart'
 import 'package:felloapp/ui/pages/userProfile/settings/settings_view.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/userProfile/verify_email.dart';
-import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
-import 'package:felloapp/util/styles/styles.dart';
 //Flutter Imports
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/enums/app_config_keys.dart';
 import '../../core/model/app_config_model.dart';
@@ -1015,61 +1010,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
             AppState.delegate!.appState.currentAction = PageAction(
               page: ShortsPageConfig,
               state: PageState.addWidget,
-              widget: BaseScaffold(
-                appBar: FAppBar(
-                  backgroundColor: Colors.transparent,
-                  centerTitle: true,
-                  leadingPadding: false,
-                  titleWidget: Expanded(
-                    child: MarqueeText(
-                      infoList: const [
-                        'Share',
-                      ],
-                      showBullet: false,
-                      style: TextStyles.rajdhaniSB.body1,
-                    ),
-                  ),
-                  leading: BackButton(
-                    color: Colors.white,
-                    onPressed: () {
-                      AppState.backButtonDispatcher!.didPopRoute();
-                    },
-                  ),
-                  showAvatar: false,
-                  showCoinBar: false,
-                  action: BlocBuilder<PreloadBloc, PreloadState>(
-                    builder: (context, preloadState) {
-                      return Padding(
-                        padding: EdgeInsets.only(right: 10.w),
-                        child: GestureDetector(
-                          onTap: () {
-                            BlocProvider.of<PreloadBloc>(
-                              context,
-                              listen: false,
-                            ).add(
-                              const PreloadEvent.toggleVolume(),
-                            );
-                          },
-                          behavior: HitTestBehavior.opaque,
-                          child: SizedBox(
-                            height: 24.r,
-                            width: 24.r,
-                            child: Icon(
-                              !preloadState.muted
-                                  ? Icons.volume_up_rounded
-                                  : Icons.volume_off_rounded,
-                              size: 21.r,
-                              color: UiConstants.kTextColor,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                body: const ShortsVideoPage(
-                  categories: [],
-                ),
+              widget: const ShortsVideoPage(
+                categories: [],
+                showAppBar: true,
+                title: 'Share',
+                showBottomNavigation: false,
               ),
             );
             break;
@@ -1080,61 +1025,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           AppState.delegate!.appState.currentAction = PageAction(
             page: ShortsPageConfig,
             state: PageState.addWidget,
-            widget: BaseScaffold(
-              appBar: FAppBar(
-                backgroundColor: Colors.transparent,
-                centerTitle: true,
-                leadingPadding: false,
-                titleWidget: Expanded(
-                  child: MarqueeText(
-                    infoList: const [
-                      'Share',
-                    ],
-                    showBullet: false,
-                    style: TextStyles.rajdhaniSB.body1,
-                  ),
-                ),
-                leading: BackButton(
-                  color: Colors.white,
-                  onPressed: () {
-                    AppState.backButtonDispatcher!.didPopRoute();
-                  },
-                ),
-                showAvatar: false,
-                showCoinBar: false,
-                action: BlocBuilder<PreloadBloc, PreloadState>(
-                  builder: (context, preloadState) {
-                    return Padding(
-                      padding: EdgeInsets.only(right: 10.w),
-                      child: GestureDetector(
-                        onTap: () {
-                          BlocProvider.of<PreloadBloc>(
-                            context,
-                            listen: false,
-                          ).add(
-                            const PreloadEvent.toggleVolume(),
-                          );
-                        },
-                        behavior: HitTestBehavior.opaque,
-                        child: SizedBox(
-                          height: 24.r,
-                          width: 24.r,
-                          child: Icon(
-                            !preloadState.muted
-                                ? Icons.volume_up_rounded
-                                : Icons.volume_off_rounded,
-                            size: 21.r,
-                            color: UiConstants.kTextColor,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              body: const ShortsVideoPage(
-                categories: [],
-              ),
+            widget: const ShortsVideoPage(
+              categories: [],
+              showAppBar: true,
+              title: 'Share',
+              showBottomNavigation: false,
             ),
           );
           break;

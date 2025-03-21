@@ -9,6 +9,8 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/lazy_load_indexed_stack.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class FdMainView extends StatelessWidget {
   const FdMainView({super.key});
@@ -63,7 +65,7 @@ class _FdHomeViewState extends State<FdHomeView>
           return <Widget>[
             SliverToBoxAdapter(
               child: Container(
-                height: SizeConfig.padding136,
+                height: 136.h,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
@@ -76,37 +78,44 @@ class _FdHomeViewState extends State<FdHomeView>
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding24,
-                    vertical: SizeConfig.padding16,
+                    horizontal: 24.w,
+                    vertical: 16.h,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
-                        width: SizeConfig.padding232,
+                        width: 232.w,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Assured returns with low risk',
-                              style: TextStyles.rajdhaniSB.title5,
+                              'Assured returns with \nlow risk',
+                              style: GoogleFonts.rajdhani(
+                                fontSize: 22.sp,
+                                color: UiConstants.kTextColor,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10.h,
                             ),
                             Container(
                               decoration: BoxDecoration(
                                 color: UiConstants.grey5,
                                 borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                    SizeConfig.roundness8,
-                                  ),
+                                  Radius.circular(8.r),
                                 ),
                               ),
                               padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.padding16,
-                                vertical: SizeConfig.padding4,
+                                horizontal: 16.w,
+                                vertical: 4.h,
                               ),
                               child: Text(
                                 '📈 Upto 9.5% Returns',
-                                style: TextStyles.sourceSans.body3,
+                                style: TextStyles.sourceSans.body3.colour(
+                                  UiConstants.kTextColor2,
+                                ),
                               ),
                             ),
                           ],
@@ -114,8 +123,8 @@ class _FdHomeViewState extends State<FdHomeView>
                       ),
                       AppImage(
                         Assets.fdIcon,
-                        width: SizeConfig.padding78,
-                        height: SizeConfig.padding78,
+                        width: 78.r,
+                        height: 78.r,
                       ),
                     ],
                   ),

@@ -18,14 +18,12 @@ import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
-import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 class EaseInFloatingActionButtonAnimator extends FloatingActionButtonAnimator {
@@ -474,61 +472,11 @@ Widget _buildLiveTab(List<VideoData> recentlive, BuildContext context) {
                     AppState.delegate!.appState.currentAction = PageAction(
                       page: LiveShortsPageConfig,
                       state: PageState.addWidget,
-                      widget: BaseScaffold(
-                        appBar: FAppBar(
-                          backgroundColor: Colors.transparent,
-                          centerTitle: true,
-                          leadingPadding: false,
-                          titleWidget: Expanded(
-                            child: MarqueeText(
-                              infoList: [
-                                recentlive[index].title,
-                              ],
-                              showBullet: false,
-                              style: TextStyles.rajdhaniSB.body1,
-                            ),
-                          ),
-                          leading: BackButton(
-                            color: Colors.white,
-                            onPressed: () {
-                              AppState.backButtonDispatcher!.didPopRoute();
-                            },
-                          ),
-                          showAvatar: false,
-                          showCoinBar: false,
-                          action: BlocBuilder<PreloadBloc, PreloadState>(
-                            builder: (context, preloadState) {
-                              return Padding(
-                                padding: EdgeInsets.only(right: 10.w),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    BlocProvider.of<PreloadBloc>(
-                                      context,
-                                      listen: false,
-                                    ).add(
-                                      const PreloadEvent.toggleVolume(),
-                                    );
-                                  },
-                                  behavior: HitTestBehavior.opaque,
-                                  child: SizedBox(
-                                    height: 24.r,
-                                    width: 24.r,
-                                    child: Icon(
-                                      !preloadState.muted
-                                          ? Icons.volume_up_rounded
-                                          : Icons.volume_off_rounded,
-                                      size: 21.r,
-                                      color: UiConstants.kTextColor,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        body: const ShortsVideoPage(
-                          categories: [],
-                        ),
+                      widget: ShortsVideoPage(
+                        categories: const [],
+                        showAppBar: true,
+                        title: recentlive[index].title,
+                        showBottomNavigation: false,
                       ),
                     );
                   },
@@ -796,53 +744,11 @@ Widget _buildTabOneData(
                 AppState.delegate!.appState.currentAction = PageAction(
                   page: ProfileShortsPageConfig,
                   state: PageState.addWidget,
-                  widget: BaseScaffold(
-                    appBar: FAppBar(
-                      backgroundColor: Colors.transparent,
-                      centerTitle: true,
-                      titleWidget:
-                          Text('Profile', style: TextStyles.rajdhaniSB.body1),
-                      leading: BackButton(
-                        color: Colors.white,
-                        onPressed: () {
-                          AppState.backButtonDispatcher!.didPopRoute();
-                        },
-                      ),
-                      showAvatar: false,
-                      showCoinBar: false,
-                      action: BlocBuilder<PreloadBloc, PreloadState>(
-                        builder: (context, preloadState) {
-                          return Padding(
-                            padding: EdgeInsets.only(right: 10.w),
-                            child: GestureDetector(
-                              onTap: () {
-                                BlocProvider.of<PreloadBloc>(
-                                  context,
-                                  listen: false,
-                                ).add(
-                                  const PreloadEvent.toggleVolume(),
-                                );
-                              },
-                              behavior: HitTestBehavior.opaque,
-                              child: SizedBox(
-                                height: 24.r,
-                                width: 24.r,
-                                child: Icon(
-                                  !preloadState.muted
-                                      ? Icons.volume_up_rounded
-                                      : Icons.volume_off_rounded,
-                                  size: 21.r,
-                                  color: UiConstants.kTextColor,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    body: const ShortsVideoPage(
-                      categories: [],
-                    ),
+                  widget: const ShortsVideoPage(
+                    categories: [],
+                    showAppBar: true,
+                    title: 'Profile',
+                    showBottomNavigation: false,
                   ),
                 );
               },

@@ -54,27 +54,28 @@ class FAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       leading: leading,
       iconTheme: const IconThemeData(color: Colors.white),
-      title: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (leadingPadding) SizedBox(width: SizeConfig.padding8),
-          if (showAvatar)
-            Transform.translate(
-              offset: Offset(0, 2.h),
-              child: ProfileImageSE(
-                padding: EdgeInsets.all(2.r),
-                key: K.userAvatarKey,
-                radius: 14.r,
-                showBadge: true,
-              ),
-            ),
-          titleWidget ??
-              Text(
-                title ?? '',
-                style: TextStyles.rajdhaniSB.title5.merge(style),
-              ),
-        ],
-      ),
+      title: titleWidget ??
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (leadingPadding) SizedBox(width: SizeConfig.padding8),
+              if (showAvatar)
+                Transform.translate(
+                  offset: Offset(0, 2.h),
+                  child: ProfileImageSE(
+                    padding: EdgeInsets.all(2.r),
+                    key: K.userAvatarKey,
+                    radius: 14.r,
+                    showBadge: true,
+                  ),
+                ),
+              titleWidget ??
+                  Text(
+                    title ?? '',
+                    style: TextStyles.rajdhaniSB.title5.merge(style),
+                  ),
+            ],
+          ),
       centerTitle: centerTitle ?? false,
       elevation: 0,
       backgroundColor: backgroundColor ?? Colors.transparent,

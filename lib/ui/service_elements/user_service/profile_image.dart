@@ -9,6 +9,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
@@ -102,10 +103,10 @@ class _ProfileImageSEState extends State<ProfileImageSE> {
                   bottom: -03,
                   child: SvgPicture.network(
                     data.url,
-                    height: SizeConfig.padding20,
+                    height: widget.radius != null ? widget.radius! : 20.h,
                     fit: BoxFit.fill,
                   ),
-                )
+                ),
             ],
           ),
         );

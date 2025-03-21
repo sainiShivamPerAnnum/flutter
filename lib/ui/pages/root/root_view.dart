@@ -11,10 +11,12 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:felloapp/ui/elements/dev_rel/flavor_banners.dart';
+import 'package:felloapp/ui/keys/keys.dart';
 import 'package:felloapp/ui/pages/hometabs/home/balance_page.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/win_helpers.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -161,15 +163,28 @@ class RootAppBar extends StatelessWidget {
                     child: FAppBar(
                       showAvatar: true,
                       leadingPadding: false,
-                      titleWidget: Expanded(
-                        child: Salutation(
-                          leftMargin: 8.w,
-                          textStyle: GoogleFonts.sourceSans3(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                            height: 1.25,
+                      titleWidget: Row(
+                        children: [
+                          Transform.translate(
+                            offset: Offset(0, 2.h),
+                            child: ProfileImageSE(
+                              padding: EdgeInsets.all(2.r),
+                              key: K.userAvatarKey,
+                              radius: 14.r,
+                              showBadge: true,
+                            ),
                           ),
-                        ),
+                          Expanded(
+                            child: Salutation(
+                              leftMargin: 8.w,
+                              textStyle: GoogleFonts.sourceSans3(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                                height: 1.25,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       backgroundColor: UiConstants.kBackgroundColor,
                       showCoinBar: false,

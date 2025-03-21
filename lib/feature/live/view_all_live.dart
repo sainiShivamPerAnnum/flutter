@@ -9,15 +9,12 @@ import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 import 'package:felloapp/feature/shorts/video_page.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/enums/page_state_enum.dart';
 
@@ -148,59 +145,11 @@ class _ViewAllLiveState extends State<ViewAllLive> {
                       AppState.delegate!.appState.currentAction = PageAction(
                         page: LiveShortsPageConfig,
                         state: PageState.addWidget,
-                        widget: BaseScaffold(
-                          appBar: FAppBar(
-                            backgroundColor: Colors.transparent,
-                            centerTitle: true,
-                            leadingPadding: false,
-                            titleWidget: Expanded(
-                              child: MarqueeText(
-                                infoList: [item.title],
-                                showBullet: false,
-                                style: TextStyles.rajdhaniSB.body1,
-                              ),
-                            ),
-                            leading: BackButton(
-                              color: Colors.white,
-                              onPressed: () {
-                                AppState.backButtonDispatcher!.didPopRoute();
-                              },
-                            ),
-                            showAvatar: false,
-                            showCoinBar: false,
-                            action: BlocBuilder<PreloadBloc, PreloadState>(
-                              builder: (context, preloadState) {
-                                return Padding(
-                                  padding: EdgeInsets.only(right: 10.w),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      BlocProvider.of<PreloadBloc>(
-                                        context,
-                                        listen: false,
-                                      ).add(
-                                        const PreloadEvent.toggleVolume(),
-                                      );
-                                    },
-                                    behavior: HitTestBehavior.opaque,
-                                    child: SizedBox(
-                                      height: 24.r,
-                                      width: 24.r,
-                                      child: Icon(
-                                        !preloadState.muted
-                                            ? Icons.volume_up_rounded
-                                            : Icons.volume_off_rounded,
-                                        size: 21.r,
-                                        color: UiConstants.kTextColor,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          body: const ShortsVideoPage(
-                            categories: [],
-                          ),
+                        widget: ShortsVideoPage(
+                          categories: const [],
+                          showAppBar: true,
+                          showBottomNavigation: false,
+                          title: item.title,
                         ),
                       );
                     },
