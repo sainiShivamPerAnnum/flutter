@@ -1,10 +1,10 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
@@ -18,7 +18,7 @@ class OnboardingViewModel extends BaseViewModel {
   int _indicatorPosition = 0;
 
   double dragStartPosition = 0, dragUpdatePosition = 0;
-  List<List<String>>? _onboardingData;
+  List<Onboarding>? _onboardingData;
   bool _isWalkthroughRegistrationInProgress = false;
 
   bool get isWalkthroughRegistrationInProgress =>
@@ -41,7 +41,7 @@ class OnboardingViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  List<List<String>>? get onboardingData => _onboardingData;
+  List<Onboarding>? get onboardingData => _onboardingData;
 
   set pageController(PageController? val) {
     _pageController = val;
@@ -53,7 +53,7 @@ class OnboardingViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  set onboardingData(List<List<String>>? val) {
+  set onboardingData(List<Onboarding>? val) {
     _onboardingData = val;
     notifyListeners();
   }
@@ -61,23 +61,8 @@ class OnboardingViewModel extends BaseViewModel {
   void init() {
     pageController = PageController();
     currentPage = 0;
-    onboardingData = [
-      [
-        "Discuss finance with certified experts",
-        "Book one-on-one sessions with expert  advisors who understand your goals.",
-        Assets.onbaording1,
-      ],
-      [
-        "Ask Questions, Get Answers in Live Webinar",
-        "Ask Questions and Gain Insights by Joining live streams hosted by trusted advisors.",
-        Assets.onbaording2,
-      ],
-      [
-        "Invest in Digital Gold to get safe Returns",
-        "Invest in trusted gold at market rates, powered by Augmont and get stable returns.",
-        Assets.onbaording3,
-      ],
-    ];
+    final onboardingInformation = AppConfigV2.instance.onboarding;
+    onboardingData = onboardingInformation;
   }
 
   Future<void> registerWalkthroughCompletion() async {

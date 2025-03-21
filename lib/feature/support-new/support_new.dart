@@ -1,5 +1,6 @@
 import 'package:felloapp/feature/support-new/bloc/support_bloc.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,7 @@ class SupportViewWrapper extends StatelessWidget {
             SupportData() => Padding(
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
                 child: SingleChildScrollView(
+                  controller: RootController.controller,
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

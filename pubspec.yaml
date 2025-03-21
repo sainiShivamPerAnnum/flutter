@@ -3,7 +3,8 @@ description: Game-based Investments
 
 publish_to: "none"
 
-version: 6.1.4+286
+
+version: 6.3.0+292
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -125,6 +126,9 @@ dependencies:
   scroll_to_index: ^3.0.1
   injectable: ^1.5.4
   flutter_branch_sdk: ^7.1.0
+  volume_controller: ^2.0.8
+  smooth_page_indicator: ^1.2.0
+  bordered_text: ^2.0.0
 
 
 

@@ -8,6 +8,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FAppBar extends StatelessWidget implements PreferredSizeWidget {
   final FaqsType? type;
@@ -59,11 +60,11 @@ class FAppBar extends StatelessWidget implements PreferredSizeWidget {
           if (leadingPadding) SizedBox(width: SizeConfig.padding8),
           if (showAvatar)
             Transform.translate(
-              offset: Offset(0, SizeConfig.padding2),
+              offset: Offset(0, 2.h),
               child: ProfileImageSE(
-                padding: EdgeInsets.all(SizeConfig.padding6),
+                padding: EdgeInsets.all(2.r),
                 key: K.userAvatarKey,
-                radius: SizeConfig.avatarRadius * 0.9,
+                radius: 14.r,
                 showBadge: true,
               ),
             ),
@@ -90,9 +91,9 @@ class FAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             if (action != null) action!,
             if (type != null) FaqPill(type: type),
-            SizedBox(width: SizeConfig.padding14)
+            SizedBox(width: SizeConfig.padding14),
           ],
-        )
+        ),
       ],
     );
   }

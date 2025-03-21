@@ -119,6 +119,7 @@ class PaginationBloc<Type, Result, PageReference, Error extends Object>
     on<_FetchNextPage>(_fetchNextPage);
     on<_Reset>(_reset);
     on<_Dispose>(_dispose);
+    on<_UpdateItemEvent<Type>>(_updateItem);
   }
 
   final PaginationCallBack<Result, PageReference, Error> _paginationCallBack;
@@ -229,6 +230,38 @@ class PaginationBloc<Type, Result, PageReference, Error extends Object>
     );
   }
 
+  /// Handles the event to update items in the loaded data.
+  Future<void> _updateItem(
+    _UpdateItemEvent<Type> event,
+    Emitter<PaginationState<Type, PageReference, Error>> emitter,
+  ) async {
+    List<Type> updatedEntries = List<Type>.from(state.entries);
+    if (event.updateByIndex != null) {
+      final update = event.updateByIndex!;
+      if (update.index >= 0 && update.index < updatedEntries.length) {
+        updatedEntries[update.index] = update.item;
+      }
+    } else if (event.updateByPredicate != null) {
+      final update = event.updateByPredicate!;
+      for (int i = 0; i < updatedEntries.length; i++) {
+        if (update.predicate(updatedEntries[i])) {
+          updatedEntries[i] = update.updater(updatedEntries[i]);
+        }
+      }
+    } else if (event.updateAll != null) {
+      for (int i = 0; i < updatedEntries.length; i++) {
+        updatedEntries[i] = event.updateAll!(updatedEntries[i]);
+      }
+    } else if (event.customUpdater != null) {
+      updatedEntries = event.customUpdater!(updatedEntries);
+    }
+    emitter(
+      state.copyWith(
+        result: updatedEntries,
+      ),
+    );
+  }
+
   /// Handles the event to reset the pagination to its initial state.
   ///
   /// Fetches the initial page and updates the state accordingly.
@@ -289,6 +322,9 @@ class PaginationBloc<Type, Result, PageReference, Error extends Object>
     );
   }
 
+  // Add these public methods to the
+  //PaginationBloc class to expose the update functionality
+
   /// Triggers the event to fetch the first page.
   void fetchFirstPage() {
     if (state.entries.isNotEmpty ||
@@ -316,5 +352,46 @@ class PaginationBloc<Type, Result, PageReference, Error extends Object>
 
   void dispose() {
     add(const _Dispose());
+  }
+
+  /// Updates an item at a specific index.
+  void updateItemAtIndex(int index, Type item) {
+    add(
+      _UpdateItemEvent<Type>(
+        updateByIndex: (index: index, item: item),
+      ),
+    );
+  }
+
+  /// Updates all items that match the given predicate.
+  void updateItemsWhere(
+    bool Function(Type item) predicate,
+    Type Function(Type) updater,
+  ) {
+    add(
+      _UpdateItemEvent<Type>(
+        updateByPredicate: (predicate: predicate, updater: updater),
+      ),
+    );
+  }
+
+  /// Updates all items using the given updater function.
+  void updateAllItems(Type Function(Type) updater) {
+    add(
+      _UpdateItemEvent<Type>(
+        updateAll: updater,
+      ),
+    );
+  }
+
+  /// Updates the items using custom logic.
+  void updateItemsWithCustomLogic(
+    List<Type> Function(List<Type> currentItems) customUpdater,
+  ) {
+    add(
+      _UpdateItemEvent<Type>(
+        customUpdater: customUpdater,
+      ),
+    );
   }
 }

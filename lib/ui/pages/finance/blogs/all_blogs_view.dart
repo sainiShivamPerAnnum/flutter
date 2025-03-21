@@ -1,4 +1,3 @@
-import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
@@ -25,7 +24,7 @@ class ViewAllBlogsView extends StatelessWidget {
           leading: const FelloAppBarBackButton(),
           elevation: 0,
           backgroundColor: UiConstants.kBackgroundColor,
-                surfaceTintColor: UiConstants.kBackgroundColor,
+          surfaceTintColor: UiConstants.kBackgroundColor,
           title: Text(locale.blogs, style: TextStyles.rajdhaniSB.title5),
           centerTitle: false,
         ),

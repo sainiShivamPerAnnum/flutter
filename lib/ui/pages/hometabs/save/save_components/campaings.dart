@@ -1,218 +1,136 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/util/styles/styles.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:tuple/tuple.dart';
 
-class Campaigns extends StatelessWidget {
-  const Campaigns({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const CampaignCardSection();
-  }
-}
-
-class CampaignCardSection extends StatelessWidget {
-  const CampaignCardSection({
+class Campaigns extends StatefulWidget {
+  const Campaigns({
     super.key,
   });
 
   @override
+  State<Campaigns> createState() => _CampaignsState();
+}
+
+class _CampaignsState extends State<Campaigns> {
+  final CarouselController _carouselController = CarouselController();
+  int _currentPage = 0;
+
+  @override
   Widget build(BuildContext context) {
-    return Consumer<SaveViewModel>(
+    return Selector<SaveViewModel, Tuple2<List<EventModel>?, bool>>(
+      selector: (_, model) => Tuple2(
+        model.ongoingEvents,
+        model.isChallengesLoading,
+      ),
       builder: (_, model, __) {
-        return model.isChallengesLoading
-            ? const SizedBox()
-            : Container(
-                width: SizeConfig.screenWidth,
-                margin: EdgeInsets.symmetric(
-                  vertical: SizeConfig.padding14,
-                  horizontal: SizeConfig.padding20,
-                ).copyWith(
-                  bottom: SizeConfig.padding8,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    SizeConfig.padding16 + SizeConfig.padding2,
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: SizeConfig.padding152,
-                      child: ClipRRect(
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.padding16),
-                        child: PageView.builder(
-                          controller: model.offersController,
-                          itemCount: model.ongoingEvents!.length,
-                          onPageChanged: (page) {
-                            model.currentPage = page;
-                          },
-                          itemBuilder: (context, index) {
-                            final event = model.ongoingEvents![index];
-                            return event.bgImage != ''
-                                ? GestureDetector(
-                                    onTap: () {
-                                      model.trackChallengeTapped(
-                                        event.bgImage,
-                                        event.type,
-                                        index,
-                                      );
-                                      AppState.delegate!
-                                          .parseRoute(Uri.parse(event.type));
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness16,
-                                        ),
-                                        image: DecorationImage(
-                                          image: CachedNetworkImageProvider(
-                                            event.bgImage,
-                                          ),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : CustomCampaignCard(
-                                    ontap: () {
-                                      AppState.delegate!.parseRoute(
-                                        Uri.parse(
-                                          event.type + (event.misc['id'] ?? ''),
-                                        ),
-                                      );
-                                      model.trackChallengeTapped(
-                                        event.bgImage,
-                                        event.type,
-                                        index,
-                                      );
-                                    },
-                                    title: event.title,
-                                    description: event.subtitle,
-                                    buttonText: event.ctaText,
-                                    imageUrl: event.thumbnail,
-                                  );
-                          },
-                        ),
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 500),
+          child: model.item2
+              ? Padding(
+                  padding: EdgeInsets.only(top: 20.h, bottom: 24.h),
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey[800]!,
+                    highlightColor: Colors.grey[600]!,
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20.w),
+                      height: 330.h,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(8.r),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: SizeConfig.padding14),
-                      child: Wrap(
-                        children: List.generate(
-                          model.ongoingEvents!.length,
-                          (index) => Padding(
-                            padding: EdgeInsets.all(SizeConfig.padding2),
-                            child: CircleAvatar(
-                              backgroundColor: model.currentPage == index
-                                  ? Colors.white
-                                  : Colors.grey,
-                              radius: SizeConfig.padding3,
-                            ),
+                  ),
+                )
+              : Padding(
+                  padding: EdgeInsets.only(top: 20.h, bottom: 24.h),
+                  child: Column(
+                    key: const ValueKey<String>('Campaings'),
+                    children: [
+                      SizedBox(
+                        height: 307.h,
+                        child: CarouselSlider.builder(
+                          carouselController: _carouselController,
+                          itemCount: model.item1!.length,
+                          itemBuilder: (context, index, realIndex) {
+                            final event = model.item1![index];
+                            return Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10.w),
+                              child: GestureDetector(
+                                onTap: () {
+                                  locator<SaveViewModel>().trackChallengeTapped(
+                                    event.bgImage,
+                                    event.type,
+                                    index,
+                                  );
+                                  AppState.delegate!
+                                      .parseRoute(Uri.parse(event.type));
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                      8.r,
+                                    ),
+                                    image: DecorationImage(
+                                      image: CachedNetworkImageProvider(
+                                        event.bgImage,
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          options: CarouselOptions(
+                            height: 330.h,
+                            aspectRatio: 1,
+                            enlargeCenterPage: false,
+                            enableInfiniteScroll: false,
+                            pageSnapping: true,
+                            viewportFraction: 0.9,
+                            autoPlay: true,
+                            autoPlayInterval: const Duration(seconds: 4),
+                            autoPlayAnimationDuration:
+                                const Duration(milliseconds: 800),
+                            padEnds: true,
+                            onPageChanged: (page, reason) {
+                              setState(() {
+                                _currentPage = page;
+                              });
+                            },
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              );
-      },
-    );
-  }
-}
-
-class CustomCampaignCard extends StatelessWidget {
-  final String title;
-  final String description;
-  final String buttonText;
-  final String imageUrl;
-  final VoidCallback ontap;
-
-  const CustomCampaignCard({
-    required this.title,
-    required this.description,
-    required this.buttonText,
-    required this.imageUrl,
-    required this.ontap,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: ontap,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.padding18,
-          vertical: SizeConfig.padding14,
-        ),
-        decoration: BoxDecoration(
-          color: UiConstants.greyVarient,
-          borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        title,
-                        style: TextStyles.sourceSansSB.body6.colour(
-                          UiConstants.kTabBorderColor,
+                      if (model.item1!.length > 1)
+                        Padding(
+                          padding: EdgeInsets.only(top: 14.h),
+                          child: SmoothPageIndicator(
+                            controller:
+                                PageController(initialPage: _currentPage),
+                            count: model.item1!.length,
+                            effect: ExpandingDotsEffect(
+                              activeDotColor: Colors.white,
+                              dotColor: Colors.grey,
+                              dotHeight: 6.h,
+                              dotWidth: 6.w,
+                            ),
+                            onDotClicked: _carouselController.animateToPage,
+                          ),
                         ),
-                      ),
                     ],
                   ),
-                  SizedBox(height: SizeConfig.padding8),
-                  Expanded(
-                    child: Text(
-                      description,
-                      style: TextStyles.sourceSansSB.body2,
-                    ),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding12,
-                  ),
-                  ElevatedButton(
-                    onPressed: ontap,
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(0, 0),
-                      padding: EdgeInsets.symmetric(
-                        vertical: SizeConfig.padding6,
-                        horizontal: SizeConfig.padding12,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          SizeConfig.roundness5,
-                        ),
-                      ),
-                    ),
-                    child: Text(
-                      buttonText,
-                      style: TextStyles.sourceSansSB.body4
-                          .colour(UiConstants.textColor),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              width: SizeConfig.padding14,
-            ),
-            CircleAvatar(
-              radius: SizeConfig.padding34,
-              backgroundImage: NetworkImage(imageUrl),
-            ),
-          ],
-        ),
-      ),
+                ),
+        );
+      },
     );
   }
 }

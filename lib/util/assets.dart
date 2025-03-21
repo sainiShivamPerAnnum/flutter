@@ -506,15 +506,17 @@ class Assets {
   static const String calender =
       "https://d11q4cti75qmcp.cloudfront.net/imagekit/static/calender.png";
 
-  static const String video_share = "assets/svg/share_video.svg";
-  static const String book_call = "assets/svg/calender.svg";
+  static const String video_save = "assets/svg/save_reel.svg";
+  static const String video_save_filled = "assets/svg/like_shorts_filled.svg";
+  static const String video_share = "assets/svg/share_reel.svg";
+  static const String book_call = "assets/svg/book_call.svg";
   static const String video_like = "assets/svg/like.svg";
   static const String confirm_payment = "assets/vectors/gif/confirm.gif";
   static const String pending_payment = "assets/vectors/gif/pending.gif";
   static const String failed_payment = "assets/vectors/gif/failed.gif";
   static const String exit_logo = "assets/svg/exit.svg";
   static const String experience = "assets/svg/experience.svg";
-  static const String add_comment = "assets/svg/add_comment.svg";
+  static const String add_comment = "assets/svg/comments_reels.svg";
   static const String remove_comment = "assets/svg/remove_comment.svg";
   static const String image = "assets/svg/image.svg";
   static const String no_shorts = "assets/svg/no_shorts.svg";
@@ -531,4 +533,12 @@ class Assets {
   static const String tick = "assets/images/icons/tick.png";
   static const String experts = "assets/images/experts.png";
   static const String noSlots = "assets/lotties/no_slots.json";
+  static const String done = "assets/svg/done.svg";
+  static const String noNotifications = "assets/svg/no_notifications.svg";
+  static const String noSaved = "assets/svg/no_saved.svg";
+  static const String expertise = "assets/svg/expertise.svg";
+  static const String qualifications = "assets/svg/qualifications.svg";
+  static const String rating = "assets/svg/rating.svg";
+  static const String experiencev2 = "assets/svg/experience_v2.svg";
+  static const String portfolio = "assets/svg/portfolio.svg";
 }

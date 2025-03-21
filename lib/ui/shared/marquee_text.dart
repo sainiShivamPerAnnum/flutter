@@ -6,6 +6,7 @@ class MarqueeText extends StatelessWidget {
   final List<String> infoList;
   final Color? bulletColor, textColor;
   final bool showBullet;
+  final TextStyle? style;
 
   const MarqueeText({
     required this.infoList,
@@ -13,6 +14,7 @@ class MarqueeText extends StatelessWidget {
     super.key,
     this.bulletColor,
     this.textColor,
+    this.style,
   });
 
   @override
@@ -41,12 +43,14 @@ class MarqueeText extends StatelessWidget {
                 ),
                 Text(
                   infoList[index],
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    color: textColor ??
-                        FelloColorPalette.augmontFundPalette().secondaryColor,
-                    fontSize: SizeConfig.mediumTextSize,
-                  ),
+                  style: style ??
+                      TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: textColor ??
+                            FelloColorPalette.augmontFundPalette()
+                                .secondaryColor,
+                        fontSize: SizeConfig.mediumTextSize,
+                      ),
                 ),
               ],
             ),
@@ -80,7 +84,7 @@ class _MarqueeWidgetState extends State<MarqueeWidget> {
 
   @override
   void initState() {
-    scrollController = ScrollController(initialScrollOffset: 50.0);
+    scrollController = ScrollController(initialScrollOffset: 0.0);
     WidgetsBinding.instance.addPostFrameCallback(scroll);
     super.initState();
   }

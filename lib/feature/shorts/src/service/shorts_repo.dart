@@ -1,15 +1,75 @@
+import 'package:felloapp/core/model/shorts/shorts_home.dart';
+import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/shorts/src/core/interaction_enum.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/local_actions_state.dart';
 import 'comment_data.dart';
 import 'video_data.dart';
 
-class ShortsRepo {
+class ShortsRepo extends BaseRepo {
   static final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://advisors.fello-dev.net/'
       : 'https://advisors.fello-prod.net/';
+
+  Future<ApiResponse<PaginatedShorts>> getVideosByTheme({
+    required String theme,
+    int page = 1,
+    int limit = 10,
+  }) async {
+    try {
+      final queryParameters = {
+        'page': page.toString(),
+        'limit': limit.toString(),
+        'theme': theme,
+      };
+
+      final response = await APIService.instance.getData(
+        'videos/search-shorts-theme',
+        cBaseUrl: _baseUrl,
+        apiName: 'ShortsRepo/getVideosByTheme',
+        queryParams: queryParameters,
+      );
+      final responseData = response["data"];
+      return ApiResponse<PaginatedShorts>(
+        model: PaginatedShorts.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<PaginatedShorts>> getVideosByCategory({
+    required String category,
+    required String theme,
+    int page = 1,
+    int limit = 10,
+  }) async {
+    try {
+      final queryParameters = {
+        'page': page.toString(),
+        'limit': limit.toString(),
+        'category': category,
+        'theme': theme,
+      };
+
+      final response = await APIService.instance.getData(
+        'videos/theme-category-paginated',
+        cBaseUrl: _baseUrl,
+        apiName: 'ShortsRepo/getVideosByCategory',
+        queryParams: queryParameters,
+      );
+      final responseData = response["data"];
+      return ApiResponse<PaginatedShorts>(
+        model: PaginatedShorts.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
 
   // Updated getVideos function
   Future<ApiResponse<List<VideoData>>> getVideos({
@@ -58,7 +118,7 @@ class ShortsRepo {
         queryParams: queryParameters,
       );
       final responseData = response["data"][0];
-      
+
       return ApiResponse<VideoData>(
         model: VideoData.fromJson(responseData),
         code: 200,
@@ -93,11 +153,15 @@ class ShortsRepo {
 
   // Updated addComment function
   Future<ApiResponse<void>> addComment(
-      String videoId, String userId, String name, String commentText) async {
+    String videoId,
+    String userId,
+    String name,
+    String commentText,
+  ) async {
     final String addCommentUrl = 'videos/comment/$videoId';
     try {
-      final String? avatarId = locator<UserService>().baseUser!.avatarId;
-      final String? dpUrl = locator<UserService>().myUserDpUrl;
+      final String? avatarId = userService.baseUser!.avatarId;
+      final String? dpUrl = userService.myUserDpUrl;
       await APIService.instance.postData(
         addCommentUrl,
         cBaseUrl: _baseUrl,
@@ -119,7 +183,10 @@ class ShortsRepo {
 
   // Updated addLike function
   Future<ApiResponse<void>> addLike(
-      bool isLiked, String videoId, String name) async {
+    bool isLiked,
+    String videoId,
+    String name,
+  ) async {
     final String likeUrl = 'videos/like/$videoId';
     try {
       await APIService.instance.postData(
@@ -129,9 +196,63 @@ class ShortsRepo {
         body: {
           'id': videoId,
           'name': name,
-          'isLiked': isLiked,
+          'isLiked': !isLiked,
         },
       );
+      return const ApiResponse<void>(code: 200);
+    } catch (e) {
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<void>> followAdvisor(
+    bool isFollowed,
+    String advisorId,
+  ) async {
+    final uid = userService.baseUser!.uid;
+    final String followUrl = isFollowed
+        ? 'user-notify/unfollow-advisor'
+        : 'user-notify/follow-advisor';
+    try {
+      await APIService.instance.postData(
+        followUrl,
+        cBaseUrl: _baseUrl,
+        apiName: 'ShortsRepo/followAdvisor',
+        body: {
+          "uid": uid,
+          'advisorId': advisorId,
+        },
+      );
+      return const ApiResponse<void>(code: 200);
+    } catch (e) {
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<void>> addSave(
+    bool isSaved,
+    String videoId,
+    String theme,
+    String category,
+  ) async {
+    final uid = userService.baseUser!.uid;
+    final String saveUrl = isSaved
+        ? 'user-video-interactions/unsave/$videoId'
+        : 'user-video-interactions/$uid';
+    final requestBody = {
+      "videoId": videoId,
+      "category": category,
+      "theme": theme,
+      "interactionType": "SAVED",
+    };
+    try {
+      await APIService.instance.postData(
+        saveUrl,
+        cBaseUrl: _baseUrl,
+        apiName: 'ShortsRepo/addSave',
+        body: isSaved ? null : requestBody,
+      );
+      await LocalActionsState.setVideoSaved(videoId, !isSaved);
       return const ApiResponse<void>(code: 200);
     } catch (e) {
       return ApiResponse.withError(e.toString(), 400);
@@ -153,6 +274,7 @@ class ShortsRepo {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
+
   Future<ApiResponse<void>> updateSeen(
     String videoId,
   ) async {
@@ -168,12 +290,40 @@ class ShortsRepo {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
+
+  Future<ApiResponse<void>> updateInteraction({
+    required String videoId,
+    required String theme,
+    required String category,
+    required InteractionType interaction,
+  }) async {
+    final uid = userService.baseUser!.uid;
+    final String interactionUrl = 'user-video-interactions/$uid';
+    final requestBody = {
+      "videoId": videoId,
+      "category": category,
+      "theme": theme,
+      "interactionType": interaction.name.toString().toUpperCase(),
+    };
+    try {
+      await APIService.instance.postData(
+        interactionUrl,
+        cBaseUrl: _baseUrl,
+        apiName: 'ShortsRepo/updateInteraction',
+        body: requestBody,
+      );
+      return const ApiResponse<void>(code: 200);
+    } catch (e) {
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
   Future<ApiResponse<String>> dynamicLink({
     required String id,
   }) async {
     final query = {
       "type": "shorts",
-       "id": id,
+      "id": id,
     };
     try {
       final response = await APIService.instance.postData(
