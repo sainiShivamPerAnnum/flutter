@@ -1,4 +1,6 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/ui/elements/appbar/appbar.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -28,7 +30,7 @@ class _FdWebViewState extends State<FdWebView> {
 
   Future<void> _launchURL(String url) async {
     if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
+      await BaseUtil.launchUrl(url);
     } else {
       BaseUtil.showNegativeAlert('Error Occured', 'Could not launch: $url');
     }
@@ -45,6 +47,7 @@ class _FdWebViewState extends State<FdWebView> {
           onUrlChange: (change) => (change.url),
           onNavigationRequest: (request) {
             final url = request.url;
+            // Handle payment apps
             if (url.startsWith('upi:') ||
                 url.startsWith('intent:') ||
                 url.startsWith('phonepe:') ||
@@ -54,8 +57,24 @@ class _FdWebViewState extends State<FdWebView> {
               _launchURL(url);
               return NavigationDecision.prevent;
             }
+            // Handle file URLs
             if (url.startsWith('file:')) {
               return NavigationDecision.navigate;
+            }
+            // Handle VKYC links
+            if (url.contains('vkyc360.unitybank.co.in') ||
+                url.contains('vkycuat.unitybank.co.in') ||
+                url.contains('vkyc.suryodaybank.com') ||
+                url.contains('uat.videocx.io')) {
+              _launchURL(url);
+              return NavigationDecision.prevent;
+            }
+
+            // Handle T&C documents
+            if (url.contains('blostem-assets.s3.ap-south-1.amazonaws.com') ||
+                url.contains('blostem.com/terms-of-use')) {
+              _launchURL(url);
+              return NavigationDecision.prevent;
             }
             return NavigationDecision.navigate;
           },
@@ -73,10 +92,35 @@ class _FdWebViewState extends State<FdWebView> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: WebViewWidget(
-          controller: controller!,
+    return WillPopScope(
+      onWillPop: () async {
+        if (controller != null) {
+          await controller!.goBack();
+          return Future.value(false);
+        } else {
+          return Future.value(true);
+        }
+      },
+      child: SafeArea(
+        child: Scaffold(
+          appBar: FAppBar(
+            backgroundColor: UiConstants.kTextColor,
+            centerTitle: true,
+            titleWidget: Text(
+              'Fixed Deposit',
+              style: TextStyles.rajdhaniSB.body1.colour(
+                UiConstants.kTextColor4,
+              ),
+            ),
+            leading: const BackButton(
+              color: UiConstants.kTextColor4,
+            ),
+            showAvatar: false,
+            showCoinBar: false,
+          ),
+          body: WebViewWidget(
+            controller: controller!,
+          ),
         ),
       ),
     );
