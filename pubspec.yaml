@@ -119,6 +119,7 @@ dependencies:
   volume_controller: ^2.0.8
   smooth_page_indicator: ^1.2.0
   bordered_text: ^2.0.0
+  transparent_image: ^2.0.1
 
 
 

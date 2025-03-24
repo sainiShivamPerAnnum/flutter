@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'package:tuple/tuple.dart';
 
 class Campaigns extends StatefulWidget {
@@ -79,12 +79,13 @@ class _CampaignsState extends State<Campaigns> {
                                     borderRadius: BorderRadius.circular(
                                       8.r,
                                     ),
-                                    image: DecorationImage(
-                                      image: CachedNetworkImageProvider(
-                                        event.bgImage,
-                                      ),
-                                      fit: BoxFit.cover,
-                                    ),
+                                  ),
+                                  child: FadeInImage.memoryNetwork(
+                                    fadeInDuration:
+                                        const Duration(milliseconds: 300),
+                                    placeholder: kTransparentImage,
+                                    image: event.bgImage,
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
