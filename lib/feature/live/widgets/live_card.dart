@@ -178,6 +178,7 @@ class _LiveCardWidgetState extends State<LiveCardWidget> {
                     state: PageState.addWidget,
                     widget: HMSPrebuilt(
                       roomCode: widget.viewerCode,
+                      advisorImage: '',
                       eventId: widget.id,
                       isLiked: widget.isLiked ?? false,
                       onLeave: () async {

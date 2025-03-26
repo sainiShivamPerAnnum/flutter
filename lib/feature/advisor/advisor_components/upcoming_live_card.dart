@@ -130,8 +130,8 @@ class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-       constraints:
-            BoxConstraints(maxWidth: widget.maxWidth ?? SizeConfig.padding300),
+      constraints:
+          BoxConstraints(maxWidth: widget.maxWidth ?? SizeConfig.padding300),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(SizeConfig.roundness8),
         color: UiConstants.greyVarient,
@@ -226,6 +226,7 @@ class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
                           state: PageState.addWidget,
                           widget: HMSPrebuilt(
                             eventId: widget.id ?? '',
+                            advisorImage: '',
                             isLiked: false,
                             advisorId: advisoriD,
                             advisorName: userName,

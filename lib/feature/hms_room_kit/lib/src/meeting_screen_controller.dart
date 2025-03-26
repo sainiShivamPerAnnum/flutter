@@ -56,6 +56,7 @@ class MeetingScreenController extends StatefulWidget {
 
   final bool isNoiseCancellationEnabled;
   final String advisorId;
+  final String advisorImage;
   final String title;
   final String description;
   final bool isLiked;
@@ -73,6 +74,7 @@ class MeetingScreenController extends StatefulWidget {
     required this.isLiked,
     required this.eventId,
     required this.advisorName,
+    required this.advisorImage,
     Key? key,
     this.isRoomMute = false,
     this.showStats = false,

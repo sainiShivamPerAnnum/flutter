@@ -31,6 +31,7 @@ class HMSPrebuilt extends StatelessWidget {
 
   final String advisorId;
   final String advisorName;
+  final String advisorImage;
   final String title;
   final String description;
   final bool isLiked;
@@ -41,6 +42,7 @@ class HMSPrebuilt extends StatelessWidget {
     required this.roomCode,
     required this.advisorId,
     required this.advisorName,
+    required this.advisorImage,
     required this.title,
     required this.description,
     required this.onLeave,
@@ -74,6 +76,7 @@ class HMSPrebuilt extends StatelessWidget {
     return ScreenController(
       advisorId: advisorId,
       advisorName: advisorName,
+      advisorImage: advisorImage,
       title: title,
       description: description,
       roomCode: roomCode,

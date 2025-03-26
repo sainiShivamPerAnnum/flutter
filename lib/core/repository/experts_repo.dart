@@ -37,6 +37,30 @@ class ExpertsRepository extends BaseRepo {
     }
   }
 
+  Future<ApiResponse<void>> followAdvisor(
+    bool isFollowed,
+    String advisorId,
+  ) async {
+    final uid = userService.baseUser!.uid;
+    final String followUrl = isFollowed
+        ? 'user-notify/unfollow-advisor'
+        : 'user-notify/follow-advisor';
+    try {
+      await APIService.instance.postData(
+        followUrl,
+        cBaseUrl: _baseUrl,
+        apiName: 'expertsRepo/followAdvisor',
+        body: {
+          "uid": uid,
+          'advisorId': advisorId,
+        },
+      );
+      return const ApiResponse<void>(code: 200);
+    } catch (e) {
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
   Future<ApiResponse<ExpertDetails>> getExperDetailsByID({
     required String advisorId,
   }) async {

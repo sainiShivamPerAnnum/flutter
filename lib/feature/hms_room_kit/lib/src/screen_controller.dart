@@ -37,6 +37,7 @@ class ScreenController extends StatefulWidget {
 
   final String advisorId;
   final String advisorName;
+  final String advisorImage;
   final String title;
   final String description;
   final bool isLiked;
@@ -46,6 +47,7 @@ class ScreenController extends StatefulWidget {
     required this.roomCode,
     required this.advisorId,
     required this.advisorName,
+    required this.advisorImage,
     required this.title,
     required this.description,
     required this.isLiked,
@@ -235,6 +237,7 @@ class _ScreenControllerState extends State<ScreenController> {
                   advisorId: widget.advisorId,
                   prebuiltOptions: widget.options,
                   hmsSDKInteractor: _hmsSDKInteractor,
+                  advisorImage: widget.advisorImage,
                   tokenData: tokenData,
                 )
               : PreviewPermissions(

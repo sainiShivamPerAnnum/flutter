@@ -1,10 +1,13 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/experts/experts_home.dart';
+import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ChatActionButtons extends StatelessWidget {
@@ -80,9 +83,27 @@ class ChatActionButtons extends StatelessWidget {
                 ),
                 onPressed: () {
                   AppState.screenStack.add(ScreenItem.modalsheet);
+                  // a bug is here image won't come here
+                  context.read<CartBloc>().add(
+                        AddToCart(
+                          advisor: Expert(
+                            advisorId: advisorId,
+                            name: advisorName,
+                            image: '',
+                            experience: '',
+                            rate: 0,
+                            rateNew: '',
+                            rating: 0,
+                            expertise: '',
+                            qualifications: '',
+                            isFree: false,
+                          ),
+                        ),
+                      );
                   BaseUtil.openBookAdvisorSheet(
                     advisorId: advisorId,
                     advisorName: advisorName,
+                    advisorImage: '',
                     isEdit: false,
                   );
                 },

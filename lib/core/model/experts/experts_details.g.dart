@@ -26,6 +26,10 @@ ExpertDetails _$ExpertDetailsFromJson(Map<String, dynamic> json) =>
           .toList(),
       ratingInfo:
           RatingInfo.fromJson(json['ratingInfo'] as Map<String, dynamic>),
+      isFollowed: json['isFollowed'] as bool,
+      shorts: (json['shorts'] as List<dynamic>)
+          .map((e) => VideoData.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 QuickAction _$QuickActionFromJson(Map<String, dynamic> json) => QuickAction(

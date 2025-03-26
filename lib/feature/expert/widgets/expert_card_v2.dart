@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
+import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
 import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
 import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 import 'package:felloapp/feature/shorts/video_page.dart';
@@ -357,7 +358,25 @@ class ExpertCardV2 extends StatelessWidget {
                             ],
                           ),
                           GestureDetector(
-                            onTap: onBookCall,
+                            onTap: () {
+                              context.read<CartBloc>().add(
+                                    AddToCart(
+                                      advisor: Expert(
+                                        advisorId: expert.advisorId,
+                                        name: expert.name,
+                                        experience: expert.experience,
+                                        rating: expert.rating,
+                                        expertise: expert.expertise,
+                                        qualifications: expert.qualifications,
+                                        rate: expert.rate,
+                                        rateNew: expert.rateNew,
+                                        image: expert.image,
+                                        isFree: expert.isFree,
+                                      ),
+                                    ),
+                                  );
+                              onBookCall();
+                            },
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 12.w,

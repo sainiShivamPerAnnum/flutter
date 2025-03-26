@@ -11,6 +11,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PollingSheet extends StatelessWidget {
   final String paymentID;
@@ -61,8 +62,8 @@ class _BookingStatusSheet extends StatelessWidget {
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.padding14,
-                    horizontal: SizeConfig.padding20,
+                    vertical: 14.h,
+                    horizontal: 20.w,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -85,9 +86,9 @@ class _BookingStatusSheet extends StatelessWidget {
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding20,
+                    horizontal: 20.w,
                   ).copyWith(
-                    top: SizeConfig.padding14,
+                    top: 6.h,
                   ),
                   child: Stack(
                     alignment: AlignmentDirectional.center,
@@ -106,13 +107,16 @@ class _BookingStatusSheet extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          GestureDetector(
-                            onTap: () {
+                          IconButton(
+                            iconSize: 18.r,
+                            splashRadius: 18.r,
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
                               AppState.backButtonDispatcher!.didPopRoute();
                             },
-                            child: Icon(
+                            icon: Icon(
                               Icons.close,
-                              size: SizeConfig.body1,
+                              size: 18.r,
                               color: UiConstants.kTextColor,
                             ),
                           ),
@@ -121,20 +125,24 @@ class _BookingStatusSheet extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Divider(
-                  color: UiConstants.greyVarient,
+                Container(
+                  padding: EdgeInsets.zero,
+                  child: const Divider(
+                    color: UiConstants.greyVarient,
+                    thickness: 1,
+                    height: 1,
+                  ),
                 ),
-                AppImage(Assets.failed_payment, height: SizeConfig.padding112),
+                AppImage(Assets.failed_payment, height: 112.h),
                 Text(
                   'Something went wrong',
                   style: TextStyles.sourceSansSB.title4,
                 ),
                 SizedBox(
-                  height: SizeConfig.padding12,
+                  height: 12.h,
                 ),
                 Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding18),
+                  padding: EdgeInsets.symmetric(horizontal: 18.w),
                   child: Text(
                     'Please try again or choose a different time slot. If your money was deducted, contact support.',
                     style: TextStyles.sourceSans.body3
@@ -143,15 +151,14 @@ class _BookingStatusSheet extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: SizeConfig.padding18,
+                  height: 18.h,
                 ),
                 const Divider(
                   color: UiConstants.greyVarient,
                 ),
                 Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding18)
-                          .copyWith(top: SizeConfig.padding18),
+                  padding: EdgeInsets.symmetric(horizontal: 18.w)
+                      .copyWith(top: 18.h),
                   child: Row(
                     children: [
                       Expanded(
@@ -166,11 +173,10 @@ class _BookingStatusSheet extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: UiConstants.greyVarient,
                             padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding16,
+                              vertical: 16.h,
                             ),
                             shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(SizeConfig.roundness8),
+                              borderRadius: BorderRadius.circular(8.r),
                             ),
                           ),
                           child: Text(
@@ -179,7 +185,7 @@ class _BookingStatusSheet extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(width: SizeConfig.padding12),
+                      SizedBox(width: 12.w),
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
@@ -188,11 +194,10 @@ class _BookingStatusSheet extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: UiConstants.kTextColor,
                             padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding16,
+                              vertical: 16.h,
                             ),
                             shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(SizeConfig.roundness8),
+                              borderRadius: BorderRadius.circular(8.r),
                             ),
                           ),
                           child: Text(
@@ -205,7 +210,7 @@ class _BookingStatusSheet extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: SizeConfig.padding40),
+                SizedBox(height: 40.h),
               ],
             ),
           CompletedPollingWithSuccess() => Column(
@@ -213,9 +218,9 @@ class _BookingStatusSheet extends StatelessWidget {
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding20,
+                    horizontal: 20.w,
                   ).copyWith(
-                    top: SizeConfig.padding14,
+                    top: 14.h,
                   ),
                   child: Stack(
                     alignment: AlignmentDirectional.center,
@@ -234,8 +239,11 @@ class _BookingStatusSheet extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          GestureDetector(
-                            onTap: () {
+                          IconButton(
+                            iconSize: 18.r,
+                            splashRadius: 18.r,
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
                               AppState.backButtonDispatcher!.didPopRoute();
                               AppState.delegate!.appState.currentAction =
                                   PageAction(
@@ -247,9 +255,9 @@ class _BookingStatusSheet extends StatelessWidget {
                                 ),
                               );
                             },
-                            child: Icon(
+                            icon: Icon(
                               Icons.close,
-                              size: SizeConfig.body1,
+                              size: 18.r,
                               color: UiConstants.kTextColor,
                             ),
                           ),
@@ -258,16 +266,21 @@ class _BookingStatusSheet extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Divider(
-                  color: UiConstants.greyVarient,
+                Container(
+                  padding: EdgeInsets.zero,
+                  child: const Divider(
+                    color: UiConstants.greyVarient,
+                    thickness: 1,
+                    height: 1,
+                  ),
                 ),
-                AppImage(Assets.confirm_payment, height: SizeConfig.padding112),
+                AppImage(Assets.confirm_payment, height: 112.h),
                 Text(
                   BaseUtil.formatDateTime(DateTime.parse(fromTime)),
                   style: TextStyles.sourceSansSB.title4,
                 ),
                 SizedBox(
-                  height: SizeConfig.padding12,
+                  height: 12.h,
                 ),
                 Text(
                   'Your slot has been booked with $advisorName',
@@ -275,13 +288,13 @@ class _BookingStatusSheet extends StatelessWidget {
                       .colour(UiConstants.kTextColor5),
                 ),
                 SizedBox(
-                  height: SizeConfig.padding18,
+                  height: 18.h,
                 ),
                 const Divider(
                   color: UiConstants.greyVarient,
                 ),
                 Padding(
-                  padding: EdgeInsets.all(SizeConfig.padding18),
+                  padding: EdgeInsets.all(18.w),
                   child: SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -298,11 +311,10 @@ class _BookingStatusSheet extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: UiConstants.kTextColor,
                         padding: EdgeInsets.symmetric(
-                          vertical: SizeConfig.padding16,
+                          vertical: 16.h,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness8),
+                          borderRadius: BorderRadius.circular(8.r),
                         ),
                       ),
                       child: Text(
@@ -320,9 +332,9 @@ class _BookingStatusSheet extends StatelessWidget {
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding20,
+                    horizontal: 20.w,
                   ).copyWith(
-                    top: SizeConfig.padding14,
+                    top: 6.h,
                   ),
                   child: Stack(
                     alignment: AlignmentDirectional.center,
@@ -341,13 +353,16 @@ class _BookingStatusSheet extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          GestureDetector(
-                            onTap: () {
+                          IconButton(
+                            iconSize: 18.r,
+                            splashRadius: 18.r,
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
                               AppState.backButtonDispatcher!.didPopRoute();
                             },
-                            child: Icon(
+                            icon: Icon(
                               Icons.close,
-                              size: SizeConfig.body1,
+                              size: 18.r,
                               color: UiConstants.kTextColor,
                             ),
                           ),
@@ -356,20 +371,24 @@ class _BookingStatusSheet extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Divider(
-                  color: UiConstants.greyVarient,
+                Container(
+                  padding: EdgeInsets.zero,
+                  child: const Divider(
+                    color: UiConstants.greyVarient,
+                    thickness: 1,
+                    height: 1,
+                  ),
                 ),
-                AppImage(Assets.pending_payment, height: SizeConfig.padding112),
+                AppImage(Assets.pending_payment, height: 112.h),
                 Text(
                   'Processing Your Booking',
                   style: TextStyles.sourceSansSB.title4,
                 ),
                 SizedBox(
-                  height: SizeConfig.padding12,
+                  height: 12.h,
                 ),
                 Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding18),
+                  padding: EdgeInsets.symmetric(horizontal: 18.w),
                   child: Text(
                     'Processing your booking. This may take some time. If this takes longer, please contact support.',
                     style: TextStyles.sourceSans.body3
@@ -378,15 +397,14 @@ class _BookingStatusSheet extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: SizeConfig.padding18,
+                  height: 18.h,
                 ),
                 const Divider(
                   color: UiConstants.greyVarient,
                 ),
                 Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding18)
-                          .copyWith(top: SizeConfig.padding18),
+                  padding: EdgeInsets.symmetric(horizontal: 18.w)
+                      .copyWith(top: 18.h),
                   child: Row(
                     children: [
                       Expanded(
@@ -401,11 +419,10 @@ class _BookingStatusSheet extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: UiConstants.greyVarient,
                             padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding16,
+                              vertical: 16.h,
                             ),
                             shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(SizeConfig.roundness8),
+                              borderRadius: BorderRadius.circular(8.r),
                             ),
                           ),
                           child: Text(
@@ -414,7 +431,7 @@ class _BookingStatusSheet extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(width: SizeConfig.padding12),
+                      SizedBox(width: 12.w),
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
@@ -423,11 +440,10 @@ class _BookingStatusSheet extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: UiConstants.kTextColor,
                             padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding16,
+                              vertical: 16.h,
                             ),
                             shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(SizeConfig.roundness8),
+                              borderRadius: BorderRadius.circular(8.r),
                             ),
                           ),
                           child: Text(
@@ -440,7 +456,7 @@ class _BookingStatusSheet extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: SizeConfig.padding40),
+                SizedBox(height: 40.h),
               ],
             ),
         };

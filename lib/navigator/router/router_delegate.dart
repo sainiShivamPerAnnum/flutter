@@ -1030,12 +1030,28 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'bookings':
         final id = queryParams['id'];
         final name = queryParams['name'];
-        if (id != null && name != null) {
+        final image = queryParams['image'];
+        if (id != null && name != null && image != null) {
           BaseUtil.openBookAdvisorSheet(
             advisorId: id,
             advisorName: name,
+            advisorImage: image,
             isEdit: false,
           );
+        }
+        break;
+      case 'toast':
+        final title = queryParams['title'];
+        final message = queryParams['message'];
+        final type = queryParams['type'];
+        if (type != null && message != null && title != null) {
+          if (type == 'negative') {
+            BaseUtil.showNegativeAlert(title, message);
+          } else {
+            BaseUtil.showPositiveAlert(title, message);
+          }
+        } else if (message != null && title != null) {
+          BaseUtil.showPositiveAlert(title, message);
         }
         break;
       case 'experts':
@@ -1437,6 +1453,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           advisorName: userName,
           title: videoData.model!.topic ?? '',
           description: videoData.model!.description ?? '',
+          advisorImage: '',
           onLeave: () async {
             await AppState.backButtonDispatcher!.didPopRoute();
           },
@@ -1457,6 +1474,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           roomCode: videoData.model!.guestCode,
           advisorId: videoData.model!.advisorId,
           advisorName: videoData.model!.advisorName,
+          advisorImage: '',
           title: videoData.model!.topic ?? '',
           description: videoData.model!.description ?? '',
           onLeave: () async {

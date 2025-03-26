@@ -193,21 +193,21 @@ class VideoWidgetState extends State<VideoWidget>
                 ),
               ),
             ),
-            if (!widget.commentsVisibility)
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        UiConstants.kTextColor4.withOpacity(.8),
-                        UiConstants.kTextColor4.withOpacity(0),
-                      ],
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.center,
-                    ),
-                  ),
-                ),
-              ),
+            // if (!widget.commentsVisibility)
+            //   Positioned.fill(
+            //     child: Container(
+            //       decoration: BoxDecoration(
+            //         gradient: LinearGradient(
+            //           colors: [
+            //             UiConstants.kTextColor4.withOpacity(.8),
+            //             UiConstants.kTextColor4.withOpacity(0),
+            //           ],
+            //           begin: Alignment.bottomCenter,
+            //           end: Alignment.center,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
             if (!widget.commentsVisibility)
               Positioned(
                 bottom: 30.h,

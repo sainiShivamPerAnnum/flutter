@@ -17,7 +17,8 @@ class PreviewMeetingFlow extends StatefulWidget {
   final HMSPrebuiltOptions? prebuiltOptions;
   final HMSSDKInteractor hmsSDKInteractor;
   final String tokenData;
-    final String advisorId;
+  final String advisorId;
+  final String advisorImage;
   final String title;
   final String description;
   final bool isLiked;
@@ -26,6 +27,7 @@ class PreviewMeetingFlow extends StatefulWidget {
   const PreviewMeetingFlow({
     required this.prebuiltOptions,
     required this.advisorName,
+    required this.advisorImage,
     required this.hmsSDKInteractor,
     required this.tokenData,
     required this.advisorId,
@@ -76,6 +78,7 @@ class _PreviewMeetingFlowState extends State<PreviewMeetingFlow> {
       localPeerNetworkQuality: null,
       options: widget.prebuiltOptions,
       tokenData: widget.tokenData,
+      advisorImage: widget.advisorImage,
       hmsSDKInteractor: widget.hmsSDKInteractor,
     );
   }

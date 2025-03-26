@@ -294,6 +294,7 @@ Widget callContainer(
                             await AppState.backButtonDispatcher!.didPopRoute();
                           },
                           advisorId: advisoriD,
+                          advisorImage: '',
                           advisorName: userName,
                           title: title,
                           description: description,

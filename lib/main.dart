@@ -10,7 +10,9 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
 import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
+import 'package:felloapp/feature/sip/cubit/selectedAsset_cubit.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
@@ -72,7 +74,9 @@ class MyApp extends HookWidget {
             create: (_) =>
                 PreloadBloc()..add(const PreloadEvent.getVideosFromApi()),
           ),
+          Provider(create: (_) => CartBloc()),
           Provider(create: (_) => SipCubit()),
+          Provider(create: (_) => SelectAssetCubit()),
           Provider(create: (_) => locator<TransactionBloc>()),
           Provider(create: (_) => locator<MyFundsBloc>()),
           Provider(create: (_) => locator<SIPTransactionBloc>()),

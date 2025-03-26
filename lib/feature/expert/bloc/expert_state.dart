@@ -16,7 +16,7 @@ final class ExpertHomeLoaded extends ExpertState {
   final String currentSection;
   const ExpertHomeLoaded({
     required this.expertsHome,
-    this.currentSection = 'Personal Finance',
+    this.currentSection = '',
   });
   ExpertState copyWith({
     ExpertsHome? expertsHome,

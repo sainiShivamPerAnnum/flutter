@@ -120,6 +120,8 @@ class UpcomingBookingsComponentState extends State<UpcomingBookingsComponent> {
                                           BaseUtil.openBookAdvisorSheet(
                                             advisorId:
                                                 model.item2[index].advisorId,
+                                            advisorImage:
+                                                model.item2[index].image,
                                             advisorName:
                                                 model.item2[index].name,
                                             isEdit: false,
@@ -332,6 +334,7 @@ class ScheduleCard extends StatelessWidget {
                         if (_isEditButtonClickable()) {
                           BaseUtil.openBookAdvisorSheet(
                             advisorId: booking.advisorId,
+                            advisorImage: booking.image,
                             isEdit: true,
                             bookingId: booking.bookingId,
                             advisorName: booking.advisorName,
@@ -382,6 +385,7 @@ class ScheduleCard extends StatelessWidget {
                             page: LivePreviewPageConfig,
                             state: PageState.addWidget,
                             widget: HMSPrebuilt(
+                              advisorImage: booking.image,
                               isLiked: false,
                               eventId: '',
                               title: '',

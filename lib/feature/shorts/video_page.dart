@@ -3,7 +3,9 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
 import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 import 'package:felloapp/feature/shorts/src/widgets/all_viewed_sheet.dart';
 import 'package:felloapp/feature/shorts/src/widgets/dot_indicator.dart';
@@ -346,8 +348,26 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                       BaseUtil.openBookAdvisorSheet(
                                         advisorId: videos[index].advisorId,
                                         advisorName: videos[index].author,
+                                        advisorImage: videos[index].advisorImg,
                                         isEdit: false,
                                       );
+                                      context.read<CartBloc>().add(
+                                            AddToCart(
+                                              advisor: Expert(
+                                                advisorId:
+                                                    videos[index].advisorId,
+                                                name: videos[index].author,
+                                                image: videos[index].advisorImg,
+                                                experience: '',
+                                                rate: 0,
+                                                rateNew: '',
+                                                rating: 0,
+                                                expertise: '',
+                                                qualifications: '',
+                                                isFree: false,
+                                              ),
+                                            ),
+                                          );
                                       locator<AnalyticsService>().track(
                                         eventName:
                                             AnalyticsEvents.shortsBookaCall,

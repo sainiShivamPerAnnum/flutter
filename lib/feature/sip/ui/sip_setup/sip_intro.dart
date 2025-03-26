@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/sip_model/calculator_data.dart';
 import 'package:felloapp/core/model/sip_model/calculator_details.dart';
 import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
@@ -9,14 +8,13 @@ import 'package:felloapp/core/model/subscription_models/all_subscription_model.d
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
+import 'package:felloapp/feature/sip/cubit/selectedAsset_cubit.dart';
 import 'package:felloapp/feature/sip/shared/edit_sip_bottomsheet.dart';
 import 'package:felloapp/feature/sip/shared/interest_calculator.dart';
 import 'package:felloapp/feature/sip/shared/sip.dart';
 import 'package:felloapp/feature/sip/shared/tab_slider.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_error_page.dart';
-import 'package:felloapp/feature/sip/ui/sip_setup/sip_select_assset.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -172,28 +170,28 @@ class _SipIntroViewState extends State<SipIntroView> {
                                   ),
                                   Padding(
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: SizeConfig.padding40),
+                                      horizontal: SizeConfig.padding40,
+                                    ),
                                     child: AppPositiveBtn(
-                                        btnText: locale.startSip,
-                                        onPressed: () {
-                                          AppState.delegate!.appState
-                                              .currentAction = PageAction(
-                                            page: SipAssetSelectPageConfig,
-                                            widget: SipAssetSelectView(
-                                              isMandateAvailable: state
-                                                  .activeSubscription.isActive,
-                                            ),
-                                            state: PageState.addWidget,
-                                          );
-                                          context
-                                              .read<SipCubit>()
-                                              .onSetUpSipEventCapture(
-                                                noOfSips: length,
-                                                totalSipAmount: state
-                                                    .activeSubscription
-                                                    .totalSipInvestedAmount,
-                                              );
-                                        }),
+                                      btnText: locale.startSip,
+                                      onPressed: () {
+                                        final selectedAssetModel =
+                                            context.read<SelectAssetCubit>();
+                                        selectedAssetModel.submitAsset(
+                                          selectedAssetModel
+                                              .state.selectedAsset!,
+                                          state.activeSubscription.isActive,
+                                        );
+                                        context
+                                            .read<SipCubit>()
+                                            .onSetUpSipEventCapture(
+                                              noOfSips: length,
+                                              totalSipAmount: state
+                                                  .activeSubscription
+                                                  .totalSipInvestedAmount,
+                                            );
+                                      },
+                                    ),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.symmetric(
