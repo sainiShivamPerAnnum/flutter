@@ -121,7 +121,7 @@ class __ExpertHomeState extends State<_ExpertHome>
                         (section) => !section.toLowerCase().contains('top'),
                       ),
                     ],
-                    verticalScrollPosition: VerticalScrollPosition.middle,
+                    verticalScrollPosition: VerticalScrollPosition.begin,
                     eachItemChild: (object, index) => Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.padding20,
@@ -312,135 +312,153 @@ class __ExpertHomeState extends State<_ExpertHome>
                             preferredSize: Size.fromHeight(
                               172.h,
                             ),
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(right: 20.w),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: 12.h,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          border: Border(
-                                            bottom: BorderSide(
-                                              color: UiConstants.kTextColor,
-                                              width: 2.h,
+                            child: Transform.translate(
+                              offset: Offset(0, -20.h),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(right: 20.w),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.only(
+                                            bottom: 12.h,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            border: Border(
+                                              bottom: BorderSide(
+                                                color: UiConstants.kTextColor,
+                                                width: 2.h,
+                                              ),
                                             ),
                                           ),
+                                          child: Text(
+                                            'All Experts',
+                                            style:
+                                                TextStyles.sourceSansSB.body1,
+                                          ),
                                         ),
-                                        child: Text(
-                                          'All Experts',
-                                          style: TextStyles.sourceSansSB.body1,
+                                        Container(
+                                          padding: EdgeInsets.zero,
+                                          child: Divider(
+                                            color: UiConstants.kTextColor5
+                                                .withOpacity(.3),
+                                            thickness: 1,
+                                            height: 1,
+                                          ),
                                         ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.zero,
-                                        child: Divider(
-                                          color: UiConstants.kTextColor5
-                                              .withOpacity(.3),
-                                          thickness: 1,
-                                          height: 1,
-                                        ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 24.h,
-                                ),
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: SizedBox(
-                                    width: 2.sw,
-                                    child: Wrap(
-                                      spacing: 8.w,
-                                      runSpacing: 8.h,
-                                      children: expertsData.list
-                                          .where(
-                                        (section) => !section
-                                            .toLowerCase()
-                                            .contains('top'),
-                                      )
-                                          .map(
-                                        (value) {
-                                          return GestureDetector(
-                                            onTap: () {
-                                              BlocProvider.of<ExpertBloc>(
-                                                context,
-                                                listen: false,
-                                              ).add(
-                                                SectionChanged(value),
-                                              );
+                                  SizedBox(
+                                    height: 24.h,
+                                  ),
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: SizedBox(
+                                      width: 2 *
+                                              (120.w *
+                                                  ((expertsData.list.length /
+                                                          2) /
+                                                      2)) +
+                                          (8.w * (expertsData.list.length - 1)),
+                                      child: Wrap(
+                                        spacing: 8.w,
+                                        runSpacing: 8.w,
+                                        children: expertsData.list
+                                            .where(
+                                          (section) => !section
+                                              .toLowerCase()
+                                              .contains('top'),
+                                        )
+                                            .map(
+                                          (value) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                BlocProvider.of<ExpertBloc>(
+                                                  context,
+                                                  listen: false,
+                                                ).add(
+                                                  SectionChanged(value),
+                                                );
 
-                                              int sectionIndex =
-                                                  otherSections.indexOf(value);
-                                              if (sectionIndex != -1) {
-                                                VerticalScrollableTabBarStatus
-                                                    .setIndex(sectionIndex);
-                                                DefaultTabController.of(context)
-                                                    .animateTo(sectionIndex);
-                                                if (sectionKeys[value] !=
-                                                    null) {
-                                                  Scrollable.ensureVisible(
-                                                    sectionKeys[value]!
-                                                        .currentContext!,
-                                                    duration: const Duration(
-                                                      milliseconds: 300,
-                                                    ),
-                                                    curve: Curves.easeInOut,
-                                                  );
+                                                int sectionIndex = otherSections
+                                                    .indexOf(value);
+                                                if (sectionIndex != -1) {
+                                                  VerticalScrollableTabBarStatus
+                                                      .setIndex(sectionIndex);
+                                                  DefaultTabController.of(
+                                                    context,
+                                                  ).animateTo(sectionIndex);
+                                                  if (sectionKeys[value] !=
+                                                      null) {
+                                                    Scrollable.ensureVisible(
+                                                      sectionKeys[value]!
+                                                          .currentContext!,
+                                                      duration: const Duration(
+                                                        milliseconds: 300,
+                                                      ),
+                                                      curve: Curves.easeInOut,
+                                                    );
+                                                  }
                                                 }
-                                              }
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: state.currentSection ==
-                                                        value
-                                                    ? const Color(0xff62E3C4)
-                                                        .withOpacity(.1)
-                                                    : const Color(0xffD9D9D9)
-                                                        .withOpacity(.1),
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(6.r),
-                                                ),
-                                                border: Border.all(
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
                                                   color: state.currentSection ==
                                                           value
                                                       ? const Color(0xff62E3C4)
-                                                          .withOpacity(.5)
-                                                      : const Color(0xffCACBCC)
-                                                          .withOpacity(.07),
+                                                          .withOpacity(.1)
+                                                      : const Color(0xffD9D9D9)
+                                                          .withOpacity(.1),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(6.r),
+                                                  ),
+                                                  border: Border.all(
+                                                    color:
+                                                        state.currentSection ==
+                                                                value
+                                                            ? const Color(
+                                                                0xff62E3C4,
+                                                              ).withOpacity(.5)
+                                                            : const Color(
+                                                                0xffCACBCC,
+                                                              ).withOpacity(
+                                                                .07,
+                                                              ),
+                                                  ),
+                                                ),
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 16.w,
+                                                  vertical: 8.h,
+                                                ),
+                                                child: Text(
+                                                  value,
+                                                  style: TextStyles
+                                                      .sourceSansM.body4
+                                                      .colour(
+                                                    state.currentSection ==
+                                                            value
+                                                        ? const Color(
+                                                            0xff62E3C4,
+                                                          )
+                                                        : UiConstants
+                                                            .kTextColor,
+                                                  ),
                                                 ),
                                               ),
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 16.w,
-                                                vertical: 8.h,
-                                              ),
-                                              child: Text(
-                                                value,
-                                                style: TextStyles
-                                                    .sourceSansM.body4
-                                                    .colour(
-                                                  state.currentSection == value
-                                                      ? const Color(0xff62E3C4)
-                                                      : UiConstants.kTextColor,
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ).toList(),
+                                            );
+                                          },
+                                        ).toList(),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 14.h,
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),

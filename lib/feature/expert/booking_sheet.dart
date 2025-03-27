@@ -228,7 +228,7 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
     }).toList();
     final totalDates = schedule?.slots?.keys.toList() ?? [];
     final dates = finalSchedule?.slots?.keys.toList() ?? [];
-    final currentTimes = (selectedDate != null &&
+    final List<String?> currentTimes = (selectedDate != null &&
             finalSchedule?.slots?[selectedDate] != null &&
             selectedDuration != null &&
             finalSchedule?.slots?[selectedDate]?[selectedDuration.toString()] !=
@@ -251,6 +251,11 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
         context.read<BookingBloc>().add(ChangeMonth(newMonth));
       }
     }
+
+    final slotsWithBookedSlots = generateTimeSlotsWithBookedSlots(
+      currentTimes,
+      selectedDuration ?? 30,
+    );
 
     return availableDatesForMonth.isEmpty
         ? Column(
@@ -519,11 +524,6 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Select Date',
-                      style: TextStyles.sourceSansSB.body2,
-                    ),
-                    SizedBox(height: 16.h),
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 500),
                       child: SingleChildScrollView(
@@ -536,6 +536,34 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                               child: DateButton(
                                 date: date,
                                 isSelected: date == selectedDate,
+                                child: RichText(
+                                  textAlign: TextAlign.center,
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: getDayAndDateParts(date).day,
+                                        style: TextStyles.sourceSansM.body4
+                                            .copyWith(
+                                          fontSize: 12.sp,
+                                        ),
+                                      ),
+                                      WidgetSpan(
+                                        child: SizedBox(
+                                          height: 2.h,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            '\n${getDayAndDateParts(date).date}',
+                                        style: TextStyles.sourceSansM.body0
+                                            .copyWith(
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 onTap: () {
                                   context
                                       .read<BookingBloc>()
@@ -567,6 +595,10 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                             child: DateButton(
                               date: e['name'].toString(),
                               requireFormat: false,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 8.h,
+                                horizontal: 24.w,
+                              ),
                               isSelected: e['value'] == selectedDuration,
                               onTap: () {
                                 context
@@ -590,7 +622,7 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                       height: 70.h,
                       child: GridView.builder(
                         shrinkWrap: true,
-                        itemCount: currentTimes.length,
+                        itemCount: slotsWithBookedSlots.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
                           crossAxisSpacing: 12.h,
@@ -598,13 +630,18 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                           childAspectRatio: 3,
                         ),
                         itemBuilder: (context, index) {
-                          final time = currentTimes[index];
-                          final displayTime = time?.split(' ')[0];
+                          final time = slotsWithBookedSlots[index];
+                          final isBookedSlot = time!.startsWith('BOOKED_');
+                          final displayTime = isBookedSlot
+                              ? time.replaceFirst('BOOKED_', '')
+                              : time;
                           return TimeButton(
-                            time: displayTime!,
-                            isSelected: time == selectedTime,
+                            time: time,
+                            isSelected: displayTime == selectedTime,
                             onTap: () {
-                              context.read<BookingBloc>().add(SelectTime(time));
+                              context
+                                  .read<BookingBloc>()
+                                  .add(SelectTime(displayTime));
                             },
                           );
                         },
@@ -758,14 +795,18 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
 class DateButton extends StatelessWidget {
   final String date;
   final bool isSelected;
+  final EdgeInsets? padding;
   final VoidCallback onTap;
   final bool requireFormat;
+  final Widget? child;
 
   const DateButton({
     required this.date,
     required this.isSelected,
     required this.onTap,
+    this.padding,
     this.requireFormat = true,
+    this.child,
     super.key,
   });
 
@@ -775,26 +816,36 @@ class DateButton extends StatelessWidget {
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
         backgroundColor: UiConstants.kBackgroundColor,
-        padding: EdgeInsets.symmetric(
-          vertical: 8.h,
-          horizontal: 10.w,
-        ),
+        padding: padding ??
+            EdgeInsets.symmetric(
+              vertical: 18.h,
+              horizontal: 10.w,
+            ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5.r),
+          borderRadius: BorderRadius.circular(8.r),
           side: BorderSide(
             color:
                 isSelected ? UiConstants.kTextColor : UiConstants.greyVarient,
-            width: 2.w,
+            width: 1.w,
           ),
         ),
       ),
-      child: Text(
-        requireFormat ? getDayAndDate(date) : date,
-        textAlign: TextAlign.center,
-        style: TextStyles.sourceSansSB.body3,
-      ),
+      child: child ??
+          Text(
+            requireFormat ? getDayAndDate(date) : date,
+            textAlign: TextAlign.center,
+            style: TextStyles.sourceSansM.body4,
+          ),
     );
   }
+}
+
+({String day, String date}) getDayAndDateParts(String dateString) {
+  DateTime date = DateTime.parse(dateString);
+  String day = DateFormat('EEE').format(date);
+  String formattedDate = DateFormat('dd').format(date);
+
+  return (day: day, date: formattedDate);
 }
 
 class MonthButton extends StatelessWidget {
@@ -873,36 +924,89 @@ String formatDate(String dateString) {
   return formattedDate;
 }
 
+List<String?> generateTimeSlotsWithBookedSlots(
+  List<String?> availableSlots,
+  int selectedDuration,
+) {
+  if (availableSlots.isEmpty) {
+    return availableSlots;
+  }
+  final startTime =
+      DateTime.tryParse(availableSlots.first ?? '') ?? DateTime.now();
+  final endTime =
+      DateTime.tryParse(availableSlots.last ?? '') ?? DateTime.now();
+
+  final allSlots = <String>[];
+  final bookedSlots = <String>[];
+  DateTime currentTime = startTime;
+  while (
+      currentTime.isBefore(endTime) || currentTime.isAtSameMomentAs(endTime)) {
+    final currentTimeString = currentTime.toIso8601String();
+    if (availableSlots.contains(currentTimeString)) {
+      allSlots.add(currentTimeString);
+    } else {
+      final bookedSlotString = 'BOOKED_$currentTimeString';
+      allSlots.add(bookedSlotString);
+      bookedSlots.add(bookedSlotString);
+    }
+    currentTime = currentTime.add(Duration(minutes: selectedDuration));
+  }
+  while (bookedSlots.length < 3) {
+    final lastSlot =
+        DateTime.tryParse(allSlots.last.replaceFirst('BOOKED_', '')) ??
+            DateTime.now();
+    final newBookedSlot = lastSlot.add(Duration(minutes: selectedDuration));
+    final newBookedSlotString = 'BOOKED_${newBookedSlot.toIso8601String()}';
+    allSlots.add(newBookedSlotString);
+    bookedSlots.add(newBookedSlotString);
+  }
+  return allSlots;
+}
+
 class TimeButton extends StatelessWidget {
   final String time;
   final bool isSelected;
   final VoidCallback onTap;
+  final bool isBooked;
 
   const TimeButton({
     required this.time,
     required this.isSelected,
     required this.onTap,
+    this.isBooked = false,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isBookedSlot = time.startsWith('BOOKED_');
+    final displayTime = isBookedSlot
+        ? getTimeIn12HourFormat(time.replaceFirst('BOOKED_', ''))
+        : getTimeIn12HourFormat(time);
+
     return ElevatedButton(
-      onPressed: onTap,
+      onPressed: isBookedSlot ? null : onTap,
       style: ElevatedButton.styleFrom(
-        backgroundColor: UiConstants.kBackgroundColor,
+        backgroundColor: isBookedSlot
+            ? const Color(0xffA6A6AC).withOpacity(0.07)
+            : UiConstants.kBackgroundColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.r),
           side: BorderSide(
-            color:
-                isSelected ? UiConstants.kTextColor : UiConstants.greyVarient,
-            width: 2.w,
+            color: isBookedSlot
+                ? UiConstants.kTextColor6.withOpacity(0.07)
+                : (isSelected
+                    ? UiConstants.kTextColor
+                    : UiConstants.greyVarient),
+            width: 1.w,
           ),
         ),
       ),
       child: Text(
-        getTimeIn12HourFormat(time),
-        style: TextStyles.sourceSans.body3,
+        displayTime,
+        style: TextStyles.sourceSansM.body4.copyWith(
+          color: isBookedSlot ? UiConstants.kTextColor6.withOpacity(0.5) : null,
+        ),
       ),
     );
   }
