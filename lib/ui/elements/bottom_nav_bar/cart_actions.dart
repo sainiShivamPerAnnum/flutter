@@ -130,7 +130,7 @@ class CartActions extends StatelessWidget {
                 cart.selectedDate != null &&
                         cart.selectedTime != null &&
                         cart.selectedDuration != null
-                    ? 'Make Payment'
+                    ? 'Finish Booking'
                     : 'Book a Call',
                 style: TextStyles.sourceSansSB.body4.colour(
                   UiConstants.kTextColor4,
