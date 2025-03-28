@@ -8,16 +8,16 @@ part of 'fd_transaction.dart';
 
 FDTransactionData _$FDTransactionDataFromJson(Map<String, dynamic> json) =>
     FDTransactionData(
-      jid: json['jid'] as String,
-      status: json['status'] as String,
-      issuerId: json['issuerId'] as String,
-      applicationId: json['applicationId'] as String,
-      depositAmount: (json['depositAmount'] as num).toDouble(),
-      roi: (json['roi'] as num).toDouble(),
-      maturityDate: json['maturityDate'] as String,
-      depositDate: json['depositDate'] as String,
-      bankDetails: (json['bankDetails'] as List<dynamic>)
-          .map((e) => BankDetails.fromJson(e as Map<String, dynamic>))
+      jid: json['jid'] as String?,
+      status: json['status'] as String?,
+      issuerId: json['issuerId'] as String?,
+      applicationId: json['applicationId'] as String?,
+      depositAmount: (json['depositAmount'] as num?)?.toDouble(),
+      roi: (json['roi'] as num?)?.toDouble(),
+      maturityDate: json['maturityDate'] as String?,
+      depositDate: json['depositDate'] as String?,
+      bankDetails: (json['bankDetails'] as List<dynamic>?)
+          ?.map((e) => BankDetails.fromJson(e as Map<String, dynamic>))
           .toList(),
       tenure: json['tenure'] as String?,
     );
@@ -37,8 +37,8 @@ Map<String, dynamic> _$FDTransactionDataToJson(FDTransactionData instance) =>
     };
 
 BankDetails _$BankDetailsFromJson(Map<String, dynamic> json) => BankDetails(
-      bankName: json['bankName'] as String,
-      accountNumber: json['accountNumber'] as String,
+      bankName: json['bankName'] as String?,
+      accountNumber: json['accountNumber'] as String?,
     );
 
 Map<String, dynamic> _$BankDetailsToJson(BankDetails instance) =>

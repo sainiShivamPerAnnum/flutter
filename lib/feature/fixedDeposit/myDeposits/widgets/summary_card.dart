@@ -44,7 +44,9 @@ class SummaryCard extends StatelessWidget {
                       height: 4.h,
                     ),
                     Text(
-                      BaseUtil.formatIndianRupees(summary.totalCurrentAmount),
+                      BaseUtil.formatIndianRupees(
+                        summary.totalCurrentAmount ?? 0,
+                      ),
                       style: GoogleFonts.sourceSans3(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
@@ -106,7 +108,9 @@ class SummaryCard extends StatelessWidget {
                       height: 4.h,
                     ),
                     Text(
-                      BaseUtil.formatIndianRupees(summary.totalInvestedAmount),
+                      BaseUtil.formatIndianRupees(
+                        summary.totalInvestedAmount ?? 0,
+                      ),
                       style: GoogleFonts.sourceSans3(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
@@ -130,7 +134,9 @@ class SummaryCard extends StatelessWidget {
                       height: 4.h,
                     ),
                     Text(
-                      BaseUtil.formatIndianRupees(summary.totalReturns),
+                      BaseUtil.formatIndianRupees(
+                        summary.totalReturns ?? 0,
+                      ),
                       style: GoogleFonts.sourceSans3(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w500,

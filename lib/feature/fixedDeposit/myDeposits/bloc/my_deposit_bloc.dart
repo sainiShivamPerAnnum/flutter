@@ -24,12 +24,26 @@ class MyFixedDepositBloc
     try {
       final data = await _fdRepository.myFds();
       if (data.isSuccess()) {
+        if (data.model is String) {
+          throw NoFixedDepositFoundException('No fixed deposits found');
+        }
         emitter(FdDepositsLoaded(fdData: data.model!));
       } else {
         emitter(FdMyDepositsError(data.errorMessage.toString()));
       }
+    } on NoFixedDepositFoundException catch (e) {
+      emitter(NoFixedDepositsState(e.message));
     } catch (e) {
       emitter(FdMyDepositsError(e.toString()));
     }
   }
+}
+
+class NoFixedDepositFoundException implements Exception {
+  final String message;
+
+  NoFixedDepositFoundException(this.message);
+
+  @override
+  String toString() => message;
 }

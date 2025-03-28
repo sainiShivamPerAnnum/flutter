@@ -1,6 +1,11 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/fixedDeposit/fd_transaction.dart';
+import 'package:felloapp/feature/fixedDeposit/depositDetails/deposit_details.dart';
 import 'package:felloapp/feature/fixedDeposit/transactions/bloc/transaction_bloc.dart';
+import 'package:felloapp/feature/fixedDeposit/transactions/widgets/no_transaction.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/extensions/string_extension.dart';
@@ -116,12 +121,34 @@ class _InvestmentDetails extends StatelessWidget {
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
                         final fdData = state.filteredDeposits;
-                        final portfolio = fdData[index];
-                        return _buildInvestmentSection(
-                          portfolio,
-                        );
+                        if (fdData.isEmpty) {
+                          return NoFdTransactions(
+                            message:
+                                'You have no ${state.currentFilter.capitalize()} Fixed deposits',
+                            onClick: () {
+                              DefaultTabController.of(context).animateTo(0);
+                            },
+                          );
+                        } else {
+                          final portfolio = fdData[index];
+                          return GestureDetector(
+                            onTap: () {
+                              AppState.delegate!.appState.currentAction =
+                                  PageAction(
+                                page: FdDetailsPageConfig,
+                                state: PageState.addWidget,
+                                widget: FixedDepositDetails(
+                                  fdData: portfolio,
+                                ),
+                              );
+                            },
+                            child: _buildInvestmentSection(portfolio),
+                          );
+                        }
                       },
-                      childCount: state.filteredDeposits.length,
+                      childCount: state.filteredDeposits.isEmpty
+                          ? 1
+                          : state.filteredDeposits.length,
                     ),
                   ),
                 ],
@@ -133,8 +160,19 @@ class _InvestmentDetails extends StatelessWidget {
   }
 
   Widget _buildInvestmentSection(FDTransactionData data) {
-    return Card(
-      color: UiConstants.greyVarient,
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: UiConstants.grey7,
+          width: 1.h,
+        ),
+        color: UiConstants.greyVarient,
+        borderRadius: BorderRadius.all(
+          Radius.circular(
+            10.r,
+          ),
+        ),
+      ),
       margin: EdgeInsets.symmetric(horizontal: 20.w),
       child: Padding(
         padding: EdgeInsets.all(18.r),
@@ -145,18 +183,31 @@ class _InvestmentDetails extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '#${data.jid}',
-                    style: GoogleFonts.sourceSans3(
-                      color: UiConstants.kTextColor,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    overflow: TextOverflow.ellipsis,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '#${data.jid}',
+                          style: GoogleFonts.sourceSans3(
+                            color: UiConstants.kTextColor,
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Icon(
+                        Icons.chevron_right,
+                        size: 18.sp,
+                        color: UiConstants.kTextColor,
+                      ),
+                    ],
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    'Deposit: ${BaseUtil.formatIndianRupees(data.depositAmount)}',
+                    'Deposit: ${BaseUtil.formatIndianRupees(
+                      data.depositAmount ?? 0,
+                    )}',
                     style: GoogleFonts.sourceSans3(
                       color: UiConstants.kTextColor.withOpacity(.75),
                       fontSize: 14.sp,
@@ -170,11 +221,11 @@ class _InvestmentDetails extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '${data.tenure ?? ''} months',
+                  data.tenure ?? '',
                   style: GoogleFonts.sourceSans3(
-                    color: UiConstants.kTextColor.withOpacity(.75),
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
+                    color: UiConstants.kTextColor,
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 SizedBox(height: 4.h),

@@ -29,7 +29,7 @@ class PortfolioModel {
   final double roi;
   final double investedAmount;
   final double currentAmount;
-  final int? tenure;
+  final String? tenure;
   final List<IndividualFDModel> individualFDs;
 
   PortfolioModel({
@@ -48,26 +48,26 @@ class PortfolioModel {
 
 @_deserializable
 class IndividualFDModel {
-  final String applicationId;
-  final double depositAmount;
-  final int? tenure;
-  final double roi;
-  final DateTime maturityDate;
-  final DateTime depositDate;
-  final String interestPayoutFrequency;
-  final String status;
-  final List<BankDetails> bankDetails;
+  final String? applicationId;
+  final double? depositAmount;
+  final String? tenure;
+  final double? roi;
+  final DateTime? maturityDate;
+  final DateTime? depositDate;
+  final String? interestPayoutFrequency;
+  final String? status;
+  final List<BankDetails>? bankDetails;
 
   IndividualFDModel({
-    required this.applicationId,
-    required this.depositAmount,
+    this.depositAmount,
+    this.roi,
+    this.maturityDate,
+    this.depositDate,
+    this.interestPayoutFrequency,
+    this.status,
+    this.bankDetails,
+    this.applicationId,
     this.tenure,
-    required this.roi,
-    required this.maturityDate,
-    required this.depositDate,
-    required this.interestPayoutFrequency,
-    required this.status,
-    required this.bankDetails,
   });
 
   factory IndividualFDModel.fromJson(Map<String, dynamic> json) =>
@@ -76,12 +76,12 @@ class IndividualFDModel {
 
 @_deserializable
 class BankDetails {
-  final String bankName;
-  final String accountNumber;
+  final String? bankName;
+  final String? accountNumber;
 
   BankDetails({
-    required this.bankName,
-    required this.accountNumber,
+    this.bankName,
+    this.accountNumber,
   });
 
   factory BankDetails.fromJson(Map<String, dynamic> json) =>
@@ -90,16 +90,16 @@ class BankDetails {
 
 @_deserializable
 class SummaryModel {
-  final double totalInvestedAmount;
-  final double totalCurrentAmount;
-  final double totalReturns;
-  final double averageXIRR;
+  final double? totalInvestedAmount;
+  final double? totalCurrentAmount;
+  final double? totalReturns;
+  final double? averageXIRR;
 
   SummaryModel({
-    required this.totalInvestedAmount,
-    required this.totalCurrentAmount,
-    required this.totalReturns,
-    required this.averageXIRR,
+    this.totalInvestedAmount,
+    this.totalCurrentAmount,
+    this.totalReturns,
+    this.averageXIRR,
   });
 
   factory SummaryModel.fromJson(Map<String, dynamic> json) =>
@@ -108,18 +108,18 @@ class SummaryModel {
 
 @_deserializable
 class InvestmentModel {
-  final String current;
-  final String invested;
-  final String netReturns;
-  final String avgXIRR;
-  final String status;
+  final String? current;
+  final String? invested;
+  final String? netReturns;
+  final String? avgXIRR;
+  final String? status;
 
   InvestmentModel({
-    required this.current,
-    required this.invested,
-    required this.netReturns,
-    required this.avgXIRR,
-    required this.status,
+    this.current,
+    this.invested,
+    this.netReturns,
+    this.avgXIRR,
+    this.status,
   });
 
   factory InvestmentModel.fromJson(Map<String, dynamic> json) =>
@@ -128,18 +128,18 @@ class InvestmentModel {
 
 @_deserializable
 class FixedDeposit {
-  final String name;
-  final String current;
-  final String invested;
-  final String avgXIRR;
-  final String tenure;
+  final String? name;
+  final String? current;
+  final String? invested;
+  final String? avgXIRR;
+  final String? tenure;
 
   FixedDeposit({
-    required this.name,
-    required this.current,
-    required this.invested,
-    required this.avgXIRR,
-    required this.tenure,
+    this.name,
+    this.current,
+    this.invested,
+    this.avgXIRR,
+    this.tenure,
   });
 
   factory FixedDeposit.fromJson(Map<String, dynamic> json) =>

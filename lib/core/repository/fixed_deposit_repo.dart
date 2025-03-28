@@ -98,7 +98,7 @@ class FdRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<UserFdPortfolio>> myFds() async {
+  Future<ApiResponse<dynamic>> myFds() async {
     try {
       final response = await APIService.instance.getData(
         ApiPath.myFds,
@@ -106,6 +106,14 @@ class FdRepository extends BaseRepo {
         apiName: '$_fd/myFds',
       );
       final responseData = response["data"];
+      if (responseData is Map &&
+          responseData.keys.length == 1 &&
+          responseData.containsKey('message')) {
+        return ApiResponse(
+          model: responseData['message'],
+          code: 200,
+        );
+      }
       return ApiResponse<UserFdPortfolio>(
         model: UserFdPortfolio.fromJson(responseData),
         code: 200,

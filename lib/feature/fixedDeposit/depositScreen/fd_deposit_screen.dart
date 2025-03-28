@@ -47,6 +47,43 @@ class __FDDepositViewState extends State<_FDDepositView> {
   int _selectedTenure = 0;
   String? _selectedLabel;
   String _selectedFrequency = '';
+  @override
+  void initState() {
+    _amountController.addListener(_onInputChange);
+    _amountController.text =
+        widget.fdData.detailsPage.cta.displayAmounts[0].toString();
+    _selectedTenure = 0;
+    final firstEligibleValue = widget
+        .fdData
+        .detailsPage
+        .cta
+        .frequencyValues[
+            widget.fdData.detailsPage.cta.frequencyValues.keys.first]!
+        .entries
+        .where((entry) {
+          final tenureOptions =
+              widget.fdData.detailsPage.cta.lockInTenure.options;
+          final selectedTenureOption = tenureOptions[_selectedTenure];
+
+          if (selectedTenureOption == '0-2 yrs') {
+            return entry.value.months <= 24;
+          } else if (selectedTenureOption == '2-3 yrs') {
+            return entry.value.months > 24 && entry.value.months <= 36;
+          } else if (selectedTenureOption == '3-5 yrs') {
+            return entry.value.months > 36 && entry.value.months <= 60;
+          }
+          return true;
+        })
+        .first
+        .value;
+
+    _selectedLabel = firstEligibleValue.label;
+
+    _selectedFrequency =
+        widget.fdData.detailsPage.cta.frequencyValues.keys.first;
+    super.initState();
+    _amountController.addListener(_onInputChange);
+  }
 
   void _onInputChange() {
     context.read<FDCalculatorBloc>().add(
@@ -78,17 +115,6 @@ class __FDDepositViewState extends State<_FDDepositView> {
   }
 
   @override
-  void initState() {
-    _amountController.text =
-        widget.fdData.detailsPage.cta.displayAmounts[0].toString();
-    _selectedLabel = widget.fdData.detailsPage.cta.lockInTenure.selected;
-    _selectedFrequency =
-        widget.fdData.detailsPage.cta.frequencyValues.keys.first;
-    super.initState();
-    _amountController.addListener(_onInputChange);
-  }
-
-  @override
   void dispose() {
     _amountController.dispose();
     super.dispose();
@@ -97,8 +123,8 @@ class __FDDepositViewState extends State<_FDDepositView> {
   @override
   Widget build(BuildContext context) {
     return BaseScaffold(
-      showBackgroundGrid: true,
-      // backgroundColor: UiConstants.bg,
+      showBackgroundGrid: false,
+      backgroundColor: UiConstants.bg,
       appBar: _CustomAppBar(
         fdData: widget.fdData,
       ),

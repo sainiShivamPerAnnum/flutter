@@ -1,14 +1,22 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/feature/fixedDeposit/depositDetails/deposit_details.dart';
 import 'package:felloapp/feature/fixedDeposit/myDeposits/bloc/my_deposit_bloc.dart';
 import 'package:felloapp/feature/fixedDeposit/myDeposits/widgets/summary_card.dart';
+import 'package:felloapp/feature/fixedDeposit/transactions/widgets/no_transaction.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../../navigator/app_state.dart';
 
 class MyDepositsSection extends StatelessWidget {
   const MyDepositsSection({
@@ -46,6 +54,17 @@ class _InvestmentDetails extends StatelessWidget {
                 onTryAgain: () {
                   myfundsBloc.add(const LoadMyFDs());
                 },
+              ),
+            NoFixedDepositsState() => Container(
+                margin: EdgeInsets.only(top: 70.h),
+                height: 90.h,
+                width: 1.sh,
+                child: NoFdTransactions(
+                  message: 'You have not invested in any plan',
+                  onClick: () {
+                    DefaultTabController.of(context).animateTo(0);
+                  },
+                ),
               ),
             FdDepositsLoaded() => CustomScrollView(
                 slivers: [
@@ -90,12 +109,24 @@ class _InvestmentDetails extends StatelessWidget {
                       (context, index) {
                         final fdData = state.fdData;
                         final portfolio = fdData.portfolio[index];
-                        return _buildInvestmentSection(portfolio.issuer, {
-                          'current': portfolio.currentAmount,
-                          'avgXirr': portfolio.roi,
-                          'invested': portfolio.investedAmount,
-                          'tenure': portfolio.tenure,
-                        });
+                        return GestureDetector(
+                          onTap: () {
+                            AppState.delegate!.appState.currentAction =
+                                PageAction(
+                              page: FdDetailsPageConfig,
+                              state: PageState.addWidget,
+                              widget: FixedDepositDetails(
+                                fdData: fdData,
+                              ),
+                            );
+                          },
+                          child: _buildInvestmentSection(portfolio.issuer, {
+                            'current': portfolio.currentAmount,
+                            'avgXirr': portfolio.roi,
+                            'invested': portfolio.investedAmount,
+                            'tenure': portfolio.tenure,
+                          }),
+                        );
                       },
                       childCount: state.fdData.portfolio.length,
                     ),
@@ -254,7 +285,7 @@ class _InvestmentDetails extends StatelessWidget {
                           height: 4.h,
                         ),
                         Text(
-                          '${data['tenure']} months',
+                          '${data['tenure']}',
                           style: GoogleFonts.sourceSans3(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w500,

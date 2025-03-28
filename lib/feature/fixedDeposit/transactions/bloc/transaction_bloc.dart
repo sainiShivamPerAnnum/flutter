@@ -51,7 +51,11 @@ class FdTransactionBloc
   ) async {
     try {
       final currentState = state as FdDepositsLoaded;
-      emitter(currentState.copyWith(currentFilter: event.filter));
+      emitter(
+        currentState.copyWith(
+          currentFilter: event.filter,
+        ),
+      );
     } catch (e) {
       emitter(FdMyDepositsError(e.toString()));
     }

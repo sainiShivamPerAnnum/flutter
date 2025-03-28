@@ -32,3 +32,21 @@ class OnProceed extends FDCalculatorEvents {
     required this.issuerId,
   });
 }
+
+class RestoreLastFDCalculation extends FDCalculatorEvents {
+  final double? investmentAmount;
+  final int? investmentPeriod;
+  final bool? isSeniorCitizen;
+  final String? payoutFrequency;
+  final bool? isFemale;
+  final String? issuerId;
+
+  const RestoreLastFDCalculation({
+    this.investmentAmount,
+    this.investmentPeriod,
+    this.isSeniorCitizen,
+    this.payoutFrequency,
+    this.isFemale,
+    this.issuerId,
+  });
+}

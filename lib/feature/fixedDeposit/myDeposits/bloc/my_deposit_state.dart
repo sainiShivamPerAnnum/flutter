@@ -38,3 +38,12 @@ class FdMyDepositsError extends MyFixedDepositState {
   @override
   List<Object> get props => [message];
 }
+
+class NoFixedDepositsState extends MyFixedDepositState {
+  final String message;
+
+  const NoFixedDepositsState(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

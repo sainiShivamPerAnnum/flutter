@@ -6,7 +6,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/lazy_load_indexed_stack.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,127 +27,108 @@ class FdHomeView extends StatefulWidget {
   State<FdHomeView> createState() => _FdHomeViewState();
 }
 
-class _FdHomeViewState extends State<FdHomeView>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  int _currentIndex = 0;
+class _FdHomeViewState extends State<FdHomeView> {
   final List<String> tabs = <String>[
     'Invest',
     'My Deposits',
     'Transactions',
   ];
   @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: tabs.length, vsync: this);
-    _tabController.addListener(() {
-      setState(() {
-        _currentIndex = _tabController.index;
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return BaseScaffold(
-      appBar: const _AppBar(),
-      showBackgroundGrid: false,
-      backgroundColor: UiConstants.bg,
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return <Widget>[
-            SliverToBoxAdapter(
-              child: Container(
-                height: 136.h,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      UiConstants.teal5,
-                      UiConstants.teal7.withOpacity(0),
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+    return DefaultTabController(
+      length: tabs.length,
+      child: BaseScaffold(
+        appBar: const _AppBar(),
+        showBackgroundGrid: false,
+        backgroundColor: UiConstants.bg,
+        body: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return <Widget>[
+              SliverToBoxAdapter(
+                child: Container(
+                  height: 136.h,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        UiConstants.teal5,
+                        UiConstants.teal7.withOpacity(0),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
                   ),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 24.w,
-                    vertical: 16.h,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: 232.w,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Assured returns with \nlow risk',
-                              style: GoogleFonts.rajdhani(
-                                fontSize: 22.sp,
-                                color: UiConstants.kTextColor,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: UiConstants.grey5,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8.r),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 24.w,
+                      vertical: 16.h,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 232.w,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Assured returns with \nlow risk',
+                                style: GoogleFonts.rajdhani(
+                                  fontSize: 22.sp,
+                                  color: UiConstants.kTextColor,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 16.w,
-                                vertical: 4.h,
+                              SizedBox(
+                                height: 10.h,
                               ),
-                              child: Text(
-                                '📈 Upto 9.5% Returns',
-                                style: TextStyles.sourceSans.body3.colour(
-                                  UiConstants.kTextColor2,
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: UiConstants.grey5,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8.r),
+                                  ),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 16.w,
+                                  vertical: 4.h,
+                                ),
+                                child: Text(
+                                  '📈 Upto 9.5% Returns',
+                                  style: TextStyles.sourceSans.body3.colour(
+                                    UiConstants.kTextColor2,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      AppImage(
-                        Assets.fdIcon,
-                        width: 78.r,
-                        height: 78.r,
-                      ),
-                    ],
+                        AppImage(
+                          Assets.fdIcon,
+                          width: 78.r,
+                          height: 78.r,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            SliverOverlapAbsorber(
-              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                context,
+              SliverOverlapAbsorber(
+                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                  context,
+                ),
+                sliver: _TabBar(
+                  tabs: tabs,
+                ),
               ),
-              sliver: _TabBar(
-                tabs: tabs,
-                controller: _tabController,
-              ),
-            ),
-          ];
-        },
-        body: LazyLoadIndexedStack(
-          index: _currentIndex,
-          children: const [
-            ALLfdsSection(),
-            MyDepositsSection(),
-            FdTransactions(),
-          ],
+            ];
+          },
+          body: const TabBarView(
+            children: [
+              ALLfdsSection(),
+              MyDepositsSection(),
+              FdTransactions(),
+            ],
+          ),
         ),
       ),
     );
@@ -178,7 +158,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: const [
-        Row(children: [FaqPill(type: FaqsType.flo)]),
+        Row(children: [FaqPill(type: FaqsType.fd)]),
       ],
     );
   }
@@ -187,11 +167,9 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
 class _TabBar extends StatelessWidget {
   const _TabBar({
     required this.tabs,
-    required this.controller,
   });
 
   final List<String> tabs;
-  final TabController controller;
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -200,7 +178,6 @@ class _TabBar extends StatelessWidget {
       backgroundColor: UiConstants.grey5,
       surfaceTintColor: UiConstants.grey5,
       bottom: TabBar(
-        controller: controller,
         indicatorColor: UiConstants.teal3,
         indicatorSize: TabBarIndicatorSize.tab,
         labelStyle: TextStyles.sourceSans.body2,
