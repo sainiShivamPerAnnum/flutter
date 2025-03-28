@@ -230,14 +230,34 @@ class FelloBalanceScreen extends StatelessWidget {
               subtitle: "100% Safe • 99.99% Pure",
               onButtonPressed: () {
                 BaseUtil().openRechargeModalSheet(
-                  investmentType: InvestmentType.AUGGOLD99,
+                  investmentType: InvestmentType.LENDBOXP2P,
                 );
                 trackSaveButtonAnalytics(
-                  InvestmentType.AUGGOLD99,
+                  InvestmentType.LENDBOXP2P,
                 );
               },
               onCardPressed: () => navigateToSaveAssetView(
                 InvestmentType.AUGGOLD99,
+              ),
+            ),
+            buildInvestmentSection(
+              iconData: Assets.fdIcon,
+              asset: Assets.fdIcon,
+              title: "Fixed Deposit",
+              infoTitle1: "Fixed Deposit Amount",
+              infoTitle2: "Fixed Deposit Value",
+              secondaryColor: UiConstants.darkPrimaryColor3,
+              subtitle: "Fixed Asset • upto 9.5% Returns",
+              onButtonPressed: () {
+                BaseUtil().openRechargeModalSheet(
+                  investmentType: InvestmentType.fixedDeposit,
+                );
+                trackSaveButtonAnalytics(
+                  InvestmentType.fixedDeposit,
+                );
+              },
+              onCardPressed: () => navigateToSaveAssetView(
+                InvestmentType.fixedDeposit,
               ),
             ),
             buildInvestmentSection(
@@ -290,6 +310,12 @@ class FelloBalanceScreen extends StatelessWidget {
         widget: AssetSectionView(
           type: investmentType,
         ),
+      );
+    } else if (investmentType == InvestmentType.fixedDeposit) {
+      AppState.delegate!.appState.currentAction = PageAction(
+        page: FdHomePageConfig,
+        widget: const FdMainView(),
+        state: PageState.addWidget,
       );
     } else {
       _analyticsService.track(
@@ -387,6 +413,13 @@ class FelloBalanceScreen extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       if (title == "Fello Flo") {
+                        AppState.delegate!.appState.currentAction = PageAction(
+                          page: P2PHomePageConfig,
+                          widget: const P2PHomePage(),
+                          state: PageState.addWidget,
+                        );
+                      }
+                      if (title == 'Fixed Deposit') {
                         AppState.delegate!.appState.currentAction = PageAction(
                           page: FdHomePageConfig,
                           widget: const FdMainView(),
@@ -618,6 +651,8 @@ class FelloBalanceScreen extends StatelessWidget {
         return BaseUtil.formatIndianRupees(portfolio?.flo.principle ?? 0);
       case "Digital Gold":
         return "${BaseUtil.digitPrecision(wallet?.wAugTotal ?? 0, 4, false)}g";
+      case "Fixed Deposit":
+        return "0";
       case "Fello Rewards":
         return "₹${wallet?.processingRedemptionBalance ?? 0}";
       default:
@@ -635,6 +670,8 @@ class FelloBalanceScreen extends StatelessWidget {
         return "${BaseUtil.digitPrecision(portfolio?.flo.balance ?? 0.0, 2)}";
       case "Digital Gold":
         return "${BaseUtil.digitPrecision(portfolio?.augmont.balance ?? 0, 2)}";
+      case "Fixed Deposit":
+        return "0";
       case "Fello Rewards":
         return "${wallet?.unclaimedBalance.toInt()}";
       default:
@@ -648,6 +685,8 @@ class FelloBalanceScreen extends StatelessWidget {
         return portfolio?.flo.percGain ?? 0.0;
       case "Digital Gold":
         return portfolio?.augmont.gold.percGains ?? 0.0;
+      case "Fixed Deposit":
+        return 0;
       case "Fello Rewards":
         return 0.0;
       default:

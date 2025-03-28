@@ -90,6 +90,8 @@ class _AssetSectionViewState extends State<AssetSectionView> {
 
   FaqsType _getFaqTypeFromAsset(InvestmentType type) {
     switch (type) {
+      case InvestmentType.fixedDeposit:
+        return FaqsType.fd;
       case InvestmentType.AUGGOLD99:
         return FaqsType.gold;
       case InvestmentType.GOLDPRO:

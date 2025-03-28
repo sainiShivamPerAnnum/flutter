@@ -30,6 +30,7 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/expert/booking_sheet.dart';
+import 'package:felloapp/feature/fixedDeposit/fd_main_view.dart';
 import 'package:felloapp/feature/referrals/ui/referral_rating_sheet.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
@@ -363,6 +364,14 @@ class BaseUtil extends ChangeNotifier {
           entryPoint: entryPoint,
           quickCheckout: quickCheckout,
         ),
+      );
+      return;
+    }
+    if (investmentType == InvestmentType.fixedDeposit) {
+      AppState.delegate!.appState.currentAction = PageAction(
+        page: FdHomePageConfig,
+        widget: const FdMainView(),
+        state: PageState.addWidget,
       );
       return;
     }
