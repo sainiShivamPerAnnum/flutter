@@ -16,6 +16,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
@@ -213,9 +214,9 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
             children: [
               Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding20,
+                  horizontal: 20.w,
                 ).copyWith(
-                  top: SizeConfig.padding12,
+                  top: 6.h,
                 ),
                 child: Stack(
                   alignment: AlignmentDirectional.center,
@@ -234,13 +235,16 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        GestureDetector(
-                          onTap: () {
+                        IconButton(
+                          iconSize: 18.r,
+                          splashRadius: 18.r,
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
                             AppState.backButtonDispatcher!.didPopRoute();
                           },
-                          child: Icon(
+                          icon: Icon(
                             Icons.close,
-                            size: SizeConfig.body1,
+                            size: 18.r,
                             color: UiConstants.kTextColor,
                           ),
                         ),
@@ -249,8 +253,13 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                   ],
                 ),
               ),
-              const Divider(
-                color: UiConstants.greyVarient,
+              Container(
+                padding: EdgeInsets.zero,
+                child: const Divider(
+                  color: UiConstants.greyVarient,
+                  thickness: 1,
+                  height: 1,
+                ),
               ),
               AppImage(Assets.noSlots, height: SizeConfig.padding124),
               Text(

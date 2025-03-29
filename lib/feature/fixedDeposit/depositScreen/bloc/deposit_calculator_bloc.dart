@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/repository/fixed_deposit_repo.dart';
+import 'package:felloapp/feature/fixedDeposit/depositScreen/widgets/redirection_sheet.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/static/fd_web_view.dart';
 
 part 'deposit_calculator_state.dart';
 part 'deposit_calculator_event.dart';
@@ -141,12 +141,15 @@ class FDCalculatorBloc
       );
 
       if (response.isSuccess() && response.model != null) {
-        AppState.delegate!.appState.currentAction = PageAction(
-          page: WebViewPageConfig,
-          state: PageState.addWidget,
-          widget: FdWebView(
-            url: response.model!,
-            onPageClosed: () {
+        AppState.screenStack.add(ScreenItem.modalsheet);
+        await BaseUtil.openModalBottomSheet(
+          isScrollControlled: false,
+          enableDrag: true,
+          isBarrierDismissible: true,
+          addToScreenStack: false,
+          content: BlostemRedirectionSheet(
+            blostemUrl: response.model!,
+            onCloseWebView: () {
               add(
                 const RestoreLastFDCalculation(),
               );
