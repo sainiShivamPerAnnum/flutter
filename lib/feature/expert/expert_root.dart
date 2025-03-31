@@ -6,6 +6,8 @@ import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/expert/widgets/expert_card.dart';
+import 'package:felloapp/feature/expert/widgets/scroll_to_index.dart';
+import 'package:felloapp/feature/expert/widgets/vertical_scrollable_widget.dart';
 import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/feature/shortsHome/bloc/shorts_home_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -21,7 +23,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:vertical_scrollable_tabview/vertical_scrollable_tabview.dart';
 
 import '../../navigator/router/ui_pages.dart';
 
@@ -50,6 +51,8 @@ class __ExpertHomeState extends State<_ExpertHome>
   Map<String, GlobalKey> sectionKeys = {};
   final FocusNode _searchFocusNode = FocusNode();
   final TextEditingController _controller = TextEditingController();
+  final AutoScrollController _chipsScrollController = AutoScrollController();
+  final Map<String, double> _chipPositions = {};
   @override
   void initState() {
     super.initState();
@@ -61,6 +64,7 @@ class __ExpertHomeState extends State<_ExpertHome>
   @override
   void dispose() {
     RootController.autoScrollController.dispose();
+    _chipsScrollController.dispose();
     _searchFocusNode.dispose();
     _controller.dispose();
     super.dispose();
@@ -112,10 +116,47 @@ class __ExpertHomeState extends State<_ExpertHome>
               child: Builder(
                 builder: (context) {
                   tabContext = context;
-                  return VerticalScrollableTabView(
+                  return ImprovedVerticalScrollableTabView(
                     autoScrollController: RootController.autoScrollController,
-                    scrollbarThumbVisibility: false,
+                    thumbVisibility: false,
                     tabController: DefaultTabController.of(tabContext!),
+                    onTabChanged: (index) {
+                      if (state.currentSection != otherSections[index]) {
+                        BlocProvider.of<ExpertBloc>(
+                          context,
+                          listen: false,
+                        ).add(
+                          SectionChanged(otherSections[index]),
+                        );
+                        String selectedSection = otherSections[index];
+                        double targetPosition =
+                            _chipPositions[selectedSection]!;
+                        if (_chipPositions.containsKey(selectedSection) &&
+                            _chipPositions[selectedSection] != null) {
+                          double currentScrollPosition =
+                              _chipsScrollController.position.pixels;
+                          double viewportWidth =
+                              _chipsScrollController.position.viewportDimension;
+                          double visibleEndPosition =
+                              currentScrollPosition + viewportWidth;
+                          double chipWidth = 120.w;
+
+                          double chipStart = targetPosition;
+                          double chipMidpoint = chipStart + (chipWidth / 2);
+
+                          bool isChipMidpointVisible =
+                              chipMidpoint >= currentScrollPosition &&
+                                  chipMidpoint <= visibleEndPosition;
+                          if (!isChipMidpointVisible) {
+                            _chipsScrollController.animateTo(
+                              targetPosition,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+                          }
+                        }
+                      }
+                    },
                     listItemData: [
                       ...expertsData.list.where(
                         (section) => !section.toLowerCase().contains('top'),
@@ -358,6 +399,7 @@ class __ExpertHomeState extends State<_ExpertHome>
                                   ),
                                   SingleChildScrollView(
                                     scrollDirection: Axis.horizontal,
+                                    controller: _chipsScrollController,
                                     child: SizedBox(
                                       width: 2 *
                                               (120.w *
@@ -377,6 +419,7 @@ class __ExpertHomeState extends State<_ExpertHome>
                                             .map(
                                           (value) {
                                             return GestureDetector(
+                                              behavior: HitTestBehavior.opaque,
                                               onTap: () {
                                                 BlocProvider.of<ExpertBloc>(
                                                   context,
@@ -390,66 +433,78 @@ class __ExpertHomeState extends State<_ExpertHome>
                                                 if (sectionIndex != -1) {
                                                   VerticalScrollableTabBarStatus
                                                       .setIndex(sectionIndex);
-                                                  DefaultTabController.of(
-                                                    context,
-                                                  ).animateTo(sectionIndex);
-                                                  if (sectionKeys[value] !=
-                                                      null) {
-                                                    Scrollable.ensureVisible(
-                                                      sectionKeys[value]!
-                                                          .currentContext!,
-                                                      duration: const Duration(
-                                                        milliseconds: 300,
-                                                      ),
-                                                      curve: Curves.easeInOut,
-                                                    );
-                                                  }
                                                 }
                                               },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: state.currentSection ==
-                                                          value
-                                                      ? const Color(0xff62E3C4)
-                                                          .withOpacity(.1)
-                                                      : const Color(0xffD9D9D9)
-                                                          .withOpacity(.1),
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(6.r),
-                                                  ),
-                                                  border: Border.all(
-                                                    color:
+                                              child: LayoutBuilder(
+                                                builder:
+                                                    (context, constraints) {
+                                                  WidgetsBinding.instance
+                                                      .addPostFrameCallback(
+                                                          (_) {
+                                                    final RenderBox box = context
+                                                            .findRenderObject()
+                                                        as RenderBox;
+                                                    final position = box
+                                                        .localToGlobal(
+                                                          Offset.zero,
+                                                        )
+                                                        .dx;
+                                                    _chipPositions[value] =
+                                                        position - 20;
+                                                  });
+                                                  return Container(
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          state.currentSection ==
+                                                                  value
+                                                              ? const Color(
+                                                                      0xff62E3C4)
+                                                                  .withOpacity(
+                                                                      .1)
+                                                              : const Color(
+                                                                      0xffD9D9D9)
+                                                                  .withOpacity(
+                                                                      .1),
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                        Radius.circular(6.r),
+                                                      ),
+                                                      border: Border.all(
+                                                        color:
+                                                            state.currentSection ==
+                                                                    value
+                                                                ? const Color(
+                                                                    0xff62E3C4,
+                                                                  ).withOpacity(
+                                                                    .5)
+                                                                : const Color(
+                                                                    0xffCACBCC,
+                                                                  ).withOpacity(
+                                                                    .07,
+                                                                  ),
+                                                      ),
+                                                    ),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                      horizontal: 16.w,
+                                                      vertical: 8.h,
+                                                    ),
+                                                    child: Text(
+                                                      value,
+                                                      style: TextStyles
+                                                          .sourceSansM.body4
+                                                          .colour(
                                                         state.currentSection ==
                                                                 value
                                                             ? const Color(
                                                                 0xff62E3C4,
-                                                              ).withOpacity(.5)
-                                                            : const Color(
-                                                                0xffCACBCC,
-                                                              ).withOpacity(
-                                                                .07,
-                                                              ),
-                                                  ),
-                                                ),
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 16.w,
-                                                  vertical: 8.h,
-                                                ),
-                                                child: Text(
-                                                  value,
-                                                  style: TextStyles
-                                                      .sourceSansM.body4
-                                                      .colour(
-                                                    state.currentSection ==
-                                                            value
-                                                        ? const Color(
-                                                            0xff62E3C4,
-                                                          )
-                                                        : UiConstants
-                                                            .kTextColor,
-                                                  ),
-                                                ),
+                                                              )
+                                                            : UiConstants
+                                                                .kTextColor,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
                                               ),
                                             );
                                           },
@@ -662,6 +717,53 @@ class __ExpertHomeState extends State<_ExpertHome>
           ),
         );
       }).toList(),
+    );
+  }
+}
+
+class CustomScrollableTabBar extends StatelessWidget {
+  final List<dynamic> items;
+  final TabController tabController;
+  final Widget Function(dynamic item, bool isSelected, int index) tabBuilder;
+  final Function(int) onTabChanged;
+
+  const CustomScrollableTabBar({
+    required this.items,
+    required this.tabController,
+    required this.tabBuilder,
+    required this.onTabChanged,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: AnimatedBuilder(
+        animation: tabController,
+        builder: (context, _) {
+          return Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: List.generate(
+              items.length,
+              (index) {
+                final item = items[index];
+                final isSelected = tabController.index == index;
+
+                return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    VerticalScrollableTabBarStatus.setIndex(index);
+                    onTabChanged(index);
+                  },
+                  child: tabBuilder(item, isSelected, index),
+                );
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 }
