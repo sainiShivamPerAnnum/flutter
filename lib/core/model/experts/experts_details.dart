@@ -35,8 +35,8 @@ class ExpertDetails {
     required this.licenses,
     required this.social,
     required this.ratingInfo,
-    required this.isFollowed,
-    required this.shorts,
+    this.isFollowed = false,
+    this.shorts = const [],
   });
   ExpertDetails copyWith({
     String? name,

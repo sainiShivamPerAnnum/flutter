@@ -38,59 +38,64 @@ class CartActions extends StatelessWidget {
       ),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.all(
-              Radius.circular(8.r),
-            ),
-            child: AppImage(
-              cart.advisor.image,
-              fit: BoxFit.cover,
-              height: 40.h,
-              width: 40.h,
-            ),
-          ),
-          SizedBox(
-            width: 12.w,
-          ),
-          GestureDetector(
-            onTap: () {
-              AppState.delegate!.appState.currentAction = PageAction(
-                page: ExpertDetailsPageConfig,
-                state: PageState.addWidget,
-                widget: ExpertsDetailsView(
-                  advisorID: cart.advisor.advisorId,
-                ),
-              );
-            },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  cart.advisor.name,
-                  style: TextStyles.sourceSansSB.body4,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      'View Details',
-                      style: TextStyles.sourceSans.body4.colour(
-                        const Color(0xffC2BDC2),
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                AppState.delegate!.appState.currentAction = PageAction(
+                  page: ExpertDetailsPageConfig,
+                  state: PageState.addWidget,
+                  widget: ExpertsDetailsView(
+                    advisorID: cart.advisor.advisorId,
+                  ),
+                );
+              },
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(8.r),
+                    ),
+                    child: AppImage(
+                      cart.advisor.image,
+                      fit: BoxFit.cover,
+                      height: 40.h,
+                      width: 40.h,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 12.w,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        cart.advisor.name,
+                        style: TextStyles.sourceSansSB.body4,
                       ),
-                    ),
-                    SizedBox(
-                      width: 4.w,
-                    ),
-                    Icon(
-                      Icons.chevron_right,
-                      size: 12.sp,
-                      color: const Color(0xffC2BDC2),
-                    ),
-                  ],
-                ),
-              ],
+                      Row(
+                        children: [
+                          Text(
+                            'View Details',
+                            style: TextStyles.sourceSans.body4.colour(
+                              const Color(0xffC2BDC2),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 4.w,
+                          ),
+                          Icon(
+                            Icons.chevron_right,
+                            size: 12.sp,
+                            color: const Color(0xffC2BDC2),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-          const Spacer(),
           GestureDetector(
             onTap: () {
               if (cart.selectedDate != null &&

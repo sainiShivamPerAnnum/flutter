@@ -359,29 +359,30 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                                     ),
                                   ),
                                 ),
-                                Transform.translate(
-                                  offset: Offset(0, -15.h),
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 9.w,
-                                      vertical: 2.h,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: UiConstants.bg,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(12.r),
+                                if (expertDetails.shorts.isNotEmpty)
+                                  Transform.translate(
+                                    offset: Offset(0, -15.h),
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 9.w,
+                                        vertical: 2.h,
                                       ),
-                                      border: Border.all(
-                                        color: UiConstants.grey6,
-                                        width: 1.r,
+                                      decoration: BoxDecoration(
+                                        color: UiConstants.bg,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(12.r),
+                                        ),
+                                        border: Border.all(
+                                          color: UiConstants.grey6,
+                                          width: 1.r,
+                                        ),
                                       ),
-                                    ),
-                                    child: Text(
-                                      'Click to know',
-                                      style: TextStyles.sourceSansM.body4,
+                                      child: Text(
+                                        'Click to know',
+                                        style: TextStyles.sourceSansM.body4,
+                                      ),
                                     ),
                                   ),
-                                ),
                               ],
                             ),
                           ),

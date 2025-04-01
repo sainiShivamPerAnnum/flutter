@@ -74,7 +74,7 @@ class MyApp extends HookWidget {
             create: (_) =>
                 PreloadBloc()..add(const PreloadEvent.getVideosFromApi()),
           ),
-          Provider(create: (_) => CartBloc()),
+          Provider(create: (_) => CartBloc(locator())..add(InitalCart())),
           Provider(create: (_) => SipCubit()),
           Provider(create: (_) => SelectAssetCubit()),
           Provider(create: (_) => locator<TransactionBloc>()),

@@ -9,7 +9,6 @@ import 'package:felloapp/feature/expert/widgets/expert_card.dart';
 import 'package:felloapp/feature/expert/widgets/scroll_to_index.dart';
 import 'package:felloapp/feature/expert/widgets/vertical_scrollable_widget.dart';
 import 'package:felloapp/feature/expertDetails/expert_profile.dart';
-import 'package:felloapp/feature/shortsHome/bloc/shorts_home_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/upcoming_bookings.dart';
@@ -70,473 +69,490 @@ class __ExpertHomeState extends State<_ExpertHome>
     super.dispose();
   }
 
+  void resetState() {
+    _controller.clear();
+    BlocProvider.of<ExpertBloc>(
+      context,
+      listen: false,
+    ).add(const LoadExpertsData());
+    _searchFocusNode.unfocus();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ExpertBloc, ExpertState>(
-      builder: (context, state) {
-        if (state is LoadingExpertsData) {
-          return const Center(child: FullScreenLoader());
-        } else if (state is ExpertHomeLoaded) {
-          final expertsData = state.expertsHome;
-
-          if (expertsData == null || expertsData.list.isEmpty) {
-            return Center(
-              child: NewErrorPage(
-                onTryAgain: () {
-                  BlocProvider.of<ExpertBloc>(
-                    context,
-                    listen: false,
-                  ).add(
-                    const LoadExpertsData(),
-                  );
-                },
-              ),
-            );
-          }
-          sectionKeys = {
-            for (final section in expertsData.list)
-              if (!section.toLowerCase().contains('top')) section: GlobalKey(),
-          };
-          final topSection = expertsData.list
-              .firstWhere((section) => section.toLowerCase().contains('top'));
-          final otherSections = expertsData.list
-              .where((section) => !section.toLowerCase().contains('top'))
-              .toList();
-
-          return RefreshIndicator(
-            triggerMode: RefreshIndicatorTriggerMode.onEdge,
-            color: UiConstants.primaryColor,
-            backgroundColor: Colors.black,
-            onRefresh: () async {
-              BlocProvider.of<ExpertBloc>(context, listen: false)
-                  .add(const LoadExpertsData());
-            },
-            child: DefaultTabController(
-              length: otherSections.length,
-              child: Builder(
-                builder: (context) {
-                  tabContext = context;
-                  return ImprovedVerticalScrollableTabView(
-                    autoScrollController: RootController.autoScrollController,
-                    thumbVisibility: false,
-                    tabController: DefaultTabController.of(tabContext!),
-                    onTabChanged: (index) {
-                      if (state.currentSection != otherSections[index]) {
+    return WillPopScope(
+      onWillPop: () async {
+        resetState();
+        return true;
+      },
+      child: RefreshIndicator(
+        triggerMode: RefreshIndicatorTriggerMode.onEdge,
+        color: UiConstants.primaryColor,
+        backgroundColor: Colors.black,
+        onRefresh: () async {
+          BlocProvider.of<ExpertBloc>(context, listen: false)
+              .add(const LoadExpertsData());
+        },
+        child: BlocBuilder<ExpertBloc, ExpertState>(
+          builder: (context, state) {
+            switch (state) {
+              case LoadingExpertsData():
+                return Column(
+                  children: [
+                    _appBar(''),
+                    const Center(child: FullScreenLoader()),
+                  ],
+                );
+              case ExpertHomeLoaded():
+                _controller.text = state.query;
+                final expertsData = state.expertsHome;
+                if (expertsData == null || expertsData.list.isEmpty) {
+                  return Center(
+                    child: NewErrorPage(
+                      onTryAgain: () {
                         BlocProvider.of<ExpertBloc>(
                           context,
                           listen: false,
                         ).add(
-                          SectionChanged(otherSections[index]),
+                          const LoadExpertsData(),
                         );
-                        String selectedSection = otherSections[index];
-                        double targetPosition =
-                            _chipPositions[selectedSection]!;
-                        if (_chipPositions.containsKey(selectedSection) &&
-                            _chipPositions[selectedSection] != null) {
-                          double currentScrollPosition =
-                              _chipsScrollController.position.pixels;
-                          double viewportWidth =
-                              _chipsScrollController.position.viewportDimension;
-                          double visibleEndPosition =
-                              currentScrollPosition + viewportWidth;
-                          double chipWidth = 120.w;
-
-                          double chipStart = targetPosition;
-                          double chipMidpoint = chipStart + (chipWidth / 2);
-
-                          bool isChipMidpointVisible =
-                              chipMidpoint >= currentScrollPosition &&
-                                  chipMidpoint <= visibleEndPosition;
-                          if (!isChipMidpointVisible) {
-                            _chipsScrollController.animateTo(
-                              targetPosition,
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            );
-                          }
-                        }
-                      }
-                    },
-                    listItemData: [
-                      ...expertsData.list.where(
-                        (section) => !section.toLowerCase().contains('top'),
-                      ),
-                    ],
-                    verticalScrollPosition: VerticalScrollPosition.begin,
-                    eachItemChild: (object, index) => Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding20,
-                      ),
-                      child: _buildInViewSection(
-                        otherSections[index],
-                        expertsData.values[otherSections[index]] ?? [],
-                        expertsData.isAnyFreeCallAvailable,
-                      ),
+                      },
                     ),
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: SizedBox(height: SizeConfig.padding14),
-                      ),
-                      SliverToBoxAdapter(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20.w),
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [UiConstants.bg, Color(0xff212B2D)],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
+                  );
+                }
+
+                sectionKeys = {
+                  for (final section in expertsData.list)
+                    if (!section.toLowerCase().contains('top'))
+                      section: GlobalKey(),
+                };
+                final topSection = expertsData.list.firstWhere(
+                  (section) => section.toLowerCase().contains('top'),
+                );
+                final otherSections = expertsData.list
+                    .where((section) => !section.toLowerCase().contains('top'))
+                    .toList();
+
+                return state.query != '' && state.searchResults.isEmpty
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          _appBar(state.query),
+                          SizedBox(
+                            height: 150.h,
+                          ),
+                          Icon(
+                            Icons.search_rounded,
+                            size: 41.r,
+                            color: Colors.white70,
+                          ),
+                          SizedBox(
+                            height: 12.h,
+                          ),
+                          Text(
+                            'No results found',
+                            style: TextStyles.sourceSansM.body0,
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(
+                            height: 12.h,
+                          ),
+                          SizedBox(
+                            width: 294.w,
+                            child: Text(
+                              'We found 0 results for your search “${state.query}”',
+                              style: TextStyles.sourceSans.body2
+                                  .colour(UiConstants.kTextColor5),
+                              textAlign: TextAlign.center,
                             ),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                        ],
+                      )
+                    : state.query != ''
+                        ? Column(
                             children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Experts',
-                                        style: TextStyles.sourceSansSB.body1,
+                              _appBar(state.query),
+                              Expanded(
+                                child: ListView.builder(
+                                  padding:
+                                      EdgeInsets.only(bottom: 80.h, top: 20.h),
+                                  itemCount: state.searchResults.length,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 20.w,
                                       ),
-                                      Text(
-                                        'Book a call with an expert instantly',
-                                        style:
-                                            TextStyles.sourceSans.body3.colour(
-                                          UiConstants.kTextColor
-                                              .withOpacity(.7),
-                                        ),
+                                      child: _buildExpertList(
+                                        state.searchResults,
+                                        expertsData.isAnyFreeCallAvailable,
+                                        'Search',
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 18.h,
-                              ),
-                              SizedBox(
-                                height: 38.h,
-                                child: TextField(
-                                  controller: _controller,
-                                  focusNode: _searchFocusNode,
-                                  autofocus: false,
-                                  onSubmitted: (query) {
-                                    if (query.trim().length >= 3) {
-                                      BlocProvider.of<ShortsHomeBloc>(context)
-                                          .add(SearchShorts(query));
-                                      _searchFocusNode.unfocus();
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                            'Please enter at least 3 characters',
-                                          ),
-                                          duration: Duration(seconds: 2),
-                                        ),
-                                      );
-                                    }
+                                    );
                                   },
-                                  textAlign: TextAlign.justify,
-                                  style: const TextStyle(color: Colors.white),
-                                  decoration: InputDecoration(
-                                    hintText: "Search",
-                                    hintStyle:
-                                        TextStyles.sourceSans.body3.colour(
-                                      UiConstants.kTextColor.withOpacity(.7),
-                                    ),
-                                    filled: true,
-                                    fillColor: const Color(0xffD9D9D9)
-                                        .withOpacity(.04),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8.r),
-                                      borderSide: BorderSide(
-                                        color: const Color(0xffCACBCC)
-                                            .withOpacity(.07),
-                                      ),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8.r),
-                                      borderSide: BorderSide(
-                                        color: const Color(0xffCACBCC)
-                                            .withOpacity(.07),
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8.r),
-                                      borderSide: BorderSide(
-                                        color: const Color(0xffCACBCC)
-                                            .withOpacity(.07),
-                                      ),
-                                    ),
-                                    suffixIcon: '' != ""
-                                        ? GestureDetector(
-                                            onTap: () {
-                                              _controller.clear();
-                                              BlocProvider.of<ShortsHomeBloc>(
-                                                context,
-                                                listen: false,
-                                              ).add(const LoadHomeData());
-                                              _searchFocusNode.unfocus();
-                                            },
-                                            child: Icon(
-                                              Icons.close,
-                                              color: UiConstants.kTextColor
-                                                  .withOpacity(.7),
-                                            ),
-                                          )
-                                        : Icon(
-                                            Icons.search,
-                                            color: UiConstants.kTextColor
-                                                .withOpacity(.7),
-                                          ),
-                                    contentPadding: EdgeInsets.symmetric(
-                                      vertical: 12.h,
-                                      horizontal: 16.w,
-                                    ),
-                                  ),
                                 ),
                               ),
-                              SizedBox(
-                                height: 18.h,
-                              ),
                             ],
-                          ),
-                        ),
-                      ),
-                      SliverPadding(
-                        padding: EdgeInsets.only(
-                          left: SizeConfig.padding20,
-                        ),
-                        sliver: _buildUpcomingBookings(),
-                      ),
-                      SliverPadding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding20,
-                        ),
-                        sliver: SliverToBoxAdapter(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding22,
-                            ),
-                            child: Text(
-                              'Our top experts',
-                              style: TextStyles.sourceSansSB.body1,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SliverPadding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding20,
-                        ),
-                        sliver: _buildTopExpertList(
-                          expertsData.values[topSection]?.take(3).toList() ??
-                              [],
-                          expertsData.isAnyFreeCallAvailable,
-                        ),
-                      ),
-                      SliverPadding(
-                        padding: EdgeInsets.only(
-                          left: 18.w,
-                        ),
-                        sliver: SliverAppBar(
-                          pinned: true,
-                          toolbarHeight: 0,
-                          backgroundColor: UiConstants.bg,
-                          surfaceTintColor: UiConstants.bg,
-                          bottom: PreferredSize(
-                            preferredSize: Size.fromHeight(
-                              172.h,
-                            ),
-                            child: Transform.translate(
-                              offset: Offset(0, -20.h),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(right: 20.w),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          padding: EdgeInsets.only(
-                                            bottom: 12.h,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                color: UiConstants.kTextColor,
-                                                width: 2.h,
-                                              ),
+                          )
+                        : DefaultTabController(
+                            length: otherSections.length,
+                            child: Builder(
+                              builder: (context) {
+                                tabContext = context;
+                                return ImprovedVerticalScrollableTabView(
+                                  autoScrollController:
+                                      RootController.autoScrollController,
+                                  thumbVisibility: false,
+                                  tabController:
+                                      DefaultTabController.of(tabContext!),
+                                  onTabChanged: (index) {
+                                    if (state.currentSection !=
+                                        otherSections[index]) {
+                                      BlocProvider.of<ExpertBloc>(
+                                        context,
+                                        listen: false,
+                                      ).add(
+                                        SectionChanged(otherSections[index]),
+                                      );
+                                      String selectedSection =
+                                          otherSections[index];
+                                      double targetPosition =
+                                          _chipPositions[selectedSection]!;
+                                      if (_chipPositions
+                                              .containsKey(selectedSection) &&
+                                          _chipPositions[selectedSection] !=
+                                              null) {
+                                        double currentScrollPosition =
+                                            _chipsScrollController
+                                                .position.pixels;
+                                        double viewportWidth =
+                                            _chipsScrollController
+                                                .position.viewportDimension;
+                                        double visibleEndPosition =
+                                            currentScrollPosition +
+                                                viewportWidth;
+                                        double chipWidth = 120.w;
+
+                                        double chipStart = targetPosition;
+                                        double chipMidpoint =
+                                            chipStart + (chipWidth / 2);
+
+                                        bool isChipMidpointVisible =
+                                            chipMidpoint >=
+                                                    currentScrollPosition &&
+                                                chipMidpoint <=
+                                                    visibleEndPosition;
+                                        if (!isChipMidpointVisible) {
+                                          _chipsScrollController.animateTo(
+                                            targetPosition,
+                                            duration: const Duration(
+                                              milliseconds: 300,
                                             ),
+                                            curve: Curves.easeInOut,
+                                          );
+                                        }
+                                      }
+                                    }
+                                  },
+                                  listItemData: [
+                                    ...expertsData.list.where(
+                                      (section) => !section
+                                          .toLowerCase()
+                                          .contains('top'),
+                                    ),
+                                  ],
+                                  verticalScrollPosition:
+                                      VerticalScrollPosition.begin,
+                                  eachItemChild: (object, index) => Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: SizeConfig.padding20,
+                                    ),
+                                    child: _buildInViewSection(
+                                      otherSections[index],
+                                      expertsData
+                                              .values[otherSections[index]] ??
+                                          [],
+                                      expertsData.isAnyFreeCallAvailable,
+                                    ),
+                                  ),
+                                  slivers: [
+                                    SliverToBoxAdapter(
+                                      child: _appBar(state.query),
+                                    ),
+                                    SliverPadding(
+                                      padding: EdgeInsets.only(
+                                        left: SizeConfig.padding20,
+                                      ),
+                                      sliver: _buildUpcomingBookings(),
+                                    ),
+                                    SliverPadding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: SizeConfig.padding20,
+                                      ),
+                                      sliver: SliverToBoxAdapter(
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: SizeConfig.padding22,
                                           ),
                                           child: Text(
-                                            'All Experts',
+                                            'Our top experts',
                                             style:
                                                 TextStyles.sourceSansSB.body1,
                                           ),
                                         ),
-                                        Container(
-                                          padding: EdgeInsets.zero,
-                                          child: Divider(
-                                            color: UiConstants.kTextColor5
-                                                .withOpacity(.3),
-                                            thickness: 1,
-                                            height: 1,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 24.h,
-                                  ),
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    controller: _chipsScrollController,
-                                    child: SizedBox(
-                                      width: 2 *
-                                              (120.w *
-                                                  ((expertsData.list.length /
-                                                          2) /
-                                                      2)) +
-                                          (8.w * (expertsData.list.length - 1)),
-                                      child: Wrap(
-                                        spacing: 8.w,
-                                        runSpacing: 8.w,
-                                        children: expertsData.list
-                                            .where(
-                                          (section) => !section
-                                              .toLowerCase()
-                                              .contains('top'),
-                                        )
-                                            .map(
-                                          (value) {
-                                            return GestureDetector(
-                                              behavior: HitTestBehavior.opaque,
-                                              onTap: () {
-                                                BlocProvider.of<ExpertBloc>(
-                                                  context,
-                                                  listen: false,
-                                                ).add(
-                                                  SectionChanged(value),
-                                                );
-
-                                                int sectionIndex = otherSections
-                                                    .indexOf(value);
-                                                if (sectionIndex != -1) {
-                                                  VerticalScrollableTabBarStatus
-                                                      .setIndex(sectionIndex);
-                                                }
-                                              },
-                                              child: LayoutBuilder(
-                                                builder:
-                                                    (context, constraints) {
-                                                  WidgetsBinding.instance
-                                                      .addPostFrameCallback(
-                                                          (_) {
-                                                    final RenderBox box = context
-                                                            .findRenderObject()
-                                                        as RenderBox;
-                                                    final position = box
-                                                        .localToGlobal(
-                                                          Offset.zero,
-                                                        )
-                                                        .dx;
-                                                    _chipPositions[value] =
-                                                        position - 20;
-                                                  });
-                                                  return Container(
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          state.currentSection ==
-                                                                  value
-                                                              ? const Color(
-                                                                      0xff62E3C4)
-                                                                  .withOpacity(
-                                                                      .1)
-                                                              : const Color(
-                                                                      0xffD9D9D9)
-                                                                  .withOpacity(
-                                                                      .1),
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                        Radius.circular(6.r),
-                                                      ),
-                                                      border: Border.all(
-                                                        color:
-                                                            state.currentSection ==
-                                                                    value
-                                                                ? const Color(
-                                                                    0xff62E3C4,
-                                                                  ).withOpacity(
-                                                                    .5)
-                                                                : const Color(
-                                                                    0xffCACBCC,
-                                                                  ).withOpacity(
-                                                                    .07,
-                                                                  ),
-                                                      ),
-                                                    ),
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                      horizontal: 16.w,
-                                                      vertical: 8.h,
-                                                    ),
-                                                    child: Text(
-                                                      value,
-                                                      style: TextStyles
-                                                          .sourceSansM.body4
-                                                          .colour(
-                                                        state.currentSection ==
-                                                                value
-                                                            ? const Color(
-                                                                0xff62E3C4,
-                                                              )
-                                                            : UiConstants
-                                                                .kTextColor,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            );
-                                          },
-                                        ).toList(),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
+                                    SliverPadding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: SizeConfig.padding20,
+                                      ),
+                                      sliver: _buildTopExpertList(
+                                        expertsData.values[topSection]
+                                                ?.take(3)
+                                                .toList() ??
+                                            [],
+                                        expertsData.isAnyFreeCallAvailable,
+                                      ),
+                                    ),
+                                    SliverPadding(
+                                      padding: EdgeInsets.only(
+                                        left: 18.w,
+                                      ),
+                                      sliver: SliverAppBar(
+                                        pinned: true,
+                                        toolbarHeight: 0,
+                                        backgroundColor: UiConstants.bg,
+                                        surfaceTintColor: UiConstants.bg,
+                                        bottom: PreferredSize(
+                                          preferredSize: Size.fromHeight(
+                                            172.h,
+                                          ),
+                                          child: Transform.translate(
+                                            offset: Offset(0, -20.h),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    right: 20.w,
+                                                  ),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                          bottom: 12.h,
+                                                        ),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border(
+                                                            bottom: BorderSide(
+                                                              color: UiConstants
+                                                                  .kTextColor,
+                                                              width: 2.h,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        child: Text(
+                                                          'All Experts',
+                                                          style: TextStyles
+                                                              .sourceSansSB
+                                                              .body1,
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        padding:
+                                                            EdgeInsets.zero,
+                                                        child: Divider(
+                                                          color: UiConstants
+                                                              .kTextColor5
+                                                              .withOpacity(.3),
+                                                          thickness: 1,
+                                                          height: 1,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 24.h,
+                                                ),
+                                                SingleChildScrollView(
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  controller:
+                                                      _chipsScrollController,
+                                                  child: SizedBox(
+                                                    width: 2 *
+                                                            (120.w *
+                                                                ((expertsData
+                                                                            .list
+                                                                            .length /
+                                                                        2) /
+                                                                    2)) +
+                                                        (8.w *
+                                                            (expertsData.list
+                                                                    .length -
+                                                                1)),
+                                                    child: Wrap(
+                                                      spacing: 8.w,
+                                                      runSpacing: 8.w,
+                                                      children: expertsData.list
+                                                          .where(
+                                                        (section) => !section
+                                                            .toLowerCase()
+                                                            .contains('top'),
+                                                      )
+                                                          .map(
+                                                        (value) {
+                                                          return GestureDetector(
+                                                            behavior:
+                                                                HitTestBehavior
+                                                                    .opaque,
+                                                            onTap: () {
+                                                              BlocProvider.of<
+                                                                  ExpertBloc>(
+                                                                context,
+                                                                listen: false,
+                                                              ).add(
+                                                                SectionChanged(
+                                                                    value),
+                                                              );
+
+                                                              int sectionIndex =
+                                                                  otherSections
+                                                                      .indexOf(
+                                                                          value);
+                                                              if (sectionIndex !=
+                                                                  -1) {
+                                                                VerticalScrollableTabBarStatus
+                                                                    .setIndex(
+                                                                        sectionIndex);
+                                                              }
+                                                            },
+                                                            child:
+                                                                LayoutBuilder(
+                                                              builder: (context,
+                                                                  constraints) {
+                                                                WidgetsBinding
+                                                                    .instance
+                                                                    .addPostFrameCallback(
+                                                                        (_) {
+                                                                  final RenderBox
+                                                                      box =
+                                                                      context.findRenderObject()
+                                                                          as RenderBox;
+                                                                  final position =
+                                                                      box
+                                                                          .localToGlobal(
+                                                                            Offset.zero,
+                                                                          )
+                                                                          .dx;
+                                                                  _chipPositions[
+                                                                          value] =
+                                                                      position -
+                                                                          20;
+                                                                });
+                                                                return Container(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: state.currentSection ==
+                                                                            value
+                                                                        ? const Color(0xff62E3C4)
+                                                                            .withOpacity(
+                                                                                .1)
+                                                                        : const Color(0xffD9D9D9)
+                                                                            .withOpacity(.1),
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .all(
+                                                                      Radius
+                                                                          .circular(
+                                                                        6.r,
+                                                                      ),
+                                                                    ),
+                                                                    border:
+                                                                        Border
+                                                                            .all(
+                                                                      color: state.currentSection ==
+                                                                              value
+                                                                          ? const Color(
+                                                                              0xff62E3C4,
+                                                                            ).withOpacity(
+                                                                              .5,
+                                                                            )
+                                                                          : const Color(
+                                                                              0xffCACBCC,
+                                                                            ).withOpacity(
+                                                                              .07,
+                                                                            ),
+                                                                    ),
+                                                                  ),
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .symmetric(
+                                                                    horizontal:
+                                                                        16.w,
+                                                                    vertical:
+                                                                        8.h,
+                                                                  ),
+                                                                  child: Text(
+                                                                    value,
+                                                                    style: TextStyles
+                                                                        .sourceSansM
+                                                                        .body4
+                                                                        .colour(
+                                                                      state.currentSection ==
+                                                                              value
+                                                                          ? const Color(
+                                                                              0xff62E3C4,
+                                                                            )
+                                                                          : UiConstants
+                                                                              .kTextColor,
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ),
+                                                          );
+                                                        },
+                                                      ).toList(),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
                             ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-          );
-        } else {
-          return NewErrorPage(
-            onTryAgain: () {
-              BlocProvider.of<ExpertBloc>(
-                context,
-                listen: false,
-              ).add(
-                const LoadExpertsData(),
-              );
-            },
-          );
-        }
-      },
+                          );
+              case LoadingExpertsFailed():
+                return Center(
+                  child: NewErrorPage(
+                    onTryAgain: () {
+                      BlocProvider.of<ExpertBloc>(
+                        context,
+                        listen: false,
+                      ).add(
+                        const LoadExpertsData(),
+                      );
+                    },
+                  ),
+                );
+            }
+          },
+        ),
+      ),
     );
   }
 
@@ -590,6 +606,151 @@ class __ExpertHomeState extends State<_ExpertHome>
             },
           );
         },
+      ),
+    );
+  }
+
+  Widget _appBar(String query) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 20.w,
+      ),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            UiConstants.bg,
+            Color(0xff212B2D),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: SizeConfig.padding14,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Experts',
+                    style: TextStyles.sourceSansSB.body1,
+                  ),
+                  Text(
+                    'Book a call with an expert instantly',
+                    style: TextStyles.sourceSans.body3.colour(
+                      UiConstants.kTextColor.withOpacity(.7),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 18.h,
+          ),
+          SizedBox(
+            height: 38.h,
+            child: TextField(
+              controller: _controller,
+              focusNode: _searchFocusNode,
+              autofocus: false,
+              onSubmitted: (query) {
+                if (query.trim().length >= 3) {
+                  BlocProvider.of<ExpertBloc>(
+                    context,
+                  ).add(SearchExperts(query));
+                  _searchFocusNode.unfocus();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Please enter at least 3 characters',
+                      ),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                }
+              },
+              textAlign: TextAlign.justify,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                hintText: "Search",
+                hintStyle: TextStyles.sourceSans.body3.colour(
+                  UiConstants.kTextColor.withOpacity(.7),
+                ),
+                filled: true,
+                fillColor: const Color(0xffD9D9D9).withOpacity(.04),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                    8.r,
+                  ),
+                  borderSide: BorderSide(
+                    color: const Color(
+                      0xffCACBCC,
+                    ).withOpacity(.07),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                    8.r,
+                  ),
+                  borderSide: BorderSide(
+                    color: const Color(
+                      0xffCACBCC,
+                    ).withOpacity(.07),
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                    8.r,
+                  ),
+                  borderSide: BorderSide(
+                    color: const Color(
+                      0xffCACBCC,
+                    ).withOpacity(.07),
+                  ),
+                ),
+                suffixIcon: query != ""
+                    ? GestureDetector(
+                        onTap: () {
+                          _controller.clear();
+                          BlocProvider.of<ExpertBloc>(
+                            context,
+                            listen: false,
+                          ).add(
+                            const LoadExpertsData(),
+                          );
+                          _searchFocusNode.unfocus();
+                        },
+                        child: Icon(
+                          Icons.close,
+                          color: UiConstants.kTextColor.withOpacity(
+                            .7,
+                          ),
+                        ),
+                      )
+                    : Icon(
+                        Icons.search,
+                        color: UiConstants.kTextColor.withOpacity(.7),
+                      ),
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 12.h,
+                  horizontal: 16.w,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 18.h,
+          ),
+        ],
       ),
     );
   }

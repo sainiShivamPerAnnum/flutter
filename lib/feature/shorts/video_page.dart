@@ -398,7 +398,7 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                         },
                                       );
                                     },
-                                    showUserName: videos[index].author != "",
+                                    showUserName: true,
                                     showVideoTitle: true,
                                     showShareButton: true,
                                     showLikeButton: true,

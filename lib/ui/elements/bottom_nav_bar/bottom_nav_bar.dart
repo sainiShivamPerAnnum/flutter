@@ -25,9 +25,10 @@ class BottomNavBar extends StatelessWidget {
       builder: (ctx, superModel, child) => BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
           return Container(
-            color: Colors.transparent,
             constraints: BoxConstraints(
-              maxHeight: state is CartItemAdded
+              maxHeight: state is CartItemAdded &&
+                      (superModel.getCurrentTabIndex == 0 ||
+                          superModel.getCurrentTabIndex == 2)
                   ? SizeConfig.navBarHeight + 73.h
                   : SizeConfig.navBarHeight,
             ),
@@ -41,66 +42,77 @@ class BottomNavBar extends StatelessWidget {
                     curve: Curves.easeIn,
                     duration: const Duration(milliseconds: 300),
                     height: SizeConfig.navBarHeight,
-                    child: BottomAppBar(
-                      notchMargin: navItemsLength % 2 == 0 ? 7 : 0,
-                      shape: const CircularNotchedRectangle(),
-                      color: Colors.black,
-                      padding: EdgeInsets.zero,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: List.generate(
-                          navItemsLength,
-                          (index) {
-                            final navbarItems =
-                                rootController.navItems.values.toList()[index];
-                            return superModel.getCurrentTabIndex == index
-                                ? Expanded(
-                                    key: ValueKey(navbarItems.title),
-                                    child: GestureDetector(
-                                      onTap: () =>
-                                          superModel.onItemTapped(index),
+                    color: UiConstants.kTextColor4,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: List.generate(
+                        navItemsLength,
+                        (index) {
+                          final navbarItems =
+                              rootController.navItems.values.toList()[index];
+                          return superModel.getCurrentTabIndex == index
+                              ? Expanded(
+                                  key: ValueKey(navbarItems.title),
+                                  child: GestureDetector(
+                                    onTap: () => superModel.onItemTapped(index),
+                                    child: NavBarIcon(
+                                      key: ValueKey(navbarItems.title),
+                                      animate: true,
+                                      item: navbarItems,
+                                      style: TextStyles.rajdhaniSB
+                                          .colour(UiConstants.kTextColor),
+                                    ),
+                                  ),
+                                )
+                              : Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      superModel.onItemTapped(index);
+                                    },
+                                    child: Container(
+                                      key: ValueKey(navbarItems.title),
+                                      alignment: Alignment.center,
+                                      color: Colors.transparent,
                                       child: NavBarIcon(
-                                        key: ValueKey(navbarItems.title),
-                                        animate: true,
+                                        animate: false,
                                         item: navbarItems,
                                         style: TextStyles.rajdhaniSB
-                                            .colour(UiConstants.kTextColor),
+                                            .colour(UiConstants.kTextColor2),
                                       ),
                                     ),
-                                  )
-                                : Expanded(
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        superModel.onItemTapped(index);
-                                      },
-                                      child: Container(
-                                        key: ValueKey(navbarItems.title),
-                                        alignment: Alignment.center,
-                                        color: Colors.transparent,
-                                        child: NavBarIcon(
-                                          animate: false,
-                                          item: navbarItems,
-                                          style: TextStyles.rajdhaniSB
-                                              .colour(UiConstants.kTextColor2),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                          },
-                        ),
+                                  ),
+                                );
+                        },
                       ),
                     ),
+                    //  BottomAppBar(
+                    //   notchMargin: navItemsLength % 2 == 0 ? 7 : 0,
+                    //   shape: const CircularNotchedRectangle(),
+                    //   color: Colors.transparent,
+                    //   padding: EdgeInsets.zero,
+                    //   child:
+                    // ),
                   ),
                 ),
-                if (state is CartItemAdded)
+                if (state is CartItemAdded &&
+                    (superModel.getCurrentTabIndex == 0 ||
+                        superModel.getCurrentTabIndex == 2))
                   Positioned(
                     bottom: SizeConfig.navBarHeight + 10.h,
                     left: 20.w,
                     right: 20.w,
-                    child: CartActions(
-                      cart: state,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: UiConstants.kTextColor4,
+                        borderRadius: BorderRadius.circular(
+                          12.r,
+                        ),
+                      ),
+                      child: CartActions(
+                        cart: state,
+                      ),
                     ),
                   ),
               ],
