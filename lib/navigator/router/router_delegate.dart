@@ -1056,9 +1056,22 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'experts':
         final id = queryParams['id'];
+        final category = queryParams['category'];
         if (id != null) {
           openExpertDetails(id);
           break;
+        } else if (category != null &&
+            rootController.navItems
+                .containsValue(RootController.expertNavBarItem)) {
+          onTapItem(RootController.expertNavBarItem);
+          final categoryIndex =
+              RootController.expertsSections.indexOf(category);
+          if (categoryIndex != -1) {
+            await RootController.autoScrollController.scrollToIndex(
+              categoryIndex,
+              duration: const Duration(milliseconds: 300),
+            );
+          }
         } else if (rootController.navItems
             .containsValue(RootController.expertNavBarItem)) {
           onTapItem(RootController.expertNavBarItem);

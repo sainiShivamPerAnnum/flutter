@@ -43,6 +43,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/quiz_section.dar
 import 'package:felloapp/ui/pages/hometabs/save/save_components/testimonials.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/upcoming_bookings.dart';
 import 'package:felloapp/ui/pages/power_play/root_card.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
@@ -51,6 +52,7 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SaveViewModel extends ChangeNotifier {
   S? locale;
@@ -381,6 +383,11 @@ class SaveViewModel extends ChangeNotifier {
           break;
       }
     }
+    saveViewItems.add(
+      SizedBox(
+        height: 60.h,
+      ),
+    );
     return saveViewItems;
   }
 
@@ -431,6 +438,12 @@ class SaveViewModel extends ChangeNotifier {
       userInterestedAdvisors = response.model?.$1.userInterestedAdvisors ?? [];
     } else {
       topExperts = null;
+    }
+    if (topExperts != null) {
+      final otherSections = topExperts!.list
+          .where((section) => !section.toLowerCase().contains('top'))
+          .toList();
+      RootController.expertsSections = otherSections;
     }
     isTopAdvisorLoading = false;
   }

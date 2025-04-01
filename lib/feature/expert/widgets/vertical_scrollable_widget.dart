@@ -2,6 +2,7 @@ import 'package:felloapp/feature/expert/widgets/scroll_to_index.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rect_getter/rect_getter.dart';
 
 /// Improved version of VerticalScrollableTabBarStatus that has a listener callback
@@ -164,7 +165,15 @@ class _ImprovedVerticalScrollableTabViewState
             center: widget.center,
             anchor: widget.anchor,
             cacheExtent: widget.cacheExtent,
-            slivers: [...widget.slivers, buildVerticalSliverList()],
+            slivers: [
+              ...widget.slivers,
+              buildVerticalSliverList(),
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 60.h,
+                ),
+              ),
+            ],
             semanticChildCount: widget.semanticChildCount,
             dragStartBehavior: widget.dragStartBehavior,
             keyboardDismissBehavior: widget.keyboardDismissBehavior,

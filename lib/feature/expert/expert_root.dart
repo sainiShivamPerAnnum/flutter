@@ -132,7 +132,7 @@ class __ExpertHomeState extends State<_ExpertHome>
                 final otherSections = expertsData.list
                     .where((section) => !section.toLowerCase().contains('top'))
                     .toList();
-
+                RootController.expertsSections = otherSections;
                 return state.query != '' && state.searchResults.isEmpty
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -177,7 +177,7 @@ class __ExpertHomeState extends State<_ExpertHome>
                               Expanded(
                                 child: ListView.builder(
                                   padding:
-                                      EdgeInsets.only(bottom: 80.h, top: 20.h),
+                                      EdgeInsets.only(bottom: 60.h, top: 20.h),
                                   itemCount: state.searchResults.length,
                                   itemBuilder: (context, index) {
                                     return Padding(

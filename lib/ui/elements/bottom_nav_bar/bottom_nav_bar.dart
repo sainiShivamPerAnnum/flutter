@@ -27,8 +27,10 @@ class BottomNavBar extends StatelessWidget {
           return Container(
             constraints: BoxConstraints(
               maxHeight: state is CartItemAdded &&
-                      (superModel.getCurrentTabIndex == 0 ||
-                          superModel.getCurrentTabIndex == 2)
+                      (rootController.currentNavBarItemModel ==
+                              RootController.saveNavBarItem ||
+                          rootController.currentNavBarItemModel ==
+                              RootController.expertNavBarItem)
                   ? SizeConfig.navBarHeight + 73.h
                   : SizeConfig.navBarHeight,
             ),
@@ -97,8 +99,10 @@ class BottomNavBar extends StatelessWidget {
                   ),
                 ),
                 if (state is CartItemAdded &&
-                    (superModel.getCurrentTabIndex == 0 ||
-                        superModel.getCurrentTabIndex == 2))
+                    (rootController.currentNavBarItemModel ==
+                            RootController.saveNavBarItem ||
+                        rootController.currentNavBarItemModel ==
+                            RootController.expertNavBarItem))
                   Positioned(
                     bottom: SizeConfig.navBarHeight + 10.h,
                     left: 20.w,

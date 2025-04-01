@@ -207,7 +207,9 @@ class __LiveHomeState extends State<_LiveHome> {
                         ),
                       ),
                     buildRecentSection(liveData.recent, context, false),
-                    SizedBox(height: SizeConfig.padding14),
+                    SizedBox(
+                      height: 60.h,
+                    ),
                   ],
                 ),
               ),

@@ -5,6 +5,7 @@ import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SupportNewPage extends StatelessWidget {
   const SupportNewPage({super.key});
@@ -53,6 +54,9 @@ class SupportViewWrapper extends StatelessWidget {
                         largeFont: true,
                       ),
                       ...state.supportItems,
+                      SizedBox(
+                        height: 60.h,
+                      ),
                     ],
                   ),
                 ),

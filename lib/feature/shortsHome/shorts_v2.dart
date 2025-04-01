@@ -410,6 +410,7 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                 )
                               : ListView.builder(
                                   shrinkWrap: true,
+                                  padding: EdgeInsets.only(bottom: 60.h),
                                   physics: const NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
                                     final theme =

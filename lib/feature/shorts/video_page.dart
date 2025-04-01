@@ -11,6 +11,7 @@ import 'package:felloapp/feature/shorts/src/widgets/all_viewed_sheet.dart';
 import 'package:felloapp/feature/shorts/src/widgets/dot_indicator.dart';
 import 'package:felloapp/feature/shorts/src/widgets/loadinng_shimmer.dart';
 import 'package:felloapp/feature/shorts/src/widgets/video_widget.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/util/local_actions_state.dart';
 import 'package:felloapp/util/locator.dart';
@@ -18,7 +19,6 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_player/video_player.dart';
-// import 'package:volume_controller/volume_controller.dart';
 
 import 'src/bloc/preload_bloc.dart';
 
@@ -207,8 +207,7 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                 backgroundColor: UiConstants.kBackgroundColor,
                                 hapticVibrate: true,
                                 content: AllShortsViewed(
-                                  category: (state.categories != null &&
-                                          state.categories.isNotEmpty)
+                                  category: (state.categories.isNotEmpty)
                                       ? state.categories[
                                           state.currentCategoryIndex]
                                       : '',
@@ -345,65 +344,80 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                     },
                                     onBook: () {
                                       FocusScope.of(context).unfocus();
-                                      BaseUtil.openBookAdvisorSheet(
-                                        advisorId: videos[index].advisorId,
-                                        advisorName: videos[index].author,
-                                        advisorImage: videos[index].advisorImg,
-                                        isEdit: false,
-                                      );
-                                      context.read<CartBloc>().add(
-                                            AddToCart(
-                                              advisor: Expert(
-                                                advisorId:
-                                                    videos[index].advisorId,
-                                                name: videos[index].author,
-                                                image: videos[index].advisorImg,
-                                                experience: '',
-                                                rate: 0,
-                                                rateNew: '',
-                                                rating: 0,
-                                                expertise: '',
-                                                qualifications: '',
-                                                isFree: false,
+                                      if (videos[index].advisorId == "") {
+                                        BlocProvider.of<PreloadBloc>(
+                                          context,
+                                          listen: false,
+                                        ).add(
+                                          PreloadEvent.pauseVideoAtIndex(
+                                            state.focusedIndex,
+                                          ),
+                                        );
+                                        AppState.delegate!.parseRoute(Uri.parse(
+                                            "experts?category=${videos[index].categoryV1}"));
+                                      } else {
+                                        BaseUtil.openBookAdvisorSheet(
+                                          advisorId: videos[index].advisorId,
+                                          advisorName: videos[index].author,
+                                          advisorImage:
+                                              videos[index].advisorImg,
+                                          isEdit: false,
+                                        );
+                                        context.read<CartBloc>().add(
+                                              AddToCart(
+                                                advisor: Expert(
+                                                  advisorId:
+                                                      videos[index].advisorId,
+                                                  name: videos[index].author,
+                                                  image:
+                                                      videos[index].advisorImg,
+                                                  experience: '',
+                                                  rate: 0,
+                                                  rateNew: '',
+                                                  rating: 0,
+                                                  expertise: '',
+                                                  qualifications: '',
+                                                  isFree: false,
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                      locator<AnalyticsService>().track(
-                                        eventName:
-                                            AnalyticsEvents.shortsBookaCall,
-                                        properties: {
-                                          "shorts title": state.currentVideos
-                                                      .isNotEmpty &&
-                                                  state.focusedIndex <
-                                                      state.currentVideos.length
-                                              ? state
-                                                  .currentVideos[
-                                                      state.focusedIndex]
-                                                  .title
-                                              : 'Default Title',
-                                          "shorts category": state
-                                                      .categories.isNotEmpty &&
-                                                  state.currentCategoryIndex <
-                                                      state.categories.length
-                                              ? state.categories[
-                                                  state.currentCategoryIndex]
-                                              : 'Default Category',
-                                          "shorts video list":
-                                              state.theme.isNotEmpty
-                                                  ? state.theme
-                                                  : 'Default Theme',
-                                          "expert name": state
-                                              .mainVideos[state.focusedIndex]
-                                              .author,
-                                        },
-                                      );
+                                            );
+                                        locator<AnalyticsService>().track(
+                                          eventName:
+                                              AnalyticsEvents.shortsBookaCall,
+                                          properties: {
+                                            "shorts title": state.currentVideos
+                                                        .isNotEmpty &&
+                                                    state.focusedIndex <
+                                                        state.currentVideos
+                                                            .length
+                                                ? state
+                                                    .currentVideos[
+                                                        state.focusedIndex]
+                                                    .title
+                                                : 'Default Title',
+                                            "shorts category": state.categories
+                                                        .isNotEmpty &&
+                                                    state.currentCategoryIndex <
+                                                        state.categories.length
+                                                ? state.categories[
+                                                    state.currentCategoryIndex]
+                                                : 'Default Category',
+                                            "shorts video list":
+                                                state.theme.isNotEmpty
+                                                    ? state.theme
+                                                    : 'Default Theme',
+                                            "expert name": state
+                                                .mainVideos[state.focusedIndex]
+                                                .author,
+                                          },
+                                        );
+                                      }
                                     },
                                     showUserName: true,
                                     showVideoTitle: true,
                                     showShareButton: true,
                                     showLikeButton: true,
-                                    showBookButton:
-                                        videos[index].advisorId != "",
+                                    showBookButton: true,
                                     comments: state
                                         .videoComments[videos[index].id]
                                         ?.reversed

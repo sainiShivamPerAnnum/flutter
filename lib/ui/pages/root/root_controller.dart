@@ -58,6 +58,7 @@ class RootController {
 
   static ScrollController controller = ScrollController();
   static AutoScrollController autoScrollController = AutoScrollController();
+  static List<String> expertsSections = [];
 
   void onChange(NavBarItemModel model) {
     log("onChange ${model.title}");
