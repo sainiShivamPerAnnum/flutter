@@ -390,6 +390,7 @@ class ScheduleCard extends StatelessWidget {
                               eventId: '',
                               title: '',
                               description: '',
+                              initialViewCount: 0,
                               advisorId: booking.advisorId,
                               advisorName: booking.advisorName,
                               roomCode: booking.guestCode,

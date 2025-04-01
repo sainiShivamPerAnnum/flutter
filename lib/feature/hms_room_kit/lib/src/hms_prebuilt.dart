@@ -32,6 +32,7 @@ class HMSPrebuilt extends StatelessWidget {
   final String advisorId;
   final String advisorName;
   final String advisorImage;
+  final int initialViewCount;
   final String title;
   final String description;
   final bool isLiked;
@@ -48,6 +49,7 @@ class HMSPrebuilt extends StatelessWidget {
     required this.onLeave,
     required this.isLiked,
     required this.eventId,
+    required this.initialViewCount,
     super.key,
     this.options,
     this.authToken,
@@ -77,6 +79,7 @@ class HMSPrebuilt extends StatelessWidget {
       advisorId: advisorId,
       advisorName: advisorName,
       advisorImage: advisorImage,
+      initialViewCount: initialViewCount,
       title: title,
       description: description,
       roomCode: roomCode,

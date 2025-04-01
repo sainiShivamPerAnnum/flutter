@@ -167,7 +167,7 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                     Selector<MeetingStore, Tuple2<String?, int>>(
                         selector: (_, meetingStore) => Tuple2(
                             meetingStore.localPeer?.role.name,
-                            meetingStore.peers.length),
+                            meetingStore.peersInRoom),
                         builder: (_, data, __) {
                           showControls = data.item1 == 'viewer-realtime';
                           return showControls

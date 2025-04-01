@@ -19,6 +19,7 @@ class PreviewMeetingFlow extends StatefulWidget {
   final String tokenData;
   final String advisorId;
   final String advisorImage;
+  final int initialViewCount;
   final String title;
   final String description;
   final bool isLiked;
@@ -28,6 +29,7 @@ class PreviewMeetingFlow extends StatefulWidget {
     required this.prebuiltOptions,
     required this.advisorName,
     required this.advisorImage,
+    required this.initialViewCount,
     required this.hmsSDKInteractor,
     required this.tokenData,
     required this.advisorId,
@@ -59,6 +61,7 @@ class _PreviewMeetingFlowState extends State<PreviewMeetingFlow> {
     return MeetingScreenController(
       advisorName: widget.advisorName,
       advisorId: widget.advisorId,
+      initialViewCount: widget.initialViewCount,
       title: widget.title,
       description: widget.description,
       user: widget.prebuiltOptions?.userName ??

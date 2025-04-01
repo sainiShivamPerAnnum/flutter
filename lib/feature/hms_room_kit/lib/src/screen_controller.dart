@@ -38,6 +38,7 @@ class ScreenController extends StatefulWidget {
   final String advisorId;
   final String advisorName;
   final String advisorImage;
+  final int initialViewCount;
   final String title;
   final String description;
   final bool isLiked;
@@ -48,6 +49,7 @@ class ScreenController extends StatefulWidget {
     required this.advisorId,
     required this.advisorName,
     required this.advisorImage,
+    required this.initialViewCount,
     required this.title,
     required this.description,
     required this.isLiked,
@@ -230,6 +232,7 @@ class _ScreenControllerState extends State<ScreenController> {
           : isPermissionGranted
               ? PreviewMeetingFlow(
                   advisorName: widget.advisorName,
+                  initialViewCount: widget.initialViewCount,
                   isLiked: widget.isLiked,
                   eventId: widget.eventId,
                   title: widget.title,

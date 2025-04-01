@@ -227,6 +227,7 @@ class _UpcomingLiveCardWidgetState extends State<UpcomingLiveCardWidget> {
                           widget: HMSPrebuilt(
                             eventId: widget.id ?? '',
                             advisorImage: '',
+                            initialViewCount: widget.liveCount ?? 0,
                             isLiked: false,
                             advisorId: advisoriD,
                             advisorName: userName,

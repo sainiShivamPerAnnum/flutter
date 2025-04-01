@@ -295,6 +295,7 @@ Widget callContainer(
                           },
                           advisorId: advisoriD,
                           advisorImage: '',
+                          initialViewCount: 0,
                           advisorName: userName,
                           title: title,
                           description: description,

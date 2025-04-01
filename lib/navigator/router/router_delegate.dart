@@ -1452,6 +1452,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           advisorId: advisorId,
           advisorName: userName,
           title: videoData.model!.topic ?? '',
+          initialViewCount: videoData.model!.totalLiveCount,
           description: videoData.model!.description ?? '',
           advisorImage: '',
           onLeave: () async {
@@ -1475,6 +1476,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           advisorId: videoData.model!.advisorId,
           advisorName: videoData.model!.advisorName,
           advisorImage: '',
+          initialViewCount: videoData.model!.totalLiveCount,
           title: videoData.model!.topic ?? '',
           description: videoData.model!.description ?? '',
           onLeave: () async {

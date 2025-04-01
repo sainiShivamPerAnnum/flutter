@@ -62,6 +62,7 @@ class MeetingScreenController extends StatefulWidget {
   final bool isLiked;
   final String eventId;
   final String advisorName;
+  final int initialViewCount;
   // final String id;
 
   const MeetingScreenController({
@@ -75,6 +76,7 @@ class MeetingScreenController extends StatefulWidget {
     required this.eventId,
     required this.advisorName,
     required this.advisorImage,
+    required this.initialViewCount,
     Key? key,
     this.isRoomMute = false,
     this.showStats = false,
@@ -156,6 +158,8 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
       widget.isLiked,
       widget.eventId,
       widget.advisorName,
+      widget.advisorImage,
+      widget.initialViewCount,
     );
   }
 
