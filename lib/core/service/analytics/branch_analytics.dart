@@ -18,6 +18,7 @@ class BranchAnalytics extends BaseAnalyticsService {
         'Gender': baseUser.gender ?? "",
         'Signed Up': baseUser.isSimpleKycVerified ?? false,
         "KYC Verified": baseUser.isSimpleKycVerified ?? false,
+        "Advisor in cart": baseUser.advisorInCart ?? '',
       };
 
       FlutterBranchSdk.setIdentity(baseUser.uid!);

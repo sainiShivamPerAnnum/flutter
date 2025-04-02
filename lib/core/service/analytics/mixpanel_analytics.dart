@@ -30,6 +30,9 @@ class MixpanelAnalytics extends BaseAnalyticsService {
         _mixpanel!.getPeople().set("Gender", baseUser.gender ?? 'O');
         _mixpanel!
             .getPeople()
+            .set("Advisor in cart", baseUser.advisorInCart ?? '');
+        _mixpanel!
+            .getPeople()
             .set("Signed Up", getSignupDate(baseUser.createdOn));
         _mixpanel!
             .getPeople()

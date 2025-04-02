@@ -11,6 +11,7 @@ import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart'
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
+import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
 import 'package:felloapp/feature/sip/cubit/selectedAsset_cubit.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
@@ -70,19 +71,15 @@ class MyApp extends HookWidget {
       ),
       child: MultiProvider(
         providers: [
-          BlocProvider(
-            create: (_) =>
-                PreloadBloc()..add(const PreloadEvent.getVideosFromApi()),
-          ),
+          BlocProvider(create: (_) => PreloadBloc()),
+          BlocProvider(create: (_) => locator<ExpertBloc>()),
           Provider(create: (_) => CartBloc(locator())..add(InitalCart())),
           Provider(create: (_) => SipCubit()),
           Provider(create: (_) => SelectAssetCubit()),
           Provider(create: (_) => locator<TransactionBloc>()),
           Provider(create: (_) => locator<MyFundsBloc>()),
           Provider(create: (_) => locator<SIPTransactionBloc>()),
-          ChangeNotifierProvider(
-            create: (_) => locator<SaveViewModel>(),
-          ),
+          ChangeNotifierProvider(create: (_) => locator<SaveViewModel>()),
           ChangeNotifierProvider(create: (_) => locator<ConnectivityService>()),
           ChangeNotifierProvider(create: (_) => locator<DBModel>()),
           ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),

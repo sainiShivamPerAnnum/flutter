@@ -733,6 +733,7 @@ Widget _buildLiveTab(List<VideoData> recentlive, BuildContext context) {
                   id: video.id,
                   status: 'recent',
                   maxWidth: 350.w,
+                  advisorImg: video.advisorImg,
                   onTap: () async {
                     final preloadBloc = BlocProvider.of<PreloadBloc>(context);
                     final switchCompleter = Completer<void>();

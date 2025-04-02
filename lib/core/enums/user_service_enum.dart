@@ -15,5 +15,6 @@ enum UserServiceProperties {
   myAvatarId,
   myUpiId,
   myAugmontDetails,
-  mySegments
+  mySegments,
+  advisorInCart,
 }

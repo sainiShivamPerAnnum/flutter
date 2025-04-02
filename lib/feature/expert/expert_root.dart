@@ -31,7 +31,7 @@ class ExpertsHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ExpertBloc(locator())..add(const LoadExpertsData()),
+      create: (_) => locator<ExpertBloc>()..add(const LoadExpertsData()),
       child: const _ExpertHome(),
     );
   }

@@ -2599,6 +2599,9 @@ abstract class _$$UpdateThemesImplCopyWith<$Res> {
       {String theme,
       List<String> categories,
       int index,
+      List<String> allThemes,
+      List<String> allThemeNames,
+      String themeName,
       Completer<void>? completer});
 }
 
@@ -2616,6 +2619,9 @@ class __$$UpdateThemesImplCopyWithImpl<$Res>
     Object? theme = null,
     Object? categories = null,
     Object? index = null,
+    Object? allThemes = null,
+    Object? allThemeNames = null,
+    Object? themeName = null,
     Object? completer = freezed,
   }) {
     return _then(_$UpdateThemesImpl(
@@ -2631,6 +2637,18 @@ class __$$UpdateThemesImplCopyWithImpl<$Res>
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
               as int,
+      allThemes: null == allThemes
+          ? _value._allThemes
+          : allThemes // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      allThemeNames: null == allThemeNames
+          ? _value._allThemeNames
+          : allThemeNames // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      themeName: null == themeName
+          ? _value.themeName
+          : themeName // ignore: cast_nullable_to_non_nullable
+              as String,
       completer: freezed == completer
           ? _value.completer
           : completer // ignore: cast_nullable_to_non_nullable
@@ -2646,8 +2664,13 @@ class _$UpdateThemesImpl implements _UpdateThemes {
       {required this.theme,
       required final List<String> categories,
       required this.index,
+      required final List<String> allThemes,
+      required final List<String> allThemeNames,
+      required this.themeName,
       this.completer})
-      : _categories = categories;
+      : _categories = categories,
+        _allThemes = allThemes,
+        _allThemeNames = allThemeNames;
 
   @override
   final String theme;
@@ -2661,12 +2684,30 @@ class _$UpdateThemesImpl implements _UpdateThemes {
 
   @override
   final int index;
+  final List<String> _allThemes;
+  @override
+  List<String> get allThemes {
+    if (_allThemes is EqualUnmodifiableListView) return _allThemes;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_allThemes);
+  }
+
+  final List<String> _allThemeNames;
+  @override
+  List<String> get allThemeNames {
+    if (_allThemeNames is EqualUnmodifiableListView) return _allThemeNames;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_allThemeNames);
+  }
+
+  @override
+  final String themeName;
   @override
   final Completer<void>? completer;
 
   @override
   String toString() {
-    return 'PreloadEvent.updateThemes(theme: $theme, categories: $categories, index: $index, completer: $completer)';
+    return 'PreloadEvent.updateThemes(theme: $theme, categories: $categories, index: $index, allThemes: $allThemes, allThemeNames: $allThemeNames, themeName: $themeName, completer: $completer)';
   }
 
   @override
@@ -2678,13 +2719,26 @@ class _$UpdateThemesImpl implements _UpdateThemes {
             const DeepCollectionEquality()
                 .equals(other._categories, _categories) &&
             (identical(other.index, index) || other.index == index) &&
+            const DeepCollectionEquality()
+                .equals(other._allThemes, _allThemes) &&
+            const DeepCollectionEquality()
+                .equals(other._allThemeNames, _allThemeNames) &&
+            (identical(other.themeName, themeName) ||
+                other.themeName == themeName) &&
             (identical(other.completer, completer) ||
                 other.completer == completer));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, theme,
-      const DeepCollectionEquality().hash(_categories), index, completer);
+  int get hashCode => Object.hash(
+      runtimeType,
+      theme,
+      const DeepCollectionEquality().hash(_categories),
+      index,
+      const DeepCollectionEquality().hash(_allThemes),
+      const DeepCollectionEquality().hash(_allThemeNames),
+      themeName,
+      completer);
 
   @JsonKey(ignore: true)
   @override
@@ -2834,11 +2888,17 @@ abstract class _UpdateThemes implements PreloadEvent {
       {required final String theme,
       required final List<String> categories,
       required final int index,
+      required final List<String> allThemes,
+      required final List<String> allThemeNames,
+      required final String themeName,
       final Completer<void>? completer}) = _$UpdateThemesImpl;
 
   String get theme;
   List<String> get categories;
   int get index;
+  List<String> get allThemes;
+  List<String> get allThemeNames;
+  String get themeName;
   Completer<void>? get completer;
   @JsonKey(ignore: true)
   _$$UpdateThemesImplCopyWith<_$UpdateThemesImpl> get copyWith =>
@@ -7064,6 +7124,9 @@ mixin _$PreloadState {
   int get currentCategoryIndex => throw _privateConstructorUsedError;
   List<String> get categories => throw _privateConstructorUsedError;
   String get theme => throw _privateConstructorUsedError;
+  String get themeName => throw _privateConstructorUsedError;
+  List<String> get allThemes => throw _privateConstructorUsedError;
+  List<String> get allThemeNames => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
   VideoPlayerController? get liveStreamController =>
       throw _privateConstructorUsedError;
@@ -7120,6 +7183,9 @@ abstract class $PreloadStateCopyWith<$Res> {
       int currentCategoryIndex,
       List<String> categories,
       String theme,
+      String themeName,
+      List<String> allThemes,
+      List<String> allThemeNames,
       String? errorMessage,
       VideoPlayerController? liveStreamController,
       PageController? livePageController});
@@ -7160,6 +7226,9 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
     Object? currentCategoryIndex = null,
     Object? categories = null,
     Object? theme = null,
+    Object? themeName = null,
+    Object? allThemes = null,
+    Object? allThemeNames = null,
     Object? errorMessage = freezed,
     Object? liveStreamController = freezed,
     Object? livePageController = freezed,
@@ -7253,6 +7322,18 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
           ? _value.theme
           : theme // ignore: cast_nullable_to_non_nullable
               as String,
+      themeName: null == themeName
+          ? _value.themeName
+          : themeName // ignore: cast_nullable_to_non_nullable
+              as String,
+      allThemes: null == allThemes
+          ? _value.allThemes
+          : allThemes // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      allThemeNames: null == allThemeNames
+          ? _value.allThemeNames
+          : allThemeNames // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -7300,6 +7381,9 @@ abstract class _$$PreloadStateImplCopyWith<$Res>
       int currentCategoryIndex,
       List<String> categories,
       String theme,
+      String themeName,
+      List<String> allThemes,
+      List<String> allThemeNames,
       String? errorMessage,
       VideoPlayerController? liveStreamController,
       PageController? livePageController});
@@ -7338,6 +7422,9 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
     Object? currentCategoryIndex = null,
     Object? categories = null,
     Object? theme = null,
+    Object? themeName = null,
+    Object? allThemes = null,
+    Object? allThemeNames = null,
     Object? errorMessage = freezed,
     Object? liveStreamController = freezed,
     Object? livePageController = freezed,
@@ -7431,6 +7518,18 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
           ? _value.theme
           : theme // ignore: cast_nullable_to_non_nullable
               as String,
+      themeName: null == themeName
+          ? _value.themeName
+          : themeName // ignore: cast_nullable_to_non_nullable
+              as String,
+      allThemes: null == allThemes
+          ? _value.allThemes
+          : allThemes // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      allThemeNames: null == allThemeNames
+          ? _value.allThemeNames
+          : allThemeNames // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -7473,6 +7572,9 @@ class _$PreloadStateImpl extends _PreloadState {
       required this.currentCategoryIndex,
       required this.categories,
       required this.theme,
+      required this.themeName,
+      required this.allThemes,
+      required this.allThemeNames,
       this.errorMessage,
       this.liveStreamController,
       this.livePageController})
@@ -7523,6 +7625,12 @@ class _$PreloadStateImpl extends _PreloadState {
   @override
   final String theme;
   @override
+  final String themeName;
+  @override
+  final List<String> allThemes;
+  @override
+  final List<String> allThemeNames;
+  @override
   final String? errorMessage;
   @override
   final VideoPlayerController? liveStreamController;
@@ -7531,7 +7639,7 @@ class _$PreloadStateImpl extends _PreloadState {
 
   @override
   String toString() {
-    return 'PreloadState(initialVideo: $initialVideo, mainVideos: $mainVideos, profileVideos: $profileVideos, liveVideo: $liveVideo, controllers: $controllers, mainPageController: $mainPageController, link: $link, shareLinkInProgress: $shareLinkInProgress, isShareAlreadyClicked: $isShareAlreadyClicked, profileControllers: $profileControllers, profilePageController: $profilePageController, focusedIndex: $focusedIndex, profileVideoIndex: $profileVideoIndex, isLoading: $isLoading, videoComments: $videoComments, currentContext: $currentContext, keyboardVisible: $keyboardVisible, showComments: $showComments, muted: $muted, currentCategoryIndex: $currentCategoryIndex, categories: $categories, theme: $theme, errorMessage: $errorMessage, liveStreamController: $liveStreamController, livePageController: $livePageController)';
+    return 'PreloadState(initialVideo: $initialVideo, mainVideos: $mainVideos, profileVideos: $profileVideos, liveVideo: $liveVideo, controllers: $controllers, mainPageController: $mainPageController, link: $link, shareLinkInProgress: $shareLinkInProgress, isShareAlreadyClicked: $isShareAlreadyClicked, profileControllers: $profileControllers, profilePageController: $profilePageController, focusedIndex: $focusedIndex, profileVideoIndex: $profileVideoIndex, isLoading: $isLoading, videoComments: $videoComments, currentContext: $currentContext, keyboardVisible: $keyboardVisible, showComments: $showComments, muted: $muted, currentCategoryIndex: $currentCategoryIndex, categories: $categories, theme: $theme, themeName: $themeName, allThemes: $allThemes, allThemeNames: $allThemeNames, errorMessage: $errorMessage, liveStreamController: $liveStreamController, livePageController: $livePageController)';
   }
 
   @override
@@ -7579,6 +7687,11 @@ class _$PreloadStateImpl extends _PreloadState {
             const DeepCollectionEquality()
                 .equals(other.categories, categories) &&
             (identical(other.theme, theme) || other.theme == theme) &&
+            (identical(other.themeName, themeName) ||
+                other.themeName == themeName) &&
+            const DeepCollectionEquality().equals(other.allThemes, allThemes) &&
+            const DeepCollectionEquality()
+                .equals(other.allThemeNames, allThemeNames) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage) &&
             (identical(other.liveStreamController, liveStreamController) ||
@@ -7612,6 +7725,9 @@ class _$PreloadStateImpl extends _PreloadState {
         currentCategoryIndex,
         const DeepCollectionEquality().hash(categories),
         theme,
+        themeName,
+        const DeepCollectionEquality().hash(allThemes),
+        const DeepCollectionEquality().hash(allThemeNames),
         errorMessage,
         liveStreamController,
         livePageController
@@ -7676,6 +7792,9 @@ abstract class _PreloadState extends PreloadState {
       required final int currentCategoryIndex,
       required final List<String> categories,
       required final String theme,
+      required final String themeName,
+      required final List<String> allThemes,
+      required final List<String> allThemeNames,
       final String? errorMessage,
       final VideoPlayerController? liveStreamController,
       final PageController? livePageController}) = _$PreloadStateImpl;
@@ -7725,6 +7844,12 @@ abstract class _PreloadState extends PreloadState {
   List<String> get categories;
   @override
   String get theme;
+  @override
+  String get themeName;
+  @override
+  List<String> get allThemes;
+  @override
+  List<String> get allThemeNames;
   @override
   String? get errorMessage;
   @override

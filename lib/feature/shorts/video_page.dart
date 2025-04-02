@@ -439,7 +439,9 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                       totalPages: widget.categories.length,
                       categoryName: state.categories.isEmpty
                           ? ''
-                          : state.categories[state.currentCategoryIndex],
+                          : state.currentCategoryIndex == 0
+                              ? state.theme
+                              : state.categories[state.currentCategoryIndex],
                       muted: state.muted,
                     ),
                 ],

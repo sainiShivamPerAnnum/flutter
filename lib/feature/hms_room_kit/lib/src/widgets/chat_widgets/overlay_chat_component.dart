@@ -138,8 +138,8 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
     return Padding(
       padding: EdgeInsets.all(SizeConfig.padding8),
       child: Selector<MeetingStore,
-          Tuple5<String?, String?, String?, String?, bool>>(
-        selector: (_, meetingStore) => Tuple5(
+          Tuple6<String?, String?, String?, String?, bool, String?>>(
+        selector: (_, meetingStore) => Tuple6(
           meetingStore.advisorId,
           meetingStore.calltitle,
           meetingStore.calldescription,
@@ -148,6 +148,7 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
               ? meetingStore.peerTracks.first.peer.name
               : 'Waiting...',
           meetingStore.isEventLikedByUser,
+          meetingStore.advisorImage,
         ),
         builder: (_, value, __) {
           return Column(
@@ -175,6 +176,7 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
                       child: ChatActionButtons(
                         advisorId: value.item1 ?? '',
                         advisorName: value.item4 ?? '',
+                        advisorImage: value.item6 ?? '',
                         onLike: () {
                           final meetingStore = context.read<MeetingStore>();
                           meetingStore.onLike();

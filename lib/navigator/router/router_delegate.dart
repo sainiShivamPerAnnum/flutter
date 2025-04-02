@@ -16,6 +16,8 @@ import 'package:felloapp/core/repository/live_repository.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
+import 'package:felloapp/feature/expert/widgets/scroll_to_index.dart';
 import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/feature/fello_badges/ui/fello_badges_home.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
@@ -1040,6 +1042,37 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           );
         }
         break;
+      case 'bookCall':
+        final id = queryParams['id'];
+        final name = queryParams['name'];
+        final image = queryParams['image'];
+        final selectedDate = queryParams['selectedDate'];
+        final selectedTime = queryParams['selectedTime'];
+        final selectedDuration = queryParams['selectedDuration'];
+        if (id != null && name != null && image != null) {
+          if (selectedDate != null &&
+              selectedTime != null &&
+              selectedDuration != null) {
+            BaseUtil.openBookAdvisorSheet(
+              advisorId: id,
+              advisorName: name,
+              advisorImage: image,
+              isEdit: false,
+              cartPayment: true,
+              selectedDate: selectedDate,
+              selectedDuration: int.tryParse(selectedDuration),
+              selectedTime: selectedTime,
+            );
+          } else {
+            BaseUtil.openBookAdvisorSheet(
+              advisorId: id,
+              advisorName: name,
+              advisorImage: image,
+              isEdit: false,
+            );
+          }
+        }
+        break;
       case 'toast':
         final title = queryParams['title'];
         final message = queryParams['message'];
@@ -1069,7 +1102,14 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           if (categoryIndex != -1) {
             await RootController.autoScrollController.scrollToIndex(
               categoryIndex,
+              preferPosition: AutoScrollPosition.begin,
               duration: const Duration(milliseconds: 300),
+            );
+            BlocProvider.of<ExpertBloc>(
+              navigatorKey.currentContext!,
+              listen: false,
+            ).add(
+              SectionChanged(category),
             );
           }
         } else if (rootController.navItems
@@ -1467,7 +1507,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           title: videoData.model!.topic ?? '',
           initialViewCount: videoData.model!.totalLiveCount,
           description: videoData.model!.description ?? '',
-          advisorImage: '',
+          advisorImage: videoData.model!.advisorImg,
           onLeave: () async {
             await AppState.backButtonDispatcher!.didPopRoute();
           },
@@ -1488,7 +1528,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           roomCode: videoData.model!.guestCode,
           advisorId: videoData.model!.advisorId,
           advisorName: videoData.model!.advisorName,
-          advisorImage: '',
+          advisorImage: videoData.model!.advisorImg,
           initialViewCount: videoData.model!.totalLiveCount,
           title: videoData.model!.topic ?? '',
           description: videoData.model!.description ?? '',

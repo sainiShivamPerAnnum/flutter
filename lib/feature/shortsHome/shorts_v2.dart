@@ -539,10 +539,15 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                                       categories:
                                                           theme.categories,
                                                       i: i,
+                                                      allThemes: state
+                                                          .shortsHome.allThemes,
                                                       searchFocusNode:
                                                           _searchFocusNode,
                                                       themeVideosBloc:
                                                           themeVideosBloc,
+                                                      allThemeNames: state
+                                                          .shortsHome
+                                                          .allThemeNames,
                                                     );
                                                   },
                                                 ),

@@ -59,6 +59,9 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             categories: e.categories,
             theme: e.theme,
             currentCategoryIndex: e.index,
+            allThemes: e.allThemes,
+            themeName: e.themeName,
+            allThemeNames: e.allThemeNames,
           ),
         );
         e.completer?.complete();
@@ -499,22 +502,43 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           List<VideoData> videosToAdd = urls
               .where((video) => video.id != state.initialVideo?.id)
               .toList();
-          // if (urls.length < 10) {
-          //   // If we reach the end of the list, start from the beginning
-          //   final resetResponse = await repository.getVideosByCategory(
-          //     category: state.categories[state.currentCategoryIndex],
-          //     theme: state.theme,
-          //     page: 1,
-          //   );
-          //   List<VideoData> resetUrls = resetResponse.model?.videos ?? [];
-          //   if (resetUrls.isNotEmpty) {
-          //     urls.addAll(resetUrls);
-          //   }
-          //   add(PreloadEvent.updateUrls(urls));
-          // }
-          // else {
-          //   add(PreloadEvent.updateUrls(urls));
-          // }
+          if (urls.length < 10) {
+            final currentThemeIndex = state.allThemes.indexOf(state.theme);
+            if (currentThemeIndex != -1 &&
+                currentThemeIndex + 1 < state.allThemes.length &&
+                state.currentCategoryIndex == 0) {
+              final nextTheme = state.allThemes[currentThemeIndex + 1];
+              final nextThemeName = state.allThemeNames[currentThemeIndex + 1];
+              final nextResponse = state.currentCategoryIndex == 0
+                  ? await repository.getVideosByTheme(
+                      theme: nextTheme,
+                      page: 1,
+                    )
+                  : await repository.getVideosByCategory(
+                      category: state.categories[state.currentCategoryIndex],
+                      theme: nextTheme,
+                      page: 1,
+                    );
+              List<VideoData> nextThemeVideos =
+                  nextResponse.model?.videos ?? [];
+              videosToAdd.addAll(
+                nextThemeVideos
+                    .where((video) => video.id != state.initialVideo?.id)
+                    .toList(),
+              );
+              add(
+                PreloadEvent.updateThemes(
+                  categories: state.categories,
+                  theme: nextTheme,
+                  index: state.currentCategoryIndex,
+                  allThemes: state.allThemes,
+                  allThemeNames: state.allThemeNames,
+                  themeName: nextThemeName,
+                ),
+              );
+            }
+          }
+
           add(PreloadEvent.updateUrls(videosToAdd));
         }
         final index = state.currentContext == ReelContext.main

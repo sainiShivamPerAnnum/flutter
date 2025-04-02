@@ -254,6 +254,7 @@ class __LiveHomeState extends State<_LiveHome> {
                 fromHome: false,
                 status: 'upcoming',
                 title: upcomingData[i].title,
+                advisorImg: upcomingData[i].advisorImg,
                 subTitle: upcomingData[i].subtitle,
                 advisorId: upcomingData[i].advisorId,
                 author: upcomingData[i].author,
@@ -365,6 +366,7 @@ Widget buildLiveSection(List<LiveStream> liveData, bool fromHome) {
                   child: LiveCardWidget(
                     id: live.id,
                     status: 'live',
+                    advisorImg: live.advisorImg,
                     title: live.title,
                     maxWidth:
                         liveData.length == 1 ? SizeConfig.padding350 : null,
@@ -407,6 +409,7 @@ Widget buildRecentSection(
             child: LiveCardWidget(
               id: recentData[i].id,
               fromHome: false,
+              advisorImg: recentData[i].advisorImg,
               onTap: () async {
                 final preloadBloc = BlocProvider.of<PreloadBloc>(context);
                 final switchCompleter = Completer<void>();

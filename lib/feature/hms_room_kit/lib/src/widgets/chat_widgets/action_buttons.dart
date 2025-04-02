@@ -14,6 +14,7 @@ class ChatActionButtons extends StatelessWidget {
   const ChatActionButtons({
     required this.advisorId,
     required this.advisorName,
+    required this.advisorImage,
     required this.isLiked,
     required this.onLike,
     required this.onShare,
@@ -21,6 +22,7 @@ class ChatActionButtons extends StatelessWidget {
   });
   final String advisorId;
   final String advisorName;
+  final String advisorImage;
   final bool isLiked;
   final VoidCallback onLike;
   final VoidCallback onShare;
@@ -103,7 +105,7 @@ class ChatActionButtons extends StatelessWidget {
                   BaseUtil.openBookAdvisorSheet(
                     advisorId: advisorId,
                     advisorName: advisorName,
-                    advisorImage: '',
+                    advisorImage: advisorImage,
                     isEdit: false,
                   );
                 },

@@ -193,6 +193,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         .d("My user name updated in userservice, property listeners notified");
   }
 
+  void updateUserCart(String advisorInCart) {
+    if (_baseUser != null) {
+      _baseUser!.advisorInCart = advisorInCart;
+      notifyListeners(UserServiceProperties.advisorInCart);
+    }
+  }
+
   void setName(String? name) {
     _name = name;
     notifyListeners(UserServiceProperties.myName);

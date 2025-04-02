@@ -1,8 +1,10 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/bookings/new_booking.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/expert/bloc/booking_bloc.dart';
 import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
@@ -1315,6 +1317,13 @@ Widget _buildPaymentSummary(
                       ),
                       backgroundColor: UiConstants.kBackgroundColor,
                       hapticVibrate: true,
+                    );
+                    locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.makePayment,
+                      properties: {
+                        "Expert ID": state.advisorId,
+                        "Expert name": state.advisorName,
+                      },
                     );
                   },
                   style: ElevatedButton.styleFrom(

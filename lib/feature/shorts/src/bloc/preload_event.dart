@@ -36,6 +36,9 @@ class PreloadEvent with _$PreloadEvent {
     required String theme,
     required List<String> categories,
     required int index,
+    required List<String> allThemes,
+    required List<String> allThemeNames,
+    required String themeName,
     Completer<void>? completer,
   }) = _UpdateThemes;
   const factory PreloadEvent.updateConstants({

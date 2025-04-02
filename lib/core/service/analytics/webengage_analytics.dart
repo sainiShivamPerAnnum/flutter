@@ -39,6 +39,12 @@ class WebEngageAnalytics extends BaseAnalyticsService {
           baseUser.isSimpleKycVerified ?? false,
         ),
       );
+      unawaited(
+        WebEngagePlugin.setUserAttribute(
+          "Advisor in cart",
+          baseUser.advisorInCart ?? '',
+        ),
+      );
       _logger.d("Analytics SERVICE :: User identify properties added.");
     }
   }
