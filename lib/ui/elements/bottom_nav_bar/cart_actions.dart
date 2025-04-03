@@ -101,16 +101,27 @@ class CartActions extends StatelessWidget {
               if (cart.selectedDate != null &&
                   cart.selectedTime != null &&
                   cart.selectedDuration != null) {
-                BaseUtil.openBookAdvisorSheet(
-                  advisorId: cart.advisor.advisorId,
-                  advisorName: cart.advisor.name,
-                  advisorImage: cart.advisor.image,
-                  isEdit: false,
-                  cartPayment: true,
-                  selectedDate: cart.selectedDate,
-                  selectedDuration: cart.selectedDuration,
-                  selectedTime: cart.selectedTime,
-                );
+                DateTime currentTime = DateTime.now();
+                DateTime selectedDateTime = DateTime.parse(cart.selectedTime!);
+                if (currentTime.isAfter(selectedDateTime)) {
+                  BaseUtil.openBookAdvisorSheet(
+                    advisorId: cart.advisor.advisorId,
+                    advisorName: cart.advisor.name,
+                    advisorImage: cart.advisor.image,
+                    isEdit: false,
+                    cartPayment: true,
+                    selectedDate: cart.selectedDate,
+                    selectedDuration: cart.selectedDuration,
+                    selectedTime: cart.selectedTime,
+                  );
+                } else {
+                  BaseUtil.openBookAdvisorSheet(
+                    advisorId: cart.advisor.advisorId,
+                    advisorName: cart.advisor.name,
+                    advisorImage: cart.advisor.image,
+                    isEdit: false,
+                  );
+                }
               } else {
                 BaseUtil.openBookAdvisorSheet(
                   advisorId: cart.advisor.advisorId,
