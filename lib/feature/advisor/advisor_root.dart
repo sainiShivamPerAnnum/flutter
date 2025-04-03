@@ -12,6 +12,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AdvisorPage extends StatelessWidget {
   const AdvisorPage({super.key});
@@ -95,7 +96,7 @@ class AdvisorViewWrapper extends StatelessWidget {
                       const Call(callType: "upcoming"),
                       const Call(callType: "past"),
                       SizedBox(
-                        height: SizeConfig.padding24,
+                        height: 80.h,
                       ),
                     ],
                   ),

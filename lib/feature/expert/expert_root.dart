@@ -177,7 +177,7 @@ class __ExpertHomeState extends State<_ExpertHome>
                               Expanded(
                                 child: ListView.builder(
                                   padding:
-                                      EdgeInsets.only(bottom: 60.h, top: 20.h),
+                                      EdgeInsets.only(bottom: 80.h, top: 20.h),
                                   itemCount: state.searchResults.length,
                                   itemBuilder: (context, index) {
                                     return Padding(
@@ -334,49 +334,53 @@ class __ExpertHomeState extends State<_ExpertHome>
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
                                               children: [
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                    right: 20.w,
-                                                  ),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Container(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                          bottom: 12.h,
-                                                        ),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          border: Border(
-                                                            bottom: BorderSide(
-                                                              color: UiConstants
-                                                                  .kTextColor,
-                                                              width: 2.h,
+                                                IgnorePointer(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                      right: 20.w,
+                                                    ),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                            bottom: 12.h,
+                                                          ),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            border: Border(
+                                                              bottom:
+                                                                  BorderSide(
+                                                                color: UiConstants
+                                                                    .kTextColor,
+                                                                width: 2.h,
+                                                              ),
                                                             ),
                                                           ),
+                                                          child: Text(
+                                                            'All Experts',
+                                                            style: TextStyles
+                                                                .sourceSansSB
+                                                                .body1,
+                                                          ),
                                                         ),
-                                                        child: Text(
-                                                          'All Experts',
-                                                          style: TextStyles
-                                                              .sourceSansSB
-                                                              .body1,
+                                                        Container(
+                                                          padding:
+                                                              EdgeInsets.zero,
+                                                          child: Divider(
+                                                            color: UiConstants
+                                                                .kTextColor5
+                                                                .withOpacity(
+                                                                    .3),
+                                                            thickness: 1,
+                                                            height: 1,
+                                                          ),
                                                         ),
-                                                      ),
-                                                      Container(
-                                                        padding:
-                                                            EdgeInsets.zero,
-                                                        child: Divider(
-                                                          color: UiConstants
-                                                              .kTextColor5
-                                                              .withOpacity(.3),
-                                                          thickness: 1,
-                                                          height: 1,
-                                                        ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                                 SizedBox(
@@ -668,13 +672,9 @@ class __ExpertHomeState extends State<_ExpertHome>
                   ).add(SearchExperts(query));
                   _searchFocusNode.unfocus();
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Please enter at least 3 characters',
-                      ),
-                      duration: Duration(seconds: 2),
-                    ),
+                  BaseUtil.showNegativeAlert(
+                    'Input Error',
+                    'Please enter at least 3 characters',
                   );
                 }
               },

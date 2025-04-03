@@ -347,15 +347,15 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                                   child: introVideosIndicator(
                                     expertDetails.shorts,
                                     context,
-                                  ),
-                                ),
-                                ClipOval(
-                                  child: SizedBox(
-                                    width: 80.r,
-                                    height: 80.r,
-                                    child: AppImage(
-                                      expertDetails.image,
-                                      fit: BoxFit.cover,
+                                    ClipOval(
+                                      child: SizedBox(
+                                        width: 78.r,
+                                        height: 78.r,
+                                        child: AppImage(
+                                          expertDetails.image,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -379,7 +379,10 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                                       ),
                                       child: Text(
                                         'Click to know',
-                                        style: TextStyles.sourceSansM.body4,
+                                        style:
+                                            TextStyles.sourceSansM.body4.colour(
+                                          const Color(0xffA6A6AC),
+                                        ),
                                       ),
                                     ),
                                   ),

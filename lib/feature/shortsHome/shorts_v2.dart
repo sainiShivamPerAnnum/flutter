@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -177,13 +178,9 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                       .add(SearchShorts(query));
                                   _searchFocusNode.unfocus();
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Please enter at least 3 characters',
-                                      ),
-                                      duration: Duration(seconds: 2),
-                                    ),
+                                  BaseUtil.showNegativeAlert(
+                                    'Input Error',
+                                    'Please enter at least 3 characters',
                                   );
                                 }
                               },
@@ -410,7 +407,8 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                 )
                               : ListView.builder(
                                   shrinkWrap: true,
-                                  padding: EdgeInsets.only(bottom: 60.h),
+                                  padding: EdgeInsets.only(bottom: 50.h)
+                                      .copyWith(top: 30.h),
                                   physics: const NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
                                     final theme =

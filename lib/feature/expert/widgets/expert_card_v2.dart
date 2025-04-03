@@ -160,15 +160,15 @@ class ExpertCardV2 extends StatelessWidget {
                             child: introVideosIndicator(
                               expert.introVideos,
                               context,
-                            ),
-                          ),
-                          ClipOval(
-                            child: SizedBox(
-                              width: 50.w,
-                              height: 50.h,
-                              child: AppImage(
-                                expert.image,
-                                fit: BoxFit.cover,
+                              ClipOval(
+                                child: SizedBox(
+                                  width: 48.w,
+                                  height: 48.h,
+                                  child: AppImage(
+                                    expert.image,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -414,6 +414,7 @@ class ExpertCardV2 extends StatelessWidget {
 Widget introVideosIndicator(
   List<VideoData> introVideos,
   BuildContext context,
+  Widget child,
 ) {
   if (introVideos.isEmpty) {
     return Container();
@@ -429,6 +430,12 @@ Widget introVideosIndicator(
       strokeWidth: 2.5,
       watchedStatuses:
           introVideos.map((video) => video.isVideoSeenByUser).toList(),
+    ),
+    child: Stack(
+      alignment: Alignment.center, // Centers the child widget
+      children: [
+        child, // The child widget (the image or text in your case)
+      ],
     ),
   );
 }

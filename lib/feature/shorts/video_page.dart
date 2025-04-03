@@ -440,7 +440,7 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                       categoryName: state.categories.isEmpty
                           ? ''
                           : state.currentCategoryIndex == 0
-                              ? state.theme
+                              ? state.themeName
                               : state.categories[state.currentCategoryIndex],
                       muted: state.muted,
                     ),

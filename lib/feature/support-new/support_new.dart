@@ -55,7 +55,7 @@ class SupportViewWrapper extends StatelessWidget {
                       ),
                       ...state.supportItems,
                       SizedBox(
-                        height: 60.h,
+                        height: 80.h,
                       ),
                     ],
                   ),

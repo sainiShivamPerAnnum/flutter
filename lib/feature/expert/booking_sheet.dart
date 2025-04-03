@@ -258,6 +258,20 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
       currentTimes,
       selectedDuration ?? 30,
     );
+    final currentMonth = selectedMonth.month;
+    final currentYear = selectedMonth.year;
+
+    final availableDatesForPrevMonth = totalDates.where((date) {
+      final dateTime = DateTime.parse(date);
+      return dateTime.month == (currentMonth == 1 ? 12 : currentMonth - 1) &&
+          dateTime.year == (currentMonth == 1 ? currentYear - 1 : currentYear);
+    }).toList();
+
+    final availableDatesForNextMonth = totalDates.where((date) {
+      final dateTime = DateTime.parse(date);
+      return dateTime.month == (currentMonth == 12 ? 1 : currentMonth + 1) &&
+          dateTime.year == (currentMonth == 12 ? currentYear + 1 : currentYear);
+    }).toList();
 
     return availableDatesForMonth.isEmpty
         ? Column(
@@ -441,215 +455,226 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 20.w).copyWith(
-                  top: 10.h,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      child: MonthButton(
-                        date: DateFormat('MMMM yyyy').format(selectedMonth),
-                        isSelected: false,
-                        onTap: () {},
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            final prevMonth = DateTime(
-                              selectedMonth.year,
-                              selectedMonth.month - 1,
-                            );
-                            changeMonth(prevMonth);
-                          },
-                          child: Material(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.r),
-                              side: BorderSide(
-                                color: UiConstants.greyVarient,
-                                width: 2.w,
-                              ),
-                            ),
-                            elevation: 0,
-                            color: Colors.transparent,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.r),
-                              child: Icon(
-                                Icons.chevron_left,
-                                size: 14.r,
-                                color: UiConstants.kTextColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 8.w,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            final nextMonth = DateTime(
-                              selectedMonth.year,
-                              selectedMonth.month + 1,
-                            );
-                            changeMonth(nextMonth);
-                          },
-                          child: Material(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.r),
-                              side: BorderSide(
-                                color: UiConstants.greyVarient,
-                                width: 2.w,
-                              ),
-                            ),
-                            elevation: 0,
-                            color: Colors.transparent,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.r),
-                              child: Icon(
-                                Icons.chevron_right,
-                                size: 14.r,
-                                color: UiConstants.kTextColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Container(
+                height: 440.h,
                 padding: EdgeInsets.all(18.r),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 500),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(bottom: 20.w),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 300),
+                              child: MonthButton(
+                                date: DateFormat('MMMM yyyy')
+                                    .format(selectedMonth),
+                                isSelected: false,
+                                onTap: () {},
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    final prevMonth = DateTime(
+                                      selectedMonth.year,
+                                      selectedMonth.month - 1,
+                                    );
+                                    changeMonth(prevMonth);
+                                  },
+                                  child: Material(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      side: BorderSide(
+                                        color: UiConstants.greyVarient,
+                                        width: 2.w,
+                                      ),
+                                    ),
+                                    elevation: 0,
+                                    color: Colors.transparent,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8.r),
+                                      child: Icon(
+                                        Icons.chevron_left,
+                                        size: 14.r,
+                                        color: availableDatesForPrevMonth
+                                                .isNotEmpty
+                                            ? UiConstants.kTextColor
+                                            : UiConstants.kTextColor
+                                                .withOpacity(0.5),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 8.w,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    final nextMonth = DateTime(
+                                      selectedMonth.year,
+                                      selectedMonth.month + 1,
+                                    );
+                                    changeMonth(nextMonth);
+                                  },
+                                  child: Material(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      side: BorderSide(
+                                        color: UiConstants.greyVarient,
+                                        width: 2.w,
+                                      ),
+                                    ),
+                                    elevation: 0,
+                                    color: Colors.transparent,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8.r),
+                                      child: Icon(
+                                        Icons.chevron_right,
+                                        size: 14.r,
+                                        color: availableDatesForNextMonth
+                                                .isNotEmpty
+                                            ? UiConstants.kTextColor
+                                            : UiConstants.kTextColor
+                                                .withOpacity(0.5),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 500),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: dates.map((date) {
+                              return Padding(
+                                padding: EdgeInsets.only(right: 12.w),
+                                child: DateButton(
+                                  date: date,
+                                  isSelected: date == selectedDate,
+                                  child: RichText(
+                                    textAlign: TextAlign.center,
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: getDayAndDateParts(date).day,
+                                          style: TextStyles.sourceSansM.body4
+                                              .copyWith(
+                                            fontSize: 12.sp,
+                                          ),
+                                        ),
+                                        WidgetSpan(
+                                          child: SizedBox(
+                                            height: 2.h,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text:
+                                              '\n${getDayAndDateParts(date).date}',
+                                          style: TextStyles.sourceSansM.body0
+                                              .copyWith(
+                                            fontSize: 20.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    context
+                                        .read<BookingBloc>()
+                                        .add(SelectDate(date));
+                                  },
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                      if (!widget.isEdit) SizedBox(height: 16.h),
+                      if (!widget.isEdit)
+                        Divider(
+                          color: UiConstants.kTextColor5.withOpacity(.3),
+                        ),
+                      if (!widget.isEdit)
+                        Text(
+                          'Select Duration',
+                          style: TextStyles.sourceSansSB.body2,
+                        ),
+                      if (!widget.isEdit) SizedBox(height: 16.h),
+                      if (!widget.isEdit)
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: dates.map((date) {
+                          children: filteredDurations.map((e) {
                             return Padding(
                               padding: EdgeInsets.only(right: 12.w),
                               child: DateButton(
-                                date: date,
-                                isSelected: date == selectedDate,
-                                child: RichText(
-                                  textAlign: TextAlign.center,
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: getDayAndDateParts(date).day,
-                                        style: TextStyles.sourceSansM.body4
-                                            .copyWith(
-                                          fontSize: 12.sp,
-                                        ),
-                                      ),
-                                      WidgetSpan(
-                                        child: SizedBox(
-                                          height: 2.h,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text:
-                                            '\n${getDayAndDateParts(date).date}',
-                                        style: TextStyles.sourceSansM.body0
-                                            .copyWith(
-                                          fontSize: 20.sp,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                date: e['name'].toString(),
+                                requireFormat: false,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 8.h,
+                                  horizontal: 35.w,
                                 ),
+                                isSelected: e['value'] == selectedDuration,
                                 onTap: () {
                                   context
                                       .read<BookingBloc>()
-                                      .add(SelectDate(date));
+                                      .add(SelectDuration(e['value'] as int));
                                 },
                               ),
                             );
                           }).toList(),
                         ),
-                      ),
-                    ),
-                    if (!widget.isEdit) SizedBox(height: 16.h),
-                    if (!widget.isEdit)
+                      SizedBox(height: 16.h),
                       Divider(
                         color: UiConstants.kTextColor5.withOpacity(.3),
                       ),
-                    if (!widget.isEdit)
                       Text(
-                        'Select Duration',
+                        'Select Time',
                         style: TextStyles.sourceSansSB.body2,
                       ),
-                    if (!widget.isEdit) SizedBox(height: 16.h),
-                    if (!widget.isEdit)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: filteredDurations.map((e) {
-                          return Padding(
-                            padding: EdgeInsets.only(right: 12.w),
-                            child: DateButton(
-                              date: e['name'].toString(),
-                              requireFormat: false,
-                              padding: EdgeInsets.symmetric(
-                                vertical: 8.h,
-                                horizontal: 24.w,
-                              ),
-                              isSelected: e['value'] == selectedDuration,
+                      SizedBox(height: 16.h),
+                      SizedBox(
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: slotsWithBookedSlots.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 12.h,
+                            mainAxisSpacing: 16.w,
+                            childAspectRatio: 3,
+                          ),
+                          itemBuilder: (context, index) {
+                            final time = slotsWithBookedSlots[index];
+                            final isBookedSlot = time!.startsWith('BOOKED_');
+                            final displayTime = isBookedSlot
+                                ? time.replaceFirst('BOOKED_', '')
+                                : time;
+                            return TimeButton(
+                              time: time,
+                              isSelected: displayTime == selectedTime,
                               onTap: () {
                                 context
                                     .read<BookingBloc>()
-                                    .add(SelectDuration(e['value'] as int));
+                                    .add(SelectTime(displayTime));
                               },
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    SizedBox(height: 16.h),
-                    Divider(
-                      color: UiConstants.kTextColor5.withOpacity(.3),
-                    ),
-                    Text(
-                      'Select Time',
-                      style: TextStyles.sourceSansSB.body2,
-                    ),
-                    SizedBox(height: 16.h),
-                    SizedBox(
-                      height: 70.h,
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        itemCount: slotsWithBookedSlots.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 12.h,
-                          mainAxisSpacing: 16.w,
-                          childAspectRatio: 3,
+                            );
+                          },
                         ),
-                        itemBuilder: (context, index) {
-                          final time = slotsWithBookedSlots[index];
-                          final isBookedSlot = time!.startsWith('BOOKED_');
-                          final displayTime = isBookedSlot
-                              ? time.replaceFirst('BOOKED_', '')
-                              : time;
-                          return TimeButton(
-                            time: time,
-                            isSelected: displayTime == selectedTime,
-                            onTap: () {
-                              context
-                                  .read<BookingBloc>()
-                                  .add(SelectTime(displayTime));
-                            },
-                          );
-                        },
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Divider(
@@ -990,13 +1015,13 @@ class TimeButton extends StatelessWidget {
       onPressed: isBookedSlot ? null : onTap,
       style: ElevatedButton.styleFrom(
         backgroundColor: isBookedSlot
-            ? const Color(0xffA6A6AC).withOpacity(0.07)
+            ? const Color(0xff2C2C2F)
             : UiConstants.kBackgroundColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.r),
           side: BorderSide(
             color: isBookedSlot
-                ? UiConstants.kTextColor6.withOpacity(0.07)
+                ? const Color(0xff37373A)
                 : (isSelected
                     ? UiConstants.kTextColor
                     : UiConstants.greyVarient),

@@ -97,7 +97,7 @@ class _SipFormAmountState extends State<SipFormAmount> {
           ),
           backgroundColor: UiConstants.bg,
           surfaceTintColor: UiConstants.bg,
-          title: Text(locale.siptitle),
+          title: const Text('SIP with Digital Gold'),
           titleTextStyle: TextStyles.rajdhaniSB.title4.setHeight(1.3),
           centerTitle: true,
           elevation: 0,
@@ -117,173 +117,180 @@ class _SipFormAmountState extends State<SipFormAmount> {
                       padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.padding24,
                       ),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: SizeConfig.padding34,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.padding28),
-                            child: TabSlider<String>(
-                              tabs: tabOptions,
-                              labelBuilder: (label) => label,
-                              onTap: (_, i) {
-                                return formmodel.onTabChange(i);
-                              },
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: SizeConfig.padding34,
                             ),
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding28,
-                          ),
-                          Text(
-                            locale.selectSipAmount,
-                            style: TextStyles.rajdhaniSB.body1
-                                .copyWith(height: 1.2),
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding16,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              AmountInputWidget(
-                                mandateAvailable: widget.mandateAvailable,
-                                lowerLimit: state.lowerLimit.toDouble(),
-                                upperLimit: state.upperLimit.toDouble(),
-                                currentTab: state.currentTab,
-                                amount: state.formAmount,
-                                ticketMultiplier: ticketMultiplier,
-                                onChange: formmodel.setAmount,
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.padding28,
                               ),
-                              if (state.formAmount <
-                                  state.lowerLimit.toDouble())
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    left: SizeConfig.padding16,
-                                    right: SizeConfig.padding16,
-                                  ),
-                                  child: Text(
-                                    locale.minSipAmount(
-                                        state.lowerLimit.toDouble()),
-                                    style: TextStyles.sourceSans.body4
-                                        .colour(UiConstants.errorText),
-                                  ),
-                                ),
-                              if (state.formAmount >
-                                  state.upperLimit.toDouble())
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    left: SizeConfig.padding16,
-                                    right: SizeConfig.padding16,
-                                  ),
-                                  child: Text(
-                                    locale.maxSipAmount(
-                                        state.upperLimit.toDouble()),
-                                    style: TextStyles.sourceSans.body4
-                                        .colour(UiConstants.errorText),
-                                  ),
-                                ),
-                              SizedBox(
-                                height: SizeConfig.padding32,
+                              child: TabSlider<String>(
+                                tabs: tabOptions,
+                                labelBuilder: (label) => label,
+                                onTap: (_, i) {
+                                  return formmodel.onTabChange(i);
+                                },
                               ),
-                              AmountSlider(
-                                lowerLimit: state.lowerLimit.toDouble(),
-                                upperLimit: state.upperLimit.toDouble(),
-                                amount: state.formAmount.toDouble(),
-                                onChanged: formmodel.setAmount,
-                                options: SipDataHolder
-                                        .instance
-                                        .data
-                                        .amountSelectionScreen
-                                        .data[tabOptions[state.currentTab]]
-                                        ?.options ??
-                                    [],
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          Container(
-                            padding: EdgeInsets.all(SizeConfig.padding16),
-                            decoration: BoxDecoration(
-                              color: UiConstants.grey5,
-                              borderRadius:
-                                  BorderRadius.circular(SizeConfig.roundness12),
                             ),
-                            child: Column(
+                            SizedBox(
+                              height: SizeConfig.padding28,
+                            ),
+                            Text(
+                              locale.selectSipAmount,
+                              style: TextStyles.rajdhaniSB.body1
+                                  .copyWith(height: 1.2),
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding16,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      locale.expectedReturns5y,
-                                      style: TextStyles.sourceSans.body2,
-                                    ),
-                                    Text.rich(
-                                      TextSpan(children: [
-                                        TextSpan(
-                                          text:
-                                              '₹${BaseUtil.formatCompactRupees(SipCalculation.getPrincipal(
-                                            formAmount: state.formAmount,
-                                            currentTab: state.currentTab,
-                                          ).toDouble())}+',
-                                        ),
-                                        TextSpan(
-                                          text: SipCalculation.getReturn(
-                                                  formAmount: state.formAmount,
-                                                  currentAsset:
-                                                      widget.sipAssetType,
-                                                  currentTab: state.currentTab,
-                                                  interestOnly: true) +
-                                              (widget.sipAssetType.isAugGold
-                                                  ? '*'
-                                                  : ''),
-                                          style: TextStyles.sourceSansSB.body1
-                                              .colour(
-                                                  UiConstants.kTabBorderColor),
-                                        ),
-                                      ]),
-                                      style: TextStyles.sourceSans.body3
-                                          .colour(UiConstants.kTextColor),
-                                    ),
-                                  ],
+                                AmountInputWidget(
+                                  mandateAvailable: widget.mandateAvailable,
+                                  lowerLimit: state.lowerLimit.toDouble(),
+                                  upperLimit: state.upperLimit.toDouble(),
+                                  currentTab: state.currentTab,
+                                  amount: state.formAmount,
+                                  ticketMultiplier: ticketMultiplier,
+                                  onChange: formmodel.setAmount,
                                 ),
+                                if (state.formAmount <
+                                    state.lowerLimit.toDouble())
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      left: SizeConfig.padding16,
+                                      right: SizeConfig.padding16,
+                                    ),
+                                    child: Text(
+                                      locale.minSipAmount(
+                                          state.lowerLimit.toDouble()),
+                                      style: TextStyles.sourceSans.body4
+                                          .colour(UiConstants.errorText),
+                                    ),
+                                  ),
+                                if (state.formAmount >
+                                    state.upperLimit.toDouble())
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      left: SizeConfig.padding16,
+                                      right: SizeConfig.padding16,
+                                    ),
+                                    child: Text(
+                                      locale.maxSipAmount(
+                                          state.upperLimit.toDouble()),
+                                      style: TextStyles.sourceSans.body4
+                                          .colour(UiConstants.errorText),
+                                    ),
+                                  ),
                                 SizedBox(
-                                  height: SizeConfig.padding3,
+                                  height: SizeConfig.padding32,
                                 ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      locale.returnSubText(
-                                          widget.sipAssetType.isLendBox
-                                              ? "P2P"
-                                              : "Gold"),
-                                      style: TextStyles.sourceSans.body4
-                                          .copyWith(color: UiConstants.grey1),
-                                    ),
-                                    Text(
-                                      percentage == null
-                                          ? 'N/A'
-                                          : locale.percentageReturns(
-                                                  percentage) +
-                                              (widget.sipAssetType.isAugGold
-                                                  ? '*'
-                                                  : ''),
-                                      style: TextStyles.sourceSans.body4
-                                          .copyWith(color: UiConstants.grey1),
-                                    ),
-                                  ],
+                                AmountSlider(
+                                  lowerLimit: state.lowerLimit.toDouble(),
+                                  upperLimit: state.upperLimit.toDouble(),
+                                  amount: state.formAmount.toDouble(),
+                                  onChanged: formmodel.setAmount,
+                                  options: SipDataHolder
+                                          .instance
+                                          .data
+                                          .amountSelectionScreen
+                                          .data[tabOptions[state.currentTab]]
+                                          ?.options ??
+                                      [],
                                 ),
                               ],
                             ),
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding16,
-                          ),
-                        ],
+                            SizedBox(
+                              height: SizeConfig.padding152,
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(SizeConfig.padding16),
+                              decoration: BoxDecoration(
+                                color: UiConstants.grey5,
+                                borderRadius: BorderRadius.circular(
+                                    SizeConfig.roundness12),
+                              ),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        locale.expectedReturns5y,
+                                        style: TextStyles.sourceSans.body2,
+                                      ),
+                                      Text.rich(
+                                        TextSpan(children: [
+                                          TextSpan(
+                                            text:
+                                                '₹${BaseUtil.formatCompactRupees(SipCalculation.getPrincipal(
+                                              formAmount: state.formAmount,
+                                              currentTab: state.currentTab,
+                                            ).toDouble())}+',
+                                          ),
+                                          TextSpan(
+                                            text: SipCalculation.getReturn(
+                                                    formAmount:
+                                                        state.formAmount,
+                                                    currentAsset:
+                                                        widget.sipAssetType,
+                                                    currentTab:
+                                                        state.currentTab,
+                                                    interestOnly: true) +
+                                                (widget.sipAssetType.isAugGold
+                                                    ? '*'
+                                                    : ''),
+                                            style: TextStyles.sourceSansSB.body1
+                                                .colour(UiConstants
+                                                    .kTabBorderColor),
+                                          ),
+                                        ]),
+                                        style: TextStyles.sourceSans.body3
+                                            .colour(UiConstants.kTextColor),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: SizeConfig.padding3,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        locale.returnSubText(
+                                            widget.sipAssetType.isLendBox
+                                                ? "P2P"
+                                                : "Gold"),
+                                        style: TextStyles.sourceSans.body4
+                                            .copyWith(color: UiConstants.grey1),
+                                      ),
+                                      Text(
+                                        percentage == null
+                                            ? 'N/A'
+                                            : locale.percentageReturns(
+                                                    percentage) +
+                                                (widget.sipAssetType.isAugGold
+                                                    ? '*'
+                                                    : ''),
+                                        style: TextStyles.sourceSans.body4
+                                            .copyWith(color: UiConstants.grey1),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding16,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     bottomNavigationBar: _Footer(
@@ -665,7 +672,6 @@ class AmountSlider extends StatelessWidget {
           Slider(
             max: upperLimit,
             min: lowerLimit,
-            divisions: options.length - 1,
             value: amount < lowerLimit
                 ? lowerLimit
                 : amount > upperLimit
@@ -773,7 +779,7 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    int tambolaTickets = widget.amount ~/ widget.ticketMultiplier;
+    // int tambolaTickets = widget.amount ~/ widget.ticketMultiplier;
     return Container(
       decoration: BoxDecoration(
         color: UiConstants.grey5,
@@ -845,35 +851,35 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
                     ),
                   ],
                 ),
-                if (!widget.mandateAvailable)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '+$tambolaTickets Tambola Ticket',
-                        style: TextStyles.sourceSans.body3.copyWith(
-                          color: UiConstants.teal3,
-                          height: 1.5,
-                        ),
-                      ),
-                      SizedBox(
-                        width: SizeConfig.padding4,
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: SizeConfig.padding4,
-                          ),
-                          Icon(
-                            Icons.info_outline,
-                            size: SizeConfig.iconSize2,
-                            color: UiConstants.teal3,
-                          ),
-                        ],
-                      ),
-                    ],
-                  )
+                // if (!widget.mandateAvailable)
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     Text(
+                //       '+$tambolaTickets Tambola Ticket',
+                //       style: TextStyles.sourceSans.body3.copyWith(
+                //         color: UiConstants.teal3,
+                //         height: 1.5,
+                //       ),
+                //     ),
+                //     SizedBox(
+                //       width: SizeConfig.padding4,
+                //     ),
+                //     Column(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: [
+                //         SizedBox(
+                //           height: SizeConfig.padding4,
+                //         ),
+                //         Icon(
+                //           Icons.info_outline,
+                //           size: SizeConfig.iconSize2,
+                //           color: UiConstants.teal3,
+                //         ),
+                //       ],
+                //     ),
+                //   ],
+                // )
               ],
             ),
           ),
