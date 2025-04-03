@@ -54,6 +54,7 @@ class PreloadEvent with _$PreloadEvent {
 
   const factory PreloadEvent.updateViewCount({
     required String videoId,
+    required String category,
   }) = _UpdateViewCount;
   const factory PreloadEvent.updateSeen({
     required String videoId,

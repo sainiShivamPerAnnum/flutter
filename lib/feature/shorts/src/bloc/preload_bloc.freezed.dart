@@ -3362,7 +3362,7 @@ abstract class _$$UpdateViewCountImplCopyWith<$Res> {
           $Res Function(_$UpdateViewCountImpl) then) =
       __$$UpdateViewCountImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String videoId});
+  $Res call({String videoId, String category});
 }
 
 /// @nodoc
@@ -3377,11 +3377,16 @@ class __$$UpdateViewCountImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? videoId = null,
+    Object? category = null,
   }) {
     return _then(_$UpdateViewCountImpl(
       videoId: null == videoId
           ? _value.videoId
           : videoId // ignore: cast_nullable_to_non_nullable
+              as String,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -3390,14 +3395,16 @@ class __$$UpdateViewCountImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$UpdateViewCountImpl implements _UpdateViewCount {
-  const _$UpdateViewCountImpl({required this.videoId});
+  const _$UpdateViewCountImpl({required this.videoId, required this.category});
 
   @override
   final String videoId;
+  @override
+  final String category;
 
   @override
   String toString() {
-    return 'PreloadEvent.updateViewCount(videoId: $videoId)';
+    return 'PreloadEvent.updateViewCount(videoId: $videoId, category: $category)';
   }
 
   @override
@@ -3405,11 +3412,13 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$UpdateViewCountImpl &&
-            (identical(other.videoId, videoId) || other.videoId == videoId));
+            (identical(other.videoId, videoId) || other.videoId == videoId) &&
+            (identical(other.category, category) ||
+                other.category == category));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, videoId);
+  int get hashCode => Object.hash(runtimeType, videoId, category);
 
   @JsonKey(ignore: true)
   @override
@@ -3556,10 +3565,12 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
 }
 
 abstract class _UpdateViewCount implements PreloadEvent {
-  const factory _UpdateViewCount({required final String videoId}) =
-      _$UpdateViewCountImpl;
+  const factory _UpdateViewCount(
+      {required final String videoId,
+      required final String category}) = _$UpdateViewCountImpl;
 
   String get videoId;
+  String get category;
   @JsonKey(ignore: true)
   _$$UpdateViewCountImplCopyWith<_$UpdateViewCountImpl> get copyWith =>
       throw _privateConstructorUsedError;

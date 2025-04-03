@@ -246,7 +246,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             repository.updateInteraction(
               videoId: e.videoId,
               theme: state.theme,
-              category: state.categories[state.currentCategoryIndex],
+              category: e.category,
               interaction: InteractionType.viewed,
             ),
           );
@@ -1030,13 +1030,21 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           comment: comments.model ?? [],
         ),
       );
-      _addProgressListener(controller, state.currentVideos[index].id);
+      _addProgressListener(
+        controller,
+        state.currentVideos[index].id,
+        state.currentVideos[index].categoryV1,
+      );
       _addSeenListener(controller, state.currentVideos[index].id);
       log('🚀🚀🚀 INITIALIZED $index for context ${state.currentContext}');
     }
   }
 
-  void _addProgressListener(VideoPlayerController controller, String videoId) {
+  void _addProgressListener(
+    VideoPlayerController controller,
+    String videoId,
+    String category,
+  ) {
     late VoidCallback listener;
 
     listener = () {
@@ -1048,7 +1056,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         controller.removeListener(listener);
 
         // Dispatch the event that 3sec has been watched
-        add(PreloadEvent.updateViewCount(videoId: videoId));
+        add(PreloadEvent.updateViewCount(videoId: videoId, category: category));
       }
     };
 
