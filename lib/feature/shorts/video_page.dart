@@ -207,10 +207,12 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                 backgroundColor: UiConstants.kBackgroundColor,
                                 hapticVibrate: true,
                                 content: AllShortsViewed(
-                                  category: (state.categories.isNotEmpty)
-                                      ? state.categories[
-                                          state.currentCategoryIndex]
-                                      : '',
+                                  category: state.categories.isEmpty
+                                      ? ''
+                                      : state.currentCategoryIndex == 0
+                                          ? state.themeName
+                                          : state.categories[
+                                              state.currentCategoryIndex],
                                 ),
                               );
                               pageController.jumpToPage(
@@ -270,8 +272,7 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                         PreloadEvent.saveVideo(
                                           videoId: videos[index].id,
                                           theme: state.theme,
-                                          category: state.categories[
-                                              state.currentCategoryIndex],
+                                          category: videos[index].categoryV1,
                                           isSaved:
                                               LocalActionsState.getVideoSaved(
                                             videos[index].id,
