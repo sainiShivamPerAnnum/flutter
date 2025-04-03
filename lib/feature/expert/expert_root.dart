@@ -330,206 +330,217 @@ class __ExpertHomeState extends State<_ExpertHome>
                                           ),
                                           child: Transform.translate(
                                             offset: Offset(0, -20.h),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                IgnorePointer(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                      right: 20.w,
-                                                    ),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Container(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                            bottom: 12.h,
-                                                          ),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border(
-                                                              bottom:
-                                                                  BorderSide(
-                                                                color: UiConstants
-                                                                    .kTextColor,
-                                                                width: 2.h,
+                                            child: GestureDetector(
+                                              behavior: HitTestBehavior.opaque,
+                                              onTap: () {},
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  GestureDetector(
+                                                    behavior:
+                                                        HitTestBehavior.opaque,
+                                                    onTap: () {},
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                        right: 20.w,
+                                                      ),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Container(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                              bottom: 12.h,
+                                                            ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              border: Border(
+                                                                bottom:
+                                                                    BorderSide(
+                                                                  color: UiConstants
+                                                                      .kTextColor,
+                                                                  width: 2.h,
+                                                                ),
                                                               ),
                                                             ),
+                                                            child: Text(
+                                                              'All Experts',
+                                                              style: TextStyles
+                                                                  .sourceSansSB
+                                                                  .body1,
+                                                            ),
                                                           ),
-                                                          child: Text(
-                                                            'All Experts',
-                                                            style: TextStyles
-                                                                .sourceSansSB
-                                                                .body1,
+                                                          Container(
+                                                            padding:
+                                                                EdgeInsets.zero,
+                                                            child: Divider(
+                                                              color: UiConstants
+                                                                  .kTextColor5
+                                                                  .withOpacity(
+                                                                .3,
+                                                              ),
+                                                              thickness: 1,
+                                                              height: 1,
+                                                            ),
                                                           ),
-                                                        ),
-                                                        Container(
-                                                          padding:
-                                                              EdgeInsets.zero,
-                                                          child: Divider(
-                                                            color: UiConstants
-                                                                .kTextColor5
-                                                                .withOpacity(
-                                                                    .3),
-                                                            thickness: 1,
-                                                            height: 1,
-                                                          ),
-                                                        ),
-                                                      ],
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                  height: 24.h,
-                                                ),
-                                                SingleChildScrollView(
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  controller:
-                                                      _chipsScrollController,
-                                                  child: SizedBox(
-                                                    width: 2 *
-                                                            (120.w *
-                                                                ((expertsData
-                                                                            .list
-                                                                            .length /
-                                                                        2) /
-                                                                    2)) +
-                                                        (8.w *
-                                                            (expertsData.list
-                                                                    .length -
-                                                                1)),
-                                                    child: Wrap(
-                                                      spacing: 8.w,
-                                                      runSpacing: 8.w,
-                                                      children: expertsData.list
-                                                          .where(
-                                                        (section) => !section
-                                                            .toLowerCase()
-                                                            .contains('top'),
-                                                      )
-                                                          .map(
-                                                        (value) {
-                                                          return GestureDetector(
-                                                            behavior:
-                                                                HitTestBehavior
-                                                                    .opaque,
-                                                            onTap: () {
-                                                              BlocProvider.of<
-                                                                  ExpertBloc>(
-                                                                context,
-                                                                listen: false,
-                                                              ).add(
-                                                                SectionChanged(
-                                                                    value),
-                                                              );
+                                                  SizedBox(
+                                                    height: 24.h,
+                                                  ),
+                                                  SingleChildScrollView(
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    controller:
+                                                        _chipsScrollController,
+                                                    child: SizedBox(
+                                                      width: 2 *
+                                                              (120.w *
+                                                                  ((expertsData
+                                                                              .list
+                                                                              .length /
+                                                                          2) /
+                                                                      2)) +
+                                                          (8.w *
+                                                              (expertsData.list
+                                                                      .length -
+                                                                  1)),
+                                                      child: Wrap(
+                                                        spacing: 8.w,
+                                                        runSpacing: 8.w,
+                                                        children:
+                                                            expertsData.list
+                                                                .where(
+                                                          (section) => !section
+                                                              .toLowerCase()
+                                                              .contains('top'),
+                                                        )
+                                                                .map(
+                                                          (value) {
+                                                            return GestureDetector(
+                                                              behavior:
+                                                                  HitTestBehavior
+                                                                      .opaque,
+                                                              onTap: () {
+                                                                BlocProvider.of<
+                                                                    ExpertBloc>(
+                                                                  context,
+                                                                  listen: false,
+                                                                ).add(
+                                                                  SectionChanged(
+                                                                      value),
+                                                                );
 
-                                                              int sectionIndex =
-                                                                  otherSections
-                                                                      .indexOf(
-                                                                          value);
-                                                              if (sectionIndex !=
-                                                                  -1) {
-                                                                VerticalScrollableTabBarStatus
-                                                                    .setIndex(
-                                                                        sectionIndex);
-                                                              }
-                                                            },
-                                                            child:
-                                                                LayoutBuilder(
-                                                              builder: (context,
-                                                                  constraints) {
-                                                                WidgetsBinding
-                                                                    .instance
-                                                                    .addPostFrameCallback(
-                                                                        (_) {
-                                                                  final RenderBox
-                                                                      box =
-                                                                      context.findRenderObject()
-                                                                          as RenderBox;
-                                                                  final position =
-                                                                      box
-                                                                          .localToGlobal(
-                                                                            Offset.zero,
-                                                                          )
-                                                                          .dx;
-                                                                  _chipPositions[
-                                                                          value] =
-                                                                      position -
-                                                                          20;
-                                                                });
-                                                                return Container(
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: state.currentSection ==
-                                                                            value
-                                                                        ? const Color(0xff62E3C4)
-                                                                            .withOpacity(
-                                                                                .1)
-                                                                        : const Color(0xffD9D9D9)
-                                                                            .withOpacity(.1),
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .all(
-                                                                      Radius
-                                                                          .circular(
-                                                                        6.r,
-                                                                      ),
-                                                                    ),
-                                                                    border:
-                                                                        Border
-                                                                            .all(
+                                                                int sectionIndex =
+                                                                    otherSections
+                                                                        .indexOf(
+                                                                  value,
+                                                                );
+                                                                if (sectionIndex !=
+                                                                    -1) {
+                                                                  VerticalScrollableTabBarStatus
+                                                                      .setIndex(
+                                                                    sectionIndex,
+                                                                  );
+                                                                }
+                                                              },
+                                                              child:
+                                                                  LayoutBuilder(
+                                                                builder: (
+                                                                  context,
+                                                                  constraints,
+                                                                ) {
+                                                                  WidgetsBinding
+                                                                      .instance
+                                                                      .addPostFrameCallback(
+                                                                          (_) {
+                                                                    final RenderBox
+                                                                        box =
+                                                                        context.findRenderObject()
+                                                                            as RenderBox;
+                                                                    final position =
+                                                                        box
+                                                                            .localToGlobal(
+                                                                              Offset.zero,
+                                                                            )
+                                                                            .dx;
+                                                                    _chipPositions[
+                                                                            value] =
+                                                                        position -
+                                                                            20;
+                                                                  });
+                                                                  return Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
                                                                       color: state.currentSection ==
                                                                               value
-                                                                          ? const Color(
-                                                                              0xff62E3C4,
-                                                                            ).withOpacity(
-                                                                              .5,
-                                                                            )
-                                                                          : const Color(
-                                                                              0xffCACBCC,
-                                                                            ).withOpacity(
-                                                                              .07,
-                                                                            ),
+                                                                          ? const Color(0xff62E3C4).withOpacity(
+                                                                              .1)
+                                                                          : const Color(0xffD9D9D9)
+                                                                              .withOpacity(.1),
+                                                                      borderRadius:
+                                                                          BorderRadius
+                                                                              .all(
+                                                                        Radius
+                                                                            .circular(
+                                                                          6.r,
+                                                                        ),
+                                                                      ),
+                                                                      border:
+                                                                          Border
+                                                                              .all(
+                                                                        color: state.currentSection ==
+                                                                                value
+                                                                            ? const Color(
+                                                                                0xff62E3C4,
+                                                                              ).withOpacity(
+                                                                                .5,
+                                                                              )
+                                                                            : const Color(
+                                                                                0xffCACBCC,
+                                                                              ).withOpacity(
+                                                                                .07,
+                                                                              ),
+                                                                      ),
                                                                     ),
-                                                                  ),
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .symmetric(
-                                                                    horizontal:
-                                                                        16.w,
-                                                                    vertical:
-                                                                        8.h,
-                                                                  ),
-                                                                  child: Text(
-                                                                    value,
-                                                                    style: TextStyles
-                                                                        .sourceSansM
-                                                                        .body4
-                                                                        .colour(
-                                                                      state.currentSection ==
-                                                                              value
-                                                                          ? const Color(
-                                                                              0xff62E3C4,
-                                                                            )
-                                                                          : UiConstants
-                                                                              .kTextColor,
+                                                                    padding:
+                                                                        EdgeInsets
+                                                                            .symmetric(
+                                                                      horizontal:
+                                                                          16.w,
+                                                                      vertical:
+                                                                          8.h,
                                                                     ),
-                                                                  ),
-                                                                );
-                                                              },
-                                                            ),
-                                                          );
-                                                        },
-                                                      ).toList(),
+                                                                    child: Text(
+                                                                      value,
+                                                                      style: TextStyles
+                                                                          .sourceSansM
+                                                                          .body4
+                                                                          .colour(
+                                                                        state.currentSection ==
+                                                                                value
+                                                                            ? const Color(
+                                                                                0xff62E3C4,
+                                                                              )
+                                                                            : UiConstants.kTextColor,
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ),
+                                                            );
+                                                          },
+                                                        ).toList(),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
