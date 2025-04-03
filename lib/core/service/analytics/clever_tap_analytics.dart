@@ -29,6 +29,10 @@ class CleverTapAnalytics extends BaseAnalyticsService {
 
   @override
   void signOut() {}
+  @override
+  void updateUserProperty({required String key, value}) {
+    var profile = {key: value};
+  }
 
   @override
   void track({String? eventName, Map<String, dynamic>? properties}) {

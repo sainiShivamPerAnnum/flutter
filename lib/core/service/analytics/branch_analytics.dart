@@ -35,6 +35,11 @@ class BranchAnalytics extends BaseAnalyticsService {
   }
 
   @override
+  void updateUserProperty({required String key, value}) {
+    var branchIdentityData = {key: value};
+  }
+
+  @override
   void track({String? eventName, Map<String, dynamic>? properties}) {
     if (eventName == null) return;
 

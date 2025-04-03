@@ -47,6 +47,10 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
   }
 
   @override
+  void updateUserProperty({required String key, value}) {
+    // TODO: implement updateUserProperty
+  }
+  @override
   void trackScreen({String? screen, Map<String, dynamic>? properties}) {}
 
   Future<String?> init() async {

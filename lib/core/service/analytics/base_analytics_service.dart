@@ -12,6 +12,8 @@ abstract class BaseAnalyticsService {
 
   void trackScreen({String? screen, Map<String, dynamic>? properties});
 
+  void updateUserProperty({required String key, dynamic value});
+
   String getSignupDate(Timestamp signupDate) {
     if (signupDate == null) signupDate = Timestamp.now();
     try {

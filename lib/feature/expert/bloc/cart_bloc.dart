@@ -4,6 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/core/repository/experts_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/util/locator.dart';
 
 part 'cart_event.dart';
 part 'cart_state.dart';
@@ -84,6 +86,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         selectedDuration: event.selectedDuration,
       ),
     );
+    locator<AnalyticsService>().updateUserProperty(
+      key: "Advisor in cart",
+      value: event.advisor.name,
+    );
   }
 
   FutureOr<void> _clearCart(
@@ -95,6 +101,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     );
     emitter(
       const InitialCartState(),
+    );
+    locator<AnalyticsService>().updateUserProperty(
+      key: "Advisor in cart",
+      value: '',
     );
   }
 }

@@ -46,6 +46,11 @@ class MixpanelAnalytics extends BaseAnalyticsService {
   }
 
   @override
+  void updateUserProperty({required String key, value}) {
+    _mixpanel!.getPeople().set(key, value);
+  }
+
+  @override
   void signOut() {
     _mixpanel!.reset();
   }

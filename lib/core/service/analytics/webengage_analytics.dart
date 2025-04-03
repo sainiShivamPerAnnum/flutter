@@ -49,6 +49,16 @@ class WebEngageAnalytics extends BaseAnalyticsService {
     }
   }
 
+  @override
+  void updateUserProperty({required String key, value}) {
+    unawaited(
+      WebEngagePlugin.setUserAttribute(
+        key,
+        value,
+      ),
+    );
+  }
+
   String _getGender(String? s) {
     if (s == 'M') return 'male';
     if (s == 'F') return 'female';
