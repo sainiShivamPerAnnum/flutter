@@ -7,6 +7,7 @@ library scroll_to_index;
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
@@ -429,7 +430,10 @@ mixin AutoScrollControllerMixin on ScrollController
   /// bring the state node (already created but all of it may not be fully in the viewport) into viewport
   Future _bringIntoViewportIfNeed(int index, AutoScrollPosition? preferPosition,
       Future move(double offset)) async {
-    double topOffset = 173.h;
+    double topOffset = MediaQuery.of(
+          AppState.delegate!.navigatorKey.currentContext!,
+        ).padding.top +
+        173.h;
     if (preferPosition != null) {
       double targetOffset = _directionalOffsetToRevealInViewport(
               index, _positionToAlignment(preferPosition)) -

@@ -322,6 +322,10 @@ class __ExpertHomeState extends State<_ExpertHome>
                                       sliver: SliverAppBar(
                                         pinned: true,
                                         toolbarHeight: 0,
+                                        flexibleSpace: GestureDetector(
+                                          behavior: HitTestBehavior.opaque,
+                                          onTap: () {},
+                                        ),
                                         backgroundColor: UiConstants.bg,
                                         surfaceTintColor: UiConstants.bg,
                                         bottom: PreferredSize(
