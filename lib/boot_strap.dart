@@ -28,6 +28,16 @@ Future<void> bootStrap(BootstrapCallBack bootStrapCallBack) async {
         await SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp],
         );
+        SystemChrome.setSystemUIOverlayStyle(
+          const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            systemNavigationBarColor: Colors.transparent,
+            systemNavigationBarDividerColor: Colors.transparent,
+          ),
+        );
+        await SystemChrome.setEnabledSystemUIMode(
+          SystemUiMode.edgeToEdge,
+        );
       } catch (e) {
         log('Failed to bootstrap app, error: $e');
       }

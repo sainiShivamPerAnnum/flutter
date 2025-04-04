@@ -3,7 +3,6 @@ description: Game-based Investments
 
 publish_to: "none"
 
-
 version: 6.3.2+295
 
 environment:
