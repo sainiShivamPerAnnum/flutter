@@ -9,6 +9,7 @@ enum ReelContext {
 @Freezed(makeCollectionsUnmodifiable: false)
 class PreloadState with _$PreloadState {
   factory PreloadState({
+    required VideoData? initialVideo,
     required List<VideoData> mainVideos,
     required List<VideoData> profileVideos,
     required List<VideoData> liveVideo,
@@ -26,12 +27,18 @@ class PreloadState with _$PreloadState {
     required ReelContext currentContext,
     required bool keyboardVisible,
     required bool showComments,
+    required bool muted,
+    required int currentCategoryIndex,
+    required List<String> categories,
+    required String theme,
     String? errorMessage,
     VideoPlayerController? liveStreamController,
     PageController? livePageController,
   }) = _PreloadState;
+  const PreloadState._();
 
   factory PreloadState.initial() => PreloadState(
+        initialVideo: null,
         mainVideos: [],
         profileVideos: [],
         liveVideo: [],
@@ -46,11 +53,47 @@ class PreloadState with _$PreloadState {
         videoComments: {},
         currentContext: ReelContext.main,
         keyboardVisible: false,
-        showComments: true,
+        showComments: false,
         liveStreamController: null,
         errorMessage: null,
-        mainPageController: PageController(initialPage: 0,keepPage: true,),
-        profilePageController: PageController(initialPage: 0,keepPage: true,),
+        theme: '',
+        mainPageController: PageController(
+          initialPage: 0,
+          keepPage: true,
+        ),
+        profilePageController: PageController(
+          initialPage: 0,
+          keepPage: true,
+        ),
         livePageController: null,
+        currentCategoryIndex: 0,
+        categories: [],
+        muted: false,
       );
+
+  List<VideoData> get currentVideos {
+    switch (currentContext) {
+      case ReelContext.main:
+        return mainVideos;
+      case ReelContext.profile:
+        return profileVideos;
+      case ReelContext.liveStream:
+        return liveVideo;
+      default:
+        return [];
+    }
+  }
+
+  VideoPlayerController? get currentController {
+    switch (currentContext) {
+      case ReelContext.main:
+        return controllers[focusedIndex];
+      case ReelContext.profile:
+        return profileControllers[profileVideoIndex];
+      case ReelContext.liveStream:
+        return liveStreamController;
+      default:
+        return null;
+    }
+  }
 }

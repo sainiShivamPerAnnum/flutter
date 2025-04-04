@@ -15,13 +15,16 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LiveHomeView extends StatelessWidget {
   const LiveHomeView({
@@ -81,6 +84,7 @@ class __LiveHomeState extends State<_LiveHome> {
               );
             }
             return SingleChildScrollView(
+              controller: RootController.controller,
               physics: const AlwaysScrollableScrollPhysics(),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
@@ -120,13 +124,14 @@ class __LiveHomeState extends State<_LiveHome> {
                               upcomingList: null,
                               recentList: null,
                               notificationState: null,
+                              fromHome: false,
                             ),
                           );
                         },
                         showViewAll: liveData.live.length > 1,
                       ),
                     ),
-                    buildLiveSection(liveData.live),
+                    buildLiveSection(liveData.live, false),
                     if (liveData.upcoming.isNotEmpty)
                       Padding(
                         padding: EdgeInsets.symmetric(
@@ -159,6 +164,7 @@ class __LiveHomeState extends State<_LiveHome> {
                                   liveList: null,
                                   upcomingList: liveData.upcoming,
                                   recentList: null,
+                                  fromHome: false,
                                 ),
                               ),
                             );
@@ -193,6 +199,7 @@ class __LiveHomeState extends State<_LiveHome> {
                                 upcomingList: null,
                                 notificationState: null,
                                 recentList: liveData.recent,
+                                fromHome: false,
                               ),
                             );
                           },
@@ -242,6 +249,7 @@ class __LiveHomeState extends State<_LiveHome> {
               ),
               child: LiveCardWidget(
                 id: upcomingData[i].id,
+                fromHome: false,
                 status: 'upcoming',
                 title: upcomingData[i].title,
                 subTitle: upcomingData[i].subtitle,
@@ -272,7 +280,7 @@ class __LiveHomeState extends State<_LiveHome> {
   }
 }
 
-Widget buildLiveSection(List<LiveStream> liveData) {
+Widget buildLiveSection(List<LiveStream> liveData, bool fromHome) {
   return (liveData.isEmpty)
       ? Container(
           padding: EdgeInsets.symmetric(
@@ -367,6 +375,7 @@ Widget buildLiveSection(List<LiveStream> liveData) {
                     viewerCode: live.viewerCode,
                     isLiked: live.isEventLikedByUser,
                     startTime: live.startTime,
+                    fromHome: fromHome,
                   ),
                 ),
             ],
@@ -395,6 +404,7 @@ Widget buildRecentSection(
             ),
             child: LiveCardWidget(
               id: recentData[i].id,
+              fromHome: false,
               onTap: () async {
                 final preloadBloc = BlocProvider.of<PreloadBloc>(context);
                 final switchCompleter = Completer<void>();
@@ -406,28 +416,62 @@ Widget buildRecentSection(
                 );
                 await switchCompleter.future;
                 AppState.delegate!.appState.currentAction = PageAction(
-                  page: ShortsPageConfig,
+                  page: LiveShortsPageConfig,
                   state: PageState.addWidget,
                   widget: BaseScaffold(
                     appBar: FAppBar(
                       backgroundColor: Colors.transparent,
                       centerTitle: true,
-                      titleWidget: Text(
-                        recentData[i].title,
-                        style: TextStyles.rajdhaniSB.body1,
+                      leadingPadding: false,
+                      titleWidget: Expanded(
+                        child: MarqueeText(
+                          infoList: [
+                            recentData[i].title,
+                          ],
+                          showBullet: false,
+                          style: TextStyles.rajdhaniSB.body1,
+                        ),
                       ),
-                      leading: const BackButton(
+                      leading: BackButton(
                         color: Colors.white,
+                        onPressed: () {
+                          AppState.backButtonDispatcher!.didPopRoute();
+                        },
                       ),
                       showAvatar: false,
                       showCoinBar: false,
+                      action: BlocBuilder<PreloadBloc, PreloadState>(
+                        builder: (context, preloadState) {
+                          return Padding(
+                            padding: EdgeInsets.only(right: 10.w),
+                            child: GestureDetector(
+                              onTap: () {
+                                BlocProvider.of<PreloadBloc>(
+                                  context,
+                                  listen: false,
+                                ).add(
+                                  const PreloadEvent.toggleVolume(),
+                                );
+                              },
+                              behavior: HitTestBehavior.opaque,
+                              child: SizedBox(
+                                height: 24.r,
+                                width: 24.r,
+                                child: Icon(
+                                  !preloadState.muted
+                                      ? Icons.volume_up_rounded
+                                      : Icons.volume_off_rounded,
+                                  size: 21.r,
+                                  color: UiConstants.kTextColor,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                    body: WillPopScope(
-                      onWillPop: () async {
-                        await AppState.backButtonDispatcher!.didPopRoute();
-                        return false;
-                      },
-                      child: const ShortsVideoPage(),
+                    body: const ShortsVideoPage(
+                      categories: [],
                     ),
                   ),
                 );
@@ -462,7 +506,7 @@ Widget buildRecentSection(
               category: (recentData[i].category ?? []).join(', '),
               bgImage: recentData[i].thumbnail,
               maxWidth: recentData.length == 1 ? SizeConfig.padding350 : null,
-              liveCount: recentData[i].viewCount,
+              liveCount: recentData[i].views.toInt(),
               duration: recentData[i].duration.toString(),
             ),
           ),

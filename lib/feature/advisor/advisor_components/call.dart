@@ -69,7 +69,8 @@ class _CallState extends State<Call> {
                             upcomingList: null,
                             recentList: null,
                             notificationState: null,
-                            onNotify:null,
+                            onNotify: null,
+                            fromHome: true,
                           ),
                         );
                       },

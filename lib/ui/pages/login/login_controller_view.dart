@@ -42,6 +42,8 @@ class _LoginControllerViewState extends State<LoginControllerView> {
         dev.log(model.currentPage.toString());
         return BaseScaffold(
           resizeToAvoidBottomInset: false,
+          showBackgroundGrid: false,
+          backgroundColor: UiConstants.bg,
           body: Stack(
             children: <Widget>[
               SingleChildScrollView(

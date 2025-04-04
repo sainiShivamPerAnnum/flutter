@@ -7,9 +7,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
@@ -168,12 +166,20 @@ class AppState extends ChangeNotifier {
         return;
       }
     }
+    while (AppState.screenStack.length > 1) {
+      AppState.backButtonDispatcher!.didPopRoute();
+    }
     if (index == _rootIndex) {
       Haptic.vibrate();
       RootController.controller.animateTo(
         0,
         duration: const Duration(seconds: 1),
         curve: Curves.easeInCirc,
+      );
+      RootController.autoScrollController.animateTo(
+        0,
+        duration: const Duration(seconds: 2),
+        curve: Curves.decelerate,
       );
       return;
     }

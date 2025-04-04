@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:felloapp/core/service/fcm/background_fcm_handler.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/local_actions_state.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -27,11 +28,22 @@ Future<void> bootStrap(BootstrapCallBack bootStrapCallBack) async {
         await SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp],
         );
+        SystemChrome.setSystemUIOverlayStyle(
+          const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            systemNavigationBarColor: Colors.transparent,
+            systemNavigationBarDividerColor: Colors.transparent,
+          ),
+        );
+        await SystemChrome.setEnabledSystemUIMode(
+          SystemUiMode.edgeToEdge,
+        );
       } catch (e) {
         log('Failed to bootstrap app, error: $e');
       }
 
       await setupLocator();
+      await LocalActionsState.cleanupCache();
 
       try {
         await PreferenceHelper.initiate();
