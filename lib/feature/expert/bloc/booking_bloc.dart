@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -11,6 +10,7 @@ import 'package:felloapp/core/model/bookings/new_booking.dart';
 import 'package:felloapp/core/model/bookings/payment_response.dart';
 import 'package:felloapp/core/repository/experts_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -19,6 +19,7 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:upi_pay/upi_pay.dart';
 
@@ -400,12 +401,15 @@ class PaymentBloc extends Bloc<BookingEvent, PaymentState> {
     } else if (response.isSuccess()) {
       emitter(SubmittedPayment(data: response.model!));
     } else {
-      emitter(SubmittingPaymentFailed(response.errorMessage!));
+      // emitter(SubmittingPaymentFailed(response.errorMessage!));
       await AppState.backButtonDispatcher!.didPopRoute();
       BaseUtil.showNegativeAlert(
         'Failed to collect payment',
         response.errorMessage,
       );
+      AppState.delegate!.navigatorKey.currentContext!.read<CartBloc>().add(
+            InitalCart(),
+          );
     }
   }
 
