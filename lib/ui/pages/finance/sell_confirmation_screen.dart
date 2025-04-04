@@ -114,7 +114,10 @@ class _SellConfirmationViewState extends State<SellConfirmationView> {
                   backgroundColor: UiConstants.kBackgroundColor,
                   appBar: AppBar(
                       backgroundColor: UiConstants.kBackgroundColor,
-                       surfaceTintColor: UiConstants.kBackgroundColor,
+                      surfaceTintColor: UiConstants.kBackgroundColor,
+                      leading: const BackButton(
+                        color: UiConstants.kTextColor,
+                      ),
                       elevation: 0),
                   body: SafeArea(
                     child: Container(

@@ -5,8 +5,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 class SellingReasonBottomSheet extends StatefulWidget {
@@ -71,6 +70,8 @@ class _SellingReasonBottomSheetState extends State<SellingReasonBottomSheet> {
                       toggleable: true,
                       selected: true,
                       value: x,
+                      fillColor:
+                          WidgetStateProperty.all(UiConstants.kTextColor),
                       groupValue: selectedReasonForSelling,
                       onChanged: (dynamic value) {
                         selectedReasonForSelling = x;
