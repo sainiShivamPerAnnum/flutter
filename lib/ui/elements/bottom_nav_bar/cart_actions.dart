@@ -103,7 +103,7 @@ class CartActions extends StatelessWidget {
                   cart.selectedDuration != null) {
                 DateTime currentTime = DateTime.now();
                 DateTime selectedDateTime = DateTime.parse(cart.selectedTime!);
-                if (currentTime.isAfter(selectedDateTime)) {
+                if (!currentTime.isAfter(selectedDateTime)) {
                   BaseUtil.openBookAdvisorSheet(
                     advisorId: cart.advisor.advisorId,
                     advisorName: cart.advisor.name,

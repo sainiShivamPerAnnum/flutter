@@ -24,26 +24,45 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     Emitter<CartState> emitter,
   ) async {
     final data = await _expertsRepository.getFromCart();
-    if (data.isSuccess() && data.model != null && data.model!.isAvailable) {
-      emitter(
-        CartItemAdded(
-          advisor: Expert(
-            advisorId: data.model!.advisorId,
-            name: data.model!.advisorName,
-            experience: '',
-            rating: 0,
-            expertise: '',
-            qualifications: '',
-            rate: 0,
-            rateNew: '',
-            image: data.model!.advisorImg,
-            isFree: false,
+    if (data.isSuccess() && data.model != null) {
+      if (data.model!.isAvailable) {
+        emitter(
+          CartItemAdded(
+            advisor: Expert(
+              advisorId: data.model!.advisorId,
+              name: data.model!.advisorName,
+              experience: '',
+              rating: 0,
+              expertise: '',
+              qualifications: '',
+              rate: 0,
+              rateNew: '',
+              image: data.model!.advisorImg,
+              isFree: false,
+            ),
+            selectedDate: data.model!.fromTime,
+            selectedTime: data.model!.fromTime,
+            selectedDuration: data.model!.duration,
           ),
-          selectedDate: data.model!.fromTime,
-          selectedTime: data.model!.fromTime,
-          selectedDuration: data.model!.duration,
-        ),
-      );
+        );
+      } else {
+        emitter(
+          CartItemAdded(
+            advisor: Expert(
+              advisorId: data.model!.advisorId,
+              name: data.model!.advisorName,
+              experience: '',
+              rating: 0,
+              expertise: '',
+              qualifications: '',
+              rate: 0,
+              rateNew: '',
+              image: data.model!.advisorImg,
+              isFree: false,
+            ),
+          ),
+        );
+      }
     }
   }
 
