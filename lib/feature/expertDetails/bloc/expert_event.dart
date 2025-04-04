@@ -9,6 +9,12 @@ class LoadExpertsDetails extends ExpertDetailsEvent {
   const LoadExpertsDetails(this.advisorId);
 }
 
+class FollowAdvisor extends ExpertDetailsEvent {
+  final String advisorId;
+  final bool isFollowed;
+  const FollowAdvisor(this.advisorId, this.isFollowed);
+}
+
 class TabChanged extends ExpertDetailsEvent {
   final int tab;
   final String advisorId;

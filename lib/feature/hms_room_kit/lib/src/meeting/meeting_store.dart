@@ -102,6 +102,8 @@ class MeetingStore extends ChangeNotifier
   bool isRoomEnded = false;
   String? advisorId;
   String? advisorName;
+  String? advisorImage;
+  int totalViews = 0;
   String calltitle = '';
   String calldescription = '';
   bool isEventLikedByUser = false;
@@ -114,6 +116,8 @@ class MeetingStore extends ChangeNotifier
     bool isLiked,
     String eventID,
     String advName,
+    String advisorImg,
+    int initialViews,
   ) {
     advisorId = advId;
     calltitle = title;
@@ -121,6 +125,8 @@ class MeetingStore extends ChangeNotifier
     calldescription = description;
     isEventLikedByUser = isLiked;
     eventId = eventID;
+    advisorImage = advisorImg;
+    totalViews = initialViews;
     notifyListeners();
   }
 

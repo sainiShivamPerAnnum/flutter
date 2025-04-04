@@ -18,6 +18,7 @@ class BranchAnalytics extends BaseAnalyticsService {
         'Gender': baseUser.gender ?? "",
         'Signed Up': baseUser.isSimpleKycVerified ?? false,
         "KYC Verified": baseUser.isSimpleKycVerified ?? false,
+        "Advisor in cart": baseUser.advisorInCart ?? '',
       };
 
       FlutterBranchSdk.setIdentity(baseUser.uid!);
@@ -31,6 +32,11 @@ class BranchAnalytics extends BaseAnalyticsService {
   Future<void> signOut() async {
     FlutterBranchSdk.logout();
     _logger.d("Branch SERVICE :: User logged out.");
+  }
+
+  @override
+  void updateUserProperty({required String key, value}) {
+    var branchIdentityData = {key: value};
   }
 
   @override

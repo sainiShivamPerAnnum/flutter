@@ -16,6 +16,14 @@ class ShortsHome {
 
   factory ShortsHome.fromJson(Map<String, dynamic> json) =>
       _$ShortsHomeFromJson(json);
+
+  List<String> get allThemes {
+    return shorts.map((themeData) => themeData.theme).toList();
+  }
+
+  List<String> get allThemeNames {
+    return shorts.map((themeData) => themeData.themeName).toList();
+  }
 }
 
 @_deserializable

@@ -64,7 +64,8 @@ class _ScheduleCallWrapperState extends State<ScheduleCallWrapper> {
   @override
   Widget build(BuildContext context) {
     return BaseScaffold(
-      showBackgroundGrid: true,
+      showBackgroundGrid: false,
+      backgroundColor: UiConstants.bg,
       appBar: AppBar(
         title:
             const Text('Schedule Live', style: TextStyle(color: Colors.white)),

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -11,6 +10,7 @@ import 'package:felloapp/core/model/bookings/new_booking.dart';
 import 'package:felloapp/core/model/bookings/payment_response.dart';
 import 'package:felloapp/core/repository/experts_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -19,6 +19,7 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:upi_pay/upi_pay.dart';
 
@@ -43,6 +44,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     on<SelectDuration>(_onSelectDuration);
     on<EditBooking>(_editBooking);
     on<SelectReedem>(_useCoins);
+    on<ChangeMonth>(_onChangeMonth);
   }
   FutureOr<void> _onLoadBookingDates(
     LoadBookingDates event,
@@ -51,51 +53,118 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     final currentSelectedDate = (state is BookingsLoaded)
         ? (state as BookingsLoaded).selectedDate
         : null;
-    // emitter(const LoadingBookingsData());
 
     final data = await _expertsRepository.getExpertAvailableSlots(
       advisorId: event.advisorId,
       duration: event.duration,
     );
     final availableDates = data.model?.slots?.keys.toList() ?? [];
-    final firstDuration = data.model?.slots?.values.first.keys.first ?? '';
-    String? selectedDate;
-
-    if (event.scheduledOn != null) {
-      final formattedScheduledOn = DateFormat('yyyy-MM-dd').format(
-        event.scheduledOn!,
-      );
-
-      if (availableDates.contains(formattedScheduledOn)) {
-        selectedDate = formattedScheduledOn;
-      } else if (availableDates.isNotEmpty) {
-        selectedDate = availableDates.first;
-      }
-    } else if (availableDates.isNotEmpty) {
-      selectedDate = availableDates.first;
-    }
-
-    if (availableDates.isNotEmpty) {
+    if (availableDates.isEmpty) {
       emitter(
         BookingsLoaded(
           advisorId: event.advisorId,
           schedule: data.model,
-          selectedDate: currentSelectedDate ?? selectedDate,
-          selectedDuration: firstDuration != ''
-              ? int.tryParse(firstDuration.toString()) ?? event.duration
-              : event.duration,
+          finalSchedule: data.model,
           isFree: data.model?.hasFreeCall ?? false,
+          selectedMonth: DateTime.now(),
+        ),
+      );
+      return;
+    }
+
+    final firstAvailableDate = availableDates.first;
+    final firstAvailableDateTime = DateTime.parse(firstAvailableDate);
+    final selectedMonth =
+        DateTime(firstAvailableDateTime.year, firstAvailableDateTime.month);
+
+    final filteredDates = availableDates.where((date) {
+      final dateTime = DateTime.parse(date);
+      return dateTime.month == selectedMonth.month &&
+          dateTime.year == selectedMonth.year;
+    }).toList();
+
+    String? selectedDate;
+    if (event.scheduledOn != null) {
+      final formattedScheduledOn =
+          DateFormat('yyyy-MM-dd').format(event.scheduledOn!);
+
+      if (filteredDates.contains(formattedScheduledOn)) {
+        selectedDate = formattedScheduledOn;
+      } else if (filteredDates.isNotEmpty) {
+        selectedDate = filteredDates.first;
+      }
+    } else if (filteredDates.isNotEmpty) {
+      selectedDate = filteredDates.first;
+    }
+    final firstDuration = _getFirstAvailableDuration(data.model);
+    if (filteredDates.isNotEmpty) {
+      emitter(
+        BookingsLoaded(
+          advisorId: event.advisorId,
+          schedule: data.model,
+          finalSchedule: _filterScheduleByMonth(data.model, selectedMonth),
+          selectedDate: currentSelectedDate ?? selectedDate,
+          selectedDuration: firstDuration ?? event.duration,
+          isFree: data.model?.hasFreeCall ?? false,
+          selectedMonth: selectedMonth,
         ),
       );
     } else {
       emitter(
         BookingsLoaded(
           schedule: data.model,
+          finalSchedule: data.model,
           advisorId: event.advisorId,
           isFree: data.model?.hasFreeCall ?? false,
+          selectedMonth: DateTime.now(),
         ),
       );
     }
+  }
+
+  int? _getFirstAvailableDuration(Schedule? schedule) {
+    if (schedule?.slots == null || schedule!.slots!.isEmpty) return null;
+    final firstSlotGroup = schedule.slots!.values.first;
+    if (firstSlotGroup.isEmpty) return null;
+    return int.tryParse(firstSlotGroup.keys.first);
+  }
+
+  void _onChangeMonth(ChangeMonth event, Emitter<BookingState> emitter) {
+    if (state is BookingsLoaded) {
+      final currentState = state as BookingsLoaded;
+      final filteredSchedule =
+          _filterScheduleByMonth(currentState.schedule, event.selectedMonth);
+      final availableDates = filteredSchedule?.slots?.keys.toList() ?? [];
+      String? selectedDate;
+      if (availableDates.isNotEmpty) {
+        selectedDate = availableDates.first;
+      }
+      emitter(
+        currentState.copyWith(
+          selectedMonth: event.selectedMonth,
+          finalSchedule: filteredSchedule,
+          selectedDate: selectedDate,
+        ),
+      );
+    }
+  }
+
+  Schedule? _filterScheduleByMonth(
+    Schedule? originalSchedule,
+    DateTime selectedMonth,
+  ) {
+    if (originalSchedule?.slots == null) return null;
+    final filteredSlots =
+        Map<String, Map<String, List<TimeSlot>>>.from(originalSchedule!.slots!);
+    filteredSlots.removeWhere((date, _) {
+      final dateTime = DateTime.parse(date);
+      return dateTime.month != selectedMonth.month ||
+          dateTime.year != selectedMonth.year;
+    });
+    return Schedule(
+      slots: filteredSlots,
+      hasFreeCall: originalSchedule.hasFreeCall,
+    );
   }
 
   void _onSelectDate(SelectDate event, Emitter<BookingState> emitter) {
@@ -332,12 +401,15 @@ class PaymentBloc extends Bloc<BookingEvent, PaymentState> {
     } else if (response.isSuccess()) {
       emitter(SubmittedPayment(data: response.model!));
     } else {
-      emitter(SubmittingPaymentFailed(response.errorMessage!));
+      // emitter(SubmittingPaymentFailed(response.errorMessage!));
       await AppState.backButtonDispatcher!.didPopRoute();
       BaseUtil.showNegativeAlert(
         'Failed to collect payment',
         response.errorMessage,
       );
+      AppState.delegate!.navigatorKey.currentContext!.read<CartBloc>().add(
+            InitalCart(),
+          );
     }
   }
 

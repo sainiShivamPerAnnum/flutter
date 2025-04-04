@@ -4,8 +4,8 @@ import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
 import 'package:felloapp/feature/shorts/src/core/interaction_enum.dart';
 import 'package:felloapp/feature/shorts/src/service/shorts_repo.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
 class AnalyticsRetryManager {
@@ -19,10 +19,8 @@ class AnalyticsRetryManager {
     required String category,
   }) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-
       // Retrieve existing queue
-      List<Map<String, dynamic>> queue = _getExistingQueue(prefs);
+      List<Map<String, dynamic>> queue = _getExistingQueue();
 
       // Check if an event for this videoId already exists
       final existingEvent = queue.firstWhere(
@@ -55,8 +53,8 @@ class AnalyticsRetryManager {
         'timestamp': DateTime.now().toIso8601String(),
       });
 
-      // Save updated queue
-      await prefs.setString(_queueKey, json.encode(queue));
+      List<String> stringList = queue.map((item) => json.encode(item)).toList();
+      await PreferenceHelper.setStringList(_queueKey, stringList);
     } catch (e) {
       debugPrint('Error queueing analytics event: $e');
     }
@@ -65,10 +63,8 @@ class AnalyticsRetryManager {
   /// Retry queued analytics events
   static Future<void> pushQueuedEvents(ShortsRepo repository) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-
       // Retrieve existing queue
-      List<Map<String, dynamic>> queue = _getExistingQueue(prefs);
+      List<Map<String, dynamic>> queue = _getExistingQueue();
 
       // Create a copy to iterate over
       final List<Map<String, dynamic>> queueCopy = List.from(queue);
@@ -110,9 +106,11 @@ class AnalyticsRetryManager {
 
       // Update or clear the queue
       if (queue.isEmpty) {
-        await prefs.remove(_queueKey);
+        await PreferenceHelper.remove(_queueKey);
       } else {
-        await prefs.setString(_queueKey, json.encode(queue));
+        List<String> stringList =
+            queue.map((item) => json.encode(item)).toList();
+        await PreferenceHelper.setStringList(_queueKey, stringList);
       }
     } catch (e) {
       debugPrint('Error in retrying queued events: $e');
@@ -120,18 +118,22 @@ class AnalyticsRetryManager {
   }
 
   /// Helper method to get existing queue
-  static List<Map<String, dynamic>> _getExistingQueue(SharedPreferences prefs) {
-    final queueString = prefs.getString(_queueKey);
-    if (queueString != null) {
-      try {
-        final List<dynamic> decoded = json.decode(queueString);
-        return decoded.cast<Map<String, dynamic>>();
-      } catch (e) {
-        debugPrint('Error decoding queue: $e');
-        return [];
-      }
+  static List<Map<String, dynamic>> _getExistingQueue() {
+    if (!PreferenceHelper.containsKey(_queueKey)) {
+      return [];
     }
-    return [];
+    final List<String> stringList = PreferenceHelper.getStringList(_queueKey);
+    if (stringList.isEmpty) {
+      return [];
+    }
+    try {
+      return stringList.map((itemString) {
+        return json.decode(itemString) as Map<String, dynamic>;
+      }).toList();
+    } catch (e) {
+      debugPrint('Error decoding analytics queue: $e');
+      return [];
+    }
   }
 }
 

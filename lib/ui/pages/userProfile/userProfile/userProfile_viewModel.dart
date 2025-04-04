@@ -22,6 +22,8 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
+import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
+// import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
@@ -83,7 +85,8 @@ class UserProfileVM extends BaseViewModel {
   final TambolaService _tambolaService = locator<TambolaService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final TransactionBloc _transactionBloc = locator<TransactionBloc>();
-  final AdvisorBloc _advisorBloc = locator<AdvisorBloc>();
+  // final ExpertBloc _expertBloc = locator<ExpertBloc>();
+  // final AdvisorBloc _advisorBloc = locator<AdvisorBloc>();
   final MyFundsBloc _myFundsBloc = locator<MyFundsBloc>();
   final SIPTransactionBloc _sipTransactionBloc = locator<SIPTransactionBloc>();
   final S _locale = locator<S>();
@@ -561,6 +564,7 @@ class UserProfileVM extends BaseViewModel {
                 _transactionBloc.dispose();
                 preloadBloc.add(const PreloadEvent.reset());
                 locator.resetLazySingleton<AdvisorBloc>();
+                locator.resetLazySingleton<ExpertBloc>();
                 _myFundsBloc.dispose();
                 _sipTransactionBloc.dispose();
                 await _baseUtil.signOut();

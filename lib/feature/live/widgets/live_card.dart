@@ -21,6 +21,7 @@ class LiveCardWidget extends StatefulWidget {
   final String title;
   final String subTitle;
   final String author;
+  final String advisorImg;
   final String category;
   final String bgImage;
   final int? liveCount;
@@ -46,6 +47,7 @@ class LiveCardWidget extends StatefulWidget {
     required this.bgImage,
     required this.advisorId,
     required this.fromHome,
+    required this.advisorImg,
     this.isLiked,
     this.onNotify,
     this.notifyOn,
@@ -178,6 +180,8 @@ class _LiveCardWidgetState extends State<LiveCardWidget> {
                     state: PageState.addWidget,
                     widget: HMSPrebuilt(
                       roomCode: widget.viewerCode,
+                      advisorImage: widget.advisorImg,
+                      initialViewCount: widget.liveCount ?? 0,
                       eventId: widget.id,
                       isLiked: widget.isLiked ?? false,
                       onLeave: () async {

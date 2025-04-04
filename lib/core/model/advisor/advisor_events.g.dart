@@ -30,6 +30,7 @@ AdvisorEvents _$AdvisorEventsFromJson(Map<String, dynamic> json) =>
       currentLiveCount: json['currentLiveCount'] as int? ?? 0,
       advisorName: json['advisorName'] as String? ?? '',
       coverImage: json['coverImage'] as String?,
+      advisorImg: json['advisorImg'] as String? ?? '',
     );
 
 Map<String, dynamic> _$AdvisorEventsToJson(AdvisorEvents instance) =>
@@ -53,4 +54,5 @@ Map<String, dynamic> _$AdvisorEventsToJson(AdvisorEvents instance) =>
       'updatedAt': instance.updatedAt.toIso8601String(),
       'categories': instance.categories,
       'coverImage': instance.coverImage,
+      'advisorImg': instance.advisorImg,
     };

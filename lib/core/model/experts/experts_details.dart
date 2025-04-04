@@ -1,3 +1,4 @@
+import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'experts_details.g.dart';
@@ -19,6 +20,8 @@ class ExpertDetails {
   final List<License> licenses;
   final List<Social> social;
   final RatingInfo ratingInfo;
+  final bool isFollowed;
+  final List<VideoData> shorts;
 
   ExpertDetails({
     required this.name,
@@ -32,7 +35,40 @@ class ExpertDetails {
     required this.licenses,
     required this.social,
     required this.ratingInfo,
+    this.isFollowed = false,
+    this.shorts = const [],
   });
+  ExpertDetails copyWith({
+    String? name,
+    String? image,
+    String? description,
+    bool? isLive,
+    String? experience,
+    int? sessionCount,
+    double? rating,
+    List<QuickAction>? quickActions,
+    List<License>? licenses,
+    List<Social>? social,
+    RatingInfo? ratingInfo,
+    bool? isFollowed,
+    List<VideoData>? shorts,
+  }) {
+    return ExpertDetails(
+      name: name ?? this.name,
+      image: image ?? this.image,
+      description: description ?? this.description,
+      isLive: isLive ?? this.isLive,
+      experience: experience ?? this.experience,
+      sessionCount: sessionCount ?? this.sessionCount,
+      rating: rating ?? this.rating,
+      QuickActions: quickActions ?? this.QuickActions,
+      licenses: licenses ?? this.licenses,
+      social: social ?? this.social,
+      ratingInfo: ratingInfo ?? this.ratingInfo,
+      isFollowed: isFollowed ?? this.isFollowed,
+      shorts: shorts ?? this.shorts,
+    );
+  }
 
   factory ExpertDetails.fromJson(Map<String, dynamic> json) =>
       _$ExpertDetailsFromJson(json);

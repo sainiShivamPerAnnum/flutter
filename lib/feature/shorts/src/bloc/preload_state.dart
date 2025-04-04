@@ -31,6 +31,9 @@ class PreloadState with _$PreloadState {
     required int currentCategoryIndex,
     required List<String> categories,
     required String theme,
+    required String themeName,
+    required List<String> allThemes,
+    required List<String> allThemeNames,
     String? errorMessage,
     VideoPlayerController? liveStreamController,
     PageController? livePageController,
@@ -68,6 +71,9 @@ class PreloadState with _$PreloadState {
         livePageController: null,
         currentCategoryIndex: 0,
         categories: [],
+        allThemes: [],
+        themeName: '',
+        allThemeNames: [],
         muted: false,
       );
 
