@@ -54,10 +54,14 @@ class GoldSellLoadingView extends StatelessWidget {
         ),
         Column(
           children: [
-            Text(
-              locale.txnWithDrawalProgress,
-              style:
-                  TextStyles.sourceSans.body2.colour(UiConstants.kTextColor2),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
+              child: Text(
+                'Your withdrawal is currently being processed and may take up to 1 business day to complete.',
+                style:
+                    TextStyles.sourceSans.body2.colour(UiConstants.kTextColor2),
+                textAlign: TextAlign.center,
+              ),
             ),
             SizedBox(height: SizeConfig.padding16),
             TweenAnimationBuilder<Duration>(
@@ -127,9 +131,8 @@ class GoldSellLoadingView extends StatelessWidget {
       isBarrierDismissible: false,
       content: const PendingDialog(
         title: "We're still processing!",
-        subtitle:
-            "Your withdrawal is taking longer than usual. We'll get back to you in ",
-        duration: '15 minutes',
+        subtitle: "Your withdrawal will be processed in ",
+        duration: '1 business day.',
       ),
     );
   }
