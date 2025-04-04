@@ -216,8 +216,8 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                   ),
                                 ),
                                 suffixIcon: state.query != ""
-                                    ? GestureDetector(
-                                        onTap: () {
+                                    ? IconButton(
+                                        onPressed: () {
                                           _controller.clear();
                                           BlocProvider.of<ShortsHomeBloc>(
                                             context,
@@ -225,7 +225,7 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                           ).add(const LoadHomeData());
                                           _searchFocusNode.unfocus();
                                         },
-                                        child: Icon(
+                                        icon: Icon(
                                           Icons.close,
                                           color: UiConstants.kTextColor
                                               .withOpacity(.7),

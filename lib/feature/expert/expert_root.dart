@@ -733,8 +733,8 @@ class __ExpertHomeState extends State<_ExpertHome>
                   ),
                 ),
                 suffixIcon: query != ""
-                    ? GestureDetector(
-                        onTap: () {
+                    ? IconButton(
+                        onPressed: () {
                           _controller.clear();
                           BlocProvider.of<ExpertBloc>(
                             context,
@@ -744,7 +744,7 @@ class __ExpertHomeState extends State<_ExpertHome>
                           );
                           _searchFocusNode.unfocus();
                         },
-                        child: Icon(
+                        icon: Icon(
                           Icons.close,
                           color: UiConstants.kTextColor.withOpacity(
                             .7,
