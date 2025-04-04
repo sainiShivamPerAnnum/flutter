@@ -3,8 +3,6 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/savedShorts/saved_shorts.dart';
-import 'package:felloapp/feature/shorts/src/core/analytics_manager.dart';
-import 'package:felloapp/feature/shorts/src/service/shorts_repo.dart';
 import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 import 'package:felloapp/feature/shortsHome/bloc/pagination_bloc.dart';
 import 'package:felloapp/feature/shortsHome/bloc/shorts_home_bloc.dart';
@@ -54,8 +52,6 @@ class _ShortsScreenState extends State<_ShortsScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _searchFocusNode.unfocus();
-      final repository = locator<ShortsRepo>();
-      AnalyticsRetryManager.pushQueuedEvents(repository);
     });
   }
 

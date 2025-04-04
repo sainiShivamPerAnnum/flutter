@@ -33,10 +33,10 @@ Future<void> bootStrap(BootstrapCallBack bootStrapCallBack) async {
       }
 
       await setupLocator();
-      await LocalActionsState.cleanupCache();
 
       try {
         await PreferenceHelper.initiate();
+        await LocalActionsState.cleanupCache();
         await Firebase.initializeApp();
       } catch (e) {
         log('Failed to bootstrap app, error: $e');

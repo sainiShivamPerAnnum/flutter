@@ -23,6 +23,8 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
+import 'package:felloapp/feature/shorts/src/core/analytics_manager.dart';
+import 'package:felloapp/feature/shorts/src/service/shorts_repo.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/tambola_mini_info_card.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -295,6 +297,8 @@ class SaveViewModel extends ChangeNotifier {
       _sellService.init();
       getSaveViewBlogs();
       getTestimonials();
+      final repository = locator<ShortsRepo>();
+      AnalyticsRetryManager.pushQueuedEvents(repository);
     });
   }
 
