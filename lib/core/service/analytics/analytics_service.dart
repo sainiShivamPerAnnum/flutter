@@ -96,6 +96,15 @@ class AnalyticsService extends BaseAnalyticsService {
     _branch.trackScreen(screen: screen, properties: properties);
   }
 
+  @override
+  void updateUserProperty({required String key, value}) {
+    _mixpanel.updateUserProperty(key: key, value: value);
+    _cleverTap.updateUserProperty(key: key, value: value);
+    _webengage.updateUserProperty(key: key, value: value);
+    _branch.updateUserProperty(key: key, value: value);
+    _facebook.updateUserProperty(key: key, value: value);
+  }
+
   Future<void> trackSignup(String? userId) async {
     try {
       final campaignId =

@@ -387,6 +387,7 @@ class AnalyticsEvents {
   static const recentLiveStream = "Recent live stream - LIVE";
   static const bookACall = "Book a call";
   static const bookCallTime = "Book a call - select time";
+  static const makePayment = "Book a call - Make payment";
   static const expertProfileView = "Expert profile view";
   static const bookQuick = "Book Now - Quick";
   static const paymentStatus = "Payment status";

@@ -1,13 +1,15 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/bookings/payment_polling.dart';
 import 'package:felloapp/core/repository/experts_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'polling_event.dart';
 part 'polling_state.dart';
@@ -48,6 +50,9 @@ class PollingBloc extends Bloc<PollingEvent, PollingState> {
           "status": "Success",
         },
       );
+      AppState.delegate!.navigatorKey.currentContext!.read<CartBloc>().add(
+            ClearCart(),
+          );
     } else if (response.isSuccess() &&
         data != null &&
         data.data.paymentDetails!.status == BookingPaymentStatus.pending) {

@@ -1,8 +1,10 @@
 import 'package:felloapp/core/model/experts/experts_home.dart';
+import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ExpertCard extends StatelessWidget {
   final Expert expert;
@@ -232,7 +234,14 @@ class ExpertCard extends StatelessWidget {
                           ],
                         ),
                         GestureDetector(
-                          onTap: onBookCall,
+                          onTap: () {
+                            context.read<CartBloc>().add(
+                                  AddToCart(
+                                    advisor: expert,
+                                  ),
+                                );
+                            return onBookCall();
+                          },
                           child: Container(
                             padding: EdgeInsets.symmetric(
                               horizontal: SizeConfig.padding8,

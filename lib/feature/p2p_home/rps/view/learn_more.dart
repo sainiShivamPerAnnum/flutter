@@ -11,6 +11,8 @@ class LearmMoreOnRPS extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Map<String, String>> rpsQNA = AppConfigV2.instance.rpsLearnMore;
     return BaseScaffold(
+      showBackgroundGrid: false,
+      backgroundColor: UiConstants.bg,
       appBar: AppBar(
         backgroundColor: UiConstants.kTambolaMidTextColor,
         surfaceTintColor: UiConstants.kTambolaMidTextColor,

@@ -31,5 +31,8 @@ class FacebookAnalytics extends BaseAnalyticsService {
   }
 
   @override
+  void updateUserProperty({required String key, value}) {}
+
+  @override
   void trackScreen({String? screen, Map<String, dynamic>? properties}) {}
 }

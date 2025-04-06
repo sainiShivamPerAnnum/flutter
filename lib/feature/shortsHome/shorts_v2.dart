@@ -1,9 +1,8 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/savedShorts/saved_shorts.dart';
-import 'package:felloapp/feature/shorts/src/core/analytics_manager.dart';
-import 'package:felloapp/feature/shorts/src/service/shorts_repo.dart';
 import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 import 'package:felloapp/feature/shortsHome/bloc/pagination_bloc.dart';
 import 'package:felloapp/feature/shortsHome/bloc/shorts_home_bloc.dart';
@@ -53,8 +52,6 @@ class _ShortsScreenState extends State<_ShortsScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _searchFocusNode.unfocus();
-      final repository = locator<ShortsRepo>();
-      AnalyticsRetryManager.pushQueuedEvents(repository);
     });
   }
 
@@ -177,13 +174,9 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                       .add(SearchShorts(query));
                                   _searchFocusNode.unfocus();
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Please enter at least 3 characters',
-                                      ),
-                                      duration: Duration(seconds: 2),
-                                    ),
+                                  BaseUtil.showNegativeAlert(
+                                    'Input Error',
+                                    'Please enter at least 3 characters',
                                   );
                                 }
                               },
@@ -219,8 +212,8 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                   ),
                                 ),
                                 suffixIcon: state.query != ""
-                                    ? GestureDetector(
-                                        onTap: () {
+                                    ? IconButton(
+                                        onPressed: () {
                                           _controller.clear();
                                           BlocProvider.of<ShortsHomeBloc>(
                                             context,
@@ -228,7 +221,7 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                           ).add(const LoadHomeData());
                                           _searchFocusNode.unfocus();
                                         },
-                                        child: Icon(
+                                        icon: Icon(
                                           Icons.close,
                                           color: UiConstants.kTextColor
                                               .withOpacity(.7),
@@ -410,6 +403,8 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                 )
                               : ListView.builder(
                                   shrinkWrap: true,
+                                  padding: EdgeInsets.only(bottom: 50.h)
+                                      .copyWith(top: 30.h),
                                   physics: const NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
                                     final theme =
@@ -538,10 +533,15 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                                       categories:
                                                           theme.categories,
                                                       i: i,
+                                                      allThemes: state
+                                                          .shortsHome.allThemes,
                                                       searchFocusNode:
                                                           _searchFocusNode,
                                                       themeVideosBloc:
                                                           themeVideosBloc,
+                                                      allThemeNames: state
+                                                          .shortsHome
+                                                          .allThemeNames,
                                                     );
                                                   },
                                                 ),

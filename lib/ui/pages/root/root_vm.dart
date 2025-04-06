@@ -21,6 +21,7 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
+import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
@@ -474,6 +475,7 @@ class RootViewModel extends BaseViewModel {
               await BaseUtil().signOut();
               _tambolaService.dispose();
               locator.resetLazySingleton<AdvisorBloc>();
+              locator.resetLazySingleton<ExpertBloc>();
               _analyticsService.signOut();
               _bankAndKycService.dump();
               _subscriptionService.dispose();

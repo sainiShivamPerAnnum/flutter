@@ -120,6 +120,8 @@ class _RpsDetailsState extends State<RpsDetails> {
               final fixedRpsDetails = state.fixedData?.rps ?? [];
               final flexiRpsDetails = state.flexiData?.rps ?? [];
               return BaseScaffold(
+                showBackgroundGrid: false,
+                backgroundColor: UiConstants.bg,
                 body: SingleChildScrollView(
                   child: Padding(
                     padding:

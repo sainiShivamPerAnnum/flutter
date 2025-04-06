@@ -23,6 +23,7 @@ class AdvisorEvents {
   final DateTime updatedAt;
   final List<String> categories;
   final String? coverImage;
+  final String advisorImg;
 
   AdvisorEvents({
     required this.id,
@@ -42,8 +43,9 @@ class AdvisorEvents {
     this.categories = const [],
     this.totalLiveCount = 0,
     this.currentLiveCount = 0,
-    this.advisorName='',
+    this.advisorName = '',
     this.coverImage,
+    this.advisorImg = '',
   });
 
   factory AdvisorEvents.fromJson(Map<String, dynamic> json) =>

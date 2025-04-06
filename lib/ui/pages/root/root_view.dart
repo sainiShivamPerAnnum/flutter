@@ -81,9 +81,15 @@ class _RootState extends State<Root> {
                       const QABanner(),
                     ],
                   ),
-                  bottomNavigationBar: const BottomNavBar(),
                 );
               },
+            ),
+            const Align(
+              alignment: Alignment.bottomCenter,
+              child: Material(
+                color: Colors.transparent,
+                child: BottomNavBar(),
+              ),
             ),
             const CircularAnim(),
             // Positioned.fill(

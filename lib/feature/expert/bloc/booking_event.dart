@@ -26,6 +26,11 @@ class SelectTime extends BookingEvent {
   const SelectTime(this.selectedTime);
 }
 
+class ChangeMonth extends BookingEvent {
+  final DateTime selectedMonth;
+  const ChangeMonth(this.selectedMonth);
+}
+
 class SelectReedem extends BookingEvent {
   final bool reddem;
   final num duration;

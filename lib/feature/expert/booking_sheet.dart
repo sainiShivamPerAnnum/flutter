@@ -1,9 +1,13 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/bookings/new_booking.dart';
+import 'package:felloapp/core/model/experts/experts_home.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/expert/bloc/booking_bloc.dart';
+import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
 import 'package:felloapp/feature/expert/payment_sheet.dart';
 import 'package:felloapp/feature/expert/polling_sheet.dart';
 import 'package:felloapp/feature/expert/widgets/custom_switch.dart';
@@ -23,17 +27,28 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class BookCallSheetView extends StatelessWidget {
   final String advisorID;
   final String advisorName;
+  final String advisorImage;
   final bool isEdit;
   final String? bookingId;
   final String? duration;
   final DateTime? scheduledOn;
+  final String? selectedDate;
+  final String? selectedTime;
+  final int? selectedDuration;
+  final bool cartPayment;
+
   const BookCallSheetView({
     required this.advisorID,
     required this.advisorName,
+    required this.advisorImage,
     required this.isEdit,
     this.bookingId,
     this.duration,
     this.scheduledOn,
+    this.selectedDate,
+    this.selectedTime,
+    this.selectedDuration,
+    this.cartPayment = false,
     super.key,
   });
 
@@ -48,11 +63,19 @@ class BookCallSheetView extends StatelessWidget {
             locator(),
             locator(),
           )..add(
-              LoadBookingDates(
-                advisorID,
-                int.tryParse(duration ?? "15") ?? 15,
-                scheduledOn,
-              ),
+              cartPayment
+                  ? GetPricing(
+                      selectedDuration!,
+                      advisorID,
+                      selectedDate!,
+                      selectedTime!,
+                      advisorName,
+                    )
+                  : LoadBookingDates(
+                      advisorID,
+                      int.tryParse(duration ?? "15") ?? 15,
+                      scheduledOn,
+                    ),
             ),
         ),
         BlocProvider(
@@ -70,6 +93,7 @@ class BookCallSheetView extends StatelessWidget {
         bookingId: bookingId,
         duration: duration,
         scheduledOn: scheduledOn,
+        advisorImage: advisorImage,
       ),
     );
   }
@@ -79,6 +103,7 @@ class _BookCallBottomSheet extends StatefulWidget {
   const _BookCallBottomSheet({
     required this.advisorId,
     required this.advisorName,
+    required this.advisorImage,
     required this.isEdit,
     this.duration,
     this.scheduledOn,
@@ -86,6 +111,7 @@ class _BookCallBottomSheet extends StatefulWidget {
   });
   final String advisorId;
   final String advisorName;
+  final String advisorImage;
   final bool isEdit;
   final String? bookingId;
   final String? duration;
@@ -132,6 +158,7 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
             return _buildContent(
               context,
               state.schedule,
+              state.finalSchedule,
               widget.advisorId,
               state.isFree,
             );
@@ -146,19 +173,22 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                NewErrorPage(
-                  onTryAgain: () {
-                    BlocProvider.of<BookingBloc>(
-                      context,
-                      listen: false,
-                    ).add(
-                      LoadBookingDates(
-                        widget.advisorId,
-                        int.tryParse(widget.duration ?? "30") ?? 30,
-                        widget.scheduledOn,
-                      ),
-                    );
-                  },
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 40.h),
+                  child: NewErrorPage(
+                    onTryAgain: () {
+                      BlocProvider.of<BookingBloc>(
+                        context,
+                        listen: false,
+                      ).add(
+                        LoadBookingDates(
+                          widget.advisorId,
+                          int.tryParse(widget.duration ?? "30") ?? 30,
+                          widget.scheduledOn,
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
             );
@@ -171,6 +201,7 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
   Widget _buildContent(
     BuildContext context,
     Schedule? schedule,
+    Schedule? finalSchedule,
     String advisorId,
     bool isFree,
   ) {
@@ -179,9 +210,10 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
     final selectedDate = loadedState?.selectedDate;
     final selectedDuration = loadedState?.selectedDuration;
     final selectedTime = loadedState?.selectedTime;
+    final selectedMonth = loadedState?.selectedMonth ?? DateTime.now();
     final currentDurations =
-        (selectedDate != null && schedule?.slots?[selectedDate] != null)
-            ? schedule!.slots![selectedDate]!.keys.toList()
+        (selectedDate != null && finalSchedule?.slots?[selectedDate] != null)
+            ? finalSchedule!.slots![selectedDate]!.keys.toList()
             : [];
     final durations = [
       {"name": '15 Mins', "value": 15},
@@ -196,26 +228,58 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
           !isFree || (duration['value'] == 15 || duration['value'] == 30);
       return matchesCurrentDurations && isAllowedForFree;
     }).toList();
-    final dates = schedule?.slots?.keys.toList() ?? [];
-    final currentTimes = (selectedDate != null &&
-            schedule?.slots?[selectedDate] != null &&
+    final totalDates = schedule?.slots?.keys.toList() ?? [];
+    final dates = finalSchedule?.slots?.keys.toList() ?? [];
+    final List<String?> currentTimes = (selectedDate != null &&
+            finalSchedule?.slots?[selectedDate] != null &&
             selectedDuration != null &&
-            schedule?.slots?[selectedDate]?[selectedDuration.toString()] !=
+            finalSchedule?.slots?[selectedDate]?[selectedDuration.toString()] !=
                 null)
-        ? schedule!.slots![selectedDate]![selectedDuration.toString()]!
+        ? finalSchedule!.slots![selectedDate]![selectedDuration.toString()]!
             .map((slot) => slot.fromTime)
             .toList()
         : [];
 
-    return dates.isEmpty
+    final availableDatesForMonth = dates.where((date) {
+      final dateTime = DateTime.parse(date);
+      return dateTime.month == selectedMonth.month;
+    }).toList();
+    void changeMonth(DateTime newMonth) {
+      final availableDatesForNewMonth = totalDates.where((date) {
+        final dateTime = DateTime.parse(date);
+        return dateTime.month == newMonth.month;
+      }).toList();
+      if (availableDatesForNewMonth.isNotEmpty) {
+        context.read<BookingBloc>().add(ChangeMonth(newMonth));
+      }
+    }
+
+    final slotsWithBookedSlots = generateTimeSlotsWithBookedSlots(
+      currentTimes,
+      selectedDuration ?? 30,
+    );
+    final currentMonth = selectedMonth.month;
+    final currentYear = selectedMonth.year;
+
+    final availableDatesForPrevMonth = totalDates.where((date) {
+      final dateTime = DateTime.parse(date);
+      return dateTime.month == (currentMonth == 1 ? 12 : currentMonth - 1) &&
+          dateTime.year == (currentMonth == 1 ? currentYear - 1 : currentYear);
+    }).toList();
+
+    final availableDatesForNextMonth = totalDates.where((date) {
+      final dateTime = DateTime.parse(date);
+      return dateTime.month == (currentMonth == 12 ? 1 : currentMonth + 1) &&
+          dateTime.year == (currentMonth == 12 ? currentYear + 1 : currentYear);
+    }).toList();
+
+    return availableDatesForMonth.isEmpty
         ? Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 20.w,
-                ).copyWith(
+                padding: EdgeInsets.symmetric(horizontal: 20.w).copyWith(
                   top: 6.h,
                 ),
                 child: Stack(
@@ -261,17 +325,17 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                   height: 1,
                 ),
               ),
-              AppImage(Assets.noSlots, height: SizeConfig.padding124),
+              AppImage(Assets.noSlots, height: 124.h),
               Text(
                 'No Slots Available at the Moment',
                 style: TextStyles.sourceSansM.body0,
               ),
               SizedBox(
-                height: SizeConfig.padding12,
+                height: 12.h,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding18,
+                  horizontal: 18.w,
                 ),
                 child: Text(
                   'Unfortunately, ${widget.advisorName} doesn’t have any available slots right now. You can discover more experts who are ready to assist you.',
@@ -281,13 +345,13 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                 ),
               ),
               SizedBox(
-                height: SizeConfig.padding18,
+                height: 18.h,
               ),
               const Divider(
                 color: UiConstants.greyVarient,
               ),
               Padding(
-                padding: EdgeInsets.all(SizeConfig.padding18),
+                padding: EdgeInsets.all(18.r),
                 child: Row(
                   children: [
                     Expanded(
@@ -298,11 +362,10 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: UiConstants.greyVarient,
                           padding: EdgeInsets.symmetric(
-                            vertical: SizeConfig.padding16,
+                            vertical: 16.h,
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness8),
+                            borderRadius: BorderRadius.circular(8.r),
                           ),
                         ),
                         child: Text(
@@ -311,7 +374,7 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                         ),
                       ),
                     ),
-                    SizedBox(width: SizeConfig.padding12),
+                    SizedBox(width: 12.w),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
@@ -320,11 +383,10 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: UiConstants.kTextColor,
                           padding: EdgeInsets.symmetric(
-                            vertical: SizeConfig.padding16,
+                            vertical: 16.h,
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness8),
+                            borderRadius: BorderRadius.circular(8.r),
                           ),
                         ),
                         child: Text(
@@ -345,9 +407,9 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
             children: [
               Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding20,
+                  horizontal: 20.w,
                 ).copyWith(
-                  top: SizeConfig.padding12,
+                  top: 6.h,
                 ),
                 child: Stack(
                   alignment: AlignmentDirectional.center,
@@ -366,13 +428,16 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        GestureDetector(
-                          onTap: () {
+                        IconButton(
+                          iconSize: 18.r,
+                          splashRadius: 18.r,
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
                             AppState.backButtonDispatcher!.didPopRoute();
                           },
-                          child: Icon(
+                          icon: Icon(
                             Icons.close,
-                            size: SizeConfig.body1,
+                            size: 18.r,
                             color: UiConstants.kTextColor,
                           ),
                         ),
@@ -381,113 +446,243 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                   ],
                 ),
               ),
-              const Divider(
-                color: UiConstants.greyVarient,
+              Container(
+                padding: EdgeInsets.zero,
+                child: const Divider(
+                  color: UiConstants.greyVarient,
+                  thickness: 1,
+                  height: 1,
+                ),
               ),
               Container(
-                padding: EdgeInsets.all(SizeConfig.padding18),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Select Date',
-                      style: TextStyles.sourceSansSB.body2,
-                    ),
-                    SizedBox(height: SizeConfig.padding16),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: dates.map((date) {
-                          return Padding(
-                            padding:
-                                EdgeInsets.only(right: SizeConfig.padding12),
-                            child: DateButton(
-                              date: date,
-                              isSelected: date == selectedDate,
-                              onTap: () {
-                                context
-                                    .read<BookingBloc>()
-                                    .add(SelectDate(date));
-                              },
+                height: 440.h,
+                padding: EdgeInsets.all(18.r),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(bottom: 20.w),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 300),
+                              child: MonthButton(
+                                date: DateFormat('MMMM yyyy')
+                                    .format(selectedMonth),
+                                isSelected: false,
+                                onTap: () {},
+                              ),
                             ),
-                          );
-                        }).toList(),
+                            Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    final prevMonth = DateTime(
+                                      selectedMonth.year,
+                                      selectedMonth.month - 1,
+                                    );
+                                    changeMonth(prevMonth);
+                                  },
+                                  child: Material(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      side: BorderSide(
+                                        color: UiConstants.greyVarient,
+                                        width: 2.w,
+                                      ),
+                                    ),
+                                    elevation: 0,
+                                    color: Colors.transparent,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8.r),
+                                      child: Icon(
+                                        Icons.chevron_left,
+                                        size: 14.r,
+                                        color: availableDatesForPrevMonth
+                                                .isNotEmpty
+                                            ? UiConstants.kTextColor
+                                            : UiConstants.kTextColor
+                                                .withOpacity(0.5),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 8.w,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    final nextMonth = DateTime(
+                                      selectedMonth.year,
+                                      selectedMonth.month + 1,
+                                    );
+                                    changeMonth(nextMonth);
+                                  },
+                                  child: Material(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      side: BorderSide(
+                                        color: UiConstants.greyVarient,
+                                        width: 2.w,
+                                      ),
+                                    ),
+                                    elevation: 0,
+                                    color: Colors.transparent,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8.r),
+                                      child: Icon(
+                                        Icons.chevron_right,
+                                        size: 14.r,
+                                        color: availableDatesForNextMonth
+                                                .isNotEmpty
+                                            ? UiConstants.kTextColor
+                                            : UiConstants.kTextColor
+                                                .withOpacity(0.5),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    if (!widget.isEdit) SizedBox(height: SizeConfig.padding16),
-                    if (!widget.isEdit)
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 500),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: dates.map((date) {
+                              return Padding(
+                                padding: EdgeInsets.only(right: 12.w),
+                                child: DateButton(
+                                  date: date,
+                                  isSelected: date == selectedDate,
+                                  child: RichText(
+                                    textAlign: TextAlign.center,
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: getDayAndDateParts(date).day,
+                                          style: TextStyles.sourceSansM.body4
+                                              .copyWith(
+                                            fontSize: 12.sp,
+                                          ),
+                                        ),
+                                        WidgetSpan(
+                                          child: SizedBox(
+                                            height: 2.h,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text:
+                                              '\n${getDayAndDateParts(date).date}',
+                                          style: TextStyles.sourceSansM.body0
+                                              .copyWith(
+                                            fontSize: 20.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    context
+                                        .read<BookingBloc>()
+                                        .add(SelectDate(date));
+                                  },
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                      if (!widget.isEdit) SizedBox(height: 16.h),
+                      if (!widget.isEdit)
+                        Divider(
+                          color: UiConstants.kTextColor5.withOpacity(.3),
+                        ),
+                      if (!widget.isEdit)
+                        Text(
+                          'Select Duration',
+                          style: TextStyles.sourceSansSB.body2,
+                        ),
+                      if (!widget.isEdit) SizedBox(height: 16.h),
+                      if (!widget.isEdit)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: filteredDurations.map((e) {
+                            return Padding(
+                              padding: EdgeInsets.only(right: 12.w),
+                              child: DateButton(
+                                date: e['name'].toString(),
+                                requireFormat: false,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 8.h,
+                                  horizontal: 35.w,
+                                ),
+                                isSelected: e['value'] == selectedDuration,
+                                onTap: () {
+                                  context
+                                      .read<BookingBloc>()
+                                      .add(SelectDuration(e['value'] as int));
+                                },
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      SizedBox(height: 16.h),
                       Divider(
                         color: UiConstants.kTextColor5.withOpacity(.3),
                       ),
-                    if (!widget.isEdit)
                       Text(
-                        'Select Duration',
+                        'Select Time',
                         style: TextStyles.sourceSansSB.body2,
                       ),
-                    if (!widget.isEdit) SizedBox(height: SizeConfig.padding16),
-                    if (!widget.isEdit)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: filteredDurations.map((e) {
-                          return Padding(
-                            padding:
-                                EdgeInsets.only(right: SizeConfig.padding12),
-                            child: DateButton(
-                              date: e['name'].toString(),
-                              requireFormat: false,
-                              isSelected: e['value'] == selectedDuration,
+                      SizedBox(height: 16.h),
+                      SizedBox(
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: slotsWithBookedSlots.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 12.h,
+                            mainAxisSpacing: 16.w,
+                            childAspectRatio: 3,
+                          ),
+                          itemBuilder: (context, index) {
+                            final time = slotsWithBookedSlots[index];
+                            final isBookedSlot = time!.startsWith('BOOKED_');
+                            final displayTime = isBookedSlot
+                                ? time.replaceFirst('BOOKED_', '')
+                                : time;
+                            return TimeButton(
+                              time: time,
+                              isSelected: displayTime == selectedTime,
                               onTap: () {
                                 context
                                     .read<BookingBloc>()
-                                    .add(SelectDuration(e['value'] as int));
+                                    .add(SelectTime(displayTime));
                               },
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    SizedBox(height: SizeConfig.padding16),
-                    Divider(
-                      color: UiConstants.kTextColor5.withOpacity(.3),
-                    ),
-                    Text(
-                      'Select Time',
-                      style: TextStyles.sourceSansSB.body2,
-                    ),
-                    SizedBox(height: SizeConfig.padding16),
-                    SizedBox(
-                      height: SizeConfig.padding70,
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        itemCount: currentTimes.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: SizeConfig.padding12,
-                          mainAxisSpacing: SizeConfig.padding16,
-                          childAspectRatio: 3,
+                            );
+                          },
                         ),
-                        itemBuilder: (context, index) {
-                          final time = currentTimes[index];
-                          final displayTime = time?.split(' ')[0];
-                          return TimeButton(
-                            time: displayTime!,
-                            isSelected: time == selectedTime,
-                            onTap: () {
-                              context.read<BookingBloc>().add(SelectTime(time));
-                            },
-                          );
-                        },
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Divider(
                 color: UiConstants.kTextColor5.withOpacity(.3),
               ),
-              SizedBox(height: SizeConfig.padding18),
+              SizedBox(height: 18.h),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding18),
+                padding: EdgeInsets.symmetric(horizontal: 18.w),
                 child: Row(
                   children: [
                     Expanded(
@@ -498,11 +693,10 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: UiConstants.greyVarient,
                           padding: EdgeInsets.symmetric(
-                            vertical: SizeConfig.padding16,
+                            vertical: 16.h,
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness8),
+                            borderRadius: BorderRadius.circular(8.r),
                           ),
                         ),
                         child: Text(
@@ -511,7 +705,7 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                         ),
                       ),
                     ),
-                    SizedBox(width: SizeConfig.padding12),
+                    SizedBox(width: 12.w),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
@@ -528,6 +722,25 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                               );
                               context.read<BookingBloc>().add(event);
                             } else if (state.isFree) {
+                              context.read<CartBloc>().add(
+                                    AddToCart(
+                                      advisor: Expert(
+                                        advisorId: widget.advisorId,
+                                        name: widget.advisorName,
+                                        experience: '',
+                                        rating: 0,
+                                        expertise: '',
+                                        qualifications: '',
+                                        rate: 0,
+                                        rateNew: '',
+                                        image: widget.advisorImage,
+                                        isFree: false,
+                                      ),
+                                      selectedDate: state.selectedDate,
+                                      selectedTime: state.selectedTime,
+                                      selectedDuration: state.selectedDuration,
+                                    ),
+                                  );
                               context.read<BookingBloc>().add(
                                     GetPricing(
                                       state.selectedDuration,
@@ -539,6 +752,25 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                                     ),
                                   );
                             } else {
+                              context.read<CartBloc>().add(
+                                    AddToCart(
+                                      advisor: Expert(
+                                        advisorId: widget.advisorId,
+                                        name: widget.advisorName,
+                                        experience: '',
+                                        rating: 0,
+                                        expertise: '',
+                                        qualifications: '',
+                                        rate: 0,
+                                        rateNew: '',
+                                        image: widget.advisorImage,
+                                        isFree: false,
+                                      ),
+                                      selectedDate: state.selectedDate,
+                                      selectedTime: state.selectedTime,
+                                      selectedDuration: state.selectedDuration,
+                                    ),
+                                  );
                               context.read<BookingBloc>().add(
                                     GetPricing(
                                       state.selectedDuration,
@@ -564,11 +796,10 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                               ? UiConstants.kTextColor.withOpacity(0.3)
                               : UiConstants.kTextColor,
                           padding: EdgeInsets.symmetric(
-                            vertical: SizeConfig.padding16,
+                            vertical: 16.h,
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness8),
+                            borderRadius: BorderRadius.circular(8.r),
                           ),
                         ),
                         child: Text(
@@ -582,7 +813,7 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
                   ],
                 ),
               ),
-              SizedBox(height: SizeConfig.padding40),
+              SizedBox(height: 40.h),
             ],
           );
   }
@@ -591,10 +822,66 @@ class _BookCallBottomSheetState extends State<_BookCallBottomSheet> {
 class DateButton extends StatelessWidget {
   final String date;
   final bool isSelected;
+  final EdgeInsets? padding;
+  final VoidCallback onTap;
+  final bool requireFormat;
+  final Widget? child;
+
+  const DateButton({
+    required this.date,
+    required this.isSelected,
+    required this.onTap,
+    this.padding,
+    this.requireFormat = true,
+    this.child,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onTap,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: UiConstants.kBackgroundColor,
+        padding: padding ??
+            EdgeInsets.symmetric(
+              vertical: 18.h,
+              horizontal: 10.w,
+            ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.r),
+          side: BorderSide(
+            color:
+                isSelected ? UiConstants.kTextColor : UiConstants.greyVarient,
+            width: 1.w,
+          ),
+        ),
+      ),
+      child: child ??
+          Text(
+            requireFormat ? getDayAndDate(date) : date,
+            textAlign: TextAlign.center,
+            style: TextStyles.sourceSansM.body4,
+          ),
+    );
+  }
+}
+
+({String day, String date}) getDayAndDateParts(String dateString) {
+  DateTime date = DateTime.parse(dateString);
+  String day = DateFormat('EEE').format(date);
+  String formattedDate = DateFormat('dd').format(date);
+
+  return (day: day, date: formattedDate);
+}
+
+class MonthButton extends StatelessWidget {
+  final String date;
+  final bool isSelected;
   final VoidCallback onTap;
   final bool requireFormat;
 
-  const DateButton({
+  const MonthButton({
     required this.date,
     required this.isSelected,
     required this.onTap,
@@ -609,22 +896,22 @@ class DateButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: UiConstants.kBackgroundColor,
         padding: EdgeInsets.symmetric(
-          vertical: SizeConfig.padding8,
-          horizontal: SizeConfig.padding10,
+          vertical: 8.h,
+          horizontal: 10.h,
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+          borderRadius: BorderRadius.circular(8.r),
           side: BorderSide(
             color:
                 isSelected ? UiConstants.kTextColor : UiConstants.greyVarient,
-            width: SizeConfig.padding2,
+            width: 2.w,
           ),
         ),
       ),
       child: Text(
-        requireFormat ? getDayAndDate(date) : date,
+        date,
         textAlign: TextAlign.center,
-        style: TextStyles.sourceSansSB.body3,
+        style: TextStyles.sourceSansM.body4,
       ),
     );
   }
@@ -664,36 +951,89 @@ String formatDate(String dateString) {
   return formattedDate;
 }
 
+List<String?> generateTimeSlotsWithBookedSlots(
+  List<String?> availableSlots,
+  int selectedDuration,
+) {
+  if (availableSlots.isEmpty) {
+    return availableSlots;
+  }
+  final startTime =
+      DateTime.tryParse(availableSlots.first ?? '') ?? DateTime.now();
+  final endTime =
+      DateTime.tryParse(availableSlots.last ?? '') ?? DateTime.now();
+
+  final allSlots = <String>[];
+  final bookedSlots = <String>[];
+  DateTime currentTime = startTime;
+  while (
+      currentTime.isBefore(endTime) || currentTime.isAtSameMomentAs(endTime)) {
+    final currentTimeString = currentTime.toIso8601String();
+    if (availableSlots.contains(currentTimeString)) {
+      allSlots.add(currentTimeString);
+    } else {
+      final bookedSlotString = 'BOOKED_$currentTimeString';
+      allSlots.add(bookedSlotString);
+      bookedSlots.add(bookedSlotString);
+    }
+    currentTime = currentTime.add(Duration(minutes: selectedDuration));
+  }
+  while (bookedSlots.length < 3) {
+    final lastSlot =
+        DateTime.tryParse(allSlots.last.replaceFirst('BOOKED_', '')) ??
+            DateTime.now();
+    final newBookedSlot = lastSlot.add(Duration(minutes: selectedDuration));
+    final newBookedSlotString = 'BOOKED_${newBookedSlot.toIso8601String()}';
+    allSlots.add(newBookedSlotString);
+    bookedSlots.add(newBookedSlotString);
+  }
+  return allSlots;
+}
+
 class TimeButton extends StatelessWidget {
   final String time;
   final bool isSelected;
   final VoidCallback onTap;
+  final bool isBooked;
 
   const TimeButton({
     required this.time,
     required this.isSelected,
     required this.onTap,
+    this.isBooked = false,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isBookedSlot = time.startsWith('BOOKED_');
+    final displayTime = isBookedSlot
+        ? getTimeIn12HourFormat(time.replaceFirst('BOOKED_', ''))
+        : getTimeIn12HourFormat(time);
+
     return ElevatedButton(
-      onPressed: onTap,
+      onPressed: isBookedSlot ? null : onTap,
       style: ElevatedButton.styleFrom(
-        backgroundColor: UiConstants.kBackgroundColor,
+        backgroundColor: isBookedSlot
+            ? const Color(0xff2C2C2F)
+            : UiConstants.kBackgroundColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+          borderRadius: BorderRadius.circular(8.r),
           side: BorderSide(
-            color:
-                isSelected ? UiConstants.kTextColor : UiConstants.greyVarient,
-            width: SizeConfig.padding2,
+            color: isBookedSlot
+                ? const Color(0xff37373A)
+                : (isSelected
+                    ? UiConstants.kTextColor
+                    : UiConstants.greyVarient),
+            width: 1.w,
           ),
         ),
       ),
       child: Text(
-        getTimeIn12HourFormat(time),
-        style: TextStyles.sourceSans.body3,
+        displayTime,
+        style: TextStyles.sourceSansM.body4.copyWith(
+          color: isBookedSlot ? UiConstants.kTextColor6.withOpacity(0.5) : null,
+        ),
       ),
     );
   }
@@ -711,9 +1051,9 @@ Widget _buildPaymentSummary(
     children: [
       Container(
         padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.padding20,
+          horizontal: 20.w,
         ).copyWith(
-          top: SizeConfig.padding14,
+          top: 6.h,
         ),
         child: Stack(
           alignment: AlignmentDirectional.center,
@@ -732,13 +1072,16 @@ Widget _buildPaymentSummary(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                GestureDetector(
-                  onTap: () {
+                IconButton(
+                  iconSize: 18.r,
+                  splashRadius: 18.r,
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
                     AppState.backButtonDispatcher!.didPopRoute();
                   },
-                  child: Icon(
+                  icon: Icon(
                     Icons.close,
-                    size: SizeConfig.body1,
+                    size: 18.r,
                     color: UiConstants.kTextColor,
                   ),
                 ),
@@ -747,15 +1090,20 @@ Widget _buildPaymentSummary(
           ],
         ),
       ),
-      const Divider(
-        color: UiConstants.greyVarient,
+      Container(
+        padding: EdgeInsets.zero,
+        child: const Divider(
+          color: UiConstants.greyVarient,
+          thickness: 1,
+          height: 1,
+        ),
       ),
       Container(
-        padding: EdgeInsets.all(SizeConfig.padding18),
-        margin: EdgeInsets.all(SizeConfig.padding18),
+        padding: EdgeInsets.all(18.r),
+        margin: EdgeInsets.all(18.r),
         decoration: BoxDecoration(
           color: UiConstants.greyVarient,
-          borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -766,28 +1114,28 @@ Widget _buildPaymentSummary(
               style: TextStyles.sourceSansSB.body2,
             ),
             SizedBox(
-              height: SizeConfig.padding10,
+              height: 10.h,
             ),
             Row(
               children: [
                 Icon(
                   Icons.access_time,
                   color: UiConstants.kTextColor5,
-                  size: SizeConfig.body3,
+                  size: 14.r,
                 ),
-                SizedBox(width: SizeConfig.padding8),
+                SizedBox(width: 8.w),
                 Text(
                   getTimeIn12HourFormat(state.time),
                   style: TextStyles.sourceSans.body3
                       .colour(UiConstants.customSubtitle),
                 ),
-                SizedBox(width: SizeConfig.padding12),
+                SizedBox(width: 12.w),
                 Icon(
                   Icons.calendar_today,
                   color: UiConstants.kTextColor5,
-                  size: SizeConfig.body3,
+                  size: 14.r,
                 ),
-                SizedBox(width: SizeConfig.padding8),
+                SizedBox(width: 8.w),
                 Text(
                   formatDate(state.date),
                   style: TextStyles.sourceSans.body3
@@ -800,12 +1148,12 @@ Widget _buildPaymentSummary(
       ),
       Container(
         margin: EdgeInsets.only(
-          left: SizeConfig.padding18,
-          right: SizeConfig.padding18,
+          left: 18.w,
+          right: 18.w,
         ),
         decoration: BoxDecoration(
           color: UiConstants.greyVarient,
-          borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -831,7 +1179,7 @@ Widget _buildPaymentSummary(
               },
             ),
             Padding(
-              padding: EdgeInsets.all(SizeConfig.padding18),
+              padding: EdgeInsets.all(18.r),
               child: Column(
                 children: [
                   _buildSummary(
@@ -898,14 +1246,14 @@ Widget _buildPaymentSummary(
         ),
       ),
       SizedBox(
-        height: SizeConfig.padding18,
+        height: 18.h,
       ),
       const Divider(
         color: UiConstants.greyVarient,
       ),
       Padding(
-        padding: EdgeInsets.all(SizeConfig.padding18).copyWith(
-          bottom: SizeConfig.padding40,
+        padding: EdgeInsets.all(18.r).copyWith(
+          bottom: 40.h,
         ),
         child: isFree
             ? Row(
@@ -918,11 +1266,10 @@ Widget _buildPaymentSummary(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: UiConstants.greyVarient,
                         padding: EdgeInsets.symmetric(
-                          vertical: SizeConfig.padding16,
+                          vertical: 16.h,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness8),
+                          borderRadius: BorderRadius.circular(8.r),
                         ),
                       ),
                       child: Text(
@@ -931,7 +1278,7 @@ Widget _buildPaymentSummary(
                       ),
                     ),
                   ),
-                  SizedBox(width: SizeConfig.padding12),
+                  SizedBox(width: 12.w),
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
@@ -958,11 +1305,10 @@ Widget _buildPaymentSummary(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: UiConstants.kTextColor,
                         padding: EdgeInsets.symmetric(
-                          vertical: SizeConfig.padding16,
+                          vertical: 16.h,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness8),
+                          borderRadius: BorderRadius.circular(8.r),
                         ),
                       ),
                       child: Text(
@@ -997,15 +1343,21 @@ Widget _buildPaymentSummary(
                       backgroundColor: UiConstants.kBackgroundColor,
                       hapticVibrate: true,
                     );
+                    locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.makePayment,
+                      properties: {
+                        "Expert ID": state.advisorId,
+                        "Expert name": state.advisorName,
+                      },
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: UiConstants.kTextColor,
                     padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.padding16,
+                      vertical: 16.h,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness8),
+                      borderRadius: BorderRadius.circular(8.r),
                     ),
                   ),
                   child: Text(
@@ -1030,13 +1382,13 @@ Widget _buildCoinsRow({
     decoration: BoxDecoration(
       color: UiConstants.kTextColor.withOpacity(.1),
       borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(SizeConfig.roundness12),
-        topRight: Radius.circular(SizeConfig.roundness12),
+        topLeft: Radius.circular(12.r),
+        topRight: Radius.circular(12.r),
       ),
     ),
     padding: EdgeInsets.symmetric(
-      vertical: SizeConfig.padding12,
-      horizontal: SizeConfig.padding20,
+      vertical: 12.h,
+      horizontal: 20.w,
     ),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1059,7 +1411,7 @@ Widget _buildCoinsRow({
               },
             ),
             SizedBox(
-              width: SizeConfig.padding8,
+              width: 8.w,
             ),
             CustomSwitchNew(
               isLoading: isLoading,
@@ -1083,7 +1435,7 @@ Widget _buildSummaryRow(
   String? subText,
 }) {
   return Padding(
-    padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+    padding: EdgeInsets.symmetric(vertical: 4.h),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -1109,7 +1461,7 @@ Widget _buildSummaryRow(
             children: [
               if (isFree && subText != null)
                 Padding(
-                  padding: EdgeInsets.only(right: SizeConfig.padding6),
+                  padding: EdgeInsets.only(right: 6.w),
                   child: Text(
                     subText,
                     style: TextStyles.sourceSansSB.body2.colour(subTextColor),
@@ -1147,7 +1499,7 @@ Widget _buildSummary(
   Color textColor = UiConstants.kTextColor,
 }) {
   return Padding(
-    padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+    padding: EdgeInsets.symmetric(vertical: 4.h),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -1185,8 +1537,8 @@ Widget drawDottedLine({required int lenghtOfStripes}) {
     children: [
       for (int i = 0; i < lenghtOfStripes; i++)
         Container(
-          width: SizeConfig.padding3,
-          height: SizeConfig.padding1,
+          width: 3.w,
+          height: 1.h,
           decoration: BoxDecoration(
             color: i % 2 == 0 ? UiConstants.textGray70 : Colors.transparent,
           ),

@@ -5,7 +5,10 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/experts/experts_details.dart';
+import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
+import 'package:felloapp/feature/expert/widgets/expert_card_v2.dart';
 import 'package:felloapp/feature/expertDetails/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/expertDetails/bloc/rating_bloc.dart';
 import 'package:felloapp/feature/expertDetails/widgets/rating_sheet.dart';
@@ -19,11 +22,13 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/local_actions_state.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 class EaseInFloatingActionButtonAnimator extends FloatingActionButtonAnimator {
@@ -144,8 +149,25 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                 BaseUtil.openBookAdvisorSheet(
                   advisorId: widget.advisorID,
                   advisorName: state.expertDetails?.name ?? '',
+                  advisorImage: state.expertDetails?.image ?? '',
                   isEdit: false,
                 );
+                context.read<CartBloc>().add(
+                      AddToCart(
+                        advisor: Expert(
+                          advisorId: widget.advisorID,
+                          name: state.expertDetails!.name,
+                          experience: state.expertDetails!.experience,
+                          rating: state.expertDetails!.rating,
+                          expertise: '',
+                          qualifications: '',
+                          rate: 0,
+                          rateNew: '',
+                          image: state.expertDetails!.image,
+                          isFree: false,
+                        ),
+                      ),
+                    );
                 _analyticsService.track(
                   eventName: AnalyticsEvents.bookQuick,
                   properties: {
@@ -158,9 +180,7 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.all(
-                    Radius.circular(
-                      SizeConfig.roundness5,
-                    ),
+                    Radius.circular(5.r),
                   ),
                 ),
                 child: Padding(
@@ -205,23 +225,114 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                 return <Widget>[
                   SliverPadding(
                     padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.padding20,
+                      horizontal: 20.w,
                     ),
                     sliver: SliverToBoxAdapter(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(
-                            height: SizeConfig.padding25,
+                            height: 25.h,
                           ),
-                          CircleAvatar(
-                            radius: SizeConfig.padding35,
-                            backgroundImage: NetworkImage(
-                              expertDetails!.image,
+                          GestureDetector(
+                            onTap: expertDetails!.shorts.isEmpty
+                                ? null
+                                : () async {
+                                    final preloadBloc =
+                                        BlocProvider.of<PreloadBloc>(context);
+                                    final switchCompleter = Completer<void>();
+                                    final updateUrlsCompleter =
+                                        Completer<void>();
+                                    final initializeCompleter =
+                                        Completer<void>();
+
+                                    preloadBloc.add(
+                                      PreloadEvent.switchToProfileReels(
+                                          completer: switchCompleter),
+                                    );
+                                    await switchCompleter.future;
+                                    preloadBloc.add(
+                                      PreloadEvent.updateUrls(
+                                        expertDetails.shorts,
+                                        completer: updateUrlsCompleter,
+                                      ),
+                                    );
+                                    await updateUrlsCompleter.future;
+                                    preloadBloc.add(
+                                      PreloadEvent.initializeAtIndex(
+                                        index: 0,
+                                        completer: initializeCompleter,
+                                      ),
+                                    );
+                                    await initializeCompleter.future;
+                                    preloadBloc.add(
+                                      const PreloadEvent.playVideoAtIndex(0),
+                                    );
+                                    AppState.delegate!.appState.currentAction =
+                                        PageAction(
+                                      page: ProfileShortsPageConfig,
+                                      state: PageState.addWidget,
+                                      widget: const ShortsVideoPage(
+                                        categories: [],
+                                        showAppBar: true,
+                                        title: 'Profile',
+                                        showBottomNavigation: false,
+                                      ),
+                                    );
+                                  },
+                            child: Stack(
+                              alignment: Alignment.topCenter,
+                              children: [
+                                SizedBox(
+                                  width: 85.r,
+                                  height: 85.r,
+                                  child: introVideosIndicator(
+                                    expertDetails.shorts,
+                                    context,
+                                    ClipOval(
+                                      child: SizedBox(
+                                        width: 78.r,
+                                        height: 78.r,
+                                        child: AppImage(
+                                          expertDetails.image,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                if (expertDetails.shorts.isNotEmpty)
+                                  Transform.translate(
+                                    offset: Offset(0, -15.h),
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 9.w,
+                                        vertical: 2.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: UiConstants.bg,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(12.r),
+                                        ),
+                                        border: Border.all(
+                                          color: UiConstants.grey6,
+                                          width: 1.r,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        'Click to know',
+                                        style:
+                                            TextStyles.sourceSansM.body4.colour(
+                                          const Color(0xffA6A6AC),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
                             ),
                           ),
                           SizedBox(
-                            height: SizeConfig.padding20,
+                            height: 20.h,
                           ),
                           Text(
                             expertDetails.name,
@@ -230,7 +341,7 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                             ),
                           ),
                           SizedBox(
-                            height: SizeConfig.padding6,
+                            height: 6.h,
                           ),
                           Text(
                             expertDetails.description,
@@ -240,7 +351,7 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                             textAlign: TextAlign.center,
                           ),
                           SizedBox(
-                            height: SizeConfig.padding12,
+                            height: 12.h,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -297,10 +408,119 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                             ],
                           ),
                           SizedBox(
-                            height: SizeConfig.padding32,
+                            height: 26.h,
                           ),
-                          CustomCarousel(
-                            quickActions: expertDetails.QuickActions,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    BlocProvider.of<ExpertDetailsBloc>(
+                                      context,
+                                      listen: false,
+                                    ).add(
+                                      FollowAdvisor(
+                                        widget.advisorID,
+                                        LocalActionsState.getAdvisorFollowed(
+                                          widget.advisorID,
+                                          expertDetails.isFollowed,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 9.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: UiConstants.kProfileBorderColor
+                                          .withOpacity(.06),
+                                      borderRadius: BorderRadius.circular(5.r),
+                                      border: Border.all(
+                                        color: UiConstants.kTextColor6
+                                            .withOpacity(.1),
+                                        width: 2.w,
+                                      ),
+                                    ),
+                                    child: LocalActionsState.getAdvisorFollowed(
+                                      widget.advisorID,
+                                      expertDetails.isFollowed,
+                                    )
+                                        ? Text(
+                                            'Following',
+                                            style:
+                                                TextStyles.sourceSansSB.body4,
+                                            textAlign: TextAlign.center,
+                                          )
+                                        : Text(
+                                            'Follow',
+                                            style:
+                                                TextStyles.sourceSansSB.body4,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10.w,
+                              ),
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    context.read<CartBloc>().add(
+                                          AddToCart(
+                                            advisor: Expert(
+                                              advisorId: widget.advisorID,
+                                              name: state.expertDetails!.name,
+                                              experience: state
+                                                  .expertDetails!.experience,
+                                              rating:
+                                                  state.expertDetails!.rating,
+                                              expertise: '',
+                                              qualifications: '',
+                                              rate: 0,
+                                              rateNew: '',
+                                              image: state.expertDetails!.image,
+                                              isFree: false,
+                                            ),
+                                          ),
+                                        );
+                                    BaseUtil.openBookAdvisorSheet(
+                                      advisorId: widget.advisorID,
+                                      advisorName:
+                                          state.expertDetails?.name ?? '',
+                                      advisorImage:
+                                          state.expertDetails?.image ?? '',
+                                      isEdit: false,
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 9.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: UiConstants.kProfileBorderColor
+                                          .withOpacity(.06),
+                                      borderRadius: BorderRadius.circular(5.r),
+                                      border: Border.all(
+                                        color: UiConstants.kTextColor6
+                                            .withOpacity(.1),
+                                        width: 2.w,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Book a Call',
+                                      style: TextStyles.sourceSansSB.body4,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 16.h,
                           ),
                         ],
                       ),
@@ -312,7 +532,7 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                     ),
                     sliver: SliverPadding(
                       padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding20,
+                        horizontal: 20.w,
                       ),
                       sliver: SliverAppBar(
                         pinned: true,
@@ -346,12 +566,12 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
               },
               body: isLoading
                   ? const FullScreenLoader()
-                  : TabBarView(
-                      controller: _tabController,
+                  : IndexedStack(
+                      index: _tabController.index,
                       children: [
                         Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding20,
+                            horizontal: 20.w,
                           ),
                           child: _buildInfoTab(
                             expertDetails!,
@@ -361,7 +581,7 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding8,
+                            horizontal: 8.w,
                           ),
                           child: _buildTabOneData(
                             shortsData,
@@ -371,7 +591,7 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding20,
+                            horizontal: 20.w,
                           ),
                           child: _buildLiveTab(recentlive, context),
                         ),
@@ -413,28 +633,28 @@ Widget _buildLiveTab(List<VideoData> recentlive, BuildContext context) {
   return CustomScrollView(
     slivers: [
       SliverPadding(
-        padding: EdgeInsets.only(top: SizeConfig.padding12),
+        padding: EdgeInsets.only(top: 12.h),
       ),
       if (recentlive.isEmpty)
         SliverToBoxAdapter(
           child: SizedBox(
-            width: SizeConfig.padding252,
+            width: 252.w,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: SizeConfig.padding18),
+                SizedBox(height: 18.h),
                 AppImage(
                   Assets.no_live,
-                  height: SizeConfig.padding35,
-                  width: SizeConfig.padding35,
+                  height: 35.h,
+                  width: 35.w,
                 ),
-                SizedBox(height: SizeConfig.padding12),
+                SizedBox(height: 12.h),
                 Text(
                   'Currently, there are no live sessions available.',
                   style: TextStyles.sourceSansSB.body0,
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: SizeConfig.padding10),
+                SizedBox(height: 10.h),
                 Text(
                   'Book a one-on-one for personalized advice!',
                   style: TextStyles.sourceSans.body3.colour(
@@ -452,12 +672,13 @@ Widget _buildLiveTab(List<VideoData> recentlive, BuildContext context) {
             (context, index) {
               final video = recentlive[index];
               return Padding(
-                padding: EdgeInsets.only(bottom: SizeConfig.padding16),
+                padding: EdgeInsets.only(bottom: 16.h),
                 child: LiveCardWidget(
                   fromHome: false,
                   id: video.id,
                   status: 'recent',
-                  maxWidth: SizeConfig.padding350,
+                  maxWidth: 350.w,
+                  advisorImg: video.advisorImg,
                   onTap: () async {
                     final preloadBloc = BlocProvider.of<PreloadBloc>(context);
                     final switchCompleter = Completer<void>();
@@ -508,7 +729,7 @@ Widget _buildInfoTab(
     slivers: [
       SliverToBoxAdapter(
         child: SizedBox(
-          height: SizeConfig.padding12,
+          height: 12.h,
         ),
       ),
       SliverToBoxAdapter(
@@ -519,7 +740,7 @@ Widget _buildInfoTab(
       ),
       SliverToBoxAdapter(
         child: SizedBox(
-          height: SizeConfig.padding18,
+          height: 18.h,
         ),
       ),
       SliverList(
@@ -527,28 +748,27 @@ Widget _buildInfoTab(
           (context, index) {
             final license = expertDetails.licenses[index];
             return Padding(
-              padding: EdgeInsets.only(bottom: SizeConfig.padding8),
+              padding: EdgeInsets.only(bottom: 8.h),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    width: SizeConfig.padding46,
-                    height: SizeConfig.padding46,
+                    width: 46.w,
+                    height: 46.h,
                     decoration: BoxDecoration(
                       color: UiConstants.greyVarient,
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness8),
+                      borderRadius: BorderRadius.circular(8.r),
                     ),
                     child: Center(
                       child: Image.network(
                         license.imageUrl,
-                        width: SizeConfig.padding46,
-                        height: SizeConfig.padding46,
+                        width: 46.w,
+                        height: 46.h,
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                  SizedBox(width: SizeConfig.padding10),
+                  SizedBox(width: 10.w),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -557,7 +777,7 @@ Widget _buildInfoTab(
                           license.name,
                           style: TextStyles.sourceSansSB.body3,
                         ),
-                        SizedBox(height: SizeConfig.padding2),
+                        SizedBox(height: 2.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -586,11 +806,11 @@ Widget _buildInfoTab(
                                           decorationThickness: 1,
                                         ),
                                   ),
-                                  SizedBox(width: SizeConfig.padding4),
+                                  SizedBox(width: 4.w),
                                   Icon(
                                     Icons.open_in_new,
                                     color: Colors.white70,
-                                    size: SizeConfig.body6,
+                                    size: 16.r,
                                   ),
                                 ],
                               ),
@@ -610,7 +830,7 @@ Widget _buildInfoTab(
       if (expertDetails.social.isNotEmpty)
         SliverToBoxAdapter(
           child: SizedBox(
-            height: SizeConfig.padding24,
+            height: 24.h,
           ),
         ),
       if (expertDetails.social.isNotEmpty)
@@ -623,7 +843,7 @@ Widget _buildInfoTab(
       if (expertDetails.social.isNotEmpty)
         SliverToBoxAdapter(
           child: SizedBox(
-            height: SizeConfig.padding18,
+            height: 18.h,
           ),
         ),
       SliverToBoxAdapter(
@@ -634,20 +854,20 @@ Widget _buildInfoTab(
                 BaseUtil.launchUrl(social.url);
               },
               child: Container(
-                padding: EdgeInsets.all(SizeConfig.padding14),
+                padding: EdgeInsets.all(14.w),
                 margin: EdgeInsets.only(
-                  right: SizeConfig.padding4,
+                  right: 4.w,
                 ),
                 decoration: BoxDecoration(
                   color: UiConstants.greyVarient,
                   borderRadius: BorderRadius.circular(
-                    SizeConfig.roundness8,
+                    8.r,
                   ),
                 ),
                 child: AppImage(
                   social.icon,
                   color: UiConstants.kTextColor5,
-                  height: SizeConfig.body2,
+                  height: 20.h,
                 ),
               ),
             );
@@ -656,7 +876,7 @@ Widget _buildInfoTab(
       ),
       SliverToBoxAdapter(
         child: SizedBox(
-          height: SizeConfig.padding24,
+          height: 24.h,
         ),
       ),
       SliverToBoxAdapter(
@@ -679,23 +899,23 @@ Widget _buildTabOneData(
       if (shortsData.isEmpty)
         SliverToBoxAdapter(
           child: SizedBox(
-            width: SizeConfig.padding252,
+            width: 252.w,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: SizeConfig.padding30),
+                SizedBox(height: 30.h),
                 AppImage(
                   Assets.no_shorts,
-                  height: SizeConfig.padding35,
-                  width: SizeConfig.padding35,
+                  height: 35.h,
+                  width: 35.w,
                 ),
-                SizedBox(height: SizeConfig.padding12),
+                SizedBox(height: 12.h),
                 Text(
                   '$name hasn’t shared any shorts yet',
                   style: TextStyles.sourceSansSB.body0,
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: SizeConfig.padding10),
+                SizedBox(height: 10.h),
                 Text(
                   'Book a session to get personal advice directly from them!',
                   style: TextStyles.sourceSans.body3.colour(
@@ -708,7 +928,7 @@ Widget _buildTabOneData(
           ),
         ),
       SliverPadding(
-        padding: EdgeInsets.only(top: SizeConfig.padding12),
+        padding: EdgeInsets.only(top: 12.h),
       ),
       SliverGrid(
         delegate: SliverChildBuilderDelegate(
@@ -757,8 +977,7 @@ Widget _buildTabOneData(
                   Container(
                     decoration: BoxDecoration(
                       color: UiConstants.greyVarient,
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness2),
+                      borderRadius: BorderRadius.circular(2.r),
                       image: DecorationImage(
                         image: NetworkImage(video.thumbnail),
                         fit: BoxFit.cover,
@@ -766,16 +985,16 @@ Widget _buildTabOneData(
                     ),
                   ),
                   Positioned(
-                    bottom: SizeConfig.padding8,
-                    left: SizeConfig.padding4,
+                    bottom: 8.h,
+                    left: 4.w,
                     child: Row(
                       children: [
                         Icon(
                           Icons.play_arrow,
                           color: UiConstants.kTextColor,
-                          size: SizeConfig.body2,
+                          size: 20.r,
                         ),
-                        SizedBox(width: SizeConfig.padding4),
+                        SizedBox(width: 4.w),
                         Text(
                           '${video.views}',
                           style: TextStyles.sourceSansSB.body4,
@@ -791,8 +1010,8 @@ Widget _buildTabOneData(
         ),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          crossAxisSpacing: SizeConfig.padding4,
-          mainAxisSpacing: SizeConfig.padding4,
+          crossAxisSpacing: 4.w,
+          mainAxisSpacing: 4.h,
           childAspectRatio: 0.6,
         ),
       ),
@@ -817,7 +1036,7 @@ class CustomCarouselState extends State<CustomCarousel> {
     return Column(
       children: [
         SizedBox(
-          height: SizeConfig.padding60,
+          height: 60.h,
           child: PageView(
             controller: _pageController,
             onPageChanged: (index) {
@@ -841,7 +1060,7 @@ class CustomCarouselState extends State<CustomCarousel> {
           ),
         ),
         SizedBox(
-          height: SizeConfig.padding12,
+          height: 12.h,
         ),
         if (widget.quickActions.length > 1)
           Row(
@@ -849,11 +1068,11 @@ class CustomCarouselState extends State<CustomCarousel> {
             children: List.generate(widget.quickActions.length, (index) {
               return Container(
                 margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding4,
-                  vertical: SizeConfig.padding8,
+                  horizontal: 4.w,
+                  vertical: 8.h,
                 ),
-                width: SizeConfig.padding4,
-                height: SizeConfig.padding4,
+                width: 4.w,
+                height: 4.h,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: _currentIndex == index ? Colors.white : Colors.grey,
@@ -873,12 +1092,12 @@ class CustomCarouselState extends State<CustomCarousel> {
   }) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.padding18,
-        vertical: SizeConfig.padding12,
+        horizontal: 18.w,
+        vertical: 12.h,
       ),
       decoration: BoxDecoration(
         color: UiConstants.greyVarient,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -894,7 +1113,7 @@ class CustomCarouselState extends State<CustomCarousel> {
                 ),
               ),
               SizedBox(
-                height: SizeConfig.padding4,
+                height: 4.h,
               ),
               Text(
                 description,
@@ -908,13 +1127,13 @@ class CustomCarouselState extends State<CustomCarousel> {
             onTap: onTap,
             child: Container(
               padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding8,
-                vertical: SizeConfig.padding6,
+                horizontal: 8.w,
+                vertical: 6.h,
               ),
               decoration: BoxDecoration(
                 color: UiConstants.kTextColor,
                 borderRadius: BorderRadius.circular(
-                  SizeConfig.roundness5,
+                  5.r,
                 ),
               ),
               child: Text(
@@ -957,7 +1176,7 @@ class RatingReviewSection extends StatelessWidget {
                   style: TextStyles.sourceSansSB.body2,
                 ),
                 SizedBox(
-                  height: SizeConfig.padding18,
+                  height: 18.h,
                 ),
                 Row(
                   children: [
@@ -966,7 +1185,7 @@ class RatingReviewSection extends StatelessWidget {
                       style: TextStyles.sourceSansSB.title2,
                     ),
                     SizedBox(
-                      width: SizeConfig.padding10,
+                      width: 10.w,
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -979,14 +1198,14 @@ class RatingReviewSection extends StatelessWidget {
                           glow: false,
                           ignoreGestures: true,
                           unratedColor: Colors.grey,
-                          itemSize: SizeConfig.body6,
+                          itemSize: 6.r,
                           itemPadding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding1,
+                            horizontal: 1.w,
                           ),
                           itemBuilder: (context, _) => Icon(
                             Icons.star,
                             color: Colors.amber,
-                            size: SizeConfig.body6,
+                            size: 6.r,
                           ),
                           onRatingUpdate: (rating) {},
                         ),
@@ -1029,8 +1248,8 @@ class RatingReviewSection extends StatelessWidget {
                         ),
                         padding: WidgetStateProperty.all(
                           EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding18,
-                            vertical: SizeConfig.padding6,
+                            horizontal: 18.w,
+                            vertical: 6.h,
                           ),
                         ),
                         side: WidgetStateProperty.all(
@@ -1043,7 +1262,7 @@ class RatingReviewSection extends StatelessWidget {
                         shape: WidgetStateProperty.all(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
-                              Radius.circular(SizeConfig.roundness5),
+                              Radius.circular(5.r),
                             ),
                             side: const BorderSide(
                               color: UiConstants.kTextColor,
@@ -1059,7 +1278,7 @@ class RatingReviewSection extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: SizeConfig.padding32),
+                SizedBox(height: 32.h),
                 Column(
                   children: (state.userRatings ?? [])
                       .take(
@@ -1098,7 +1317,7 @@ class RatingReviewSection extends StatelessWidget {
                       ],
                     ),
                   ),
-                SizedBox(height: SizeConfig.padding20),
+                SizedBox(height: 20.h),
               ],
             )
         };
@@ -1131,13 +1350,13 @@ class ReviewCard extends StatelessWidget {
         Row(
           children: [
             CircleAvatar(
-              radius: SizeConfig.padding16,
+              radius: 16.r,
               child: AppImage(
                 "assets/vectors/userAvatars/$image.svg",
                 fit: BoxFit.cover,
               ),
             ),
-            SizedBox(width: SizeConfig.padding8),
+            SizedBox(width: 8.w),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1160,7 +1379,7 @@ class ReviewCard extends StatelessWidget {
           ],
         ),
         SizedBox(
-          height: SizeConfig.padding10,
+          height: 10.h,
         ),
         RatingBar.builder(
           initialRating: rating.toDouble(),
@@ -1169,18 +1388,18 @@ class ReviewCard extends StatelessWidget {
           itemCount: 5,
           glow: false,
           ignoreGestures: true,
-          itemSize: SizeConfig.body6,
+          itemSize: 6.r,
           unratedColor: Colors.grey,
-          itemPadding: EdgeInsets.symmetric(horizontal: SizeConfig.padding2),
+          itemPadding: EdgeInsets.symmetric(horizontal: 2.w),
           itemBuilder: (context, _) => Icon(
             Icons.star,
             color: Colors.amber,
-            size: SizeConfig.body6,
+            size: 6.r,
           ),
           onRatingUpdate: (rating) {},
         ),
         SizedBox(
-          height: SizeConfig.padding10,
+          height: 10.h,
         ),
         if (review != '')
           Text(
@@ -1191,7 +1410,7 @@ class ReviewCard extends StatelessWidget {
           ),
         Padding(
           padding: EdgeInsets.symmetric(
-            vertical: review != '' ? SizeConfig.padding16 : SizeConfig.padding4,
+            vertical: review != '' ? 16.h : 4.h,
           ),
           child: Divider(
             color: UiConstants.kTextColor.withOpacity(.11),

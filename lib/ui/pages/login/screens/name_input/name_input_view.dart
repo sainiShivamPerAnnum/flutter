@@ -85,6 +85,15 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                         FilteringTextInputFormatter.allow(
                           RegExp(r'[a-zA-Z ]'),
                         ),
+                        // Custom formatter to prevent clearing on invalid input
+                        TextInputFormatter.withFunction((oldValue, newValue) {
+                          // If the new value is invalid, return the old value
+                          if (!RegExp(r'^[a-zA-Z ]*$')
+                              .hasMatch(newValue.text)) {
+                            return oldValue;
+                          }
+                          return newValue;
+                        }),
                       ],
                       onSubmit: (_) {
                         FocusScope.of(context)

@@ -311,7 +311,6 @@ class Assets {
   static const String exit_logo = "assets/svg/exit.svg";
   static const String experience = "assets/svg/experience.svg";
   static const String add_comment = "assets/svg/comments_reels.svg";
-  static const String remove_comment = "assets/svg/remove_comment.svg";
   static const String image = "assets/svg/image.svg";
   static const String no_shorts = "assets/svg/no_shorts.svg";
   static const String no_live = "assets/svg/no_live.svg";

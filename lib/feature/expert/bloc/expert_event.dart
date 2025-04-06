@@ -13,3 +13,8 @@ class SectionChanged extends ExpertEvent {
 
   const SectionChanged(this.newSection);
 }
+
+class SearchExperts extends ExpertEvent {
+  final String query;
+  const SearchExperts(this.query);
+}

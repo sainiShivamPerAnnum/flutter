@@ -15,6 +15,8 @@ import 'package:felloapp/core/repository/live_repository.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
+import 'package:felloapp/feature/expert/widgets/scroll_to_index.dart';
 import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/feature/fello_badges/ui/fello_badges_home.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
@@ -970,19 +972,86 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'bookings':
         final id = queryParams['id'];
         final name = queryParams['name'];
-        if (id != null && name != null) {
+        final image = queryParams['image'];
+        if (id != null && name != null && image != null) {
           BaseUtil.openBookAdvisorSheet(
             advisorId: id,
             advisorName: name,
+            advisorImage: image,
             isEdit: false,
           );
         }
         break;
+      case 'bookCall':
+        final id = queryParams['id'];
+        final name = queryParams['name'];
+        final image = queryParams['image'];
+        final selectedDate = queryParams['selectedDate'];
+        final selectedTime = queryParams['selectedTime'];
+        final selectedDuration = queryParams['selectedDuration'];
+        if (id != null && name != null && image != null) {
+          if (selectedDate != null &&
+              selectedTime != null &&
+              selectedDuration != null) {
+            BaseUtil.openBookAdvisorSheet(
+              advisorId: id,
+              advisorName: name,
+              advisorImage: image,
+              isEdit: false,
+              cartPayment: true,
+              selectedDate: selectedDate,
+              selectedDuration: int.tryParse(selectedDuration),
+              selectedTime: selectedTime,
+            );
+          } else {
+            BaseUtil.openBookAdvisorSheet(
+              advisorId: id,
+              advisorName: name,
+              advisorImage: image,
+              isEdit: false,
+            );
+          }
+        }
+        break;
+      case 'toast':
+        final title = queryParams['title'];
+        final message = queryParams['message'];
+        final type = queryParams['type'];
+        if (type != null && message != null && title != null) {
+          if (type == 'negative') {
+            BaseUtil.showNegativeAlert(title, message);
+          } else {
+            BaseUtil.showPositiveAlert(title, message);
+          }
+        } else if (message != null && title != null) {
+          BaseUtil.showPositiveAlert(title, message);
+        }
+        break;
       case 'experts':
         final id = queryParams['id'];
+        final category = queryParams['category'];
         if (id != null) {
           openExpertDetails(id);
           break;
+        } else if (category != null &&
+            rootController.navItems
+                .containsValue(RootController.expertNavBarItem)) {
+          onTapItem(RootController.expertNavBarItem);
+          final categoryIndex =
+              RootController.expertsSections.indexOf(category);
+          if (categoryIndex != -1) {
+            await RootController.autoScrollController.scrollToIndex(
+              categoryIndex,
+              preferPosition: AutoScrollPosition.begin,
+              duration: const Duration(milliseconds: 300),
+            );
+            BlocProvider.of<ExpertBloc>(
+              navigatorKey.currentContext!,
+              listen: false,
+            ).add(
+              SectionChanged(category),
+            );
+          }
         } else if (rootController.navItems
             .containsValue(RootController.expertNavBarItem)) {
           onTapItem(RootController.expertNavBarItem);
@@ -1225,7 +1294,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           advisorId: advisorId,
           advisorName: userName,
           title: videoData.model!.topic ?? '',
+          initialViewCount: videoData.model!.totalLiveCount,
           description: videoData.model!.description ?? '',
+          advisorImage: videoData.model!.advisorImg,
           onLeave: () async {
             await AppState.backButtonDispatcher!.didPopRoute();
           },
@@ -1246,6 +1317,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           roomCode: videoData.model!.guestCode,
           advisorId: videoData.model!.advisorId,
           advisorName: videoData.model!.advisorName,
+          advisorImage: videoData.model!.advisorImg,
+          initialViewCount: videoData.model!.totalLiveCount,
           title: videoData.model!.topic ?? '',
           description: videoData.model!.description ?? '',
           onLeave: () async {
