@@ -13,7 +13,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
 class FDDepositView extends StatelessWidget {
   final AllFdsData fdData;
@@ -50,10 +52,16 @@ class __FDDepositViewState extends State<_FDDepositView> {
   @override
   void initState() {
     _amountController.addListener(_onInputChange);
+    _selectedTenure = 0;
+    _selectedFrequency =
+        widget.fdData.detailsPage.cta.frequencyValues.keys.first;
     _amountController.text =
         widget.fdData.detailsPage.cta.displayAmounts[0].toString();
-    _selectedTenure = 0;
-    final firstEligibleValue = widget
+    super.initState();
+  }
+
+  void _onInputChange() {
+    final eligibleEntries = widget
         .fdData
         .detailsPage
         .cta
@@ -61,37 +69,47 @@ class __FDDepositViewState extends State<_FDDepositView> {
             widget.fdData.detailsPage.cta.frequencyValues.keys.first]!
         .entries
         .where((entry) {
-          final tenureOptions =
-              widget.fdData.detailsPage.cta.lockInTenure.options;
-          final selectedTenureOption = tenureOptions[_selectedTenure];
+      final tenureOptions = widget.fdData.detailsPage.cta.lockInTenure.options;
+      final selectedTenureOption = tenureOptions[_selectedTenure];
 
-          if (selectedTenureOption == '0-2 yrs') {
-            return entry.value.months <= 24;
-          } else if (selectedTenureOption == '2-3 yrs') {
-            return entry.value.months > 24 && entry.value.months <= 36;
-          } else if (selectedTenureOption == '3-5 yrs') {
-            return entry.value.months > 36 && entry.value.months <= 60;
-          }
-          return true;
-        })
-        .first
-        .value;
+      if (selectedTenureOption == '0-2 yrs') {
+        return entry.value.months <= 24;
+      } else if (selectedTenureOption == '2-3 yrs') {
+        return entry.value.months > 24 && entry.value.months <= 36;
+      } else if (selectedTenureOption == '3-5 yrs') {
+        return entry.value.months > 36 && entry.value.months <= 60;
+      }
+      return true;
+    }).toList();
 
-    _selectedLabel = firstEligibleValue.label;
+    // Case 1 & 2: If _selectedLabel is null or _selectedTenure has changed,
+    // use the first eligible value
+    FrequencyValue? selectedFrequencyValue;
 
-    _selectedFrequency =
-        widget.fdData.detailsPage.cta.frequencyValues.keys.first;
-    super.initState();
-    _amountController.addListener(_onInputChange);
-  }
+    // Check if the current _selectedLabel is in the eligible entries
+    final currentLabelStillValid = _selectedLabel != null &&
+        eligibleEntries.any((entry) => entry.value.label == _selectedLabel);
 
-  void _onInputChange() {
+    if (!currentLabelStillValid) {
+      // Case 1 & 2: Page just opened or tenure changed, use first eligible value
+      selectedFrequencyValue =
+          eligibleEntries.isNotEmpty ? eligibleEntries.first.value : null;
+      _selectedLabel = selectedFrequencyValue?.label;
+    } else {
+      // Case 3: User selected a different label within the same tenure
+      // Find the entry that matches the selected label
+      selectedFrequencyValue = eligibleEntries
+          .firstWhere((entry) => entry.value.label == _selectedLabel,
+              orElse: () => eligibleEntries.first)
+          .value;
+    }
     context.read<FDCalculatorBloc>().add(
           UpdateFDVariables(
             investmentAmount:
                 double.tryParse(_amountController.text.replaceAll(',', '')) ??
                     0,
-            investmentPeriod: _getSelectedTenureMonths(),
+            investmentPeriod:
+                selectedFrequencyValue?.months ?? _getSelectedTenureMonths(),
             isSeniorCitizen: false,
             payoutFrequency: _selectedFrequency,
             isFemale: false,
@@ -534,35 +552,67 @@ class __FDDepositViewState extends State<_FDDepositView> {
                   ),
                   BlocBuilder<FDCalculatorBloc, FixedDepositCalculatorState>(
                     builder: (context, state) {
-                      if (state is FdCalculationResult) {
-                        return Row(
-                          children: [
-                            Text(
-                              '₹${state.maturityAmount}',
-                              style: TextStyles.sourceSansB.body1.colour(
-                                UiConstants.kTabBorderColor,
-                              ),
-                            ),
-                            SizedBox(
-                              width: SizeConfig.padding6,
-                            ),
-                            Text(
-                              'giving ${state.interestRate}% gross returns',
-                              style: TextStyles.sourceSans.body4.colour(
-                                UiConstants.kTextColor.withOpacity(.6),
-                              ),
-                            ),
-                          ],
-                        );
-                      } else if (state is FCalculatorError) {
-                        return Text(
-                          state.message,
-                          style: TextStyles.sourceSans.body4.colour(
-                            UiConstants.errorText,
-                          ),
-                        );
-                      }
-                      return Container();
+                      return AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        child: state is FdCalculationResult
+                            ? Row(
+                                key: const ValueKey('calculationResult'),
+                                children: [
+                                  Text(
+                                    '₹${state.maturityAmount}',
+                                    style: TextStyles.sourceSansB.body1.colour(
+                                      UiConstants.kTabBorderColor,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: SizeConfig.padding6,
+                                  ),
+                                  Text(
+                                    'giving ${state.interestRate}% gross returns',
+                                    style: TextStyles.sourceSans.body4.colour(
+                                      UiConstants.kTextColor.withOpacity(.6),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : state is FCalculatorError
+                                ? Padding(
+                                    padding: EdgeInsets.only(top: 5.h),
+                                    child: Text(
+                                      state.message,
+                                      key: const ValueKey('errorMessage'),
+                                      style: TextStyles.sourceSans.body4.colour(
+                                        UiConstants.errorText,
+                                      ),
+                                    ),
+                                  )
+                                : Padding(
+                                    padding: EdgeInsets.only(top: 5.h),
+                                    child: Shimmer.fromColors(
+                                      key: const ValueKey('loading'),
+                                      baseColor: UiConstants.kTabBorderColor
+                                          .withOpacity(0.3),
+                                      highlightColor: UiConstants
+                                          .kTabBorderColor
+                                          .withOpacity(0.6),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 100.w,
+                                            height: 21.h,
+                                            color: Colors.white,
+                                          ),
+                                          SizedBox(width: SizeConfig.padding6),
+                                          Container(
+                                            width: 150.w,
+                                            height: 21.h,
+                                            color: Colors.white,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                      );
                     },
                   ),
                   SizedBox(height: SizeConfig.padding16),

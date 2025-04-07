@@ -21,28 +21,3 @@ FDTransactionData _$FDTransactionDataFromJson(Map<String, dynamic> json) =>
           .toList(),
       tenure: json['tenure'] as String?,
     );
-
-Map<String, dynamic> _$FDTransactionDataToJson(FDTransactionData instance) =>
-    <String, dynamic>{
-      'jid': instance.jid,
-      'status': instance.status,
-      'issuerId': instance.issuerId,
-      'applicationId': instance.applicationId,
-      'depositAmount': instance.depositAmount,
-      'tenure': instance.tenure,
-      'roi': instance.roi,
-      'maturityDate': instance.maturityDate,
-      'depositDate': instance.depositDate,
-      'bankDetails': instance.bankDetails,
-    };
-
-BankDetails _$BankDetailsFromJson(Map<String, dynamic> json) => BankDetails(
-      bankName: json['bankName'] as String?,
-      accountNumber: json['accountNumber'] as String?,
-    );
-
-Map<String, dynamic> _$BankDetailsToJson(BankDetails instance) =>
-    <String, dynamic>{
-      'bankName': instance.bankName,
-      'accountNumber': instance.accountNumber,
-    };

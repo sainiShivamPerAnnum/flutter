@@ -3,7 +3,11 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'fd_transaction.g.dart';
 
-@JsonSerializable()
+const _deserializable = JsonSerializable(
+  createToJson: false,
+);
+
+@_deserializable
 class FDTransactionData {
   final String? jid;
   final String? status;
@@ -31,6 +35,4 @@ class FDTransactionData {
 
   factory FDTransactionData.fromJson(Map<String, dynamic> json) =>
       _$FDTransactionDataFromJson(json);
-
-  Map<String, dynamic> toJson() => _$FDTransactionDataToJson(this);
 }

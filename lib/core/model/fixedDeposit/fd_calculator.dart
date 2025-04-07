@@ -19,14 +19,14 @@ class FDInterestModel {
 
 @_deserializable
 class FDCalculator {
-  final String totalInterest;
-  final String maturityAmount;
-  final double interestRate;
+  final String? totalInterest;
+  final String? maturityAmount;
+  final double? interestRate;
 
   FDCalculator({
-    required this.totalInterest,
-    required this.maturityAmount,
-    required this.interestRate,
+    this.totalInterest,
+    this.maturityAmount,
+    this.interestRate,
   });
 
   factory FDCalculator.fromJson(Map<String, dynamic> json) =>

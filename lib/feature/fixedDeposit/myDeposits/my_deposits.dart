@@ -9,9 +9,7 @@ import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -120,7 +118,8 @@ class _InvestmentDetails extends StatelessWidget {
                               ),
                             );
                           },
-                          child: _buildInvestmentSection(portfolio.issuer, {
+                          child:
+                              _buildInvestmentSection(portfolio.issuer ?? "", {
                             'current': portfolio.currentAmount,
                             'avgXirr': portfolio.roi,
                             'invested': portfolio.investedAmount,
@@ -199,7 +198,7 @@ class _InvestmentDetails extends StatelessWidget {
                           height: 4.h,
                         ),
                         Text(
-                          BaseUtil.formatIndianRupees(data['current']),
+                          BaseUtil.formatIndianRupees(data['current'] ?? 0),
                           style: GoogleFonts.sourceSans3(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w500,
@@ -223,7 +222,7 @@ class _InvestmentDetails extends StatelessWidget {
                           height: 4.h,
                         ),
                         Text(
-                          '${data['avgXirr']}% p.a.',
+                          '${data['avgXirr']}%',
                           style: GoogleFonts.sourceSans3(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w500,
@@ -261,7 +260,7 @@ class _InvestmentDetails extends StatelessWidget {
                           height: 4.h,
                         ),
                         Text(
-                          BaseUtil.formatIndianRupees(data['invested']),
+                          BaseUtil.formatIndianRupees(data['invested'] ?? 0),
                           style: GoogleFonts.sourceSans3(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w500,

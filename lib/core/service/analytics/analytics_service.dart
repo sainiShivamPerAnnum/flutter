@@ -60,6 +60,10 @@ class AnalyticsService extends BaseAnalyticsService {
     bool cleverTap = true,
     bool apxor = false,
     bool branch = true,
+    bool moengage = false,
+    bool amplitude = false,
+    bool superSend = false,
+    bool smartlook = false,
   }) {
     try {
       if (FirebaseAuth.instance.currentUser != null) {
@@ -99,7 +103,6 @@ class AnalyticsService extends BaseAnalyticsService {
   @override
   void updateUserProperty({required String key, value}) {
     _mixpanel.updateUserProperty(key: key, value: value);
-    _cleverTap.updateUserProperty(key: key, value: value);
     _webengage.updateUserProperty(key: key, value: value);
     _branch.updateUserProperty(key: key, value: value);
     _facebook.updateUserProperty(key: key, value: value);

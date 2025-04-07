@@ -24,22 +24,22 @@ class UserFdPortfolio {
 
 @_deserializable
 class PortfolioModel {
-  final String issuerId;
-  final String issuer;
-  final double roi;
-  final double investedAmount;
-  final double currentAmount;
+  final String? issuerId;
+  final String? issuer;
+  final double? roi;
+  final double? investedAmount;
+  final double? currentAmount;
   final String? tenure;
-  final List<IndividualFDModel> individualFDs;
+  final List<IndividualFDModel>? individualFDs;
 
   PortfolioModel({
-    required this.issuerId,
-    required this.issuer,
-    required this.roi,
-    required this.investedAmount,
-    required this.currentAmount,
+    this.issuerId,
+    this.issuer,
+    this.roi,
+    this.investedAmount,
+    this.currentAmount,
     this.tenure,
-    required this.individualFDs,
+    this.individualFDs,
   });
 
   factory PortfolioModel.fromJson(Map<String, dynamic> json) =>

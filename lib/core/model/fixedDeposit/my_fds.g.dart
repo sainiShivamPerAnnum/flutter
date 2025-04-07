@@ -17,14 +17,14 @@ UserFdPortfolio _$UserFdPortfolioFromJson(Map<String, dynamic> json) =>
 
 PortfolioModel _$PortfolioModelFromJson(Map<String, dynamic> json) =>
     PortfolioModel(
-      issuerId: json['issuerId'] as String,
-      issuer: json['issuer'] as String,
-      roi: (json['roi'] as num).toDouble(),
-      investedAmount: (json['investedAmount'] as num).toDouble(),
-      currentAmount: (json['currentAmount'] as num).toDouble(),
+      issuerId: json['issuerId'] as String?,
+      issuer: json['issuer'] as String?,
+      roi: (json['roi'] as num?)?.toDouble(),
+      investedAmount: (json['investedAmount'] as num?)?.toDouble(),
+      currentAmount: (json['currentAmount'] as num?)?.toDouble(),
       tenure: json['tenure'] as String?,
-      individualFDs: (json['individualFDs'] as List<dynamic>)
-          .map((e) => IndividualFDModel.fromJson(e as Map<String, dynamic>))
+      individualFDs: (json['individualFDs'] as List<dynamic>?)
+          ?.map((e) => IndividualFDModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
