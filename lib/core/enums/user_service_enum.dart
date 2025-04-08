@@ -17,4 +17,5 @@ enum UserServiceProperties {
   myAugmontDetails,
   mySegments,
   advisorInCart,
+  fdSummary,
 }

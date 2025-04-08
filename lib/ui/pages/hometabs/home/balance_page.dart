@@ -3,6 +3,7 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/fixedDeposit/my_fds.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
@@ -150,13 +151,17 @@ class FelloBalanceScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
               child: Row(
                 children: [
-                  Selector<UserService, Portfolio>(
-                    builder: (_, portfolio, child) => Row(
+                  Selector<UserService, Tuple2<Portfolio, SummaryModel?>>(
+                    builder: (_, value, child) => Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           BaseUtil.formatIndianRupees(
-                              getTotalBalance(portfolio)),
+                            getTotalBalance(
+                              value.item1,
+                              value.item2,
+                            ),
+                          ),
                           style: TextStyles.sourceSansSB.title3,
                         ),
                         SizedBox(width: SizeConfig.padding8),
@@ -166,19 +171,19 @@ class FelloBalanceScreen extends StatelessWidget {
                             children: [
                               RotatedBox(
                                 quarterTurns:
-                                    portfolio.absolute.percGains < 0 ? 2 : 0,
+                                    value.item1.absolute.percGains < 0 ? 2 : 0,
                                 child: AppImage(
                                   Assets.arrow,
                                   width: SizeConfig.body4,
-                                  color: portfolio.absolute.percGains < 0
+                                  color: value.item1.absolute.percGains < 0
                                       ? Colors.red
                                       : UiConstants.primaryColor,
                                 ),
                               ),
                               Text(
-                                " ${BaseUtil.digitPrecision(portfolio.absolute.percGains, 2, false)}%",
+                                " ${BaseUtil.digitPrecision(value.item1.absolute.percGains, 2, false)}%",
                                 style: TextStyles.sourceSansSB.body3.colour(
-                                  portfolio.absolute.percGains < 0
+                                  value.item1.absolute.percGains < 0
                                       ? Colors.red
                                       : UiConstants.primaryColor,
                                 ),
@@ -188,7 +193,10 @@ class FelloBalanceScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    selector: (_, userService) => userService.userPortfolio,
+                    selector: (_, userService) => Tuple2(
+                      userService.userPortfolio,
+                      userService.userFdSummary,
+                    ),
                   ),
                 ],
               ),
@@ -230,10 +238,10 @@ class FelloBalanceScreen extends StatelessWidget {
               subtitle: "100% Safe • 99.99% Pure",
               onButtonPressed: () {
                 BaseUtil().openRechargeModalSheet(
-                  investmentType: InvestmentType.LENDBOXP2P,
+                  investmentType: InvestmentType.AUGGOLD99,
                 );
                 trackSaveButtonAnalytics(
-                  InvestmentType.LENDBOXP2P,
+                  InvestmentType.AUGGOLD99,
                 );
               },
               onCardPressed: () => navigateToSaveAssetView(
@@ -244,10 +252,10 @@ class FelloBalanceScreen extends StatelessWidget {
               iconData: Assets.fdIcon,
               asset: Assets.fdIcon,
               title: "Fixed Deposit",
-              infoTitle1: "Fixed Deposit Amount",
-              infoTitle2: "Fixed Deposit Value",
+              infoTitle1: "FD Balance",
+              infoTitle2: "Invested",
               secondaryColor: UiConstants.darkPrimaryColor3,
-              subtitle: "Fixed Asset • upto 9.5% Returns",
+              subtitle: "FD Asset • upto 9.5% Returns",
               onButtonPressed: () {
                 BaseUtil().openRechargeModalSheet(
                   investmentType: InvestmentType.fixedDeposit,
@@ -349,15 +357,17 @@ class FelloBalanceScreen extends StatelessWidget {
     );
   }
 
-  int getTotalBalance(Portfolio portfolio) {
+  int getTotalBalance(Portfolio portfolio, SummaryModel? fdSummary) {
     if (portfolio.absolute.balance != 0) {
-      return portfolio.absolute.balance.toInt();
+      return portfolio.absolute.balance.toInt() +
+          (fdSummary?.totalInvestedAmount ?? 0).toInt();
     } else {
       String stringBalance =
           PreferenceHelper.getString(Constants.FELLO_BALANCE);
 
       double doubleBalance = double.tryParse(stringBalance) ?? 0.0;
-      int intBalance = doubleBalance.toInt();
+      int intBalance =
+          doubleBalance.toInt() + (fdSummary?.totalInvestedAmount ?? 0).toInt();
       return intBalance;
     }
   }
@@ -505,8 +515,10 @@ class FelloBalanceScreen extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Selector<UserService,
-                                Tuple2<Portfolio, UserFundWallet?>>(
+                            Selector<
+                                UserService,
+                                Tuple3<Portfolio, UserFundWallet?,
+                                    SummaryModel?>>(
                               builder: (_, value, child) =>
                                   title != "Fello Rewards"
                                       ? Text(
@@ -515,6 +527,7 @@ class FelloBalanceScreen extends StatelessWidget {
                                               getFirstValue(
                                                 value.item1,
                                                 value.item2,
+                                                value.item3,
                                                 title,
                                               ),
                                             ),
@@ -526,20 +539,23 @@ class FelloBalanceScreen extends StatelessWidget {
                                           '${getFirstValue(
                                             value.item1,
                                             value.item2,
+                                            value.item3,
                                             title,
                                           )} coins',
                                           style: TextStyles.sourceSansB.body0
                                               .colour(Colors.white),
                                         ),
-                              selector: (_, userService) => Tuple2(
+                              selector: (_, userService) => Tuple3(
                                 userService.userPortfolio,
                                 userService.userFundWallet,
+                                userService.userFdSummary,
                               ),
                             ),
                             if (title != "Fello Rewards")
                               Column(
                                 children: [
-                                  Selector<UserService, Portfolio>(
+                                  Selector<UserService,
+                                      Tuple2<Portfolio, SummaryModel?>>(
                                     builder: (context, value, child) => Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.end,
@@ -549,32 +565,44 @@ class FelloBalanceScreen extends StatelessWidget {
                                           offset:
                                               Offset(0, -SizeConfig.padding6),
                                           child: RotatedBox(
-                                            quarterTurns:
-                                                getPercValue(value, title) >= 0
-                                                    ? 0
-                                                    : 2,
+                                            quarterTurns: getPercValue(
+                                                      value.item1,
+                                                      title,
+                                                      value.item2,
+                                                    ) >=
+                                                    0
+                                                ? 0
+                                                : 2,
                                             child: AppImage(
                                               Assets.arrow,
                                               width: SizeConfig.iconSize3,
-                                              color:
-                                                  getPercValue(value, title) >=
-                                                          0
-                                                      ? UiConstants.primaryColor
-                                                      : Colors.red,
+                                              color: getPercValue(
+                                                        value.item1,
+                                                        title,
+                                                        value.item2,
+                                                      ) >=
+                                                      0
+                                                  ? UiConstants.primaryColor
+                                                  : Colors.red,
                                             ),
                                           ),
                                         ),
                                         Text(
                                           " ${BaseUtil.digitPrecision(
-                                            getPercValue(value, title),
+                                            getPercValue(
+                                              value.item1,
+                                              title,
+                                              value.item2,
+                                            ),
                                             2,
                                             false,
                                           )}%",
                                           style: TextStyles.sourceSans.body3
                                               .colour(
                                             getPercValue(
-                                                      value,
+                                                      value.item1,
                                                       title,
+                                                      value.item2,
                                                     ) >=
                                                     0
                                                 ? UiConstants.primaryColor
@@ -583,7 +611,10 @@ class FelloBalanceScreen extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                                    selector: (p0, p1) => p1.userPortfolio,
+                                    selector: (p0, p1) => Tuple2(
+                                      p1.userPortfolio,
+                                      p1.userFdSummary,
+                                    ),
                                   ),
                                   SizedBox(height: SizeConfig.padding2),
                                 ],
@@ -593,7 +624,8 @@ class FelloBalanceScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Selector<UserService, Tuple2<Portfolio, UserFundWallet?>>(
+                  Selector<UserService,
+                      Tuple3<Portfolio, UserFundWallet?, SummaryModel?>>(
                     builder: (_, value, child) {
                       return (title == "Fello Rewards" &&
                               (value.item2?.processingRedemptionBalance ?? 0) ==
@@ -618,6 +650,7 @@ class FelloBalanceScreen extends StatelessWidget {
                                     getSecondValue(
                                       value.item1,
                                       value.item2,
+                                      value.item3,
                                       title,
                                     ),
                                     style: TextStyles.sourceSansB.body0
@@ -627,9 +660,10 @@ class FelloBalanceScreen extends StatelessWidget {
                               ],
                             );
                     },
-                    selector: (_, userService) => Tuple2(
+                    selector: (_, userService) => Tuple3(
                       userService.userPortfolio,
                       userService.userFundWallet,
+                      userService.userFdSummary,
                     ),
                   ),
                 ],
@@ -644,6 +678,7 @@ class FelloBalanceScreen extends StatelessWidget {
   String getSecondValue(
     Portfolio? portfolio,
     UserFundWallet? wallet,
+    SummaryModel? fdSummary,
     String title,
   ) {
     switch (title) {
@@ -652,7 +687,7 @@ class FelloBalanceScreen extends StatelessWidget {
       case "Digital Gold":
         return "${BaseUtil.digitPrecision(wallet?.wAugTotal ?? 0, 4, false)}g";
       case "Fixed Deposit":
-        return "0";
+        return BaseUtil.formatIndianRupees(fdSummary?.totalInvestedAmount ?? 0);
       case "Fello Rewards":
         return "₹${wallet?.processingRedemptionBalance ?? 0}";
       default:
@@ -663,6 +698,7 @@ class FelloBalanceScreen extends StatelessWidget {
   String getFirstValue(
     Portfolio? portfolio,
     UserFundWallet? wallet,
+    SummaryModel? fdSummary,
     String title,
   ) {
     switch (title) {
@@ -671,7 +707,7 @@ class FelloBalanceScreen extends StatelessWidget {
       case "Digital Gold":
         return "${BaseUtil.digitPrecision(portfolio?.augmont.balance ?? 0, 2)}";
       case "Fixed Deposit":
-        return "0";
+        return "${BaseUtil.digitPrecision(fdSummary?.totalCurrentAmount ?? 0, 2)}";
       case "Fello Rewards":
         return "${wallet?.unclaimedBalance.toInt()}";
       default:
@@ -679,14 +715,18 @@ class FelloBalanceScreen extends StatelessWidget {
     }
   }
 
-  num getPercValue(Portfolio? portfolio, String title) {
+  num getPercValue(
+    Portfolio? portfolio,
+    String title,
+    SummaryModel? fdSummary,
+  ) {
     switch (title) {
       case "Fello Flo":
         return portfolio?.flo.percGain ?? 0.0;
       case "Digital Gold":
         return portfolio?.augmont.gold.percGains ?? 0.0;
       case "Fixed Deposit":
-        return 0;
+        return fdSummary?.averageXIRR ?? 0.0;
       case "Fello Rewards":
         return 0.0;
       default:

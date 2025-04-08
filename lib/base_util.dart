@@ -887,6 +887,11 @@ class BaseUtil extends ChangeNotifier {
     return true;
   }
 
+  static String formatAmount(String amount) {
+    String cleanAmount = amount.replaceAll(RegExp(r'[^\d.]'), '');
+    return cleanAmount;
+  }
+
   static int getRandomRewardAmount(index) {
     if (index < 5) {
       return 50;

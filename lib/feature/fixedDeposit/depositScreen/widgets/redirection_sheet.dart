@@ -127,6 +127,7 @@ class BlostemRedirectionSheet extends StatelessWidget {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
+              AppState.backButtonDispatcher!.didPopRoute();
               AppState.delegate!.appState.currentAction = PageAction(
                 page: WebViewPageConfig,
                 state: PageState.addWidget,

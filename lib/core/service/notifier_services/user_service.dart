@@ -8,6 +8,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/fixedDeposit/my_fds.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/quick_save_model.dart';
@@ -93,6 +94,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   DynamicUI? pageConfigs;
   QuickSaveModel? quickSaveModel;
   AlertModel? referralAlertDialog;
+  SummaryModel? _userFdSummary;
 
   bool? _isEmailVerified;
   bool? _isSimpleKycVerified;
@@ -114,6 +116,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String? get myUserDpUrl => _myUserDpUrl;
 
   String? get myUserName => _myUserName;
+
+  SummaryModel? get userFdSummary => _userFdSummary;
+
+  set userFdSummary(SummaryModel? value) {
+    _userFdSummary = value;
+    notifyListeners();
+  }
 
   String? get name =>
       (_kycName != null && _kycName!.isNotEmpty) ? _kycName : _name;
@@ -224,6 +233,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   set userFundWallet(UserFundWallet? wallet) {
     if ((_userFundWallet?.netWorth ?? 0) != (wallet?.netWorth ?? 0)) {
       updatePortFolio();
+      updateFd();
     }
     _userFundWallet = wallet;
     notifyListeners(UserServiceProperties.myUserFund);
@@ -267,6 +277,15 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       userPortfolio = res.model!;
     } else {
       userPortfolio = const Portfolio();
+    }
+  }
+
+  Future<void> updateFd() async {
+    final res = await _userRepo.myFds();
+    if (res.isSuccess()) {
+      userFdSummary = res.model!.summary;
+    } else {
+      userFdSummary = SummaryModel();
     }
   }
 

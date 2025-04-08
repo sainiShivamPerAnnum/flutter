@@ -28,8 +28,10 @@ class UpdateFDVariables extends FDCalculatorEvents {
 
 class OnProceed extends FDCalculatorEvents {
   final String issuerId;
+  final String blostemId;
   const OnProceed({
     required this.issuerId,
+    required this.blostemId,
   });
 }
 

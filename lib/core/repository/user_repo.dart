@@ -9,6 +9,7 @@ import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/app_environment.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/fixedDeposit/my_fds.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
@@ -24,6 +25,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -38,6 +40,9 @@ class UserRepository extends BaseRepo {
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
 
   static const _userOps = 'userOps';
+  final _baseUrl = FlavorConfig.isDevelopment()
+      ? 'https://advisors.fello-dev.net'
+      : 'https://advisors.fello-prod.net';
 
   Future<ApiResponse<String>> getCustomUserToken(String? mobileNo) async {
     try {
@@ -638,6 +643,34 @@ class UserRepository extends BaseRepo {
     } catch (e) {
       logger.d(e);
       return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<UserFdPortfolio>> myFds() async {
+    try {
+      final response = await APIService.instance.getData(
+        ApiPath.myFds,
+        cBaseUrl: _baseUrl,
+        apiName: '$_userOps/myFds',
+      );
+      final responseData = response["data"];
+      if (responseData is Map &&
+          responseData.keys.length == 1 &&
+          responseData.containsKey('message')) {
+        return ApiResponse(
+          model: responseData['message'],
+          code: 200,
+        );
+      }
+      return ApiResponse<UserFdPortfolio>(
+        model: UserFdPortfolio.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      return ApiResponse.withError(
+        e.toString(),
+        400,
+      );
     }
   }
 }

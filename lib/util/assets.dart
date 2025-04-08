@@ -336,4 +336,5 @@ class Assets {
   static const String experiencev2 = "assets/svg/experience_v2.svg";
   static const String portfolio = "assets/svg/portfolio.svg";
   static const String webRedirect = "assets/svg/web_redirect.svg";
+  static const String discounts = "assets/svg/Discount.svg";
 }

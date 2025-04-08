@@ -7,6 +7,7 @@ part of 'fd_home.dart';
 // **************************************************************************
 
 AllFdsData _$AllFdsDataFromJson(Map<String, dynamic> json) => AllFdsData(
+      blostemId: json['blostemId'] as String,
       id: json['id'] as String,
       displayName: json['displayName'] as String,
       subText: json['subText'] as String,
@@ -20,6 +21,11 @@ AllFdsData _$AllFdsDataFromJson(Map<String, dynamic> json) => AllFdsData(
       tncLink: json['tncLink'] as String,
       detailsPage:
           DetailsPage.fromJson(json['detailsPage'] as Map<String, dynamic>),
+      description: json['description'] as String? ?? '',
+      additionalOffers:
+          (json['additionalOffers'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      ),
     );
 
 InvestDetail _$InvestDetailFromJson(Map<String, dynamic> json) => InvestDetail(
@@ -68,15 +74,26 @@ BookCall _$BookCallFromJson(Map<String, dynamic> json) => BookCall(
     );
 
 LockInTenure _$LockInTenureFromJson(Map<String, dynamic> json) => LockInTenure(
-      options:
-          (json['options'] as List<dynamic>).map((e) => e as String).toList(),
+      options: (json['options'] as List<dynamic>)
+          .map((e) => TenureOptions.fromJson(e as Map<String, dynamic>))
+          .toList(),
       selected: json['selected'] as String,
+    );
+
+TenureOptions _$TenureOptionsFromJson(Map<String, dynamic> json) =>
+    TenureOptions(
+      label: json['label'] as String,
+      minDays: json['minDays'] as int,
+      maxDays: json['maxDays'] as int,
     );
 
 FrequencyValue _$FrequencyValueFromJson(Map<String, dynamic> json) =>
     FrequencyValue(
       label: json['label'] as String,
-      months: json['months'] as int,
+      days: json['days'] as int,
+      value: json['value'] as int,
       returns: json['returns'] as String?,
       seniorReturns: json['seniorReturns'] as String?,
+      amounts:
+          (json['amounts'] as List<dynamic>?)?.map((e) => e as num).toList(),
     );

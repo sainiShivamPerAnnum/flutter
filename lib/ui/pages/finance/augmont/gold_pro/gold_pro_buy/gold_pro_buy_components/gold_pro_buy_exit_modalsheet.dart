@@ -79,11 +79,12 @@ class _GoldProBuyExitModalSheetState extends State<GoldProBuyExitModalSheet> {
                         toggleable: true,
                         activeColor: UiConstants.primaryColor,
                         tileColor: UiConstants.kTextColor,
+                        fillColor:
+                            WidgetStateProperty.all(UiConstants.kTextColor),
                         selected: true,
                         value: index,
                         groupValue: _selectedIndex,
                         onChanged: (value) {
-                          print(value);
                           selectedIndex = index;
                           selectedReasonForSelling = _sellingReasons[index];
                         },

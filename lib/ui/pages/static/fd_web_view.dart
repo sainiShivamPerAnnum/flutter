@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +95,7 @@ class _FdWebViewState extends State<FdWebView> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (controller != null) {
+        if (controller != null && await controller!.canGoBack()) {
           await controller!.goBack();
           return Future.value(false);
         } else {
@@ -112,8 +113,15 @@ class _FdWebViewState extends State<FdWebView> {
                 UiConstants.kTextColor4,
               ),
             ),
-            leading: const BackButton(
+            leading: BackButton(
               color: UiConstants.kTextColor4,
+              onPressed: () async {
+                if (controller != null && await controller!.canGoBack()) {
+                  await controller!.goBack();
+                } else {
+                  await AppState.backButtonDispatcher!.didPopRoute();
+                }
+              },
             ),
             showAvatar: false,
             showCoinBar: false,

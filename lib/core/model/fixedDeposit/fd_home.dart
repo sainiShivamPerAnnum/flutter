@@ -8,6 +8,8 @@ const _deserializable = JsonSerializable(
 
 @_deserializable
 class AllFdsData {
+  final String blostemId;
+  final String description;
   final String id;
   final String displayName;
   final String subText;
@@ -16,8 +18,10 @@ class AllFdsData {
   final String icon;
   final String tncLink;
   final DetailsPage detailsPage;
+  final Map<String, String>? additionalOffers;
 
   AllFdsData({
+    required this.blostemId,
     required this.id,
     required this.displayName,
     required this.subText,
@@ -26,6 +30,8 @@ class AllFdsData {
     required this.icon,
     required this.tncLink,
     required this.detailsPage,
+    this.description = '',
+    this.additionalOffers,
   });
 
   factory AllFdsData.fromJson(Map<String, dynamic> json) =>
@@ -126,7 +132,7 @@ class BookCall {
 
 @_deserializable
 class LockInTenure {
-  final List<String> options;
+  final List<TenureOptions> options;
   final String selected;
 
   LockInTenure({
@@ -139,17 +145,37 @@ class LockInTenure {
 }
 
 @_deserializable
+class TenureOptions {
+  final String label;
+  final int minDays;
+  final int maxDays;
+
+  TenureOptions({
+    required this.label,
+    required this.minDays,
+    required this.maxDays,
+  });
+
+  factory TenureOptions.fromJson(Map<String, dynamic> json) =>
+      _$TenureOptionsFromJson(json);
+}
+
+@_deserializable
 class FrequencyValue {
   final String label;
-  final int months;
+  final int days;
+  final int value;
   final String? returns;
   final String? seniorReturns;
+  final List<num>? amounts;
 
   FrequencyValue({
     required this.label,
-    required this.months,
+    required this.days,
+    required this.value,
     required this.returns,
     required this.seniorReturns,
+    this.amounts,
   });
 
   factory FrequencyValue.fromJson(Map<String, dynamic> json) =>

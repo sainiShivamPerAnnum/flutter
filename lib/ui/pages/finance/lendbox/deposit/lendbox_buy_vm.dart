@@ -116,21 +116,12 @@ class LendboxBuyViewModel extends BaseViewModel
     _skipMl = value;
   }
 
-  late bool _showHappyHour;
-
   bool _showInfoIcon = false;
 
   bool get showInfoIcon => _showInfoIcon;
 
   set showInfoIcon(bool value) {
     _showInfoIcon = value;
-  }
-
-  bool get showHappyHour => _showHappyHour;
-
-  set showHappyHour(bool value) {
-    _showHappyHour = value;
-    notifyListeners();
   }
 
   bool get showCoupons => _showCoupons;

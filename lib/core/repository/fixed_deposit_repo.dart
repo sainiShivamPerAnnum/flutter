@@ -154,10 +154,12 @@ class FdRepository extends BaseRepo {
 
   Future<ApiResponse<String>> getRedirectionUrl({
     required String? issuerId,
+    required String? blostemId,
   }) async {
     try {
       final params = {
         "issuerId": issuerId,
+        "blostemId": blostemId,
       };
       final response = await APIService.instance.getData(
         ApiPath.fdRedirection,

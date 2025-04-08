@@ -47,16 +47,16 @@ class _FDDepositView extends StatefulWidget {
 class __FDDepositViewState extends State<_FDDepositView> {
   final TextEditingController _amountController = TextEditingController();
   int _selectedTenure = 0;
-  String? _selectedLabel;
+  int? _selectedLabel;
   String _selectedFrequency = '';
   @override
   void initState() {
-    _amountController.addListener(_onInputChange);
     _selectedTenure = 0;
     _selectedFrequency =
         widget.fdData.detailsPage.cta.frequencyValues.keys.first;
     _amountController.text =
         widget.fdData.detailsPage.cta.displayAmounts[0].toString();
+    _onInputChange();
     super.initState();
   }
 
@@ -71,15 +71,8 @@ class __FDDepositViewState extends State<_FDDepositView> {
         .where((entry) {
       final tenureOptions = widget.fdData.detailsPage.cta.lockInTenure.options;
       final selectedTenureOption = tenureOptions[_selectedTenure];
-
-      if (selectedTenureOption == '0-2 yrs') {
-        return entry.value.months <= 24;
-      } else if (selectedTenureOption == '2-3 yrs') {
-        return entry.value.months > 24 && entry.value.months <= 36;
-      } else if (selectedTenureOption == '3-5 yrs') {
-        return entry.value.months > 36 && entry.value.months <= 60;
-      }
-      return true;
+      return entry.value.days > selectedTenureOption.minDays &&
+          entry.value.days <= selectedTenureOption.maxDays;
     }).toList();
 
     // Case 1 & 2: If _selectedLabel is null or _selectedTenure has changed,
@@ -88,19 +81,103 @@ class __FDDepositViewState extends State<_FDDepositView> {
 
     // Check if the current _selectedLabel is in the eligible entries
     final currentLabelStillValid = _selectedLabel != null &&
-        eligibleEntries.any((entry) => entry.value.label == _selectedLabel);
+        eligibleEntries.any((entry) => entry.value.days == _selectedLabel);
 
     if (!currentLabelStillValid) {
       // Case 1 & 2: Page just opened or tenure changed, use first eligible value
       selectedFrequencyValue =
           eligibleEntries.isNotEmpty ? eligibleEntries.first.value : null;
-      _selectedLabel = selectedFrequencyValue?.label;
+      _selectedLabel = selectedFrequencyValue?.days;
     } else {
       // Case 3: User selected a different label within the same tenure
       // Find the entry that matches the selected label
       selectedFrequencyValue = eligibleEntries
-          .firstWhere((entry) => entry.value.label == _selectedLabel,
-              orElse: () => eligibleEntries.first)
+          .firstWhere(
+            (entry) => entry.value.days == _selectedLabel,
+            orElse: () => eligibleEntries.first,
+          )
+          .value;
+    }
+    if (widget
+            .fdData.detailsPage.cta.frequencyValues[_selectedFrequency]!.entries
+            .where((entry) {
+              final tenureOptions =
+                  widget.fdData.detailsPage.cta.lockInTenure.options;
+              final selectedTenureOption = tenureOptions[_selectedTenure];
+
+              return entry.value.days > selectedTenureOption.minDays &&
+                  entry.value.days <= selectedTenureOption.maxDays;
+            })
+            .first
+            .value
+            .amounts !=
+        null) {
+      _amountController.text = widget
+          .fdData.detailsPage.cta.frequencyValues[_selectedFrequency]!.entries
+          .where((entry) {
+            final tenureOptions =
+                widget.fdData.detailsPage.cta.lockInTenure.options;
+            final selectedTenureOption = tenureOptions[_selectedTenure];
+
+            return entry.value.days > selectedTenureOption.minDays &&
+                entry.value.days <= selectedTenureOption.maxDays;
+          })
+          .first
+          .value
+          .amounts![0]
+          .toString();
+    }
+    context.read<FDCalculatorBloc>().add(
+          UpdateFDVariables(
+            investmentAmount:
+                double.tryParse(_amountController.text.replaceAll(',', '')) ??
+                    0,
+            investmentPeriod:
+                selectedFrequencyValue?.value ?? _getSelectedTenureMonths(),
+            isSeniorCitizen: false,
+            payoutFrequency: _selectedFrequency,
+            isFemale: false,
+            issuerId: widget.fdData.id,
+          ),
+        );
+  }
+
+  void _onChipClick(String amount) {
+    final eligibleEntries = widget
+        .fdData
+        .detailsPage
+        .cta
+        .frequencyValues[
+            widget.fdData.detailsPage.cta.frequencyValues.keys.first]!
+        .entries
+        .where((entry) {
+      final tenureOptions = widget.fdData.detailsPage.cta.lockInTenure.options;
+      final selectedTenureOption = tenureOptions[_selectedTenure];
+      return entry.value.days > selectedTenureOption.minDays &&
+          entry.value.days <= selectedTenureOption.maxDays;
+    }).toList();
+
+    // Case 1 & 2: If _selectedLabel is null or _selectedTenure has changed,
+    // use the first eligible value
+    FrequencyValue? selectedFrequencyValue;
+
+    // Check if the current _selectedLabel is in the eligible entries
+    final currentLabelStillValid = _selectedLabel != null &&
+        eligibleEntries.any((entry) => entry.value.days == _selectedLabel);
+
+    if (!currentLabelStillValid) {
+      // Case 1 & 2: Page just opened or tenure changed, use first eligible value
+      selectedFrequencyValue =
+          eligibleEntries.isNotEmpty ? eligibleEntries.first.value : null;
+      _selectedLabel = selectedFrequencyValue?.days;
+    } else {
+      // Case 3: User selected a different label within the same tenure
+      // Find the entry that matches the selected label
+      selectedFrequencyValue = eligibleEntries
+          .firstWhere(
+            (entry) => entry.value.days == _selectedLabel,
+            orElse: () => eligibleEntries.first,
+          )
           .value;
     }
     context.read<FDCalculatorBloc>().add(
@@ -109,7 +186,7 @@ class __FDDepositViewState extends State<_FDDepositView> {
                 double.tryParse(_amountController.text.replaceAll(',', '')) ??
                     0,
             investmentPeriod:
-                selectedFrequencyValue?.months ?? _getSelectedTenureMonths(),
+                selectedFrequencyValue?.value ?? _getSelectedTenureMonths(),
             isSeniorCitizen: false,
             payoutFrequency: _selectedFrequency,
             isFemale: false,
@@ -121,15 +198,7 @@ class __FDDepositViewState extends State<_FDDepositView> {
   int _getSelectedTenureMonths() {
     final selectedTenureOption =
         widget.fdData.detailsPage.cta.lockInTenure.options[_selectedTenure];
-
-    if (selectedTenureOption == '0-2 yrs') {
-      return 24;
-    } else if (selectedTenureOption == '2-3 yrs') {
-      return 36;
-    } else if (selectedTenureOption == '3-5 yrs') {
-      return 60;
-    }
-    return 0;
+    return selectedTenureOption.maxDays;
   }
 
   @override
@@ -218,32 +287,89 @@ class __FDDepositViewState extends State<_FDDepositView> {
                   SizedBox(height: SizeConfig.padding6),
                   Wrap(
                     spacing: 8.0,
-                    children: widget.fdData.detailsPage.cta.displayAmounts
-                        .asMap()
-                        .entries
-                        .map((entry) {
-                      final amount = entry.value;
-                      return GestureDetector(
-                        onTap: () {
-                          _amountController.text = amount.toString();
-                        },
-                        child: Chip(
-                          backgroundColor: UiConstants.kChipColor,
-                          label: Text(
-                            BaseUtil.formatIndianRupees(amount),
-                            style: TextStyles.sourceSansM.body4,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              SizeConfig.roundness32,
-                            ),
-                            side: const BorderSide(
-                              color: UiConstants.kChipColor,
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                    children: [
+                      ...(widget.fdData.detailsPage.cta
+                                  .frequencyValues[_selectedFrequency]!.entries
+                                  .where((entry) {
+                                    final tenureOptions = widget.fdData
+                                        .detailsPage.cta.lockInTenure.options;
+                                    final selectedTenureOption =
+                                        tenureOptions[_selectedTenure];
+
+                                    return entry.value.days >
+                                            selectedTenureOption.minDays &&
+                                        entry.value.days <=
+                                            selectedTenureOption.maxDays;
+                                  })
+                                  .first
+                                  .value
+                                  .amounts !=
+                              null
+                          ? widget.fdData.detailsPage.cta
+                              .frequencyValues[_selectedFrequency]!.entries
+                              .where((entry) {
+                                final tenureOptions = widget.fdData.detailsPage
+                                    .cta.lockInTenure.options;
+                                final selectedTenureOption =
+                                    tenureOptions[_selectedTenure];
+
+                                return entry.value.days >
+                                        selectedTenureOption.minDays &&
+                                    entry.value.days <=
+                                        selectedTenureOption.maxDays;
+                              })
+                              .first
+                              .value
+                              .amounts!
+                              .map(
+                                (amount) => GestureDetector(
+                                  onTap: () {
+                                    _amountController.text = amount.toString();
+                                    _onChipClick(amount.toString());
+                                  },
+                                  child: Chip(
+                                    backgroundColor: UiConstants.kChipColor,
+                                    label: Text(
+                                      BaseUtil.formatIndianRupees(
+                                        amount,
+                                      ),
+                                      style: TextStyles.sourceSansM.body4,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness32,
+                                      ),
+                                      side: const BorderSide(
+                                        color: UiConstants.kChipColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                          : widget.fdData.detailsPage.cta.displayAmounts.map(
+                              (amount) => GestureDetector(
+                                onTap: () {
+                                  _amountController.text = amount.toString();
+                                  _onChipClick(amount.toString());
+                                },
+                                child: Chip(
+                                  backgroundColor: UiConstants.kChipColor,
+                                  label: Text(
+                                    BaseUtil.formatIndianRupees(amount),
+                                    style: TextStyles.sourceSansM.body4,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness32,
+                                    ),
+                                    side: const BorderSide(
+                                      color: UiConstants.kChipColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )),
+                    ],
                   ),
                   SizedBox(
                     height: SizeConfig.padding24,
@@ -273,7 +399,7 @@ class __FDDepositViewState extends State<_FDDepositView> {
                               ? UiConstants.kTextColor
                               : UiConstants.greyVarient,
                           label: Text(
-                            tenure,
+                            tenure.label,
                             style: _selectedTenure == index
                                 ? TextStyles.sourceSansM.body4.colour(
                                     UiConstants.kTextColor4,
@@ -396,17 +522,9 @@ class __FDDepositViewState extends State<_FDDepositView> {
                               .fdData.detailsPage.cta.lockInTenure.options;
                           final selectedTenureOption =
                               tenureOptions[_selectedTenure];
-
-                          if (selectedTenureOption == '0-2 yrs') {
-                            return entry.value.months <= 24;
-                          } else if (selectedTenureOption == '2-3 yrs') {
-                            return entry.value.months > 24 &&
-                                entry.value.months <= 36;
-                          } else if (selectedTenureOption == '3-5 yrs') {
-                            return entry.value.months > 36 &&
-                                entry.value.months <= 60;
-                          }
-                          return true;
+                          return entry.value.days >
+                                  selectedTenureOption.minDays &&
+                              entry.value.days <= selectedTenureOption.maxDays;
                         }).map((entry) {
                           final value = entry.value;
                           return TableRow(
@@ -414,21 +532,21 @@ class __FDDepositViewState extends State<_FDDepositView> {
                               GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    if (_selectedLabel == value.label) {
-                                      _selectedLabel = null;
+                                    if (_selectedLabel == value.days) {
+                                      // _selectedLabel = null;
                                     } else {
-                                      _selectedLabel = value.label;
+                                      _selectedLabel = value.days;
+                                      _onInputChange();
                                     }
-                                    _onInputChange();
                                   });
                                 },
                                 child: Padding(
                                   padding: EdgeInsets.all(SizeConfig.padding8),
                                   child: Icon(
-                                    _selectedLabel == value.label
+                                    _selectedLabel == value.days
                                         ? Icons.check_circle
                                         : Icons.radio_button_unchecked,
-                                    color: _selectedLabel == value.label
+                                    color: _selectedLabel == value.days
                                         ? UiConstants.kblue3
                                         : UiConstants.kTextColor,
                                   ),
@@ -547,7 +665,7 @@ class __FDDepositViewState extends State<_FDDepositView> {
                   ),
                   SizedBox(height: SizeConfig.padding24),
                   Text(
-                    'Your estimated payout after $_selectedLabel',
+                    'Your estimated payout after $_selectedLabel days',
                     style: TextStyles.sourceSansM.body4,
                   ),
                   BlocBuilder<FDCalculatorBloc, FixedDepositCalculatorState>(
@@ -559,7 +677,13 @@ class __FDDepositViewState extends State<_FDDepositView> {
                                 key: const ValueKey('calculationResult'),
                                 children: [
                                   Text(
-                                    '₹${state.maturityAmount}',
+                                    BaseUtil.formatIndianRupees(
+                                      num.parse(
+                                        BaseUtil.formatAmount(
+                                          state.maturityAmount ?? '0',
+                                        ),
+                                      ),
+                                    ),
                                     style: TextStyles.sourceSansB.body1.colour(
                                       UiConstants.kTabBorderColor,
                                     ),
@@ -621,6 +745,7 @@ class __FDDepositViewState extends State<_FDDepositView> {
                       context.read<FDCalculatorBloc>().add(
                             OnProceed(
                               issuerId: widget.fdData.id,
+                              blostemId: widget.fdData.blostemId,
                             ),
                           );
                     },
@@ -758,8 +883,10 @@ class _CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
                 SizedBox(height: SizeConfig.padding2),
                 Text(
-                  fdData.subText + fdData.subText,
+                  fdData.description,
                   style: TextStyles.sourceSans.body3,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),

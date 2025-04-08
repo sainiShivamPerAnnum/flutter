@@ -138,6 +138,7 @@ class FDCalculatorBloc
       emitter(const ProccedingToDeposit());
       final response = await _fdRepository.getRedirectionUrl(
         issuerId: event.issuerId,
+        blostemId: event.blostemId,
       );
 
       if (response.isSuccess() && response.model != null) {

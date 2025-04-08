@@ -1,11 +1,8 @@
 import UIKit
 import Firebase
 import AppTrackingTransparency
-import AppsFlyerLib
 import Flutter
 import Contacts
-import CleverTapSDK
-import clevertap_plugin
 import WebEngage
 import webengage_flutter
 
@@ -27,9 +24,7 @@ import webengage_flutter
 
         let contactChannel = FlutterMethodChannel(name: "methodChannel/contact", binaryMessenger: controller.binaryMessenger)
 
-        CleverTap.autoIntegrate() // integrate CleverTap SDK using the autoIntegrate option
-        CleverTapPlugin.sharedInstance()?.applicationDidLaunch(options: launchOptions)
-
+       
         paymentChannel.setMethodCallHandler{(call: FlutterMethodCall, result: @escaping
                                              FlutterResult) -> Void in
 //            self.resultMyFlutter = result
@@ -189,7 +184,6 @@ import webengage_flutter
     
     // Called when the application sucessfuly registers for push notifications
     override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        AppsFlyerLib.shared().registerUninstall(deviceToken)
     }
     override func applicationDidBecomeActive(_ application: UIApplication) {
         ATTrackingManager.requestTrackingAuthorization(completionHandler: {_ in })
