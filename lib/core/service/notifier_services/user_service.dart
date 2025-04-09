@@ -451,6 +451,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       _logger.d("UserService signout called");
       _userFundWallet = null;
       _userPortfolio = const Portfolio();
+      _userFdSummary = null;
       _firebaseUser = null;
       _baseUser = null;
       _myUserDpUrl = null;

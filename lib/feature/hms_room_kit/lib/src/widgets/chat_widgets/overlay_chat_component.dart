@@ -6,11 +6,13 @@ import 'package:felloapp/feature/hms_room_kit/lib/src/layout_api/hms_room_layout
 import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_store.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/chat_widgets/action_buttons.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/widgets/chat_widgets/pin_chat_widget.dart';
+import 'package:felloapp/feature/shorts/src/widgets/expandable_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 
 ///Package imports
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
@@ -103,7 +105,11 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
     }
   }
 
+  bool _isExpanded = false;
   void _toggleExpansion() {
+    setState(() {
+      _isExpanded = !_isExpanded;
+    });
     if (_animationController.isCompleted) {
       _animationController.reverse();
     } else {
@@ -123,14 +129,6 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
             : null,
       );
     }
-  }
-
-  bool _isExpanded = false;
-  void _toggleExpanded() {
-    setState(() {
-      _isExpanded = !_isExpanded;
-    });
-    _toggleExpansion();
   }
 
   @override
@@ -205,78 +203,14 @@ class _OverlayChatComponentState extends State<OverlayChatComponent>
                           height: SizeConfig.padding8,
                         ),
                       if (widget.role == 'viewer-realtime')
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          width: SizeConfig.screenWidth! * 0.95,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding12,
-                          ),
-                          height: _isExpanded
-                              ? SizeConfig.padding120
-                              : SizeConfig.padding46,
-                          decoration: BoxDecoration(
-                            color: Colors.black54,
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness5),
-                          ),
-                          child: GestureDetector(
-                            onTap: _toggleExpanded,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.all(SizeConfig.padding8),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.info,
-                                        color: Colors.white,
-                                        size: SizeConfig.body4,
-                                      ),
-                                      SizedBox(width: SizeConfig.padding8),
-                                      Expanded(
-                                        child: Text(
-                                          value.item2 ?? '',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: SizeConfig.body4,
-                                          ),
-                                        ),
-                                      ),
-                                      Icon(
-                                        _isExpanded
-                                            ? Icons.expand_less
-                                            : Icons.expand_more,
-                                        color: Colors.white,
-                                        size: SizeConfig.body2,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                _isExpanded
-                                    ? Expanded(
-                                        child: Padding(
-                                          padding: EdgeInsets.all(
-                                              SizeConfig.padding8),
-                                          child: SingleChildScrollView(
-                                            physics:
-                                                const BouncingScrollPhysics(),
-                                            child: Text(
-                                              value.item3 ?? '',
-                                              style: const TextStyle(
-                                                  color: Colors.white70),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : const SizedBox.shrink(),
-                              ],
-                            ),
-                          ),
+                        ExpandableWidget(
+                          title: value.item2 ?? '',
+                          leadingIcon: Icons.info,
+                          expandedText: value.item3 ?? '',
+                          backgroundColor: Colors.black45,
+                          width: 1.sw,
+                          textColor: Colors.white,
+                          onExpansionChanged: _toggleExpansion,
                         ),
                       if (widget.role == 'viewer-realtime')
                         SizedBox(

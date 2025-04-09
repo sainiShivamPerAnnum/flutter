@@ -101,7 +101,6 @@ class VideoWidget extends StatefulWidget {
 
 class VideoWidgetState extends State<VideoWidget>
     with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _commentController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -109,10 +108,6 @@ class VideoWidgetState extends State<VideoWidget>
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToEnd();
     });
@@ -120,20 +115,13 @@ class VideoWidgetState extends State<VideoWidget>
 
   @override
   void dispose() {
-    _animationController.dispose();
     _commentController.dispose();
     _scrollController.dispose();
     _focusNode.dispose();
     super.dispose();
   }
 
-  void _toggleExpansion() {
-    if (_animationController.isCompleted) {
-      _animationController.reverse();
-    } else {
-      _animationController.forward();
-    }
-  }
+  void _toggleExpansion() {}
 
   void _scrollToEnd() {
     if (_scrollController.hasClients) {
@@ -235,23 +223,25 @@ class VideoWidgetState extends State<VideoWidget>
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        locator<AnalyticsService>().track(
-                                          eventName: AnalyticsEvents
-                                              .shortsProfileClick,
-                                          properties: {
-                                            "expert name": widget.userName,
-                                          },
-                                        );
-                                        AppState.backButtonDispatcher!
-                                            .didPopRoute();
-                                        AppState.delegate!.appState
-                                            .currentAction = PageAction(
-                                          page: ExpertDetailsPageConfig,
-                                          state: PageState.addWidget,
-                                          widget: ExpertsDetailsView(
-                                            advisorID: widget.advisorId,
-                                          ),
-                                        );
+                                        if (widget.userName != '') {
+                                          locator<AnalyticsService>().track(
+                                            eventName: AnalyticsEvents
+                                                .shortsProfileClick,
+                                            properties: {
+                                              "expert name": widget.userName,
+                                            },
+                                          );
+                                          AppState.backButtonDispatcher!
+                                              .didPopRoute();
+                                          AppState.delegate!.appState
+                                              .currentAction = PageAction(
+                                            page: ExpertDetailsPageConfig,
+                                            state: PageState.addWidget,
+                                            widget: ExpertsDetailsView(
+                                              advisorID: widget.advisorId,
+                                            ),
+                                          );
+                                        }
                                       },
                                       child: Row(
                                         crossAxisAlignment:

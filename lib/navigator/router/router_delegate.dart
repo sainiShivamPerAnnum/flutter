@@ -1185,6 +1185,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case "shortsNotification":
         pageConfiguration = ShortsNotificationPageConfig;
         break;
+      case "fixedDeposit":
+        BaseUtil().openRechargeModalSheet(
+          investmentType: InvestmentType.fixedDeposit,
+          queryParams: queryParams,
+          fullPager: true,
+        );
+        break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration, queryParams: queryParams);

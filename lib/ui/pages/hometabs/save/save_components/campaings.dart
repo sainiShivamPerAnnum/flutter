@@ -85,7 +85,7 @@ class _CampaignsState extends State<Campaigns> {
                                         const Duration(milliseconds: 300),
                                     placeholder: kTransparentImage,
                                     image: event.bgImage,
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.fill,
                                   ),
                                 ),
                               ),

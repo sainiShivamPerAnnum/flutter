@@ -416,14 +416,8 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                                       .title
                                                   : 'Default Title',
                                               "shorts category": state
-                                                          .categories
-                                                          .isNotEmpty &&
-                                                      state.currentCategoryIndex <
-                                                          state
-                                                              .categories.length
-                                                  ? state.categories[state
-                                                      .currentCategoryIndex]
-                                                  : 'Default Category',
+                                                  .currentVideos[index]
+                                                  .categoryV1,
                                               "shorts video list":
                                                   state.theme.isNotEmpty
                                                       ? state.theme
@@ -436,12 +430,11 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                           );
                                         }
                                       },
-                                      showUserName: videos[index].author != "",
+                                      showUserName: true,
                                       showVideoTitle: true,
                                       showShareButton: true,
                                       showLikeButton: true,
-                                      showBookButton:
-                                          videos[index].advisorId != "",
+                                      showBookButton: true,
                                       comments: state
                                           .videoComments[videos[index].id]
                                           ?.reversed
@@ -465,12 +458,10 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                         child: FAppBar(
                           backgroundColor: Colors.transparent,
                           centerTitle: true,
-                          titleWidget: Expanded(
-                            child: MarqueeText(
-                              infoList: [widget.title ?? ''],
-                              showBullet: false,
-                              style: TextStyles.rajdhaniSB.body1,
-                            ),
+                          titleWidget: MarqueeText(
+                            infoList: [widget.title ?? ''],
+                            showBullet: false,
+                            style: TextStyles.rajdhaniSB.body1,
                           ),
                           leading: BackButton(
                             color: Colors.white,
