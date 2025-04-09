@@ -108,7 +108,7 @@ class RootViewModel extends BaseViewModel {
           _referralService.initDynamicLinks(),
         ]);
         unawaited(getFirebaseAppInstanceId());
-        unawaited(handleStartUpNotificationData());
+        // unawaited(handleStartUpNotificationData());
         await locator<ReferralService>().fetchReferralCode();
         await Future.wait([
           // _userService.checkForNewNotifications(),

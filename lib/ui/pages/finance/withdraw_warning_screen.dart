@@ -1,9 +1,7 @@
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
-import 'package:felloapp/core/model/game_tier_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -284,36 +282,5 @@ class WithDrawWarningScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class WithDrawGameViewModel {
-  final List<GameModel?> gamesWillBeLocked;
-  final double totalWining;
-  WithDrawGameViewModel(this.gamesWillBeLocked, this.totalWining);
-
-  factory WithDrawGameViewModel.fromGames(
-      GameTiers model, double withDrawingAmount) {
-    final gamesWillBeLocked = <GameModel?>[];
-    final _userPortfolio = locator<UserService>().userPortfolio;
-    final netWorth =
-        _userPortfolio.augmont.principle + (_userPortfolio.flo.principle);
-    final finalAmount = netWorth - withDrawingAmount;
-
-    for (var i in model.data) {
-      bool isTierAlreadyLocked = true;
-      if (i!.minInvestmentToUnlock > netWorth) {
-        isTierAlreadyLocked = false;
-      }
-      if (finalAmount < i.minInvestmentToUnlock && isTierAlreadyLocked) {
-        gamesWillBeLocked.addAll([...i.games]);
-      }
-    }
-    var totalWining = 0.0;
-    gamesWillBeLocked.forEach((e) {
-      totalWining = totalWining + (e!.prizeAmount! * 1.0);
-    });
-
-    return WithDrawGameViewModel(gamesWillBeLocked, totalWining);
   }
 }

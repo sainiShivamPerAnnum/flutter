@@ -14,8 +14,6 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/model/feed_card_model.dart';
-import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_leader_model.dart';
 import 'package:felloapp/core/model/settings_items_model.dart';
@@ -83,7 +81,6 @@ class BaseUtil extends ChangeNotifier {
   int? _ticketCount;
   User? firebaseUser;
   FirebaseAnalytics? baseAnalytics;
-  List<FeedCard>? feedCards;
   String? userRegdPan;
   List<SettingsListItemModel>? settingsItemList;
 
@@ -97,7 +94,6 @@ class BaseUtil extends ChangeNotifier {
   AugmontRates? augmontGoldRates;
 
   ///KYC global object
-  List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
   String? myUserDpUrl;
   List<UserTransaction>? userMiniTxnList;
@@ -837,7 +833,6 @@ class BaseUtil extends ChangeNotifier {
       _ticketCount = null;
       firebaseUser = null;
       baseAnalytics = null;
-      feedCards = null;
       // _dailyPickCount = null;
       userRegdPan = null;
       // weeklyDigits = null;
@@ -848,7 +843,6 @@ class BaseUtil extends ChangeNotifier {
 
       _augmontDetail = null;
       augmontGoldRates = null;
-      prizeLeaders = [];
       referralLeaders = [];
       myUserDpUrl = null;
       userMiniTxnList = null;

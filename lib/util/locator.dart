@@ -29,7 +29,6 @@ import 'package:felloapp/core/repository/sip_repo.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
-import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/branch_analytics.dart';
@@ -45,7 +44,6 @@ import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -155,7 +153,6 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(GoogleSignInService.new);
   locator.registerLazySingleton(RazorpayService.new);
   locator.registerSingletonAsync(SharedPreferences.getInstance);
-  locator.registerLazySingleton(MarketingEventHandlerService.new);
   locator.registerLazySingleton(SubService.new);
   locator.registerLazySingleton(
     () => TransactionBloc(
@@ -200,7 +197,6 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(LendboxRepo.new);
   locator.registerLazySingleton(AdvisorRepo.new);
   locator.registerLazySingleton(PrizingRepo.new);
-  locator.registerLazySingleton(UserStatsRepo.new);
   locator.registerLazySingleton(RootController.new);
   locator.registerLazySingleton(ClientCommsRepo.new);
   locator.registerLazySingleton(ReportRepository.new);

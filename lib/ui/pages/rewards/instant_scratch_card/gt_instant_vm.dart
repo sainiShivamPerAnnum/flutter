@@ -2,7 +2,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
-import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -21,10 +20,6 @@ class GTInstantViewModel extends BaseViewModel {
   final CustomLogger _logger = locator<CustomLogger>();
   final ApiPath _apiPaths = locator<ApiPath>();
   final ScratchCardService _gtService = locator<ScratchCardService>();
-
-  // final PaytmService? _paytmService = locator<PaytmService>();
-  final MarketingEventHandlerService _marketingEventHandlerService =
-      locator<MarketingEventHandlerService>();
 
   // final _rsaEncryption =  RSAEncryption();
   S locale = locator<S>();
@@ -154,7 +149,6 @@ class GTInstantViewModel extends BaseViewModel {
 
     Future.delayed(const Duration(seconds: 3), () {
       AppState.isInstantGtViewInView = false;
-      _marketingEventHandlerService.showModalsheet = true;
       AppState.backButtonDispatcher!.didPopRoute();
       if (showRatingDialog) BaseUtil.showFelloRatingSheet();
     });

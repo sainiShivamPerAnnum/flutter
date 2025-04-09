@@ -267,21 +267,21 @@ class SaveViewModel extends ChangeNotifier {
   Future<void> init() async {
     // _baseUtil.fetchUserAugmontDetail();
     // baseProvider = BaseUtil();
+    await getCampaignEvents();
     await _userService.getUserFundWalletData();
-    await _userCoinService.getUserCoinBalance();
     await getUpcomingBooking();
-    await getPastBooking();
     await getTopExperts();
     await getLiveData();
-    await getCampaignEvents();
-    await locator<SubService>().init();
+    await _userCoinService.getUserCoinBalance();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _sellService.init();
-      getSaveViewBlogs();
       getTestimonials();
+      getSaveViewBlogs();
+      locator<SubService>().init();
+      _sellService.init();
       final repository = locator<ShortsRepo>();
       AnalyticsRetryManager.pushQueuedEvents(repository);
+      getPastBooking();
     });
   }
 

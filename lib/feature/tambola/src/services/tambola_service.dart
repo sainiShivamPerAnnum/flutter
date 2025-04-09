@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:felloapp/core/constants/cache_keys.dart';
-import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/model/tambola_offers_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
@@ -40,7 +39,6 @@ class TambolaService extends ChangeNotifier {
 
   //LOCAL VARIABLES
   DailyPick? _weeklyPicks;
-  GameModel? tambolaGameData;
   PrizesModel? tambolaPrizes;
   List<Winners>? pastWeekWinners;
   List<TambolaTicketModel> allTickets = [];

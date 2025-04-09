@@ -1,5 +1,4 @@
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/buttons/nav_buttons/nav_buttons.dart';
@@ -18,20 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:scratcher/scratcher.dart';
 
-enum GTSOURCE {
-  newuser,
-  deposit,
-  cricket,
-  footBall,
-  candyFiesta,
-  poolClub,
-  panVerify,
-  autosave,
-  game,
-  prize,
-  event,
-  referral
-}
+enum GTSOURCE { newuser, deposit, panVerify, autosave, prize, event, referral }
 
 class GTInstantView extends StatefulWidget {
   final String? title;
@@ -61,9 +47,6 @@ class _GTInstantViewState extends State<GTInstantView>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      locator<MarketingEventHandlerService>().showModalsheet = false;
-    });
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(
@@ -78,9 +61,6 @@ class _GTInstantViewState extends State<GTInstantView>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      locator<MarketingEventHandlerService>().showModalsheet = true;
-    });
     _controller.dispose();
     super.dispose();
   }

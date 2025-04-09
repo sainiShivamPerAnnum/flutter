@@ -13,7 +13,6 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
-import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -94,8 +93,6 @@ class UserProfileVM extends BaseViewModel {
   final ScratchCardService _gtService = locator<ScratchCardService>();
   final PreloadBloc preloadBloc = locator<PreloadBloc>();
 
-  final MarketingEventHandlerService _marketingService =
-      locator<MarketingEventHandlerService>();
   final TambolaRepo _tambolaRepo = locator<TambolaRepo>();
   bool isUsernameUpdated = false;
   double? picSize;
@@ -563,7 +560,6 @@ class UserProfileVM extends BaseViewModel {
                 _myFundsBloc.dispose();
                 _sipTransactionBloc.dispose();
                 await _baseUtil.signOut();
-                _marketingService.dump();
                 _txnHistoryService.signOut();
                 _analyticsService.signOut();
                 _bankAndKycService.dump();

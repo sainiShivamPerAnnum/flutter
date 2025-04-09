@@ -100,7 +100,14 @@ class __ExpertHomeState extends State<_ExpertHome>
                 return Column(
                   children: [
                     _appBar(''),
-                    const Center(child: FullScreenLoader()),
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          top: 150.h,
+                        ),
+                        child: const FullScreenLoader(),
+                      ),
+                    ),
                   ],
                 );
               case ExpertHomeLoaded():
