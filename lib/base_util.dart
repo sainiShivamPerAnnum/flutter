@@ -33,7 +33,6 @@ import 'package:felloapp/feature/referrals/ui/referral_rating_sheet.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/modalsheets/confirm_exit_modal.dart';
 import 'package:felloapp/ui/pages/asset_selection.dart';
@@ -42,7 +41,6 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_view.dart'
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -1274,34 +1272,5 @@ class BaseUtil extends ChangeNotifier {
   set isUpiInfoMissing(bool? value) {
     _isUpiInfoMissing = value;
     notifyListeners();
-  }
-}
-
-class CompleteProfileDialog extends StatelessWidget {
-  final String? title, subtitle;
-
-  const CompleteProfileDialog({super.key, this.title, this.subtitle});
-
-  @override
-  Widget build(BuildContext context) {
-    S locale = S.of(context);
-    return WillPopScope(
-      onWillPop: () async {
-        await AppState.backButtonDispatcher!.didPopRoute();
-        return Future.value(true);
-      },
-      child: MoreInfoDialog(
-        title: title ?? locale.obCompleteProfile,
-        text: subtitle ?? locale.obCompleteProfileSubTitle,
-        imagePath: Assets.completeProfile,
-        btnText: locale.btnComplete.toUpperCase(),
-        onPressed: () {
-          while (AppState.screenStack.length > 1) {
-            AppState.backButtonDispatcher!.didPopRoute();
-          }
-          AppState.delegate!.appState.setCurrentTabIndex = 0;
-        },
-      ),
-    );
   }
 }

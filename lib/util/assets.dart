@@ -64,7 +64,6 @@ class Assets {
   static const String txnHistory = "assets/vectors/icons/txnHistory.svg";
   static const String bank = "assets/vectors/icons/bank.svg";
   static const String google = "assets/vectors/icons/google.svg";
-  static const String whatsapp = "assets/vectors/icons/whatsapp.svg";
   //PROFILE PICTURES
   static const String cvtar1 = "assets/vectors/userAvatars/AV1.svg";
   static const String cvtar2 = "assets/vectors/userAvatars/AV2.svg";
@@ -98,8 +97,6 @@ class Assets {
 
   static const String redeemSucessfullAssetPNG =
       "images/redeemSucessfull_png.png";
-
-  static const String completeProfile = "assets/images/completeProfile.png";
 
   //How to play aseets (Tambola Screen)
   static const String howToPlayAsset1Tambola = "assets/svg/tambola_inst_1.svg";
@@ -144,9 +141,6 @@ class Assets {
   static const String ic_upload_procced =
       "assets/vectors/icons/ic_upload_proceed.svg";
   static const String dummyPan = "assets/images/pancard dummy.webp";
-  static const String graph = "assets/vectors/icons/graph.svg";
-
-  static String journeyIcon = "assets/vectors/icons/journeyIcon.svg";
 
   static String multiAvatars = "assets/vectors/multiAvatars.svg";
   static String arrow = "assets/vectors/arrow.svg";
@@ -205,8 +199,6 @@ class Assets {
   static const String tambolaPrizeAsset = 'assets/svg/tambola_prize_asset.svg';
   static const String tambolaTopBannerLottie =
       '${assetBaseUrl}lotties/tambola_animation.json';
-  static const String uhoh = 'assets/vectors/uhoh.svg';
-  static const String noPredictions = 'assets/svg/prediction_ball.svg';
   static const goldCoinIcon =
       "https://d37gtxigg82zaw.cloudfront.net/weekly-recap/investments.svg";
   static const String inAppReviewBg = 'assets/svg/in_app_review_success_bg.svg';
@@ -249,10 +241,6 @@ class Assets {
 
   static const String editIcon = "assets/vectors/edit_icon.svg";
   static const String pauseIcon = "assets/vectors/pause_icon.svg";
-  static const String normalChevronLeftArrow =
-      "assets/vectors/normal_chevron_left.svg";
-  static const String normalChevronRightArrow =
-      "assets/vectors/normal_chevron_right.svg";
   //asset-prefs
   static const String assetPrefBottomSheet1 =
       "assets/svg/asset_pref_bottomsheet1.svg";

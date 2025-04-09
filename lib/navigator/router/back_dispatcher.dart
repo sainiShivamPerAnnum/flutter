@@ -23,7 +23,6 @@ import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/modalsheets/autosave_confirm_exit_modalsheet.dart';
 import 'package:felloapp/ui/modalsheets/autosave_survey_modalsheet.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_components/gold_pro_buy_exit_modalsheet.dart';
-import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -358,13 +357,11 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
             .onChange(locator<RootController>().navItems.values.toList()[0]);
         return Future.value(true);
       } else if (AppState.delegate!.appState.rootIndex ==
-              locator<RootController>()
-                  .navItems
-                  .values
-                  .toList()
-                  .indexWhere((element) => element.title == "Save") &&
-          locator<CardActionsNotifier>().isVerticalView) {
-        locator<CardActionsNotifier>().isVerticalView = false;
+          locator<RootController>()
+              .navItems
+              .values
+              .toList()
+              .indexWhere((element) => element.title == "Save")) {
         return Future.value(true);
       }
     }

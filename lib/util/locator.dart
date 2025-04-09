@@ -81,7 +81,6 @@ import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_vm.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transaction_history_vm.dart';
-import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/my_account_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
@@ -218,7 +217,6 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => AdvisorBloc(locator()));
   locator.registerLazySingleton(() => ExpertBloc(locator()));
   //ROOT
-  locator.registerLazySingleton(CardActionsNotifier.new);
 
   /// SPLASH
   locator.registerFactory(LauncherViewModel.new);

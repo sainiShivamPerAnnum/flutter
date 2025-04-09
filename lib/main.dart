@@ -20,7 +20,6 @@ import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/route_parser.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -99,9 +98,6 @@ class MyApp extends HookWidget {
           ),
           ChangeNotifierProvider(
             create: (_) => locator<ScratchCardService>(),
-          ),
-          ChangeNotifierProvider(
-            create: (_) => locator<CardActionsNotifier>(),
           ),
         ],
         child: PropertyChangeProvider<UserService, UserServiceProperties>(
