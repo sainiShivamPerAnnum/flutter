@@ -11,7 +11,7 @@ analyzer:
     invalid_annotation_target: ignore
     invalid_assignment: warning
     missing_return: error
-    dead_code: info
+    dead_code: error
 
 linter:
   rules:
