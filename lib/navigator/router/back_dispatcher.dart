@@ -77,6 +77,10 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     if (AppState.screenStack.last == ScreenItem.loader) {
       return Future.value(true);
     }
+    if ((AppState.delegate!.currentConfiguration?.path ?? '') ==
+        '/webViewScreenPath') {
+      // return Future.value(true);
+    }
     if (AppState.isInLiveStream &&
         AppState.screenStack.last != ScreenItem.dialog &&
         AppState.screenStack.last != ScreenItem.modalsheet &&

@@ -34,6 +34,7 @@ class PreloadState with _$PreloadState {
     required String themeName,
     required List<String> allThemes,
     required List<String> allThemeNames,
+    required List<ThemeTransition> themeTransitionIndices,
     String? errorMessage,
     VideoPlayerController? liveStreamController,
     PageController? livePageController,
@@ -74,6 +75,7 @@ class PreloadState with _$PreloadState {
         allThemes: [],
         themeName: '',
         allThemeNames: [],
+        themeTransitionIndices: [],
         muted: false,
       );
 

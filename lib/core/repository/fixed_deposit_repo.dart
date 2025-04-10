@@ -127,20 +127,29 @@ class FdRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<FDTransactionData>>> fdTransactions() async {
+  Future<ApiResponse<dynamic>> fdTransactions() async {
     try {
       final response = await APIService.instance.getData(
         ApiPath.fdTransactions,
         cBaseUrl: _baseUrl,
         apiName: '$_fd/fdTransactions',
       );
-      final List<FDTransactionData> responseData = (response['data'] as List)
+      final responseData = response["data"];
+      if (responseData is Map &&
+          responseData.keys.length == 1 &&
+          responseData.containsKey('message')) {
+        return ApiResponse(
+          model: responseData['message'],
+          code: 200,
+        );
+      }
+      final List<FDTransactionData> responseList = (response['data'] as List)
           .map(
             (item) => FDTransactionData.fromJson(item as Map<String, dynamic>),
           )
           .toList();
       return ApiResponse<List<FDTransactionData>>(
-        model: responseData,
+        model: responseList,
         code: 200,
       );
     } catch (e) {

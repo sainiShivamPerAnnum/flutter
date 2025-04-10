@@ -8,6 +8,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/shorts/src/core/analytics_manager.dart';
 import 'package:felloapp/feature/shorts/src/core/interaction_enum.dart';
+import 'package:felloapp/feature/shorts/src/service/theme_data.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/local_actions_state.dart';
@@ -481,6 +482,34 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         _analyticsService.track(
           eventName: AnalyticsEvents.shortsVerticalSwipe,
         );
+        if (state.currentContext == ReelContext.main &&
+            state.themeTransitionIndices != null &&
+            state.themeTransitionIndices.isNotEmpty) {
+          String currentVideoTheme = state.theme;
+          String currentVideoThemeName = state.themeName;
+
+          for (int i = 0; i < state.themeTransitionIndices.length; i++) {
+            if (e.index >= state.themeTransitionIndices[i].index) {
+              currentVideoTheme = state.themeTransitionIndices[i].theme;
+              currentVideoThemeName = state.themeTransitionIndices[i].themeName;
+            } else {
+              break;
+            }
+          }
+          if (currentVideoTheme != state.theme) {
+            add(
+              PreloadEvent.updateThemes(
+                categories: state.categories,
+                theme: currentVideoTheme,
+                index: state.currentCategoryIndex,
+                allThemes: state.allThemes,
+                allThemeNames: state.allThemeNames,
+                themeName: currentVideoThemeName,
+              ),
+            );
+          }
+        }
+
         if (shouldFetch) {
           final response = state.currentCategoryIndex == 0
               ? await repository.getVideosByTheme(
@@ -517,26 +546,37 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                     );
               List<VideoData> nextThemeVideos =
                   nextResponse.model?.videos ?? [];
+              final themeTransitionIndex =
+                  state.currentVideos.length + videosToAdd.length;
+              final updatedThemeTransitions = List<ThemeTransition>.from(
+                state.themeTransitionIndices,
+              );
+              updatedThemeTransitions.add(
+                ThemeTransition(
+                  index: themeTransitionIndex,
+                  theme: nextTheme,
+                  themeName: nextThemeName,
+                ),
+              );
+              updatedThemeTransitions
+                  .sort((a, b) => a.index.compareTo(b.index));
+              add(
+                PreloadEvent.updateThemeTransitions(
+                  themeTransitions: updatedThemeTransitions,
+                ),
+              );
+
               videosToAdd.addAll(
                 nextThemeVideos
                     .where((video) => video.id != state.initialVideo?.id)
                     .toList(),
-              );
-              add(
-                PreloadEvent.updateThemes(
-                  categories: state.categories,
-                  theme: nextTheme,
-                  index: state.currentCategoryIndex,
-                  allThemes: state.allThemes,
-                  allThemeNames: state.allThemeNames,
-                  themeName: nextThemeName,
-                ),
               );
             }
           }
 
           add(PreloadEvent.updateUrls(videosToAdd));
         }
+
         final index = state.currentContext == ReelContext.main
             ? state.focusedIndex
             : state.profileVideoIndex;
@@ -550,6 +590,13 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         } else {
           emit(state.copyWith(profileVideoIndex: e.index));
         }
+      },
+      updateThemeTransitions: (e) async {
+        emit(
+          state.copyWith(
+            themeTransitionIndices: e.themeTransitions,
+          ),
+        );
       },
       updateUrls: (e) async {
         if (state.currentContext == ReelContext.main) {

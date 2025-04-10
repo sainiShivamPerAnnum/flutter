@@ -93,42 +93,32 @@ class _FdWebViewState extends State<FdWebView> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        if (controller != null && await controller!.canGoBack()) {
-          await controller!.goBack();
-          return Future.value(false);
-        } else {
-          return Future.value(true);
-        }
-      },
-      child: SafeArea(
-        child: Scaffold(
-          appBar: FAppBar(
-            backgroundColor: UiConstants.kTextColor,
-            centerTitle: true,
-            titleWidget: Text(
-              'Fixed Deposit',
-              style: TextStyles.rajdhaniSB.body1.colour(
-                UiConstants.kTextColor4,
-              ),
+    return SafeArea(
+      child: Scaffold(
+        appBar: FAppBar(
+          backgroundColor: UiConstants.kTextColor,
+          centerTitle: true,
+          titleWidget: Text(
+            'Fixed Deposit',
+            style: TextStyles.rajdhaniSB.body1.colour(
+              UiConstants.kTextColor4,
             ),
-            leading: BackButton(
-              color: UiConstants.kTextColor4,
-              onPressed: () async {
-                if (controller != null && await controller!.canGoBack()) {
-                  await controller!.goBack();
-                } else {
-                  await AppState.backButtonDispatcher!.didPopRoute();
-                }
-              },
-            ),
-            showAvatar: false,
-            showCoinBar: false,
           ),
-          body: WebViewWidget(
-            controller: controller!,
+          leading: BackButton(
+            color: UiConstants.kTextColor4,
+            onPressed: () async {
+              if (controller != null && await controller!.canGoBack()) {
+                await controller!.goBack();
+              } else {
+                await AppState.backButtonDispatcher!.didPopRoute();
+              }
+            },
           ),
+          showAvatar: false,
+          showCoinBar: false,
+        ),
+        body: WebViewWidget(
+          controller: controller!,
         ),
       ),
     );

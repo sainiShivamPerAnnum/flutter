@@ -53,6 +53,17 @@ class _InvestmentDetails extends StatelessWidget {
                   myfundsBloc.add(const LoadMyFDTransactions());
                 },
               ),
+            NoFixedDepositsState() => Container(
+                margin: EdgeInsets.only(top: 70.h),
+                height: 90.h,
+                width: 1.sh,
+                child: NoFdTransactions(
+                  message: 'You have not invested in any plan',
+                  onClick: () {
+                    DefaultTabController.of(context).animateTo(0);
+                  },
+                ),
+              ),
             FdDepositsLoaded() => CustomScrollView(
                 slivers: [
                   SliverOverlapInjector(

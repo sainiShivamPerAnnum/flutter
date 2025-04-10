@@ -52,6 +52,10 @@ class PreloadEvent with _$PreloadEvent {
     required String comment,
   }) = _AddComment;
 
+  const factory PreloadEvent.updateThemeTransitions({
+    required List<ThemeTransition> themeTransitions,
+  }) = UpdateThemeTransitions;
+
   const factory PreloadEvent.updateViewCount({
     required String videoId,
     required String category,
