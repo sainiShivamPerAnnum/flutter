@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
@@ -22,7 +21,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -256,15 +254,6 @@ class ReferralDetailsViewModel extends BaseViewModel {
 
   Future getProfileDpWithUid(String uid) async {
     return _dbModel.getUserDP(uid);
-  }
-
-  String getUserMembershipDate(Timestamp? tmp) {
-    if (tmp != null) {
-      DateTime dt = tmp.toDate();
-      return DateFormat("dd MMM, yyyy").format(dt);
-    } else {
-      return '\'Unavailable\'';
-    }
   }
 
   bool bonusUnlockedReferalPresent(List<ReferralDetail> list) {

@@ -17,22 +17,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.16"
-  action_slider:
-    dependency: "direct main"
-    description:
-      name: action_slider
-      sha256: fad0720cde9bf06c12594c15da17dba087556a3285875a91aee3d3a64a3072e2
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.7.0"
-  adaptive_number:
-    dependency: transitive
-    description:
-      name: adaptive_number
-      sha256: "3a567544e9b5c9c803006f51140ad544aedc79604fd4f3f2c1380003f97c1d77"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   advertising_id:
     dependency: "direct main"
     description:
@@ -377,14 +361,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.17.2"
-  dart_jsonwebtoken:
-    dependency: "direct main"
-    description:
-      name: dart_jsonwebtoken
-      sha256: "2a42e97c0b8b4e9a42b24a71453635f445c7b66c7d7c81e3a429f37ead9fe778"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.7.1"
   dart_style:
     dependency: transitive
     description:
@@ -416,14 +392,6 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  device_frame:
-    dependency: transitive
-    description:
-      name: device_frame
-      sha256: afe76182aec178d171953d9b4a50a43c57c7cf3c77d8b09a48bf30c8fa04dd9d
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   device_info_plus:
     dependency: "direct main"
     description:
@@ -440,14 +408,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
-  device_preview:
-    dependency: "direct main"
-    description:
-      name: device_preview
-      sha256: "2f097bf31b929e15e6756dbe0ec1bcb63952ab9ed51c25dc5a2c722d2b21fdaf"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   dio:
     dependency: "direct main"
     description:
@@ -488,14 +448,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.9"
-  ed25519_edwards:
-    dependency: transitive
-    description:
-      name: ed25519_edwards
-      sha256: "6ce0112d131327ec6d42beede1e5dfd526069b18ad45dcf654f15074ad9276cd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.1"
   encrypt:
     dependency: "direct main"
     description:
@@ -664,30 +616,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.6.16"
-  firebase_database:
-    dependency: "direct main"
-    description:
-      name: firebase_database
-      sha256: "8568ad41f9312ab1f162f70c1e3e7cb7420b8bc8d07e4d543e575bb0cb41f8a5"
-      url: "https://pub.dev"
-    source: hosted
-    version: "10.4.0"
-  firebase_database_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_database_platform_interface
-      sha256: "4366ade2390f8799a317bb13af29c2a1fdfc84f4d04372094756b86a6cbfd305"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.5+16"
-  firebase_database_web:
-    dependency: transitive
-    description:
-      name: firebase_database_web
-      sha256: "4920a83b917493b37fd408cbb01c289ef8a422d9ed48982f908a9850290262f9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.3+16"
   firebase_dynamic_links:
     dependency: "direct main"
     description:
@@ -776,30 +704,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.4+16"
-  firebase_remote_config:
-    dependency: "direct main"
-    description:
-      name: firebase_remote_config
-      sha256: "60fc92273d1db338a6fad1839c42dedc4ad64f812043acad0cbb200702f5c9ce"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.3.8"
-  firebase_remote_config_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_remote_config_platform_interface
-      sha256: "41813ef8dfbc40ef7a59a73f9e5acef2608dbcb2933241b6c03d52e90677040f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.4.16"
-  firebase_remote_config_web:
-    dependency: transitive
-    description:
-      name: firebase_remote_config_web
-      sha256: "089e92f333c2fb2c05c640c80fecea9d1e06dada0ba85efe34a580987ef94a0a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.4.16"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -889,14 +793,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.18.6"
-  flutter_inset_box_shadow:
-    dependency: "direct main"
-    description:
-      name: flutter_inset_box_shadow
-      sha256: "0b1930ed5f4ad84b11b41dda907fbc5d4c12929a4c51455c626e5937b47ffb93"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.8"
   flutter_linkify:
     dependency: "direct main"
     description:
@@ -2310,14 +2206,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "14.2.1"
-  volume_controller:
-    dependency: "direct main"
-    description:
-      name: volume_controller
-      sha256: c71d4c62631305df63b72da79089e078af2659649301807fa746088f365cb48e
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.8"
   watcher:
     dependency: transitive
     description:

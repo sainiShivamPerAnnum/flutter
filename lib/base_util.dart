@@ -6,7 +6,6 @@ import 'dart:math';
 
 //Pub Imports
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -104,7 +103,6 @@ class BaseUtil extends ChangeNotifier {
   UserTransaction? firstAugmontTransaction;
 
   /// Objects for Transaction list Pagination
-  DocumentSnapshot? lastTransactionListDocument;
   bool hasMoreTransactionListDocuments = true;
 
   DateTime? _userCreationTimestamp;
@@ -849,7 +847,6 @@ class BaseUtil extends ChangeNotifier {
       packageInfo = null;
       freshchatKeys = null;
       _userCreationTimestamp = null;
-      lastTransactionListDocument = null;
       hasMoreTransactionListDocuments = true;
       isOtpResendCount = 0;
       isUpiInfoMissing = true;

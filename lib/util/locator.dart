@@ -70,7 +70,6 @@ import 'package:felloapp/feature/tambola/src/ui/tambola_home_tickets/tambola_hom
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_vm.dart';
-import 'package:felloapp/ui/elements/faq_card/faq_card_vm.dart';
 import 'package:felloapp/ui/pages/asset_prefs/asset_pref_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_vm.dart';
@@ -260,7 +259,6 @@ Future<void> setupLocator() async {
   //WIDGETS
   locator.registerFactory(MiniTransactionCardViewModel.new);
   locator.registerFactory(FelloCoinBarViewModel.new);
-  locator.registerFactory(FAQCardViewModel.new);
   locator.registerFactory(AssetPreferenceViewModel.new);
   locator.registerLazySingleton(WebEngageAnalytics.new);
 

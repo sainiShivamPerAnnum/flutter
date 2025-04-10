@@ -15,7 +15,6 @@ import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
-import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
@@ -35,7 +34,6 @@ import 'base_repo.dart';
 
 class UserRepository extends BaseRepo {
   final CustomLogger _logger = locator<CustomLogger>();
-  final Api _api = locator<Api>();
   final ApiPath _apiPaths = locator<ApiPath>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
 
@@ -230,7 +228,6 @@ class UserRepository extends BaseRepo {
 
   Future<void> removeUserFCM(String? userUid) async {
     try {
-      await _api.deleteUserClientToken(userUid);
       logger.d("Token successfully removed from firestore, on user signout.");
     } catch (e) {
       logger.e(e);

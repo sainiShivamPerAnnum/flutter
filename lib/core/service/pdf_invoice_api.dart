@@ -263,7 +263,7 @@ class PdfInvoiceApi {
           SizedBox(height: 2 * PdfPageFormat.mm),
           Divider(),
           SizedBox(height: 2 * PdfPageFormat.mm),
-          Text("91GameFi Pvt Ltd"),
+          Text("TRANSACTREE ENTERPRISES PRIVATE LIMITED"),
           SizedBox(height: 1 * PdfPageFormat.mm),
           Text("https://fello.in/"),
           SizedBox(height: PdfPageFormat.cm / 2)

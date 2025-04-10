@@ -63,7 +63,6 @@ import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_view.dart'
 import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/pages/userProfile/settings/settings_view.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_view.dart';
-import 'package:felloapp/ui/pages/userProfile/verify_email.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -287,9 +286,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.RefPolicy:
           _addPageData(const ReferralPolicy(), RefPolicyPageConfig);
-          break;
-        case Pages.VerifyEmail:
-          _addPageData(const VerifyEmail(), VerifyEmailPageConfig);
           break;
         case Pages.Notifications:
           _addPageData(const NotificationsPage(), NotificationsConfig);
