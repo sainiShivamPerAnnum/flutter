@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -321,6 +322,7 @@ class __FDDepositViewState extends State<_FDDepositView> {
                               .first
                               .value
                               .amounts!
+                              .take(4)
                               .map(
                                 (amount) => GestureDetector(
                                   onTap: () {
@@ -346,29 +348,31 @@ class __FDDepositViewState extends State<_FDDepositView> {
                                   ),
                                 ),
                               )
-                          : widget.fdData.detailsPage.cta.displayAmounts.map(
-                              (amount) => GestureDetector(
-                                onTap: () {
-                                  _amountController.text = amount.toString();
-                                  _onChipClick(amount.toString());
-                                },
-                                child: Chip(
-                                  backgroundColor: UiConstants.kChipColor,
-                                  label: Text(
-                                    BaseUtil.formatIndianRupees(amount),
-                                    style: TextStyles.sourceSansM.body4,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness32,
+                          : widget.fdData.detailsPage.cta.displayAmounts
+                              .take(4)
+                              .map(
+                                (amount) => GestureDetector(
+                                  onTap: () {
+                                    _amountController.text = amount.toString();
+                                    _onChipClick(amount.toString());
+                                  },
+                                  child: Chip(
+                                    backgroundColor: UiConstants.kChipColor,
+                                    label: Text(
+                                      BaseUtil.formatIndianRupees(amount),
+                                      style: TextStyles.sourceSansM.body4,
                                     ),
-                                    side: const BorderSide(
-                                      color: UiConstants.kChipColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness32,
+                                      ),
+                                      side: const BorderSide(
+                                        color: UiConstants.kChipColor,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            )),
+                              )),
                     ],
                   ),
                   SizedBox(
@@ -791,7 +795,7 @@ class __FDDepositViewState extends State<_FDDepositView> {
                 ],
               ),
             ),
-            SizedBox(height: SizeConfig.padding20),
+            SizedBox(height: SizeConfig.padding40),
             ConsultationWidget(
               margin: EdgeInsets.only(
                 top: SizeConfig.padding10,
@@ -833,12 +837,12 @@ class _CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final AllFdsData fdData;
   const _CustomAppBar({required this.fdData});
   @override
-  Size get preferredSize => Size.fromHeight(SizeConfig.padding140);
+  Size get preferredSize => Size.fromHeight(140.h);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: preferredSize.height,
+      height: 140.h,
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -849,15 +853,15 @@ class _CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           end: Alignment.bottomCenter,
         ),
       ),
-      padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20).copyWith(
-        bottom: SizeConfig.padding16,
-        top: MediaQuery.of(context).padding.top + SizeConfig.padding20,
+      padding: EdgeInsets.symmetric(horizontal: 20.w).copyWith(
+        bottom: 16.h,
+        top: MediaQuery.of(context).padding.top + 20.h,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(top: SizeConfig.padding2),
+            padding: EdgeInsets.only(top: 2.h),
             child: GestureDetector(
               onTap: () async {
                 await AppState.backButtonDispatcher!.didPopRoute();
@@ -865,12 +869,12 @@ class _CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Icon(
                 Icons.arrow_back,
                 color: UiConstants.kTextColor,
-                size: SizeConfig.iconSize0,
+                size: 20.sp,
               ),
             ),
           ),
           SizedBox(
-            width: SizeConfig.padding18,
+            width: 18.w,
           ),
           Expanded(
             child: Column(
@@ -879,14 +883,22 @@ class _CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               children: [
                 Text(
                   fdData.displayName,
-                  style: TextStyles.sourceSansSB.body1,
+                  style: GoogleFonts.sourceSans3(
+                    fontSize: 18.sp,
+                    color: UiConstants.kTextColor,
+                  ),
                 ),
-                SizedBox(height: SizeConfig.padding2),
-                Text(
-                  fdData.description,
-                  style: TextStyles.sourceSans.body3,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                SizedBox(height: 2.h),
+                Expanded(
+                  child: Text(
+                    fdData.description,
+                    style: GoogleFonts.sourceSans3(
+                      fontSize: 14.sp,
+                      color: UiConstants.kTextColor,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),
@@ -896,8 +908,8 @@ class _CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: ClipOval(
               child: AppImage(
                 fdData.icon,
-                width: SizeConfig.padding48,
-                height: SizeConfig.padding48,
+                width: 48.r,
+                height: 48.r,
               ),
             ),
           ),
