@@ -289,6 +289,9 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                     investmentType: InvestmentType.AUGGOLD99,
                                   ),
                                 if (!isNewUser) ...[
+                                  SizedBox(
+                                    height: SizeConfig.padding24,
+                                  ),
                                   CircularSlider(
                                     isNewUser: isNewUser,
                                     type: widget.type,
