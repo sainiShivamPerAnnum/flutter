@@ -184,7 +184,7 @@ class _InvestmentDetails extends StatelessWidget {
           ),
         ),
       ),
-      margin: EdgeInsets.symmetric(horizontal: 20.w),
+      margin: EdgeInsets.symmetric(horizontal: 20.w).copyWith(bottom: 18.h),
       child: Padding(
         padding: EdgeInsets.all(18.r),
         child: Row(

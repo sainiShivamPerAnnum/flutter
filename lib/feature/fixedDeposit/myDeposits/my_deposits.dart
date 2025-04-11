@@ -140,7 +140,7 @@ class _InvestmentDetails extends StatelessWidget {
 
   Widget _buildInvestmentSection(String title, Map<String, dynamic> data) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.w),
+      margin: EdgeInsets.symmetric(horizontal: 20.w).copyWith(bottom: 18.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.r),
         color: UiConstants.greyVarient,
