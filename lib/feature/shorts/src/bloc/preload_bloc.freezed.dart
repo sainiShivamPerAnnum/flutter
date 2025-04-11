@@ -2649,6 +2649,8 @@ abstract class _$$UpdateThemesImplCopyWith<$Res> {
   @useResult
   $Res call(
       {String theme,
+      String initialTheme,
+      String initialThemeName,
       List<String> categories,
       int index,
       List<String> allThemes,
@@ -2669,6 +2671,8 @@ class __$$UpdateThemesImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? theme = null,
+    Object? initialTheme = null,
+    Object? initialThemeName = null,
     Object? categories = null,
     Object? index = null,
     Object? allThemes = null,
@@ -2680,6 +2684,14 @@ class __$$UpdateThemesImplCopyWithImpl<$Res>
       theme: null == theme
           ? _value.theme
           : theme // ignore: cast_nullable_to_non_nullable
+              as String,
+      initialTheme: null == initialTheme
+          ? _value.initialTheme
+          : initialTheme // ignore: cast_nullable_to_non_nullable
+              as String,
+      initialThemeName: null == initialThemeName
+          ? _value.initialThemeName
+          : initialThemeName // ignore: cast_nullable_to_non_nullable
               as String,
       categories: null == categories
           ? _value._categories
@@ -2714,6 +2726,8 @@ class __$$UpdateThemesImplCopyWithImpl<$Res>
 class _$UpdateThemesImpl implements _UpdateThemes {
   const _$UpdateThemesImpl(
       {required this.theme,
+      required this.initialTheme,
+      required this.initialThemeName,
       required final List<String> categories,
       required this.index,
       required final List<String> allThemes,
@@ -2726,6 +2740,10 @@ class _$UpdateThemesImpl implements _UpdateThemes {
 
   @override
   final String theme;
+  @override
+  final String initialTheme;
+  @override
+  final String initialThemeName;
   final List<String> _categories;
   @override
   List<String> get categories {
@@ -2759,7 +2777,7 @@ class _$UpdateThemesImpl implements _UpdateThemes {
 
   @override
   String toString() {
-    return 'PreloadEvent.updateThemes(theme: $theme, categories: $categories, index: $index, allThemes: $allThemes, allThemeNames: $allThemeNames, themeName: $themeName, completer: $completer)';
+    return 'PreloadEvent.updateThemes(theme: $theme, initialTheme: $initialTheme, initialThemeName: $initialThemeName, categories: $categories, index: $index, allThemes: $allThemes, allThemeNames: $allThemeNames, themeName: $themeName, completer: $completer)';
   }
 
   @override
@@ -2768,6 +2786,10 @@ class _$UpdateThemesImpl implements _UpdateThemes {
         (other.runtimeType == runtimeType &&
             other is _$UpdateThemesImpl &&
             (identical(other.theme, theme) || other.theme == theme) &&
+            (identical(other.initialTheme, initialTheme) ||
+                other.initialTheme == initialTheme) &&
+            (identical(other.initialThemeName, initialThemeName) ||
+                other.initialThemeName == initialThemeName) &&
             const DeepCollectionEquality()
                 .equals(other._categories, _categories) &&
             (identical(other.index, index) || other.index == index) &&
@@ -2785,6 +2807,8 @@ class _$UpdateThemesImpl implements _UpdateThemes {
   int get hashCode => Object.hash(
       runtimeType,
       theme,
+      initialTheme,
+      initialThemeName,
       const DeepCollectionEquality().hash(_categories),
       index,
       const DeepCollectionEquality().hash(_allThemes),
@@ -2942,6 +2966,8 @@ class _$UpdateThemesImpl implements _UpdateThemes {
 abstract class _UpdateThemes implements PreloadEvent {
   const factory _UpdateThemes(
       {required final String theme,
+      required final String initialTheme,
+      required final String initialThemeName,
       required final List<String> categories,
       required final int index,
       required final List<String> allThemes,
@@ -2950,6 +2976,8 @@ abstract class _UpdateThemes implements PreloadEvent {
       final Completer<void>? completer}) = _$UpdateThemesImpl;
 
   String get theme;
+  String get initialTheme;
+  String get initialThemeName;
   List<String> get categories;
   int get index;
   List<String> get allThemes;
@@ -7502,6 +7530,8 @@ mixin _$PreloadState {
   List<String> get allThemeNames => throw _privateConstructorUsedError;
   List<ThemeTransition> get themeTransitionIndices =>
       throw _privateConstructorUsedError;
+  String get initialTheme => throw _privateConstructorUsedError;
+  String get initialThemeName => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
   VideoPlayerController? get liveStreamController =>
       throw _privateConstructorUsedError;
@@ -7562,6 +7592,8 @@ abstract class $PreloadStateCopyWith<$Res> {
       List<String> allThemes,
       List<String> allThemeNames,
       List<ThemeTransition> themeTransitionIndices,
+      String initialTheme,
+      String initialThemeName,
       String? errorMessage,
       VideoPlayerController? liveStreamController,
       PageController? livePageController});
@@ -7606,6 +7638,8 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
     Object? allThemes = null,
     Object? allThemeNames = null,
     Object? themeTransitionIndices = null,
+    Object? initialTheme = null,
+    Object? initialThemeName = null,
     Object? errorMessage = freezed,
     Object? liveStreamController = freezed,
     Object? livePageController = freezed,
@@ -7715,6 +7749,14 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
           ? _value.themeTransitionIndices
           : themeTransitionIndices // ignore: cast_nullable_to_non_nullable
               as List<ThemeTransition>,
+      initialTheme: null == initialTheme
+          ? _value.initialTheme
+          : initialTheme // ignore: cast_nullable_to_non_nullable
+              as String,
+      initialThemeName: null == initialThemeName
+          ? _value.initialThemeName
+          : initialThemeName // ignore: cast_nullable_to_non_nullable
+              as String,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -7766,6 +7808,8 @@ abstract class _$$PreloadStateImplCopyWith<$Res>
       List<String> allThemes,
       List<String> allThemeNames,
       List<ThemeTransition> themeTransitionIndices,
+      String initialTheme,
+      String initialThemeName,
       String? errorMessage,
       VideoPlayerController? liveStreamController,
       PageController? livePageController});
@@ -7808,6 +7852,8 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
     Object? allThemes = null,
     Object? allThemeNames = null,
     Object? themeTransitionIndices = null,
+    Object? initialTheme = null,
+    Object? initialThemeName = null,
     Object? errorMessage = freezed,
     Object? liveStreamController = freezed,
     Object? livePageController = freezed,
@@ -7917,6 +7963,14 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
           ? _value.themeTransitionIndices
           : themeTransitionIndices // ignore: cast_nullable_to_non_nullable
               as List<ThemeTransition>,
+      initialTheme: null == initialTheme
+          ? _value.initialTheme
+          : initialTheme // ignore: cast_nullable_to_non_nullable
+              as String,
+      initialThemeName: null == initialThemeName
+          ? _value.initialThemeName
+          : initialThemeName // ignore: cast_nullable_to_non_nullable
+              as String,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -7963,6 +8017,8 @@ class _$PreloadStateImpl extends _PreloadState {
       required this.allThemes,
       required this.allThemeNames,
       required this.themeTransitionIndices,
+      required this.initialTheme,
+      required this.initialThemeName,
       this.errorMessage,
       this.liveStreamController,
       this.livePageController})
@@ -8021,6 +8077,10 @@ class _$PreloadStateImpl extends _PreloadState {
   @override
   final List<ThemeTransition> themeTransitionIndices;
   @override
+  final String initialTheme;
+  @override
+  final String initialThemeName;
+  @override
   final String? errorMessage;
   @override
   final VideoPlayerController? liveStreamController;
@@ -8029,7 +8089,7 @@ class _$PreloadStateImpl extends _PreloadState {
 
   @override
   String toString() {
-    return 'PreloadState(initialVideo: $initialVideo, mainVideos: $mainVideos, profileVideos: $profileVideos, liveVideo: $liveVideo, controllers: $controllers, mainPageController: $mainPageController, link: $link, shareLinkInProgress: $shareLinkInProgress, isShareAlreadyClicked: $isShareAlreadyClicked, profileControllers: $profileControllers, profilePageController: $profilePageController, focusedIndex: $focusedIndex, profileVideoIndex: $profileVideoIndex, isLoading: $isLoading, videoComments: $videoComments, currentContext: $currentContext, keyboardVisible: $keyboardVisible, showComments: $showComments, muted: $muted, currentCategoryIndex: $currentCategoryIndex, categories: $categories, theme: $theme, themeName: $themeName, allThemes: $allThemes, allThemeNames: $allThemeNames, themeTransitionIndices: $themeTransitionIndices, errorMessage: $errorMessage, liveStreamController: $liveStreamController, livePageController: $livePageController)';
+    return 'PreloadState(initialVideo: $initialVideo, mainVideos: $mainVideos, profileVideos: $profileVideos, liveVideo: $liveVideo, controllers: $controllers, mainPageController: $mainPageController, link: $link, shareLinkInProgress: $shareLinkInProgress, isShareAlreadyClicked: $isShareAlreadyClicked, profileControllers: $profileControllers, profilePageController: $profilePageController, focusedIndex: $focusedIndex, profileVideoIndex: $profileVideoIndex, isLoading: $isLoading, videoComments: $videoComments, currentContext: $currentContext, keyboardVisible: $keyboardVisible, showComments: $showComments, muted: $muted, currentCategoryIndex: $currentCategoryIndex, categories: $categories, theme: $theme, themeName: $themeName, allThemes: $allThemes, allThemeNames: $allThemeNames, themeTransitionIndices: $themeTransitionIndices, initialTheme: $initialTheme, initialThemeName: $initialThemeName, errorMessage: $errorMessage, liveStreamController: $liveStreamController, livePageController: $livePageController)';
   }
 
   @override
@@ -8084,6 +8144,10 @@ class _$PreloadStateImpl extends _PreloadState {
                 .equals(other.allThemeNames, allThemeNames) &&
             const DeepCollectionEquality()
                 .equals(other.themeTransitionIndices, themeTransitionIndices) &&
+            (identical(other.initialTheme, initialTheme) ||
+                other.initialTheme == initialTheme) &&
+            (identical(other.initialThemeName, initialThemeName) ||
+                other.initialThemeName == initialThemeName) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage) &&
             (identical(other.liveStreamController, liveStreamController) ||
@@ -8121,6 +8185,8 @@ class _$PreloadStateImpl extends _PreloadState {
         const DeepCollectionEquality().hash(allThemes),
         const DeepCollectionEquality().hash(allThemeNames),
         const DeepCollectionEquality().hash(themeTransitionIndices),
+        initialTheme,
+        initialThemeName,
         errorMessage,
         liveStreamController,
         livePageController
@@ -8189,6 +8255,8 @@ abstract class _PreloadState extends PreloadState {
       required final List<String> allThemes,
       required final List<String> allThemeNames,
       required final List<ThemeTransition> themeTransitionIndices,
+      required final String initialTheme,
+      required final String initialThemeName,
       final String? errorMessage,
       final VideoPlayerController? liveStreamController,
       final PageController? livePageController}) = _$PreloadStateImpl;
@@ -8246,6 +8314,10 @@ abstract class _PreloadState extends PreloadState {
   List<String> get allThemeNames;
   @override
   List<ThemeTransition> get themeTransitionIndices;
+  @override
+  String get initialTheme;
+  @override
+  String get initialThemeName;
   @override
   String? get errorMessage;
   @override

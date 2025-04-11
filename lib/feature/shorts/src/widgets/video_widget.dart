@@ -402,23 +402,27 @@ class VideoWidgetState extends State<VideoWidget>
                 ),
               ),
             ),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              height: widget.commentsVisibility ? .40.sh : 0,
-              transform: Matrix4.translationValues(
-                0,
-                widget.commentsVisibility ? 0 : 50,
-                0,
-              ),
-              decoration: BoxDecoration(
-                color: const Color(0xff232326),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20.r),
-                  topRight: Radius.circular(20.r),
+            GestureDetector(
+              onTap: () {},
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                height: widget.commentsVisibility ? .40.sh : 0,
+                transform: Matrix4.translationValues(
+                  0,
+                  widget.commentsVisibility ? 0 : 50,
+                  0,
                 ),
+                decoration: BoxDecoration(
+                  color: const Color(0xff232326),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20.r),
+                    topRight: Radius.circular(20.r),
+                  ),
+                ),
+                child:
+                    _buildComments(_scrollController, widget.onCommentToggle),
               ),
-              child: _buildComments(_scrollController, widget.onCommentToggle),
             ),
           ],
         ),

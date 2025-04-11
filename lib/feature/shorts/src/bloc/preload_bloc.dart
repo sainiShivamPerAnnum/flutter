@@ -59,6 +59,8 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           state.copyWith(
             categories: e.categories,
             theme: e.theme,
+            initialTheme: e.initialTheme,
+            initialThemeName: e.initialThemeName,
             currentCategoryIndex: e.index,
             allThemes: e.allThemes,
             themeName: e.themeName,
@@ -472,39 +474,42 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
       },
       onVideoIndexChanged: (e) async {
-        final bool shouldFetch =
-            (e.index + VideoPreloadConstants.kPreloadLimit) %
-                        VideoPreloadConstants.kNextLimit ==
-                    0 &&
-                state.currentVideos.length ==
-                    e.index + VideoPreloadConstants.kPreloadLimit &&
-                state.currentContext == ReelContext.main;
+        final bool shouldFetch = (state.currentVideos.length - e.index <=
+                VideoPreloadConstants.kPreloadLimit) &&
+            state.currentContext == ReelContext.main;
         _analyticsService.track(
           eventName: AnalyticsEvents.shortsVerticalSwipe,
         );
         if (state.currentContext == ReelContext.main &&
-            state.themeTransitionIndices != null &&
             state.themeTransitionIndices.isNotEmpty) {
-          String currentVideoTheme = state.theme;
-          String currentVideoThemeName = state.themeName;
-
+          String? themeForCurrentIndex;
+          String? themeNameForCurrentIndex;
+          ThemeTransition? currentTransition;
           for (int i = 0; i < state.themeTransitionIndices.length; i++) {
             if (e.index >= state.themeTransitionIndices[i].index) {
-              currentVideoTheme = state.themeTransitionIndices[i].theme;
-              currentVideoThemeName = state.themeTransitionIndices[i].themeName;
+              currentTransition = state.themeTransitionIndices[i];
             } else {
               break;
             }
           }
-          if (currentVideoTheme != state.theme) {
+          if (currentTransition != null) {
+            themeForCurrentIndex = currentTransition.theme;
+            themeNameForCurrentIndex = currentTransition.themeName;
+          } else {
+            themeForCurrentIndex = state.initialTheme;
+            themeNameForCurrentIndex = state.initialThemeName;
+          }
+          if (themeForCurrentIndex != state.theme) {
             add(
               PreloadEvent.updateThemes(
                 categories: state.categories,
-                theme: currentVideoTheme,
+                theme: themeForCurrentIndex,
+                initialTheme: state.initialTheme,
+                initialThemeName: state.initialThemeName,
                 index: state.currentCategoryIndex,
                 allThemes: state.allThemes,
                 allThemeNames: state.allThemeNames,
-                themeName: currentVideoThemeName,
+                themeName: themeNameForCurrentIndex,
               ),
             );
           }

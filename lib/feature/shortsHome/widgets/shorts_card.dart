@@ -77,6 +77,8 @@ class ShortsCard extends StatelessWidget {
           PreloadEvent.updateThemes(
             categories: reorderedCategories,
             theme: theme,
+            initialTheme: theme,
+            initialThemeName: themeName,
             index: 0,
             completer: themeCompleter,
             allThemes: allThemes,

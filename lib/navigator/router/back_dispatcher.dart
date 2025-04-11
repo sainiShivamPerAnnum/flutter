@@ -142,6 +142,8 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           categories: [],
           theme: preloadState.theme,
           themeName: preloadState.themeName,
+          initialTheme: preloadState.initialTheme,
+          initialThemeName: preloadState.initialThemeName,
           allThemeNames: [],
           allThemes: [],
           index: 0,

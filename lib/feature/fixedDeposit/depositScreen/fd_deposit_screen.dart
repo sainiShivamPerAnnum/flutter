@@ -252,8 +252,11 @@ class __FDDepositViewState extends State<_FDDepositView> {
                     ),
                     inputFormatters: [
                       CurrencyInputFormatter(),
+                      LengthLimitingTextInputFormatter(12),
                     ],
-                    keyboardType: TextInputType.number,
+                    onChanged: _onChipClick,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
                     decoration: InputDecoration(
                       prefixIcon: Padding(
                         padding: EdgeInsets.all(
