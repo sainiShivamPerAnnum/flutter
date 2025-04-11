@@ -359,15 +359,13 @@ class FelloBalanceScreen extends StatelessWidget {
 
   int getTotalBalance(Portfolio portfolio, SummaryModel? fdSummary) {
     if (portfolio.absolute.balance != 0) {
-      return portfolio.absolute.balance.toInt() +
-          (fdSummary?.totalInvestedAmount ?? 0).toInt();
+      return portfolio.absolute.balance.toInt();
     } else {
       String stringBalance =
           PreferenceHelper.getString(Constants.FELLO_BALANCE);
 
       double doubleBalance = double.tryParse(stringBalance) ?? 0.0;
-      int intBalance =
-          doubleBalance.toInt() + (fdSummary?.totalInvestedAmount ?? 0).toInt();
+      int intBalance = doubleBalance.toInt();
       return intBalance;
     }
   }

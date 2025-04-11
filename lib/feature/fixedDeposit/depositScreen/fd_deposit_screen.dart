@@ -252,7 +252,7 @@ class __FDDepositViewState extends State<_FDDepositView> {
                     ),
                     inputFormatters: [
                       CurrencyInputFormatter(),
-                      LengthLimitingTextInputFormatter(12),
+                      LengthLimitingTextInputFormatter(10),
                     ],
                     onChanged: _onChipClick,
                     keyboardType:
@@ -826,8 +826,14 @@ class CurrencyInputFormatter extends TextInputFormatter {
       return newValue;
     }
     final value = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
-    final formatter = NumberFormat('#,##,##0');
-    final formattedValue = formatter.format(int.parse(value));
+    final formatter = NumberFormat('#,##,##0', 'en_IN');
+    String formattedValue = '';
+    if (value.isNotEmpty) {
+      final parsedValue = int.tryParse(value);
+      if (parsedValue != null) {
+        formattedValue = formatter.format(parsedValue);
+      }
+    }
 
     return TextEditingValue(
       text: formattedValue,
