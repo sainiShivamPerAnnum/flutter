@@ -136,6 +136,9 @@ class __AllFdsState extends State<_AllFds> {
                                           ),
                                         ),
                                       ),
+                                      SizedBox(
+                                        width: 4.w,
+                                      ),
                                       Text(
                                         finance.additionalOffers!['text']!,
                                         style:
