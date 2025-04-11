@@ -49,7 +49,7 @@ Cta _$CtaFromJson(Map<String, dynamic> json) => Cta(
       lockInTenure:
           LockInTenure.fromJson(json['lockInTenure'] as Map<String, dynamic>),
       displayAmounts: (json['displayAmounts'] as List<dynamic>)
-          .map((e) => e as int)
+          .map((e) => (e as num).toInt())
           .toList(),
       frequencyValues: (json['frequencyValues'] as Map<String, dynamic>).map(
         (k, e) => MapEntry(
@@ -70,7 +70,7 @@ BookCall _$BookCallFromJson(Map<String, dynamic> json) => BookCall(
       label: json['label'] as String,
       description: json['description'] as String,
       action: json['action'] as String,
-      usersBookedToday: json['usersBookedToday'] as int,
+      usersBookedToday: (json['usersBookedToday'] as num).toInt(),
     );
 
 LockInTenure _$LockInTenureFromJson(Map<String, dynamic> json) => LockInTenure(
@@ -83,15 +83,15 @@ LockInTenure _$LockInTenureFromJson(Map<String, dynamic> json) => LockInTenure(
 TenureOptions _$TenureOptionsFromJson(Map<String, dynamic> json) =>
     TenureOptions(
       label: json['label'] as String,
-      minDays: json['minDays'] as int,
-      maxDays: json['maxDays'] as int,
+      minDays: (json['minDays'] as num).toInt(),
+      maxDays: (json['maxDays'] as num).toInt(),
     );
 
 FrequencyValue _$FrequencyValueFromJson(Map<String, dynamic> json) =>
     FrequencyValue(
       label: json['label'] as String,
-      days: json['days'] as int,
-      value: json['value'] as int,
+      days: (json['days'] as num).toInt(),
+      value: (json['value'] as num).toInt(),
       returns: json['returns'] as String?,
       seniorReturns: json['seniorReturns'] as String?,
       amounts:

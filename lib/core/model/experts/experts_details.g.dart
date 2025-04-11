@@ -13,7 +13,7 @@ ExpertDetails _$ExpertDetailsFromJson(Map<String, dynamic> json) =>
       description: json['description'] as String,
       isLive: json['isLive'] as bool,
       experience: json['experience'] as String,
-      sessionCount: json['sessionCount'] as int,
+      sessionCount: (json['sessionCount'] as num).toInt(),
       rating: (json['rating'] as num).toDouble(),
       QuickActions: (json['QuickActions'] as List<dynamic>)
           .map((e) => QuickAction.fromJson(e as Map<String, dynamic>))
@@ -59,7 +59,7 @@ RatingInfo _$RatingInfoFromJson(Map<String, dynamic> json) => RatingInfo(
       userRatings: (json['userRatings'] as List<dynamic>)
           .map((e) => UserRating.fromJson(e as Map<String, dynamic>))
           .toList(),
-      ratingCount: json['ratingCount'] as int,
+      ratingCount: (json['ratingCount'] as num).toInt(),
     );
 
 UserRating _$UserRatingFromJson(Map<String, dynamic> json) => UserRating(

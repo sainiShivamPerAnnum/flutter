@@ -127,7 +127,7 @@ LendboxAssetConfiguration _$LendboxAssetConfigurationFromJson(
       reinvestInterestGain: json['reinvestInterestGain'] as num? ?? 0,
       isForOldLb: json['isForOldLb'] as bool? ?? false,
       interest: json['interest'] as num? ?? 10,
-      maturityDuration: json['maturityDuration'] as int? ?? 3,
+      maturityDuration: (json['maturityDuration'] as num?)?.toInt() ?? 3,
       assetName: json['assetName'] as String? ?? '',
       highlights: json['highlights'] as String? ?? '',
       description: json['description'] as String? ?? '',

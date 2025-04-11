@@ -150,7 +150,7 @@ Story _$StoryFromJson(Map<String, dynamic> json) => Story(
       blurHash: json['blurHash'] as String? ?? '',
       story: json['story'] as String? ?? '',
       id: json['id'] as String? ?? '',
-      order: json['order'] as int? ?? 0,
+      order: (json['order'] as num?)?.toInt() ?? 0,
       style: json['style'] as String? ?? 'tl3',
       events: json['events'] as Map<String, dynamic>? ?? const {},
     );

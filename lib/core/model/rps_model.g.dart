@@ -10,7 +10,7 @@ RpsData _$RpsDataFromJson(Map<String, dynamic> json) => RpsData(
       uid: json['uid'] as String,
       principleAmount: (json['principleAmount'] as num).toDouble(),
       fundType: json['fundType'] as String,
-      tenure: json['tenure'] as int,
+      tenure: (json['tenure'] as num).toInt(),
       accuredInterest: (json['accuredInterest'] as num).toDouble(),
       rps: (json['rps'] as List<dynamic>)
           .map((e) => Rps.fromJson(e as Map<String, dynamic>))

@@ -42,7 +42,7 @@ LiveStream _$LiveStreamFromJson(Map<String, dynamic> json) => LiveStream(
       subtitle: json['subtitle'] as String,
       author: json['author'] as String,
       thumbnail: json['thumbnail'] as String,
-      liveCount: json['liveCount'] as int,
+      liveCount: (json['liveCount'] as num).toInt(),
       advisorCode: json['advisorCode'] as String,
       viewerCode: json['viewerCode'] as String,
       isEventLikedByUser: json['isEventLikedByUser'] as bool,
