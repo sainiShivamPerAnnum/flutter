@@ -19,10 +19,11 @@ PortfolioModel _$PortfolioModelFromJson(Map<String, dynamic> json) =>
     PortfolioModel(
       issuerId: json['issuerId'] as String?,
       issuer: json['issuer'] as String?,
-      roi: (json['roi'] as num?)?.toDouble(),
-      investedAmount: (json['investedAmount'] as num?)?.toDouble(),
-      currentAmount: (json['currentAmount'] as num?)?.toDouble(),
+      roi: json['roi'] as num?,
+      investedAmount: json['investedAmount'] as num?,
+      currentAmount: json['currentAmount'] as num?,
       tenure: json['tenure'] as String?,
+      maturityAmount: json['maturityAmount'] as num?,
       individualFDs: (json['individualFDs'] as List<dynamic>?)
           ?.map((e) => IndividualFDModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -30,8 +31,8 @@ PortfolioModel _$PortfolioModelFromJson(Map<String, dynamic> json) =>
 
 IndividualFDModel _$IndividualFDModelFromJson(Map<String, dynamic> json) =>
     IndividualFDModel(
-      depositAmount: (json['depositAmount'] as num?)?.toDouble(),
-      roi: (json['roi'] as num?)?.toDouble(),
+      depositAmount: json['depositAmount'] as num?,
+      roi: json['roi'] as num?,
       maturityDate: json['maturityDate'] == null
           ? null
           : DateTime.parse(json['maturityDate'] as String),
@@ -43,6 +44,7 @@ IndividualFDModel _$IndividualFDModelFromJson(Map<String, dynamic> json) =>
       bankDetails: (json['bankDetails'] as List<dynamic>?)
           ?.map((e) => BankDetails.fromJson(e as Map<String, dynamic>))
           .toList(),
+      maturityAmount: json['maturityAmount'] as num?,
       applicationId: json['applicationId'] as String?,
       tenure: json['tenure'] as String?,
     );
@@ -53,10 +55,10 @@ BankDetails _$BankDetailsFromJson(Map<String, dynamic> json) => BankDetails(
     );
 
 SummaryModel _$SummaryModelFromJson(Map<String, dynamic> json) => SummaryModel(
-      totalInvestedAmount: (json['totalInvestedAmount'] as num?)?.toDouble(),
-      totalCurrentAmount: (json['totalCurrentAmount'] as num?)?.toDouble(),
-      totalReturns: (json['totalReturns'] as num?)?.toDouble(),
-      averageXIRR: (json['averageXIRR'] as num?)?.toDouble(),
+      totalInvestedAmount: json['totalInvestedAmount'] as num?,
+      totalCurrentAmount: json['totalCurrentAmount'] as num?,
+      totalReturns: json['totalReturns'] as num?,
+      averageXIRR: json['averageXIRR'] as num?,
     );
 
 InvestmentModel _$InvestmentModelFromJson(Map<String, dynamic> json) =>

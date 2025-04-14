@@ -26,9 +26,10 @@ class UserFdPortfolio {
 class PortfolioModel {
   final String? issuerId;
   final String? issuer;
-  final double? roi;
-  final double? investedAmount;
-  final double? currentAmount;
+  final num? roi;
+  final num? investedAmount;
+  final num? currentAmount;
+  final num? maturityAmount;
   final String? tenure;
   final List<IndividualFDModel>? individualFDs;
 
@@ -39,6 +40,7 @@ class PortfolioModel {
     this.investedAmount,
     this.currentAmount,
     this.tenure,
+    this.maturityAmount,
     this.individualFDs,
   });
 
@@ -49,10 +51,11 @@ class PortfolioModel {
 @_deserializable
 class IndividualFDModel {
   final String? applicationId;
-  final double? depositAmount;
+  final num? depositAmount;
   final String? tenure;
-  final double? roi;
+  final num? roi;
   final DateTime? maturityDate;
+  final num? maturityAmount;
   final DateTime? depositDate;
   final String? interestPayoutFrequency;
   final String? status;
@@ -66,6 +69,7 @@ class IndividualFDModel {
     this.interestPayoutFrequency,
     this.status,
     this.bankDetails,
+    this.maturityAmount,
     this.applicationId,
     this.tenure,
   });
@@ -90,10 +94,10 @@ class BankDetails {
 
 @_deserializable
 class SummaryModel {
-  final double? totalInvestedAmount;
-  final double? totalCurrentAmount;
-  final double? totalReturns;
-  final double? averageXIRR;
+  final num? totalInvestedAmount;
+  final num? totalCurrentAmount;
+  final num? totalReturns;
+  final num? averageXIRR;
 
   SummaryModel({
     this.totalInvestedAmount,

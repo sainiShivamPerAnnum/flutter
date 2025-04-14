@@ -21,7 +21,7 @@ class FDInterestModel {
 class FDCalculator {
   final String? totalInterest;
   final String? maturityAmount;
-  final double? interestRate;
+  final num? interestRate;
 
   FDCalculator({
     this.totalInterest,

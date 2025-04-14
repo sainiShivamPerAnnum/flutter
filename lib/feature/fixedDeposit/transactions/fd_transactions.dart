@@ -196,9 +196,9 @@ class _InvestmentDetails extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Expanded(
+                      Flexible(
                         child: Text(
-                          '#${data.jid}',
+                          '#${data.applicationId ?? data.jid}',
                           style: GoogleFonts.sourceSans3(
                             color: UiConstants.kTextColor,
                             fontSize: 16.sp,

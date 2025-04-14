@@ -17,5 +17,5 @@ FDInterestModel _$FDInterestModelFromJson(Map<String, dynamic> json) =>
 FDCalculator _$FDCalculatorFromJson(Map<String, dynamic> json) => FDCalculator(
       totalInterest: json['totalInterest'] as String?,
       maturityAmount: json['maturityAmount'] as String?,
-      interestRate: (json['interestRate'] as num?)?.toDouble(),
+      interestRate: json['interestRate'] as num?,
     );

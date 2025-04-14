@@ -24,11 +24,12 @@ class FixedDepositDetails extends StatelessWidget {
     BankDetails? bankDetail;
     String? status;
     String? applicationId;
-    double? depositAmount;
+    num? depositAmount;
     DateTime? depositDate;
     DateTime? maturityDate;
-    double? roi;
+    num? roi;
     String? tenure;
+    num? maturityAmount;
 
     if (fdData is UserFdPortfolio) {
       // Handle UserFdPortfolio
@@ -44,6 +45,7 @@ class FixedDepositDetails extends StatelessWidget {
       depositDate = individualFd?.depositDate;
       maturityDate = individualFd?.maturityDate;
       roi = individualFd?.roi;
+      maturityAmount = individualFd?.maturityAmount;
       tenure = individualFd?.tenure;
       bankDetail = individualFd?.bankDetails?.isNotEmpty == true
           ? individualFd!.bankDetails!.first
@@ -51,8 +53,9 @@ class FixedDepositDetails extends StatelessWidget {
     } else if (fdData is FDTransactionData) {
       // Handle FDTransactionData
       status = fdData.status;
-      applicationId = fdData.applicationId;
+      applicationId = fdData.applicationId ?? fdData.jid;
       depositAmount = fdData.depositAmount;
+      maturityAmount = fdData.maturityAmount;
       depositDate = fdData.depositDate != null
           ? DateTime.tryParse(fdData.depositDate!)
           : null;
@@ -74,7 +77,7 @@ class FixedDepositDetails extends StatelessWidget {
       appBar: const FAppBar(
         title: 'Deposit Details',
         showHelpButton: true,
-        type: FaqsType.felloFlo,
+        type: FaqsType.fd,
         showCoinBar: false,
         showAvatar: false,
         leadingPadding: false,
@@ -121,9 +124,13 @@ class FixedDepositDetails extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text(
-                      applicationId ?? 'null',
-                      style: TextStyles.sourceSansSB.body1,
+                    Expanded(
+                      child: Text(
+                        '#$applicationId',
+                        style: TextStyles.sourceSansSB.body1,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
@@ -145,13 +152,15 @@ class FixedDepositDetails extends StatelessWidget {
                   children: [
                     _buildDetailRow(
                       'Deposit ID',
-                      applicationId,
+                      '#$applicationId',
                     ),
                     _buildDetailRow(
                       'Deposit amount',
-                      BaseUtil.formatIndianRupees(
-                        depositAmount ?? 0,
-                      ),
+                      depositAmount == null
+                          ? null
+                          : BaseUtil.formatIndianRupees(
+                              depositAmount,
+                            ),
                     ),
                     _buildDetailRow(
                       'Deposit date',
@@ -170,11 +179,9 @@ class FixedDepositDetails extends StatelessWidget {
                     ),
                     _buildDetailRow(
                       'Est. payout',
-                      _calculateEstimatedPayout(
-                        depositAmount,
-                        roi,
-                        tenure,
-                      ),
+                      maturityAmount == null
+                          ? null
+                          : BaseUtil.formatIndianRupees(maturityAmount),
                     ),
                   ],
                 ),
@@ -232,27 +239,27 @@ class FixedDepositDetails extends StatelessWidget {
     return DateFormat('MMM dd, yyyy').format(date);
   }
 
-  String _formatTenureAndRoi(String? tenure, double? roi) {
+  String _formatTenureAndRoi(String? tenure, num? roi) {
     if (tenure == null && roi == null) return 'N/A';
     return '${tenure ?? 'N/A'} @ ${roi?.toStringAsFixed(1) ?? 'N/A'}%';
   }
 
   String _calculateEstimatedPayout(
-    double? depositAmount,
-    double? roi,
+    num? depositAmount,
+    num? roi,
     String? tenure,
   ) {
     if (depositAmount == null || roi == null || tenure == null) return 'N/A';
 
-    double principal = depositAmount;
-    double rate = roi / 100;
-    double time = _getTenureInYears(tenure);
-    double estimatedPayout = principal * (1 + (rate * time));
+    num principal = depositAmount;
+    num rate = roi / 100;
+    num time = _getTenureInYears(tenure);
+    num estimatedPayout = principal * (1 + (rate * time));
 
     return BaseUtil.formatIndianRupees(estimatedPayout);
   }
 
-  double _getTenureInYears(String tenure) {
+  num _getTenureInYears(String tenure) {
     RegExp regex = RegExp(r'(\d+)');
     var match = regex.firstMatch(tenure);
     if (match != null) {

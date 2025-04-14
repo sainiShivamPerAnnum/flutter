@@ -214,9 +214,13 @@ class FelloBalanceScreen extends StatelessWidget {
                       secondaryColor: UiConstants.darkPrimaryColor3,
                       subtitle: "P2P Asset • upto 11% Returns",
                       onButtonPressed: () {
-                        BaseUtil().openRechargeModalSheet(
-                          investmentType: InvestmentType.LENDBOXP2P,
+                        BaseUtil.showNegativeAlert(
+                          "New Investments Temporarily Stopped",
+                          "New investments in P2P are currently stopped. Please check back later for updates.",
                         );
+                        // BaseUtil().openRechargeModalSheet(
+                        //   investmentType: InvestmentType.LENDBOXP2P,
+                        // );
                         trackSaveButtonAnalytics(
                           InvestmentType.LENDBOXP2P,
                         );
@@ -477,10 +481,11 @@ class FelloBalanceScreen extends StatelessWidget {
                         vertical: SizeConfig.padding6,
                       ),
                       decoration: BoxDecoration(
-                        color:
-                            title == "Fello Rewards" && !isRewardButtonEnabled
-                                ? Colors.white.withOpacity(0.5)
-                                : Colors.white,
+                        color: title == "Fello Rewards" &&
+                                    !isRewardButtonEnabled ||
+                                title == 'Fello Flo'
+                            ? Colors.white.withOpacity(0.5)
+                            : Colors.white,
                         borderRadius: BorderRadius.all(
                           Radius.circular(SizeConfig.roundness5),
                         ),

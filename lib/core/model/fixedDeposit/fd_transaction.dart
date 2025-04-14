@@ -13,11 +13,12 @@ class FDTransactionData {
   final String? status;
   final String? issuerId;
   final String? applicationId;
-  final double? depositAmount;
+  final num? depositAmount;
   final String? tenure;
-  final double? roi;
+  final num? roi;
   final String? maturityDate;
   final String? depositDate;
+  final num? maturityAmount;
   final List<BankDetails>? bankDetails;
 
   FDTransactionData({
@@ -30,6 +31,7 @@ class FDTransactionData {
     this.maturityDate,
     this.depositDate,
     this.bankDetails,
+    this.maturityAmount,
     this.tenure,
   });
 

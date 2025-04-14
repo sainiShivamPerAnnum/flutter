@@ -21,7 +21,7 @@ class ProccedingToDeposit extends FixedDepositCalculatorState {
 class FdCalculationResult extends FixedDepositCalculatorState {
   final String? totalInterest;
   final String? maturityAmount;
-  final double? interestRate;
+  final num? interestRate;
 
   const FdCalculationResult({
     this.totalInterest,
