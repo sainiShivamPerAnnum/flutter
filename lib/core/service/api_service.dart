@@ -397,3 +397,53 @@ class CoreInterceptor extends Interceptor {
     handler.next(err);
   }
 }
+
+extension APIServiceExtension on APIService {
+  Future<dynamic> callApiForEndpoint(
+    String endpoint, {
+    required String method,
+    Map<String, dynamic>? body,
+    Map<String, String>? headers,
+    Map<String, dynamic>? queryParameters,
+    bool decryptData = false,
+  }) async {
+    try {
+      switch (method.toUpperCase()) {
+        case 'GET':
+          return await getData(
+            endpoint,
+            apiName: endpoint,
+            queryParams: queryParameters,
+            headers: headers,
+            decryptData: decryptData,
+          );
+        case 'POST':
+          return await postData(
+            endpoint,
+            apiName: endpoint,
+            body: body,
+            headers: headers,
+            queryParams: queryParameters,
+            decryptData: decryptData,
+          );
+        case 'PUT':
+          return await putData(
+            endpoint,
+            apiName: endpoint,
+            body: body,
+            headers: headers,
+          );
+        case 'PATCH':
+          return await patchData(
+            endpoint,
+            apiName: endpoint,
+            body: body,
+          );
+        default:
+          throw ArgumentError('Unsupported HTTP method: $method');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+}

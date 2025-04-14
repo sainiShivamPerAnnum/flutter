@@ -1,9 +1,16 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:felloapp/core/model/sdui/sdui_parsers/animated_container/animated_container_widget_parser.dart';
+import 'package:felloapp/core/model/sdui/sdui_parsers/animated_switcher/animated_switcher_widget_parser.dart';
+import 'package:felloapp/core/model/sdui/sdui_parsers/app_image/app_image_wiget_parser.dart';
+import 'package:felloapp/core/model/sdui/sdui_parsers/base_scaffold/base_scaffold_widget_parser.dart';
+import 'package:felloapp/core/model/sdui/sdui_parsers/bloc_parser/bloc_widget_parser.dart';
 import 'package:felloapp/core/model/sdui/sdui_parsers/cached_network_image/cached_network_image_widget_parser.dart';
 import 'package:felloapp/core/model/sdui/sdui_parsers/carousel/carousel_widget_parser.dart';
+import 'package:felloapp/core/model/sdui/sdui_parsers/clip_rrect/clip_rrect_widget_parser.dart';
 import 'package:felloapp/core/model/sdui/sdui_parsers/divider/divider_widget_parser.dart';
+import 'package:felloapp/core/model/sdui/sdui_parsers/dynamic_view/dynamic_view_widget_parser.dart';
 import 'package:felloapp/core/model/sdui/sdui_parsers/fractional_translation/fractional_translation_widget_parser.dart';
 import 'package:felloapp/core/model/sdui/sdui_parsers/gestureDetector/gesture_detector_widget_parser.dart';
 import 'package:felloapp/core/model/sdui/sdui_parsers/responsiveContainer/resposive_container_widget_parser.dart';
@@ -53,14 +60,21 @@ Future<void> bootStrap(BootstrapCallBack bootStrapCallBack) async {
       await Stac.initialize(
         parsers: [
           // const StacWebViewParser(),
+          const AnimatedContainerWidgetParser(),
+          const AnimatedSwitcherWidgetParser(),
+          const AppImageWidgetParser(),
+          const BaseScaffoldWidgetParser(),
+          const BlocWidgetParser(),
+          const CachedNetworkImageWidgetParser(),
           const CarouselWidgetParser(),
-          const TransformWidgetParser(),
+          const ClipRRectWidgetParser(),
           const DividerWidgetParser(),
+          const CustomDynamicViewParser(),
           const FractionalTranslationWidgetParser(),
           const GestureDetectorParser(),
-          const CachedNetworkImageWidgetParser(),
           const ResponsiveContainerParser(),
           const SpacerWidgetParser(),
+          const TransformWidgetParser(),
         ],
         actionParsers: [],
       );
