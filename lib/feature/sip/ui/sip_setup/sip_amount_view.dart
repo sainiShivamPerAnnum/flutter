@@ -957,3 +957,25 @@ class MaxValueInputFormatter extends TextInputFormatter {
     }
   }
 }
+
+class MinValueInputFormatter extends TextInputFormatter {
+  final double minAmount;
+
+  MinValueInputFormatter({required this.minAmount});
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) {
+      return newValue;
+    }
+    final int? value = int.tryParse(newValue.text);
+
+    if (value != null && value < minAmount) {
+      return oldValue;
+    }
+    return newValue;
+  }
+}

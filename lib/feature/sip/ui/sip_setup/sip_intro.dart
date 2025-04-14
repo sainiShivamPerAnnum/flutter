@@ -13,6 +13,7 @@ import 'package:felloapp/feature/sip/shared/edit_sip_bottomsheet.dart';
 import 'package:felloapp/feature/sip/shared/interest_calculator.dart';
 import 'package:felloapp/feature/sip/shared/sip.dart';
 import 'package:felloapp/feature/sip/shared/tab_slider.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_error_page.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -691,31 +692,5 @@ class _SipCalculatorState extends State<SipCalculator>
         ),
       ],
     );
-  }
-}
-
-class MaxValueInputFormatter extends TextInputFormatter {
-  final int maxValue;
-
-  MaxValueInputFormatter({required this.maxValue});
-
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    if (newValue.text.isEmpty) {
-      return newValue;
-    }
-
-    final int? value = int.tryParse(newValue.text);
-    if (value == null) {
-      return oldValue;
-    } else if (value > maxValue) {
-      return TextEditingValue(
-        text: maxValue.toString(),
-        selection: TextSelection.collapsed(offset: maxValue.toString().length),
-      );
-    } else {
-      return newValue;
-    }
   }
 }

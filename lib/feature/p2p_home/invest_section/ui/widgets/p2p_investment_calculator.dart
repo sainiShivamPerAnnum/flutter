@@ -1,7 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/feature/sip/shared/sip.dart';
-import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';

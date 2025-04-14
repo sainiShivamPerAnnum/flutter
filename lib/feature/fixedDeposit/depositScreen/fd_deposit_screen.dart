@@ -4,6 +4,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/fixedDeposit/fd_home.dart';
 import 'package:felloapp/feature/fixedDeposit/depositScreen/bloc/deposit_calculator_bloc.dart';
+// import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/consultant_card.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -253,6 +254,11 @@ class __FDDepositViewState extends State<_FDDepositView> {
                     inputFormatters: [
                       CurrencyInputFormatter(),
                       LengthLimitingTextInputFormatter(10),
+                      // MinValueInputFormatter(
+                      //     minAmount: widget.fdData),
+                      FilteringTextInputFormatter.deny(
+                        RegExp(r'^0+'),
+                      ),
                     ],
                     onChanged: _onChipClick,
                     keyboardType:
