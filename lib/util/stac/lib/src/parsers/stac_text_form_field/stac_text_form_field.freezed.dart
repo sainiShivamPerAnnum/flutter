@@ -63,12 +63,24 @@ mixin _$StacTextFormField {
   List<StacFormFieldValidator> get validatorRules =>
       throw _privateConstructorUsedError;
 
-  /// Serializes this StacTextFormField to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacTextFormField value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacTextFormField value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacTextFormField value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacTextFormField
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacTextFormFieldCopyWith<StacTextFormField> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -133,8 +145,6 @@ class _$StacTextFormFieldCopyWithImpl<$Res, $Val extends StacTextFormField>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacTextFormField
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -328,8 +338,6 @@ class _$StacTextFormFieldCopyWithImpl<$Res, $Val extends StacTextFormField>
     ) as $Val);
   }
 
-  /// Create a copy of StacTextFormField
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacInputDecorationCopyWith<$Res>? get decoration {
@@ -342,8 +350,6 @@ class _$StacTextFormFieldCopyWithImpl<$Res, $Val extends StacTextFormField>
     });
   }
 
-  /// Create a copy of StacTextFormField
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get style {
@@ -356,8 +362,6 @@ class _$StacTextFormFieldCopyWithImpl<$Res, $Val extends StacTextFormField>
     });
   }
 
-  /// Create a copy of StacTextFormField
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res> get scrollPadding {
@@ -430,8 +434,6 @@ class __$$StacTextFormFieldImplCopyWithImpl<$Res>
       $Res Function(_$StacTextFormFieldImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacTextFormField
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -857,7 +859,7 @@ class _$StacTextFormFieldImpl implements _StacTextFormField {
                 .equals(other._validatorRules, _validatorRules));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -900,14 +902,40 @@ class _$StacTextFormFieldImpl implements _StacTextFormField {
         const DeepCollectionEquality().hash(_validatorRules)
       ]);
 
-  /// Create a copy of StacTextFormField
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacTextFormFieldImplCopyWith<_$StacTextFormFieldImpl> get copyWith =>
       __$$StacTextFormFieldImplCopyWithImpl<_$StacTextFormFieldImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacTextFormField value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacTextFormField value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacTextFormField value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -1035,11 +1063,8 @@ abstract class _StacTextFormField implements StacTextFormField {
   List<StacInputFormatter> get inputFormatters;
   @override
   List<StacFormFieldValidator> get validatorRules;
-
-  /// Create a copy of StacTextFormField
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacTextFormFieldImplCopyWith<_$StacTextFormFieldImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

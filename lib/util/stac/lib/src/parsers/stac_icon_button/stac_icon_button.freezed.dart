@@ -40,12 +40,24 @@ mixin _$StacIconButton {
   Map<String, dynamic>? get selectedIcon => throw _privateConstructorUsedError;
   Map<String, dynamic>? get icon => throw _privateConstructorUsedError;
 
-  /// Serializes this StacIconButton to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacIconButton value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacIconButton value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacIconButton value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacIconButton
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacIconButtonCopyWith<StacIconButton> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -92,8 +104,6 @@ class _$StacIconButtonCopyWithImpl<$Res, $Val extends StacIconButton>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacIconButton
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -197,8 +207,6 @@ class _$StacIconButtonCopyWithImpl<$Res, $Val extends StacIconButton>
     ) as $Val);
   }
 
-  /// Create a copy of StacIconButton
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get padding {
@@ -211,8 +219,6 @@ class _$StacIconButtonCopyWithImpl<$Res, $Val extends StacIconButton>
     });
   }
 
-  /// Create a copy of StacIconButton
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBoxConstraintsCopyWith<$Res>? get constraints {
@@ -225,8 +231,6 @@ class _$StacIconButtonCopyWithImpl<$Res, $Val extends StacIconButton>
     });
   }
 
-  /// Create a copy of StacIconButton
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacButtonStyleCopyWith<$Res>? get style {
@@ -285,8 +289,6 @@ class __$$StacIconButtonImplCopyWithImpl<$Res>
       _$StacIconButtonImpl _value, $Res Function(_$StacIconButtonImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacIconButton
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -529,7 +531,7 @@ class _$StacIconButtonImpl implements _StacIconButton {
             const DeepCollectionEquality().equals(other._icon, _icon));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -554,14 +556,40 @@ class _$StacIconButtonImpl implements _StacIconButton {
         const DeepCollectionEquality().hash(_icon)
       ]);
 
-  /// Create a copy of StacIconButton
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacIconButtonImplCopyWith<_$StacIconButtonImpl> get copyWith =>
       __$$StacIconButtonImplCopyWithImpl<_$StacIconButtonImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacIconButton value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacIconButton value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacIconButton value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -634,11 +662,8 @@ abstract class _StacIconButton implements StacIconButton {
   Map<String, dynamic>? get selectedIcon;
   @override
   Map<String, dynamic>? get icon;
-
-  /// Create a copy of StacIconButton
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacIconButtonImplCopyWith<_$StacIconButtonImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

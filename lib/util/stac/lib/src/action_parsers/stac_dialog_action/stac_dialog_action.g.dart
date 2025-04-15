@@ -19,6 +19,8 @@ _$StacDialogActionImpl _$$StacDialogActionImplFromJson(
       barrierColor: json['barrierColor'] as String?,
       barrierLabel: json['barrierLabel'] as String?,
       useSafeArea: json['useSafeArea'] as bool? ?? true,
+      addToScreenStack: json['addToScreenStack'] as bool? ?? true,
+      hapticVibrate: json['hapticVibrate'] as bool? ?? false,
       traversalEdgeBehavior: $enumDecodeNullable(
           _$TraversalEdgeBehaviorEnumMap, json['traversalEdgeBehavior']),
     );
@@ -33,6 +35,8 @@ Map<String, dynamic> _$$StacDialogActionImplToJson(
       'barrierColor': instance.barrierColor,
       'barrierLabel': instance.barrierLabel,
       'useSafeArea': instance.useSafeArea,
+      'addToScreenStack': instance.addToScreenStack,
+      'hapticVibrate': instance.hapticVibrate,
       'traversalEdgeBehavior':
           _$TraversalEdgeBehaviorEnumMap[instance.traversalEdgeBehavior],
     };

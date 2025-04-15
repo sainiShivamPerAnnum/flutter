@@ -27,12 +27,24 @@ mixin _$StacDuration {
   int get milliseconds => throw _privateConstructorUsedError;
   int get microseconds => throw _privateConstructorUsedError;
 
-  /// Serializes this StacDuration to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacDuration value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacDuration value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacDuration value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacDuration
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacDurationCopyWith<StacDuration> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -62,8 +74,6 @@ class _$StacDurationCopyWithImpl<$Res, $Val extends StacDuration>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacDuration
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -128,8 +138,6 @@ class __$$StacDurationImplCopyWithImpl<$Res>
       _$StacDurationImpl _value, $Res Function(_$StacDurationImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacDuration
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -222,18 +230,44 @@ class _$StacDurationImpl implements _StacDuration {
                 other.microseconds == microseconds));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType, days, hours, minutes, seconds, milliseconds, microseconds);
 
-  /// Create a copy of StacDuration
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacDurationImplCopyWith<_$StacDurationImpl> get copyWith =>
       __$$StacDurationImplCopyWithImpl<_$StacDurationImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacDuration value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacDuration value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacDuration value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -267,11 +301,8 @@ abstract class _StacDuration implements StacDuration {
   int get milliseconds;
   @override
   int get microseconds;
-
-  /// Create a copy of StacDuration
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacDurationImplCopyWith<_$StacDurationImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

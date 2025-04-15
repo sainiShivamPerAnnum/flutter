@@ -5,6 +5,8 @@ targets:
         enabled: true
         generate_for:
           - "lib/core/model/**.dart"
+          - "lib/util/stac/**.dart"
+          - "lib/util/stac_framework/**.dart"
           - "lib/core/service/fcm/**.dart"
           - "lib/core/service/feature_flag_service/types.dart"
           - "lib/feature/shorts/src/service/**.dart"
@@ -18,6 +20,8 @@ targets:
         generate_for:
           - "lib/core/model/sdui/**.dart"
           - "lib/feature/shorts/src/bloc/**.dart"
+          - "lib/util/stac/**.dart"
+          - "lib/util/stac_framework/**.dart"
         options: 
           copy_with: true
           map: true

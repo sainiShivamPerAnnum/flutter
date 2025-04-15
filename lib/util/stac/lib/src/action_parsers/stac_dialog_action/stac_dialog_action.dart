@@ -1,6 +1,6 @@
+import 'package:felloapp/util/stac/lib/src/action_parsers/stac_network_request/stac_network_request.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:felloapp/util/stac/lib/src/action_parsers/stac_network_request/stac_network_request.dart';
 
 export 'stac_dialog_action_parser.dart';
 
@@ -17,6 +17,8 @@ class StacDialogAction with _$StacDialogAction {
     String? barrierColor,
     String? barrierLabel,
     @Default(true) bool useSafeArea,
+    @Default(true) bool addToScreenStack,
+    @Default(false) bool hapticVibrate,
     TraversalEdgeBehavior? traversalEdgeBehavior,
   }) = _StacDialogAction;
 

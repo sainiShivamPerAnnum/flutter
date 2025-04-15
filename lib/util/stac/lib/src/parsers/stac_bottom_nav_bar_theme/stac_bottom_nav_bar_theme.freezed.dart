@@ -38,12 +38,24 @@ mixin _$StacBottomNavBarThemeData {
   BottomNavigationBarLandscapeLayout? get landscapeLayout =>
       throw _privateConstructorUsedError;
 
-  /// Serializes this StacBottomNavBarThemeData to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacBottomNavBarThemeData value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacBottomNavBarThemeData value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacBottomNavBarThemeData value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacBottomNavBarThemeData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacBottomNavBarThemeDataCopyWith<StacBottomNavBarThemeData> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -86,8 +98,6 @@ class _$StacBottomNavBarThemeDataCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacBottomNavBarThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -161,8 +171,6 @@ class _$StacBottomNavBarThemeDataCopyWithImpl<$Res,
     ) as $Val);
   }
 
-  /// Create a copy of StacBottomNavBarThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacIconThemeDataCopyWith<$Res>? get selectedIconTheme {
@@ -175,8 +183,6 @@ class _$StacBottomNavBarThemeDataCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacBottomNavBarThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacIconThemeDataCopyWith<$Res>? get unselectedIconTheme {
@@ -190,8 +196,6 @@ class _$StacBottomNavBarThemeDataCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacBottomNavBarThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get selectedLabelStyle {
@@ -204,8 +208,6 @@ class _$StacBottomNavBarThemeDataCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacBottomNavBarThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get unselectedLabelStyle {
@@ -263,8 +265,6 @@ class __$$StacBottomNavBarThemeDataImplCopyWithImpl<$Res>
       $Res Function(_$StacBottomNavBarThemeDataImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacBottomNavBarThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -424,7 +424,7 @@ class _$StacBottomNavBarThemeDataImpl implements _StacBottomNavBarThemeData {
                 other.landscapeLayout == landscapeLayout));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -442,14 +442,40 @@ class _$StacBottomNavBarThemeDataImpl implements _StacBottomNavBarThemeData {
       enableFeedback,
       landscapeLayout);
 
-  /// Create a copy of StacBottomNavBarThemeData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacBottomNavBarThemeDataImplCopyWith<_$StacBottomNavBarThemeDataImpl>
       get copyWith => __$$StacBottomNavBarThemeDataImplCopyWithImpl<
           _$StacBottomNavBarThemeDataImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacBottomNavBarThemeData value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacBottomNavBarThemeData value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacBottomNavBarThemeData value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -505,11 +531,8 @@ abstract class _StacBottomNavBarThemeData implements StacBottomNavBarThemeData {
   bool? get enableFeedback;
   @override
   BottomNavigationBarLandscapeLayout? get landscapeLayout;
-
-  /// Create a copy of StacBottomNavBarThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacBottomNavBarThemeDataImplCopyWith<_$StacBottomNavBarThemeDataImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

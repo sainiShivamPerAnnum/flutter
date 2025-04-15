@@ -24,12 +24,24 @@ mixin _$StacCenter {
   double? get heightFactor => throw _privateConstructorUsedError;
   Map<String, dynamic>? get child => throw _privateConstructorUsedError;
 
-  /// Serializes this StacCenter to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacCenter value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacCenter value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacCenter value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacCenter
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacCenterCopyWith<StacCenter> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -54,8 +66,6 @@ class _$StacCenterCopyWithImpl<$Res, $Val extends StacCenter>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacCenter
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -100,8 +110,6 @@ class __$$StacCenterImplCopyWithImpl<$Res>
       _$StacCenterImpl _value, $Res Function(_$StacCenterImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacCenter
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -167,18 +175,44 @@ class _$StacCenterImpl implements _StacCenter {
             const DeepCollectionEquality().equals(other._child, _child));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, widthFactor, heightFactor,
       const DeepCollectionEquality().hash(_child));
 
-  /// Create a copy of StacCenter
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacCenterImplCopyWith<_$StacCenterImpl> get copyWith =>
       __$$StacCenterImplCopyWithImpl<_$StacCenterImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacCenter value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacCenter value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacCenter value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -203,11 +237,8 @@ abstract class _StacCenter implements StacCenter {
   double? get heightFactor;
   @override
   Map<String, dynamic>? get child;
-
-  /// Create a copy of StacCenter
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacCenterImplCopyWith<_$StacCenterImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

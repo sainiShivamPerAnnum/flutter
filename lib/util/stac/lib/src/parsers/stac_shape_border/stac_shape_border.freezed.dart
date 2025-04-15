@@ -23,12 +23,24 @@ mixin _$StacShapeBorder {
   StacShapeBorderType get borderType => throw _privateConstructorUsedError;
   Map<String, dynamic> get data => throw _privateConstructorUsedError;
 
-  /// Serializes this StacShapeBorder to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacShapeBorder value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacShapeBorder value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacShapeBorder value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacShapeBorder
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacShapeBorderCopyWith<StacShapeBorder> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -52,8 +64,6 @@ class _$StacShapeBorderCopyWithImpl<$Res, $Val extends StacShapeBorder>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacShapeBorder
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -92,8 +102,6 @@ class __$$StacShapeBorderImplCopyWithImpl<$Res>
       _$StacShapeBorderImpl _value, $Res Function(_$StacShapeBorderImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacShapeBorder
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -148,19 +156,45 @@ class _$StacShapeBorderImpl implements _StacShapeBorder {
             const DeepCollectionEquality().equals(other._data, _data));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType, borderType, const DeepCollectionEquality().hash(_data));
 
-  /// Create a copy of StacShapeBorder
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacShapeBorderImplCopyWith<_$StacShapeBorderImpl> get copyWith =>
       __$$StacShapeBorderImplCopyWithImpl<_$StacShapeBorderImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacShapeBorder value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacShapeBorder value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacShapeBorder value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -182,11 +216,8 @@ abstract class _StacShapeBorder implements StacShapeBorder {
   StacShapeBorderType get borderType;
   @override
   Map<String, dynamic> get data;
-
-  /// Create a copy of StacShapeBorder
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacShapeBorderImplCopyWith<_$StacShapeBorderImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

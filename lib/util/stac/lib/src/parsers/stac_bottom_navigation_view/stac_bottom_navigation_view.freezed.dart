@@ -23,12 +23,24 @@ StacBottomNavigationView _$StacBottomNavigationViewFromJson(
 mixin _$StacBottomNavigationView {
   List<Map<String, dynamic>> get children => throw _privateConstructorUsedError;
 
-  /// Serializes this StacBottomNavigationView to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacBottomNavigationView value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacBottomNavigationView value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacBottomNavigationView value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacBottomNavigationView
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacBottomNavigationViewCopyWith<StacBottomNavigationView> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -53,8 +65,6 @@ class _$StacBottomNavigationViewCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacBottomNavigationView
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -91,8 +101,6 @@ class __$$StacBottomNavigationViewImplCopyWithImpl<$Res>
       $Res Function(_$StacBottomNavigationViewImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacBottomNavigationView
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -139,19 +147,45 @@ class _$StacBottomNavigationViewImpl implements _StacBottomNavigationView {
             const DeepCollectionEquality().equals(other._children, _children));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(_children));
 
-  /// Create a copy of StacBottomNavigationView
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacBottomNavigationViewImplCopyWith<_$StacBottomNavigationViewImpl>
       get copyWith => __$$StacBottomNavigationViewImplCopyWithImpl<
           _$StacBottomNavigationViewImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacBottomNavigationView value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacBottomNavigationView value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacBottomNavigationView value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -171,11 +205,8 @@ abstract class _StacBottomNavigationView implements StacBottomNavigationView {
 
   @override
   List<Map<String, dynamic>> get children;
-
-  /// Create a copy of StacBottomNavigationView
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacBottomNavigationViewImplCopyWith<_$StacBottomNavigationViewImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

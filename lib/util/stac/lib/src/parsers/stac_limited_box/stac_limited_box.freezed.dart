@@ -24,12 +24,24 @@ mixin _$StacLimitedBox {
   double get maxWidth => throw _privateConstructorUsedError;
   Map<String, dynamic>? get child => throw _privateConstructorUsedError;
 
-  /// Serializes this StacLimitedBox to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacLimitedBox value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacLimitedBox value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacLimitedBox value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacLimitedBox
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacLimitedBoxCopyWith<StacLimitedBox> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -53,8 +65,6 @@ class _$StacLimitedBoxCopyWithImpl<$Res, $Val extends StacLimitedBox>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacLimitedBox
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -98,8 +108,6 @@ class __$$StacLimitedBoxImplCopyWithImpl<$Res>
       _$StacLimitedBoxImpl _value, $Res Function(_$StacLimitedBoxImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacLimitedBox
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -169,19 +177,45 @@ class _$StacLimitedBoxImpl implements _StacLimitedBox {
             const DeepCollectionEquality().equals(other._child, _child));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, maxHeight, maxWidth,
       const DeepCollectionEquality().hash(_child));
 
-  /// Create a copy of StacLimitedBox
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacLimitedBoxImplCopyWith<_$StacLimitedBoxImpl> get copyWith =>
       __$$StacLimitedBoxImplCopyWithImpl<_$StacLimitedBoxImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacLimitedBox value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacLimitedBox value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacLimitedBox value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -206,11 +240,8 @@ abstract class _StacLimitedBox implements StacLimitedBox {
   double get maxWidth;
   @override
   Map<String, dynamic>? get child;
-
-  /// Create a copy of StacLimitedBox
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacLimitedBoxImplCopyWith<_$StacLimitedBoxImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -32,6 +32,8 @@ _$StacModalBottomSheetActionImpl _$$StacModalBottomSheetActionImplFromJson(
       enableDrag: json['enableDrag'] as bool? ?? true,
       showDragHandle: json['showDragHandle'] as bool?,
       useSafeArea: json['useSafeArea'] as bool? ?? false,
+      addToScreenStack: json['addToScreenStack'] as bool? ?? true,
+      hapticVibrate: json['hapticVibrate'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$StacModalBottomSheetActionImplToJson(
@@ -52,4 +54,6 @@ Map<String, dynamic> _$$StacModalBottomSheetActionImplToJson(
       'enableDrag': instance.enableDrag,
       'showDragHandle': instance.showDragHandle,
       'useSafeArea': instance.useSafeArea,
+      'addToScreenStack': instance.addToScreenStack,
+      'hapticVibrate': instance.hapticVibrate,
     };

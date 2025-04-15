@@ -48,12 +48,24 @@ mixin _$StacSwitch {
   bool? get applyTheme => throw _privateConstructorUsedError;
   bool? get applyCupertinoTheme => throw _privateConstructorUsedError;
 
-  /// Serializes this StacSwitch to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacSwitch value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacSwitch value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacSwitch value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacSwitch
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacSwitchCopyWith<StacSwitch> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -107,8 +119,6 @@ class _$StacSwitchCopyWithImpl<$Res, $Val extends StacSwitch>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacSwitch
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -242,8 +252,6 @@ class _$StacSwitchCopyWithImpl<$Res, $Val extends StacSwitch>
     ) as $Val);
   }
 
-  /// Create a copy of StacSwitch
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacMaterialColorCopyWith<$Res>? get overlayColor {
@@ -256,8 +264,6 @@ class _$StacSwitchCopyWithImpl<$Res, $Val extends StacSwitch>
     });
   }
 
-  /// Create a copy of StacSwitch
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacMaterialColorCopyWith<$Res>? get thumbColor {
@@ -270,8 +276,6 @@ class _$StacSwitchCopyWithImpl<$Res, $Val extends StacSwitch>
     });
   }
 
-  /// Create a copy of StacSwitch
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacMaterialColorCopyWith<$Res>? get trackColor {
@@ -284,8 +288,6 @@ class _$StacSwitchCopyWithImpl<$Res, $Val extends StacSwitch>
     });
   }
 
-  /// Create a copy of StacSwitch
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacMaterialColorCopyWith<$Res>? get trackOutlineColor {
@@ -352,8 +354,6 @@ class __$$StacSwitchImplCopyWithImpl<$Res>
       _$StacSwitchImpl _value, $Res Function(_$StacSwitchImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacSwitch
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -652,7 +652,7 @@ class _$StacSwitchImpl implements _StacSwitch {
                 other.applyCupertinoTheme == applyCupertinoTheme));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -683,13 +683,39 @@ class _$StacSwitchImpl implements _StacSwitch {
         applyCupertinoTheme
       ]);
 
-  /// Create a copy of StacSwitch
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacSwitchImplCopyWith<_$StacSwitchImpl> get copyWith =>
       __$$StacSwitchImplCopyWithImpl<_$StacSwitchImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacSwitch value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacSwitch value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacSwitch value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -780,11 +806,8 @@ abstract class _StacSwitch implements StacSwitch {
   bool? get applyTheme;
   @override
   bool? get applyCupertinoTheme;
-
-  /// Create a copy of StacSwitch
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacSwitchImplCopyWith<_$StacSwitchImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

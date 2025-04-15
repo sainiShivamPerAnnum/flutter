@@ -34,12 +34,24 @@ mixin _$StacTextStyle {
   TextBaseline? get textBaseline => throw _privateConstructorUsedError;
   double? get height => throw _privateConstructorUsedError;
 
-  /// Serializes this StacTextStyle to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacTextStyle value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacTextStyle value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacTextStyle value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacTextStyle
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacTextStyleCopyWith<StacTextStyle> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -76,8 +88,6 @@ class _$StacTextStyleCopyWithImpl<$Res, $Val extends StacTextStyle>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacTextStyle
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -184,8 +194,6 @@ class __$$StacTextStyleImplCopyWithImpl<$Res>
       _$StacTextStyleImpl _value, $Res Function(_$StacTextStyleImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacTextStyle
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -354,7 +362,7 @@ class _$StacTextStyleImpl implements _StacTextStyle {
             (identical(other.height, height) || other.height == height));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -372,13 +380,39 @@ class _$StacTextStyleImpl implements _StacTextStyle {
       textBaseline,
       height);
 
-  /// Create a copy of StacTextStyle
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacTextStyleImplCopyWith<_$StacTextStyleImpl> get copyWith =>
       __$$StacTextStyleImplCopyWithImpl<_$StacTextStyleImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacTextStyle value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacTextStyle value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacTextStyle value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -433,11 +467,8 @@ abstract class _StacTextStyle implements StacTextStyle {
   TextBaseline? get textBaseline;
   @override
   double? get height;
-
-  /// Create a copy of StacTextStyle
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacTextStyleImplCopyWith<_$StacTextStyleImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

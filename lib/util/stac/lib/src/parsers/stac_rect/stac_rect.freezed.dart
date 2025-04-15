@@ -32,12 +32,24 @@ mixin _$StacRect {
   double? get bottom => throw _privateConstructorUsedError;
   double? get radius => throw _privateConstructorUsedError;
 
-  /// Serializes this StacRect to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacRect value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacRect value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacRect value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacRect
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacRectCopyWith<StacRect> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -75,8 +87,6 @@ class _$StacRectCopyWithImpl<$Res, $Val extends StacRect>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacRect
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -140,8 +150,6 @@ class _$StacRectCopyWithImpl<$Res, $Val extends StacRect>
     ) as $Val);
   }
 
-  /// Create a copy of StacRect
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacOffsetCopyWith<$Res>? get center {
@@ -154,8 +162,6 @@ class _$StacRectCopyWithImpl<$Res, $Val extends StacRect>
     });
   }
 
-  /// Create a copy of StacRect
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacOffsetCopyWith<$Res>? get a {
@@ -168,8 +174,6 @@ class _$StacRectCopyWithImpl<$Res, $Val extends StacRect>
     });
   }
 
-  /// Create a copy of StacRect
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacOffsetCopyWith<$Res>? get b {
@@ -220,8 +224,6 @@ class __$$StacRectImplCopyWithImpl<$Res>
       _$StacRectImpl _value, $Res Function(_$StacRectImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacRect
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -352,18 +354,44 @@ class _$StacRectImpl implements _StacRect {
             (identical(other.radius, radius) || other.radius == radius));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, rectType, center, a, b, width,
       height, left, top, right, bottom, radius);
 
-  /// Create a copy of StacRect
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacRectImplCopyWith<_$StacRectImpl> get copyWith =>
       __$$StacRectImplCopyWithImpl<_$StacRectImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacRect value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacRect value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacRect value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -412,11 +440,8 @@ abstract class _StacRect implements StacRect {
   double? get bottom;
   @override
   double? get radius;
-
-  /// Create a copy of StacRect
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacRectImplCopyWith<_$StacRectImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

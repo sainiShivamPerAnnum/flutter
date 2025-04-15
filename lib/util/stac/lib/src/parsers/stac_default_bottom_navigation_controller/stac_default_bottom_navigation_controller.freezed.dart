@@ -25,12 +25,24 @@ mixin _$StacDefaultBottomNavigationController {
   int? get initialIndex => throw _privateConstructorUsedError;
   Map<String, dynamic> get child => throw _privateConstructorUsedError;
 
-  /// Serializes this StacDefaultBottomNavigationController to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacDefaultBottomNavigationController value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacDefaultBottomNavigationController value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacDefaultBottomNavigationController value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacDefaultBottomNavigationController
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacDefaultBottomNavigationControllerCopyWith<
           StacDefaultBottomNavigationController>
       get copyWith => throw _privateConstructorUsedError;
@@ -58,8 +70,6 @@ class _$StacDefaultBottomNavigationControllerCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacDefaultBottomNavigationController
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -106,8 +116,6 @@ class __$$StacDefaultBottomNavigationControllerImplCopyWithImpl<$Res>
       $Res Function(_$StacDefaultBottomNavigationControllerImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacDefaultBottomNavigationController
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -174,20 +182,46 @@ class _$StacDefaultBottomNavigationControllerImpl
             const DeepCollectionEquality().equals(other._child, _child));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, length, initialIndex,
       const DeepCollectionEquality().hash(_child));
 
-  /// Create a copy of StacDefaultBottomNavigationController
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacDefaultBottomNavigationControllerImplCopyWith<
           _$StacDefaultBottomNavigationControllerImpl>
       get copyWith => __$$StacDefaultBottomNavigationControllerImplCopyWithImpl<
           _$StacDefaultBottomNavigationControllerImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacDefaultBottomNavigationController value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacDefaultBottomNavigationController value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacDefaultBottomNavigationController value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -215,11 +249,8 @@ abstract class _StacDefaultBottomNavigationController
   int? get initialIndex;
   @override
   Map<String, dynamic> get child;
-
-  /// Create a copy of StacDefaultBottomNavigationController
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacDefaultBottomNavigationControllerImplCopyWith<
           _$StacDefaultBottomNavigationControllerImpl>
       get copyWith => throw _privateConstructorUsedError;

@@ -24,12 +24,24 @@ mixin _$StacRoundedRactangleBorder {
   StacBorderSide get side => throw _privateConstructorUsedError;
   StacBorderRadius get borderRadius => throw _privateConstructorUsedError;
 
-  /// Serializes this StacRoundedRactangleBorder to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacRoundedRactangleBorder value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacRoundedRactangleBorder value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacRoundedRactangleBorder value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacRoundedRactangleBorder
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacRoundedRactangleBorderCopyWith<StacRoundedRactangleBorder>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -58,8 +70,6 @@ class _$StacRoundedRactangleBorderCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacRoundedRactangleBorder
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -78,8 +88,6 @@ class _$StacRoundedRactangleBorderCopyWithImpl<$Res,
     ) as $Val);
   }
 
-  /// Create a copy of StacRoundedRactangleBorder
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBorderSideCopyWith<$Res> get side {
@@ -88,8 +96,6 @@ class _$StacRoundedRactangleBorderCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacRoundedRactangleBorder
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBorderRadiusCopyWith<$Res> get borderRadius {
@@ -126,8 +132,6 @@ class __$$StacRoundedRactangleBorderImplCopyWithImpl<$Res>
       $Res Function(_$StacRoundedRactangleBorderImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacRoundedRactangleBorder
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -180,18 +184,44 @@ class _$StacRoundedRactangleBorderImpl implements _StacRoundedRactangleBorder {
                 other.borderRadius == borderRadius));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, side, borderRadius);
 
-  /// Create a copy of StacRoundedRactangleBorder
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacRoundedRactangleBorderImplCopyWith<_$StacRoundedRactangleBorderImpl>
       get copyWith => __$$StacRoundedRactangleBorderImplCopyWithImpl<
           _$StacRoundedRactangleBorderImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacRoundedRactangleBorder value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacRoundedRactangleBorder value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacRoundedRactangleBorder value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -214,11 +244,8 @@ abstract class _StacRoundedRactangleBorder
   StacBorderSide get side;
   @override
   StacBorderRadius get borderRadius;
-
-  /// Create a copy of StacRoundedRactangleBorder
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacRoundedRactangleBorderImplCopyWith<_$StacRoundedRactangleBorderImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

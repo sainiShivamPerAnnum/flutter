@@ -29,12 +29,24 @@ mixin _$StacNetworkRequest {
   dynamic get body => throw _privateConstructorUsedError;
   List<StacNetworkResult> get results => throw _privateConstructorUsedError;
 
-  /// Serializes this StacNetworkRequest to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacNetworkRequest value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacNetworkRequest value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacNetworkRequest value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacNetworkRequest
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacNetworkRequestCopyWith<StacNetworkRequest> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -65,8 +77,6 @@ class _$StacNetworkRequestCopyWithImpl<$Res, $Val extends StacNetworkRequest>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacNetworkRequest
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -137,8 +147,6 @@ class __$$StacNetworkRequestImplCopyWithImpl<$Res>
       $Res Function(_$StacNetworkRequestImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacNetworkRequest
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -260,7 +268,7 @@ class _$StacNetworkRequestImpl implements _StacNetworkRequest {
             const DeepCollectionEquality().equals(other._results, _results));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -272,14 +280,40 @@ class _$StacNetworkRequestImpl implements _StacNetworkRequest {
       const DeepCollectionEquality().hash(body),
       const DeepCollectionEquality().hash(_results));
 
-  /// Create a copy of StacNetworkRequest
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacNetworkRequestImplCopyWith<_$StacNetworkRequestImpl> get copyWith =>
       __$$StacNetworkRequestImplCopyWithImpl<_$StacNetworkRequestImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacNetworkRequest value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacNetworkRequest value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacNetworkRequest value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -316,11 +350,8 @@ abstract class _StacNetworkRequest implements StacNetworkRequest {
   dynamic get body;
   @override
   List<StacNetworkResult> get results;
-
-  /// Create a copy of StacNetworkRequest
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacNetworkRequestImplCopyWith<_$StacNetworkRequestImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -334,12 +365,24 @@ mixin _$StacNetworkResult {
   int get statusCode => throw _privateConstructorUsedError;
   Map<String, dynamic> get action => throw _privateConstructorUsedError;
 
-  /// Serializes this StacNetworkResult to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacNetworkResult value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacNetworkResult value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacNetworkResult value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacNetworkResult
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacNetworkResultCopyWith<StacNetworkResult> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -363,8 +406,6 @@ class _$StacNetworkResultCopyWithImpl<$Res, $Val extends StacNetworkResult>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacNetworkResult
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -403,8 +444,6 @@ class __$$StacNetworkResultImplCopyWithImpl<$Res>
       $Res Function(_$StacNetworkResultImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacNetworkResult
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -459,19 +498,45 @@ class _$StacNetworkResultImpl implements _StacNetworkResult {
             const DeepCollectionEquality().equals(other._action, _action));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType, statusCode, const DeepCollectionEquality().hash(_action));
 
-  /// Create a copy of StacNetworkResult
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacNetworkResultImplCopyWith<_$StacNetworkResultImpl> get copyWith =>
       __$$StacNetworkResultImplCopyWithImpl<_$StacNetworkResultImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacNetworkResult value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacNetworkResult value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacNetworkResult value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -493,11 +558,8 @@ abstract class _StacNetworkResult implements StacNetworkResult {
   int get statusCode;
   @override
   Map<String, dynamic> get action;
-
-  /// Create a copy of StacNetworkResult
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacNetworkResultImplCopyWith<_$StacNetworkResultImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

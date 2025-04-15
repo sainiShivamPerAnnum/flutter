@@ -22,12 +22,24 @@ StacNetworkWidget _$StacNetworkWidgetFromJson(Map<String, dynamic> json) {
 mixin _$StacNetworkWidget {
   StacNetworkRequest get request => throw _privateConstructorUsedError;
 
-  /// Serializes this StacNetworkWidget to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacNetworkWidget value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacNetworkWidget value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacNetworkWidget value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacNetworkWidget
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacNetworkWidgetCopyWith<StacNetworkWidget> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -53,8 +65,6 @@ class _$StacNetworkWidgetCopyWithImpl<$Res, $Val extends StacNetworkWidget>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacNetworkWidget
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -68,8 +78,6 @@ class _$StacNetworkWidgetCopyWithImpl<$Res, $Val extends StacNetworkWidget>
     ) as $Val);
   }
 
-  /// Create a copy of StacNetworkWidget
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacNetworkRequestCopyWith<$Res> get request {
@@ -101,8 +109,6 @@ class __$$StacNetworkWidgetImplCopyWithImpl<$Res>
       $Res Function(_$StacNetworkWidgetImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacNetworkWidget
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -141,18 +147,44 @@ class _$StacNetworkWidgetImpl implements _StacNetworkWidget {
             (identical(other.request, request) || other.request == request));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, request);
 
-  /// Create a copy of StacNetworkWidget
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacNetworkWidgetImplCopyWith<_$StacNetworkWidgetImpl> get copyWith =>
       __$$StacNetworkWidgetImplCopyWithImpl<_$StacNetworkWidgetImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacNetworkWidget value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacNetworkWidget value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacNetworkWidget value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -171,11 +203,8 @@ abstract class _StacNetworkWidget implements StacNetworkWidget {
 
   @override
   StacNetworkRequest get request;
-
-  /// Create a copy of StacNetworkWidget
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacNetworkWidgetImplCopyWith<_$StacNetworkWidgetImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

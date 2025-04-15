@@ -39,12 +39,24 @@ mixin _$StacRadio {
   bool get useCheckmarkStyle => throw _privateConstructorUsedError;
   bool get useCupertinoCheckmarkStyle => throw _privateConstructorUsedError;
 
-  /// Serializes this StacRadio to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacRadio value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacRadio value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacRadio value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacRadio
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacRadioCopyWith<StacRadio> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -86,8 +98,6 @@ class _$StacRadioCopyWithImpl<$Res, $Val extends StacRadio>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacRadio
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -181,8 +191,6 @@ class _$StacRadioCopyWithImpl<$Res, $Val extends StacRadio>
     ) as $Val);
   }
 
-  /// Create a copy of StacRadio
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacVisualDensityCopyWith<$Res>? get visualDensity {
@@ -235,8 +243,6 @@ class __$$StacRadioImplCopyWithImpl<$Res>
       _$StacRadioImpl _value, $Res Function(_$StacRadioImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacRadio
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -452,7 +458,7 @@ class _$StacRadioImpl implements _StacRadio {
                     useCupertinoCheckmarkStyle));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -474,13 +480,39 @@ class _$StacRadioImpl implements _StacRadio {
       useCheckmarkStyle,
       useCupertinoCheckmarkStyle);
 
-  /// Create a copy of StacRadio
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacRadioImplCopyWith<_$StacRadioImpl> get copyWith =>
       __$$StacRadioImplCopyWithImpl<_$StacRadioImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacRadio value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacRadio value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacRadio value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -547,11 +579,8 @@ abstract class _StacRadio implements StacRadio {
   bool get useCheckmarkStyle;
   @override
   bool get useCupertinoCheckmarkStyle;
-
-  /// Create a copy of StacRadio
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacRadioImplCopyWith<_$StacRadioImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

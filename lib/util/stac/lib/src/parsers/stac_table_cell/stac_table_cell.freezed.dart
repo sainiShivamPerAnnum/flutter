@@ -24,12 +24,24 @@ mixin _$StacTableCell {
       throw _privateConstructorUsedError;
   Map<String, dynamic>? get child => throw _privateConstructorUsedError;
 
-  /// Serializes this StacTableCell to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacTableCell value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacTableCell value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacTableCell value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacTableCell
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacTableCellCopyWith<StacTableCell> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -55,8 +67,6 @@ class _$StacTableCellCopyWithImpl<$Res, $Val extends StacTableCell>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacTableCell
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -97,8 +107,6 @@ class __$$StacTableCellImplCopyWithImpl<$Res>
       _$StacTableCellImpl _value, $Res Function(_$StacTableCellImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacTableCell
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -155,18 +163,44 @@ class _$StacTableCellImpl implements _StacTableCell {
             const DeepCollectionEquality().equals(other._child, _child));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, verticalAlignment,
       const DeepCollectionEquality().hash(_child));
 
-  /// Create a copy of StacTableCell
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacTableCellImplCopyWith<_$StacTableCellImpl> get copyWith =>
       __$$StacTableCellImplCopyWithImpl<_$StacTableCellImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacTableCell value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacTableCell value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacTableCell value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -188,11 +222,8 @@ abstract class _StacTableCell implements StacTableCell {
   TableCellVerticalAlignment? get verticalAlignment;
   @override
   Map<String, dynamic>? get child;
-
-  /// Create a copy of StacTableCell
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacTableCellImplCopyWith<_$StacTableCellImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

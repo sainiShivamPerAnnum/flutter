@@ -29,12 +29,24 @@ mixin _$StacBoxDecoration {
   StacDecorationImage? get image => throw _privateConstructorUsedError;
   StacGradient? get gradient => throw _privateConstructorUsedError;
 
-  /// Serializes this StacBoxDecoration to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacBoxDecoration value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacBoxDecoration value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacBoxDecoration value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacBoxDecoration
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacBoxDecorationCopyWith<StacBoxDecoration> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -71,8 +83,6 @@ class _$StacBoxDecorationCopyWithImpl<$Res, $Val extends StacBoxDecoration>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacBoxDecoration
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -121,8 +131,6 @@ class _$StacBoxDecorationCopyWithImpl<$Res, $Val extends StacBoxDecoration>
     ) as $Val);
   }
 
-  /// Create a copy of StacBoxDecoration
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBorderCopyWith<$Res>? get border {
@@ -135,8 +143,6 @@ class _$StacBoxDecorationCopyWithImpl<$Res, $Val extends StacBoxDecoration>
     });
   }
 
-  /// Create a copy of StacBoxDecoration
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBorderRadiusCopyWith<$Res>? get borderRadius {
@@ -149,8 +155,6 @@ class _$StacBoxDecorationCopyWithImpl<$Res, $Val extends StacBoxDecoration>
     });
   }
 
-  /// Create a copy of StacBoxDecoration
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacDecorationImageCopyWith<$Res>? get image {
@@ -163,8 +167,6 @@ class _$StacBoxDecorationCopyWithImpl<$Res, $Val extends StacBoxDecoration>
     });
   }
 
-  /// Create a copy of StacBoxDecoration
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacGradientCopyWith<$Res>? get gradient {
@@ -214,8 +216,6 @@ class __$$StacBoxDecorationImplCopyWithImpl<$Res>
       $Res Function(_$StacBoxDecorationImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacBoxDecoration
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -332,7 +332,7 @@ class _$StacBoxDecorationImpl implements _StacBoxDecoration {
                 other.gradient == gradient));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -345,14 +345,40 @@ class _$StacBoxDecorationImpl implements _StacBoxDecoration {
       image,
       gradient);
 
-  /// Create a copy of StacBoxDecoration
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacBoxDecorationImplCopyWith<_$StacBoxDecorationImpl> get copyWith =>
       __$$StacBoxDecorationImplCopyWithImpl<_$StacBoxDecorationImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacBoxDecoration value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacBoxDecoration value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacBoxDecoration value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -392,11 +418,8 @@ abstract class _StacBoxDecoration implements StacBoxDecoration {
   StacDecorationImage? get image;
   @override
   StacGradient? get gradient;
-
-  /// Create a copy of StacBoxDecoration
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacBoxDecorationImplCopyWith<_$StacBoxDecorationImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

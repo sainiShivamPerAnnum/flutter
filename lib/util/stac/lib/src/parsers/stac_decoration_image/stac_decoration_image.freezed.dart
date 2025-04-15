@@ -33,12 +33,24 @@ mixin _$StacDecorationImage {
   bool get invertColors => throw _privateConstructorUsedError;
   bool get isAntiAlias => throw _privateConstructorUsedError;
 
-  /// Serializes this StacDecorationImage to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacDecorationImage value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacDecorationImage value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacDecorationImage value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacDecorationImage
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacDecorationImageCopyWith<StacDecorationImage> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -76,8 +88,6 @@ class _$StacDecorationImageCopyWithImpl<$Res, $Val extends StacDecorationImage>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacDecorationImage
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -146,8 +156,6 @@ class _$StacDecorationImageCopyWithImpl<$Res, $Val extends StacDecorationImage>
     ) as $Val);
   }
 
-  /// Create a copy of StacDecorationImage
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacRectCopyWith<$Res>? get centerSlice {
@@ -195,8 +203,6 @@ class __$$StacDecorationImageImplCopyWithImpl<$Res>
       $Res Function(_$StacDecorationImageImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacDecorationImage
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -351,7 +357,7 @@ class _$StacDecorationImageImpl implements _StacDecorationImage {
                 other.isAntiAlias == isAntiAlias));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -368,14 +374,40 @@ class _$StacDecorationImageImpl implements _StacDecorationImage {
       invertColors,
       isAntiAlias);
 
-  /// Create a copy of StacDecorationImage
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacDecorationImageImplCopyWith<_$StacDecorationImageImpl> get copyWith =>
       __$$StacDecorationImageImplCopyWithImpl<_$StacDecorationImageImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacDecorationImage value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacDecorationImage value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacDecorationImage value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -427,11 +459,8 @@ abstract class _StacDecorationImage implements StacDecorationImage {
   bool get invertColors;
   @override
   bool get isAntiAlias;
-
-  /// Create a copy of StacDecorationImage
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacDecorationImageImplCopyWith<_$StacDecorationImageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

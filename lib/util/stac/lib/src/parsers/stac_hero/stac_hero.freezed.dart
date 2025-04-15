@@ -29,12 +29,24 @@ mixin _$StacHero {
       throw _privateConstructorUsedError;
   bool get transitionOnUserGestures => throw _privateConstructorUsedError;
 
-  /// Serializes this StacHero to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacHero value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacHero value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacHero value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacHero
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacHeroCopyWith<StacHero> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -65,8 +77,6 @@ class _$StacHeroCopyWithImpl<$Res, $Val extends StacHero>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacHero
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -102,8 +112,6 @@ class _$StacHeroCopyWithImpl<$Res, $Val extends StacHero>
     ) as $Val);
   }
 
-  /// Create a copy of StacHero
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacRectTweenCopyWith<$Res>? get createRectTween {
@@ -145,8 +153,6 @@ class __$$StacHeroImplCopyWithImpl<$Res>
       _$StacHeroImpl _value, $Res Function(_$StacHeroImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacHero
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -261,7 +267,7 @@ class _$StacHeroImpl implements _StacHero {
                 other.transitionOnUserGestures == transitionOnUserGestures));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -272,13 +278,39 @@ class _$StacHeroImpl implements _StacHero {
       const DeepCollectionEquality().hash(_placeholderBuilder),
       transitionOnUserGestures);
 
-  /// Create a copy of StacHero
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacHeroImplCopyWith<_$StacHeroImpl> get copyWith =>
       __$$StacHeroImplCopyWithImpl<_$StacHeroImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacHero value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacHero value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacHero value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -312,11 +344,8 @@ abstract class _StacHero implements StacHero {
   Map<String, dynamic>? get placeholderBuilder;
   @override
   bool get transitionOnUserGestures;
-
-  /// Create a copy of StacHero
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacHeroImplCopyWith<_$StacHeroImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

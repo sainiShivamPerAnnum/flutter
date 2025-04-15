@@ -24,12 +24,24 @@ mixin _$StacDivider {
   double? get height => throw _privateConstructorUsedError;
   String? get color => throw _privateConstructorUsedError;
 
-  /// Serializes this StacDivider to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacDivider value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacDivider value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacDivider value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacDivider
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacDividerCopyWith<StacDivider> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -53,8 +65,6 @@ class _$StacDividerCopyWithImpl<$Res, $Val extends StacDivider>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacDivider
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -98,8 +108,6 @@ class __$$StacDividerImplCopyWithImpl<$Res>
       _$StacDividerImpl _value, $Res Function(_$StacDividerImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacDivider
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -155,17 +163,43 @@ class _$StacDividerImpl implements _StacDivider {
             (identical(other.color, color) || other.color == color));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, thickness, height, color);
 
-  /// Create a copy of StacDivider
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacDividerImplCopyWith<_$StacDividerImpl> get copyWith =>
       __$$StacDividerImplCopyWithImpl<_$StacDividerImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacDivider value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacDivider value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacDivider value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -190,11 +224,8 @@ abstract class _StacDivider implements StacDivider {
   double? get height;
   @override
   String? get color;
-
-  /// Create a copy of StacDivider
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacDividerImplCopyWith<_$StacDividerImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

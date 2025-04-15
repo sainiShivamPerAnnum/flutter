@@ -73,12 +73,24 @@ mixin _$StacTheme {
       throw _privateConstructorUsedError;
   StacTabBarThemeData? get tabBarTheme => throw _privateConstructorUsedError;
 
-  /// Serializes this StacTheme to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacTheme value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacTheme value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacTheme value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacThemeCopyWith<StacTheme> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -165,8 +177,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -390,8 +400,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
     ) as $Val);
   }
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacInputDecorationThemeCopyWith<$Res>? get inputDecorationTheme {
@@ -405,8 +413,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
     });
   }
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacColorSchemeCopyWith<$Res>? get colorScheme {
@@ -419,8 +425,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
     });
   }
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacMaterialColorCopyWith<$Res>? get primarySwatch {
@@ -433,8 +437,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
     });
   }
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacAppBarThemeCopyWith<$Res>? get appBarTheme {
@@ -447,8 +449,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
     });
   }
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacButtonStyleCopyWith<$Res>? get elevatedButtonTheme {
@@ -461,8 +461,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
     });
   }
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacButtonStyleCopyWith<$Res>? get outlinedButtonTheme {
@@ -475,8 +473,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
     });
   }
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacButtonStyleCopyWith<$Res>? get iconButtonTheme {
@@ -489,8 +485,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
     });
   }
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacIconThemeDataCopyWith<$Res>? get iconTheme {
@@ -503,8 +497,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
     });
   }
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacIconThemeDataCopyWith<$Res>? get primaryIconTheme {
@@ -517,8 +509,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
     });
   }
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacDialogThemeCopyWith<$Res>? get dialogTheme {
@@ -531,8 +521,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
     });
   }
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacFloatingActionButtonThemeDataCopyWith<$Res>?
@@ -547,8 +535,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
     });
   }
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacButtonStyleCopyWith<$Res>? get textButtonTheme {
@@ -561,8 +547,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
     });
   }
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBottomAppBarThemeCopyWith<$Res>? get bottomAppBarTheme {
@@ -576,8 +560,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
     });
   }
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBottomNavBarThemeDataCopyWith<$Res>? get bottomNavigationBarTheme {
@@ -591,8 +573,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
     });
   }
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBottomSheetThemeDataCopyWith<$Res>? get bottomSheetTheme {
@@ -606,8 +586,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
     });
   }
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacCardThemeDataCopyWith<$Res>? get cardTheme {
@@ -620,8 +598,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
     });
   }
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacListTileThemeDataCopyWith<$Res>? get listTileTheme {
@@ -634,8 +610,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
     });
   }
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacNavigationBarThemeDataCopyWith<$Res>? get navigationBarTheme {
@@ -649,8 +623,6 @@ class _$StacThemeCopyWithImpl<$Res, $Val extends StacTheme>
     });
   }
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTabBarThemeDataCopyWith<$Res>? get tabBarTheme {
@@ -766,8 +738,6 @@ class __$$StacThemeImplCopyWithImpl<$Res>
       _$StacThemeImpl _value, $Res Function(_$StacThemeImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1228,7 +1198,7 @@ class _$StacThemeImpl implements _StacTheme {
             (identical(other.tabBarTheme, tabBarTheme) || other.tabBarTheme == tabBarTheme));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -1277,13 +1247,39 @@ class _$StacThemeImpl implements _StacTheme {
         tabBarTheme
       ]);
 
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacThemeImplCopyWith<_$StacThemeImpl> get copyWith =>
       __$$StacThemeImplCopyWithImpl<_$StacThemeImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacTheme value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacTheme value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacTheme value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -1428,11 +1424,8 @@ abstract class _StacTheme implements StacTheme {
   StacNavigationBarThemeData? get navigationBarTheme;
   @override
   StacTabBarThemeData? get tabBarTheme;
-
-  /// Create a copy of StacTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacThemeImplCopyWith<_$StacThemeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

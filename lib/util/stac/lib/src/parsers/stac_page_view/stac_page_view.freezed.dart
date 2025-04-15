@@ -35,12 +35,24 @@ mixin _$StacPageView {
   double get viewportFraction => throw _privateConstructorUsedError;
   List<Map<String, dynamic>> get children => throw _privateConstructorUsedError;
 
-  /// Serializes this StacPageView to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacPageView value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacPageView value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacPageView value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacPageView
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacPageViewCopyWith<StacPageView> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -78,8 +90,6 @@ class _$StacPageViewCopyWithImpl<$Res, $Val extends StacPageView>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacPageView
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -192,8 +202,6 @@ class __$$StacPageViewImplCopyWithImpl<$Res>
       _$StacPageViewImpl _value, $Res Function(_$StacPageViewImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacPageView
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -382,7 +390,7 @@ class _$StacPageViewImpl implements _StacPageView {
             const DeepCollectionEquality().equals(other._children, _children));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -401,13 +409,39 @@ class _$StacPageViewImpl implements _StacPageView {
       viewportFraction,
       const DeepCollectionEquality().hash(_children));
 
-  /// Create a copy of StacPageView
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacPageViewImplCopyWith<_$StacPageViewImpl> get copyWith =>
       __$$StacPageViewImplCopyWithImpl<_$StacPageViewImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacPageView value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacPageView value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacPageView value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -465,11 +499,8 @@ abstract class _StacPageView implements StacPageView {
   double get viewportFraction;
   @override
   List<Map<String, dynamic>> get children;
-
-  /// Create a copy of StacPageView
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacPageViewImplCopyWith<_$StacPageViewImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

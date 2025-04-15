@@ -23,12 +23,24 @@ mixin _$StacVisualDensity {
   double get horizontal => throw _privateConstructorUsedError;
   double get vertical => throw _privateConstructorUsedError;
 
-  /// Serializes this StacVisualDensity to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacVisualDensity value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacVisualDensity value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacVisualDensity value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacVisualDensity
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacVisualDensityCopyWith<StacVisualDensity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -52,8 +64,6 @@ class _$StacVisualDensityCopyWithImpl<$Res, $Val extends StacVisualDensity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacVisualDensity
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -92,8 +102,6 @@ class __$$StacVisualDensityImplCopyWithImpl<$Res>
       $Res Function(_$StacVisualDensityImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacVisualDensity
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -143,18 +151,44 @@ class _$StacVisualDensityImpl implements _StacVisualDensity {
                 other.vertical == vertical));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, horizontal, vertical);
 
-  /// Create a copy of StacVisualDensity
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacVisualDensityImplCopyWith<_$StacVisualDensityImpl> get copyWith =>
       __$$StacVisualDensityImplCopyWithImpl<_$StacVisualDensityImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacVisualDensity value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacVisualDensity value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacVisualDensity value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -176,11 +210,8 @@ abstract class _StacVisualDensity implements StacVisualDensity {
   double get horizontal;
   @override
   double get vertical;
-
-  /// Create a copy of StacVisualDensity
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacVisualDensityImplCopyWith<_$StacVisualDensityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

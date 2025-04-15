@@ -25,12 +25,24 @@ mixin _$StacFittedBox {
   Clip get clipBehavior => throw _privateConstructorUsedError;
   Map<String, dynamic>? get child => throw _privateConstructorUsedError;
 
-  /// Serializes this StacFittedBox to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacFittedBox value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacFittedBox value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacFittedBox value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacFittedBox
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacFittedBoxCopyWith<StacFittedBox> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -58,8 +70,6 @@ class _$StacFittedBoxCopyWithImpl<$Res, $Val extends StacFittedBox>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacFittedBox
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -112,8 +122,6 @@ class __$$StacFittedBoxImplCopyWithImpl<$Res>
       _$StacFittedBoxImpl _value, $Res Function(_$StacFittedBoxImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacFittedBox
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -193,18 +201,44 @@ class _$StacFittedBoxImpl implements _StacFittedBox {
             const DeepCollectionEquality().equals(other._child, _child));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, fit, alignment, clipBehavior,
       const DeepCollectionEquality().hash(_child));
 
-  /// Create a copy of StacFittedBox
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacFittedBoxImplCopyWith<_$StacFittedBoxImpl> get copyWith =>
       __$$StacFittedBoxImplCopyWithImpl<_$StacFittedBoxImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacFittedBox value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacFittedBox value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacFittedBox value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -232,11 +266,8 @@ abstract class _StacFittedBox implements StacFittedBox {
   Clip get clipBehavior;
   @override
   Map<String, dynamic>? get child;
-
-  /// Create a copy of StacFittedBox
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacFittedBoxImplCopyWith<_$StacFittedBoxImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

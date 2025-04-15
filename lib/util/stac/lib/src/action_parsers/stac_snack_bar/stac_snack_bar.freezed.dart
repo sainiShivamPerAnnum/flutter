@@ -38,12 +38,24 @@ mixin _$StacSnackBar {
   DismissDirection? get dismissDirection => throw _privateConstructorUsedError;
   Clip get clipBehavior => throw _privateConstructorUsedError;
 
-  /// Serializes this StacSnackBar to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacSnackBar value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacSnackBar value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacSnackBar value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacSnackBar
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacSnackBarCopyWith<StacSnackBar> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -90,8 +102,6 @@ class _$StacSnackBarCopyWithImpl<$Res, $Val extends StacSnackBar>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacSnackBar
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -185,8 +195,6 @@ class _$StacSnackBarCopyWithImpl<$Res, $Val extends StacSnackBar>
     ) as $Val);
   }
 
-  /// Create a copy of StacSnackBar
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get margin {
@@ -199,8 +207,6 @@ class _$StacSnackBarCopyWithImpl<$Res, $Val extends StacSnackBar>
     });
   }
 
-  /// Create a copy of StacSnackBar
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get padding {
@@ -213,8 +219,6 @@ class _$StacSnackBarCopyWithImpl<$Res, $Val extends StacSnackBar>
     });
   }
 
-  /// Create a copy of StacSnackBar
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacShapeBorderCopyWith<$Res>? get shape {
@@ -227,8 +231,6 @@ class _$StacSnackBarCopyWithImpl<$Res, $Val extends StacSnackBar>
     });
   }
 
-  /// Create a copy of StacSnackBar
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacSnackBarActionCopyWith<$Res>? get action {
@@ -241,8 +243,6 @@ class _$StacSnackBarCopyWithImpl<$Res, $Val extends StacSnackBar>
     });
   }
 
-  /// Create a copy of StacSnackBar
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacDurationCopyWith<$Res> get duration {
@@ -299,8 +299,6 @@ class __$$StacSnackBarImplCopyWithImpl<$Res>
       _$StacSnackBarImpl _value, $Res Function(_$StacSnackBarImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacSnackBar
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -514,7 +512,7 @@ class _$StacSnackBarImpl implements _StacSnackBar {
                 other.clipBehavior == clipBehavior));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -536,13 +534,39 @@ class _$StacSnackBarImpl implements _StacSnackBar {
       dismissDirection,
       clipBehavior);
 
-  /// Create a copy of StacSnackBar
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacSnackBarImplCopyWith<_$StacSnackBarImpl> get copyWith =>
       __$$StacSnackBarImplCopyWithImpl<_$StacSnackBarImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacSnackBar value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacSnackBar value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacSnackBar value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -609,11 +633,8 @@ abstract class _StacSnackBar implements StacSnackBar {
   DismissDirection? get dismissDirection;
   @override
   Clip get clipBehavior;
-
-  /// Create a copy of StacSnackBar
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacSnackBarImplCopyWith<_$StacSnackBarImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

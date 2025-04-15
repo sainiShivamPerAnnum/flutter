@@ -33,37 +33,7 @@ mixin _$StacBorderSide {
   double get width => throw _privateConstructorUsedError;
   double get strokeAlign => throw _privateConstructorUsedError;
   BorderStyle get borderStyle => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>(
-    TResult Function(String? color, double width, double strokeAlign,
-            BorderStyle borderStyle)
-        $default, {
-    required TResult Function(String color, double width, double strokeAlign,
-            BorderStyle borderStyle)
-        none,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(String? color, double width, double strokeAlign,
-            BorderStyle borderStyle)?
-        $default, {
-    TResult? Function(String color, double width, double strokeAlign,
-            BorderStyle borderStyle)?
-        none,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>(
-    TResult Function(String? color, double width, double strokeAlign,
-            BorderStyle borderStyle)?
-        $default, {
-    TResult Function(String color, double width, double strokeAlign,
-            BorderStyle borderStyle)?
-        none,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+
   @optionalTypeArgs
   TResult map<TResult extends Object?>(
     TResult Function(_StacBorderSide value) $default, {
@@ -83,13 +53,8 @@ mixin _$StacBorderSide {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
-
-  /// Serializes this StacBorderSide to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacBorderSide
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacBorderSideCopyWith<StacBorderSide> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -117,8 +82,6 @@ class _$StacBorderSideCopyWithImpl<$Res, $Val extends StacBorderSide>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacBorderSide
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -171,8 +134,6 @@ class __$$StacBorderSideImplCopyWithImpl<$Res>
       _$StacBorderSideImpl _value, $Res Function(_$StacBorderSideImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacBorderSide
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -249,62 +210,17 @@ class _$StacBorderSideImpl implements _StacBorderSide {
                 other.borderStyle == borderStyle));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, color, width, strokeAlign, borderStyle);
 
-  /// Create a copy of StacBorderSide
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacBorderSideImplCopyWith<_$StacBorderSideImpl> get copyWith =>
       __$$StacBorderSideImplCopyWithImpl<_$StacBorderSideImpl>(
           this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>(
-    TResult Function(String? color, double width, double strokeAlign,
-            BorderStyle borderStyle)
-        $default, {
-    required TResult Function(String color, double width, double strokeAlign,
-            BorderStyle borderStyle)
-        none,
-  }) {
-    return $default(color, width, strokeAlign, borderStyle);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(String? color, double width, double strokeAlign,
-            BorderStyle borderStyle)?
-        $default, {
-    TResult? Function(String color, double width, double strokeAlign,
-            BorderStyle borderStyle)?
-        none,
-  }) {
-    return $default?.call(color, width, strokeAlign, borderStyle);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>(
-    TResult Function(String? color, double width, double strokeAlign,
-            BorderStyle borderStyle)?
-        $default, {
-    TResult Function(String color, double width, double strokeAlign,
-            BorderStyle borderStyle)?
-        none,
-    required TResult orElse(),
-  }) {
-    if ($default != null) {
-      return $default(color, width, strokeAlign, borderStyle);
-    }
-    return orElse();
-  }
 
   @override
   @optionalTypeArgs
@@ -363,11 +279,8 @@ abstract class _StacBorderSide implements StacBorderSide {
   double get strokeAlign;
   @override
   BorderStyle get borderStyle;
-
-  /// Create a copy of StacBorderSide
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacBorderSideImplCopyWith<_$StacBorderSideImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -395,8 +308,6 @@ class __$$StacBorderSideNoneImplCopyWithImpl<$Res>
       $Res Function(_$StacBorderSideNoneImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacBorderSide
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -474,62 +385,17 @@ class _$StacBorderSideNoneImpl implements _StacBorderSideNone {
                 other.borderStyle == borderStyle));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, color, width, strokeAlign, borderStyle);
 
-  /// Create a copy of StacBorderSide
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacBorderSideNoneImplCopyWith<_$StacBorderSideNoneImpl> get copyWith =>
       __$$StacBorderSideNoneImplCopyWithImpl<_$StacBorderSideNoneImpl>(
           this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>(
-    TResult Function(String? color, double width, double strokeAlign,
-            BorderStyle borderStyle)
-        $default, {
-    required TResult Function(String color, double width, double strokeAlign,
-            BorderStyle borderStyle)
-        none,
-  }) {
-    return none(color, width, strokeAlign, borderStyle);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(String? color, double width, double strokeAlign,
-            BorderStyle borderStyle)?
-        $default, {
-    TResult? Function(String color, double width, double strokeAlign,
-            BorderStyle borderStyle)?
-        none,
-  }) {
-    return none?.call(color, width, strokeAlign, borderStyle);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>(
-    TResult Function(String? color, double width, double strokeAlign,
-            BorderStyle borderStyle)?
-        $default, {
-    TResult Function(String color, double width, double strokeAlign,
-            BorderStyle borderStyle)?
-        none,
-    required TResult orElse(),
-  }) {
-    if (none != null) {
-      return none(color, width, strokeAlign, borderStyle);
-    }
-    return orElse();
-  }
 
   @override
   @optionalTypeArgs
@@ -588,11 +454,8 @@ abstract class _StacBorderSideNone implements StacBorderSide {
   double get strokeAlign;
   @override
   BorderStyle get borderStyle;
-
-  /// Create a copy of StacBorderSide
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacBorderSideNoneImplCopyWith<_$StacBorderSideNoneImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

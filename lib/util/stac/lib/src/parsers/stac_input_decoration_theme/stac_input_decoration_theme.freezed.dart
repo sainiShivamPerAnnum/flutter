@@ -57,12 +57,24 @@ mixin _$StacInputDecorationTheme {
   bool get alignLabelWithHint => throw _privateConstructorUsedError;
   StacBoxConstraints? get constraints => throw _privateConstructorUsedError;
 
-  /// Serializes this StacInputDecorationTheme to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacInputDecorationTheme value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacInputDecorationTheme value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacInputDecorationTheme value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacInputDecorationThemeCopyWith<StacInputDecorationTheme> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -138,8 +150,6 @@ class _$StacInputDecorationThemeCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -308,8 +318,6 @@ class _$StacInputDecorationThemeCopyWithImpl<$Res,
     ) as $Val);
   }
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get labelStyle {
@@ -322,8 +330,6 @@ class _$StacInputDecorationThemeCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get floatingLabelStyle {
@@ -336,8 +342,6 @@ class _$StacInputDecorationThemeCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get helperStyle {
@@ -350,8 +354,6 @@ class _$StacInputDecorationThemeCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get hintStyle {
@@ -364,8 +366,6 @@ class _$StacInputDecorationThemeCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get errorStyle {
@@ -378,8 +378,6 @@ class _$StacInputDecorationThemeCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get contentPadding {
@@ -392,8 +390,6 @@ class _$StacInputDecorationThemeCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get prefixStyle {
@@ -406,8 +402,6 @@ class _$StacInputDecorationThemeCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get suffixStyle {
@@ -420,8 +414,6 @@ class _$StacInputDecorationThemeCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get counterStyle {
@@ -434,8 +426,6 @@ class _$StacInputDecorationThemeCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBorderSideCopyWith<$Res>? get activeIndicatorBorder {
@@ -449,8 +439,6 @@ class _$StacInputDecorationThemeCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBorderSideCopyWith<$Res>? get outlineBorder {
@@ -463,8 +451,6 @@ class _$StacInputDecorationThemeCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacInputBorderCopyWith<$Res>? get errorBorder {
@@ -477,8 +463,6 @@ class _$StacInputDecorationThemeCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacInputBorderCopyWith<$Res>? get focusedBorder {
@@ -491,8 +475,6 @@ class _$StacInputDecorationThemeCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacInputBorderCopyWith<$Res>? get focusedErrorBorder {
@@ -505,8 +487,6 @@ class _$StacInputDecorationThemeCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacInputBorderCopyWith<$Res>? get disabledBorder {
@@ -519,8 +499,6 @@ class _$StacInputDecorationThemeCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacInputBorderCopyWith<$Res>? get enabledBorder {
@@ -533,8 +511,6 @@ class _$StacInputDecorationThemeCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacInputBorderCopyWith<$Res>? get border {
@@ -547,8 +523,6 @@ class _$StacInputDecorationThemeCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBoxConstraintsCopyWith<$Res>? get constraints {
@@ -653,8 +627,6 @@ class __$$StacInputDecorationThemeImplCopyWithImpl<$Res>
       $Res Function(_$StacInputDecorationThemeImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1006,7 +978,7 @@ class _$StacInputDecorationThemeImpl implements _StacInputDecorationTheme {
                 other.constraints == constraints));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -1044,14 +1016,40 @@ class _$StacInputDecorationThemeImpl implements _StacInputDecorationTheme {
         constraints
       ]);
 
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacInputDecorationThemeImplCopyWith<_$StacInputDecorationThemeImpl>
       get copyWith => __$$StacInputDecorationThemeImplCopyWithImpl<
           _$StacInputDecorationThemeImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacInputDecorationTheme value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacInputDecorationTheme value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacInputDecorationTheme value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -1163,11 +1161,8 @@ abstract class _StacInputDecorationTheme implements StacInputDecorationTheme {
   bool get alignLabelWithHint;
   @override
   StacBoxConstraints? get constraints;
-
-  /// Create a copy of StacInputDecorationTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacInputDecorationThemeImplCopyWith<_$StacInputDecorationThemeImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

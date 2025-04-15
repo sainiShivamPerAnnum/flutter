@@ -25,12 +25,24 @@ mixin _$StacBorderRadius {
   double get bottomLeft => throw _privateConstructorUsedError;
   double get bottomRight => throw _privateConstructorUsedError;
 
-  /// Serializes this StacBorderRadius to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacBorder value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacBorder value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacBorder value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacBorderRadius
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacBorderRadiusCopyWith<StacBorderRadius> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -55,8 +67,6 @@ class _$StacBorderRadiusCopyWithImpl<$Res, $Val extends StacBorderRadius>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacBorderRadius
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -106,8 +116,6 @@ class __$$StacBorderImplCopyWithImpl<$Res>
       _$StacBorderImpl _value, $Res Function(_$StacBorderImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacBorderRadius
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -181,18 +189,44 @@ class _$StacBorderImpl implements _StacBorder {
                 other.bottomRight == bottomRight));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, topLeft, topRight, bottomLeft, bottomRight);
 
-  /// Create a copy of StacBorderRadius
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacBorderImplCopyWith<_$StacBorderImpl> get copyWith =>
       __$$StacBorderImplCopyWithImpl<_$StacBorderImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacBorder value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacBorder value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacBorder value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -220,11 +254,8 @@ abstract class _StacBorder implements StacBorderRadius {
   double get bottomLeft;
   @override
   double get bottomRight;
-
-  /// Create a copy of StacBorderRadius
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacBorderImplCopyWith<_$StacBorderImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -24,12 +24,24 @@ mixin _$StacAlignmentGeometry {
   double get dx => throw _privateConstructorUsedError;
   double get dy => throw _privateConstructorUsedError;
 
-  /// Serializes this StacAlignmentGeometry to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacAlignmentGeometry value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacAlignmentGeometry value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacAlignmentGeometry value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacAlignmentGeometry
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacAlignmentGeometryCopyWith<StacAlignmentGeometry> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -54,8 +66,6 @@ class _$StacAlignmentGeometryCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacAlignmentGeometry
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -96,8 +106,6 @@ class __$$StacAlignmentGeometryImplCopyWithImpl<$Res>
       $Res Function(_$StacAlignmentGeometryImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacAlignmentGeometry
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -144,18 +152,44 @@ class _$StacAlignmentGeometryImpl implements _StacAlignmentGeometry {
             (identical(other.dy, dy) || other.dy == dy));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, dx, dy);
 
-  /// Create a copy of StacAlignmentGeometry
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacAlignmentGeometryImplCopyWith<_$StacAlignmentGeometryImpl>
       get copyWith => __$$StacAlignmentGeometryImplCopyWithImpl<
           _$StacAlignmentGeometryImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacAlignmentGeometry value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacAlignmentGeometry value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacAlignmentGeometry value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -177,11 +211,8 @@ abstract class _StacAlignmentGeometry implements StacAlignmentGeometry {
   double get dx;
   @override
   double get dy;
-
-  /// Create a copy of StacAlignmentGeometry
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacAlignmentGeometryImplCopyWith<_$StacAlignmentGeometryImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

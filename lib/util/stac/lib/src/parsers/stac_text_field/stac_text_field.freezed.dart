@@ -49,12 +49,24 @@ mixin _$StacTextField {
   List<StacInputFormatter> get inputFormatters =>
       throw _privateConstructorUsedError;
 
-  /// Serializes this StacTextField to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacTextField value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacTextField value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacTextField value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacTextField
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacTextFieldCopyWith<StacTextField> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -106,8 +118,6 @@ class _$StacTextFieldCopyWithImpl<$Res, $Val extends StacTextField>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacTextField
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -241,8 +251,6 @@ class _$StacTextFieldCopyWithImpl<$Res, $Val extends StacTextField>
     ) as $Val);
   }
 
-  /// Create a copy of StacTextField
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacInputDecorationCopyWith<$Res>? get decoration {
@@ -255,8 +263,6 @@ class _$StacTextFieldCopyWithImpl<$Res, $Val extends StacTextField>
     });
   }
 
-  /// Create a copy of StacTextField
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get style {
@@ -319,8 +325,6 @@ class __$$StacTextFieldImplCopyWithImpl<$Res>
       _$StacTextFieldImpl _value, $Res Function(_$StacTextFieldImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacTextField
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -612,7 +616,7 @@ class _$StacTextFieldImpl implements _StacTextField {
                 .equals(other._inputFormatters, _inputFormatters));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -643,13 +647,39 @@ class _$StacTextFieldImpl implements _StacTextField {
         const DeepCollectionEquality().hash(_inputFormatters)
       ]);
 
-  /// Create a copy of StacTextField
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacTextFieldImplCopyWith<_$StacTextFieldImpl> get copyWith =>
       __$$StacTextFieldImplCopyWithImpl<_$StacTextFieldImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacTextField value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacTextField value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacTextField value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -740,11 +770,8 @@ abstract class _StacTextField implements StacTextField {
   String? get hintText;
   @override
   List<StacInputFormatter> get inputFormatters;
-
-  /// Create a copy of StacTextField
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacTextFieldImplCopyWith<_$StacTextFieldImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

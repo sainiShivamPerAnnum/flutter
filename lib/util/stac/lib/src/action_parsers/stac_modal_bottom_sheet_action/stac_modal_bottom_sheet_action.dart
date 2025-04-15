@@ -24,6 +24,8 @@ class StacModalBottomSheetAction with _$StacModalBottomSheetAction {
     @Default(true) bool enableDrag,
     bool? showDragHandle,
     @Default(false) bool useSafeArea,
+    @Default(true) bool addToScreenStack,
+    @Default(false) bool hapticVibrate,
   }) = _StacModalBottomSheetAction;
 
   factory StacModalBottomSheetAction.fromJson(Map<String, dynamic> json) =>

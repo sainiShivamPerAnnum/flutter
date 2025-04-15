@@ -27,12 +27,24 @@ mixin _$StacTabBarView {
   double get viewportFraction => throw _privateConstructorUsedError;
   Clip get clipBehavior => throw _privateConstructorUsedError;
 
-  /// Serializes this StacTabBarView to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacTabBarView value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacTabBarView value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacTabBarView value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacTabBarView
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacTabBarViewCopyWith<StacTabBarView> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -62,8 +74,6 @@ class _$StacTabBarViewCopyWithImpl<$Res, $Val extends StacTabBarView>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacTabBarView
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -128,8 +138,6 @@ class __$$StacTabBarViewImplCopyWithImpl<$Res>
       _$StacTabBarViewImpl _value, $Res Function(_$StacTabBarViewImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacTabBarView
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -229,7 +237,7 @@ class _$StacTabBarViewImpl implements _StacTabBarView {
                 other.clipBehavior == clipBehavior));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -240,14 +248,40 @@ class _$StacTabBarViewImpl implements _StacTabBarView {
       viewportFraction,
       clipBehavior);
 
-  /// Create a copy of StacTabBarView
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacTabBarViewImplCopyWith<_$StacTabBarViewImpl> get copyWith =>
       __$$StacTabBarViewImplCopyWithImpl<_$StacTabBarViewImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacTabBarView value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacTabBarView value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacTabBarView value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -281,11 +315,8 @@ abstract class _StacTabBarView implements StacTabBarView {
   double get viewportFraction;
   @override
   Clip get clipBehavior;
-
-  /// Create a copy of StacTabBarView
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacTabBarViewImplCopyWith<_$StacTabBarViewImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

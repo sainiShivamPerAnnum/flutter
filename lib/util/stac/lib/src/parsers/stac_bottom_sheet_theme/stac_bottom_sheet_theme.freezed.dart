@@ -35,12 +35,24 @@ mixin _$StacBottomSheetThemeData {
   Clip? get clipBehavior => throw _privateConstructorUsedError;
   StacBoxConstraints? get constraints => throw _privateConstructorUsedError;
 
-  /// Serializes this StacBottomSheetThemeData to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacBottomSheetThemeData value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacBottomSheetThemeData value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacBottomSheetThemeData value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacBottomSheetThemeData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacBottomSheetThemeDataCopyWith<StacBottomSheetThemeData> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -82,8 +94,6 @@ class _$StacBottomSheetThemeDataCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacBottomSheetThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -157,8 +167,6 @@ class _$StacBottomSheetThemeDataCopyWithImpl<$Res,
     ) as $Val);
   }
 
-  /// Create a copy of StacBottomSheetThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBorderCopyWith<$Res>? get shape {
@@ -171,8 +179,6 @@ class _$StacBottomSheetThemeDataCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacBottomSheetThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacSizeCopyWith<$Res>? get dragHandleSize {
@@ -185,8 +191,6 @@ class _$StacBottomSheetThemeDataCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacBottomSheetThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBoxConstraintsCopyWith<$Res>? get constraints {
@@ -242,8 +246,6 @@ class __$$StacBottomSheetThemeDataImplCopyWithImpl<$Res>
       $Res Function(_$StacBottomSheetThemeDataImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacBottomSheetThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -403,7 +405,7 @@ class _$StacBottomSheetThemeDataImpl implements _StacBottomSheetThemeData {
                 other.constraints == constraints));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -421,14 +423,40 @@ class _$StacBottomSheetThemeDataImpl implements _StacBottomSheetThemeData {
       clipBehavior,
       constraints);
 
-  /// Create a copy of StacBottomSheetThemeData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacBottomSheetThemeDataImplCopyWith<_$StacBottomSheetThemeDataImpl>
       get copyWith => __$$StacBottomSheetThemeDataImplCopyWithImpl<
           _$StacBottomSheetThemeDataImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacBottomSheetThemeData value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacBottomSheetThemeData value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacBottomSheetThemeData value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -483,11 +511,8 @@ abstract class _StacBottomSheetThemeData implements StacBottomSheetThemeData {
   Clip? get clipBehavior;
   @override
   StacBoxConstraints? get constraints;
-
-  /// Create a copy of StacBottomSheetThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacBottomSheetThemeDataImplCopyWith<_$StacBottomSheetThemeDataImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -22,12 +22,24 @@ StacGetFormValue _$StacGetFormValueFromJson(Map<String, dynamic> json) {
 mixin _$StacGetFormValue {
   String get id => throw _privateConstructorUsedError;
 
-  /// Serializes this StacGetFormValue to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacGetFormValue value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacGetFormValue value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacGetFormValue value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacGetFormValue
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacGetFormValueCopyWith<StacGetFormValue> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -51,8 +63,6 @@ class _$StacGetFormValueCopyWithImpl<$Res, $Val extends StacGetFormValue>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacGetFormValue
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -86,8 +96,6 @@ class __$$StacGetFormValueImplCopyWithImpl<$Res>
       $Res Function(_$StacGetFormValueImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacGetFormValue
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -126,18 +134,44 @@ class _$StacGetFormValueImpl implements _StacGetFormValue {
             (identical(other.id, id) || other.id == id));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id);
 
-  /// Create a copy of StacGetFormValue
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacGetFormValueImplCopyWith<_$StacGetFormValueImpl> get copyWith =>
       __$$StacGetFormValueImplCopyWithImpl<_$StacGetFormValueImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacGetFormValue value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacGetFormValue value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacGetFormValue value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -156,11 +190,8 @@ abstract class _StacGetFormValue implements StacGetFormValue {
 
   @override
   String get id;
-
-  /// Create a copy of StacGetFormValue
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacGetFormValueImplCopyWith<_$StacGetFormValueImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

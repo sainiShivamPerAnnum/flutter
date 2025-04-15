@@ -39,12 +39,24 @@ mixin _$StacListView {
   String? get restorationId => throw _privateConstructorUsedError;
   Clip get clipBehavior => throw _privateConstructorUsedError;
 
-  /// Serializes this StacListView to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacListView value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacListView value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacListView value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacListView
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacListViewCopyWith<StacListView> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -87,8 +99,6 @@ class _$StacListViewCopyWithImpl<$Res, $Val extends StacListView>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacListView
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -182,8 +192,6 @@ class _$StacListViewCopyWithImpl<$Res, $Val extends StacListView>
     ) as $Val);
   }
 
-  /// Create a copy of StacListView
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get padding {
@@ -236,8 +244,6 @@ class __$$StacListViewImplCopyWithImpl<$Res>
       _$StacListViewImpl _value, $Res Function(_$StacListViewImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacListView
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -460,7 +466,7 @@ class _$StacListViewImpl implements _StacListView {
                 other.clipBehavior == clipBehavior));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -482,13 +488,39 @@ class _$StacListViewImpl implements _StacListView {
       restorationId,
       clipBehavior);
 
-  /// Create a copy of StacListView
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacListViewImplCopyWith<_$StacListViewImpl> get copyWith =>
       __$$StacListViewImplCopyWithImpl<_$StacListViewImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacListView value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacListView value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacListView value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -555,11 +587,8 @@ abstract class _StacListView implements StacListView {
   String? get restorationId;
   @override
   Clip get clipBehavior;
-
-  /// Create a copy of StacListView
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacListViewImplCopyWith<_$StacListViewImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

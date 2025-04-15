@@ -23,12 +23,24 @@ mixin _$StacFormValidate {
   Map<String, dynamic>? get isValid => throw _privateConstructorUsedError;
   Map<String, dynamic>? get isNotValid => throw _privateConstructorUsedError;
 
-  /// Serializes this StacFormValidate to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacFormValidate value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacFormValidate value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacFormValidate value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacFormValidate
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacFormValidateCopyWith<StacFormValidate> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -52,8 +64,6 @@ class _$StacFormValidateCopyWithImpl<$Res, $Val extends StacFormValidate>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacFormValidate
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -92,8 +102,6 @@ class __$$StacFormValidateImplCopyWithImpl<$Res>
       $Res Function(_$StacFormValidateImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacFormValidate
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -160,21 +168,47 @@ class _$StacFormValidateImpl implements _StacFormValidate {
                 .equals(other._isNotValid, _isNotValid));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_isValid),
       const DeepCollectionEquality().hash(_isNotValid));
 
-  /// Create a copy of StacFormValidate
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacFormValidateImplCopyWith<_$StacFormValidateImpl> get copyWith =>
       __$$StacFormValidateImplCopyWithImpl<_$StacFormValidateImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacFormValidate value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacFormValidate value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacFormValidate value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -196,11 +230,8 @@ abstract class _StacFormValidate implements StacFormValidate {
   Map<String, dynamic>? get isValid;
   @override
   Map<String, dynamic>? get isNotValid;
-
-  /// Create a copy of StacFormValidate
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacFormValidateImplCopyWith<_$StacFormValidateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

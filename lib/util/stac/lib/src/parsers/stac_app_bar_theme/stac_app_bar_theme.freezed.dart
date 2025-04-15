@@ -36,12 +36,24 @@ mixin _$StacAppBarTheme {
   StacSystemUIOverlayStyle? get systemOverlayStyle =>
       throw _privateConstructorUsedError;
 
-  /// Serializes this StacAppBarTheme to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacAppBarTheme value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacAppBarTheme value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacAppBarTheme value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacAppBarTheme
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacAppBarThemeCopyWith<StacAppBarTheme> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -85,8 +97,6 @@ class _$StacAppBarThemeCopyWithImpl<$Res, $Val extends StacAppBarTheme>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacAppBarTheme
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -165,8 +175,6 @@ class _$StacAppBarThemeCopyWithImpl<$Res, $Val extends StacAppBarTheme>
     ) as $Val);
   }
 
-  /// Create a copy of StacAppBarTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacIconThemeDataCopyWith<$Res>? get iconTheme {
@@ -179,8 +187,6 @@ class _$StacAppBarThemeCopyWithImpl<$Res, $Val extends StacAppBarTheme>
     });
   }
 
-  /// Create a copy of StacAppBarTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacIconThemeDataCopyWith<$Res>? get actionsIconTheme {
@@ -193,8 +199,6 @@ class _$StacAppBarThemeCopyWithImpl<$Res, $Val extends StacAppBarTheme>
     });
   }
 
-  /// Create a copy of StacAppBarTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get toolbarTextStyle {
@@ -207,8 +211,6 @@ class _$StacAppBarThemeCopyWithImpl<$Res, $Val extends StacAppBarTheme>
     });
   }
 
-  /// Create a copy of StacAppBarTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get titleTextStyle {
@@ -221,8 +223,6 @@ class _$StacAppBarThemeCopyWithImpl<$Res, $Val extends StacAppBarTheme>
     });
   }
 
-  /// Create a copy of StacAppBarTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacSystemUIOverlayStyleCopyWith<$Res>? get systemOverlayStyle {
@@ -281,8 +281,6 @@ class __$$StacAppBarThemeImplCopyWithImpl<$Res>
       _$StacAppBarThemeImpl _value, $Res Function(_$StacAppBarThemeImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacAppBarTheme
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -453,7 +451,7 @@ class _$StacAppBarThemeImpl implements _StacAppBarTheme {
                 other.systemOverlayStyle == systemOverlayStyle));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -472,14 +470,40 @@ class _$StacAppBarThemeImpl implements _StacAppBarTheme {
       titleTextStyle,
       systemOverlayStyle);
 
-  /// Create a copy of StacAppBarTheme
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacAppBarThemeImplCopyWith<_$StacAppBarThemeImpl> get copyWith =>
       __$$StacAppBarThemeImplCopyWithImpl<_$StacAppBarThemeImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacAppBarTheme value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacAppBarTheme value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacAppBarTheme value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -538,11 +562,8 @@ abstract class _StacAppBarTheme implements StacAppBarTheme {
   StacTextStyle? get titleTextStyle;
   @override
   StacSystemUIOverlayStyle? get systemOverlayStyle;
-
-  /// Create a copy of StacAppBarTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacAppBarThemeImplCopyWith<_$StacAppBarThemeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

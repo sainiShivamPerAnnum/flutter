@@ -25,12 +25,24 @@ mixin _$StacBoxConstraints {
   double get minHeight => throw _privateConstructorUsedError;
   double get maxHeight => throw _privateConstructorUsedError;
 
-  /// Serializes this StacBoxConstraints to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacBoxConstraints value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacBoxConstraints value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacBoxConstraints value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacBoxConstraints
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacBoxConstraintsCopyWith<StacBoxConstraints> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -55,8 +67,6 @@ class _$StacBoxConstraintsCopyWithImpl<$Res, $Val extends StacBoxConstraints>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacBoxConstraints
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -106,8 +116,6 @@ class __$$StacBoxConstraintsImplCopyWithImpl<$Res>
       $Res Function(_$StacBoxConstraintsImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacBoxConstraints
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -178,19 +186,45 @@ class _$StacBoxConstraintsImpl implements _StacBoxConstraints {
                 other.maxHeight == maxHeight));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, minWidth, maxWidth, minHeight, maxHeight);
 
-  /// Create a copy of StacBoxConstraints
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacBoxConstraintsImplCopyWith<_$StacBoxConstraintsImpl> get copyWith =>
       __$$StacBoxConstraintsImplCopyWithImpl<_$StacBoxConstraintsImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacBoxConstraints value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacBoxConstraints value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacBoxConstraints value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -218,11 +252,8 @@ abstract class _StacBoxConstraints implements StacBoxConstraints {
   double get minHeight;
   @override
   double get maxHeight;
-
-  /// Create a copy of StacBoxConstraints
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacBoxConstraintsImplCopyWith<_$StacBoxConstraintsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

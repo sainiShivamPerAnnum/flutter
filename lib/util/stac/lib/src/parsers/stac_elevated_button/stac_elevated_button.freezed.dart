@@ -29,12 +29,24 @@ mixin _$StacElevatedButton {
   Clip get clipBehavior => throw _privateConstructorUsedError;
   Map<String, dynamic> get child => throw _privateConstructorUsedError;
 
-  /// Serializes this StacElevatedButton to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacElevatedButton value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacElevatedButton value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacElevatedButton value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacElevatedButton
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacElevatedButtonCopyWith<StacElevatedButton> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -68,8 +80,6 @@ class _$StacElevatedButtonCopyWithImpl<$Res, $Val extends StacElevatedButton>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacElevatedButton
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -118,8 +128,6 @@ class _$StacElevatedButtonCopyWithImpl<$Res, $Val extends StacElevatedButton>
     ) as $Val);
   }
 
-  /// Create a copy of StacElevatedButton
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacButtonStyleCopyWith<$Res>? get style {
@@ -163,8 +171,6 @@ class __$$StacElevatedButtonImplCopyWithImpl<$Res>
       $Res Function(_$StacElevatedButtonImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacElevatedButton
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -316,7 +322,7 @@ class _$StacElevatedButtonImpl implements _StacElevatedButton {
             const DeepCollectionEquality().equals(other._child, _child));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -329,14 +335,40 @@ class _$StacElevatedButtonImpl implements _StacElevatedButton {
       clipBehavior,
       const DeepCollectionEquality().hash(_child));
 
-  /// Create a copy of StacElevatedButton
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacElevatedButtonImplCopyWith<_$StacElevatedButtonImpl> get copyWith =>
       __$$StacElevatedButtonImplCopyWithImpl<_$StacElevatedButtonImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacElevatedButton value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacElevatedButton value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacElevatedButton value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -376,11 +408,8 @@ abstract class _StacElevatedButton implements StacElevatedButton {
   Clip get clipBehavior;
   @override
   Map<String, dynamic> get child;
-
-  /// Create a copy of StacElevatedButton
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacElevatedButtonImplCopyWith<_$StacElevatedButtonImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

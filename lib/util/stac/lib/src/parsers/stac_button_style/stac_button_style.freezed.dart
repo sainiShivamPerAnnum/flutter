@@ -39,12 +39,24 @@ mixin _$StacButtonStyle {
   bool? get enableFeedback => throw _privateConstructorUsedError;
   double? get iconSize => throw _privateConstructorUsedError;
 
-  /// Serializes this StacButtonStyle to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacButtonStyle value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacButtonStyle value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacButtonStyle value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacButtonStyle
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacButtonStyleCopyWith<StacButtonStyle> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -94,8 +106,6 @@ class _$StacButtonStyleCopyWithImpl<$Res, $Val extends StacButtonStyle>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacButtonStyle
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -194,8 +204,6 @@ class _$StacButtonStyleCopyWithImpl<$Res, $Val extends StacButtonStyle>
     ) as $Val);
   }
 
-  /// Create a copy of StacButtonStyle
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get textStyle {
@@ -208,8 +216,6 @@ class _$StacButtonStyleCopyWithImpl<$Res, $Val extends StacButtonStyle>
     });
   }
 
-  /// Create a copy of StacButtonStyle
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get padding {
@@ -222,8 +228,6 @@ class _$StacButtonStyleCopyWithImpl<$Res, $Val extends StacButtonStyle>
     });
   }
 
-  /// Create a copy of StacButtonStyle
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacSizeCopyWith<$Res>? get minimumSize {
@@ -236,8 +240,6 @@ class _$StacButtonStyleCopyWithImpl<$Res, $Val extends StacButtonStyle>
     });
   }
 
-  /// Create a copy of StacButtonStyle
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacSizeCopyWith<$Res>? get fixedSize {
@@ -250,8 +252,6 @@ class _$StacButtonStyleCopyWithImpl<$Res, $Val extends StacButtonStyle>
     });
   }
 
-  /// Create a copy of StacButtonStyle
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacSizeCopyWith<$Res>? get maximumSize {
@@ -264,8 +264,6 @@ class _$StacButtonStyleCopyWithImpl<$Res, $Val extends StacButtonStyle>
     });
   }
 
-  /// Create a copy of StacButtonStyle
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBorderSideCopyWith<$Res>? get side {
@@ -278,8 +276,6 @@ class _$StacButtonStyleCopyWithImpl<$Res, $Val extends StacButtonStyle>
     });
   }
 
-  /// Create a copy of StacButtonStyle
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacRoundedRectangleBorderCopyWith<$Res>? get shape {
@@ -345,8 +341,6 @@ class __$$StacButtonStyleImplCopyWithImpl<$Res>
       _$StacButtonStyleImpl _value, $Res Function(_$StacButtonStyleImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacButtonStyle
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -556,7 +550,7 @@ class _$StacButtonStyleImpl implements _StacButtonStyle {
                 other.iconSize == iconSize));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -579,14 +573,40 @@ class _$StacButtonStyleImpl implements _StacButtonStyle {
       enableFeedback,
       iconSize);
 
-  /// Create a copy of StacButtonStyle
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacButtonStyleImplCopyWith<_$StacButtonStyleImpl> get copyWith =>
       __$$StacButtonStyleImplCopyWithImpl<_$StacButtonStyleImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacButtonStyle value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacButtonStyle value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacButtonStyle value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -656,11 +676,8 @@ abstract class _StacButtonStyle implements StacButtonStyle {
   bool? get enableFeedback;
   @override
   double? get iconSize;
-
-  /// Create a copy of StacButtonStyle
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacButtonStyleImplCopyWith<_$StacButtonStyleImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

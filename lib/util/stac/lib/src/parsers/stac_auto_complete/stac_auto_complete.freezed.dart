@@ -27,12 +27,24 @@ mixin _$StacAutoComplete {
       throw _privateConstructorUsedError;
   String? get initialValue => throw _privateConstructorUsedError;
 
-  /// Serializes this StacAutoComplete to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacAutoComplete value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacAutoComplete value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacAutoComplete value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacAutoComplete
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacAutoCompleteCopyWith<StacAutoComplete> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -61,8 +73,6 @@ class _$StacAutoCompleteCopyWithImpl<$Res, $Val extends StacAutoComplete>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacAutoComplete
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -121,8 +131,6 @@ class __$$StacAutoCompleteImplCopyWithImpl<$Res>
       $Res Function(_$StacAutoCompleteImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacAutoComplete
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -221,7 +229,7 @@ class _$StacAutoCompleteImpl implements _StacAutoComplete {
                 other.initialValue == initialValue));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -231,14 +239,40 @@ class _$StacAutoCompleteImpl implements _StacAutoComplete {
       optionsViewOpenDirection,
       initialValue);
 
-  /// Create a copy of StacAutoComplete
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacAutoCompleteImplCopyWith<_$StacAutoCompleteImpl> get copyWith =>
       __$$StacAutoCompleteImplCopyWithImpl<_$StacAutoCompleteImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacAutoComplete value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacAutoComplete value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacAutoComplete value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -269,11 +303,8 @@ abstract class _StacAutoComplete implements StacAutoComplete {
   OptionsViewOpenDirection get optionsViewOpenDirection;
   @override
   String? get initialValue;
-
-  /// Create a copy of StacAutoComplete
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacAutoCompleteImplCopyWith<_$StacAutoCompleteImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -37,12 +37,24 @@ mixin _$StacCheckBox {
   bool get autofocus => throw _privateConstructorUsedError;
   bool get isError => throw _privateConstructorUsedError;
 
-  /// Serializes this StacCheckBox to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacCheckBox value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacCheckBox value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacCheckBox value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacCheckBox
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacCheckBoxCopyWith<StacCheckBox> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -84,8 +96,6 @@ class _$StacCheckBoxCopyWithImpl<$Res, $Val extends StacCheckBox>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacCheckBox
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -169,8 +179,6 @@ class _$StacCheckBoxCopyWithImpl<$Res, $Val extends StacCheckBox>
     ) as $Val);
   }
 
-  /// Create a copy of StacCheckBox
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacMaterialColorCopyWith<$Res>? get fillColor {
@@ -183,8 +191,6 @@ class _$StacCheckBoxCopyWithImpl<$Res, $Val extends StacCheckBox>
     });
   }
 
-  /// Create a copy of StacCheckBox
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacMaterialColorCopyWith<$Res>? get overlayColor {
@@ -237,8 +243,6 @@ class __$$StacCheckBoxImplCopyWithImpl<$Res>
       _$StacCheckBoxImpl _value, $Res Function(_$StacCheckBoxImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacCheckBox
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -428,7 +432,7 @@ class _$StacCheckBoxImpl implements _StacCheckBox {
             (identical(other.isError, isError) || other.isError == isError));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -448,13 +452,39 @@ class _$StacCheckBoxImpl implements _StacCheckBox {
       autofocus,
       isError);
 
-  /// Create a copy of StacCheckBox
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacCheckBoxImplCopyWith<_$StacCheckBoxImpl> get copyWith =>
       __$$StacCheckBoxImplCopyWithImpl<_$StacCheckBoxImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacCheckBox value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacCheckBox value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacCheckBox value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -515,11 +545,8 @@ abstract class _StacCheckBox implements StacCheckBox {
   bool get autofocus;
   @override
   bool get isError;
-
-  /// Create a copy of StacCheckBox
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacCheckBoxImplCopyWith<_$StacCheckBoxImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

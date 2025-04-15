@@ -31,12 +31,24 @@ mixin _$StacDialogTheme {
   StacEdgeInsets? get actionsPadding => throw _privateConstructorUsedError;
   String? get iconColor => throw _privateConstructorUsedError;
 
-  /// Serializes this StacDialogTheme to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacDialogTheme value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacDialogTheme value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacDialogTheme value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacDialogTheme
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacDialogThemeCopyWith<StacDialogTheme> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -76,8 +88,6 @@ class _$StacDialogThemeCopyWithImpl<$Res, $Val extends StacDialogTheme>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacDialogTheme
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -136,8 +146,6 @@ class _$StacDialogThemeCopyWithImpl<$Res, $Val extends StacDialogTheme>
     ) as $Val);
   }
 
-  /// Create a copy of StacDialogTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBorderCopyWith<$Res>? get shape {
@@ -150,8 +158,6 @@ class _$StacDialogThemeCopyWithImpl<$Res, $Val extends StacDialogTheme>
     });
   }
 
-  /// Create a copy of StacDialogTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacAlignmentGeometryCopyWith<$Res>? get alignment {
@@ -164,8 +170,6 @@ class _$StacDialogThemeCopyWithImpl<$Res, $Val extends StacDialogTheme>
     });
   }
 
-  /// Create a copy of StacDialogTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get titleTextStyle {
@@ -178,8 +182,6 @@ class _$StacDialogThemeCopyWithImpl<$Res, $Val extends StacDialogTheme>
     });
   }
 
-  /// Create a copy of StacDialogTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get contentTextStyle {
@@ -192,8 +194,6 @@ class _$StacDialogThemeCopyWithImpl<$Res, $Val extends StacDialogTheme>
     });
   }
 
-  /// Create a copy of StacDialogTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get actionsPadding {
@@ -247,8 +247,6 @@ class __$$StacDialogThemeImplCopyWithImpl<$Res>
       _$StacDialogThemeImpl _value, $Res Function(_$StacDialogThemeImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacDialogTheme
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -378,7 +376,7 @@ class _$StacDialogThemeImpl implements _StacDialogTheme {
                 other.iconColor == iconColor));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -393,14 +391,40 @@ class _$StacDialogThemeImpl implements _StacDialogTheme {
       actionsPadding,
       iconColor);
 
-  /// Create a copy of StacDialogTheme
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacDialogThemeImplCopyWith<_$StacDialogThemeImpl> get copyWith =>
       __$$StacDialogThemeImplCopyWithImpl<_$StacDialogThemeImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacDialogTheme value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacDialogTheme value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacDialogTheme value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -446,11 +470,8 @@ abstract class _StacDialogTheme implements StacDialogTheme {
   StacEdgeInsets? get actionsPadding;
   @override
   String? get iconColor;
-
-  /// Create a copy of StacDialogTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacDialogThemeImplCopyWith<_$StacDialogThemeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -30,12 +30,24 @@ mixin _$StacTextButton {
   bool get isSemanticButton => throw _privateConstructorUsedError;
   Map<String, dynamic> get child => throw _privateConstructorUsedError;
 
-  /// Serializes this StacTextButton to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacTextButton value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacTextButton value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacTextButton value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacTextButton
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacTextButtonCopyWith<StacTextButton> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -70,8 +82,6 @@ class _$StacTextButtonCopyWithImpl<$Res, $Val extends StacTextButton>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacTextButton
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -125,8 +135,6 @@ class _$StacTextButtonCopyWithImpl<$Res, $Val extends StacTextButton>
     ) as $Val);
   }
 
-  /// Create a copy of StacTextButton
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacButtonStyleCopyWith<$Res>? get style {
@@ -171,8 +179,6 @@ class __$$StacTextButtonImplCopyWithImpl<$Res>
       _$StacTextButtonImpl _value, $Res Function(_$StacTextButtonImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacTextButton
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -331,7 +337,7 @@ class _$StacTextButtonImpl implements _StacTextButton {
             const DeepCollectionEquality().equals(other._child, _child));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -345,14 +351,40 @@ class _$StacTextButtonImpl implements _StacTextButton {
       isSemanticButton,
       const DeepCollectionEquality().hash(_child));
 
-  /// Create a copy of StacTextButton
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacTextButtonImplCopyWith<_$StacTextButtonImpl> get copyWith =>
       __$$StacTextButtonImplCopyWithImpl<_$StacTextButtonImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacTextButton value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacTextButton value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacTextButton value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -395,11 +427,8 @@ abstract class _StacTextButton implements StacTextButton {
   bool get isSemanticButton;
   @override
   Map<String, dynamic> get child;
-
-  /// Create a copy of StacTextButton
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacTextButtonImplCopyWith<_$StacTextButtonImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

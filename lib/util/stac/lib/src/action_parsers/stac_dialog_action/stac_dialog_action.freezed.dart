@@ -27,15 +27,29 @@ mixin _$StacDialogAction {
   String? get barrierColor => throw _privateConstructorUsedError;
   String? get barrierLabel => throw _privateConstructorUsedError;
   bool get useSafeArea => throw _privateConstructorUsedError;
+  bool get addToScreenStack => throw _privateConstructorUsedError;
+  bool get hapticVibrate => throw _privateConstructorUsedError;
   TraversalEdgeBehavior? get traversalEdgeBehavior =>
       throw _privateConstructorUsedError;
 
-  /// Serializes this StacDialogAction to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacDialogAction value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacDialogAction value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacDialogAction value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacDialogAction
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacDialogActionCopyWith<StacDialogAction> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -54,6 +68,8 @@ abstract class $StacDialogActionCopyWith<$Res> {
       String? barrierColor,
       String? barrierLabel,
       bool useSafeArea,
+      bool addToScreenStack,
+      bool hapticVibrate,
       TraversalEdgeBehavior? traversalEdgeBehavior});
 
   $StacNetworkRequestCopyWith<$Res>? get request;
@@ -69,8 +85,6 @@ class _$StacDialogActionCopyWithImpl<$Res, $Val extends StacDialogAction>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacDialogAction
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -81,6 +95,8 @@ class _$StacDialogActionCopyWithImpl<$Res, $Val extends StacDialogAction>
     Object? barrierColor = freezed,
     Object? barrierLabel = freezed,
     Object? useSafeArea = null,
+    Object? addToScreenStack = null,
+    Object? hapticVibrate = null,
     Object? traversalEdgeBehavior = freezed,
   }) {
     return _then(_value.copyWith(
@@ -112,6 +128,14 @@ class _$StacDialogActionCopyWithImpl<$Res, $Val extends StacDialogAction>
           ? _value.useSafeArea
           : useSafeArea // ignore: cast_nullable_to_non_nullable
               as bool,
+      addToScreenStack: null == addToScreenStack
+          ? _value.addToScreenStack
+          : addToScreenStack // ignore: cast_nullable_to_non_nullable
+              as bool,
+      hapticVibrate: null == hapticVibrate
+          ? _value.hapticVibrate
+          : hapticVibrate // ignore: cast_nullable_to_non_nullable
+              as bool,
       traversalEdgeBehavior: freezed == traversalEdgeBehavior
           ? _value.traversalEdgeBehavior
           : traversalEdgeBehavior // ignore: cast_nullable_to_non_nullable
@@ -119,8 +143,6 @@ class _$StacDialogActionCopyWithImpl<$Res, $Val extends StacDialogAction>
     ) as $Val);
   }
 
-  /// Create a copy of StacDialogAction
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacNetworkRequestCopyWith<$Res>? get request {
@@ -150,6 +172,8 @@ abstract class _$$StacDialogActionImplCopyWith<$Res>
       String? barrierColor,
       String? barrierLabel,
       bool useSafeArea,
+      bool addToScreenStack,
+      bool hapticVibrate,
       TraversalEdgeBehavior? traversalEdgeBehavior});
 
   @override
@@ -164,8 +188,6 @@ class __$$StacDialogActionImplCopyWithImpl<$Res>
       $Res Function(_$StacDialogActionImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacDialogAction
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -176,6 +198,8 @@ class __$$StacDialogActionImplCopyWithImpl<$Res>
     Object? barrierColor = freezed,
     Object? barrierLabel = freezed,
     Object? useSafeArea = null,
+    Object? addToScreenStack = null,
+    Object? hapticVibrate = null,
     Object? traversalEdgeBehavior = freezed,
   }) {
     return _then(_$StacDialogActionImpl(
@@ -207,6 +231,14 @@ class __$$StacDialogActionImplCopyWithImpl<$Res>
           ? _value.useSafeArea
           : useSafeArea // ignore: cast_nullable_to_non_nullable
               as bool,
+      addToScreenStack: null == addToScreenStack
+          ? _value.addToScreenStack
+          : addToScreenStack // ignore: cast_nullable_to_non_nullable
+              as bool,
+      hapticVibrate: null == hapticVibrate
+          ? _value.hapticVibrate
+          : hapticVibrate // ignore: cast_nullable_to_non_nullable
+              as bool,
       traversalEdgeBehavior: freezed == traversalEdgeBehavior
           ? _value.traversalEdgeBehavior
           : traversalEdgeBehavior // ignore: cast_nullable_to_non_nullable
@@ -226,6 +258,8 @@ class _$StacDialogActionImpl implements _StacDialogAction {
       this.barrierColor,
       this.barrierLabel,
       this.useSafeArea = true,
+      this.addToScreenStack = true,
+      this.hapticVibrate = false,
       this.traversalEdgeBehavior})
       : _widget = widget;
 
@@ -257,11 +291,17 @@ class _$StacDialogActionImpl implements _StacDialogAction {
   @JsonKey()
   final bool useSafeArea;
   @override
+  @JsonKey()
+  final bool addToScreenStack;
+  @override
+  @JsonKey()
+  final bool hapticVibrate;
+  @override
   final TraversalEdgeBehavior? traversalEdgeBehavior;
 
   @override
   String toString() {
-    return 'StacDialogAction(widget: $widget, request: $request, assetPath: $assetPath, barrierDismissible: $barrierDismissible, barrierColor: $barrierColor, barrierLabel: $barrierLabel, useSafeArea: $useSafeArea, traversalEdgeBehavior: $traversalEdgeBehavior)';
+    return 'StacDialogAction(widget: $widget, request: $request, assetPath: $assetPath, barrierDismissible: $barrierDismissible, barrierColor: $barrierColor, barrierLabel: $barrierLabel, useSafeArea: $useSafeArea, addToScreenStack: $addToScreenStack, hapticVibrate: $hapticVibrate, traversalEdgeBehavior: $traversalEdgeBehavior)';
   }
 
   @override
@@ -281,11 +321,15 @@ class _$StacDialogActionImpl implements _StacDialogAction {
                 other.barrierLabel == barrierLabel) &&
             (identical(other.useSafeArea, useSafeArea) ||
                 other.useSafeArea == useSafeArea) &&
+            (identical(other.addToScreenStack, addToScreenStack) ||
+                other.addToScreenStack == addToScreenStack) &&
+            (identical(other.hapticVibrate, hapticVibrate) ||
+                other.hapticVibrate == hapticVibrate) &&
             (identical(other.traversalEdgeBehavior, traversalEdgeBehavior) ||
                 other.traversalEdgeBehavior == traversalEdgeBehavior));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -296,16 +340,44 @@ class _$StacDialogActionImpl implements _StacDialogAction {
       barrierColor,
       barrierLabel,
       useSafeArea,
+      addToScreenStack,
+      hapticVibrate,
       traversalEdgeBehavior);
 
-  /// Create a copy of StacDialogAction
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacDialogActionImplCopyWith<_$StacDialogActionImpl> get copyWith =>
       __$$StacDialogActionImplCopyWithImpl<_$StacDialogActionImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacDialogAction value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacDialogAction value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacDialogAction value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -324,6 +396,8 @@ abstract class _StacDialogAction implements StacDialogAction {
           final String? barrierColor,
           final String? barrierLabel,
           final bool useSafeArea,
+          final bool addToScreenStack,
+          final bool hapticVibrate,
           final TraversalEdgeBehavior? traversalEdgeBehavior}) =
       _$StacDialogActionImpl;
 
@@ -345,12 +419,13 @@ abstract class _StacDialogAction implements StacDialogAction {
   @override
   bool get useSafeArea;
   @override
-  TraversalEdgeBehavior? get traversalEdgeBehavior;
-
-  /// Create a copy of StacDialogAction
-  /// with the given fields replaced by the non-null parameter values.
+  bool get addToScreenStack;
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  bool get hapticVibrate;
+  @override
+  TraversalEdgeBehavior? get traversalEdgeBehavior;
+  @override
+  @JsonKey(ignore: true)
   _$$StacDialogActionImplCopyWith<_$StacDialogActionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

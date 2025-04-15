@@ -29,12 +29,24 @@ mixin _$StacLinearProgressIndicator {
   String? get semanticsValue => throw _privateConstructorUsedError;
   StacBorderRadius get borderRadius => throw _privateConstructorUsedError;
 
-  /// Serializes this StacLinearProgressIndicator to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacLinearProgressIndicator value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacLinearProgressIndicator value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacLinearProgressIndicator value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacLinearProgressIndicator
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacLinearProgressIndicatorCopyWith<StacLinearProgressIndicator>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -70,8 +82,6 @@ class _$StacLinearProgressIndicatorCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacLinearProgressIndicator
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -115,8 +125,6 @@ class _$StacLinearProgressIndicatorCopyWithImpl<$Res,
     ) as $Val);
   }
 
-  /// Create a copy of StacLinearProgressIndicator
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBorderRadiusCopyWith<$Res> get borderRadius {
@@ -158,8 +166,6 @@ class __$$StacLinearProgressIndicatorImplCopyWithImpl<$Res>
       $Res Function(_$StacLinearProgressIndicatorImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacLinearProgressIndicator
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -261,19 +267,45 @@ class _$StacLinearProgressIndicatorImpl
                 other.borderRadius == borderRadius));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, value, backgroundColor, color,
       minHeight, semanticsLabel, semanticsValue, borderRadius);
 
-  /// Create a copy of StacLinearProgressIndicator
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacLinearProgressIndicatorImplCopyWith<_$StacLinearProgressIndicatorImpl>
       get copyWith => __$$StacLinearProgressIndicatorImplCopyWithImpl<
           _$StacLinearProgressIndicatorImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacLinearProgressIndicator value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacLinearProgressIndicator value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacLinearProgressIndicator value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -311,11 +343,8 @@ abstract class _StacLinearProgressIndicator
   String? get semanticsValue;
   @override
   StacBorderRadius get borderRadius;
-
-  /// Create a copy of StacLinearProgressIndicator
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacLinearProgressIndicatorImplCopyWith<_$StacLinearProgressIndicatorImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

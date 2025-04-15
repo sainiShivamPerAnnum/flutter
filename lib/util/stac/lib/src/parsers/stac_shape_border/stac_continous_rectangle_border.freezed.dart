@@ -24,12 +24,24 @@ mixin _$StacContinousRectangleBorder {
   StacBorderSide get side => throw _privateConstructorUsedError;
   StacBorderRadius get borderRadius => throw _privateConstructorUsedError;
 
-  /// Serializes this StacContinousRectangleBorder to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacContinousRectangleBorder value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacContinousRectangleBorder value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacContinousRectangleBorder value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacContinousRectangleBorder
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacContinousRectangleBorderCopyWith<StacContinousRectangleBorder>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -59,8 +71,6 @@ class _$StacContinousRectangleBorderCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacContinousRectangleBorder
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -79,8 +89,6 @@ class _$StacContinousRectangleBorderCopyWithImpl<$Res,
     ) as $Val);
   }
 
-  /// Create a copy of StacContinousRectangleBorder
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBorderSideCopyWith<$Res> get side {
@@ -89,8 +97,6 @@ class _$StacContinousRectangleBorderCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacContinousRectangleBorder
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBorderRadiusCopyWith<$Res> get borderRadius {
@@ -127,8 +133,6 @@ class __$$StacContinousRectangleBorderImplCopyWithImpl<$Res>
       $Res Function(_$StacContinousRectangleBorderImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacContinousRectangleBorder
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -182,19 +186,45 @@ class _$StacContinousRectangleBorderImpl
                 other.borderRadius == borderRadius));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, side, borderRadius);
 
-  /// Create a copy of StacContinousRectangleBorder
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacContinousRectangleBorderImplCopyWith<
           _$StacContinousRectangleBorderImpl>
       get copyWith => __$$StacContinousRectangleBorderImplCopyWithImpl<
           _$StacContinousRectangleBorderImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacContinousRectangleBorder value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacContinousRectangleBorder value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacContinousRectangleBorder value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -217,11 +247,8 @@ abstract class _StacContinousRectangleBorder
   StacBorderSide get side;
   @override
   StacBorderRadius get borderRadius;
-
-  /// Create a copy of StacContinousRectangleBorder
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacContinousRectangleBorderImplCopyWith<
           _$StacContinousRectangleBorderImpl>
       get copyWith => throw _privateConstructorUsedError;

@@ -23,12 +23,24 @@ mixin _$StacForm {
   AutovalidateMode? get autovalidateMode => throw _privateConstructorUsedError;
   Map<String, dynamic> get child => throw _privateConstructorUsedError;
 
-  /// Serializes this StacForm to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacForm value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacForm value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacForm value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacForm
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacFormCopyWith<StacForm> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -51,8 +63,6 @@ class _$StacFormCopyWithImpl<$Res, $Val extends StacForm>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacForm
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -91,8 +101,6 @@ class __$$StacFormImplCopyWithImpl<$Res>
       _$StacFormImpl _value, $Res Function(_$StacFormImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacForm
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -147,18 +155,44 @@ class _$StacFormImpl implements _StacForm {
             const DeepCollectionEquality().equals(other._child, _child));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, autovalidateMode,
       const DeepCollectionEquality().hash(_child));
 
-  /// Create a copy of StacForm
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacFormImplCopyWith<_$StacFormImpl> get copyWith =>
       __$$StacFormImplCopyWithImpl<_$StacFormImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacForm value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacForm value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacForm value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -180,11 +214,8 @@ abstract class _StacForm implements StacForm {
   AutovalidateMode? get autovalidateMode;
   @override
   Map<String, dynamic> get child;
-
-  /// Create a copy of StacForm
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacFormImplCopyWith<_$StacFormImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

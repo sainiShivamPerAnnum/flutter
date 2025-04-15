@@ -23,12 +23,24 @@ mixin _$StacInputFormatter {
   InputFormatterType get type => throw _privateConstructorUsedError;
   String? get rule => throw _privateConstructorUsedError;
 
-  /// Serializes this StacInputFormatter to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacInputFormatter value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacInputFormatter value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacInputFormatter value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacInputFormatter
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacInputFormatterCopyWith<StacInputFormatter> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -52,8 +64,6 @@ class _$StacInputFormatterCopyWithImpl<$Res, $Val extends StacInputFormatter>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacInputFormatter
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -92,8 +102,6 @@ class __$$StacInputFormatterImplCopyWithImpl<$Res>
       $Res Function(_$StacInputFormatterImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacInputFormatter
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -140,18 +148,44 @@ class _$StacInputFormatterImpl implements _StacInputFormatter {
             (identical(other.rule, rule) || other.rule == rule));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, type, rule);
 
-  /// Create a copy of StacInputFormatter
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacInputFormatterImplCopyWith<_$StacInputFormatterImpl> get copyWith =>
       __$$StacInputFormatterImplCopyWithImpl<_$StacInputFormatterImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacInputFormatter value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacInputFormatter value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacInputFormatter value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -173,11 +207,8 @@ abstract class _StacInputFormatter implements StacInputFormatter {
   InputFormatterType get type;
   @override
   String? get rule;
-
-  /// Create a copy of StacInputFormatter
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacInputFormatterImplCopyWith<_$StacInputFormatterImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

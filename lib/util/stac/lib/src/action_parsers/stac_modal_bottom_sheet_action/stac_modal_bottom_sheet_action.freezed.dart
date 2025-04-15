@@ -36,13 +36,27 @@ mixin _$StacModalBottomSheetAction {
   bool get enableDrag => throw _privateConstructorUsedError;
   bool? get showDragHandle => throw _privateConstructorUsedError;
   bool get useSafeArea => throw _privateConstructorUsedError;
+  bool get addToScreenStack => throw _privateConstructorUsedError;
+  bool get hapticVibrate => throw _privateConstructorUsedError;
 
-  /// Serializes this StacModalBottomSheetAction to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacModalBottomSheetAction value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacModalBottomSheetAction value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacModalBottomSheetAction value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacModalBottomSheetAction
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacModalBottomSheetActionCopyWith<StacModalBottomSheetAction>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -69,7 +83,9 @@ abstract class $StacModalBottomSheetActionCopyWith<$Res> {
       bool isDismissible,
       bool enableDrag,
       bool? showDragHandle,
-      bool useSafeArea});
+      bool useSafeArea,
+      bool addToScreenStack,
+      bool hapticVibrate});
 
   $StacNetworkRequestCopyWith<$Res>? get request;
   $StacBorderCopyWith<$Res>? get shape;
@@ -87,8 +103,6 @@ class _$StacModalBottomSheetActionCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacModalBottomSheetAction
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -107,6 +121,8 @@ class _$StacModalBottomSheetActionCopyWithImpl<$Res,
     Object? enableDrag = null,
     Object? showDragHandle = freezed,
     Object? useSafeArea = null,
+    Object? addToScreenStack = null,
+    Object? hapticVibrate = null,
   }) {
     return _then(_value.copyWith(
       widget: freezed == widget
@@ -169,11 +185,17 @@ class _$StacModalBottomSheetActionCopyWithImpl<$Res,
           ? _value.useSafeArea
           : useSafeArea // ignore: cast_nullable_to_non_nullable
               as bool,
+      addToScreenStack: null == addToScreenStack
+          ? _value.addToScreenStack
+          : addToScreenStack // ignore: cast_nullable_to_non_nullable
+              as bool,
+      hapticVibrate: null == hapticVibrate
+          ? _value.hapticVibrate
+          : hapticVibrate // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 
-  /// Create a copy of StacModalBottomSheetAction
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacNetworkRequestCopyWith<$Res>? get request {
@@ -186,8 +208,6 @@ class _$StacModalBottomSheetActionCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacModalBottomSheetAction
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBorderCopyWith<$Res>? get shape {
@@ -200,8 +220,6 @@ class _$StacModalBottomSheetActionCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacModalBottomSheetAction
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBoxConstraintsCopyWith<$Res>? get constraints {
@@ -239,7 +257,9 @@ abstract class _$$StacModalBottomSheetActionImplCopyWith<$Res>
       bool isDismissible,
       bool enableDrag,
       bool? showDragHandle,
-      bool useSafeArea});
+      bool useSafeArea,
+      bool addToScreenStack,
+      bool hapticVibrate});
 
   @override
   $StacNetworkRequestCopyWith<$Res>? get request;
@@ -259,8 +279,6 @@ class __$$StacModalBottomSheetActionImplCopyWithImpl<$Res>
       $Res Function(_$StacModalBottomSheetActionImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacModalBottomSheetAction
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -279,6 +297,8 @@ class __$$StacModalBottomSheetActionImplCopyWithImpl<$Res>
     Object? enableDrag = null,
     Object? showDragHandle = freezed,
     Object? useSafeArea = null,
+    Object? addToScreenStack = null,
+    Object? hapticVibrate = null,
   }) {
     return _then(_$StacModalBottomSheetActionImpl(
       widget: freezed == widget
@@ -341,6 +361,14 @@ class __$$StacModalBottomSheetActionImplCopyWithImpl<$Res>
           ? _value.useSafeArea
           : useSafeArea // ignore: cast_nullable_to_non_nullable
               as bool,
+      addToScreenStack: null == addToScreenStack
+          ? _value.addToScreenStack
+          : addToScreenStack // ignore: cast_nullable_to_non_nullable
+              as bool,
+      hapticVibrate: null == hapticVibrate
+          ? _value.hapticVibrate
+          : hapticVibrate // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -363,7 +391,9 @@ class _$StacModalBottomSheetActionImpl implements _StacModalBottomSheetAction {
       this.isDismissible = true,
       this.enableDrag = true,
       this.showDragHandle,
-      this.useSafeArea = false})
+      this.useSafeArea = false,
+      this.addToScreenStack = true,
+      this.hapticVibrate = false})
       : _widget = widget;
 
   factory _$StacModalBottomSheetActionImpl.fromJson(
@@ -413,10 +443,16 @@ class _$StacModalBottomSheetActionImpl implements _StacModalBottomSheetAction {
   @override
   @JsonKey()
   final bool useSafeArea;
+  @override
+  @JsonKey()
+  final bool addToScreenStack;
+  @override
+  @JsonKey()
+  final bool hapticVibrate;
 
   @override
   String toString() {
-    return 'StacModalBottomSheetAction(widget: $widget, request: $request, assetPath: $assetPath, backgroundColor: $backgroundColor, barrierLabel: $barrierLabel, elevation: $elevation, shape: $shape, constraints: $constraints, barrierColor: $barrierColor, isScrollControlled: $isScrollControlled, useRootNavigator: $useRootNavigator, isDismissible: $isDismissible, enableDrag: $enableDrag, showDragHandle: $showDragHandle, useSafeArea: $useSafeArea)';
+    return 'StacModalBottomSheetAction(widget: $widget, request: $request, assetPath: $assetPath, backgroundColor: $backgroundColor, barrierLabel: $barrierLabel, elevation: $elevation, shape: $shape, constraints: $constraints, barrierColor: $barrierColor, isScrollControlled: $isScrollControlled, useRootNavigator: $useRootNavigator, isDismissible: $isDismissible, enableDrag: $enableDrag, showDragHandle: $showDragHandle, useSafeArea: $useSafeArea, addToScreenStack: $addToScreenStack, hapticVibrate: $hapticVibrate)';
   }
 
   @override
@@ -450,10 +486,14 @@ class _$StacModalBottomSheetActionImpl implements _StacModalBottomSheetAction {
             (identical(other.showDragHandle, showDragHandle) ||
                 other.showDragHandle == showDragHandle) &&
             (identical(other.useSafeArea, useSafeArea) ||
-                other.useSafeArea == useSafeArea));
+                other.useSafeArea == useSafeArea) &&
+            (identical(other.addToScreenStack, addToScreenStack) ||
+                other.addToScreenStack == addToScreenStack) &&
+            (identical(other.hapticVibrate, hapticVibrate) ||
+                other.hapticVibrate == hapticVibrate));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -471,16 +511,44 @@ class _$StacModalBottomSheetActionImpl implements _StacModalBottomSheetAction {
       isDismissible,
       enableDrag,
       showDragHandle,
-      useSafeArea);
+      useSafeArea,
+      addToScreenStack,
+      hapticVibrate);
 
-  /// Create a copy of StacModalBottomSheetAction
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacModalBottomSheetActionImplCopyWith<_$StacModalBottomSheetActionImpl>
       get copyWith => __$$StacModalBottomSheetActionImplCopyWithImpl<
           _$StacModalBottomSheetActionImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacModalBottomSheetAction value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacModalBottomSheetAction value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacModalBottomSheetAction value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -507,7 +575,9 @@ abstract class _StacModalBottomSheetAction
       final bool isDismissible,
       final bool enableDrag,
       final bool? showDragHandle,
-      final bool useSafeArea}) = _$StacModalBottomSheetActionImpl;
+      final bool useSafeArea,
+      final bool addToScreenStack,
+      final bool hapticVibrate}) = _$StacModalBottomSheetActionImpl;
 
   factory _StacModalBottomSheetAction.fromJson(Map<String, dynamic> json) =
       _$StacModalBottomSheetActionImpl.fromJson;
@@ -542,11 +612,12 @@ abstract class _StacModalBottomSheetAction
   bool? get showDragHandle;
   @override
   bool get useSafeArea;
-
-  /// Create a copy of StacModalBottomSheetAction
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  bool get addToScreenStack;
+  @override
+  bool get hapticVibrate;
+  @override
+  @JsonKey(ignore: true)
   _$$StacModalBottomSheetActionImplCopyWith<_$StacModalBottomSheetActionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

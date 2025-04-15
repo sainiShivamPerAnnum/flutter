@@ -26,12 +26,24 @@ mixin _$StacFractionallySizedBox {
   double? get heightFactor => throw _privateConstructorUsedError;
   Map<String, dynamic>? get child => throw _privateConstructorUsedError;
 
-  /// Serializes this StacFractionallySizedBox to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacFractionallySizedBox value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacFractionallySizedBox value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacFractionallySizedBox value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacFractionallySizedBox
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacFractionallySizedBoxCopyWith<StacFractionallySizedBox> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -60,8 +72,6 @@ class _$StacFractionallySizedBoxCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacFractionallySizedBox
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -117,8 +127,6 @@ class __$$StacFractionallySizedBoxImplCopyWithImpl<$Res>
       $Res Function(_$StacFractionallySizedBoxImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacFractionallySizedBox
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -196,19 +204,45 @@ class _$StacFractionallySizedBoxImpl implements _StacFractionallySizedBox {
             const DeepCollectionEquality().equals(other._child, _child));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, alignment, widthFactor,
       heightFactor, const DeepCollectionEquality().hash(_child));
 
-  /// Create a copy of StacFractionallySizedBox
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacFractionallySizedBoxImplCopyWith<_$StacFractionallySizedBoxImpl>
       get copyWith => __$$StacFractionallySizedBoxImplCopyWithImpl<
           _$StacFractionallySizedBoxImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacFractionallySizedBox value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacFractionallySizedBox value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacFractionallySizedBox value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -236,11 +270,8 @@ abstract class _StacFractionallySizedBox implements StacFractionallySizedBox {
   double? get heightFactor;
   @override
   Map<String, dynamic>? get child;
-
-  /// Create a copy of StacFractionallySizedBox
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacFractionallySizedBoxImplCopyWith<_$StacFractionallySizedBoxImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

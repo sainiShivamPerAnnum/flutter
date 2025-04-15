@@ -37,12 +37,24 @@ mixin _$StacFloatingActionButtonThemeData {
   StacEdgeInsets? get extendedPadding => throw _privateConstructorUsedError;
   StacTextStyle? get extendedTextStyle => throw _privateConstructorUsedError;
 
-  /// Serializes this StacFloatingActionButtonThemeData to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacFloatingActionButtonThemeData value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacFloatingActionButtonThemeData value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacFloatingActionButtonThemeData value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacFloatingActionButtonThemeData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacFloatingActionButtonThemeDataCopyWith<StacFloatingActionButtonThemeData>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -87,8 +99,6 @@ class _$StacFloatingActionButtonThemeDataCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacFloatingActionButtonThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -172,8 +182,6 @@ class _$StacFloatingActionButtonThemeDataCopyWithImpl<$Res,
     ) as $Val);
   }
 
-  /// Create a copy of StacFloatingActionButtonThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get extendedPadding {
@@ -186,8 +194,6 @@ class _$StacFloatingActionButtonThemeDataCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacFloatingActionButtonThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get extendedTextStyle {
@@ -243,8 +249,6 @@ class __$$StacFloatingActionButtonThemeDataImplCopyWithImpl<$Res>
       $Res Function(_$StacFloatingActionButtonThemeDataImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacFloatingActionButtonThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -428,7 +432,7 @@ class _$StacFloatingActionButtonThemeDataImpl
                 other.extendedTextStyle == extendedTextStyle));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -448,15 +452,41 @@ class _$StacFloatingActionButtonThemeDataImpl
       extendedPadding,
       extendedTextStyle);
 
-  /// Create a copy of StacFloatingActionButtonThemeData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacFloatingActionButtonThemeDataImplCopyWith<
           _$StacFloatingActionButtonThemeDataImpl>
       get copyWith => __$$StacFloatingActionButtonThemeDataImplCopyWithImpl<
           _$StacFloatingActionButtonThemeDataImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacFloatingActionButtonThemeData value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacFloatingActionButtonThemeData value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacFloatingActionButtonThemeData value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -520,11 +550,8 @@ abstract class _StacFloatingActionButtonThemeData
   StacEdgeInsets? get extendedPadding;
   @override
   StacTextStyle? get extendedTextStyle;
-
-  /// Create a copy of StacFloatingActionButtonThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacFloatingActionButtonThemeDataImplCopyWith<
           _$StacFloatingActionButtonThemeDataImpl>
       get copyWith => throw _privateConstructorUsedError;

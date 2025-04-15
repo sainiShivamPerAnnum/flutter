@@ -29,12 +29,24 @@ mixin _$StacIconThemeData {
   double? get opacity => throw _privateConstructorUsedError;
   List<StacShadow>? get shadows => throw _privateConstructorUsedError;
 
-  /// Serializes this StacIconThemeData to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacIconThemeData value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacIconThemeData value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacIconThemeData value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacIconThemeData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacIconThemeDataCopyWith<StacIconThemeData> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -66,8 +78,6 @@ class _$StacIconThemeDataCopyWithImpl<$Res, $Val extends StacIconThemeData>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacIconThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -144,8 +154,6 @@ class __$$StacIconThemeDataImplCopyWithImpl<$Res>
       $Res Function(_$StacIconThemeDataImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacIconThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -257,7 +265,7 @@ class _$StacIconThemeDataImpl implements _StacIconThemeData {
             const DeepCollectionEquality().equals(other._shadows, _shadows));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -270,14 +278,40 @@ class _$StacIconThemeDataImpl implements _StacIconThemeData {
       opacity,
       const DeepCollectionEquality().hash(_shadows));
 
-  /// Create a copy of StacIconThemeData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacIconThemeDataImplCopyWith<_$StacIconThemeDataImpl> get copyWith =>
       __$$StacIconThemeDataImplCopyWithImpl<_$StacIconThemeDataImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacIconThemeData value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacIconThemeData value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacIconThemeData value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -317,11 +351,8 @@ abstract class _StacIconThemeData implements StacIconThemeData {
   double? get opacity;
   @override
   List<StacShadow>? get shadows;
-
-  /// Create a copy of StacIconThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacIconThemeDataImplCopyWith<_$StacIconThemeDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

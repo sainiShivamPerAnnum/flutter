@@ -32,12 +32,24 @@ mixin _$StacMaterialColor {
   String get shade800 => throw _privateConstructorUsedError;
   String get shade900 => throw _privateConstructorUsedError;
 
-  /// Serializes this StacMaterialColor to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacMaterialColor value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacMaterialColor value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacMaterialColor value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacMaterialColor
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacMaterialColorCopyWith<StacMaterialColor> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -72,8 +84,6 @@ class _$StacMaterialColorCopyWithImpl<$Res, $Val extends StacMaterialColor>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacMaterialColor
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -168,8 +178,6 @@ class __$$StacMaterialColorImplCopyWithImpl<$Res>
       $Res Function(_$StacMaterialColorImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacMaterialColor
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -308,7 +316,7 @@ class _$StacMaterialColorImpl implements _StacMaterialColor {
                 other.shade900 == shade900));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -324,14 +332,40 @@ class _$StacMaterialColorImpl implements _StacMaterialColor {
       shade800,
       shade900);
 
-  /// Create a copy of StacMaterialColor
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacMaterialColorImplCopyWith<_$StacMaterialColorImpl> get copyWith =>
       __$$StacMaterialColorImplCopyWithImpl<_$StacMaterialColorImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacMaterialColor value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacMaterialColor value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacMaterialColor value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -380,11 +414,8 @@ abstract class _StacMaterialColor implements StacMaterialColor {
   String get shade800;
   @override
   String get shade900;
-
-  /// Create a copy of StacMaterialColor
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacMaterialColorImplCopyWith<_$StacMaterialColorImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

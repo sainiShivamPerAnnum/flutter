@@ -24,12 +24,24 @@ mixin _$StacShadow {
   StacOffset get offset => throw _privateConstructorUsedError;
   double get blurRadius => throw _privateConstructorUsedError;
 
-  /// Serializes this StacShadow to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacShadow value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacShadow value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacShadow value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacShadow
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacShadowCopyWith<StacShadow> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -55,8 +67,6 @@ class _$StacShadowCopyWithImpl<$Res, $Val extends StacShadow>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacShadow
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -80,8 +90,6 @@ class _$StacShadowCopyWithImpl<$Res, $Val extends StacShadow>
     ) as $Val);
   }
 
-  /// Create a copy of StacShadow
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacOffsetCopyWith<$Res> get offset {
@@ -113,8 +121,6 @@ class __$$StacShadowImplCopyWithImpl<$Res>
       _$StacShadowImpl _value, $Res Function(_$StacShadowImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacShadow
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -176,17 +182,43 @@ class _$StacShadowImpl implements _StacShadow {
                 other.blurRadius == blurRadius));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, color, offset, blurRadius);
 
-  /// Create a copy of StacShadow
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacShadowImplCopyWith<_$StacShadowImpl> get copyWith =>
       __$$StacShadowImplCopyWithImpl<_$StacShadowImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacShadow value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacShadow value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacShadow value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -211,11 +243,8 @@ abstract class _StacShadow implements StacShadow {
   StacOffset get offset;
   @override
   double get blurRadius;
-
-  /// Create a copy of StacShadow
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacShadowImplCopyWith<_$StacShadowImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

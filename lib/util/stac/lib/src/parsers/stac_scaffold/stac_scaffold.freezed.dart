@@ -46,12 +46,24 @@ mixin _$StacScaffold {
   bool get endDrawerEnableOpenDragGesture => throw _privateConstructorUsedError;
   String? get restorationId => throw _privateConstructorUsedError;
 
-  /// Serializes this StacScaffold to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacScaffold value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacScaffold value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacScaffold value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacScaffold
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacScaffoldCopyWith<StacScaffold> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -95,8 +107,6 @@ class _$StacScaffoldCopyWithImpl<$Res, $Val extends StacScaffold>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacScaffold
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -245,8 +255,6 @@ class __$$StacScaffoldImplCopyWithImpl<$Res>
       _$StacScaffoldImpl _value, $Res Function(_$StacScaffoldImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacScaffold
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -559,7 +567,7 @@ class _$StacScaffoldImpl implements _StacScaffold {
                 other.restorationId == restorationId));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -585,13 +593,39 @@ class _$StacScaffoldImpl implements _StacScaffold {
         restorationId
       ]);
 
-  /// Create a copy of StacScaffold
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacScaffoldImplCopyWith<_$StacScaffoldImpl> get copyWith =>
       __$$StacScaffoldImplCopyWithImpl<_$StacScaffoldImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacScaffold value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacScaffold value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacScaffold value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -667,11 +701,8 @@ abstract class _StacScaffold implements StacScaffold {
   bool get endDrawerEnableOpenDragGesture;
   @override
   String? get restorationId;
-
-  /// Create a copy of StacScaffold
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacScaffoldImplCopyWith<_$StacScaffoldImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

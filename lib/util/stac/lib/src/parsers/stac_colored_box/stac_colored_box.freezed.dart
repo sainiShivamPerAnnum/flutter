@@ -23,12 +23,24 @@ mixin _$StacColoredBox {
   String get color => throw _privateConstructorUsedError;
   Map<String, dynamic>? get child => throw _privateConstructorUsedError;
 
-  /// Serializes this StacColoredBox to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacColoredBox value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacColoredBox value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacColoredBox value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacColoredBox
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacColoredBoxCopyWith<StacColoredBox> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -52,8 +64,6 @@ class _$StacColoredBoxCopyWithImpl<$Res, $Val extends StacColoredBox>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacColoredBox
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -92,8 +102,6 @@ class __$$StacColoredBoxImplCopyWithImpl<$Res>
       _$StacColoredBoxImpl _value, $Res Function(_$StacColoredBoxImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacColoredBox
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -149,19 +157,45 @@ class _$StacColoredBoxImpl implements _StacColoredBox {
             const DeepCollectionEquality().equals(other._child, _child));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType, color, const DeepCollectionEquality().hash(_child));
 
-  /// Create a copy of StacColoredBox
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacColoredBoxImplCopyWith<_$StacColoredBoxImpl> get copyWith =>
       __$$StacColoredBoxImplCopyWithImpl<_$StacColoredBoxImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacColoredBox value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacColoredBox value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacColoredBox value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -183,11 +217,8 @@ abstract class _StacColoredBox implements StacColoredBox {
   String get color;
   @override
   Map<String, dynamic>? get child;
-
-  /// Create a copy of StacColoredBox
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacColoredBoxImplCopyWith<_$StacColoredBoxImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

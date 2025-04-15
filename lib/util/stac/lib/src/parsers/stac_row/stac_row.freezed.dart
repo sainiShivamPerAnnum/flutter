@@ -29,12 +29,24 @@ mixin _$StacRow {
   double get spacing => throw _privateConstructorUsedError;
   List<Map<String, dynamic>> get children => throw _privateConstructorUsedError;
 
-  /// Serializes this StacRow to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacRow value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacRow value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacRow value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacRow
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacRowCopyWith<StacRow> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -63,8 +75,6 @@ class _$StacRowCopyWithImpl<$Res, $Val extends StacRow>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacRow
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -134,8 +144,6 @@ class __$$StacRowImplCopyWithImpl<$Res>
       _$StacRowImpl _value, $Res Function(_$StacRowImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacRow
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -246,7 +254,7 @@ class _$StacRowImpl implements _StacRow {
             const DeepCollectionEquality().equals(other._children, _children));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -258,13 +266,39 @@ class _$StacRowImpl implements _StacRow {
       spacing,
       const DeepCollectionEquality().hash(_children));
 
-  /// Create a copy of StacRow
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacRowImplCopyWith<_$StacRowImpl> get copyWith =>
       __$$StacRowImplCopyWithImpl<_$StacRowImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacRow value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacRow value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacRow value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -300,11 +334,8 @@ abstract class _StacRow implements StacRow {
   double get spacing;
   @override
   List<Map<String, dynamic>> get children;
-
-  /// Create a copy of StacRow
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacRowImplCopyWith<_$StacRowImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

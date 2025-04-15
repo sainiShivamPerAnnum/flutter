@@ -47,12 +47,24 @@ mixin _$StacChip {
   StacBoxConstraints? get deleteIconBoxConstraints =>
       throw _privateConstructorUsedError;
 
-  /// Serializes this StacChip to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacChip value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacChip value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacChip value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacChip
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacChipCopyWith<StacChip> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -108,8 +120,6 @@ class _$StacChipCopyWithImpl<$Res, $Val extends StacChip>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacChip
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -233,8 +243,6 @@ class _$StacChipCopyWithImpl<$Res, $Val extends StacChip>
     ) as $Val);
   }
 
-  /// Create a copy of StacChip
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get labelStyle {
@@ -247,8 +255,6 @@ class _$StacChipCopyWithImpl<$Res, $Val extends StacChip>
     });
   }
 
-  /// Create a copy of StacChip
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get labelPadding {
@@ -261,8 +267,6 @@ class _$StacChipCopyWithImpl<$Res, $Val extends StacChip>
     });
   }
 
-  /// Create a copy of StacChip
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBorderSideCopyWith<$Res>? get side {
@@ -275,8 +279,6 @@ class _$StacChipCopyWithImpl<$Res, $Val extends StacChip>
     });
   }
 
-  /// Create a copy of StacChip
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacRoundedRectangleBorderCopyWith<$Res>? get shape {
@@ -289,8 +291,6 @@ class _$StacChipCopyWithImpl<$Res, $Val extends StacChip>
     });
   }
 
-  /// Create a copy of StacChip
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get padding {
@@ -303,8 +303,6 @@ class _$StacChipCopyWithImpl<$Res, $Val extends StacChip>
     });
   }
 
-  /// Create a copy of StacChip
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacVisualDensityCopyWith<$Res>? get visualDensity {
@@ -317,8 +315,6 @@ class _$StacChipCopyWithImpl<$Res, $Val extends StacChip>
     });
   }
 
-  /// Create a copy of StacChip
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacIconThemeDataCopyWith<$Res>? get iconTheme {
@@ -331,8 +327,6 @@ class _$StacChipCopyWithImpl<$Res, $Val extends StacChip>
     });
   }
 
-  /// Create a copy of StacChip
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBoxConstraintsCopyWith<$Res>? get avatarBoxConstraints {
@@ -346,8 +340,6 @@ class _$StacChipCopyWithImpl<$Res, $Val extends StacChip>
     });
   }
 
-  /// Create a copy of StacChip
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBoxConstraintsCopyWith<$Res>? get deleteIconBoxConstraints {
@@ -423,8 +415,6 @@ class __$$StacChipImplCopyWithImpl<$Res>
       _$StacChipImpl _value, $Res Function(_$StacChipImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacChip
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -718,7 +708,7 @@ class _$StacChipImpl implements _StacChip {
                 other.deleteIconBoxConstraints == deleteIconBoxConstraints));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -747,13 +737,39 @@ class _$StacChipImpl implements _StacChip {
         deleteIconBoxConstraints
       ]);
 
-  /// Create a copy of StacChip
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacChipImplCopyWith<_$StacChipImpl> get copyWith =>
       __$$StacChipImplCopyWithImpl<_$StacChipImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacChip value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacChip value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacChip value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -838,11 +854,8 @@ abstract class _StacChip implements StacChip {
   StacBoxConstraints? get avatarBoxConstraints;
   @override
   StacBoxConstraints? get deleteIconBoxConstraints;
-
-  /// Create a copy of StacChip
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacChipImplCopyWith<_$StacChipImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

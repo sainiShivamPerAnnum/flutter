@@ -33,12 +33,24 @@ mixin _$StacNavigationBarThemeData {
   NavigationDestinationLabelBehavior? get labelBehavior =>
       throw _privateConstructorUsedError;
 
-  /// Serializes this StacNavigationBarThemeData to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacNavigationBarThemeData value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacNavigationBarThemeData value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacNavigationBarThemeData value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacNavigationBarThemeData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacNavigationBarThemeDataCopyWith<StacNavigationBarThemeData>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -78,8 +90,6 @@ class _$StacNavigationBarThemeDataCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacNavigationBarThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -138,8 +148,6 @@ class _$StacNavigationBarThemeDataCopyWithImpl<$Res,
     ) as $Val);
   }
 
-  /// Create a copy of StacNavigationBarThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBorderCopyWith<$Res>? get indicatorShape {
@@ -152,8 +160,6 @@ class _$StacNavigationBarThemeDataCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacNavigationBarThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get labelTextStyle {
@@ -166,8 +172,6 @@ class _$StacNavigationBarThemeDataCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacNavigationBarThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacIconThemeDataCopyWith<$Res>? get iconTheme {
@@ -220,8 +224,6 @@ class __$$StacNavigationBarThemeDataImplCopyWithImpl<$Res>
       $Res Function(_$StacNavigationBarThemeDataImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacNavigationBarThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -352,7 +354,7 @@ class _$StacNavigationBarThemeDataImpl implements _StacNavigationBarThemeData {
                 other.labelBehavior == labelBehavior));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -367,14 +369,40 @@ class _$StacNavigationBarThemeDataImpl implements _StacNavigationBarThemeData {
       iconTheme,
       labelBehavior);
 
-  /// Create a copy of StacNavigationBarThemeData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacNavigationBarThemeDataImplCopyWith<_$StacNavigationBarThemeDataImpl>
       get copyWith => __$$StacNavigationBarThemeDataImplCopyWithImpl<
           _$StacNavigationBarThemeDataImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacNavigationBarThemeData value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacNavigationBarThemeData value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacNavigationBarThemeData value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -422,11 +450,8 @@ abstract class _StacNavigationBarThemeData
   StacIconThemeData? get iconTheme;
   @override
   NavigationDestinationLabelBehavior? get labelBehavior;
-
-  /// Create a copy of StacNavigationBarThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacNavigationBarThemeDataImplCopyWith<_$StacNavigationBarThemeDataImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

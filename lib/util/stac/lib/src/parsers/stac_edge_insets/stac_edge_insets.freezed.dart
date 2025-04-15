@@ -25,12 +25,24 @@ mixin _$StacEdgeInsets {
   double? get right => throw _privateConstructorUsedError;
   double? get bottom => throw _privateConstructorUsedError;
 
-  /// Serializes this StacEdgeInsets to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacEdgeInsets value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacEdgeInsets value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacEdgeInsets value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacEdgeInsets
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacEdgeInsetsCopyWith<StacEdgeInsets> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -54,8 +66,6 @@ class _$StacEdgeInsetsCopyWithImpl<$Res, $Val extends StacEdgeInsets>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacEdgeInsets
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -104,8 +114,6 @@ class __$$StacEdgeInsetsImplCopyWithImpl<$Res>
       _$StacEdgeInsetsImpl _value, $Res Function(_$StacEdgeInsetsImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacEdgeInsets
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -168,18 +176,44 @@ class _$StacEdgeInsetsImpl implements _StacEdgeInsets {
             (identical(other.bottom, bottom) || other.bottom == bottom));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, left, top, right, bottom);
 
-  /// Create a copy of StacEdgeInsets
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacEdgeInsetsImplCopyWith<_$StacEdgeInsetsImpl> get copyWith =>
       __$$StacEdgeInsetsImplCopyWithImpl<_$StacEdgeInsetsImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacEdgeInsets value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacEdgeInsets value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacEdgeInsets value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -207,11 +241,8 @@ abstract class _StacEdgeInsets implements StacEdgeInsets {
   double? get right;
   @override
   double? get bottom;
-
-  /// Create a copy of StacEdgeInsets
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacEdgeInsetsImplCopyWith<_$StacEdgeInsetsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

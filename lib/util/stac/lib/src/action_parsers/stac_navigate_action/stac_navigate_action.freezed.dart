@@ -28,12 +28,24 @@ mixin _$StacNavigateAction {
   Map<String, dynamic>? get result => throw _privateConstructorUsedError;
   Map<String, dynamic>? get arguments => throw _privateConstructorUsedError;
 
-  /// Serializes this StacNavigateAction to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacNavigateAction value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacNavigateAction value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacNavigateAction value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacNavigateAction
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacNavigateActionCopyWith<StacNavigateAction> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -66,8 +78,6 @@ class _$StacNavigateActionCopyWithImpl<$Res, $Val extends StacNavigateAction>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacNavigateAction
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -111,8 +121,6 @@ class _$StacNavigateActionCopyWithImpl<$Res, $Val extends StacNavigateAction>
     ) as $Val);
   }
 
-  /// Create a copy of StacNavigateAction
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacNetworkRequestCopyWith<$Res>? get request {
@@ -155,8 +163,6 @@ class __$$StacNavigateActionImplCopyWithImpl<$Res>
       $Res Function(_$StacNavigateActionImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacNavigateAction
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -282,7 +288,7 @@ class _$StacNavigateActionImpl extends _StacNavigateAction {
                 .equals(other._arguments, _arguments));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -294,14 +300,40 @@ class _$StacNavigateActionImpl extends _StacNavigateAction {
       const DeepCollectionEquality().hash(_result),
       const DeepCollectionEquality().hash(_arguments));
 
-  /// Create a copy of StacNavigateAction
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacNavigateActionImplCopyWith<_$StacNavigateActionImpl> get copyWith =>
       __$$StacNavigateActionImplCopyWithImpl<_$StacNavigateActionImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacNavigateAction value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacNavigateAction value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacNavigateAction value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -339,11 +371,8 @@ abstract class _StacNavigateAction extends StacNavigateAction {
   Map<String, dynamic>? get result;
   @override
   Map<String, dynamic>? get arguments;
-
-  /// Create a copy of StacNavigateAction
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacNavigateActionImplCopyWith<_$StacNavigateActionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

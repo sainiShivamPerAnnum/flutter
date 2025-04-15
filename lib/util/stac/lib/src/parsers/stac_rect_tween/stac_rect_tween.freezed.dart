@@ -24,12 +24,24 @@ mixin _$StacRectTween {
   StacRect? get begin => throw _privateConstructorUsedError;
   StacRect? get end => throw _privateConstructorUsedError;
 
-  /// Serializes this StacRectTween to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacRectTween value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacRectTween value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacRectTween value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacRectTween
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacRectTweenCopyWith<StacRectTween> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -56,8 +68,6 @@ class _$StacRectTweenCopyWithImpl<$Res, $Val extends StacRectTween>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacRectTween
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -81,8 +91,6 @@ class _$StacRectTweenCopyWithImpl<$Res, $Val extends StacRectTween>
     ) as $Val);
   }
 
-  /// Create a copy of StacRectTween
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacRectCopyWith<$Res>? get begin {
@@ -95,8 +103,6 @@ class _$StacRectTweenCopyWithImpl<$Res, $Val extends StacRectTween>
     });
   }
 
-  /// Create a copy of StacRectTween
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacRectCopyWith<$Res>? get end {
@@ -134,8 +140,6 @@ class __$$StacRectTweenImplCopyWithImpl<$Res>
       _$StacRectTweenImpl _value, $Res Function(_$StacRectTweenImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacRectTween
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -190,17 +194,43 @@ class _$StacRectTweenImpl implements _StacRectTween {
             (identical(other.end, end) || other.end == end));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, type, begin, end);
 
-  /// Create a copy of StacRectTween
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacRectTweenImplCopyWith<_$StacRectTweenImpl> get copyWith =>
       __$$StacRectTweenImplCopyWithImpl<_$StacRectTweenImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacRectTween value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacRectTween value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacRectTween value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -225,11 +255,8 @@ abstract class _StacRectTween implements StacRectTween {
   StacRect? get begin;
   @override
   StacRect? get end;
-
-  /// Create a copy of StacRectTween
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacRectTweenImplCopyWith<_$StacRectTweenImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

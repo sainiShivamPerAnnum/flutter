@@ -28,12 +28,24 @@ mixin _$StacCardThemeData {
   StacEdgeInsets? get margin => throw _privateConstructorUsedError;
   StacBorder? get shape => throw _privateConstructorUsedError;
 
-  /// Serializes this StacCardThemeData to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacCardThemeData value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacCardThemeData value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacCardThemeData value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacCardThemeData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacCardThemeDataCopyWith<StacCardThemeData> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -67,8 +79,6 @@ class _$StacCardThemeDataCopyWithImpl<$Res, $Val extends StacCardThemeData>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacCardThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -112,8 +122,6 @@ class _$StacCardThemeDataCopyWithImpl<$Res, $Val extends StacCardThemeData>
     ) as $Val);
   }
 
-  /// Create a copy of StacCardThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get margin {
@@ -126,8 +134,6 @@ class _$StacCardThemeDataCopyWithImpl<$Res, $Val extends StacCardThemeData>
     });
   }
 
-  /// Create a copy of StacCardThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBorderCopyWith<$Res>? get shape {
@@ -172,8 +178,6 @@ class __$$StacCardThemeDataImplCopyWithImpl<$Res>
       $Res Function(_$StacCardThemeDataImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacCardThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -271,19 +275,45 @@ class _$StacCardThemeDataImpl implements _StacCardThemeData {
             (identical(other.shape, shape) || other.shape == shape));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, clipBehavior, color, shadowColor,
       surfaceTintColor, elevation, margin, shape);
 
-  /// Create a copy of StacCardThemeData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacCardThemeDataImplCopyWith<_$StacCardThemeDataImpl> get copyWith =>
       __$$StacCardThemeDataImplCopyWithImpl<_$StacCardThemeDataImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacCardThemeData value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacCardThemeData value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacCardThemeData value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -320,11 +350,8 @@ abstract class _StacCardThemeData implements StacCardThemeData {
   StacEdgeInsets? get margin;
   @override
   StacBorder? get shape;
-
-  /// Create a copy of StacCardThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacCardThemeDataImplCopyWith<_$StacCardThemeDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -40,12 +40,24 @@ mixin _$StacAppBar {
   double? get elevation => throw _privateConstructorUsedError;
   double? get scrolledUnderElevation => throw _privateConstructorUsedError;
 
-  /// Serializes this StacAppBar to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacAppBar value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacAppBar value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacAppBar value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacAppBar
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacAppBarCopyWith<StacAppBar> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -91,8 +103,6 @@ class _$StacAppBarCopyWithImpl<$Res, $Val extends StacAppBar>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacAppBar
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -196,8 +206,6 @@ class _$StacAppBarCopyWithImpl<$Res, $Val extends StacAppBar>
     ) as $Val);
   }
 
-  /// Create a copy of StacAppBar
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get titleTextStyle {
@@ -210,8 +218,6 @@ class _$StacAppBarCopyWithImpl<$Res, $Val extends StacAppBar>
     });
   }
 
-  /// Create a copy of StacAppBar
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get toolbarTextStyle {
@@ -268,8 +274,6 @@ class __$$StacAppBarImplCopyWithImpl<$Res>
       _$StacAppBarImpl _value, $Res Function(_$StacAppBarImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacAppBar
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -523,7 +527,7 @@ class _$StacAppBarImpl implements _StacAppBar {
                 other.scrolledUnderElevation == scrolledUnderElevation));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -548,13 +552,39 @@ class _$StacAppBarImpl implements _StacAppBar {
         scrolledUnderElevation
       ]);
 
-  /// Create a copy of StacAppBar
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacAppBarImplCopyWith<_$StacAppBarImpl> get copyWith =>
       __$$StacAppBarImplCopyWithImpl<_$StacAppBarImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacAppBar value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacAppBar value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacAppBar value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -627,11 +657,8 @@ abstract class _StacAppBar implements StacAppBar {
   double? get elevation;
   @override
   double? get scrolledUnderElevation;
-
-  /// Create a copy of StacAppBar
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacAppBarImplCopyWith<_$StacAppBarImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

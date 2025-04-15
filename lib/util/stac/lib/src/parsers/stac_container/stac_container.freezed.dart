@@ -33,12 +33,24 @@ mixin _$StacContainer {
   Map<String, dynamic>? get child => throw _privateConstructorUsedError;
   Clip get clipBehavior => throw _privateConstructorUsedError;
 
-  /// Serializes this StacContainer to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacContainer value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacContainer value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacContainer value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacContainer
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacContainerCopyWith<StacContainer> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -79,8 +91,6 @@ class _$StacContainerCopyWithImpl<$Res, $Val extends StacContainer>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacContainer
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -144,8 +154,6 @@ class _$StacContainerCopyWithImpl<$Res, $Val extends StacContainer>
     ) as $Val);
   }
 
-  /// Create a copy of StacContainer
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get padding {
@@ -158,8 +166,6 @@ class _$StacContainerCopyWithImpl<$Res, $Val extends StacContainer>
     });
   }
 
-  /// Create a copy of StacContainer
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBoxDecorationCopyWith<$Res>? get decoration {
@@ -172,8 +178,6 @@ class _$StacContainerCopyWithImpl<$Res, $Val extends StacContainer>
     });
   }
 
-  /// Create a copy of StacContainer
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBoxDecorationCopyWith<$Res>? get foregroundDecoration {
@@ -187,8 +191,6 @@ class _$StacContainerCopyWithImpl<$Res, $Val extends StacContainer>
     });
   }
 
-  /// Create a copy of StacContainer
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBoxConstraintsCopyWith<$Res>? get constraints {
@@ -201,8 +203,6 @@ class _$StacContainerCopyWithImpl<$Res, $Val extends StacContainer>
     });
   }
 
-  /// Create a copy of StacContainer
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get margin {
@@ -257,8 +257,6 @@ class __$$StacContainerImplCopyWithImpl<$Res>
       _$StacContainerImpl _value, $Res Function(_$StacContainerImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacContainer
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -403,7 +401,7 @@ class _$StacContainerImpl implements _StacContainer {
                 other.clipBehavior == clipBehavior));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -419,13 +417,39 @@ class _$StacContainerImpl implements _StacContainer {
       const DeepCollectionEquality().hash(_child),
       clipBehavior);
 
-  /// Create a copy of StacContainer
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacContainerImplCopyWith<_$StacContainerImpl> get copyWith =>
       __$$StacContainerImplCopyWithImpl<_$StacContainerImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacContainer value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacContainer value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacContainer value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -474,11 +498,8 @@ abstract class _StacContainer implements StacContainer {
   Map<String, dynamic>? get child;
   @override
   Clip get clipBehavior;
-
-  /// Create a copy of StacContainer
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacContainerImplCopyWith<_$StacContainerImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -43,12 +43,24 @@ mixin _$StacListTileThemeData {
       throw _privateConstructorUsedError;
   List<StacShadow>? get shadows => throw _privateConstructorUsedError;
 
-  /// Serializes this StacListTileThemeData to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacListTileThemeData value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacListTileThemeData value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacListTileThemeData value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacListTileThemeData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacListTileThemeDataCopyWith<StacListTileThemeData> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -99,8 +111,6 @@ class _$StacListTileThemeDataCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacListTileThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -204,8 +214,6 @@ class _$StacListTileThemeDataCopyWithImpl<$Res,
     ) as $Val);
   }
 
-  /// Create a copy of StacListTileThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacBorderCopyWith<$Res>? get shape {
@@ -218,8 +226,6 @@ class _$StacListTileThemeDataCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacListTileThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get titleTextStyle {
@@ -232,8 +238,6 @@ class _$StacListTileThemeDataCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacListTileThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get subtitleTextStyle {
@@ -246,8 +250,6 @@ class _$StacListTileThemeDataCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacListTileThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get leadingAndTrailingTextStyle {
@@ -261,8 +263,6 @@ class _$StacListTileThemeDataCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacListTileThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get contentPadding {
@@ -275,8 +275,6 @@ class _$StacListTileThemeDataCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacListTileThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacVisualDensityCopyWith<$Res>? get visualDensity {
@@ -343,8 +341,6 @@ class __$$StacListTileThemeDataImplCopyWithImpl<$Res>
       $Res Function(_$StacListTileThemeDataImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacListTileThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -571,7 +567,7 @@ class _$StacListTileThemeDataImpl implements _StacListTileThemeData {
             const DeepCollectionEquality().equals(other._shadows, _shadows));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -596,14 +592,40 @@ class _$StacListTileThemeDataImpl implements _StacListTileThemeData {
         const DeepCollectionEquality().hash(_shadows)
       ]);
 
-  /// Create a copy of StacListTileThemeData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacListTileThemeDataImplCopyWith<_$StacListTileThemeDataImpl>
       get copyWith => __$$StacListTileThemeDataImplCopyWithImpl<
           _$StacListTileThemeDataImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacListTileThemeData value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacListTileThemeData value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacListTileThemeData value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -676,11 +698,8 @@ abstract class _StacListTileThemeData implements StacListTileThemeData {
   ListTileTitleAlignment? get titleAlignment;
   @override
   List<StacShadow>? get shadows;
-
-  /// Create a copy of StacListTileThemeData
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacListTileThemeDataImplCopyWith<_$StacListTileThemeDataImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

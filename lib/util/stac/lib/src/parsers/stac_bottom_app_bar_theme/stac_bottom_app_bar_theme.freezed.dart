@@ -28,12 +28,24 @@ mixin _$StacBottomAppBarTheme {
   String? get shadowColor => throw _privateConstructorUsedError;
   StacEdgeInsets? get padding => throw _privateConstructorUsedError;
 
-  /// Serializes this StacBottomAppBarTheme to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacBottomAppBarTheme value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacBottomAppBarTheme value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacBottomAppBarTheme value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacBottomAppBarTheme
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacBottomAppBarThemeCopyWith<StacBottomAppBarTheme> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -66,8 +78,6 @@ class _$StacBottomAppBarThemeCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacBottomAppBarTheme
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -106,8 +116,6 @@ class _$StacBottomAppBarThemeCopyWithImpl<$Res,
     ) as $Val);
   }
 
-  /// Create a copy of StacBottomAppBarTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get padding {
@@ -151,8 +159,6 @@ class __$$StacBottomAppBarThemeImplCopyWithImpl<$Res>
       $Res Function(_$StacBottomAppBarThemeImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacBottomAppBarTheme
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -240,19 +246,45 @@ class _$StacBottomAppBarThemeImpl implements _StacBottomAppBarTheme {
             (identical(other.padding, padding) || other.padding == padding));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, color, elevation, height,
       surfaceTintColor, shadowColor, padding);
 
-  /// Create a copy of StacBottomAppBarTheme
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacBottomAppBarThemeImplCopyWith<_$StacBottomAppBarThemeImpl>
       get copyWith => __$$StacBottomAppBarThemeImplCopyWithImpl<
           _$StacBottomAppBarThemeImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacBottomAppBarTheme value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacBottomAppBarTheme value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacBottomAppBarTheme value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -286,11 +318,8 @@ abstract class _StacBottomAppBarTheme implements StacBottomAppBarTheme {
   String? get shadowColor;
   @override
   StacEdgeInsets? get padding;
-
-  /// Create a copy of StacBottomAppBarTheme
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacBottomAppBarThemeImplCopyWith<_$StacBottomAppBarThemeImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

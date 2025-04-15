@@ -50,12 +50,24 @@ mixin _$StacAlertDialog {
   StacAlignmentGeometry? get alignment => throw _privateConstructorUsedError;
   bool get scrollable => throw _privateConstructorUsedError;
 
-  /// Serializes this StacAlertDialog to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacAlertDialog value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacAlertDialog value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacAlertDialog value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacAlertDialog
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacAlertDialogCopyWith<StacAlertDialog> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -116,8 +128,6 @@ class _$StacAlertDialogCopyWithImpl<$Res, $Val extends StacAlertDialog>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacAlertDialog
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -256,8 +266,6 @@ class _$StacAlertDialogCopyWithImpl<$Res, $Val extends StacAlertDialog>
     ) as $Val);
   }
 
-  /// Create a copy of StacAlertDialog
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get iconPadding {
@@ -270,8 +278,6 @@ class _$StacAlertDialogCopyWithImpl<$Res, $Val extends StacAlertDialog>
     });
   }
 
-  /// Create a copy of StacAlertDialog
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get titlePadding {
@@ -284,8 +290,6 @@ class _$StacAlertDialogCopyWithImpl<$Res, $Val extends StacAlertDialog>
     });
   }
 
-  /// Create a copy of StacAlertDialog
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get titleTextStyle {
@@ -298,8 +302,6 @@ class _$StacAlertDialogCopyWithImpl<$Res, $Val extends StacAlertDialog>
     });
   }
 
-  /// Create a copy of StacAlertDialog
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get contentPadding {
@@ -312,8 +314,6 @@ class _$StacAlertDialogCopyWithImpl<$Res, $Val extends StacAlertDialog>
     });
   }
 
-  /// Create a copy of StacAlertDialog
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get contentTextStyle {
@@ -326,8 +326,6 @@ class _$StacAlertDialogCopyWithImpl<$Res, $Val extends StacAlertDialog>
     });
   }
 
-  /// Create a copy of StacAlertDialog
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get actionsPadding {
@@ -340,8 +338,6 @@ class _$StacAlertDialogCopyWithImpl<$Res, $Val extends StacAlertDialog>
     });
   }
 
-  /// Create a copy of StacAlertDialog
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get buttonPadding {
@@ -354,8 +350,6 @@ class _$StacAlertDialogCopyWithImpl<$Res, $Val extends StacAlertDialog>
     });
   }
 
-  /// Create a copy of StacAlertDialog
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res> get insetPadding {
@@ -364,8 +358,6 @@ class _$StacAlertDialogCopyWithImpl<$Res, $Val extends StacAlertDialog>
     });
   }
 
-  /// Create a copy of StacAlertDialog
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacShapeBorderCopyWith<$Res>? get shape {
@@ -378,8 +370,6 @@ class _$StacAlertDialogCopyWithImpl<$Res, $Val extends StacAlertDialog>
     });
   }
 
-  /// Create a copy of StacAlertDialog
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacAlignmentGeometryCopyWith<$Res>? get alignment {
@@ -459,8 +449,6 @@ class __$$StacAlertDialogImplCopyWithImpl<$Res>
       _$StacAlertDialogImpl _value, $Res Function(_$StacAlertDialogImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacAlertDialog
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -790,7 +778,7 @@ class _$StacAlertDialogImpl implements _StacAlertDialog {
                 other.scrollable == scrollable));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -822,14 +810,40 @@ class _$StacAlertDialogImpl implements _StacAlertDialog {
         scrollable
       ]);
 
-  /// Create a copy of StacAlertDialog
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacAlertDialogImplCopyWith<_$StacAlertDialogImpl> get copyWith =>
       __$$StacAlertDialogImplCopyWithImpl<_$StacAlertDialogImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacAlertDialog value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacAlertDialog value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacAlertDialog value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -923,11 +937,8 @@ abstract class _StacAlertDialog implements StacAlertDialog {
   StacAlignmentGeometry? get alignment;
   @override
   bool get scrollable;
-
-  /// Create a copy of StacAlertDialog
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacAlertDialogImplCopyWith<_$StacAlertDialogImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

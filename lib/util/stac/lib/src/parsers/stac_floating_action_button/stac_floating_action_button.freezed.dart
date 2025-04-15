@@ -43,12 +43,24 @@ mixin _$StacFloatingActionButton {
   Object? get heroTag => throw _privateConstructorUsedError;
   Map<String, dynamic> get child => throw _privateConstructorUsedError;
 
-  /// Serializes this StacFloatingActionButton to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacFloatingActionButton value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacFloatingActionButton value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacFloatingActionButton value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacFloatingActionButton
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacFloatingActionButtonCopyWith<StacFloatingActionButton> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -97,8 +109,6 @@ class _$StacFloatingActionButtonCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacFloatingActionButton
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -209,8 +219,6 @@ class _$StacFloatingActionButtonCopyWithImpl<$Res,
     ) as $Val);
   }
 
-  /// Create a copy of StacFloatingActionButton
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get textStyle {
@@ -223,8 +231,6 @@ class _$StacFloatingActionButtonCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacFloatingActionButton
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get extendedTextStyle {
@@ -286,8 +292,6 @@ class __$$StacFloatingActionButtonImplCopyWithImpl<$Res>
       $Res Function(_$StacFloatingActionButtonImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacFloatingActionButton
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -548,7 +552,7 @@ class _$StacFloatingActionButtonImpl implements _StacFloatingActionButton {
             const DeepCollectionEquality().equals(other._child, _child));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -575,14 +579,40 @@ class _$StacFloatingActionButtonImpl implements _StacFloatingActionButton {
         const DeepCollectionEquality().hash(_child)
       ]);
 
-  /// Create a copy of StacFloatingActionButton
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacFloatingActionButtonImplCopyWith<_$StacFloatingActionButtonImpl>
       get copyWith => __$$StacFloatingActionButtonImplCopyWithImpl<
           _$StacFloatingActionButtonImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacFloatingActionButton value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacFloatingActionButton value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacFloatingActionButton value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -662,11 +692,8 @@ abstract class _StacFloatingActionButton implements StacFloatingActionButton {
   Object? get heroTag;
   @override
   Map<String, dynamic> get child;
-
-  /// Create a copy of StacFloatingActionButton
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacFloatingActionButtonImplCopyWith<_$StacFloatingActionButtonImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

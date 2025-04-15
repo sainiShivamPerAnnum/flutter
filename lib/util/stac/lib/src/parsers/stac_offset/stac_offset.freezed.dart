@@ -23,12 +23,24 @@ mixin _$StacOffset {
   double get dx => throw _privateConstructorUsedError;
   double get dy => throw _privateConstructorUsedError;
 
-  /// Serializes this StacOffset to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacOffset value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacOffset value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacOffset value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacOffset
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacOffsetCopyWith<StacOffset> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -52,8 +64,6 @@ class _$StacOffsetCopyWithImpl<$Res, $Val extends StacOffset>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacOffset
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -92,8 +102,6 @@ class __$$StacOffsetImplCopyWithImpl<$Res>
       _$StacOffsetImpl _value, $Res Function(_$StacOffsetImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacOffset
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -140,17 +148,43 @@ class _$StacOffsetImpl implements _StacOffset {
             (identical(other.dy, dy) || other.dy == dy));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, dx, dy);
 
-  /// Create a copy of StacOffset
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacOffsetImplCopyWith<_$StacOffsetImpl> get copyWith =>
       __$$StacOffsetImplCopyWithImpl<_$StacOffsetImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacOffset value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacOffset value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacOffset value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -171,11 +205,8 @@ abstract class _StacOffset implements StacOffset {
   double get dx;
   @override
   double get dy;
-
-  /// Create a copy of StacOffset
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacOffsetImplCopyWith<_$StacOffsetImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

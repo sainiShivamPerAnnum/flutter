@@ -41,12 +41,24 @@ mixin _$StacBottomNavigationBar {
   BottomNavigationBarLandscapeLayout? get landscapeLayout =>
       throw _privateConstructorUsedError;
 
-  /// Serializes this StacBottomNavigationBar to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacBottomNavigationBar value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacBottomNavigationBar value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacBottomNavigationBar value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacBottomNavigationBar
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacBottomNavigationBarCopyWith<StacBottomNavigationBar> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -90,8 +102,6 @@ class _$StacBottomNavigationBarCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacBottomNavigationBar
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -180,8 +190,6 @@ class _$StacBottomNavigationBarCopyWithImpl<$Res,
     ) as $Val);
   }
 
-  /// Create a copy of StacBottomNavigationBar
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get selectedLabelStyle {
@@ -194,8 +202,6 @@ class _$StacBottomNavigationBarCopyWithImpl<$Res,
     });
   }
 
-  /// Create a copy of StacBottomNavigationBar
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get unselectedLabelStyle {
@@ -252,8 +258,6 @@ class __$$StacBottomNavigationBarImplCopyWithImpl<$Res>
       $Res Function(_$StacBottomNavigationBarImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacBottomNavigationBar
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -454,7 +458,7 @@ class _$StacBottomNavigationBarImpl implements _StacBottomNavigationBar {
                 other.landscapeLayout == landscapeLayout));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -475,14 +479,40 @@ class _$StacBottomNavigationBarImpl implements _StacBottomNavigationBar {
       enableFeedback,
       landscapeLayout);
 
-  /// Create a copy of StacBottomNavigationBar
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacBottomNavigationBarImplCopyWith<_$StacBottomNavigationBarImpl>
       get copyWith => __$$StacBottomNavigationBarImplCopyWithImpl<
           _$StacBottomNavigationBarImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacBottomNavigationBar value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacBottomNavigationBar value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacBottomNavigationBar value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -547,11 +577,8 @@ abstract class _StacBottomNavigationBar implements StacBottomNavigationBar {
   bool? get enableFeedback;
   @override
   BottomNavigationBarLandscapeLayout? get landscapeLayout;
-
-  /// Create a copy of StacBottomNavigationBar
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacBottomNavigationBarImplCopyWith<_$StacBottomNavigationBarImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

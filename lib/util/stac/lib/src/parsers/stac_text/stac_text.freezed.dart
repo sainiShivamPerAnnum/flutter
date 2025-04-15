@@ -33,12 +33,24 @@ mixin _$StacText {
   TextWidthBasis? get textWidthBasis => throw _privateConstructorUsedError;
   String? get selectionColor => throw _privateConstructorUsedError;
 
-  /// Serializes this StacText to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacText value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacText value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacText value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacText
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacTextCopyWith<StacText> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -75,8 +87,6 @@ class _$StacTextCopyWithImpl<$Res, $Val extends StacText>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacText
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -145,8 +155,6 @@ class _$StacTextCopyWithImpl<$Res, $Val extends StacText>
     ) as $Val);
   }
 
-  /// Create a copy of StacText
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get style {
@@ -194,8 +202,6 @@ class __$$StacTextImplCopyWithImpl<$Res>
       _$StacTextImpl _value, $Res Function(_$StacTextImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacText
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -351,7 +357,7 @@ class _$StacTextImpl implements _StacText {
                 other.selectionColor == selectionColor));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -368,13 +374,39 @@ class _$StacTextImpl implements _StacText {
       textWidthBasis,
       selectionColor);
 
-  /// Create a copy of StacText
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacTextImplCopyWith<_$StacTextImpl> get copyWith =>
       __$$StacTextImplCopyWithImpl<_$StacTextImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacText value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacText value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacText value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -426,11 +458,8 @@ abstract class _StacText implements StacText {
   TextWidthBasis? get textWidthBasis;
   @override
   String? get selectionColor;
-
-  /// Create a copy of StacText
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacTextImplCopyWith<_$StacTextImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -445,12 +474,24 @@ mixin _$StacTextSpan {
   StacTextStyle? get style => throw _privateConstructorUsedError;
   Map<String, dynamic>? get onTap => throw _privateConstructorUsedError;
 
-  /// Serializes this StacTextSpan to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacTextSpan value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacTextSpan value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacTextSpan value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacTextSpan
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacTextSpanCopyWith<StacTextSpan> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -476,8 +517,6 @@ class _$StacTextSpanCopyWithImpl<$Res, $Val extends StacTextSpan>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacTextSpan
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -501,8 +540,6 @@ class _$StacTextSpanCopyWithImpl<$Res, $Val extends StacTextSpan>
     ) as $Val);
   }
 
-  /// Create a copy of StacTextSpan
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacTextStyleCopyWith<$Res>? get style {
@@ -538,8 +575,6 @@ class __$$StacTextSpanImplCopyWithImpl<$Res>
       _$StacTextSpanImpl _value, $Res Function(_$StacTextSpanImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacTextSpan
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -603,18 +638,44 @@ class _$StacTextSpanImpl implements _StacTextSpan {
             const DeepCollectionEquality().equals(other._onTap, _onTap));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType, data, style, const DeepCollectionEquality().hash(_onTap));
 
-  /// Create a copy of StacTextSpan
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacTextSpanImplCopyWith<_$StacTextSpanImpl> get copyWith =>
       __$$StacTextSpanImplCopyWithImpl<_$StacTextSpanImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacTextSpan value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacTextSpan value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacTextSpan value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -639,11 +700,8 @@ abstract class _StacTextSpan implements StacTextSpan {
   StacTextStyle? get style;
   @override
   Map<String, dynamic>? get onTap;
-
-  /// Create a copy of StacTextSpan
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacTextSpanImplCopyWith<_$StacTextSpanImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -33,12 +33,24 @@ mixin _$StacPositioned {
   StacRect? get rect => throw _privateConstructorUsedError;
   Map<String, dynamic>? get child => throw _privateConstructorUsedError;
 
-  /// Serializes this StacPositioned to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacPositioned value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacPositioned value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacPositioned value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacPositioned
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacPositionedCopyWith<StacPositioned> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -76,8 +88,6 @@ class _$StacPositionedCopyWithImpl<$Res, $Val extends StacPositioned>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacPositioned
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -146,8 +156,6 @@ class _$StacPositionedCopyWithImpl<$Res, $Val extends StacPositioned>
     ) as $Val);
   }
 
-  /// Create a copy of StacPositioned
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacRectCopyWith<$Res>? get rect {
@@ -195,8 +203,6 @@ class __$$StacPositionedImplCopyWithImpl<$Res>
       _$StacPositionedImpl _value, $Res Function(_$StacPositionedImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacPositioned
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -346,7 +352,7 @@ class _$StacPositionedImpl implements _StacPositioned {
             const DeepCollectionEquality().equals(other._child, _child));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -363,14 +369,40 @@ class _$StacPositionedImpl implements _StacPositioned {
       rect,
       const DeepCollectionEquality().hash(_child));
 
-  /// Create a copy of StacPositioned
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacPositionedImplCopyWith<_$StacPositionedImpl> get copyWith =>
       __$$StacPositionedImplCopyWithImpl<_$StacPositionedImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacPositioned value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacPositioned value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacPositioned value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -422,11 +454,8 @@ abstract class _StacPositioned implements StacPositioned {
   StacRect? get rect;
   @override
   Map<String, dynamic>? get child;
-
-  /// Create a copy of StacPositioned
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacPositionedImplCopyWith<_$StacPositionedImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

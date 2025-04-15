@@ -27,12 +27,24 @@ mixin _$StacSnackBarAction {
   String get label => throw _privateConstructorUsedError;
   Map<String, dynamic> get onPressed => throw _privateConstructorUsedError;
 
-  /// Serializes this StacSnackBarAction to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacSnackBarAction value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacSnackBarAction value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacSnackBarAction value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacSnackBarAction
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacSnackBarActionCopyWith<StacSnackBarAction> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -62,8 +74,6 @@ class _$StacSnackBarActionCopyWithImpl<$Res, $Val extends StacSnackBarAction>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacSnackBarAction
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -128,8 +138,6 @@ class __$$StacSnackBarActionImplCopyWithImpl<$Res>
       $Res Function(_$StacSnackBarActionImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacSnackBarAction
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -226,7 +234,7 @@ class _$StacSnackBarActionImpl implements _StacSnackBarAction {
                 .equals(other._onPressed, _onPressed));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -237,14 +245,40 @@ class _$StacSnackBarActionImpl implements _StacSnackBarAction {
       label,
       const DeepCollectionEquality().hash(_onPressed));
 
-  /// Create a copy of StacSnackBarAction
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacSnackBarActionImplCopyWith<_$StacSnackBarActionImpl> get copyWith =>
       __$$StacSnackBarActionImplCopyWithImpl<_$StacSnackBarActionImpl>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacSnackBarAction value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacSnackBarAction value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacSnackBarAction value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -279,11 +313,8 @@ abstract class _StacSnackBarAction implements StacSnackBarAction {
   String get label;
   @override
   Map<String, dynamic> get onPressed;
-
-  /// Create a copy of StacSnackBarAction
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacSnackBarActionImplCopyWith<_$StacSnackBarActionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

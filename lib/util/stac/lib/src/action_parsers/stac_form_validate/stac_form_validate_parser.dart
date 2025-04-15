@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:felloapp/util/stac/lib/src/parsers/stac_form/stac_form_scope.dart';
 import 'package:felloapp/util/stac/lib/src/utils/action_type.dart';
 import 'package:felloapp/util/stac/lib/stac.dart';
+import 'package:flutter/material.dart';
 
 class StacFormValidateParser extends StacActionParser<StacFormValidate> {
   const StacFormValidateParser();

@@ -41,12 +41,24 @@ mixin _$StacSlider {
   SliderInteraction? get allowedInteraction =>
       throw _privateConstructorUsedError;
 
-  /// Serializes this StacSlider to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacSlider value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacSlider value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacSlider value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacSlider
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacSliderCopyWith<StacSlider> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -89,8 +101,6 @@ class _$StacSliderCopyWithImpl<$Res, $Val extends StacSlider>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacSlider
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -233,8 +243,6 @@ class __$$StacSliderImplCopyWithImpl<$Res>
       _$StacSliderImpl _value, $Res Function(_$StacSliderImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacSlider
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -481,7 +489,7 @@ class _$StacSliderImpl implements _StacSlider {
                 other.allowedInteraction == allowedInteraction));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -506,13 +514,39 @@ class _$StacSliderImpl implements _StacSlider {
         allowedInteraction
       ]);
 
-  /// Create a copy of StacSlider
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacSliderImplCopyWith<_$StacSliderImpl> get copyWith =>
       __$$StacSliderImplCopyWithImpl<_$StacSliderImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacSlider value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacSlider value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacSlider value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -585,11 +619,8 @@ abstract class _StacSlider implements StacSlider {
   bool get autofocus;
   @override
   SliderInteraction? get allowedInteraction;
-
-  /// Create a copy of StacSlider
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacSliderImplCopyWith<_$StacSliderImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

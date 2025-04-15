@@ -31,12 +31,24 @@ mixin _$StacCard {
   Map<String, dynamic>? get child => throw _privateConstructorUsedError;
   bool get semanticContainer => throw _privateConstructorUsedError;
 
-  /// Serializes this StacCard to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacCard value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacCard value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacCard value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacCard
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacCardCopyWith<StacCard> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -72,8 +84,6 @@ class _$StacCardCopyWithImpl<$Res, $Val extends StacCard>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacCard
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -132,8 +142,6 @@ class _$StacCardCopyWithImpl<$Res, $Val extends StacCard>
     ) as $Val);
   }
 
-  /// Create a copy of StacCard
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacShapeBorderCopyWith<$Res>? get shape {
@@ -146,8 +154,6 @@ class _$StacCardCopyWithImpl<$Res, $Val extends StacCard>
     });
   }
 
-  /// Create a copy of StacCard
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get margin {
@@ -195,8 +201,6 @@ class __$$StacCardImplCopyWithImpl<$Res>
       _$StacCardImpl _value, $Res Function(_$StacCardImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacCard
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -334,7 +338,7 @@ class _$StacCardImpl implements _StacCard {
                 other.semanticContainer == semanticContainer));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -349,13 +353,39 @@ class _$StacCardImpl implements _StacCard {
       const DeepCollectionEquality().hash(_child),
       semanticContainer);
 
-  /// Create a copy of StacCard
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacCardImplCopyWith<_$StacCardImpl> get copyWith =>
       __$$StacCardImplCopyWithImpl<_$StacCardImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacCard value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacCard value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacCard value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -401,11 +431,8 @@ abstract class _StacCard implements StacCard {
   Map<String, dynamic>? get child;
   @override
   bool get semanticContainer;
-
-  /// Create a copy of StacCard
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacCardImplCopyWith<_$StacCardImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

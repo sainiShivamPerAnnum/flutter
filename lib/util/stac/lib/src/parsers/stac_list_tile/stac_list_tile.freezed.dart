@@ -45,12 +45,24 @@ mixin _$StacListTile {
   double? get minVerticalPadding => throw _privateConstructorUsedError;
   double? get minLeadingWidth => throw _privateConstructorUsedError;
 
-  /// Serializes this StacListTile to a JSON map.
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacListTile value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacListTile value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacListTile value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StacListTile
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StacListTileCopyWith<StacListTile> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -100,8 +112,6 @@ class _$StacListTileCopyWithImpl<$Res, $Val extends StacListTile>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StacListTile
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -230,8 +240,6 @@ class _$StacListTileCopyWithImpl<$Res, $Val extends StacListTile>
     ) as $Val);
   }
 
-  /// Create a copy of StacListTile
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StacEdgeInsetsCopyWith<$Res>? get contentPadding {
@@ -291,8 +299,6 @@ class __$$StacListTileImplCopyWithImpl<$Res>
       _$StacListTileImpl _value, $Res Function(_$StacListTileImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StacListTile
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -613,7 +619,7 @@ class _$StacListTileImpl implements _StacListTile {
                 other.minLeadingWidth == minLeadingWidth));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -643,13 +649,39 @@ class _$StacListTileImpl implements _StacListTile {
         minLeadingWidth
       ]);
 
-  /// Create a copy of StacListTile
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StacListTileImplCopyWith<_$StacListTileImpl> get copyWith =>
       __$$StacListTileImplCopyWithImpl<_$StacListTileImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacListTile value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacListTile value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacListTile value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -737,11 +769,8 @@ abstract class _StacListTile implements StacListTile {
   double? get minVerticalPadding;
   @override
   double? get minLeadingWidth;
-
-  /// Create a copy of StacListTile
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StacListTileImplCopyWith<_$StacListTileImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
