@@ -1882,18 +1882,16 @@ packages:
   stac:
     dependency: "direct main"
     description:
-      name: stac
-      sha256: "53f5ab2c45e093fc5178a51db5bb5ae9ae3fda64fc8a879c90e612ebc7fc6b32"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/stac"
+      relative: true
+    source: path
     version: "0.10.0"
   stac_framework:
     dependency: "direct main"
     description:
-      name: stac_framework
-      sha256: "58fb26982eaf83626eaaefd4db153306f4f198bb2c4a4d288d97705da4eadac0"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/stac_framework"
+      relative: true
+    source: path
     version: "0.2.2"
   stack_trace:
     dependency: transitive
