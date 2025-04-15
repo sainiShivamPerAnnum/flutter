@@ -111,10 +111,6 @@ dependencies:
   smooth_page_indicator: ^1.2.0
   bordered_text: ^2.0.0
   transparent_image: ^2.0.1
-  stac:
-    path: packages/stac/
-  stac_framework: 
-    path: packages/stac_framework/
 
 
 

@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:felloapp/core/model/sdui/sdui_parsers/dynamic_view/dynamic_view_widget.dart';
 import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/util/stac/lib/src/framework/stac.dart';
+import 'package:felloapp/util/stac_framework/lib/src/stac_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stac/src/utils/log.dart';
-import 'package:stac/stac.dart';
 
 abstract class DynamicViewState {}
 
@@ -77,7 +77,6 @@ class DynamicViewBloc extends Bloc<DynamicViewEvent, DynamicViewState> {
         emit(DynamicViewError(apiResponse.error ?? 'Unknown error'));
       }
     } catch (e) {
-      Log.e('Error fetching dynamic content: $e');
       emit(DynamicViewError(e.toString()));
     }
   }

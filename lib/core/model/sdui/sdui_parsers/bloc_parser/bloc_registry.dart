@@ -1,6 +1,6 @@
+import 'package:felloapp/util/stac/lib/src/framework/stac.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stac/stac.dart';
 
 /// A completely dynamic registry for BLoC types and operations
 class BlocRegistry {

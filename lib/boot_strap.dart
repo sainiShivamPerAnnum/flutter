@@ -21,12 +21,12 @@ import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/local_actions_state.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
+import 'package:felloapp/util/stac/lib/src/framework/stac.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
-import 'package:stac/stac.dart';
 
 typedef BootstrapCallBack = Widget Function();
 

@@ -1879,20 +1879,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.3"
-  stac:
-    dependency: "direct main"
-    description:
-      path: "packages/stac"
-      relative: true
-    source: path
-    version: "0.10.0"
-  stac_framework:
-    dependency: "direct main"
-    description:
-      path: "packages/stac_framework"
-      relative: true
-    source: path
-    version: "0.2.2"
   stack_trace:
     dependency: transitive
     description:

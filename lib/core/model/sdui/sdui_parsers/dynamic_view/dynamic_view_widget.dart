@@ -1,6 +1,5 @@
+import 'package:felloapp/util/stac/lib/src/action_parsers/stac_network_request/stac_network_request.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:stac/stac.dart';
-
 part 'dynamic_view_widget.freezed.dart';
 part 'dynamic_view_widget.g.dart';
 

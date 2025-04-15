@@ -1,7 +1,8 @@
 import 'package:felloapp/core/model/sdui/sdui_parsers/app_image/app_image_widget.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/stac/lib/src/utils/color_utils.dart';
+import 'package:felloapp/util/stac_framework/lib/src/stac_parser.dart';
 import 'package:flutter/material.dart';
-import 'package:stac/stac.dart';
 
 class AppImageWidgetParser extends StacParser<AppImageWidget> {
   const AppImageWidgetParser();

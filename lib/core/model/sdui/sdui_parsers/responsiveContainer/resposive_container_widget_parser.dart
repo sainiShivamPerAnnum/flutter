@@ -1,7 +1,11 @@
 import 'package:felloapp/core/model/sdui/sdui_parsers/responsiveContainer/responsive_container_widget.dart';
+import 'package:felloapp/util/stac/lib/src/framework/stac.dart';
+import 'package:felloapp/util/stac/lib/src/parsers/stac_box_decoration/stac_box_decoration.dart';
+import 'package:felloapp/util/stac/lib/src/parsers/stac_edge_insets/stac_edge_insets.dart';
+import 'package:felloapp/util/stac/lib/src/utils/color_utils.dart';
+import 'package:felloapp/util/stac_framework/lib/src/stac_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:stac/stac.dart';
 
 class ResponsiveContainerParser extends StacParser<ResponsiveContainer> {
   const ResponsiveContainerParser();

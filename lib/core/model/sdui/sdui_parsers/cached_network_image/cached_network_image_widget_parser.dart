@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:felloapp/core/model/sdui/sdui_parsers/cached_network_image/cached_network_image_widget.dart';
+import 'package:felloapp/util/stac/lib/src/utils/color_utils.dart';
+import 'package:felloapp/util/stac_framework/lib/src/stac_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
-import 'package:stac/stac.dart';
 
 class CachedNetworkImageWidgetParser
     extends StacParser<CachedNetorkImageWidget> {

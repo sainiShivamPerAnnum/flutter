@@ -1,8 +1,10 @@
 import 'dart:ui';
 
+import 'package:felloapp/util/stac/lib/src/parsers/stac_alignment/stac_alignment.dart';
+import 'package:felloapp/util/stac/lib/src/parsers/stac_box_constraints/stac_box_constraints.dart';
+import 'package:felloapp/util/stac/lib/src/parsers/stac_box_decoration/stac_box_decoration.dart';
+import 'package:felloapp/util/stac/lib/src/parsers/stac_edge_insets/stac_edge_insets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:stac/src/parsers/stac_box_constraints/stac_box_constraints.dart';
-import 'package:stac/stac.dart';
 
 part 'responsive_container_widget.freezed.dart';
 part 'responsive_container_widget.g.dart';

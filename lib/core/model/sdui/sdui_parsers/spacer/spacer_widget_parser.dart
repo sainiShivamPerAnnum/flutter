@@ -1,6 +1,6 @@
 import 'package:felloapp/core/model/sdui/sdui_parsers/spacer/spacer_widget.dart';
+import 'package:felloapp/util/stac_framework/lib/src/stac_parser.dart';
 import 'package:flutter/material.dart';
-import 'package:stac/stac.dart';
 
 class SpacerWidgetParser extends StacParser<SpacerWidget> {
   const SpacerWidgetParser();

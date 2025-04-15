@@ -1,6 +1,7 @@
 import 'package:felloapp/core/model/sdui/sdui_parsers/divider/divider_widget.dart';
+import 'package:felloapp/util/stac/lib/src/utils/color_utils.dart';
+import 'package:felloapp/util/stac_framework/lib/src/stac_parser.dart';
 import 'package:flutter/material.dart';
-import 'package:stac/stac.dart';
 
 class DividerWidgetParser extends StacParser<DividerWidget> {
   const DividerWidgetParser();

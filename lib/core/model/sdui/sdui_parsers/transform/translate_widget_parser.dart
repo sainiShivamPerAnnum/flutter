@@ -1,6 +1,7 @@
 import 'package:felloapp/core/model/sdui/sdui_parsers/transform/translate_widget.dart';
+import 'package:felloapp/util/stac/lib/src/framework/stac.dart';
+import 'package:felloapp/util/stac_framework/lib/src/stac_parser.dart';
 import 'package:flutter/material.dart';
-import 'package:stac/stac.dart';
 
 class TransformWidgetParser extends StacParser<TransformWidget> {
   const TransformWidgetParser();

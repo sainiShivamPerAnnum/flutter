@@ -1,6 +1,8 @@
 import 'package:felloapp/core/model/sdui/sdui_parsers/animated_container/animated_container_widget.dart';
+import 'package:felloapp/util/stac/lib/src/framework/stac.dart';
+import 'package:felloapp/util/stac/lib/src/utils/color_utils.dart';
+import 'package:felloapp/util/stac_framework/lib/src/stac_parser.dart';
 import 'package:flutter/material.dart';
-import 'package:stac/stac.dart';
 
 class AnimatedContainerWidgetParser
     extends StacParser<AnimatedContainerWidget> {

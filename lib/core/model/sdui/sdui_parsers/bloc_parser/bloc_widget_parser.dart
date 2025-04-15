@@ -1,8 +1,9 @@
 import 'package:felloapp/core/model/sdui/sdui_parsers/bloc_parser/bloc_registry.dart';
 import 'package:felloapp/core/model/sdui/sdui_parsers/bloc_parser/bloc_widget.dart';
+import 'package:felloapp/util/stac/lib/src/framework/stac.dart';
+import 'package:felloapp/util/stac_framework/lib/src/stac_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stac/stac.dart';
 
 /// The actual parser class that implements StacParser
 class BlocWidgetParser extends StacParser<BlocWidget> {

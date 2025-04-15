@@ -1,8 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:felloapp/core/model/sdui/sdui_parsers/carousel/carousel_widget.dart';
+import 'package:felloapp/util/stac/lib/src/framework/stac.dart';
+import 'package:felloapp/util/stac_framework/lib/src/stac_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:stac/stac.dart';
 
 class CarouselWidgetParser extends StacParser<CarouselWidget> {
   const CarouselWidgetParser();
