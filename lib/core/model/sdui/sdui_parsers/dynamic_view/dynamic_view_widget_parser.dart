@@ -213,8 +213,8 @@ class ApiResponse<T> {
   final String? error;
 
   ApiResponse({
-    this.model,
     required this.code,
+    this.model,
     this.error,
   });
 
