@@ -1,4 +1,4 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart' as cs;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -33,7 +33,8 @@ class UpcomingBookingsComponent extends StatefulWidget {
 
 class UpcomingBookingsComponentState extends State<UpcomingBookingsComponent> {
   int _currentPage = 0;
-  final CarouselController _carouselController = CarouselController();
+  final cs.CarouselSliderController _carouselController =
+      cs.CarouselSliderController();
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +106,7 @@ class UpcomingBookingsComponentState extends State<UpcomingBookingsComponent> {
                           duration: const Duration(milliseconds: 500),
                           child: model.item3
                               ? const ExpertCardV2Shimmer()
-                              : CarouselSlider.builder(
+                              : cs.CarouselSlider.builder(
                                   itemCount: model.item2.length,
                                   itemBuilder: (context, index, realIndex) {
                                     return Padding(
@@ -160,7 +161,7 @@ class UpcomingBookingsComponentState extends State<UpcomingBookingsComponent> {
                                       ),
                                     );
                                   },
-                                  options: CarouselOptions(
+                                  options: cs.CarouselOptions(
                                     height: double.infinity,
                                     enlargeCenterPage: false,
                                     enableInfiniteScroll: false,
