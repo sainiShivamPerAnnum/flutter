@@ -58,9 +58,6 @@ class SizeConfig {
     viewPadding = _mediaQueryData.viewPadding;
   }
 
-  // TEXT SIZES
-  static double get titleSize => screenWidth! * 0.1;
-
   static double get title98 => 98.sp; //98
   static double get title68 => 68.sp; //68
   static double get title50 => 50.sp; //50
@@ -122,7 +119,7 @@ class SizeConfig {
 
   static double get padding30 => 30.w;
 
-  static double get padding32 => 32.w; // wrong
+  static double get padding32 => 32.w;
 
   static double get padding33 => 33.w;
   static double get padding34 => 34.w;
@@ -194,7 +191,7 @@ class SizeConfig {
   static double get pageHorizontalMargins => screenWidth! * 0.0579; //
 
   //BORDER RADIUS
-  static double get roundness2 => screenWidth! * .00525;
+  static double get roundness2 => 2.r;
   static double get roundness8 => 8.r; //8
   static double get roundness5 => 5.r; //5
   static double get roundness12 => 12.r; //12
@@ -205,31 +202,16 @@ class SizeConfig {
   static double get roundness56 => 56.r; //56
   static double get roundness112 => 112.r; //56
 
-  //SLIVER APP BAR (Campaign Screen)
-  static double get sliverAppExpandableSize => screenWidth! * 0.6;
-  static double get sliverAppBarPaddingSmall => screenWidth! * 0.05;
-  static double get sliverAppBarPaddingLarge => screenWidth! * 0.128;
-  static double get boxWidthLarge => screenWidth! * 0.371;
-  static double get profileDPSize => screenWidth! * 0.05;
-  static double get boxDividerMargins => screenWidth! * 0.016;
-  static double get bannerHeight => screenWidth! * 0.5;
-
   //Navbar
   static double get navBarWidth =>
       SizeConfig.screenWidth! - (SizeConfig.pageHorizontalMargins * 2);
   static double get navBarHeight =>
       kBottomNavigationBarHeight +
-      math.max(SizeConfig.viewPadding!.bottom, SizeConfig.padding8);
+      math.max(SizeConfig.viewPadding!.bottom, 8.h);
 
   //Avatar
   static double get avatarRadius => screenWidth! * 0.048;
-  static double get roundedButtonRadius => screenWidth! * 0.048;
-  static double get tileAvatarRadius => screenWidth! * 0.057;
   static double get notificationAvatarRadius => screenWidth! * 0.06;
-
-  //DIVIDERS HEIGHTS
-  static double get dividerHeight => screenWidth! * 0.0006;
-
   //BORDER SIZES
   static double get border0 => 0.5.w; // 0.5
   static double get border1 => 1.w; // 1
@@ -239,7 +221,4 @@ class SizeConfig {
 
   // Button Border Radius
   static double get buttonBorderRadius => screenWidth! * 0.0139; // 5
-
-//Assets
-  static double get onboardingAssetsDimens => screenWidth! * 0.4;
 }
