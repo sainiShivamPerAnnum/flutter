@@ -263,7 +263,13 @@ class CustomDynamicViewParser extends StacParser<DynamicViewWidget> {
           case DynamicViewError():
             return errorBuilder != null
                 ? errorBuilder!(context, state.error)
-                : const Center(child: NewErrorPage());
+                : Center(
+                    child: NewErrorPage(
+                      onTryAgain: () {
+                        bloc.add(FetchDynamicView(model, context));
+                      },
+                    ),
+                  );
         }
       },
     );
