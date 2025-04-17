@@ -1,5 +1,5 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:felloapp/util/stac/lib/src/action_parsers/stac_network_request/stac_network_request.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'stac_navigate_action.freezed.dart';
 part 'stac_navigate_action.g.dart';
@@ -12,7 +12,8 @@ enum NavigationStyle {
   popAll,
   pushNamed,
   pushNamedAndRemoveAll,
-  pushReplacementNamed
+  pushReplacementNamed,
+  link,
 }
 
 @freezed

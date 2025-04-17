@@ -95,14 +95,36 @@ Color? _parseThemeColor(String color, BuildContext context) {
   }
 }
 
-Color _parseHexColor(String color) {
-  // Ex: #000000
-  final buffer = StringBuffer();
-  if (color.length == 6 || color.length == 7) buffer.write(_defaultOpacity);
-  buffer.write(color.replaceFirst(_hashtag, _empty));
-  int? intColor = int.tryParse(buffer.toString(), radix: 16);
-  intColor = intColor ?? 0x00000000;
-  return Color(intColor);
+Color _parseHexColor(String hexColor) {
+  // Remove the leading # if present
+  final cleanedHex = hexColor.replaceFirst(_hashtag, _empty);
+
+  // Determine the format and parse accordingly
+  if (cleanedHex.length == 6) {
+    // Format: RRGGBB (no alpha)
+    return Color(int.parse('FF$cleanedHex', radix: 16));
+  } else if (cleanedHex.length == 8) {
+    // Format: RRGGBBAA (with alpha at the end)
+    final rgb = cleanedHex.substring(0, 6);
+    final alpha = cleanedHex.substring(6, 8);
+    return Color(int.parse('$alpha$rgb', radix: 16));
+  } else if (cleanedHex.length == 3) {
+    // Format: RGB (shorthand, no alpha)
+    final r = cleanedHex.substring(0, 1);
+    final g = cleanedHex.substring(1, 2);
+    final b = cleanedHex.substring(2, 3);
+    return Color(int.parse('FF$r$r$g$g$b$b', radix: 16));
+  } else if (cleanedHex.length == 4) {
+    // Format: RGBA (shorthand with alpha)
+    final r = cleanedHex.substring(0, 1);
+    final g = cleanedHex.substring(1, 2);
+    final b = cleanedHex.substring(2, 3);
+    final a = cleanedHex.substring(3, 4);
+    return Color(int.parse('$a$a$r$r$g$g$b$b', radix: 16));
+  } else {
+    // Invalid format, default to transparent
+    return Colors.transparent;
+  }
 }
 
 Color? _parseNameColor(String colorString) {

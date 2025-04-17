@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:felloapp/util/stac/lib/src/framework/framework.dart';
 import 'package:felloapp/util/stac/lib/src/parsers/stac_edge_insets/stac_edge_insets.dart';
 import 'package:felloapp/util/stac/lib/src/parsers/stac_grid_view/stac_grid_view.dart';
 import 'package:felloapp/util/stac/lib/src/utils/widget_type.dart';
 import 'package:felloapp/util/stac_framework/lib/stac_framework.dart';
+import 'package:flutter/material.dart';
 
 class StacGridViewParser extends StacParser<StacGridView> {
   const StacGridViewParser();

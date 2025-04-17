@@ -21,6 +21,7 @@ StacNetworkRequest _$StacNetworkRequestFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$StacNetworkRequest {
   String get url => throw _privateConstructorUsedError;
+  String get cBaseUrl => throw _privateConstructorUsedError;
   Method get method => throw _privateConstructorUsedError;
   Map<String, dynamic>? get queryParameters =>
       throw _privateConstructorUsedError;
@@ -59,6 +60,7 @@ abstract class $StacNetworkRequestCopyWith<$Res> {
   @useResult
   $Res call(
       {String url,
+      String cBaseUrl,
       Method method,
       Map<String, dynamic>? queryParameters,
       Map<String, dynamic>? headers,
@@ -81,6 +83,7 @@ class _$StacNetworkRequestCopyWithImpl<$Res, $Val extends StacNetworkRequest>
   @override
   $Res call({
     Object? url = null,
+    Object? cBaseUrl = null,
     Object? method = null,
     Object? queryParameters = freezed,
     Object? headers = freezed,
@@ -92,6 +95,10 @@ class _$StacNetworkRequestCopyWithImpl<$Res, $Val extends StacNetworkRequest>
       url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
+              as String,
+      cBaseUrl: null == cBaseUrl
+          ? _value.cBaseUrl
+          : cBaseUrl // ignore: cast_nullable_to_non_nullable
               as String,
       method: null == method
           ? _value.method
@@ -131,6 +138,7 @@ abstract class _$$StacNetworkRequestImplCopyWith<$Res>
   @useResult
   $Res call(
       {String url,
+      String cBaseUrl,
       Method method,
       Map<String, dynamic>? queryParameters,
       Map<String, dynamic>? headers,
@@ -151,6 +159,7 @@ class __$$StacNetworkRequestImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? url = null,
+    Object? cBaseUrl = null,
     Object? method = null,
     Object? queryParameters = freezed,
     Object? headers = freezed,
@@ -162,6 +171,10 @@ class __$$StacNetworkRequestImplCopyWithImpl<$Res>
       url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
+              as String,
+      cBaseUrl: null == cBaseUrl
+          ? _value.cBaseUrl
+          : cBaseUrl // ignore: cast_nullable_to_non_nullable
               as String,
       method: null == method
           ? _value.method
@@ -196,6 +209,7 @@ class __$$StacNetworkRequestImplCopyWithImpl<$Res>
 class _$StacNetworkRequestImpl implements _StacNetworkRequest {
   const _$StacNetworkRequestImpl(
       {required this.url,
+      required this.cBaseUrl,
       this.method = Method.get,
       final Map<String, dynamic>? queryParameters,
       final Map<String, dynamic>? headers,
@@ -211,6 +225,8 @@ class _$StacNetworkRequestImpl implements _StacNetworkRequest {
 
   @override
   final String url;
+  @override
+  final String cBaseUrl;
   @override
   @JsonKey()
   final Method method;
@@ -249,7 +265,7 @@ class _$StacNetworkRequestImpl implements _StacNetworkRequest {
 
   @override
   String toString() {
-    return 'StacNetworkRequest(url: $url, method: $method, queryParameters: $queryParameters, headers: $headers, contentType: $contentType, body: $body, results: $results)';
+    return 'StacNetworkRequest(url: $url, cBaseUrl: $cBaseUrl, method: $method, queryParameters: $queryParameters, headers: $headers, contentType: $contentType, body: $body, results: $results)';
   }
 
   @override
@@ -258,6 +274,8 @@ class _$StacNetworkRequestImpl implements _StacNetworkRequest {
         (other.runtimeType == runtimeType &&
             other is _$StacNetworkRequestImpl &&
             (identical(other.url, url) || other.url == url) &&
+            (identical(other.cBaseUrl, cBaseUrl) ||
+                other.cBaseUrl == cBaseUrl) &&
             (identical(other.method, method) || other.method == method) &&
             const DeepCollectionEquality()
                 .equals(other._queryParameters, _queryParameters) &&
@@ -273,6 +291,7 @@ class _$StacNetworkRequestImpl implements _StacNetworkRequest {
   int get hashCode => Object.hash(
       runtimeType,
       url,
+      cBaseUrl,
       method,
       const DeepCollectionEquality().hash(_queryParameters),
       const DeepCollectionEquality().hash(_headers),
@@ -326,6 +345,7 @@ class _$StacNetworkRequestImpl implements _StacNetworkRequest {
 abstract class _StacNetworkRequest implements StacNetworkRequest {
   const factory _StacNetworkRequest(
       {required final String url,
+      required final String cBaseUrl,
       final Method method,
       final Map<String, dynamic>? queryParameters,
       final Map<String, dynamic>? headers,
@@ -338,6 +358,8 @@ abstract class _StacNetworkRequest implements StacNetworkRequest {
 
   @override
   String get url;
+  @override
+  String get cBaseUrl;
   @override
   Method get method;
   @override

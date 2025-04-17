@@ -140,6 +140,7 @@ const String FdCalculatorViewPath = '/fd/calculator';
 const String FdDetailsViewPath = '/fd/details';
 const String shortsNotificationViewPath = "/shorts-notification";
 const String savedShortsViewPath = "/shorts-saved";
+const String customSDUIViewPath = "/sdui";
 
 enum Pages {
   Splash,
@@ -277,6 +278,7 @@ enum Pages {
   FdDetailsView,
   ShortsNotification,
   SavedShorts,
+  Sdui,
 }
 
 class PageConfiguration {
@@ -1111,4 +1113,10 @@ PageConfiguration SavedShortsPageConfig = PageConfiguration(
   path: savedShortsViewPath,
   uiPage: Pages.SavedShorts,
   name: "Saved Shorts",
+);
+PageConfiguration SduiPageConfig = PageConfiguration(
+  key: 'SavedShortsPageConfig',
+  path: customSDUIViewPath,
+  uiPage: Pages.Sdui,
+  name: "Sdui",
 );

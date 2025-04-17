@@ -14,6 +14,7 @@ enum Method {
 class StacNetworkRequest with _$StacNetworkRequest {
   const factory StacNetworkRequest({
     required String url,
+    required String cBaseUrl,
     @Default(Method.get) Method method,
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? headers,

@@ -6,6 +6,5 @@
 //
 
 import CTNotificationContent
-import CleverTapSDK
 
 class NotificationViewController: CTNotificationViewController {}

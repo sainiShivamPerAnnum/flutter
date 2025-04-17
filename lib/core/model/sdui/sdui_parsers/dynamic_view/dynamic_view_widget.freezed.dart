@@ -21,8 +21,8 @@ DynamicViewWidget _$DynamicViewWidgetFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$DynamicViewWidget {
   StacNetworkRequest get request => throw _privateConstructorUsedError;
-  String get targetPath => throw _privateConstructorUsedError;
   Map<String, dynamic> get template => throw _privateConstructorUsedError;
+  String get targetPath => throw _privateConstructorUsedError;
 
   @optionalTypeArgs
   TResult map<TResult extends Object?>(
@@ -54,8 +54,8 @@ abstract class $DynamicViewWidgetCopyWith<$Res> {
   @useResult
   $Res call(
       {StacNetworkRequest request,
-      String targetPath,
-      Map<String, dynamic> template});
+      Map<String, dynamic> template,
+      String targetPath});
 
   $StacNetworkRequestCopyWith<$Res> get request;
 }
@@ -74,22 +74,22 @@ class _$DynamicViewWidgetCopyWithImpl<$Res, $Val extends DynamicViewWidget>
   @override
   $Res call({
     Object? request = null,
-    Object? targetPath = null,
     Object? template = null,
+    Object? targetPath = null,
   }) {
     return _then(_value.copyWith(
       request: null == request
           ? _value.request
           : request // ignore: cast_nullable_to_non_nullable
               as StacNetworkRequest,
-      targetPath: null == targetPath
-          ? _value.targetPath
-          : targetPath // ignore: cast_nullable_to_non_nullable
-              as String,
       template: null == template
           ? _value.template
           : template // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>,
+      targetPath: null == targetPath
+          ? _value.targetPath
+          : targetPath // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 
@@ -112,8 +112,8 @@ abstract class _$$DynamicViewWidgetImplCopyWith<$Res>
   @useResult
   $Res call(
       {StacNetworkRequest request,
-      String targetPath,
-      Map<String, dynamic> template});
+      Map<String, dynamic> template,
+      String targetPath});
 
   @override
   $StacNetworkRequestCopyWith<$Res> get request;
@@ -131,22 +131,22 @@ class __$$DynamicViewWidgetImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? request = null,
-    Object? targetPath = null,
     Object? template = null,
+    Object? targetPath = null,
   }) {
     return _then(_$DynamicViewWidgetImpl(
       request: null == request
           ? _value.request
           : request // ignore: cast_nullable_to_non_nullable
               as StacNetworkRequest,
-      targetPath: null == targetPath
-          ? _value.targetPath
-          : targetPath // ignore: cast_nullable_to_non_nullable
-              as String,
       template: null == template
           ? _value._template
           : template // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>,
+      targetPath: null == targetPath
+          ? _value.targetPath
+          : targetPath // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -156,8 +156,8 @@ class __$$DynamicViewWidgetImplCopyWithImpl<$Res>
 class _$DynamicViewWidgetImpl implements _DynamicViewWidget {
   const _$DynamicViewWidgetImpl(
       {required this.request,
-      this.targetPath = '',
-      required final Map<String, dynamic> template})
+      required final Map<String, dynamic> template,
+      this.targetPath = ''})
       : _template = template;
 
   factory _$DynamicViewWidgetImpl.fromJson(Map<String, dynamic> json) =>
@@ -165,9 +165,6 @@ class _$DynamicViewWidgetImpl implements _DynamicViewWidget {
 
   @override
   final StacNetworkRequest request;
-  @override
-  @JsonKey()
-  final String targetPath;
   final Map<String, dynamic> _template;
   @override
   Map<String, dynamic> get template {
@@ -177,8 +174,12 @@ class _$DynamicViewWidgetImpl implements _DynamicViewWidget {
   }
 
   @override
+  @JsonKey()
+  final String targetPath;
+
+  @override
   String toString() {
-    return 'DynamicViewWidget(request: $request, targetPath: $targetPath, template: $template)';
+    return 'DynamicViewWidget(request: $request, template: $template, targetPath: $targetPath)';
   }
 
   @override
@@ -187,15 +188,15 @@ class _$DynamicViewWidgetImpl implements _DynamicViewWidget {
         (other.runtimeType == runtimeType &&
             other is _$DynamicViewWidgetImpl &&
             (identical(other.request, request) || other.request == request) &&
+            const DeepCollectionEquality().equals(other._template, _template) &&
             (identical(other.targetPath, targetPath) ||
-                other.targetPath == targetPath) &&
-            const DeepCollectionEquality().equals(other._template, _template));
+                other.targetPath == targetPath));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, request, targetPath,
-      const DeepCollectionEquality().hash(_template));
+  int get hashCode => Object.hash(runtimeType, request,
+      const DeepCollectionEquality().hash(_template), targetPath);
 
   @JsonKey(ignore: true)
   @override
@@ -243,8 +244,8 @@ class _$DynamicViewWidgetImpl implements _DynamicViewWidget {
 abstract class _DynamicViewWidget implements DynamicViewWidget {
   const factory _DynamicViewWidget(
       {required final StacNetworkRequest request,
-      final String targetPath,
-      required final Map<String, dynamic> template}) = _$DynamicViewWidgetImpl;
+      required final Map<String, dynamic> template,
+      final String targetPath}) = _$DynamicViewWidgetImpl;
 
   factory _DynamicViewWidget.fromJson(Map<String, dynamic> json) =
       _$DynamicViewWidgetImpl.fromJson;
@@ -252,9 +253,9 @@ abstract class _DynamicViewWidget implements DynamicViewWidget {
   @override
   StacNetworkRequest get request;
   @override
-  String get targetPath;
-  @override
   Map<String, dynamic> get template;
+  @override
+  String get targetPath;
   @override
   @JsonKey(ignore: true)
   _$$DynamicViewWidgetImplCopyWith<_$DynamicViewWidgetImpl> get copyWith =>

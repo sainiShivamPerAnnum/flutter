@@ -4,16 +4,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_v2/fcm_handler_v2.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/elements/fello_dialog/apxor_dialog.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -137,31 +134,6 @@ class FcmHandler extends ChangeNotifier {
           showSnackbar = false;
           await _userService.checkForNewNotifications();
           break;
-        case FcmCommands.COMMAND_APPXOR_DIALOG:
-          debugPrint("fcm handler: appxor");
-          if (AppState.isOnboardingInProgress ||
-              AppState.isWebGamePInProgress ||
-              AppState.isWebGameLInProgress ||
-              AppState.isUpdateScreen ||
-              AppState.isInstantGtViewInView ||
-              AppState.showAutosaveBt ||
-              AppState.screenStack.last == ScreenItem.loader) return true;
-          if (data["payload"] != null && data["payload"].isNotEmpty) {
-            unawaited(
-              BaseUtil.openDialog(
-                isBarrierDismissible: false,
-                barrierColor: Colors.black12,
-                addToScreenStack: true,
-                hapticVibrate: true,
-                content: ApxorDialog(
-                  dialogContent:
-                      json.decode(data["payload"]) as Map<String, dynamic>,
-                ),
-              ),
-            );
-          }
-          return true;
-
         default:
       }
     }

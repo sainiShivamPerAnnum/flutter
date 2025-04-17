@@ -94,6 +94,11 @@ class Stac {
     const StacAspectRatioParser(),
     const StacFittedBoxParser(),
     const StacLimitedBoxParser(),
+    const StacSliverListParser(),
+    const StacSliverToBoxAdapterParser(),
+    const StacCustomScrollViewParser(),
+    const StacSliverAppBarParser(),
+    const StacFlexibleSpaceBarParser(),
   ];
 
   static final _actionParsers = <StacActionParser>[
@@ -110,14 +115,12 @@ class Stac {
   static Future<void> initialize({
     List<StacParser> parsers = const [],
     List<StacActionParser> actionParsers = const [],
-    Dio? dio,
     bool override = false,
   }) async {
     _parsers.addAll(parsers);
     _actionParsers.addAll(actionParsers);
-    StacRegistry.instance.registerAll(_parsers, override);
-    StacRegistry.instance.registerAllActions(_actionParsers, override);
-    StacNetworkService.initialize(dio ?? Dio());
+    await StacRegistry.instance.registerAll(_parsers, override);
+    await StacRegistry.instance.registerAllActions(_actionParsers, override);
   }
 
   static Widget? fromJson(Map<String, dynamic>? json, BuildContext context) {

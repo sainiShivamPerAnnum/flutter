@@ -11,14 +11,14 @@ _$DynamicViewWidgetImpl _$$DynamicViewWidgetImplFromJson(
     _$DynamicViewWidgetImpl(
       request:
           StacNetworkRequest.fromJson(json['request'] as Map<String, dynamic>),
-      targetPath: json['targetPath'] as String? ?? '',
       template: json['template'] as Map<String, dynamic>,
+      targetPath: json['targetPath'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$DynamicViewWidgetImplToJson(
         _$DynamicViewWidgetImpl instance) =>
     <String, dynamic>{
       'request': instance.request,
-      'targetPath': instance.targetPath,
       'template': instance.template,
+      'targetPath': instance.targetPath,
     };

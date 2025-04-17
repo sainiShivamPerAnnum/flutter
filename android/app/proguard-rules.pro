@@ -16,5 +16,3 @@
 -keep public class com.google.firebase.messaging.FirebaseMessagingService {
     public *;
 }
--keep class com.apxor.** { *; }
--dontwarn com.apxor.**

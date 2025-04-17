@@ -105,12 +105,6 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<key>CleverTapAccountID</key>
-	<string>$(CleverTapAccountID)</string>
-	<key>CleverTapRegion</key>
-	<string>in1</string>
-	<key>CleverTapToken</key>
-	<string>$(CleverTapToken)</string>
 	<key>FacebookAdvertiserIDCollectionEnabled</key>
 	<true/>
 	<key>FacebookAppID</key>

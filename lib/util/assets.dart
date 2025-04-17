@@ -325,4 +325,8 @@ class Assets {
   static const String portfolio = "assets/svg/portfolio.svg";
   static const String webRedirect = "assets/svg/web_redirect.svg";
   static const String discounts = "assets/svg/Discount.svg";
+  static const String bigShield = "assets/svg/shield_big.svg";
+  static const String chat = "assets/svg/chat.svg";
+  static const String purse = "assets/svg/purse.svg";
+  static const String safe = "assets/svg/safe.svg";
 }

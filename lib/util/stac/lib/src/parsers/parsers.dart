@@ -1,3 +1,5 @@
+export 'package:felloapp/util/stac/lib/src/parsers/sliver_list/stac_sliver_list.dart';
+export 'package:felloapp/util/stac/lib/src/parsers/sliver_to_box_adapter/stac_sliver_to_box_adapter.dart';
 export 'package:felloapp/util/stac/lib/src/parsers/stac_alert_dialog/stac_alert_dialog.dart';
 export 'package:felloapp/util/stac/lib/src/parsers/stac_align/stac_align.dart';
 export 'package:felloapp/util/stac/lib/src/parsers/stac_alignment/stac_alignment.dart';
@@ -18,7 +20,6 @@ export 'package:felloapp/util/stac/lib/src/parsers/stac_box_shadow/stac_box_shad
 export 'package:felloapp/util/stac/lib/src/parsers/stac_button_style/stac_button_style.dart';
 export 'package:felloapp/util/stac/lib/src/parsers/stac_card/stac_card.dart';
 export 'package:felloapp/util/stac/lib/src/parsers/stac_card_theme_data/stac_card_theme_data.dart';
-// export 'package:felloapp/util/stac/lib/src/parsers/stac_carousel_view/stac_carousel_view.dart';
 export 'package:felloapp/util/stac/lib/src/parsers/stac_center/stac_center.dart';
 export 'package:felloapp/util/stac/lib/src/parsers/stac_check_box/stac_check_box.dart';
 export 'package:felloapp/util/stac/lib/src/parsers/stac_chip/stac_chip.dart';
@@ -27,6 +28,9 @@ export 'package:felloapp/util/stac/lib/src/parsers/stac_circular_progress_indica
 export 'package:felloapp/util/stac/lib/src/parsers/stac_colored_box/stac_colored_box.dart';
 export 'package:felloapp/util/stac/lib/src/parsers/stac_column/stac_column.dart';
 export 'package:felloapp/util/stac/lib/src/parsers/stac_container/stac_container.dart';
+export 'package:felloapp/util/stac/lib/src/parsers/stac_custom_scroll_view/stac_custom_scroll_view.dart';
+// export 'package:felloapp/util/stac/lib/src/parsers/stac_carousel_view/stac_carousel_view.dart';
+export 'package:felloapp/util/stac/lib/src/parsers/stac_custom_scroll_view/stac_custom_scroll_view_parser.dart';
 export 'package:felloapp/util/stac/lib/src/parsers/stac_default_bottom_navigation_controller/stac_default_bottom_navigation_controller.dart';
 export 'package:felloapp/util/stac/lib/src/parsers/stac_default_tab_controller/stac_default_tab_controller.dart';
 export 'package:felloapp/util/stac/lib/src/parsers/stac_dialog_theme/stac_dialog_theme.dart';
@@ -74,6 +78,8 @@ export 'package:felloapp/util/stac/lib/src/parsers/stac_single_child_scroll_view
 export 'package:felloapp/util/stac/lib/src/parsers/stac_size/stac_size.dart';
 export 'package:felloapp/util/stac/lib/src/parsers/stac_sized_box/stac_sized_box.dart';
 export 'package:felloapp/util/stac/lib/src/parsers/stac_slider/stac_slider.dart';
+export 'package:felloapp/util/stac/lib/src/parsers/stac_sliver_app_bar/stac_sliver_app_bar.dart';
+export 'package:felloapp/util/stac/lib/src/parsers/stac_flexible_spacebar/stac_flexible_spacebar.dart';
 export 'package:felloapp/util/stac/lib/src/parsers/stac_spacer/stac_spacer.dart';
 export 'package:felloapp/util/stac/lib/src/parsers/stac_stack/stac_stack.dart';
 export 'package:felloapp/util/stac/lib/src/parsers/stac_switch/stac_switch.dart';

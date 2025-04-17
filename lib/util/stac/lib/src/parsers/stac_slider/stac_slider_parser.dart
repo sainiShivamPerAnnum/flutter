@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:felloapp/util/stac/lib/src/utils/widget_type.dart';
 import 'package:felloapp/util/stac/lib/stac.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../stac_form/stac_form_scope.dart';
 

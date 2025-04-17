@@ -2,7 +2,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-// import 'package:apxor_flutter/observer.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -23,6 +22,7 @@ import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/feature/p2p_home/rps/view/view_rps.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
+import 'package:felloapp/feature/sdui/sdui_page.dart';
 import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
 import 'package:felloapp/feature/shorts/video_page.dart';
 import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
@@ -729,6 +729,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.AllShorts:
         AllShortsPageConfig.currentPageAction = action;
         break;
+      case Pages.Sdui:
+        SduiPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -1187,6 +1190,18 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           queryParams: queryParams,
           fullPager: true,
         );
+        break;
+      case "sdui":
+        final pageUrl = queryParams['pageUrl'];
+        if (pageUrl != null) {
+          appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: SduiPageConfig,
+            widget: SduiPage(
+              linkToParse: pageUrl,
+            ),
+          );
+        }
         break;
     }
     if (pageConfiguration != null) {

@@ -65,4 +65,8 @@ enum WidgetType {
   aspectRatio,
   fittedBox,
   limitedBox,
+  sliverAppBar,
+  customScrollView,
+  sliverToBoxAdapter,
+  sliverList,
 }

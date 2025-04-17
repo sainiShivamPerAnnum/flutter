@@ -1,10 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/stac/lib/src/action_parsers/stac_navigate_action/stac_navigate_action.dart';
 import 'package:felloapp/util/stac/lib/src/framework/framework.dart';
 import 'package:felloapp/util/stac/lib/src/utils/action_type.dart';
 import 'package:felloapp/util/stac_framework/lib/stac_framework.dart';
+import 'package:flutter/material.dart';
 
 class StacNavigateActionParser extends StacActionParser<StacNavigateAction> {
   const StacNavigateActionParser();
@@ -46,13 +49,15 @@ class StacNavigateActionParser extends StacActionParser<StacNavigateAction> {
   }) {
     switch (navigationStyle) {
       case NavigationStyle.push:
-        return Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => widget ?? const SizedBox()),
+        AppState.delegate!.appState.currentAction = PageAction(
+          page: SduiPageConfig,
+          state: PageState.addWidget,
+          widget: widget,
         );
+        break;
 
       case NavigationStyle.pop:
-        Navigator.pop(context, result);
+        AppState.backButtonDispatcher!.didPopRoute();
         break;
 
       case NavigationStyle.pushReplacement:
@@ -95,6 +100,9 @@ class StacNavigateActionParser extends StacActionParser<StacNavigateAction> {
           result: result,
           arguments: arguments,
         );
+      case NavigationStyle.link:
+        AppState.delegate!.parseRoute(Uri.parse(routeName!));
+        break;
     }
 
     return null;

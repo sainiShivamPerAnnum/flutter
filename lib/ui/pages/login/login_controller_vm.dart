@@ -552,7 +552,6 @@ class LoginControllerViewModel extends BaseViewModel {
             _analyticsService.track(
               eventName: AnalyticsEvents.installedApps,
               appFlyer: false,
-              apxor: false,
               webEngage: false,
               properties: {
                 "apps": Map<String, dynamic>.from(value)

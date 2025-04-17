@@ -43,4 +43,5 @@ const _$NavigationStyleEnumMap = {
   NavigationStyle.pushNamed: 'pushNamed',
   NavigationStyle.pushNamedAndRemoveAll: 'pushNamedAndRemoveAll',
   NavigationStyle.pushReplacementNamed: 'pushReplacementNamed',
+  NavigationStyle.link: 'link',
 };

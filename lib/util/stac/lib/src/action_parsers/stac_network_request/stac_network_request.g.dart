@@ -10,6 +10,7 @@ _$StacNetworkRequestImpl _$$StacNetworkRequestImplFromJson(
         Map<String, dynamic> json) =>
     _$StacNetworkRequestImpl(
       url: json['url'] as String,
+      cBaseUrl: json['cBaseUrl'] as String,
       method:
           $enumDecodeNullable(_$MethodEnumMap, json['method']) ?? Method.get,
       queryParameters: json['queryParameters'] as Map<String, dynamic>?,
@@ -27,6 +28,7 @@ Map<String, dynamic> _$$StacNetworkRequestImplToJson(
         _$StacNetworkRequestImpl instance) =>
     <String, dynamic>{
       'url': instance.url,
+      'cBaseUrl': instance.cBaseUrl,
       'method': _$MethodEnumMap[instance.method]!,
       'queryParameters': instance.queryParameters,
       'headers': instance.headers,

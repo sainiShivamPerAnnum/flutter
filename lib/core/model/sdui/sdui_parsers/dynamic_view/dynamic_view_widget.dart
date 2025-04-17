@@ -7,8 +7,8 @@ part 'dynamic_view_widget.g.dart';
 class DynamicViewWidget with _$DynamicViewWidget {
   const factory DynamicViewWidget({
     required StacNetworkRequest request,
-    @Default('') String targetPath,
     required Map<String, dynamic> template,
+    @Default('') String targetPath,
   }) = _DynamicViewWidget;
 
   factory DynamicViewWidget.fromJson(Map<String, dynamic> json) =>
