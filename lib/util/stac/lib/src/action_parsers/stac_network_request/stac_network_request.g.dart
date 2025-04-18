@@ -13,6 +13,7 @@ _$StacNetworkRequestImpl _$$StacNetworkRequestImplFromJson(
       cBaseUrl: json['cBaseUrl'] as String,
       method:
           $enumDecodeNullable(_$MethodEnumMap, json['method']) ?? Method.get,
+      isS3Request: json['isS3Request'] as bool? ?? false,
       queryParameters: json['queryParameters'] as Map<String, dynamic>?,
       headers: json['headers'] as Map<String, dynamic>?,
       contentType: json['contentType'] as String?,
@@ -30,6 +31,7 @@ Map<String, dynamic> _$$StacNetworkRequestImplToJson(
       'url': instance.url,
       'cBaseUrl': instance.cBaseUrl,
       'method': _$MethodEnumMap[instance.method]!,
+      'isS3Request': instance.isS3Request,
       'queryParameters': instance.queryParameters,
       'headers': instance.headers,
       'contentType': instance.contentType,

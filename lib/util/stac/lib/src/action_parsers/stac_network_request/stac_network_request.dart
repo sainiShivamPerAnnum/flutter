@@ -16,6 +16,7 @@ class StacNetworkRequest with _$StacNetworkRequest {
     required String url,
     required String cBaseUrl,
     @Default(Method.get) Method method,
+    @Default(false) bool isS3Request,
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? headers,
     String? contentType,

@@ -93,6 +93,7 @@ class APIService implements API {
     final Map<String, dynamic>? headers,
     final String? cBaseUrl,
     final bool decryptData = false,
+    final bool isJsonData = false,
   }) async {
     try {
       String finalPath = (cBaseUrl ?? _baseUrl) + url;
@@ -112,7 +113,9 @@ class APIService implements API {
         final data = await _decryptData(response.data);
         return json.decode(data!);
       }
-
+      if (isJsonData) {
+        return response.data;
+      }
       return returnResponse(response);
     } on DioException catch (e) {
       return returnResponse(e.response);

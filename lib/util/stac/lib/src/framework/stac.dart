@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:felloapp/util/stac/lib/src/action_parsers/action_parsers.dart';
 import 'package:felloapp/util/stac/lib/src/action_parsers/stac_network_request/stac_network_request_parser.dart';
 import 'package:felloapp/util/stac/lib/src/framework/stac_registry.dart';
@@ -169,33 +168,49 @@ class Stac {
     LoadingWidgetBuilder? loadingWidget,
     ErrorWidgetBuilder? errorWidget,
   }) {
-    return FutureBuilder<Response?>(
+    return FutureBuilder<Map<String, dynamic>?>(
       future: StacNetworkService.request(context, request),
       builder: (context, snapshot) {
+        Widget child;
+
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            Widget? widget;
             if (loadingWidget != null) {
-              widget = loadingWidget(context);
-              return widget;
+              child = loadingWidget(context);
+            } else {
+              child = const SizedBox();
             }
             break;
+
           case ConnectionState.done:
             if (snapshot.hasData) {
-              final json = jsonDecode(snapshot.data.toString());
-              return Stac.fromJson(json, context) ?? const SizedBox();
+              child = Stac.fromJson(snapshot.data, context) ?? const SizedBox();
             } else if (snapshot.hasError) {
               Log.e(snapshot.error);
               if (errorWidget != null) {
-                final widget = errorWidget(context, snapshot.error);
-                return widget;
+                child = errorWidget(context, snapshot.error);
+              } else {
+                child = const SizedBox();
               }
+            } else {
+              child = const SizedBox();
             }
             break;
+
           default:
+            child = const SizedBox();
             break;
         }
-        return const SizedBox();
+
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child: KeyedSubtree(
+            key: ValueKey<String>(snapshot.connectionState.toString() +
+                (snapshot.hasData ? 'data' : '') +
+                (snapshot.hasError ? 'error' : '')),
+            child: child,
+          ),
+        );
       },
     );
   }

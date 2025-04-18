@@ -1,9 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart' as cs;
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
-import 'package:felloapp/feature/sdui/sdui_widget.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -75,15 +72,8 @@ class _CampaignsState extends State<Campaigns> {
                                     event.type,
                                     index,
                                   );
-
-                                  AppState.delegate!.appState.currentAction =
-                                      PageAction(
-                                    page: SduiPageConfig,
-                                    widget: SduiLocalWidget(),
-                                    state: PageState.addWidget,
-                                  );
-                                  // AppState.delegate!
-                                  //     .parseRoute(Uri.parse(event.type));
+                                  AppState.delegate!
+                                      .parseRoute(Uri.parse(event.type));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(

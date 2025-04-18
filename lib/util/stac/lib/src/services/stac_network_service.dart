@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/stac/lib/src/action_parsers/stac_network_request/stac_network_request.dart';
 import 'package:felloapp/util/stac/lib/src/framework/framework.dart';
@@ -7,7 +6,7 @@ import 'package:flutter/material.dart';
 class StacNetworkService {
   const StacNetworkService._();
 
-  static Future<Response?> request(
+  static Future<Map<String, dynamic>?> request(
     BuildContext context,
     StacNetworkRequest request,
   ) async {
@@ -23,16 +22,20 @@ class StacNetworkService {
     }
   }
 
-  static Future<Response?> getRequest(StacNetworkRequest request) async {
+  static Future<Map<String, dynamic>?> getRequest<T>(
+    StacNetworkRequest request,
+  ) async {
     return APIService.instance.getData(
       request.url,
       queryParams: request.queryParameters,
+      cBaseUrl: request.cBaseUrl,
       headers: Map<String, dynamic>.from(request.headers ?? {}),
       apiName: 'sdui/${request.url}',
+      isJsonData: request.isS3Request,
     );
   }
 
-  static Future<Response?> postRequest(
+  static Future<Map<String, dynamic>?> postRequest(
     StacNetworkRequest request,
     BuildContext context,
   ) async {
@@ -42,15 +45,18 @@ class StacNetworkService {
       request.url,
       queryParams: request.queryParameters,
       body: body,
+      cBaseUrl: request.cBaseUrl,
       headers: Map<String, String>.from(request.headers ?? {}),
       apiName: 'sdui/${request.url}',
     );
   }
 
-  static Future<Response?> putRequest(StacNetworkRequest request) async {
+  static Future<Map<String, dynamic>?> putRequest(
+      StacNetworkRequest request) async {
     return APIService.instance.putData(
       request.url,
       body: request.body,
+      cBaseUrl: request.cBaseUrl,
       headers: Map<String, dynamic>.from(request.headers ?? {}),
       apiName: 'sdui/${request.url}',
     );

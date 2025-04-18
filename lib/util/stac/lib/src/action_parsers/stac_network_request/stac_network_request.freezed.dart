@@ -23,6 +23,7 @@ mixin _$StacNetworkRequest {
   String get url => throw _privateConstructorUsedError;
   String get cBaseUrl => throw _privateConstructorUsedError;
   Method get method => throw _privateConstructorUsedError;
+  bool get isS3Request => throw _privateConstructorUsedError;
   Map<String, dynamic>? get queryParameters =>
       throw _privateConstructorUsedError;
   Map<String, dynamic>? get headers => throw _privateConstructorUsedError;
@@ -62,6 +63,7 @@ abstract class $StacNetworkRequestCopyWith<$Res> {
       {String url,
       String cBaseUrl,
       Method method,
+      bool isS3Request,
       Map<String, dynamic>? queryParameters,
       Map<String, dynamic>? headers,
       String? contentType,
@@ -85,6 +87,7 @@ class _$StacNetworkRequestCopyWithImpl<$Res, $Val extends StacNetworkRequest>
     Object? url = null,
     Object? cBaseUrl = null,
     Object? method = null,
+    Object? isS3Request = null,
     Object? queryParameters = freezed,
     Object? headers = freezed,
     Object? contentType = freezed,
@@ -104,6 +107,10 @@ class _$StacNetworkRequestCopyWithImpl<$Res, $Val extends StacNetworkRequest>
           ? _value.method
           : method // ignore: cast_nullable_to_non_nullable
               as Method,
+      isS3Request: null == isS3Request
+          ? _value.isS3Request
+          : isS3Request // ignore: cast_nullable_to_non_nullable
+              as bool,
       queryParameters: freezed == queryParameters
           ? _value.queryParameters
           : queryParameters // ignore: cast_nullable_to_non_nullable
@@ -140,6 +147,7 @@ abstract class _$$StacNetworkRequestImplCopyWith<$Res>
       {String url,
       String cBaseUrl,
       Method method,
+      bool isS3Request,
       Map<String, dynamic>? queryParameters,
       Map<String, dynamic>? headers,
       String? contentType,
@@ -161,6 +169,7 @@ class __$$StacNetworkRequestImplCopyWithImpl<$Res>
     Object? url = null,
     Object? cBaseUrl = null,
     Object? method = null,
+    Object? isS3Request = null,
     Object? queryParameters = freezed,
     Object? headers = freezed,
     Object? contentType = freezed,
@@ -180,6 +189,10 @@ class __$$StacNetworkRequestImplCopyWithImpl<$Res>
           ? _value.method
           : method // ignore: cast_nullable_to_non_nullable
               as Method,
+      isS3Request: null == isS3Request
+          ? _value.isS3Request
+          : isS3Request // ignore: cast_nullable_to_non_nullable
+              as bool,
       queryParameters: freezed == queryParameters
           ? _value._queryParameters
           : queryParameters // ignore: cast_nullable_to_non_nullable
@@ -211,6 +224,7 @@ class _$StacNetworkRequestImpl implements _StacNetworkRequest {
       {required this.url,
       required this.cBaseUrl,
       this.method = Method.get,
+      this.isS3Request = false,
       final Map<String, dynamic>? queryParameters,
       final Map<String, dynamic>? headers,
       this.contentType,
@@ -230,6 +244,9 @@ class _$StacNetworkRequestImpl implements _StacNetworkRequest {
   @override
   @JsonKey()
   final Method method;
+  @override
+  @JsonKey()
+  final bool isS3Request;
   final Map<String, dynamic>? _queryParameters;
   @override
   Map<String, dynamic>? get queryParameters {
@@ -265,7 +282,7 @@ class _$StacNetworkRequestImpl implements _StacNetworkRequest {
 
   @override
   String toString() {
-    return 'StacNetworkRequest(url: $url, cBaseUrl: $cBaseUrl, method: $method, queryParameters: $queryParameters, headers: $headers, contentType: $contentType, body: $body, results: $results)';
+    return 'StacNetworkRequest(url: $url, cBaseUrl: $cBaseUrl, method: $method, isS3Request: $isS3Request, queryParameters: $queryParameters, headers: $headers, contentType: $contentType, body: $body, results: $results)';
   }
 
   @override
@@ -277,6 +294,8 @@ class _$StacNetworkRequestImpl implements _StacNetworkRequest {
             (identical(other.cBaseUrl, cBaseUrl) ||
                 other.cBaseUrl == cBaseUrl) &&
             (identical(other.method, method) || other.method == method) &&
+            (identical(other.isS3Request, isS3Request) ||
+                other.isS3Request == isS3Request) &&
             const DeepCollectionEquality()
                 .equals(other._queryParameters, _queryParameters) &&
             const DeepCollectionEquality().equals(other._headers, _headers) &&
@@ -293,6 +312,7 @@ class _$StacNetworkRequestImpl implements _StacNetworkRequest {
       url,
       cBaseUrl,
       method,
+      isS3Request,
       const DeepCollectionEquality().hash(_queryParameters),
       const DeepCollectionEquality().hash(_headers),
       contentType,
@@ -347,6 +367,7 @@ abstract class _StacNetworkRequest implements StacNetworkRequest {
       {required final String url,
       required final String cBaseUrl,
       final Method method,
+      final bool isS3Request,
       final Map<String, dynamic>? queryParameters,
       final Map<String, dynamic>? headers,
       final String? contentType,
@@ -362,6 +383,8 @@ abstract class _StacNetworkRequest implements StacNetworkRequest {
   String get cBaseUrl;
   @override
   Method get method;
+  @override
+  bool get isS3Request;
   @override
   Map<String, dynamic>? get queryParameters;
   @override
