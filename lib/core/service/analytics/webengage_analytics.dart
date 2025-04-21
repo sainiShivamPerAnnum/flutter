@@ -39,8 +39,24 @@ class WebEngageAnalytics extends BaseAnalyticsService {
           baseUser.isSimpleKycVerified ?? false,
         ),
       );
+      unawaited(
+        WebEngagePlugin.setUserAttribute(
+          "Advisor in cart",
+          baseUser.advisorInCart ?? '',
+        ),
+      );
       _logger.d("Analytics SERVICE :: User identify properties added.");
     }
+  }
+
+  @override
+  void updateUserProperty({required String key, value}) {
+    unawaited(
+      WebEngagePlugin.setUserAttribute(
+        key,
+        value,
+      ),
+    );
   }
 
   String _getGender(String? s) {

@@ -59,6 +59,9 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             categories: e.categories,
             theme: e.theme,
             currentCategoryIndex: e.index,
+            allThemes: e.allThemes,
+            themeName: e.themeName,
+            allThemeNames: e.allThemeNames,
           ),
         );
         e.completer?.complete();
@@ -167,10 +170,8 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                       state.focusedIndex < state.currentVideos.length
                   ? state.currentVideos[state.focusedIndex].title
                   : 'Default Title',
-              "shorts category": state.categories.isNotEmpty &&
-                      state.currentCategoryIndex < state.categories.length
-                  ? state.categories[state.currentCategoryIndex]
-                  : 'Default Category',
+              "shorts category":
+                  state.currentVideos[state.focusedIndex].categoryV1,
               "shorts video list":
                   state.theme.isNotEmpty ? state.theme : 'Default Theme',
             },
@@ -243,7 +244,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
             repository.updateInteraction(
               videoId: e.videoId,
               theme: state.theme,
-              category: state.categories[state.currentCategoryIndex],
+              category: e.category,
               interaction: InteractionType.viewed,
             ),
           );
@@ -286,10 +287,8 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                     state.focusedIndex < state.currentVideos.length
                 ? state.currentVideos[state.focusedIndex].title
                 : 'Default Title',
-            "shorts category": state.categories.isNotEmpty &&
-                    state.currentCategoryIndex < state.categories.length
-                ? state.categories[state.currentCategoryIndex]
-                : 'Default Category',
+            "shorts category":
+                state.currentVideos[state.focusedIndex].categoryV1,
             "shorts video list":
                 state.theme.isNotEmpty ? state.theme : 'Default Theme',
           },
@@ -499,22 +498,43 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           List<VideoData> videosToAdd = urls
               .where((video) => video.id != state.initialVideo?.id)
               .toList();
-          // if (urls.length < 10) {
-          //   // If we reach the end of the list, start from the beginning
-          //   final resetResponse = await repository.getVideosByCategory(
-          //     category: state.categories[state.currentCategoryIndex],
-          //     theme: state.theme,
-          //     page: 1,
-          //   );
-          //   List<VideoData> resetUrls = resetResponse.model?.videos ?? [];
-          //   if (resetUrls.isNotEmpty) {
-          //     urls.addAll(resetUrls);
-          //   }
-          //   add(PreloadEvent.updateUrls(urls));
-          // }
-          // else {
-          //   add(PreloadEvent.updateUrls(urls));
-          // }
+          if (urls.length < 10) {
+            final currentThemeIndex = state.allThemes.indexOf(state.theme);
+            if (currentThemeIndex != -1 &&
+                currentThemeIndex + 1 < state.allThemes.length &&
+                state.currentCategoryIndex == 0) {
+              final nextTheme = state.allThemes[currentThemeIndex + 1];
+              final nextThemeName = state.allThemeNames[currentThemeIndex + 1];
+              final nextResponse = state.currentCategoryIndex == 0
+                  ? await repository.getVideosByTheme(
+                      theme: nextTheme,
+                      page: 1,
+                    )
+                  : await repository.getVideosByCategory(
+                      category: state.categories[state.currentCategoryIndex],
+                      theme: nextTheme,
+                      page: 1,
+                    );
+              List<VideoData> nextThemeVideos =
+                  nextResponse.model?.videos ?? [];
+              videosToAdd.addAll(
+                nextThemeVideos
+                    .where((video) => video.id != state.initialVideo?.id)
+                    .toList(),
+              );
+              add(
+                PreloadEvent.updateThemes(
+                  categories: state.categories,
+                  theme: nextTheme,
+                  index: state.currentCategoryIndex,
+                  allThemes: state.allThemes,
+                  allThemeNames: state.allThemeNames,
+                  themeName: nextThemeName,
+                ),
+              );
+            }
+          }
+
           add(PreloadEvent.updateUrls(videosToAdd));
         }
         final index = state.currentContext == ReelContext.main
@@ -687,10 +707,8 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                     state.focusedIndex < state.currentVideos.length
                 ? state.currentVideos[state.focusedIndex].title
                 : 'Default Title',
-            "shorts category": state.categories.isNotEmpty &&
-                    state.currentCategoryIndex < state.categories.length
-                ? state.categories[state.currentCategoryIndex]
-                : 'Default Category',
+            "shorts category":
+                state.currentVideos[state.focusedIndex].categoryV1,
             "shorts video list":
                 state.theme.isNotEmpty ? state.theme : 'Default Theme',
           },
@@ -805,10 +823,8 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                     state.focusedIndex < state.currentVideos.length
                 ? state.currentVideos[state.focusedIndex].title
                 : 'Default Title',
-            "shorts category": state.categories.isNotEmpty &&
-                    state.currentCategoryIndex < state.categories.length
-                ? state.categories[state.currentCategoryIndex]
-                : 'Default Category',
+            "shorts category":
+                state.currentVideos[state.focusedIndex].categoryV1,
             "shorts video list":
                 state.theme.isNotEmpty ? state.theme : 'Default Theme',
           },
@@ -1006,13 +1022,21 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           comment: comments.model ?? [],
         ),
       );
-      _addProgressListener(controller, state.currentVideos[index].id);
-      _addSeenListener(controller, state.currentVideos[index].id);
+      _addProgressListener(
+        controller,
+        state.currentVideos[index].id,
+        state.currentVideos[index].categoryV1,
+      );
+      _addSeenListener(controller, state.currentVideos[index].id, index);
       log('🚀🚀🚀 INITIALIZED $index for context ${state.currentContext}');
     }
   }
 
-  void _addProgressListener(VideoPlayerController controller, String videoId) {
+  void _addProgressListener(
+    VideoPlayerController controller,
+    String videoId,
+    String category,
+  ) {
     late VoidCallback listener;
 
     listener = () {
@@ -1024,7 +1048,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         controller.removeListener(listener);
 
         // Dispatch the event that 3sec has been watched
-        add(PreloadEvent.updateViewCount(videoId: videoId));
+        add(PreloadEvent.updateViewCount(videoId: videoId, category: category));
       }
     };
 
@@ -1032,7 +1056,11 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
     controller.addListener(listener);
   }
 
-  void _addSeenListener(VideoPlayerController controller, String videoId) {
+  void _addSeenListener(
+    VideoPlayerController controller,
+    String videoId,
+    int index,
+  ) {
     late VoidCallback listener;
 
     listener = () {
@@ -1050,7 +1078,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           videoId: videoId,
           interaction: InteractionType.watched,
           theme: state.theme,
-          category: state.categories[state.currentCategoryIndex],
+          category: state.currentVideos[index].categoryV1,
         );
       }
     };
@@ -1104,7 +1132,7 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           controller,
           currentVideo.id,
           state.theme,
-          state.categories[state.currentCategoryIndex],
+          state.currentVideos[index].categoryV1,
         );
       }
       controller?.removeListener(() {});

@@ -33,6 +33,7 @@ class BaseUser {
   bool? isOldUser;
   String? subsStatus;
   String? favAsset;
+  String? advisorInCart;
   List segments;
   SuperFelloLevel superFelloLevel = SuperFelloLevel.NEW_FELLO;
   num minRedemptionAmt = 200;
@@ -116,6 +117,7 @@ class BaseUser {
     this.doesHaveSubscriptionTransaction = false,
     this.isAdvisor = false,
     this.advisorId,
+    this.advisorInCart = '',
   });
 
   BaseUser.newUser(String id, String mobile)
@@ -149,41 +151,43 @@ class BaseUser {
 
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String? client_token])
       : this(
-            id,
-            data[fldMobile]?.toString() ?? '',
-            data[fldEmail]?.toString() ?? '',
-            data[fldName]?.toString() ?? '',
-            data[fldDob]?.toString() ?? '',
-            data[fldGender]?.toString().toUpperCase() ?? '',
-            client_token?.toString() ?? '',
-            data[fldIsInvested] ?? false,
-            data[fldIsIciciOnboarded],
-            data[fldIsAugmontOnboarded] ?? false,
-            data[fldIsSimpleKycVerified] ?? false,
-            data[fldIsKycVerified] ?? 0,
-            data[fldKycName] ?? '',
-            data[fldPendingTxnId] ?? '',
-            data[fldIsIciciEnabled] ?? false,
-            data[fldIsAugmontEnabled] ?? false,
-            data[fldUsername]?.toString() ?? '',
-            data[fldIsEmailVerified] ?? false,
-            data[fldIsBlocked] ?? false,
-            UserPreferences(data[fldUserPrefs]),
-            TimestampModel.fromMap(data[fldCreatedOn]),
-            data[fldAppFlyerId] ?? '',
-            data[fldAvatarId] ?? '',
-            data[fldIsOldUser] ?? false,
-            data['mSegments'] ?? [],
-            minRedemptionAmt: data[fieldMinRedemptionAmt] ?? 200,
-            superFelloLevel: data[fieldSuperFelloLevel] != null
-                ? _$UserBadgeLevelEnumMap[data[fieldSuperFelloLevel]]!
-                : SuperFelloLevel.NEW_FELLO,
-            subsStatus: data[fieldSubscriptionStatus],
-            favAsset: data[fieldFavAsset],
-            doesHaveSubscriptionTransaction:
-                data[doesHaveSubscriptionTxn] ?? false,
-            isAdvisor: data[isAdv] ?? false,
-            advisorId: data[advId] ?? '');
+          id,
+          data[fldMobile]?.toString() ?? '',
+          data[fldEmail]?.toString() ?? '',
+          data[fldName]?.toString() ?? '',
+          data[fldDob]?.toString() ?? '',
+          data[fldGender]?.toString().toUpperCase() ?? '',
+          client_token?.toString() ?? '',
+          data[fldIsInvested] ?? false,
+          data[fldIsIciciOnboarded],
+          data[fldIsAugmontOnboarded] ?? false,
+          data[fldIsSimpleKycVerified] ?? false,
+          data[fldIsKycVerified] ?? 0,
+          data[fldKycName] ?? '',
+          data[fldPendingTxnId] ?? '',
+          data[fldIsIciciEnabled] ?? false,
+          data[fldIsAugmontEnabled] ?? false,
+          data[fldUsername]?.toString() ?? '',
+          data[fldIsEmailVerified] ?? false,
+          data[fldIsBlocked] ?? false,
+          UserPreferences(data[fldUserPrefs]),
+          TimestampModel.fromMap(data[fldCreatedOn]),
+          data[fldAppFlyerId] ?? '',
+          data[fldAvatarId] ?? '',
+          data[fldIsOldUser] ?? false,
+          data['mSegments'] ?? [],
+          minRedemptionAmt: data[fieldMinRedemptionAmt] ?? 200,
+          superFelloLevel: data[fieldSuperFelloLevel] != null
+              ? _$UserBadgeLevelEnumMap[data[fieldSuperFelloLevel]]!
+              : SuperFelloLevel.NEW_FELLO,
+          subsStatus: data[fieldSubscriptionStatus],
+          favAsset: data[fieldFavAsset],
+          doesHaveSubscriptionTransaction:
+              data[doesHaveSubscriptionTxn] ?? false,
+          isAdvisor: data[isAdv] ?? false,
+          advisorId: data[advId] ?? '',
+          advisorInCart: '',
+        );
 
   bool hasIncompleteDetails() {
     return (mobile?.isEmpty ?? true) || (name?.isEmpty ?? true);
@@ -208,7 +212,7 @@ class UserPreferences {
     Preferences.TAMBOLANOTIFICATIONS: 'tn',
     Preferences.APPLOCK: 'al',
     Preferences.FLOINVOICEMAIL: "er",
-    Preferences.TAMBOLAONBOARDING: "to"
+    Preferences.TAMBOLAONBOARDING: "to",
   };
 
   //setup defaults
@@ -216,7 +220,7 @@ class UserPreferences {
     Preferences.TAMBOLANOTIFICATIONS: 1,
     Preferences.APPLOCK: 0,
     Preferences.FLOINVOICEMAIL: 0,
-    Preferences.TAMBOLAONBOARDING: 0
+    Preferences.TAMBOLAONBOARDING: 0,
   };
 
   //current values

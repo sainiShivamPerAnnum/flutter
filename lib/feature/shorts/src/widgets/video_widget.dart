@@ -193,21 +193,21 @@ class VideoWidgetState extends State<VideoWidget>
                 ),
               ),
             ),
-            if (!widget.commentsVisibility)
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        UiConstants.kTextColor4.withOpacity(.8),
-                        UiConstants.kTextColor4.withOpacity(0),
-                      ],
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.center,
-                    ),
-                  ),
-                ),
-              ),
+            // if (!widget.commentsVisibility)
+            //   Positioned.fill(
+            //     child: Container(
+            //       decoration: BoxDecoration(
+            //         gradient: LinearGradient(
+            //           colors: [
+            //             UiConstants.kTextColor4.withOpacity(.8),
+            //             UiConstants.kTextColor4.withOpacity(0),
+            //           ],
+            //           begin: Alignment.bottomCenter,
+            //           end: Alignment.center,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
             if (!widget.commentsVisibility)
               Positioned(
                 bottom: 30.h,
@@ -254,22 +254,60 @@ class VideoWidgetState extends State<VideoWidget>
                                         );
                                       },
                                       child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
                                           CircleAvatar(
-                                            radius: SizeConfig.padding16,
-                                            backgroundImage: NetworkImage(
-                                              widget.expertProfileImage,
-                                            ),
+                                            radius: 16.r,
+                                            backgroundColor: Colors.transparent,
+                                            child: widget.expertProfileImage !=
+                                                    ''
+                                                ? ClipOval(
+                                                    child: AppImage(
+                                                      height: 32.r,
+                                                      width: 32.r,
+                                                      fit: BoxFit.cover,
+                                                      widget.expertProfileImage,
+                                                    ),
+                                                  )
+                                                : AppImage(
+                                                    height: 32.r,
+                                                    width: 32.r,
+                                                    Assets.logoShortform,
+                                                  ),
                                           ),
                                           SizedBox(
                                             width: 8.w,
                                           ),
-                                          Text(
-                                            widget.userName,
-                                            style: GoogleFonts.sourceSans3(
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.white,
-                                              fontSize: 14.sp,
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: UiConstants.kTextColor4
+                                                      .withOpacity(0.3),
+                                                  blurRadius: 12,
+                                                  offset: const Offset(0, 1),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Text(
+                                              widget.userName == ''
+                                                  ? 'Fello'
+                                                  : widget.userName,
+                                              style: GoogleFonts.sourceSans3(
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.white,
+                                                fontSize: 14.sp,
+                                                shadows: [
+                                                  Shadow(
+                                                    blurRadius: 8.0,
+                                                    color: UiConstants
+                                                        .kTextColor4
+                                                        .withOpacity(0.3),
+                                                    offset: const Offset(0, 1),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                           SizedBox(
@@ -278,37 +316,38 @@ class VideoWidgetState extends State<VideoWidget>
                                         ],
                                       ),
                                     ),
-                                    GestureDetector(
-                                      onTap: widget.onFollow,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xffA2A0A2)
-                                              .withOpacity(.3),
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(4.r),
+                                    if (widget.userName != '')
+                                      GestureDetector(
+                                        onTap: widget.onFollow,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xffA2A0A2)
+                                                .withOpacity(.3),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(4.r),
+                                            ),
+                                            border: Border.all(
+                                              width: 1.h,
+                                              color: const Color(0xffA6A6AC)
+                                                  .withOpacity(.2),
+                                            ),
                                           ),
-                                          border: Border.all(
-                                            width: 1.h,
-                                            color: const Color(0xffA6A6AC)
-                                                .withOpacity(.2),
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 16.w,
+                                            vertical: 4.h,
                                           ),
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 16.w,
-                                          vertical: 4.h,
-                                        ),
-                                        child: Text(
-                                          widget.isFollowed
-                                              ? 'Following'
-                                              : 'Follow',
-                                          style: GoogleFonts.sourceSans3(
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white,
-                                            fontSize: 12.sp,
+                                          child: Text(
+                                            widget.isFollowed
+                                                ? 'Following'
+                                                : 'Follow',
+                                            style: GoogleFonts.sourceSans3(
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white,
+                                              fontSize: 12.sp,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -423,17 +462,46 @@ class VideoWidgetState extends State<VideoWidget>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              child,
+              Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: UiConstants.kTextColor4.withOpacity(0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
+                ),
+                child: child,
+              ),
               SizedBox(
                 height: 4.h,
               ),
               if (label != null)
-                Text(
-                  label,
-                  style: GoogleFonts.sourceSans3(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
+                Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: UiConstants.kTextColor4.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    label,
+                    style: GoogleFonts.sourceSans3(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 8.0,
+                          color: UiConstants.kTextColor4.withOpacity(0.3),
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
             ],
@@ -623,7 +691,7 @@ class VideoWidgetState extends State<VideoWidget>
                                   children: [
                                     CircleAvatar(
                                       radius: SizeConfig.padding10,
-                                      backgroundColor: Colors.black,
+                                      backgroundColor: UiConstants.kTextColor4,
                                       child: widget.comments?[index].avatarId !=
                                                   '' &&
                                               widget.comments?[index]
@@ -775,7 +843,7 @@ class VideoWidgetState extends State<VideoWidget>
                     child: CircleAvatar(
                       key: const ValueKey(Constants.PROFILE),
                       radius: 16.r,
-                      backgroundColor: Colors.black,
+                      backgroundColor: UiConstants.kTextColor4,
                       backgroundImage: (model!.avatarId != null &&
                               model.avatarId == 'CUSTOM' &&
                               model.myUserDpUrl != null &&

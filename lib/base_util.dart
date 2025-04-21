@@ -462,10 +462,15 @@ class BaseUtil extends ChangeNotifier {
   static dynamic openBookAdvisorSheet({
     required String advisorId,
     required String advisorName,
+    required String advisorImage,
     required bool isEdit,
     String? duration,
     DateTime? scheduledOn,
     String? bookingId,
+    String? selectedDate,
+    String? selectedTime,
+    int? selectedDuration,
+    bool cartPayment = false,
   }) {
     AppState.screenStack.add(ScreenItem.modalsheet);
     return openModalBottomSheet(
@@ -476,10 +481,15 @@ class BaseUtil extends ChangeNotifier {
       content: BookCallSheetView(
         advisorID: advisorId,
         advisorName: advisorName,
+        advisorImage: advisorImage,
         isEdit: isEdit,
         bookingId: bookingId,
         duration: duration,
         scheduledOn: scheduledOn,
+        cartPayment: cartPayment,
+        selectedDate: selectedDate,
+        selectedTime: selectedTime,
+        selectedDuration: selectedDuration,
       ),
       backgroundColor: UiConstants.kBackgroundColor,
       hapticVibrate: true,

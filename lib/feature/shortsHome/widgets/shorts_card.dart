@@ -26,12 +26,16 @@ class ShortsCard extends StatelessWidget {
     required this.themeVideosBloc,
     required this.themeName,
     required this.theme,
+    required this.allThemes,
+    required this.allThemeNames,
     super.key,
   });
   final List<VideoData> videos;
   final List<String> categories;
   final String themeName;
   final String theme;
+  final List<String> allThemes;
+  final List<String> allThemeNames;
   final int i;
   final FocusNode searchFocusNode;
   final ThemeVideosBloc themeVideosBloc;
@@ -77,6 +81,9 @@ class ShortsCard extends StatelessWidget {
             theme: theme,
             index: 0,
             completer: themeCompleter,
+            allThemes: allThemes,
+            themeName: themeName,
+            allThemeNames: allThemeNames,
           ),
         );
         await themeCompleter.future;

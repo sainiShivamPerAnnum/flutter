@@ -3,12 +3,15 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
 import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 import 'package:felloapp/feature/shorts/src/widgets/all_viewed_sheet.dart';
 import 'package:felloapp/feature/shorts/src/widgets/dot_indicator.dart';
 import 'package:felloapp/feature/shorts/src/widgets/loadinng_shimmer.dart';
 import 'package:felloapp/feature/shorts/src/widgets/video_widget.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/util/local_actions_state.dart';
 import 'package:felloapp/util/locator.dart';
@@ -16,7 +19,6 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_player/video_player.dart';
-// import 'package:volume_controller/volume_controller.dart';
 
 import 'src/bloc/preload_bloc.dart';
 
@@ -205,11 +207,12 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                 backgroundColor: UiConstants.kBackgroundColor,
                                 hapticVibrate: true,
                                 content: AllShortsViewed(
-                                  category: (state.categories != null &&
-                                          state.categories.isNotEmpty)
-                                      ? state.categories[
-                                          state.currentCategoryIndex]
-                                      : '',
+                                  category: state.categories.isEmpty
+                                      ? ''
+                                      : state.currentCategoryIndex == 0
+                                          ? state.themeName
+                                          : state.categories[
+                                              state.currentCategoryIndex],
                                 ),
                               );
                               pageController.jumpToPage(
@@ -269,8 +272,7 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                         PreloadEvent.saveVideo(
                                           videoId: videos[index].id,
                                           theme: state.theme,
-                                          category: state.categories[
-                                              state.currentCategoryIndex],
+                                          category: videos[index].categoryV1,
                                           isSaved:
                                               LocalActionsState.getVideoSaved(
                                             videos[index].id,
@@ -343,47 +345,80 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                                     },
                                     onBook: () {
                                       FocusScope.of(context).unfocus();
-                                      BaseUtil.openBookAdvisorSheet(
-                                        advisorId: videos[index].advisorId,
-                                        advisorName: videos[index].author,
-                                        isEdit: false,
-                                      );
-                                      locator<AnalyticsService>().track(
-                                        eventName:
-                                            AnalyticsEvents.shortsBookaCall,
-                                        properties: {
-                                          "shorts title": state.currentVideos
-                                                      .isNotEmpty &&
-                                                  state.focusedIndex <
-                                                      state.currentVideos.length
-                                              ? state
-                                                  .currentVideos[
-                                                      state.focusedIndex]
-                                                  .title
-                                              : 'Default Title',
-                                          "shorts category": state
-                                                      .categories.isNotEmpty &&
-                                                  state.currentCategoryIndex <
-                                                      state.categories.length
-                                              ? state.categories[
-                                                  state.currentCategoryIndex]
-                                              : 'Default Category',
-                                          "shorts video list":
-                                              state.theme.isNotEmpty
-                                                  ? state.theme
-                                                  : 'Default Theme',
-                                          "expert name": state
-                                              .mainVideos[state.focusedIndex]
-                                              .author,
-                                        },
-                                      );
+                                      if (videos[index].advisorId == "") {
+                                        BlocProvider.of<PreloadBloc>(
+                                          context,
+                                          listen: false,
+                                        ).add(
+                                          PreloadEvent.pauseVideoAtIndex(
+                                            state.focusedIndex,
+                                          ),
+                                        );
+                                        AppState.delegate!.parseRoute(Uri.parse(
+                                            "experts?category=${videos[index].categoryV1}"));
+                                      } else {
+                                        BaseUtil.openBookAdvisorSheet(
+                                          advisorId: videos[index].advisorId,
+                                          advisorName: videos[index].author,
+                                          advisorImage:
+                                              videos[index].advisorImg,
+                                          isEdit: false,
+                                        );
+                                        context.read<CartBloc>().add(
+                                              AddToCart(
+                                                advisor: Expert(
+                                                  advisorId:
+                                                      videos[index].advisorId,
+                                                  name: videos[index].author,
+                                                  image:
+                                                      videos[index].advisorImg,
+                                                  experience: '',
+                                                  rate: 0,
+                                                  rateNew: '',
+                                                  rating: 0,
+                                                  expertise: '',
+                                                  qualifications: '',
+                                                  isFree: false,
+                                                ),
+                                              ),
+                                            );
+                                        locator<AnalyticsService>().track(
+                                          eventName:
+                                              AnalyticsEvents.shortsBookaCall,
+                                          properties: {
+                                            "shorts title": state.currentVideos
+                                                        .isNotEmpty &&
+                                                    state.focusedIndex <
+                                                        state.currentVideos
+                                                            .length
+                                                ? state
+                                                    .currentVideos[
+                                                        state.focusedIndex]
+                                                    .title
+                                                : 'Default Title',
+                                            "shorts category": state.categories
+                                                        .isNotEmpty &&
+                                                    state.currentCategoryIndex <
+                                                        state.categories.length
+                                                ? state.categories[
+                                                    state.currentCategoryIndex]
+                                                : 'Default Category',
+                                            "shorts video list":
+                                                state.theme.isNotEmpty
+                                                    ? state.theme
+                                                    : 'Default Theme',
+                                            "expert name": state
+                                                .mainVideos[state.focusedIndex]
+                                                .author,
+                                          },
+                                        );
+                                      }
                                     },
-                                    showUserName: videos[index].author != "",
+                                    showUserName: true,
                                     showVideoTitle: true,
                                     showShareButton: true,
                                     showLikeButton: true,
-                                    showBookButton:
-                                        videos[index].advisorId != "",
+                                    showBookButton: true,
                                     comments: state
                                         .videoComments[videos[index].id]
                                         ?.reversed
@@ -405,7 +440,9 @@ class _ShortsVideoPageState extends State<ShortsVideoPage>
                       totalPages: widget.categories.length,
                       categoryName: state.categories.isEmpty
                           ? ''
-                          : state.categories[state.currentCategoryIndex],
+                          : state.currentCategoryIndex == 0
+                              ? state.themeName
+                              : state.categories[state.currentCategoryIndex],
                       muted: state.muted,
                     ),
                 ],

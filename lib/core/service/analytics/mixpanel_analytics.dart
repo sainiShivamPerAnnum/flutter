@@ -30,6 +30,9 @@ class MixpanelAnalytics extends BaseAnalyticsService {
         _mixpanel!.getPeople().set("Gender", baseUser.gender ?? 'O');
         _mixpanel!
             .getPeople()
+            .set("Advisor in cart", baseUser.advisorInCart ?? '');
+        _mixpanel!
+            .getPeople()
             .set("Signed Up", getSignupDate(baseUser.createdOn));
         _mixpanel!
             .getPeople()
@@ -40,6 +43,11 @@ class MixpanelAnalytics extends BaseAnalyticsService {
     } catch (e) {
       _logger.e(e.toString());
     }
+  }
+
+  @override
+  void updateUserProperty({required String key, value}) {
+    _mixpanel!.getPeople().set(key, value);
   }
 
   @override

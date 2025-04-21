@@ -83,6 +83,7 @@ class _ViewAllLiveState extends State<ViewAllLive> {
                   padding: EdgeInsets.only(bottom: SizeConfig.padding16),
                   child: LiveCardWidget(
                     id: item.id,
+                    advisorImg: item.advisorImg,
                     maxWidth: SizeConfig.padding350,
                     status: widget.type,
                     title: item.title,
@@ -103,6 +104,7 @@ class _ViewAllLiveState extends State<ViewAllLive> {
                     id: item.id,
                     fromHome: widget.fromHome,
                     maxWidth: SizeConfig.padding350,
+                    advisorImg: item.advisorImg,
                     status: widget.type,
                     title: item.title,
                     subTitle: item.subtitle,
@@ -133,6 +135,7 @@ class _ViewAllLiveState extends State<ViewAllLive> {
                   child: LiveCardWidget(
                     id: item.id,
                     fromHome: widget.fromHome,
+                    advisorImg: item.advisorImg,
                     maxWidth: SizeConfig.padding350,
                     status: widget.type,
                     onTap: () async {
@@ -149,6 +152,8 @@ class _ViewAllLiveState extends State<ViewAllLive> {
                         page: LiveShortsPageConfig,
                         state: PageState.addWidget,
                         widget: BaseScaffold(
+                          showBackgroundGrid: false,
+                          backgroundColor: UiConstants.bg,
                           appBar: FAppBar(
                             backgroundColor: Colors.transparent,
                             centerTitle: true,

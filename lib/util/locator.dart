@@ -68,6 +68,7 @@ import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
+import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/hmssdk_interactor.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/src/meeting/meeting_store.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
@@ -257,6 +258,7 @@ Future<void> setupLocator() async {
   );
 
   locator.registerLazySingleton(() => AdvisorBloc(locator()));
+  locator.registerLazySingleton(() => ExpertBloc(locator()));
   //ROOT
   locator.registerLazySingleton(CardActionsNotifier.new);
 

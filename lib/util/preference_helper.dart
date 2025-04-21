@@ -135,4 +135,12 @@ class PreferenceHelper {
   static void reload() {
     _prefs!.reload();
   }
+
+  static Set<String> getKeys() {
+    return _prefs!.getKeys();
+  }
+
+  static bool containsKey(String key) {
+    return _prefs!.containsKey(key);
+  }
 }

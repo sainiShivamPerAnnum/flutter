@@ -4,6 +4,7 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -12,7 +13,7 @@ import 'package:felloapp/util/locator.dart';
 part 'selectedAsset_state.dart';
 
 class SelectAssetCubit extends Cubit<SelectAssetCubitState> {
-  SelectAssetCubit() : super(const SelectAssetCubitState());
+  SelectAssetCubit() : super(SelectAssetCubitState());
 
   void setSelectedAsset(AssetOptions asset) {
     emit(state.copyWith(selectedAsset: asset));

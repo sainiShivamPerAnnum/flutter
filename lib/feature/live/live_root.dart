@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -207,7 +208,9 @@ class __LiveHomeState extends State<_LiveHome> {
                         ),
                       ),
                     buildRecentSection(liveData.recent, context, false),
-                    SizedBox(height: SizeConfig.padding14),
+                    SizedBox(
+                      height: 80.h,
+                    ),
                   ],
                 ),
               ),
@@ -245,13 +248,14 @@ class __LiveHomeState extends State<_LiveHome> {
               padding: EdgeInsets.only(
                 right: SizeConfig.padding8,
               ).copyWith(
-                bottom: SizeConfig.padding8,
+                bottom: SizeConfig.padding24,
               ),
               child: LiveCardWidget(
                 id: upcomingData[i].id,
                 fromHome: false,
                 status: 'upcoming',
                 title: upcomingData[i].title,
+                advisorImg: upcomingData[i].advisorImg,
                 subTitle: upcomingData[i].subtitle,
                 advisorId: upcomingData[i].advisorId,
                 author: upcomingData[i].author,
@@ -363,6 +367,7 @@ Widget buildLiveSection(List<LiveStream> liveData, bool fromHome) {
                   child: LiveCardWidget(
                     id: live.id,
                     status: 'live',
+                    advisorImg: live.advisorImg,
                     title: live.title,
                     maxWidth:
                         liveData.length == 1 ? SizeConfig.padding350 : null,
@@ -390,21 +395,19 @@ Widget buildRecentSection(
 ) {
   final analytics = locator<AnalyticsService>();
   return SingleChildScrollView(
-    scrollDirection: Axis.horizontal,
-    physics: recentData.length > 1
-        ? const AlwaysScrollableScrollPhysics()
-        : const NeverScrollableScrollPhysics(),
-    child: Row(
+    scrollDirection: Axis.vertical,
+    physics: const NeverScrollableScrollPhysics(),
+    child: Column(
       children: [
-        for (int i = 0; i < recentData.length; i++)
+        for (int i = 0; i < min(3, recentData.length); i++)
           Padding(
             padding: EdgeInsets.only(
-              bottom: SizeConfig.padding8,
-              right: SizeConfig.padding8,
+              bottom: 16.h,
             ),
             child: LiveCardWidget(
               id: recentData[i].id,
               fromHome: false,
+              advisorImg: recentData[i].advisorImg,
               onTap: () async {
                 final preloadBloc = BlocProvider.of<PreloadBloc>(context);
                 final switchCompleter = Completer<void>();
@@ -419,6 +422,8 @@ Widget buildRecentSection(
                   page: LiveShortsPageConfig,
                   state: PageState.addWidget,
                   widget: BaseScaffold(
+                    showBackgroundGrid: false,
+                    backgroundColor: UiConstants.bg,
                     appBar: FAppBar(
                       backgroundColor: Colors.transparent,
                       centerTitle: true,
@@ -505,7 +510,7 @@ Widget buildRecentSection(
               author: recentData[i].author,
               category: (recentData[i].category ?? []).join(', '),
               bgImage: recentData[i].thumbnail,
-              maxWidth: recentData.length == 1 ? SizeConfig.padding350 : null,
+              maxWidth: SizeConfig.padding350,
               liveCount: recentData[i].views.toInt(),
               duration: recentData[i].duration.toString(),
             ),

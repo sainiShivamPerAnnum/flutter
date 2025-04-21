@@ -2,6 +2,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_vm.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/date_helper.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -33,7 +34,7 @@ class NotificationsPage extends StatelessWidget {
           ),
           elevation: 0.0,
           backgroundColor: UiConstants.kBackgroundColor,
-        surfaceTintColor: UiConstants.kBackgroundColor,
+          surfaceTintColor: UiConstants.kBackgroundColor,
           leading: IconButton(
             onPressed: () {
               AppState.backButtonDispatcher!.didPopRoute();
@@ -99,7 +100,7 @@ class NotificationsPage extends StatelessWidget {
                                             .withOpacity(0.1),
                                         radius:
                                             SizeConfig.notificationAvatarRadius,
-                                        child: SvgPicture.asset(
+                                        child: AppImage(
                                           model.getNotificationAsset(model
                                               .notifications![index].title!),
                                           color: UiConstants.primaryColor,

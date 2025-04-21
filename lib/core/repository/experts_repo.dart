@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/bookings/new_booking.dart';
 import 'package:felloapp/core/model/bookings/payment_polling.dart';
 import 'package:felloapp/core/model/bookings/payment_response.dart';
+import 'package:felloapp/core/model/experts/cart_details.dart';
 import 'package:felloapp/core/model/experts/experts_details.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
@@ -33,6 +34,30 @@ class ExpertsRepository extends BaseRepo {
       );
     } catch (e) {
       logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<void>> followAdvisor(
+    bool isFollowed,
+    String advisorId,
+  ) async {
+    final uid = userService.baseUser!.uid;
+    final String followUrl = isFollowed
+        ? 'user-notify/unfollow-advisor'
+        : 'user-notify/follow-advisor';
+    try {
+      await APIService.instance.postData(
+        followUrl,
+        cBaseUrl: _baseUrl,
+        apiName: 'expertsRepo/followAdvisor',
+        body: {
+          "uid": uid,
+          'advisorId': advisorId,
+        },
+      );
+      return const ApiResponse<void>(code: 200);
+    } catch (e) {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -441,6 +466,102 @@ class ExpertsRepository extends BaseRepo {
 
       return ApiResponse<PollingStatusResponse>(
         model: PollingStatusResponse.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<List<Expert>>> applyQuery({
+    required String query,
+  }) async {
+    try {
+      final params = {
+        "searchTerm": query,
+      };
+      final response = await APIService.instance.getData(
+        'advisors/search',
+        cBaseUrl: _baseUrl,
+        apiName: 'expertsRepo/applyQuery',
+        queryParams: params,
+      );
+      final responseData = response["data"];
+
+      final List<Expert> experts = (responseData as List)
+          .map(
+            (item) => Expert.fromJson(
+              item,
+            ),
+          )
+          .toList();
+      return ApiResponse<List<Expert>>(
+        model: experts,
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<bool>> saveToCart({
+    required String advisorId,
+    String? startTime,
+    String? endTime,
+    int? duration,
+  }) async {
+    try {
+      final Map<String, dynamic> body = {
+        "advisorId": advisorId,
+        if (startTime != null) "startTime": startTime,
+        if (endTime != null) "endTime": endTime,
+        if (duration != null) "duration": duration,
+      };
+      await APIService.instance.postData(
+        'booking/save/pending-booking',
+        body: body,
+        cBaseUrl: _baseUrl,
+        apiName: '$_booking/saveToCart',
+      );
+      return const ApiResponse<bool>(
+        model: true,
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<CartDetails>> getFromCart() async {
+    try {
+      final response = await APIService.instance.getData(
+        'booking/pending',
+        cBaseUrl: _baseUrl,
+        apiName: '$_booking/getFromCart',
+      );
+      final responseData = response['data'];
+      return ApiResponse<CartDetails>(
+        model: CartDetails.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<bool>> deleteFromCart() async {
+    try {
+      await APIService.instance.postData(
+        'booking/delete/pending-booking',
+        cBaseUrl: _baseUrl,
+        apiName: '$_booking/deleteFromCart',
+      );
+      return const ApiResponse<bool>(
+        model: true,
         code: 200,
       );
     } catch (e) {

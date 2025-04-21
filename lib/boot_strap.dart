@@ -28,15 +28,25 @@ Future<void> bootStrap(BootstrapCallBack bootStrapCallBack) async {
         await SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp],
         );
+        SystemChrome.setSystemUIOverlayStyle(
+          const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            systemNavigationBarColor: Colors.transparent,
+            systemNavigationBarDividerColor: Colors.transparent,
+          ),
+        );
+        await SystemChrome.setEnabledSystemUIMode(
+          SystemUiMode.edgeToEdge,
+        );
       } catch (e) {
         log('Failed to bootstrap app, error: $e');
       }
 
       await setupLocator();
-      await LocalActionsState.cleanupCache();
 
       try {
         await PreferenceHelper.initiate();
+        await LocalActionsState.cleanupCache();
         await Firebase.initializeApp();
       } catch (e) {
         log('Failed to bootstrap app, error: $e');

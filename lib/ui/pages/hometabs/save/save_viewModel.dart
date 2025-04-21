@@ -23,6 +23,8 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
+import 'package:felloapp/feature/shorts/src/core/analytics_manager.dart';
+import 'package:felloapp/feature/shorts/src/service/shorts_repo.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/tambola_mini_info_card.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -43,6 +45,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/quiz_section.dar
 import 'package:felloapp/ui/pages/hometabs/save/save_components/testimonials.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/upcoming_bookings.dart';
 import 'package:felloapp/ui/pages/power_play/root_card.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
@@ -51,6 +54,7 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SaveViewModel extends ChangeNotifier {
   S? locale;
@@ -293,6 +297,8 @@ class SaveViewModel extends ChangeNotifier {
       _sellService.init();
       getSaveViewBlogs();
       getTestimonials();
+      final repository = locator<ShortsRepo>();
+      AnalyticsRetryManager.pushQueuedEvents(repository);
     });
   }
 
@@ -381,6 +387,11 @@ class SaveViewModel extends ChangeNotifier {
           break;
       }
     }
+    saveViewItems.add(
+      SizedBox(
+        height: 60.h,
+      ),
+    );
     return saveViewItems;
   }
 
@@ -431,6 +442,12 @@ class SaveViewModel extends ChangeNotifier {
       userInterestedAdvisors = response.model?.$1.userInterestedAdvisors ?? [];
     } else {
       topExperts = null;
+    }
+    if (topExperts != null) {
+      final otherSections = topExperts!.list
+          .where((section) => !section.toLowerCase().contains('top'))
+          .toList();
+      RootController.expertsSections = otherSections;
     }
     isTopAdvisorLoading = false;
   }

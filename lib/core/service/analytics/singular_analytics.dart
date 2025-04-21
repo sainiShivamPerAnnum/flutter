@@ -32,6 +32,9 @@ class SingularAnalytics extends BaseAnalyticsService {
   }
 
   @override
+  void updateUserProperty({required String key, value}) {}
+
+  @override
   Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
     if (FlavorConfig.isProduction()) {
       _singularConfig = SingularConfig(PROD_KEY, PROD_SECRET);

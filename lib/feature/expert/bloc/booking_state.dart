@@ -22,15 +22,19 @@ class BookingError extends BookingState {
 final class BookingsLoaded extends BookingState {
   final String advisorId;
   final Schedule? schedule;
+  final Schedule? finalSchedule;
   final String? selectedDate;
   final int selectedDuration;
   final String? selectedTime;
   final bool isFree;
+  final DateTime selectedMonth;
 
   const BookingsLoaded({
     required this.advisorId,
     required this.schedule,
+    required this.finalSchedule,
     required this.isFree,
+    required this.selectedMonth,
     this.selectedDate,
     this.selectedTime,
     this.selectedDuration = 30,
@@ -39,18 +43,22 @@ final class BookingsLoaded extends BookingState {
   BookingState copyWith({
     String? advisorId,
     Schedule? schedule,
+    Schedule? finalSchedule,
     String? selectedDate,
     String? selectedTime,
     int? selectedDuration,
     bool? isFree,
+    DateTime? selectedMonth,
   }) {
     return BookingsLoaded(
       advisorId: advisorId ?? this.advisorId,
       schedule: schedule ?? this.schedule,
+      finalSchedule: finalSchedule ?? this.finalSchedule,
       selectedDate: selectedDate,
       selectedTime: selectedTime,
       selectedDuration: selectedDuration ?? this.selectedDuration,
       isFree: isFree ?? this.isFree,
+      selectedMonth: selectedMonth ?? this.selectedMonth,
     );
   }
 
@@ -58,10 +66,12 @@ final class BookingsLoaded extends BookingState {
   List<Object?> get props => [
         advisorId,
         schedule,
+        finalSchedule,
         selectedDate,
         selectedTime,
         selectedDuration,
         isFree,
+        selectedMonth,
       ];
 }
 

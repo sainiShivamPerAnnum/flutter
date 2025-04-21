@@ -6,9 +6,20 @@ sealed class AutoSaveSetupState extends Equatable {
 
 final class SelectAssetCubitState extends AutoSaveSetupState {
   final AssetOptions? selectedAsset;
-  const SelectAssetCubitState({
-    this.selectedAsset,
-  });
+
+  SelectAssetCubitState({
+    AssetOptions? selectedAsset,
+  }) : selectedAsset = selectedAsset ?? _getDefaultAugGoldAsset();
+
+  static AssetOptions? _getDefaultAugGoldAsset() {
+    return SipDataHolder.instance.data.selectAssetScreen.options.firstWhere(
+      (option) => option.isAugGold,
+      orElse: () =>
+          SipDataHolder.instance.data.selectAssetScreen.options.isNotEmpty
+              ? SipDataHolder.instance.data.selectAssetScreen.options.first
+              : const AssetOptions(),
+    );
+  }
 
   SelectAssetCubitState copyWith({
     AssetOptions? selectedAsset,
