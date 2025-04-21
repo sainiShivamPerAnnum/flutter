@@ -11,8 +11,8 @@ ShortsNotification _$ShortsNotificationFromJson(Map<String, dynamic> json) =>
       notifications: (json['notifications'] as List<dynamic>)
           .map((e) => Notification.fromJson(e as Map<String, dynamic>))
           .toList(),
-      totalPages: json['totalPages'] as int,
-      page: json['page'] as int,
+      totalPages: (json['totalPages'] as num).toInt(),
+      page: (json['page'] as num).toInt(),
     );
 
 Notification _$NotificationFromJson(Map<String, dynamic> json) => Notification(

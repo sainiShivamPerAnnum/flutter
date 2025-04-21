@@ -93,6 +93,7 @@ class APIService implements API {
     final Map<String, dynamic>? headers,
     final String? cBaseUrl,
     final bool decryptData = false,
+    final bool isJsonData = false,
   }) async {
     try {
       String finalPath = (cBaseUrl ?? _baseUrl) + url;
@@ -112,7 +113,9 @@ class APIService implements API {
         final data = await _decryptData(response.data);
         return json.decode(data!);
       }
-
+      if (isJsonData) {
+        return response.data;
+      }
       return returnResponse(response);
     } on DioException catch (e) {
       return returnResponse(e.response);
@@ -134,7 +137,7 @@ class APIService implements API {
     required String apiName,
     Map<String, dynamic>? body,
     String? cBaseUrl,
-    Map<String, String>? headers,
+    Map<String, dynamic>? headers,
     Map<String, dynamic>? queryParams,
     final bool decryptData = false,
   }) async {
@@ -395,5 +398,60 @@ class CoreInterceptor extends Interceptor {
       default:
     }
     handler.next(err);
+  }
+}
+
+extension APIServiceExtension on APIService {
+  Future<T> callApiForEndpoint<T>(
+    String endpoint, {
+    required String method,
+    Map<String, dynamic>? body,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? queryParameters,
+    String? cBaseUrl,
+    bool decryptData = false,
+  }) async {
+    try {
+      switch (method.toUpperCase()) {
+        case 'GET':
+          return await getData<T>(
+            endpoint,
+            apiName: endpoint,
+            queryParams: queryParameters,
+            headers: headers,
+            cBaseUrl: cBaseUrl,
+            decryptData: decryptData,
+          );
+        case 'POST':
+          return await postData<T>(
+            endpoint,
+            apiName: endpoint,
+            body: body,
+            headers: headers,
+            cBaseUrl: cBaseUrl,
+            queryParams: queryParameters,
+            decryptData: decryptData,
+          );
+        case 'PUT':
+          return await putData<T>(
+            endpoint,
+            apiName: endpoint,
+            body: body,
+            cBaseUrl: cBaseUrl,
+            headers: headers,
+          );
+        case 'PATCH':
+          return await patchData<T>(
+            endpoint,
+            apiName: endpoint,
+            cBaseUrl: cBaseUrl,
+            body: body,
+          );
+        default:
+          throw ArgumentError('Unsupported HTTP method: $method');
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 }

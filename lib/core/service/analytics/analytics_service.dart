@@ -15,8 +15,6 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AnalyticsService extends BaseAnalyticsService {
-  static const appFlierKey = 'fyD5pxiiDw5DrwynP52oT9';
-
   final MixpanelAnalytics _mixpanel = locator<MixpanelAnalytics>();
   final FacebookAnalytics _facebook = locator<FacebookAnalytics>();
   final WebEngageAnalytics _webengage = locator<WebEngageAnalytics>();
@@ -55,9 +53,9 @@ class AnalyticsService extends BaseAnalyticsService {
     bool mixpanel = true,
     bool webEngage = true,
     bool facebook = true,
-    bool appFlyer = true,
-    bool singular = true,
-    bool cleverTap = true,
+    bool appFlyer = false,
+    bool singular = false,
+    bool cleverTap = false,
     bool apxor = false,
     bool branch = true,
     bool moengage = false,

@@ -16,7 +16,6 @@ class FcmCommands {
   static const GAME_END_MESSAGE_KEY = "gameEndMessage";
   static const COMMAND_JOURNEY_UPDATE = "userJourneyStats";
   static const COMMAND_WITHDRAWAL_RESPONSE = "withdrawalResponse";
-  static const COMMAND_APPXOR_DIALOG = "appxor/dialog";
   static const COMMAND_IPL_WIN_RESPONSE = "iplPowerPlayWinResponse";
   static const COMMAND_GOLDEN_TICKET_WIN = "goldenTicketWin";
 }

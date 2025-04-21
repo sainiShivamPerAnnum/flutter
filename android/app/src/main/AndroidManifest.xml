@@ -49,9 +49,6 @@
         android:roundIcon="@mipmap/ic_launcher_round">
 
         <meta-data
-            android:name="APXOR_APP_ID"
-            android:value="@string/APXOR_APP_ID" />
-        <meta-data
             android:name="com.truecaller.android.sdk.PartnerKey"
             android:value="o_h9ehduocvkg0dz0s2rz8orereiolp9vrseeehfzcu" />
         <meta-data

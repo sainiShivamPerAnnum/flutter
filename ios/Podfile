@@ -10,8 +10,6 @@ project 'Runner', {
   'Release' => :release,
 }
 
-pod "CleverTap-iOS-SDK"
-
 def flutter_root
   generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
   unless File.exist?(generated_xcode_build_settings_path)
@@ -34,16 +32,8 @@ use_frameworks!
 target 'Runner' do
   use_modular_headers!
   # Override Firebase SDK Version
-  $FirebaseSDKVersion = '10.22.0'
+  $FirebaseSDKVersion = '11.10.0'
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
-end
-
-target 'NotificationService' do
-  pod 'CTNotificationService'
-end
-
-target 'NotificationContentExtension' do
-  pod 'CTNotificationContent'
 end
 
 post_install do |installer|

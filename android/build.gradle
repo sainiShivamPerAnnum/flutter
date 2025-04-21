@@ -16,9 +16,7 @@ buildscript {
 allprojects {
     repositories {
         google()
-        maven {
-           url "https://repo.apxor.com/artifactory/list/libs-release-android/"
-        }
+        mavenCentral()
     }
 }
 

@@ -1,4 +1,4 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart' as cs;
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
@@ -21,7 +21,8 @@ class Campaigns extends StatefulWidget {
 }
 
 class _CampaignsState extends State<Campaigns> {
-  final CarouselController _carouselController = CarouselController();
+  final cs.CarouselSliderController _carouselController =
+      cs.CarouselSliderController();
   int _currentPage = 0;
 
   @override
@@ -57,7 +58,7 @@ class _CampaignsState extends State<Campaigns> {
                     children: [
                       SizedBox(
                         height: 307.h,
-                        child: CarouselSlider.builder(
+                        child: cs.CarouselSlider.builder(
                           carouselController: _carouselController,
                           itemCount: model.item1!.length,
                           itemBuilder: (context, index, realIndex) {
@@ -91,7 +92,7 @@ class _CampaignsState extends State<Campaigns> {
                               ),
                             );
                           },
-                          options: CarouselOptions(
+                          options: cs.CarouselOptions(
                             height: 330.h,
                             aspectRatio: 1,
                             enlargeCenterPage: false,

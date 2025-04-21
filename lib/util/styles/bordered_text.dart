@@ -63,7 +63,7 @@ class BorderedText extends StatelessWidget {
       textDirection: child.textDirection,
       children: <Widget>[
         Text(
-          child.data!,
+          child.data ?? '',
           style: style,
           maxLines: child.maxLines,
           overflow: child.overflow,

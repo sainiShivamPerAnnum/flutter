@@ -12,7 +12,6 @@ class ApiPath {
   //User Ops Apis
   String get kAddNewUser => "/v2/new";
 
-  String get kUpdateUserAppflyer => "/appflyer";
 
   static const String kAddBankAccount = "/bank";
 

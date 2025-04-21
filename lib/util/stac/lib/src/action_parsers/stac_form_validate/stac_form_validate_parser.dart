@@ -1,0 +1,29 @@
+import 'dart:async';
+
+import 'package:felloapp/util/stac/lib/src/parsers/stac_form/stac_form_scope.dart';
+import 'package:felloapp/util/stac/lib/src/utils/action_type.dart';
+import 'package:felloapp/util/stac/lib/stac.dart';
+import 'package:flutter/material.dart';
+
+class StacFormValidateParser extends StacActionParser<StacFormValidate> {
+  const StacFormValidateParser();
+
+  @override
+  String get actionType => ActionType.validateForm.name;
+
+  @override
+  StacFormValidate getModel(Map<String, dynamic> json) =>
+      StacFormValidate.fromJson(json);
+
+  @override
+  FutureOr onCall(BuildContext context, StacFormValidate model) {
+    final isValid =
+        StacFormScope.of(context)?.formKey.currentState?.validate() ?? false;
+
+    if (isValid) {
+      return Stac.onCallFromJson(model.isValid, context);
+    } else {
+      return Stac.onCallFromJson(model.isNotValid, context);
+    }
+  }
+}

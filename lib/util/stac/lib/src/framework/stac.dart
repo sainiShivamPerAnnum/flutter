@@ -1,0 +1,266 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:felloapp/util/stac/lib/src/action_parsers/action_parsers.dart';
+import 'package:felloapp/util/stac/lib/src/action_parsers/stac_network_request/stac_network_request_parser.dart';
+import 'package:felloapp/util/stac/lib/src/framework/stac_registry.dart';
+import 'package:felloapp/util/stac/lib/src/parsers/parsers.dart';
+import 'package:felloapp/util/stac/lib/src/services/stac_network_service.dart';
+import 'package:felloapp/util/stac/lib/src/services/stac_screen_utils.dart';
+import 'package:felloapp/util/stac/lib/src/utils/log.dart';
+import 'package:felloapp/util/stac_framework/lib/stac_framework.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+typedef ErrorWidgetBuilder = Widget Function(
+  BuildContext context,
+  dynamic error,
+);
+
+typedef LoadingWidgetBuilder = Widget Function(BuildContext context);
+
+/// The `Stac` class is a central part of the Stac framework.
+/// It provides methods to parse and render widgets from JSON, handle actions from JSON, and fetch and render widgets from network requests or assets.
+///
+/// The `Stac` class uses a registry of parsers.md (`StacParser`) and action parsers.md (`StacActionParser`) to handle different types of widgets and actions.
+/// These parsers.md can be registered during the initialization of the `Stac` class.
+///
+/// The `Stac` class also provides utility methods to convert a widget to a `PreferredSizeWidget`.
+class Stac {
+  static final _parsers = <StacParser>[
+    const StacContainerParser(),
+    const StacTextParser(),
+    const StacTextFieldParser(),
+    const StacElevatedButtonParser(),
+    const StacImageParser(),
+    const StacIconParser(),
+    const StacCenterParser(),
+    const StacRowParser(),
+    const StacColumnParser(),
+    const StacStackParser(),
+    const StacPositionedParser(),
+    const StacIconButtonParser(),
+    const StacFloatingActionButtonParser(),
+    const StacOutlinedButtonParser(),
+    const StacPaddingParser(),
+    const StacAppBarParser(),
+    const StacTextButtonParser(),
+    const StacScaffoldParser(),
+    const StacSizedBoxParser(),
+    const StacFractionallySizedBoxParser(),
+    const StacTextFormFieldParser(),
+    const StacTabBarViewParser(),
+    const StacTabBarParser(),
+    const StacListTileParser(),
+    const StacCardParser(),
+    const StacBottomNavigationBarParser(),
+    const StacListViewParser(),
+    const StacDefaultTabControllerParser(),
+    const StacSingleChildScrollViewParser(),
+    const StacAlertDialogParser(),
+    const StacTabParser(),
+    const StacFormParser(),
+    const StacCheckBoxParser(),
+    const StacExpandedParser(),
+    const StacFlexibleParser(),
+    const StacSpacerParser(),
+    const StacSafeAreaParser(),
+    const StacSwitchParser(),
+    const StacAlignParser(),
+    const StacPageViewParser(),
+    const StacRefreshIndicatorParser(),
+    const StacNetworkWidgetParser(),
+    const StacCircleAvatarParser(),
+    const StacChipParser(),
+    const StacGridViewParser(),
+    const StacFilledButtonParser(),
+    const StacBottomNavigationViewParser(),
+    const StacDefaultBottomNavigationControllerParser(),
+    const StacWrapParser(),
+    const StacAutoCompleteParser(),
+    // const StacTableParser(),
+    const StacTableCellParser(),
+    // const StacCarouselViewParser(),
+    const StacColoredBoxParser(),
+    const StacDividerParser(),
+    const StacCircularProgressIndicatorParser(),
+    const StacLinearProgressIndicatorParser(),
+    const StacHeroParser(),
+    const StacRadioParser(),
+    const StacRadioGroupParser(),
+    const StacSliderParser(),
+    const StacOpacityParser(),
+    const StacPlaceholderParser(),
+    const StacAspectRatioParser(),
+    const StacFittedBoxParser(),
+    const StacLimitedBoxParser(),
+    const StacSliverListParser(),
+    const StacSliverToBoxAdapterParser(),
+    const StacCustomScrollViewParser(),
+    const StacSliverAppBarParser(),
+    const StacFlexibleSpaceBarParser(),
+  ];
+
+  static final _actionParsers = <StacActionParser>[
+    const StacNoneActionParser(),
+    const StacNavigateActionParser(),
+    const StacNetworkRequestParser(),
+    const StacModalBottomSheetActionParser(),
+    const StacDialogActionParser(),
+    const StacGetFormValueParser(),
+    const StacFormValidateParser(),
+    const StacSnackBarParser(),
+  ];
+
+  static Future<void> initialize({
+    List<StacParser> parsers = const [],
+    List<StacActionParser> actionParsers = const [],
+    bool override = false,
+  }) async {
+    _parsers.addAll(parsers);
+    _actionParsers.addAll(actionParsers);
+    await StacRegistry.instance.registerAll(_parsers, override);
+    await StacRegistry.instance.registerAllActions(_actionParsers, override);
+  }
+
+  static Widget? fromJson(Map<String, dynamic>? json, BuildContext context) {
+    try {
+      if (json != null) {
+        String widgetType = json['type'];
+        StacParser? stacParser = StacRegistry.instance.getParser(widgetType);
+        if (stacParser != null) {
+          final model = stacParser.getModel(json);
+          return stacParser.parse(context, model);
+        } else {
+          Log.w('Widget type [$widgetType] not supported');
+        }
+      }
+    } catch (e) {
+      Log.e(e);
+    }
+    return null;
+  }
+
+  static FutureOr<dynamic> onCallFromJson(
+    Map<String, dynamic>? json,
+    BuildContext context,
+  ) {
+    try {
+      if (json != null && json['actionType'] != null) {
+        String actionType = json['actionType'];
+        StacActionParser? stacActionParser =
+            StacRegistry.instance.getActionParser(actionType);
+        if (stacActionParser != null) {
+          final model = stacActionParser.getModel(json);
+          return stacActionParser.onCall(context, model);
+        } else {
+          Log.w('Action type [$actionType] not supported');
+        }
+      }
+    } catch (e) {
+      Log.e(e);
+    }
+    return null;
+  }
+
+  static Widget fromNetwork({
+    required BuildContext context,
+    required StacNetworkRequest request,
+    LoadingWidgetBuilder? loadingWidget,
+    ErrorWidgetBuilder? errorWidget,
+  }) {
+    return FutureBuilder<Map<String, dynamic>?>(
+      future: StacNetworkService.request(context, request),
+      builder: (context, snapshot) {
+        Widget child;
+
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            if (loadingWidget != null) {
+              child = loadingWidget(context);
+            } else {
+              child = const SizedBox();
+            }
+            break;
+
+          case ConnectionState.done:
+            if (snapshot.hasData) {
+              final json = snapshot.data;
+              ScreenUtilStacExtension.santizeJson(json: json);
+              child = Stac.fromJson(json, context) ?? const SizedBox();
+            } else if (snapshot.hasError) {
+              Log.e(snapshot.error);
+              if (errorWidget != null) {
+                child = errorWidget(context, snapshot.error);
+              } else {
+                child = const SizedBox();
+              }
+            } else {
+              child = const SizedBox();
+            }
+            break;
+
+          default:
+            child = const SizedBox();
+            break;
+        }
+
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child: KeyedSubtree(
+            key: ValueKey<String>(snapshot.connectionState.toString() +
+                (snapshot.hasData ? 'data' : '') +
+                (snapshot.hasError ? 'error' : '')),
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+
+  static Widget? fromAssets(
+    String assetPath, {
+    LoadingWidgetBuilder? loadingWidget,
+    ErrorWidgetBuilder? errorWidget,
+  }) {
+    return FutureBuilder<String>(
+      future: rootBundle.loadString(assetPath),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            Widget? widget;
+            if (loadingWidget != null) {
+              widget = loadingWidget(context);
+              return widget;
+            }
+            break;
+          case ConnectionState.done:
+            if (snapshot.hasData) {
+              final json = jsonDecode(snapshot.data.toString());
+              ScreenUtilStacExtension.santizeJson(json: json);
+              return Stac.fromJson(json, context) ?? const SizedBox();
+            } else if (snapshot.hasError) {
+              Log.e(snapshot.error);
+              if (errorWidget != null) {
+                final widget = errorWidget(context, snapshot.error);
+                return widget;
+              }
+            }
+            break;
+          default:
+            break;
+        }
+        return const SizedBox();
+      },
+    );
+  }
+}
+
+extension StacExtension on Widget? {
+  PreferredSizeWidget? get toPreferredSizeWidget {
+    if (this != null) {
+      return this as PreferredSizeWidget;
+    }
+    return null;
+  }
+}
