@@ -126,7 +126,7 @@ class StacScreenUtilTransformer {
   }
 
   /// Process EdgeInsets values
-  static dynamic _processEdgeInsets(dynamic padding, {bool forHeight = false}) {
+  static dynamic _processEdgeInsets(padding, {bool forHeight = false}) {
     if (padding is num) {
       // For a single number, use .r as it applies to all sides
       return ScreenUtilTag('r', padding);

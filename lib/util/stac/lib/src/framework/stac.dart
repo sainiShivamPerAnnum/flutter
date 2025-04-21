@@ -6,6 +6,7 @@ import 'package:felloapp/util/stac/lib/src/action_parsers/stac_network_request/s
 import 'package:felloapp/util/stac/lib/src/framework/stac_registry.dart';
 import 'package:felloapp/util/stac/lib/src/parsers/parsers.dart';
 import 'package:felloapp/util/stac/lib/src/services/stac_network_service.dart';
+import 'package:felloapp/util/stac/lib/src/services/stac_screen_utils.dart';
 import 'package:felloapp/util/stac/lib/src/utils/log.dart';
 import 'package:felloapp/util/stac_framework/lib/stac_framework.dart';
 import 'package:flutter/material.dart';
@@ -184,7 +185,9 @@ class Stac {
 
           case ConnectionState.done:
             if (snapshot.hasData) {
-              child = Stac.fromJson(snapshot.data, context) ?? const SizedBox();
+              final json = snapshot.data;
+              ScreenUtilStacExtension.santizeJson(json: json);
+              child = Stac.fromJson(json, context) ?? const SizedBox();
             } else if (snapshot.hasError) {
               Log.e(snapshot.error);
               if (errorWidget != null) {
@@ -234,6 +237,7 @@ class Stac {
           case ConnectionState.done:
             if (snapshot.hasData) {
               final json = jsonDecode(snapshot.data.toString());
+              ScreenUtilStacExtension.santizeJson(json: json);
               return Stac.fromJson(json, context) ?? const SizedBox();
             } else if (snapshot.hasError) {
               Log.e(snapshot.error);

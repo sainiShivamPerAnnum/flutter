@@ -97,7 +97,7 @@ class _SipIntroViewState extends State<SipIntroView> {
                               Column(
                                 children: [
                                   Container(
-                                    height: SizeConfig.padding436,
+                                    height: SizeConfig.padding350,
                                     decoration: const BoxDecoration(
                                       gradient: LinearGradient(
                                         begin: Alignment.bottomCenter,
