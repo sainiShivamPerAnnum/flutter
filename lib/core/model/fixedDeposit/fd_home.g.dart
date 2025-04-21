@@ -96,4 +96,6 @@ FrequencyValue _$FrequencyValueFromJson(Map<String, dynamic> json) =>
       seniorReturns: json['seniorReturns'] as String?,
       amounts:
           (json['amounts'] as List<dynamic>?)?.map((e) => e as num).toList(),
+      maxDeposit: json['maxDeposit'] as num?,
+      minDeposit: json['minDeposit'] as num?,
     );

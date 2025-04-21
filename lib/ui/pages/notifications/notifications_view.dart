@@ -103,8 +103,7 @@ class NotificationsPage extends StatelessWidget {
                                         child: AppImage(
                                           model.getNotificationAsset(model
                                               .notifications![index].title!),
-                                          color: UiConstants.primaryColor,
-                                          height: SizeConfig.iconSize1,
+                                          height: SizeConfig.iconSize0,
                                           fit: BoxFit.contain,
                                         ),
                                       ),

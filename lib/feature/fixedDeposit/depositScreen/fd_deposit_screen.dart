@@ -4,6 +4,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/fixedDeposit/fd_home.dart';
 import 'package:felloapp/feature/fixedDeposit/depositScreen/bloc/deposit_calculator_bloc.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 // import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/consultant_card.dart';
@@ -254,8 +255,52 @@ class __FDDepositViewState extends State<_FDDepositView> {
                     inputFormatters: [
                       CurrencyInputFormatter(),
                       LengthLimitingTextInputFormatter(10),
-                      // MinValueInputFormatter(
-                      //     minAmount: widget.fdData),
+                      MinValueInputFormatter(
+                        minAmount: (widget
+                                    .fdData
+                                    .detailsPage
+                                    .cta
+                                    .frequencyValues[_selectedFrequency]!
+                                    .entries
+                                    .where((entry) {
+                                      final tenureOptions = widget.fdData
+                                          .detailsPage.cta.lockInTenure.options;
+                                      final selectedTenureOption =
+                                          tenureOptions[_selectedTenure];
+                                      return entry.value.days >
+                                              selectedTenureOption.minDays &&
+                                          entry.value.days <=
+                                              selectedTenureOption.maxDays;
+                                    })
+                                    .first
+                                    .value
+                                    .minDeposit ??
+                                0)
+                            .toDouble(),
+                      ),
+                      MaxValueInputFormatter(
+                        maxValue: (widget
+                                    .fdData
+                                    .detailsPage
+                                    .cta
+                                    .frequencyValues[_selectedFrequency]!
+                                    .entries
+                                    .where((entry) {
+                                      final tenureOptions = widget.fdData
+                                          .detailsPage.cta.lockInTenure.options;
+                                      final selectedTenureOption =
+                                          tenureOptions[_selectedTenure];
+                                      return entry.value.days >
+                                              selectedTenureOption.minDays &&
+                                          entry.value.days <=
+                                              selectedTenureOption.maxDays;
+                                    })
+                                    .first
+                                    .value
+                                    .maxDeposit ??
+                                10000000)
+                            .toInt(),
+                      ),
                       FilteringTextInputFormatter.deny(
                         RegExp(r'^0+'),
                       ),

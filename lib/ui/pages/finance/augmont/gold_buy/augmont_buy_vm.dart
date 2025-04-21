@@ -293,7 +293,7 @@ class GoldBuyViewModel extends BaseViewModel
         text: amount?.toString() ??
             assetOptionsModel!.data.userOptions[1].value.toString());
     fieldWidth =
-        SizeConfig.padding40 * goldAmountController!.text.length.toDouble();
+        SizeConfig.padding30 * goldAmountController!.text.length.toDouble();
     if (goldBuyAmount != assetOptionsModel?.data.userOptions[1].value) {
       lastTappedChipIndex = -1;
     }
@@ -306,7 +306,7 @@ class GoldBuyViewModel extends BaseViewModel
 
         goldAmountController!.text = goldBuyAmount!.toInt().toString();
         fieldWidth =
-            SizeConfig.padding32 * goldAmountController!.text.length.toDouble();
+            SizeConfig.padding30 * goldAmountController!.text.length.toDouble();
         updateGoldAmount();
         goldAmountController!.selection = TextSelection.fromPosition(
             TextPosition(offset: goldAmountController!.text.length));
@@ -524,7 +524,7 @@ class GoldBuyViewModel extends BaseViewModel
         goldAmountInGrams = 0.0;
       }
     }
-    fieldWidth = SizeConfig.padding40 *
+    fieldWidth = SizeConfig.padding30 *
         ((goldAmountController?.text != null &&
                 (goldAmountController?.text.isNotEmpty ?? false))
             ? (goldAmountController?.text ?? "0").length.toDouble()

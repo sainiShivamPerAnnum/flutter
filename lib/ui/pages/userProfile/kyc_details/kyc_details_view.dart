@@ -47,7 +47,7 @@ class KYCDetailsView extends StatelessWidget {
                   color: Colors.white,
                 ),
                 backgroundColor: UiConstants.kTambolaMidTextColor,
-        surfaceTintColor:UiConstants.kTambolaMidTextColor,
+                surfaceTintColor: UiConstants.kTambolaMidTextColor,
                 title: Text(
                   locale.kycTitle.toUpperCase(),
                   style: TextStyles.sourceSansSB.title5,
@@ -72,8 +72,7 @@ class KYCDetailsView extends StatelessWidget {
                         SizeConfig.screenHeight! - SizeConfig.fToolBarHeight,
                     child: Padding(
                       padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.pageHorizontalMargins)
-                          .copyWith(right: SizeConfig.padding32),
+                          horizontal: SizeConfig.pageHorizontalMargins),
                       child: Column(
                         children: [
                           SizedBox(

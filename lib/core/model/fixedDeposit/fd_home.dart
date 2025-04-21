@@ -168,6 +168,8 @@ class FrequencyValue {
   final String? returns;
   final String? seniorReturns;
   final List<num>? amounts;
+  final num? maxDeposit;
+  final num? minDeposit;
 
   FrequencyValue({
     required this.label,
@@ -176,6 +178,8 @@ class FrequencyValue {
     required this.returns,
     required this.seniorReturns,
     this.amounts,
+    this.maxDeposit,
+    this.minDeposit,
   });
 
   factory FrequencyValue.fromJson(Map<String, dynamic> json) =>

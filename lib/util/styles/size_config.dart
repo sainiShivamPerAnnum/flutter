@@ -187,7 +187,7 @@ class SizeConfig {
   static double get padding350 => 350.w;
 
   // MARGINS
-  static double get pageHorizontalMargins => screenWidth! * 0.0579; //
+  static double get pageHorizontalMargins => 20.w; //
 
   //BORDER RADIUS
   static double get roundness2 => 2.r;
@@ -209,8 +209,8 @@ class SizeConfig {
       math.max(SizeConfig.viewPadding!.bottom, 8.h);
 
   //Avatar
-  static double get avatarRadius => screenWidth! * 0.048;
-  static double get notificationAvatarRadius => screenWidth! * 0.06;
+  static double get avatarRadius => 28.r;
+  static double get notificationAvatarRadius => 20.r;
   //BORDER SIZES
   static double get border0 => 0.5.w; // 0.5
   static double get border1 => 1.w; // 1
@@ -219,5 +219,5 @@ class SizeConfig {
   static double get border4 => 2.5.w; // 2.5
 
   // Button Border Radius
-  static double get buttonBorderRadius => screenWidth! * 0.0139; // 5
+  static double get buttonBorderRadius => 5.r; // 5
 }
