@@ -21,11 +21,22 @@ AllFdsData _$AllFdsDataFromJson(Map<String, dynamic> json) => AllFdsData(
       tncLink: json['tncLink'] as String,
       detailsPage:
           DetailsPage.fromJson(json['detailsPage'] as Map<String, dynamic>),
+      payoutDisplayValues:
+          (json['payoutDisplayValues'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry(
+            k, PayoutDisplayValues.fromJson(e as Map<String, dynamic>)),
+      ),
       description: json['description'] as String? ?? '',
       additionalOffers:
           (json['additionalOffers'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String),
       ),
+    );
+
+PayoutDisplayValues _$PayoutDisplayValuesFromJson(Map<String, dynamic> json) =>
+    PayoutDisplayValues(
+      label: json['label'] as String,
+      value: json['value'] as String,
     );
 
 InvestDetail _$InvestDetailFromJson(Map<String, dynamic> json) => InvestDetail(

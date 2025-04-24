@@ -637,7 +637,9 @@ class __FDDepositViewState extends State<_FDDepositView> {
                       return DropdownMenuItem<String>(
                         value: frequencyKey,
                         child: Text(
-                          frequencyKey,
+                          widget.fdData.payoutDisplayValues[frequencyKey]
+                                  ?.label ??
+                              frequencyKey,
                           style: TextStyles.sourceSansM.body3,
                         ),
                       );
@@ -685,7 +687,9 @@ class __FDDepositViewState extends State<_FDDepositView> {
                         return Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            frequencyKey,
+                            widget.fdData.payoutDisplayValues[frequencyKey]
+                                    ?.label ??
+                                frequencyKey,
                             style: TextStyles.sourceSansM.body3,
                           ),
                         );

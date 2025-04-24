@@ -17,6 +17,7 @@ class AllFdsData {
   final List<Tag> tags;
   final String icon;
   final String tncLink;
+  final Map<String, PayoutDisplayValues> payoutDisplayValues;
   final DetailsPage detailsPage;
   final Map<String, String>? additionalOffers;
 
@@ -30,12 +31,27 @@ class AllFdsData {
     required this.icon,
     required this.tncLink,
     required this.detailsPage,
+    required this.payoutDisplayValues,
     this.description = '',
     this.additionalOffers,
   });
 
   factory AllFdsData.fromJson(Map<String, dynamic> json) =>
       _$AllFdsDataFromJson(json);
+}
+
+@_deserializable
+class PayoutDisplayValues {
+  final String label;
+  final String value;
+
+  PayoutDisplayValues({
+    required this.label,
+    required this.value,
+  });
+
+  factory PayoutDisplayValues.fromJson(Map<String, dynamic> json) =>
+      _$PayoutDisplayValuesFromJson(json);
 }
 
 @_deserializable
