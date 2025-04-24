@@ -15,6 +15,7 @@ class UpdateFDVariables extends FDCalculatorEvents {
   final String payoutFrequency;
   final bool isFemale;
   final String issuerId;
+  final num minAmount;
 
   const UpdateFDVariables({
     required this.investmentAmount,
@@ -23,15 +24,20 @@ class UpdateFDVariables extends FDCalculatorEvents {
     required this.payoutFrequency,
     required this.isFemale,
     required this.issuerId,
+    required this.minAmount,
   });
 }
 
 class OnProceed extends FDCalculatorEvents {
   final String issuerId;
   final String blostemId;
+  final num minAmount;
+  final double investmentAmount;
   const OnProceed({
     required this.issuerId,
     required this.blostemId,
+    required this.minAmount,
+    required this.investmentAmount,
   });
 }
 
@@ -42,6 +48,7 @@ class RestoreLastFDCalculation extends FDCalculatorEvents {
   final String? payoutFrequency;
   final bool? isFemale;
   final String? issuerId;
+  final num? minAmount;
 
   const RestoreLastFDCalculation({
     this.investmentAmount,
@@ -50,5 +57,6 @@ class RestoreLastFDCalculation extends FDCalculatorEvents {
     this.payoutFrequency,
     this.isFemale,
     this.issuerId,
+    this.minAmount,
   });
 }

@@ -4,8 +4,6 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/fixedDeposit/fd_home.dart';
 import 'package:felloapp/feature/fixedDeposit/depositScreen/bloc/deposit_calculator_bloc.dart';
-import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
-// import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/consultant_card.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -141,8 +139,30 @@ class __FDDepositViewState extends State<_FDDepositView> {
             payoutFrequency: _selectedFrequency,
             isFemale: false,
             issuerId: widget.fdData.id,
+            minAmount: getMinimumInvestmentAmount(),
           ),
         );
+  }
+
+  double getMinimumInvestmentAmount() {
+    try {
+      return (widget.fdData.detailsPage.cta.frequencyValues[_selectedFrequency]!
+                  .entries
+                  .where((entry) {
+                    final tenureOptions =
+                        widget.fdData.detailsPage.cta.lockInTenure.options;
+                    final selectedTenureOption = tenureOptions[_selectedTenure];
+                    return entry.value.days > selectedTenureOption.minDays &&
+                        entry.value.days <= selectedTenureOption.maxDays;
+                  })
+                  .first
+                  .value
+                  .minDeposit ??
+              0)
+          .toDouble();
+    } catch (e) {
+      return 0.0;
+    }
   }
 
   void _onChipClick(String amount) {
@@ -194,6 +214,7 @@ class __FDDepositViewState extends State<_FDDepositView> {
             payoutFrequency: _selectedFrequency,
             isFemale: false,
             issuerId: widget.fdData.id,
+            minAmount: getMinimumInvestmentAmount(),
           ),
         );
   }
@@ -254,53 +275,7 @@ class __FDDepositViewState extends State<_FDDepositView> {
                     ),
                     inputFormatters: [
                       CurrencyInputFormatter(),
-                      LengthLimitingTextInputFormatter(10),
-                      MinValueInputFormatter(
-                        minAmount: (widget
-                                    .fdData
-                                    .detailsPage
-                                    .cta
-                                    .frequencyValues[_selectedFrequency]!
-                                    .entries
-                                    .where((entry) {
-                                      final tenureOptions = widget.fdData
-                                          .detailsPage.cta.lockInTenure.options;
-                                      final selectedTenureOption =
-                                          tenureOptions[_selectedTenure];
-                                      return entry.value.days >
-                                              selectedTenureOption.minDays &&
-                                          entry.value.days <=
-                                              selectedTenureOption.maxDays;
-                                    })
-                                    .first
-                                    .value
-                                    .minDeposit ??
-                                0)
-                            .toDouble(),
-                      ),
-                      MaxValueInputFormatter(
-                        maxValue: (widget
-                                    .fdData
-                                    .detailsPage
-                                    .cta
-                                    .frequencyValues[_selectedFrequency]!
-                                    .entries
-                                    .where((entry) {
-                                      final tenureOptions = widget.fdData
-                                          .detailsPage.cta.lockInTenure.options;
-                                      final selectedTenureOption =
-                                          tenureOptions[_selectedTenure];
-                                      return entry.value.days >
-                                              selectedTenureOption.minDays &&
-                                          entry.value.days <=
-                                              selectedTenureOption.maxDays;
-                                    })
-                                    .first
-                                    .value
-                                    .maxDeposit ??
-                                10000000)
-                            .toInt(),
-                      ),
+                      LengthLimitingTextInputFormatter(11),
                       FilteringTextInputFormatter.deny(
                         RegExp(r'^0+'),
                       ),
@@ -639,7 +614,7 @@ class __FDDepositViewState extends State<_FDDepositView> {
                               ),
                             ],
                           );
-                        }).toList(),
+                        }),
                       ],
                     ),
                   ),
@@ -800,10 +775,23 @@ class __FDDepositViewState extends State<_FDDepositView> {
                   SizedBox(height: SizeConfig.padding16),
                   GestureDetector(
                     onTap: () {
+                      if ((double.tryParse(
+                                _amountController.text.replaceAll(',', ''),
+                              ) ??
+                              0) <
+                          getMinimumInvestmentAmount()) {
+                        _amountController.text =
+                            getMinimumInvestmentAmount().toString();
+                      }
                       context.read<FDCalculatorBloc>().add(
                             OnProceed(
                               issuerId: widget.fdData.id,
                               blostemId: widget.fdData.blostemId,
+                              investmentAmount: double.tryParse(
+                                    _amountController.text.replaceAll(',', ''),
+                                  ) ??
+                                  0,
+                              minAmount: getMinimumInvestmentAmount(),
                             ),
                           );
                     },
@@ -877,15 +865,19 @@ class CurrencyInputFormatter extends TextInputFormatter {
       return newValue;
     }
     final value = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
-    final formatter = NumberFormat('#,##,##0', 'en_IN');
-    String formattedValue = '';
-    if (value.isNotEmpty) {
-      final parsedValue = int.tryParse(value);
-      if (parsedValue != null) {
-        formattedValue = formatter.format(parsedValue);
-      }
-    }
 
+    if (value.isEmpty) {
+      return const TextEditingValue(
+        text: '',
+        selection: TextSelection.collapsed(offset: 0),
+      );
+    }
+    final parsedValue = int.tryParse(value);
+    if (parsedValue == null) {
+      return newValue;
+    }
+    final formatter = NumberFormat('#,##,##0', 'en_IN');
+    final formattedValue = formatter.format(parsedValue);
     return TextEditingValue(
       text: formattedValue,
       selection: TextSelection.collapsed(offset: formattedValue.length),

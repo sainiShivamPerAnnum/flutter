@@ -37,16 +37,16 @@ class StacScreenUtilTransformer {
   static void _processCommonProperties(Map<String, dynamic> json) {
     // Handle width and height (apply .w and .h)
     if (json.containsKey('width') && json['width'] is num) {
-      json['width'] = ScreenUtilTag('w', json['width']);
+      json['width'] = ScreenUtilTag('w', json['width']).toDouble();
     }
 
     if (json.containsKey('height') && json['height'] is num) {
-      json['height'] = ScreenUtilTag('h', json['height']);
+      json['height'] = ScreenUtilTag('h', json['height']).toDouble();
     }
 
     // Handle size (apply .r for radius-related properties)
     if (json.containsKey('size') && json['size'] is num) {
-      json['size'] = ScreenUtilTag('r', json['size']);
+      json['size'] = ScreenUtilTag('r', json['size']).toDouble();
     }
 
     // Handle padding
@@ -101,7 +101,7 @@ class StacScreenUtilTransformer {
       case 'Text':
         // Handle direct fontSize property if present
         if (json.containsKey('fontSize') && json['fontSize'] is num) {
-          json['fontSize'] = ScreenUtilTag('sp', json['fontSize']);
+          json['fontSize'] = ScreenUtilTag('sp', json['fontSize']).toDouble();
         }
         break;
 
@@ -113,7 +113,7 @@ class StacScreenUtilTransformer {
       case 'BorderRadius':
         // Handle border radius values
         if (json.containsKey('radius') && json['radius'] is num) {
-          json['radius'] = ScreenUtilTag('r', json['radius']);
+          json['radius'] = ScreenUtilTag('r', json['radius']).toDouble();
         }
         break;
 
@@ -129,33 +129,34 @@ class StacScreenUtilTransformer {
   static dynamic _processEdgeInsets(padding, {bool forHeight = false}) {
     if (padding is num) {
       // For a single number, use .r as it applies to all sides
-      return ScreenUtilTag('r', padding);
+      return ScreenUtilTag('r', padding).toDouble();
     } else if (padding is Map<String, dynamic>) {
       // For a map with specific sides
       final result = Map<String, dynamic>.from(padding);
 
       if (result.containsKey('left') && result['left'] is num) {
-        result['left'] = ScreenUtilTag('w', result['left']);
+        result['left'] = ScreenUtilTag('w', result['left']).toDouble();
       }
 
       if (result.containsKey('right') && result['right'] is num) {
-        result['right'] = ScreenUtilTag('w', result['right']);
+        result['right'] = ScreenUtilTag('w', result['right']).toDouble();
       }
 
       if (result.containsKey('top') && result['top'] is num) {
-        result['top'] = ScreenUtilTag('h', result['top']);
+        result['top'] = ScreenUtilTag('h', result['top']).toDouble();
       }
 
       if (result.containsKey('bottom') && result['bottom'] is num) {
-        result['bottom'] = ScreenUtilTag('h', result['bottom']);
+        result['bottom'] = ScreenUtilTag('h', result['bottom']).toDouble();
       }
 
       if (result.containsKey('horizontal') && result['horizontal'] is num) {
-        result['horizontal'] = ScreenUtilTag('w', result['horizontal']);
+        result['horizontal'] =
+            ScreenUtilTag('w', result['horizontal']).toDouble();
       }
 
       if (result.containsKey('vertical') && result['vertical'] is num) {
-        result['vertical'] = ScreenUtilTag('h', result['vertical']);
+        result['vertical'] = ScreenUtilTag('h', result['vertical']).toDouble();
       }
 
       return result;
@@ -163,11 +164,11 @@ class StacScreenUtilTransformer {
       // For a list with horizontal and vertical values
       final result = List.from(padding);
       if (result[0] is num) {
-        result[0] = ScreenUtilTag('w', result[0]);
+        result[0] = ScreenUtilTag('w', result[0]).toDouble();
       }
 
       if (result[1] is num) {
-        result[1] = ScreenUtilTag('h', result[1]);
+        result[1] = ScreenUtilTag('h', result[1]).toDouble();
       }
 
       return result;
@@ -182,31 +183,33 @@ class StacScreenUtilTransformer {
     if (decoration.containsKey('borderRadius') &&
         decoration['borderRadius'] is num) {
       decoration['borderRadius'] =
-          ScreenUtilTag('r', decoration['borderRadius']);
+          ScreenUtilTag('r', decoration['borderRadius']).toDouble();
     } else if (decoration.containsKey('borderRadius') &&
         decoration['borderRadius'] is Map) {
       final borderRadius = decoration['borderRadius'] as Map<String, dynamic>;
 
       if (borderRadius.containsKey('topLeft') &&
           borderRadius['topLeft'] is num) {
-        borderRadius['topLeft'] = ScreenUtilTag('r', borderRadius['topLeft']);
+        borderRadius['topLeft'] =
+            ScreenUtilTag('r', borderRadius['topLeft']).toDouble();
       }
 
       if (borderRadius.containsKey('topRight') &&
           borderRadius['topRight'] is num) {
-        borderRadius['topRight'] = ScreenUtilTag('r', borderRadius['topRight']);
+        borderRadius['topRight'] =
+            ScreenUtilTag('r', borderRadius['topRight']).toDouble();
       }
 
       if (borderRadius.containsKey('bottomLeft') &&
           borderRadius['bottomLeft'] is num) {
         borderRadius['bottomLeft'] =
-            ScreenUtilTag('r', borderRadius['bottomLeft']);
+            ScreenUtilTag('r', borderRadius['bottomLeft']).toDouble();
       }
 
       if (borderRadius.containsKey('bottomRight') &&
           borderRadius['bottomRight'] is num) {
         borderRadius['bottomRight'] =
-            ScreenUtilTag('r', borderRadius['bottomRight']);
+            ScreenUtilTag('r', borderRadius['bottomRight']).toDouble();
       }
     }
 
@@ -215,7 +218,7 @@ class StacScreenUtilTransformer {
       final border = decoration['border'] as Map<String, dynamic>;
 
       if (border.containsKey('width') && border['width'] is num) {
-        border['width'] = ScreenUtilTag('w', border['width']);
+        border['width'] = ScreenUtilTag('w', border['width']).toDouble();
       }
     }
   }
@@ -224,12 +227,13 @@ class StacScreenUtilTransformer {
   static void _processTextStyle(Map<String, dynamic> style) {
     // Handle fontSize
     if (style.containsKey('fontSize') && style['fontSize'] is num) {
-      style['fontSize'] = ScreenUtilTag('sp', style['fontSize']);
+      style['fontSize'] = ScreenUtilTag('sp', style['fontSize']).toDouble();
     }
 
     // Handle letterSpacing
     if (style.containsKey('letterSpacing') && style['letterSpacing'] is num) {
-      style['letterSpacing'] = ScreenUtilTag('w', style['letterSpacing']);
+      style['letterSpacing'] =
+          ScreenUtilTag('w', style['letterSpacing']).toDouble();
     }
 
     // Handle height (line height)
@@ -286,9 +290,9 @@ class ScreenUtilTag {
 /// Extension method to make initialization cleaner
 extension ScreenUtilStacExtension on Stac {
   /// Initialize STAC with ScreenUtil support
-  static Future<void> santizeJson({
+  static Map<String, dynamic>? santizeJson({
     Map<String, dynamic>? json,
-  }) async {
-    StacScreenUtilTransformer._transformJson(json);
+  }) {
+    return StacScreenUtilTransformer._transformJson(json);
   }
 }

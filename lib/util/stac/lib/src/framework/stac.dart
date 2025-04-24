@@ -186,8 +186,9 @@ class Stac {
           case ConnectionState.done:
             if (snapshot.hasData) {
               final json = snapshot.data;
-              ScreenUtilStacExtension.santizeJson(json: json);
-              child = Stac.fromJson(json, context) ?? const SizedBox();
+              final sanitizedJson =
+                  ScreenUtilStacExtension.santizeJson(json: json);
+              child = Stac.fromJson(sanitizedJson, context) ?? const SizedBox();
             } else if (snapshot.hasError) {
               Log.e(snapshot.error);
               if (errorWidget != null) {
@@ -237,8 +238,9 @@ class Stac {
           case ConnectionState.done:
             if (snapshot.hasData) {
               final json = jsonDecode(snapshot.data.toString());
-              ScreenUtilStacExtension.santizeJson(json: json);
-              return Stac.fromJson(json, context) ?? const SizedBox();
+              final sanitizedJson =
+                  ScreenUtilStacExtension.santizeJson(json: json);
+              return Stac.fromJson(sanitizedJson, context) ?? const SizedBox();
             } else if (snapshot.hasError) {
               Log.e(snapshot.error);
               if (errorWidget != null) {

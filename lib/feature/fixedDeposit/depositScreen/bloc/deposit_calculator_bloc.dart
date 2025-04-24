@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/repository/fixed_deposit_repo.dart';
 import 'package:felloapp/feature/fixedDeposit/depositScreen/widgets/redirection_sheet.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'deposit_calculator_state.dart';
 part 'deposit_calculator_event.dart';
@@ -44,6 +44,14 @@ class FDCalculatorBloc
     _debounce = Timer(const Duration(milliseconds: 300), () {});
     await Future.delayed(const Duration(milliseconds: 300));
     try {
+      if (event.investmentAmount < event.minAmount) {
+        emitter(
+          FCalculatorError(
+            'The minimum investment amount is ₹${event.minAmount}',
+          ),
+        );
+        return;
+      }
       emitter(const LoadingFdCalculator());
       final response = await _fdRepository.fetchFdCalculation(
         investmentAmount: event.investmentAmount,
@@ -152,13 +160,21 @@ class FDCalculatorBloc
             blostemUrl: response.model!,
             onCloseWebView: () {
               add(
-                const RestoreLastFDCalculation(),
+                RestoreLastFDCalculation(
+                  investmentAmount: event.investmentAmount > event.minAmount
+                      ? event.investmentAmount
+                      : event.minAmount.toDouble(),
+                ),
               );
             },
           ),
         );
         add(
-          const RestoreLastFDCalculation(),
+          RestoreLastFDCalculation(
+            investmentAmount: event.investmentAmount > event.minAmount
+                ? event.investmentAmount
+                : event.minAmount.toDouble(),
+          ),
         );
       } else {
         emitter(
