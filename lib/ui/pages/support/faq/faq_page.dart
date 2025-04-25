@@ -36,7 +36,6 @@ class FAQPage extends StatelessWidget {
           showCoinBar: false,
           showHelpButton: false,
           action: Container(
-            height: SizeConfig.avatarRadius * 2,
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding2),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),

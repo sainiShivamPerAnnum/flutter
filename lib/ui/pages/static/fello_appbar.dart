@@ -88,9 +88,9 @@ class NotificationButton extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     backgroundColor: Colors.white.withOpacity(0.1),
-                    radius: SizeConfig.avatarRadius * 1.1,
+                    radius: SizeConfig.avatarRadius * 0.6,
                     child: Padding(
-                      padding: EdgeInsets.all(SizeConfig.padding12),
+                      padding: EdgeInsets.all(SizeConfig.padding8),
                       child: SvgPicture.asset(
                         Assets.alerts,
                       ),

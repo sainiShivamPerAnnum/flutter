@@ -31,8 +31,7 @@ dependencies:
   firebase_storage: ^11.6.4
   flutter:
     sdk: flutter
-  flutter_facebook_sdk:
-    path: packages/flutter_facebook_sdk/
+  flutter_meta_sdk: ^1.0.5
   flutter_localizations:
     sdk: flutter
   flutter_rating_bar: ^4.0.0

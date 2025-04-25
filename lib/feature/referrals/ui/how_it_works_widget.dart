@@ -110,7 +110,7 @@ class _HowItWorksWidgetState extends State<HowItWorksWidget> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          for (int i = 0; i < 50; i++)
+                          for (int i = 0; i < 46; i++)
                             Container(
                               width: SizeConfig.padding6,
                               height: 1,

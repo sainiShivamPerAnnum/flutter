@@ -3,7 +3,7 @@ import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:flutter_facebook_sdk/flutter_facebook_sdk.dart';
+import 'package:flutter_meta_sdk/flutter_meta_sdk.dart';
 
 class FacebookAnalytics extends BaseAnalyticsService {
   final CustomLogger _logger = locator<CustomLogger>();
@@ -19,10 +19,9 @@ class FacebookAnalytics extends BaseAnalyticsService {
     try {
       if (FlavorConfig.isProduction()) {
         if (properties != null && properties.isNotEmpty) {
-          FlutterFacebookSdk()
-              .logEvent(eventName: eventName!, parameters: properties);
+          FlutterMetaSdk().logEvent(name: eventName!, parameters: properties);
         } else {
-          FlutterFacebookSdk().logEvent(eventName: eventName!);
+          FlutterMetaSdk().logEvent(name: eventName!);
         }
       }
     } catch (e) {

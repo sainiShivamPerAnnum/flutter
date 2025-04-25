@@ -120,7 +120,6 @@ class FelloInfoBar extends StatelessWidget {
         margin: EdgeInsets.symmetric(
           horizontal: SizeConfig.padding2,
         ),
-        height: SizeConfig.avatarRadius * 2,
         decoration: BoxDecoration(
           color: UiConstants.kTextFieldColor.withOpacity(0.4),
           border: Border.all(color: borderColor ?? Colors.white10),
@@ -129,8 +128,10 @@ class FelloInfoBar extends StatelessWidget {
         child: Stack(
           children: [
             Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: SizeConfig.padding8),
+                SizedBox(height: SizeConfig.padding6),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
