@@ -199,7 +199,8 @@ class VideoWidgetState extends State<VideoWidget>
             if (!widget.commentsVisibility)
               Positioned(
                 bottom: 30.h,
-                left: 20.w,
+                left: 10.w,
+                right: 0.w,
                 child: Visibility(
                   visible: !widget.isKeyBoardOpen,
                   replacement: const SizedBox.shrink(),
