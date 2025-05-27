@@ -95,6 +95,10 @@ class MyAccount extends StatelessWidget {
                     uri: "",
                     onTap: () => model.showRatingSheet(),
                   ),
+                  const AccountInfoTiles(
+                    title: 'Support',
+                    uri: "/support",
+                  ),
                   //Scratch Cards count and navigation
                   const ScratchCardsInfoStrip(),
                   //Current Winnings Information

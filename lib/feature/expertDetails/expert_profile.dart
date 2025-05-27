@@ -69,11 +69,11 @@ class ExpertsDetailsView extends StatelessWidget {
             locator(),
           )..add(LoadExpertsDetails(advisorID)),
         ),
-        BlocProvider(
-          create: (context) => RatingBloc(
-            locator(),
-          )..add(LoadRatings(advisorID)),
-        ),
+        // BlocProvider(
+        //   create: (context) => RatingBloc(
+        //     locator(),
+        //   )..add(LoadRatings(advisorID)),
+        // ),
       ],
       child: _ExpertProfilePage(
         advisorID: advisorID,
@@ -344,26 +344,20 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                             height: 6.h,
                           ),
                           Text(
-                            expertDetails.description,
+                            expertDetails.experience,
                             style: TextStyles.sourceSansSB.body4.colour(
                               UiConstants.kTextColor.withOpacity(.7),
                             ),
                             textAlign: TextAlign.center,
                           ),
                           SizedBox(
-                            height: 12.h,
+                            height: 18.h,
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Column(
                                 children: [
-                                  Text(
-                                    'Experience',
-                                    style: TextStyles.sourceSansSB.body6.colour(
-                                      UiConstants.kTextColor,
-                                    ),
-                                  ),
                                   Text(
                                     expertDetails
                                         .experience, // Display experience
@@ -371,157 +365,190 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                                       UiConstants.kTextColor,
                                     ),
                                   ),
+                                  Text(
+                                    'Experience',
+                                    style: TextStyles.sourceSansSB.body6.colour(
+                                      UiConstants.kTextColor6,
+                                    ),
+                                  ),
                                 ],
+                              ),
+                              SizedBox(
+                                width: 28.w,
+                              ),
+                              SizedBox(
+                                height: SizeConfig.padding28,
+                                child: const VerticalDivider(
+                                  color: UiConstants.grey6,
+                                  thickness: 0.6,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 28.w,
                               ),
                               Column(
                                 children: [
-                                  Text(
-                                    'Sessions',
-                                    style: TextStyles.sourceSansSB.body6.colour(
-                                      UiConstants.kTextColor,
-                                    ),
-                                  ),
                                   Text(
                                     expertDetails.sessionCount.toString(),
                                     style: TextStyles.sourceSansSB.body2.colour(
                                       UiConstants.kTextColor,
                                     ),
                                   ),
+                                  Text(
+                                    'Sessions',
+                                    style: TextStyles.sourceSansSB.body6.colour(
+                                      UiConstants.kTextColor6,
+                                    ),
+                                  ),
                                 ],
+                              ),
+                              SizedBox(
+                                width: 28.w,
+                              ),
+                              SizedBox(
+                                height: SizeConfig.padding28,
+                                child: const VerticalDivider(
+                                  color: UiConstants.grey6,
+                                  thickness: 0.6,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 28.w,
                               ),
                               Column(
                                 children: [
-                                  Text(
-                                    'Rating',
-                                    style: TextStyles.sourceSansSB.body6.colour(
-                                      UiConstants.kTextColor,
-                                    ),
-                                  ),
                                   Text(
                                     expertDetails.rating.toString(),
                                     style: TextStyles.sourceSansSB.body2.colour(
                                       UiConstants.kTextColor,
                                     ),
                                   ),
+                                  Text(
+                                    'Rating',
+                                    style: TextStyles.sourceSansSB.body6.colour(
+                                      UiConstants.kTextColor6,
+                                    ),
+                                  ),
                                 ],
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 26.h,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    BlocProvider.of<ExpertDetailsBloc>(
-                                      context,
-                                      listen: false,
-                                    ).add(
-                                      FollowAdvisor(
-                                        widget.advisorID,
-                                        LocalActionsState.getAdvisorFollowed(
-                                          widget.advisorID,
-                                          expertDetails.isFollowed,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 9.h,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: UiConstants.kProfileBorderColor
-                                          .withOpacity(.06),
-                                      borderRadius: BorderRadius.circular(5.r),
-                                      border: Border.all(
-                                        color: UiConstants.kTextColor6
-                                            .withOpacity(.1),
-                                        width: 2.w,
-                                      ),
-                                    ),
-                                    child: LocalActionsState.getAdvisorFollowed(
-                                      widget.advisorID,
-                                      expertDetails.isFollowed,
-                                    )
-                                        ? Text(
-                                            'Following',
-                                            style:
-                                                TextStyles.sourceSansSB.body4,
-                                            textAlign: TextAlign.center,
-                                          )
-                                        : Text(
-                                            'Follow',
-                                            style:
-                                                TextStyles.sourceSansSB.body4,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10.w,
-                              ),
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    context.read<CartBloc>().add(
-                                          AddToCart(
-                                            advisor: Expert(
-                                              advisorId: widget.advisorID,
-                                              name: state.expertDetails!.name,
-                                              experience: state
-                                                  .expertDetails!.experience,
-                                              rating:
-                                                  state.expertDetails!.rating,
-                                              expertise: '',
-                                              qualifications: '',
-                                              rate: 0,
-                                              rateNew: '',
-                                              image: state.expertDetails!.image,
-                                              isFree: false,
-                                            ),
-                                          ),
-                                        );
-                                    BaseUtil.openBookAdvisorSheet(
-                                      advisorId: widget.advisorID,
-                                      advisorName:
-                                          state.expertDetails?.name ?? '',
-                                      advisorImage:
-                                          state.expertDetails?.image ?? '',
-                                      isEdit: false,
-                                    );
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 9.h,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: UiConstants.kProfileBorderColor
-                                          .withOpacity(.06),
-                                      borderRadius: BorderRadius.circular(5.r),
-                                      border: Border.all(
-                                        color: UiConstants.kTextColor6
-                                            .withOpacity(.1),
-                                        width: 2.w,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      'Book a Call',
-                                      style: TextStyles.sourceSansSB.body4,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
                               ),
                             ],
                           ),
                           SizedBox(
                             height: 16.h,
                           ),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //   children: [
+                          //     Expanded(
+                          //       child: GestureDetector(
+                          //         onTap: () {
+                          //           BlocProvider.of<ExpertDetailsBloc>(
+                          //             context,
+                          //             listen: false,
+                          //           ).add(
+                          //             FollowAdvisor(
+                          //               widget.advisorID,
+                          //               LocalActionsState.getAdvisorFollowed(
+                          //                 widget.advisorID,
+                          //                 expertDetails.isFollowed,
+                          //               ),
+                          //             ),
+                          //           );
+                          //         },
+                          //         child: Container(
+                          //           padding: EdgeInsets.symmetric(
+                          //             vertical: 9.h,
+                          //           ),
+                          //           decoration: BoxDecoration(
+                          //             color: UiConstants.kProfileBorderColor
+                          //                 .withOpacity(.06),
+                          //             borderRadius: BorderRadius.circular(5.r),
+                          //             border: Border.all(
+                          //               color: UiConstants.kTextColor6
+                          //                   .withOpacity(.1),
+                          //               width: 2.w,
+                          //             ),
+                          //           ),
+                          //           child: LocalActionsState.getAdvisorFollowed(
+                          //             widget.advisorID,
+                          //             expertDetails.isFollowed,
+                          //           )
+                          //               ? Text(
+                          //                   'Following',
+                          //                   style:
+                          //                       TextStyles.sourceSansSB.body4,
+                          //                   textAlign: TextAlign.center,
+                          //                 )
+                          //               : Text(
+                          //                   'Follow',
+                          //                   style:
+                          //                       TextStyles.sourceSansSB.body4,
+                          //                   textAlign: TextAlign.center,
+                          //                 ),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     SizedBox(
+                          //       width: 10.w,
+                          //     ),
+                          //     Expanded(
+                          //       child: GestureDetector(
+                          //         onTap: () {
+                          //           context.read<CartBloc>().add(
+                          //                 AddToCart(
+                          //                   advisor: Expert(
+                          //                     advisorId: widget.advisorID,
+                          //                     name: state.expertDetails!.name,
+                          //                     experience: state
+                          //                         .expertDetails!.experience,
+                          //                     rating:
+                          //                         state.expertDetails!.rating,
+                          //                     expertise: '',
+                          //                     qualifications: '',
+                          //                     rate: 0,
+                          //                     rateNew: '',
+                          //                     image: state.expertDetails!.image,
+                          //                     isFree: false,
+                          //                   ),
+                          //                 ),
+                          //               );
+                          //           BaseUtil.openBookAdvisorSheet(
+                          //             advisorId: widget.advisorID,
+                          //             advisorName:
+                          //                 state.expertDetails?.name ?? '',
+                          //             advisorImage:
+                          //                 state.expertDetails?.image ?? '',
+                          //             isEdit: false,
+                          //           );
+                          //         },
+                          //         child: Container(
+                          //           padding: EdgeInsets.symmetric(
+                          //             vertical: 9.h,
+                          //           ),
+                          //           decoration: BoxDecoration(
+                          //             color: UiConstants.kProfileBorderColor
+                          //                 .withOpacity(.06),
+                          //             borderRadius: BorderRadius.circular(5.r),
+                          //             border: Border.all(
+                          //               color: UiConstants.kTextColor6
+                          //                   .withOpacity(.1),
+                          //               width: 2.w,
+                          //             ),
+                          //           ),
+                          //           child: Text(
+                          //             'Book a Call',
+                          //             style: TextStyles.sourceSansSB.body4,
+                          //             textAlign: TextAlign.center,
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
+
+                          // SizedBox(
+                          //   height: 16.h,
+                          // ),
                         ],
                       ),
                     ),
@@ -879,12 +906,12 @@ Widget _buildInfoTab(
           height: 24.h,
         ),
       ),
-      SliverToBoxAdapter(
-        child: RatingReviewSection(
-          ratingInfo: expertDetails.ratingInfo,
-          advisorId: advisorID,
-        ),
-      ),
+      // SliverToBoxAdapter(
+      //   child: RatingReviewSection(
+      //     ratingInfo: expertDetails.ratingInfo,
+      //     advisorId: advisorID,
+      //   ),
+      // ),
     ],
   );
 }

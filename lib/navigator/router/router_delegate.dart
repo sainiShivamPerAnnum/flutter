@@ -25,10 +25,12 @@ import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/feature/sdui/sdui_page.dart';
 import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
 import 'package:felloapp/feature/shorts/video_page.dart';
+import 'package:felloapp/feature/shorts_notifications/shorts_notifications.dart';
 import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_select_assset.dart';
+import 'package:felloapp/feature/support-new/support_new.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/transition_delegate.dart';
@@ -387,6 +389,18 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(
             const P2PHomePage(),
             P2PHomePageConfig,
+          );
+          break;
+        case Pages.ShortsNotification:
+          _addPageData(
+            const ShortsNotificationPage(),
+            ShortsNotificationPageConfig,
+          );
+          break;
+        case Pages.Support:
+          _addPageData(
+            const SupportNewPage(),
+            SupportPageConfig,
           );
           break;
         default:
@@ -1183,6 +1197,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case "shortsNotification":
         pageConfiguration = ShortsNotificationPageConfig;
+        break;
+      case "support":
+        pageConfiguration = SupportPageConfig;
         break;
       case "fixedDeposit":
         BaseUtil().openRechargeModalSheet(

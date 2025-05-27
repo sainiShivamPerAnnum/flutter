@@ -1,7 +1,7 @@
 targets:
   $default:
     builders:
-      json_serializable|json_serializable:
+      json_annotation|json_serializable:
         enabled: true
         generate_for:
           - "lib/core/model/**.dart"
@@ -15,7 +15,8 @@ targets:
         enabled: true
         generate_for:
           - "lib/core/model/**.dart"
-      freezed: 
+
+      freezed:
         enabled: true
         generate_for:
           - "lib/core/model/sdui/**.dart"

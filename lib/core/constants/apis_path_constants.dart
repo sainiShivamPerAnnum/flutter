@@ -12,7 +12,6 @@ class ApiPath {
   //User Ops Apis
   String get kAddNewUser => "/v2/new";
 
-
   static const String kAddBankAccount = "/bank";
 
   static String kGetBankAccountDetails(String? uid) => '/$uid/bank';
@@ -275,4 +274,18 @@ class ApiPath {
   static const followTheme = "user-notify/follow-theme";
   static const unfollowTheme = "user-notify/unfollow-theme";
   static const getSaved = "videos/saved/grouped-by-theme";
+
+  static const String chatSessionPath = '/chat/session';
+  static const String chatMessagesPath = '/chat/messages';
+  static const String sendMessagePath = '/chat/send';
+  static const String handoverPath = '/chat/handover';
+  static const String consultationPath = '/chat/consultation';
+
+  // WebSocket endpoints
+  static const String chatWebSocketPath = '/chat/ws';
+
+  // Additional chat related endpoints
+  static const String chatStatusPath = '/chat/status';
+  static const String advisorPath = '/chat/advisor';
+  static const String chatHistoryPath = '/chat/history';
 }

@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/feature/advisor/advisor_root.dart';
+import 'package:felloapp/feature/chat/chat_screen.dart';
 import 'package:felloapp/feature/expert/expert_root.dart';
 import 'package:felloapp/feature/expert/widgets/scroll_to_index.dart';
 import 'package:felloapp/feature/live/live_root.dart';
@@ -122,7 +122,7 @@ class RootController {
         final UserService userService = locator<UserService>();
         if (userService.baseUser?.isAdvisor ?? false) {
           navItems.putIfAbsent(
-            const AdvisorPage(),
+            const ChatScreen(advisorId: '1'),
             () => RootController.advisortNavBarItem,
           );
         } else {

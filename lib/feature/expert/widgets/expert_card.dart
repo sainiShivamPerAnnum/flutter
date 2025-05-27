@@ -5,6 +5,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ExpertCard extends StatelessWidget {
   final Expert expert;
@@ -27,249 +28,289 @@ class ExpertCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: UiConstants.greyVarient,
-          borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+          borderRadius: BorderRadius.circular(10.r),
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(SizeConfig.roundness8),
-                    bottomLeft: Radius.circular(
-                      SizeConfig.roundness8,
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 14.w,
+                vertical: 16.h,
+              ),
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100.r),
+                    child: Image.network(
+                      expert.image,
+                      height: SizeConfig.padding56,
+                      width: SizeConfig.padding56,
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  child: Image.network(
-                    expert.image,
-                    height: SizeConfig.padding156,
-                    width: SizeConfig.padding140,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Positioned(
-                  bottom: SizeConfig.padding8,
-                  child: SizedBox(
-                    width: SizeConfig.padding140,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(
-                            SizeConfig.padding4,
-                          ),
-                          margin: EdgeInsets.only(left: SizeConfig.padding10),
-                          decoration: BoxDecoration(
-                            color: UiConstants.kTextColor4.withOpacity(0.3),
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness5),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              AppImage(
-                                Assets.experience,
-                                height: SizeConfig.body6,
-                              ),
-                              SizedBox(
-                                width: SizeConfig.padding2,
-                              ),
-                              Text(
-                                " ${expert.experience} Years",
-                                style: TextStyles.sourceSans.body6,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(
-                            SizeConfig.padding4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: UiConstants.kTextColor4.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(
-                              SizeConfig.roundness5,
-                            ),
-                          ),
-                          margin: EdgeInsets.only(right: SizeConfig.padding10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.star,
-                                color: UiConstants.kamber,
-                                size: SizeConfig.body6,
-                              ),
-                              SizedBox(
-                                width: SizeConfig.padding2,
-                              ),
-                              Text(
-                                '${expert.rating}',
-                                style: TextStyles.sourceSans.body6,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding16,
-                  vertical: SizeConfig.padding10,
-                ),
-                constraints: BoxConstraints(
-                  maxHeight: SizeConfig.padding156,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Name
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  SizedBox(width: SizeConfig.padding14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           expert.name,
-                          style: TextStyles.sourceSansSB.body1.colour(
+                          style: TextStyles.sourceSansSB.body2.colour(
                             UiConstants.kTextColor,
                           ),
                         ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: UiConstants.kTextColor,
-                          size: SizeConfig.body2,
+                        Wrap(
+                          spacing: SizeConfig.padding6,
+                          runSpacing: SizeConfig.padding6,
+                          children: _buildExpertiseTags(),
                         ),
                       ],
                     ),
-                    SizedBox(height: SizeConfig.padding4),
-
-                    // Expertise List
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.star,
-                          color: UiConstants.kTextColor6,
-                          size: SizeConfig.body4,
-                        ),
-                        SizedBox(width: SizeConfig.padding4),
-                        Expanded(
-                          child: Text(
-                            expert.expertise,
-                            style: TextStyles.sourceSans.body4.colour(
-                              UiConstants.kTextColor6,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: SizeConfig.padding4),
-
-                    // Qualifications List
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.school,
-                          color: UiConstants.kTextColor6,
-                          size: SizeConfig.body4,
-                        ),
-                        SizedBox(width: SizeConfig.padding4),
-                        Expanded(
-                          child: Text(
-                            expert.qualifications,
-                            style: TextStyles.sourceSans.body4.colour(
-                              UiConstants.kTextColor6,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: SizeConfig.padding8),
-                    const Divider(
-                      color: UiConstants.grey6,
-                    ),
-                    SizedBox(height: SizeConfig.padding8),
-
-                    // Price and Book Button
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding18),
+              child: Column(
+                children: [
+                  const Divider(
+                    color: UiConstants.grey6,
+                    thickness: 0.6,
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(vertical: SizeConfig.padding2),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Row(
                           children: [
-                            Text(
-                              expert.rateNew,
-                              style: TextStyles.sourceSansSB.body3
-                                  .colour(
-                                    UiConstants.kTextColor,
-                                  )
-                                  .copyWith(
-                                    decoration: isFree && expert.isFree
-                                        ? TextDecoration.lineThrough
-                                        : TextDecoration.none,
-                                    decorationColor: UiConstants.kTextColor,
-                                  ),
+                            Icon(
+                              Icons.calendar_today,
+                              color: UiConstants.kTextColor,
+                              size: SizeConfig.body4,
                             ),
-                            if (isFree && expert.isFree)
-                              SizedBox(
-                                width: SizeConfig.padding4,
+                            SizedBox(width: SizeConfig.padding8),
+                            Text(
+                              "${expert.experience} years",
+                              style: TextStyles.sourceSansM.body4.colour(
+                                UiConstants.kTextColor,
                               ),
-                            if (isFree && expert.isFree)
-                              Text(
-                                "Free",
-                                style: TextStyles.sourceSansSB.body3
-                                    .colour(
-                                      UiConstants.kTabBorderColor,
-                                    )
-                                    .copyWith(),
-                              ),
+                            ),
                           ],
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            context.read<CartBloc>().add(
-                                  AddToCart(
-                                    advisor: expert,
-                                  ),
-                                );
-                            return onBookCall();
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.padding8,
-                              vertical: SizeConfig.padding6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: UiConstants.kTextColor,
-                              borderRadius: BorderRadius.circular(
-                                SizeConfig.roundness5,
-                              ),
-                            ),
-                            child: Text(
-                              'Book a Call',
-                              style: TextStyles.sourceSansSB.body4.colour(
-                                UiConstants.kTextColor4,
-                              ),
-                            ),
+                        SizedBox(width: SizeConfig.padding18),
+                        SizedBox(
+                          height: SizeConfig.padding16,
+                          child: const VerticalDivider(
+                            color: UiConstants.grey6,
+                            thickness: 0.6,
                           ),
+                        ),
+                        SizedBox(width: SizeConfig.padding18),
+                        Row(
+                          children: [
+                            AppImage(
+                              Assets.qualifications,
+                              height: SizeConfig.body4,
+                              width: SizeConfig.body4,
+                              color: UiConstants.kTextColor,
+                            ),
+                            SizedBox(width: SizeConfig.padding4),
+                            Text(
+                              expert.qualifications,
+                              style: TextStyles.sourceSansM.body4.colour(
+                                UiConstants.kTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(width: SizeConfig.padding18),
+                        SizedBox(
+                          height: SizeConfig.padding16,
+                          child: const VerticalDivider(
+                            color: UiConstants.grey6,
+                            thickness: 0.6,
+                          ),
+                        ),
+                        SizedBox(width: SizeConfig.padding18),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.message_rounded,
+                              color: UiConstants.kTextColor,
+                              size: SizeConfig.body4,
+                            ),
+                            SizedBox(width: SizeConfig.padding4),
+                            Text(
+                              "32 sessions",
+                              style: TextStyles.sourceSansM.body4.colour(
+                                UiConstants.kTextColor,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                  const Divider(
+                    color: UiConstants.grey6,
+                    thickness: 0.6,
+                  ),
+                ],
+              ),
+            ),
+            // Action buttons
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 18.w,
+                vertical: 18.h,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: SizeConfig.padding6,
+                          horizontal: SizeConfig.padding16,
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                              UiConstants.kProfileBorderColor.withOpacity(.06),
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness5),
+                          border: Border.all(
+                            width: SizeConfig.border1,
+                            color: UiConstants.kTextColor6.withOpacity(.1),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.chat_bubble_outline,
+                              color: UiConstants.kTextColor,
+                              size: SizeConfig.body4,
+                            ),
+                            SizedBox(width: SizeConfig.padding4),
+                            Text(
+                              'Chat Now',
+                              style: TextStyles.sourceSansSB.body4.colour(
+                                UiConstants.kTextColor,
+                              ),
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding14,
+                              child: const VerticalDivider(
+                                color: UiConstants.grey6,
+                                thickness: 0.6,
+                              ),
+                            ),
+                            Text(
+                              'Free',
+                              style: TextStyles.sourceSansSB.body4.colour(
+                                UiConstants.teal3,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: SizeConfig.padding10),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        context.read<CartBloc>().add(
+                              AddToCart(
+                                advisor: expert,
+                              ),
+                            );
+                        return onBookCall();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: SizeConfig.padding6,
+                          horizontal: SizeConfig.padding16,
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                              UiConstants.kProfileBorderColor.withOpacity(.06),
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness5),
+                          border: Border.all(
+                            width: SizeConfig.border1,
+                            color: UiConstants.kTextColor6.withOpacity(.1),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.call_outlined,
+                              color: UiConstants.kTextColor,
+                              size: SizeConfig.body4,
+                            ),
+                            SizedBox(width: SizeConfig.padding4),
+                            Text(
+                              'Book a Call',
+                              style: TextStyles.sourceSansSB.body4.colour(
+                                UiConstants.kTextColor,
+                              ),
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding14,
+                              child: const VerticalDivider(
+                                color: UiConstants.grey6,
+                                thickness: 0.6,
+                              ),
+                            ),
+                            Text(
+                              expert.rateNew.split('/').first,
+                              style: TextStyles.sourceSansSB.body4.colour(
+                                UiConstants.teal3,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  List<Widget> _buildExpertiseTags() {
+    final expertiseTags = expert.expertise.split(',');
+    final tagsToUse = expertiseTags;
+
+    return tagsToUse.map((tag) {
+      return Container(
+        margin: EdgeInsets.only(top: SizeConfig.padding6),
+        padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.padding8,
+          vertical: SizeConfig.padding4,
+        ),
+        decoration: BoxDecoration(
+          color: UiConstants.teal4.withOpacity(.3),
+          borderRadius: BorderRadius.circular(18.r),
+        ),
+        child: Text(
+          tag.trim(),
+          style: TextStyles.sourceSansM.body6.colour(
+            UiConstants.teal3,
+          ),
+        ),
+      );
+    }).toList();
   }
 }

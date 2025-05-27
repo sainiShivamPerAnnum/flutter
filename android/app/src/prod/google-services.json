@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "298601110864-c6716pakd1m8ioo22vqtfsefio6256kr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.fello.felloapp",
+            "certificate_hash": "4a889b7c972527b415a3ff02048bc04a5b681090"
+          }
+        },
+        {
           "client_id": "298601110864-cock8gmuif89ags48p3tplil5ac5vdm0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

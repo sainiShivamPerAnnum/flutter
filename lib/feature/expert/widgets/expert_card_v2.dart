@@ -458,8 +458,7 @@ class StoryIndicatorPainter extends CustomPainter {
 class ExpertTagsComponent extends StatelessWidget {
   final List<String> expertiseTags;
 
-  const ExpertTagsComponent({required this.expertiseTags, Key? key})
-      : super(key: key);
+  const ExpertTagsComponent({required this.expertiseTags, super.key});
 
   @override
   Widget build(BuildContext context) {

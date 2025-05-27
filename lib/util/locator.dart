@@ -6,6 +6,7 @@ import 'package:felloapp/core/repository/advisor_repo.dart';
 import 'package:felloapp/core/repository/analytics_repo.dart';
 import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
+import 'package:felloapp/core/repository/chat_repo.dart';
 import 'package:felloapp/core/repository/clientComms_repo.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/repository/experts_repo.dart';
@@ -201,6 +202,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(RpsRepository.new);
   locator.registerLazySingleton(FdRepository.new);
   locator.registerLazySingleton(ShortsRepository.new);
+  locator.registerLazySingleton(ChatRepository.new);
   locator.registerLazySingleton(() => FcmHandlerV2(locator()));
   locator.registerLazySingleton<StoriesRepository>(
     () => StoriesRepository(locator()),

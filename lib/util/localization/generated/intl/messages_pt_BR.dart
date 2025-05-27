@@ -31,15 +31,18 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "onboradButton": MessageLookupByLibrary.simpleMessage("INICIAR"),
-        "resultsPageFirstDisclaimer": m28,
-        "resultsPageLethalDosageMessage": m29,
-        "resultsPageSafeDosageMessage": m30,
-        "resultsPageSafeDosageTitle":
-            MessageLookupByLibrary.simpleMessage("Limite Seguro Diário"),
-        "resultsPageSecondDisclaimer": MessageLookupByLibrary.simpleMessage(
-            "*Se aplica a pessoas com 18 anos ou mais. Essa calculadora não substitui conselhos médicos profissionais."),
-        "splashSlowConnection": MessageLookupByLibrary.simpleMessage(
-            "A conexão está demorando mais do que o normal")
-      };
+    "onboradButton": MessageLookupByLibrary.simpleMessage("INICIAR"),
+    "resultsPageFirstDisclaimer": m28,
+    "resultsPageLethalDosageMessage": m29,
+    "resultsPageSafeDosageMessage": m30,
+    "resultsPageSafeDosageTitle": MessageLookupByLibrary.simpleMessage(
+      "Limite Seguro Diário",
+    ),
+    "resultsPageSecondDisclaimer": MessageLookupByLibrary.simpleMessage(
+      "*Se aplica a pessoas com 18 anos ou mais. Essa calculadora não substitui conselhos médicos profissionais.",
+    ),
+    "splashSlowConnection": MessageLookupByLibrary.simpleMessage(
+      "A conexão está demorando mais do que o normal",
+    ),
+  };
 }

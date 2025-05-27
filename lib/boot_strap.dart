@@ -25,9 +25,12 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/stac/lib/src/framework/stac.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
 typedef BootstrapCallBack = Widget Function();
 
@@ -41,6 +44,11 @@ Future<void> bootStrap(BootstrapCallBack bootStrapCallBack) async {
       if (FlavorConfig.isDevelopment() || FlavorConfig.isQA()) {
         FlutterBranchSdk.validateSDKIntegration();
       }
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: kIsWeb
+            ? HydratedStorageDirectory.web
+            : HydratedStorageDirectory((await getTemporaryDirectory()).path),
+      );
       try {
         await SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp],

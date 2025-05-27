@@ -10,6 +10,7 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/chat/bloc/chat_bloc.dart';
 import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
 import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
@@ -41,7 +42,7 @@ import 'feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'feature/sip/cubit/autosave_cubit.dart';
 
 class MyApp extends HookWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +72,7 @@ class MyApp extends HookWidget {
       child: MultiProvider(
         providers: [
           BlocProvider(create: (_) => PreloadBloc()),
+          BlocProvider(create: (_) => ChatBloc(chatRepository: locator())),
           BlocProvider(create: (_) => locator<ExpertBloc>()),
           Provider(create: (_) => CartBloc(locator())..add(InitalCart())),
           Provider(create: (_) => SipCubit()),
