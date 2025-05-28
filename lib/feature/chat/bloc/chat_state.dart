@@ -12,11 +12,10 @@ enum ChatLoadingState {
 
 enum ChatStatus { ai, human, ended }
 
-enum SenderType { user, ai, advisor, system }
-
 class ChatState extends Equatable {
   final ChatLoadingState loadingState;
-  final ChatSession? session;
+  final ChatSessionWithMessages? currentSession;
+  final Map<String, List<ChatMessage>> sessionMessages;
   final bool isSocketConnected;
   final bool isSendingMessage;
   final String? error;
@@ -28,7 +27,8 @@ class ChatState extends Equatable {
 
   const ChatState({
     this.loadingState = ChatLoadingState.initial,
-    this.session,
+    this.currentSession,
+    this.sessionMessages = const {},
     this.isSocketConnected = false,
     this.isSendingMessage = false,
     this.error,
@@ -41,7 +41,8 @@ class ChatState extends Equatable {
 
   ChatState copyWith({
     ChatLoadingState? loadingState,
-    ChatSession? session,
+    ChatSessionWithMessages? currentSession,
+    Map<String, List<ChatMessage>>? sessionMessages,
     bool? isSocketConnected,
     bool? isSendingMessage,
     String? error,
@@ -53,7 +54,8 @@ class ChatState extends Equatable {
   }) {
     return ChatState(
       loadingState: loadingState ?? this.loadingState,
-      session: session ?? this.session,
+      currentSession: currentSession ?? this.currentSession,
+      sessionMessages: sessionMessages ?? this.sessionMessages,
       isSocketConnected: isSocketConnected ?? this.isSocketConnected,
       isSendingMessage: isSendingMessage ?? this.isSendingMessage,
       error: error,
@@ -73,7 +75,8 @@ class ChatState extends Equatable {
   @override
   List<Object?> get props => [
         loadingState,
-        session,
+        currentSession,
+        sessionMessages,
         isSocketConnected,
         isSendingMessage,
         error,
@@ -85,12 +88,13 @@ class ChatState extends Equatable {
       ];
 
   // Convenience getters
-  List<ChatMessage> get messages => session?.messages ?? [];
+  List<ChatMessage> get messages => currentSession?.messages ?? [];
   bool get isAiMode => chatStatus == ChatStatus.ai;
   bool get isHumanMode => chatStatus == ChatStatus.human;
   bool get isChatEnded => chatStatus == ChatStatus.ended;
-  bool get hasSession => session != null;
-  String? get sessionId => session?.id;
+  bool get hasSession => currentSession != null;
+  String? get sessionId => currentSession?.sessionId;
+  ChatSession? get session => currentSession?.session;
 
   /// Check if current session belongs to different user
   bool isDifferentUser(String userId) {

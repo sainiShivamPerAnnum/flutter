@@ -1,4 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
+
+import '../../../ui/pages/static/app_widget.dart';
 
 class ChatInput extends StatefulWidget {
   final Function(String) onSendMessage;
@@ -57,55 +67,72 @@ class _ChatInputState extends State<ChatInput> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-      decoration: const BoxDecoration(
-        color: Color(0xFF1A1A1A),
+      padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 16.h),
+      decoration: BoxDecoration(
         border: Border(
           top: BorderSide(
-            color: Color(0xFF2A2A2A),
-            width: 1,
+            color: const Color(0xFF2A2A2A),
+            width: 1.w,
           ),
         ),
       ),
       child: SafeArea(
         child: Row(
           children: [
-            // Voice input button
-            Container(
-              width: 44,
-              height: 44,
-              decoration: const BoxDecoration(
-                color: Color(0xFF2D7D7D),
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                onPressed: widget.isEnabled ? _handleVoiceInput : null,
-                icon: const Icon(
-                  Icons.mic_rounded,
-                  color: Colors.white,
-                  size: 20,
-                ),
-                padding: EdgeInsets.zero,
-              ),
+            PropertyChangeConsumer<UserService, UserServiceProperties>(
+              properties: const [
+                UserServiceProperties.myUserDpUrl,
+                UserServiceProperties.myAvatarId,
+              ],
+              builder: (context, model, properties) {
+                return Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: UiConstants.primaryColor,
+                      width: 2.r,
+                    ),
+                  ),
+                  child: CircleAvatar(
+                    key: const ValueKey(Constants.PROFILE),
+                    radius: 16.r,
+                    backgroundColor: UiConstants.kTextColor4,
+                    backgroundImage: (model!.avatarId != null &&
+                            model.avatarId == 'CUSTOM' &&
+                            model.myUserDpUrl != null &&
+                            model.myUserDpUrl!.isNotEmpty)
+                        ? CachedNetworkImageProvider(
+                            model.myUserDpUrl!,
+                          )
+                        : const AssetImage(
+                            Assets.profilePic,
+                          ) as ImageProvider<Object>?,
+                    child: model.avatarId != null && model.avatarId != 'CUSTOM'
+                        ? AppImage(
+                            "assets/vectors/userAvatars/${model.avatarId}.svg",
+                            fit: BoxFit.cover,
+                          )
+                        : const SizedBox(),
+                  ),
+                );
+              },
             ),
-            const SizedBox(width: 12),
-
-            // Text input
+            SizedBox(width: 12.w),
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
                   color: const Color(0xFF2A2A2A),
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(24.r),
                   border: Border.all(
                     color: _focusNode.hasFocus
                         ? const Color(0xFF2D7D7D)
                         : Colors.transparent,
-                    width: 1,
+                    width: 1.w,
                   ),
                 ),
                 child: Row(
                   children: [
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16.w),
                     Expanded(
                       child: TextField(
                         controller: _controller,
@@ -115,17 +142,20 @@ class _ChatInputState extends State<ChatInput> {
                           hintText: widget.placeholder ?? 'Type a message...',
                           hintStyle: TextStyle(
                             color: Colors.white.withOpacity(0.5),
-                            fontSize: 15,
+                            fontSize: 15.sp,
                             fontWeight: FontWeight.w400,
                           ),
                           border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 12,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 12.h,
                           ),
                         ),
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white,
-                          fontSize: 15,
+                          fontSize: 15.sp,
                           fontWeight: FontWeight.w400,
                         ),
                         maxLines: 4,
@@ -134,10 +164,8 @@ class _ChatInputState extends State<ChatInput> {
                         onSubmitted: (_) => _handleSend(),
                       ),
                     ),
-
-                    // Send button
                     Container(
-                      margin: const EdgeInsets.only(right: 4),
+                      margin: EdgeInsets.only(right: 4.w),
                       child: IconButton(
                         onPressed: _isComposing &&
                                 widget.isEnabled &&
@@ -145,12 +173,13 @@ class _ChatInputState extends State<ChatInput> {
                             ? _handleSend
                             : null,
                         icon: widget.isLoading
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
+                            ? SizedBox(
+                                width: 20.w,
+                                height: 20.h,
                                 child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                  strokeWidth: 2.w,
+                                  valueColor:
+                                      const AlwaysStoppedAnimation<Color>(
                                     Color(0xFF2D7D7D),
                                   ),
                                 ),
@@ -160,12 +189,12 @@ class _ChatInputState extends State<ChatInput> {
                                 color: _isComposing && widget.isEnabled
                                     ? const Color(0xFF2D7D7D)
                                     : Colors.white.withOpacity(0.3),
-                                size: 20,
+                                size: 20.sp,
                               ),
-                        padding: const EdgeInsets.all(8),
-                        constraints: const BoxConstraints(
-                          minWidth: 36,
-                          minHeight: 36,
+                        padding: EdgeInsets.all(8.r),
+                        constraints: BoxConstraints(
+                          minWidth: 36.w,
+                          minHeight: 36.h,
                         ),
                       ),
                     ),
@@ -177,10 +206,5 @@ class _ChatInputState extends State<ChatInput> {
         ),
       ),
     );
-  }
-
-  void _handleVoiceInput() {
-    // Handle voice input
-    // You can integrate with speech_to_text package here
   }
 }

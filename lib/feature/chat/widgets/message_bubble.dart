@@ -1,14 +1,23 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/chat/chat_models.dart';
 import 'package:felloapp/feature/chat/widgets/consultation_card.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MessageBubble extends StatelessWidget {
+  final String? userId;
+  final String? advisorProfilePhoto;
   final ChatMessage message;
   final String? advisorName;
   final Function(ConsultationOffer)? onBookConsultation;
 
   const MessageBubble({
     required this.message,
+    required this.userId,
+    required this.advisorProfilePhoto,
     super.key,
     this.advisorName,
     this.onBookConsultation,
@@ -19,6 +28,8 @@ class MessageBubble extends StatelessWidget {
     final isUser = _isUserMessage();
     final isSystem = _isSystemMessage();
 
+    final isAdvisor = _isAdvisor();
+
     if (message.messageType == MessageType.consultation) {
       return _buildConsultationMessage(context);
     }
@@ -28,81 +39,76 @@ class MessageBubble extends StatelessWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+      margin: EdgeInsets.symmetric(vertical: 4.h, horizontal: 16.w),
       child: Row(
         mainAxisAlignment:
             isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!isUser) ...[
-            _buildAiAvatar(),
-            const SizedBox(width: 12),
+            isAdvisor ? _buildUserAvatar() : _buildAiAvatar(),
+            SizedBox(width: 6.w),
           ],
           Flexible(
             child: Container(
               constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.75,
+                maxWidth: 248.w,
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
               decoration: BoxDecoration(
-                color:
-                    isUser ? const Color(0xFF2D7D7D) : const Color(0xFF2A2A2A),
+                color: isUser
+                    ? UiConstants.teal4.withOpacity(.5)
+                    : UiConstants.greyVarient,
                 borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(20),
-                  topRight: const Radius.circular(20),
-                  bottomLeft: isUser
-                      ? const Radius.circular(20)
-                      : const Radius.circular(4),
-                  bottomRight: isUser
-                      ? const Radius.circular(4)
-                      : const Radius.circular(20),
+                  topLeft:
+                      isUser ? Radius.circular(10.r) : Radius.circular(2.r),
+                  topRight:
+                      isUser ? Radius.circular(2.r) : Radius.circular(10.r),
+                  bottomLeft: Radius.circular(10.r),
+                  bottomRight: Radius.circular(10.r),
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    message.content,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                      height: 1.4,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        _formatTime(message.timestamp),
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.6),
-                          fontSize: 11,
-                          fontWeight: FontWeight.w400,
-                        ),
+              child: IntrinsicWidth(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        message.content,
+                        style: TextStyles.sourceSans.body3,
                       ),
-                      if (isUser) ...[
-                        const SizedBox(width: 6),
-                        Icon(
-                          message.isRead ? Icons.done_all : Icons.done,
-                          size: 14,
-                          color: message.isRead
-                              ? const Color(0xFF4CAF50)
-                              : Colors.white.withOpacity(0.6),
-                        ),
-                      ],
-                    ],
-                  ),
-                ],
+                    ),
+                    SizedBox(height: 2.h),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            BaseUtil.formatTime(message.timestamp),
+                            style: TextStyles.sourceSans.body4.colour(
+                              const Color(0xffA6A6AC),
+                            ),
+                          ),
+                          if (isUser) ...[
+                            SizedBox(width: 4.w),
+                            Icon(
+                              message.isRead ? Icons.done_all : Icons.done,
+                              size: 12.sp,
+                              color: message.isRead
+                                  ? const Color(0xFF48BCEE)
+                                  : Colors.white.withOpacity(0.6),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-          if (isUser) ...[
-            const SizedBox(width: 12),
-            _buildUserAvatar(),
-          ],
         ],
       ),
     );
@@ -110,48 +116,50 @@ class MessageBubble extends StatelessWidget {
 
   Widget _buildAiAvatar() {
     return Container(
-      width: 32,
-      height: 32,
+      width: 20.w,
+      height: 20.h,
       decoration: const BoxDecoration(
         shape: BoxShape.circle,
-        color: Color(0xFF2D7D7D),
+        color: UiConstants.greyVarient,
       ),
-      child: const Icon(
+      child: Icon(
         Icons.smart_toy_rounded,
-        size: 18,
+        size: 12.sp,
         color: Colors.white,
       ),
     );
   }
 
   Widget _buildUserAvatar() {
-    return Container(
-      width: 32,
-      height: 32,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        color: Color(0xFF2D7D7D),
+    return CircleAvatar(
+      radius: 20.r,
+      backgroundColor: Colors.grey[300],
+      backgroundImage: NetworkImage(
+        advisorProfilePhoto ?? '',
       ),
-      child: const Icon(
-        Icons.person,
-        size: 18,
-        color: Colors.white,
-      ),
+      onBackgroundImageError: (exception, stackTrace) {},
+      child: advisorProfilePhoto == ''
+          ? Icon(
+              Icons.person,
+              size: 12.r,
+              color: Colors.grey[600],
+            )
+          : null,
     );
   }
 
   Widget _buildSystemMessage(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
       child: Center(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
           decoration: BoxDecoration(
-            color: const Color(0xFF2D7D7D).withOpacity(0.15),
-            borderRadius: BorderRadius.circular(16),
+            color: const Color(0xFF4CAF50).withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12.r),
             border: Border.all(
-              color: const Color(0xFF2D7D7D).withOpacity(0.3),
-              width: 1,
+              color: const Color(0xFF4CAF50).withOpacity(0.3),
+              width: 0.5,
             ),
           ),
           child: Row(
@@ -159,17 +167,17 @@ class MessageBubble extends StatelessWidget {
             children: [
               Icon(
                 _getSystemIcon(),
-                size: 14,
+                size: 12.sp,
                 color: const Color(0xFF4CAF50),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 6.w),
               Flexible(
                 child: Text(
                   message.content,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Color(0xFF4CAF50),
-                    fontSize: 12,
+                  style: TextStyle(
+                    color: const Color(0xFF4CAF50),
+                    fontSize: 11.sp,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -182,8 +190,6 @@ class MessageBubble extends StatelessWidget {
   }
 
   Widget _buildConsultationMessage(BuildContext context) {
-    // Create a consultation offer from message data
-    // This would typically come from message.data or be parsed from content
     final offer = ConsultationOffer(
       id: message.id,
       advisorName: advisorName ?? 'Anil Singhvi',
@@ -193,7 +199,7 @@ class MessageBubble extends StatelessWidget {
     );
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
       child: ConsultationCard(
         offer: offer,
         onBook: onBookConsultation,
@@ -211,36 +217,15 @@ class MessageBubble extends StatelessWidget {
   }
 
   bool _isUserMessage() {
-    // Check if message is from user based on sender type or handler
-    return message.handler == 'user' ||
-        message.senderId != 'ai' &&
-            message.senderId != 'system' &&
-            message.senderId.isNotEmpty &&
-            message.senderId != 'advisor';
+    return message.senderId == userId;
   }
 
   bool _isSystemMessage() {
-    return message.messageType == MessageType.handover ||
-        message.handler == 'system' ||
-        message.senderId == 'system';
+    return message.messageType == MessageType.handover;
   }
 
-  String _formatTime(DateTime timestamp) {
-    final now = DateTime.now();
-    final difference = now.difference(timestamp);
-
-    if (difference.inMinutes < 1) {
-      return 'Just now';
-    } else if (difference.inHours < 1) {
-      return '${difference.inMinutes}m';
-    } else if (difference.inDays < 1) {
-      return '${difference.inHours}h';
-    } else {
-      final hour = timestamp.hour;
-      final minute = timestamp.minute.toString().padLeft(2, '0');
-      final amPm = hour >= 12 ? 'PM' : 'AM';
-      final displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
-      return '$displayHour:$minute $amPm';
-    }
+  bool _isAdvisor() {
+    return message.messageType == MessageType.advisor ||
+        message.handler == 'advisor';
   }
 }

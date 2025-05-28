@@ -75,21 +75,6 @@ class LoadChatHistory extends ChatEvent {
   List<Object?> get props => [userId];
 }
 
-/// Handover to human advisor
-class HandoverToHuman extends ChatEvent {
-  const HandoverToHuman();
-}
-
-/// Book consultation
-class BookConsultation extends ChatEvent {
-  final ConsultationOffer offer;
-
-  const BookConsultation({required this.offer});
-
-  @override
-  List<Object?> get props => [offer];
-}
-
 /// Mark message as read
 class MarkMessageAsRead extends ChatEvent {
   final String messageId;
@@ -143,10 +128,10 @@ class HandoverComplete extends ChatEvent {
 
 /// Session created/retrieved event
 class SessionReady extends ChatEvent {
-  final ChatSession session;
+  final ChatSessionWithMessages sessionWithMessages;
 
-  const SessionReady({required this.session});
+  const SessionReady({required this.sessionWithMessages});
 
   @override
-  List<Object?> get props => [session];
+  List<Object?> get props => [sessionWithMessages];
 }

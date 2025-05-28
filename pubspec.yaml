@@ -7,7 +7,6 @@ version: 6.4.0+301
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
-
 dependencies:
   animations: ^2.0.2
   another_flushbar: ^1.12.30
@@ -16,7 +15,7 @@ dependencies:
   cached_network_image: ^3.2.3
   carousel_slider: ^5.0.0
   cloud_firestore: ^4.15.4
-  collection: ^1.15.0-nullsafety.4
+  collection: ^1.18.0 
   connectivity_plus: ^5.0.2
   device_info_plus: ^9.0.0
   encrypt: ^5.0.0
@@ -26,6 +25,7 @@ dependencies:
   firebase_crashlytics: ^3.4.9
   firebase_dynamic_links: ^5.4.9
   firebase_in_app_messaging: ^0.7.4+9
+  firebase_instance_id: ^1.1.0
   firebase_messaging: ^14.7.10
   firebase_performance: ^0.9.3+9
   firebase_storage: ^11.6.4
@@ -34,9 +34,9 @@ dependencies:
   flutter_meta_sdk: ^1.0.5
   flutter_localizations:
     sdk: flutter
-  flutter_rating_bar: ^4.0.0
-  flutter_spinkit: ^5.0.0
-  flutter_svg: ^2.1.0
+  flutter_rating_bar: ^4.0.1
+  flutter_spinkit: ^5.2.1
+  flutter_svg: ^2.0.10+1
   flutter_windowmanager: ^0.2.0
   get_it: ^7.2.0
   google_fonts: ^6.1.0
@@ -46,9 +46,9 @@ dependencies:
   isar: ^3.1.0
   isar_flutter_libs: ^3.1.0
   local_auth: ^2.1.2
-  logger: ^2.3.0
-  lottie: ^2.3.2
-  mixpanel_flutter: ^2.0.0
+  logger: ^2.4.0
+  lottie: ^3.1.2
+  mixpanel_flutter: ^2.3.1
   open_filex: ^4.3.1
   package_info_plus: ^8.0.2
   path_provider: ^2.0.2
@@ -60,9 +60,9 @@ dependencies:
   scratcher: ^2.5.0
   share_plus: ^7.0.2
   shared_preferences: ^2.0.6
-  shimmer: ^2.0.0
+  shimmer: ^3.0.0
   sms_autofill: ^2.4.0
-  syncfusion_flutter_gauges: ^26.2.14
+  syncfusion_flutter_gauges: ^27.1.58
   truecaller_sdk: ^0.1.2
   upi_pay:
     path: packages/upi/
@@ -70,24 +70,23 @@ dependencies:
   video_player: ^2.9.1
   webview_flutter: ^4.2.0
   advertising_id: ^2.4.0
-  flutter_hooks: ^0.18.6
-  tuple: ^2.0.1
+  flutter_hooks: ^0.20.5
+  tuple: ^2.0.2
   android_play_install_referrer: ^0.2.1
   youtube_player_iframe: ^4.0.4
   flutter_bloc: ^9.1.0
-  syncfusion_flutter_charts: ^26.2.14
+  syncfusion_flutter_charts: ^27.1.58
   vibration: ^1.7.7
   in_app_update: ^4.1.0
-  firebase_instance_id: ^1.1.0
   dio: ^5.3.3
   dio_http2_adapter: ^2.3.1+1
   json_annotation: ^4.8.1
   equatable: ^2.0.7
   flutter_blurhash: ^0.8.2
-  story_view: ^0.16.0
+  story_view: ^0.16.5
   freezed_annotation: ^2.4.1
   hmssdk_flutter: ^1.10.6
-  super_tooltip: ^2.0.7
+  super_tooltip: ^2.0.8
   focus_detector_v2: ^3.1.0+1
   flutter_widget_from_html_core: ^0.15.2
   dropdown_button2: ^2.3.9
@@ -98,23 +97,22 @@ dependencies:
   pointer_interceptor: ^0.10.1+2
   design_system:
     path: _packages/design_system/
-  injectable_generator: ^1.4.1
-  flutter_screenutil: ^5.9.0
+  flutter_screenutil: ^5.9.3
   timeago: ^3.7.0
   keyboard_detection: ^0.7.3
   webengage_flutter: ^1.4.2
   rect_getter: ^1.1.0
   injectable: ^1.5.4
   flutter_branch_sdk: ^7.1.0
-  smooth_page_indicator: ^1.2.0
+  smooth_page_indicator: ^1.2.0+3
   bordered_text: ^2.0.0
   transparent_image: ^2.0.1
   hydrated_bloc: ^10.0.0
   socket_io_client: ^3.0.2
 
-
 dev_dependencies:
-  build_runner: ^2.4.13
+  build_runner: any
+  build_runner_core: ^7.3.2
   flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
@@ -125,9 +123,6 @@ dev_dependencies:
   isar_generator: ^3.1.0
   json_serializable: ^6.8.0
   
-dependency_overrides:
-   archive: ^4.0.5
-   win32: ^5.7.2
 
 flutter:
   uses-material-design: true

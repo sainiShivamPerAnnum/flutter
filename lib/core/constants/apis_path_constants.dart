@@ -275,17 +275,6 @@ class ApiPath {
   static const unfollowTheme = "user-notify/unfollow-theme";
   static const getSaved = "videos/saved/grouped-by-theme";
 
-  static const String chatSessionPath = '/chat/session';
-  static const String chatMessagesPath = '/chat/messages';
-  static const String sendMessagePath = '/chat/send';
-  static const String handoverPath = '/chat/handover';
-  static const String consultationPath = '/chat/consultation';
-
-  // WebSocket endpoints
-  static const String chatWebSocketPath = '/chat/ws';
-
-  // Additional chat related endpoints
-  static const String chatStatusPath = '/chat/status';
-  static const String advisorPath = '/chat/advisor';
-  static const String chatHistoryPath = '/chat/history';
+  static const String chatSessionPath = 'chats/sessions';
+  static const String chatHistoryPath = 'chats/user-chats';
 }

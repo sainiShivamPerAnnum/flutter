@@ -1036,6 +1036,11 @@ class BaseUtil extends ChangeNotifier {
     return formatter.format(dateTime);
   }
 
+  static String formatOnlyDate(DateTime dateTime) {
+    final DateFormat formatter = DateFormat('MM/dd');
+    return formatter.format(dateTime);
+  }
+
   static Future<bool> isFirstTimeThisWeek() async {
     /// Get the current week number
     final currentWeekNumber =

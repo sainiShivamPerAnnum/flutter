@@ -141,6 +141,7 @@ const String FdDetailsViewPath = '/fd/details';
 const String shortsNotificationViewPath = "/shorts-notification";
 const String savedShortsViewPath = "/shorts-saved";
 const String customSDUIViewPath = "/sdui";
+const String chatDetailsViewPath = "/chat";
 
 enum Pages {
   Splash,
@@ -279,6 +280,7 @@ enum Pages {
   ShortsNotification,
   SavedShorts,
   Sdui,
+  Chat,
 }
 
 class PageConfiguration {
@@ -1084,39 +1086,45 @@ PageConfiguration RpsLearnMorePageConfig = PageConfiguration(
 );
 
 PageConfiguration FdHomePageConfig = PageConfiguration(
-  key: 'FdHomePageConfig',
+  key: 'FdViewPath',
   path: FdViewPath,
   uiPage: Pages.FdHomeView,
   name: 'Fd Home View Path',
 );
 PageConfiguration FdCalulatorPageConfig = PageConfiguration(
-  key: 'FdCalulatorPageConfig',
+  key: 'FdCalculatorViewPath',
   path: FdCalculatorViewPath,
   uiPage: Pages.FdCalculatorView,
   name: 'Fd Calculator View Path',
 );
 PageConfiguration FdDetailsPageConfig = PageConfiguration(
-  key: 'FdDetailsPageConfig',
+  key: 'FdDetailsViewPath',
   path: FdDetailsViewPath,
   uiPage: Pages.FdDetailsView,
   name: 'Fd Details View Path',
 );
 PageConfiguration ShortsNotificationPageConfig = PageConfiguration(
-  key: 'ShortsNotificationPageConfig',
+  key: 'shortsNotificationViewPath',
   path: shortsNotificationViewPath,
   uiPage: Pages.ShortsNotification,
   name: "Shorts Notification",
 );
 
 PageConfiguration SavedShortsPageConfig = PageConfiguration(
-  key: 'SavedShortsPageConfig',
+  key: 'savedShortsViewPath',
   path: savedShortsViewPath,
   uiPage: Pages.SavedShorts,
   name: "Saved Shorts",
 );
 PageConfiguration SduiPageConfig = PageConfiguration(
-  key: 'SavedShortsPageConfig',
+  key: 'customSDUIViewPath',
   path: customSDUIViewPath,
   uiPage: Pages.Sdui,
   name: "Sdui",
+);
+PageConfiguration ChatsPageConfig = PageConfiguration(
+  key: 'chatDetailsViewPath',
+  path: chatDetailsViewPath,
+  uiPage: Pages.Chat,
+  name: "Chat Screen",
 );

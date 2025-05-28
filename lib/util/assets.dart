@@ -285,6 +285,7 @@ class Assets {
   static const String experts_bottom_nav = "assets/svg/expert.svg";
   static const String support_bottom_nav = "assets/svg/support.svg";
   static const String shorts_bottom_nav = "assets/svg/shorts.svg";
+  static const String chats_bottom_nav = "assets/svg/chat_bottom_nav.svg";
   static const String calender =
       "https://d11q4cti75qmcp.cloudfront.net/imagekit/static/calender.png";
 

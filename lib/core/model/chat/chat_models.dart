@@ -14,7 +14,7 @@ class ChatMessage {
   final DateTime timestamp;
   final bool read;
   final String handler; // ai or advisor
-  final MessageType messageType;
+  final MessageType? messageType;
   @JsonKey(name: '_id')
   final String? mongoId;
   @JsonKey(name: '__v')
@@ -28,7 +28,7 @@ class ChatMessage {
     required this.message,
     required this.timestamp,
     required this.handler,
-    required this.messageType,
+    this.messageType = MessageType.ai,
     this.read = false,
     this.mongoId,
     this.version,
@@ -95,24 +95,18 @@ class ConsultationOffer {
 
 @JsonSerializable()
 class ChatSession {
-  final String id;
-  final List<ChatMessage> messages;
-  final String? humanAdvisorId;
-  final String? humanAdvisorName;
+  final String sessionId;
+  final String? advisorId;
+  final String? status;
   final DateTime createdAt;
-  final DateTime updatedAt;
-  final int currentPage;
-  final bool hasMoreMessages;
+  final bool isExisting;
 
   ChatSession({
-    required this.id,
-    required this.messages,
+    required this.sessionId,
+    required this.advisorId,
     required this.createdAt,
-    required this.updatedAt,
-    this.humanAdvisorId,
-    this.humanAdvisorName,
-    this.currentPage = 0,
-    this.hasMoreMessages = false,
+    required this.status,
+    required this.isExisting,
   });
 
   factory ChatSession.fromJson(Map<String, dynamic> json) =>
@@ -121,24 +115,74 @@ class ChatSession {
   Map<String, dynamic> toJson() => _$ChatSessionToJson(this);
 
   ChatSession copyWith({
-    String? id,
+    String? sessionId,
+    String? advisorId,
+    String? status,
+    DateTime? createdAt,
+    bool? isExisting,
+  }) {
+    return ChatSession(
+      sessionId: sessionId ?? this.sessionId,
+      advisorId: advisorId ?? this.advisorId,
+      status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
+      isExisting: isExisting ?? this.isExisting,
+    );
+  }
+}
+
+/// Extended chat session model that includes messages and UI state
+@JsonSerializable()
+class ChatSessionWithMessages {
+  final ChatSession session;
+  final List<ChatMessage> messages;
+  final String? humanAdvisorId;
+  final String? humanAdvisorName;
+  final DateTime updatedAt;
+
+  ChatSessionWithMessages({
+    required this.session,
+    required this.messages,
+    required this.updatedAt,
+    this.humanAdvisorId,
+    this.humanAdvisorName,
+  });
+
+  factory ChatSessionWithMessages.fromJson(Map<String, dynamic> json) =>
+      _$ChatSessionWithMessagesFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ChatSessionWithMessagesToJson(this);
+
+  /// Create from basic ChatSession
+  factory ChatSessionWithMessages.fromSession(ChatSession session) {
+    return ChatSessionWithMessages(
+      session: session,
+      messages: [],
+      updatedAt: DateTime.now(),
+    );
+  }
+
+  ChatSessionWithMessages copyWith({
+    ChatSession? session,
     List<ChatMessage>? messages,
     String? humanAdvisorId,
     String? humanAdvisorName,
-    DateTime? createdAt,
     DateTime? updatedAt,
-    int? currentPage,
-    bool? hasMoreMessages,
   }) {
-    return ChatSession(
-      id: id ?? this.id,
+    return ChatSessionWithMessages(
+      session: session ?? this.session,
       messages: messages ?? this.messages,
       humanAdvisorId: humanAdvisorId ?? this.humanAdvisorId,
       humanAdvisorName: humanAdvisorName ?? this.humanAdvisorName,
-      createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      currentPage: currentPage ?? this.currentPage,
-      hasMoreMessages: hasMoreMessages ?? this.hasMoreMessages,
     );
   }
+
+  // Convenience getters
+  String get id => session.sessionId;
+  String get sessionId => session.sessionId;
+  String? get advisorId => session.advisorId;
+  String? get status => session.status;
+  DateTime get createdAt => session.createdAt;
+  bool get isExisting => session.isExisting;
 }

@@ -1,11 +1,16 @@
-import 'package:felloapp/core/model/chat/chat_models.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/chat/bloc/chat_bloc.dart';
 import 'package:felloapp/feature/chat/bloc/chat_event.dart';
 import 'package:felloapp/feature/chat/bloc/chat_state.dart';
 import 'package:felloapp/feature/chat/widgets/chat_input.dart';
 import 'package:felloapp/feature/chat/widgets/message_bubble.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ChatScreen extends StatefulWidget {
   final String advisorId;
@@ -27,12 +32,12 @@ class _ChatScreenState extends State<ChatScreen> {
   final ScrollController _scrollController = ScrollController();
   bool _isNearBottom = true;
 
+  final String? uid = locator<UserService>().baseUser!.uid;
+
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-
-    // Initialize chat when screen opens
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ChatBloc>().add(InitializeChat(advisorId: widget.advisorId));
     });
@@ -47,8 +52,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _onScroll() {
     if (_scrollController.hasClients) {
-      final isNearBottom = _scrollController.offset >=
-          _scrollController.position.maxScrollExtent - 100;
+      final isNearBottom = _scrollController.offset <= 100;
 
       if (_isNearBottom != isNearBottom) {
         setState(() {
@@ -62,7 +66,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (_scrollController.hasClients) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
+          0,
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
@@ -75,23 +79,11 @@ class _ChatScreenState extends State<ChatScreen> {
     _scrollToBottom();
   }
 
-  void _handleBookConsultation(ConsultationOffer offer) {
-    context.read<ChatBloc>().add(BookConsultation(offer: offer));
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Consultation booked with ${offer.advisorName}'),
-        backgroundColor: const Color(0xFF2D7D7D),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF1A1A1A),
+    return BaseScaffold(
+      backgroundColor: UiConstants.bg,
+      showBackgroundGrid: false,
       appBar: _buildAppBar(context),
       body: BlocConsumer<ChatBloc, ChatState>(
         listener: (context, state) {
@@ -102,12 +94,11 @@ class _ChatScreenState extends State<ChatScreen> {
                 backgroundColor: Colors.red.shade600,
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
             );
           }
-
-          // Auto-scroll when new messages arrive
           if (state.messages.isNotEmpty && _isNearBottom) {
             _scrollToBottom();
           }
@@ -115,7 +106,6 @@ class _ChatScreenState extends State<ChatScreen> {
         builder: (context, state) {
           return Column(
             children: [
-              // Connection status banner
               if (!state.isSocketConnected &&
                   state.loadingState != ChatLoadingState.initial)
                 Container(
@@ -132,7 +122,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
                           valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.orange.shade600),
+                            Colors.orange.shade600,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -150,69 +141,69 @@ class _ChatScreenState extends State<ChatScreen> {
 
               // Chat content
               Expanded(
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF1A1A1A),
-                  ),
-                  child: Column(
-                    children: [
-                      // Loading state for initial setup
-                      if (state.loadingState == ChatLoadingState.initial ||
-                          state.loadingState ==
-                              ChatLoadingState.creatingSession)
-                        const Expanded(
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Color(0xFF2D7D7D)),
+                child: Column(
+                  children: [
+                    // Loading state for initial setup
+                    if (state.loadingState == ChatLoadingState.initial ||
+                        state.loadingState == ChatLoadingState.creatingSession)
+                      const Expanded(
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Color(0xFF2D7D7D),
                                 ),
-                                SizedBox(height: 16),
-                                Text(
-                                  'Setting up your chat...',
-                                  style: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 14,
-                                  ),
+                              ),
+                              SizedBox(height: 16),
+                              Text(
+                                'Setting up your chat...',
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 14,
                                 ),
-                              ],
-                            ),
-                          ),
-                        )
-                      else
-                        // Messages list
-                        Expanded(
-                          child: ListView.builder(
-                            controller: _scrollController,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            itemCount: state.messages.length,
-                            itemBuilder: (context, index) {
-                              final message = state.messages[index];
-                              return MessageBubble(
-                                key: ValueKey(message.id),
-                                message: message,
-                                advisorName:
-                                    state.advisorName ?? widget.advisorName,
-                                onBookConsultation: _handleBookConsultation,
-                              );
-                            },
+                              ),
+                            ],
                           ),
                         ),
-
-                      // Chat input
-                      ChatInput(
-                        onSendMessage: _handleSendMessage,
-                        isEnabled:
-                            state.isReadyForMessaging && !state.isChatEnded,
-                        isLoading: state.isSendingMessage,
-                        placeholder: state.isHumanMode
-                            ? 'Message ${state.advisorName ?? widget.advisorName ?? 'advisor'}'
-                            : 'Type a message...',
+                      )
+                    else
+                      // Messages list
+                      Expanded(
+                        child: ListView.builder(
+                          controller: _scrollController,
+                          reverse: true,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          itemCount: state.messages.length,
+                          itemBuilder: (context, index) {
+                            final reversedIndex =
+                                state.messages.length - 1 - index;
+                            final message = state.messages[reversedIndex];
+                            return MessageBubble(
+                              key: ValueKey(message.id),
+                              userId: uid,
+                              message: message,
+                              advisorProfilePhoto: widget.advisorAvatar,
+                              advisorName:
+                                  state.advisorName ?? widget.advisorName,
+                              onBookConsultation: (c) {},
+                            );
+                          },
+                        ),
                       ),
-                    ],
-                  ),
+
+                    // Chat input
+                    ChatInput(
+                      onSendMessage: _handleSendMessage,
+                      isEnabled:
+                          state.isReadyForMessaging && !state.isChatEnded,
+                      isLoading: state.isSendingMessage,
+                      placeholder: state.isHumanMode
+                          ? 'Message ${state.advisorName ?? widget.advisorName ?? 'advisor'}'
+                          : 'Type a message...',
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -238,110 +229,119 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return AppBar(
-      backgroundColor: const Color(0xFF1A1A1A),
-      elevation: 0,
-      leading: IconButton(
-        onPressed: () => Navigator.of(context).pop(),
-        icon: const Icon(
-          Icons.arrow_back,
-          color: Colors.white,
-          size: 24,
-        ),
+    return PreferredSize(
+      preferredSize: Size.fromHeight(
+        66.h,
       ),
-      title: BlocBuilder<ChatBloc, ChatState>(
-        builder: (context, state) {
-          final displayName =
-              state.advisorName ?? widget.advisorName ?? 'Anil Singhvi';
-
-          return Row(
-            children: [
-              // Avatar
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: state.isSocketConnected
-                        ? const Color(0xFF2D7D7D)
-                        : Colors.grey.shade600,
-                    width: 2,
-                  ),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: widget.advisorAvatar != null
-                      ? Image.network(
-                          widget.advisorAvatar!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return _buildDefaultAvatar();
-                          },
-                        )
-                      : _buildDefaultAvatar(),
-                ),
-              ),
-              const SizedBox(width: 12),
-
-              // Name and status
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      displayName,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: state.isSocketConnected
-                                ? const Color(0xFF4CAF50)
-                                : Colors.grey.shade500,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          state.isSocketConnected
-                              ? (state.isHumanMode ? 'Online' : 'AI Assistant')
-                              : 'Connecting...',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.7),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-      actions: [
-        IconButton(
-          onPressed: () {
-            // Handle call action
-          },
-          icon: const Icon(
-            Icons.call_outlined,
-            color: Colors.white,
-            size: 24,
+      child: AppBar(
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                UiConstants.bg,
+                Color(0xff212B2D),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
           ),
         ),
-        const SizedBox(width: 8),
-      ],
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+            size: 16.sp,
+          ),
+        ),
+        title: BlocBuilder<ChatBloc, ChatState>(
+          builder: (context, state) {
+            final displayName = state.advisorName ?? widget.advisorName;
+            return Row(
+              children: [
+                Container(
+                  width: 26.w,
+                  height: 26.h,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: state.isSocketConnected
+                          ? const Color(0xFF2D7D7D)
+                          : Colors.grey.shade600,
+                      width: 2.w,
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20.r),
+                    child: widget.advisorAvatar != null
+                        ? Image.network(
+                            widget.advisorAvatar!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return _buildDefaultAvatar();
+                            },
+                          )
+                        : _buildDefaultAvatar(),
+                  ),
+                ),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        displayName ?? '',
+                        style: TextStyles.sourceSansSB.body1,
+                      ),
+                      // Row(
+                      //   children: [
+                      // Container(
+                      //   width: 8.w,
+                      //   height: 8.h,
+                      //   decoration: BoxDecoration(
+                      //     shape: BoxShape.circle,
+                      //     color: state.isSocketConnected
+                      //         ? const Color(0xFF4CAF50)
+                      //         : Colors.grey.shade500,
+                      //   ),
+                      // ),
+                      // SizedBox(width: 6.w),
+                      // Text(
+                      //   state.isSocketConnected
+                      //       ? (state.isHumanMode
+                      //           ? 'Online'
+                      //           : 'AI Assistant')
+                      //       : 'Connecting...',
+                      //   style: TextStyle(
+                      //     color: Colors.white.withOpacity(0.7),
+                      //     fontSize: 12.sp,
+                      //     fontWeight: FontWeight.w400,
+                      //   ),
+                      // ),
+                      // ],
+                      // ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              // Handle call action
+            },
+            icon: Icon(
+              Icons.call_sharp,
+              color: Colors.white,
+              size: 14.sp,
+            ),
+          ),
+          SizedBox(width: 8.w),
+        ],
+      ),
     );
   }
 
@@ -351,10 +351,10 @@ class _ChatScreenState extends State<ChatScreen> {
         shape: BoxShape.circle,
         color: Color(0xFF2D7D7D),
       ),
-      child: const Icon(
+      child: Icon(
         Icons.person,
         color: Colors.white,
-        size: 20,
+        size: 14.sp,
       ),
     );
   }

@@ -2,13 +2,12 @@ import 'dart:developer';
 
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/feature/chat/chat_screen.dart';
+import 'package:felloapp/feature/chat_home/chat_home.dart';
 import 'package:felloapp/feature/expert/expert_root.dart';
 import 'package:felloapp/feature/expert/widgets/scroll_to_index.dart';
 import 'package:felloapp/feature/live/live_root.dart';
 import 'package:felloapp/feature/shorts/flutter_preload_videos.dart';
 import 'package:felloapp/feature/shortsHome/shorts_v2.dart';
-import 'package:felloapp/feature/support-new/support_new.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/util/assets.dart';
@@ -26,7 +25,7 @@ class RootController {
     Assets.experts_bottom_nav,
   );
   static const supportNavBarItem = NavBarItemModel(
-    "Support",
+    "Chats",
     Assets.support_bottom_nav,
   );
   static const advisortNavBarItem = NavBarItemModel(
@@ -122,12 +121,12 @@ class RootController {
         final UserService userService = locator<UserService>();
         if (userService.baseUser?.isAdvisor ?? false) {
           navItems.putIfAbsent(
-            const ChatScreen(advisorId: '1'),
+            const ChatHome(),
             () => RootController.advisortNavBarItem,
           );
         } else {
           navItems.putIfAbsent(
-            const SupportNewPage(),
+            const ChatHome(),
             () => RootController.supportNavBarItem,
           );
         }

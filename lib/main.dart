@@ -72,7 +72,6 @@ class MyApp extends HookWidget {
       child: MultiProvider(
         providers: [
           BlocProvider(create: (_) => PreloadBloc()),
-          BlocProvider(create: (_) => ChatBloc(chatRepository: locator())),
           BlocProvider(create: (_) => locator<ExpertBloc>()),
           Provider(create: (_) => CartBloc(locator())..add(InitalCart())),
           Provider(create: (_) => SipCubit()),
