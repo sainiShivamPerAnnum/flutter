@@ -5,6 +5,7 @@ import 'package:felloapp/feature/chat/bloc/chat_bloc.dart';
 import 'package:felloapp/feature/chat/bloc/chat_event.dart';
 import 'package:felloapp/feature/chat/bloc/chat_state.dart';
 import 'package:felloapp/feature/chat/widgets/chat_input.dart';
+import 'package:felloapp/feature/chat/widgets/chat_welcome.dart';
 import 'package:felloapp/feature/chat/widgets/message_bubble.dart';
 import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -171,6 +172,20 @@ class _ChatScreenState extends State<ChatScreen> {
                               ),
                             ],
                           ),
+                        ),
+                      )
+                    else if (state.messages.isEmpty)
+                      Expanded(
+                        child: NewChatWelcome(
+                          advisorName:
+                              state.advisorName ?? widget.advisorName ?? '',
+                          onOptionSelected: (messageText) {
+                            _handleSendMessage(messageText);
+                          },
+                          onWithdrawalSupportTap: () {
+                            AppState.delegate!
+                                .parseRoute(Uri.parse('/support'));
+                          },
                         ),
                       )
                     else

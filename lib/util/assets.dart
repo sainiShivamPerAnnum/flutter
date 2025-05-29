@@ -329,4 +329,5 @@ class Assets {
   static const String chat = "assets/svg/chat.svg";
   static const String purse = "assets/svg/purse.svg";
   static const String safe = "assets/svg/safe.svg";
+  static const String noChats = "assets/svg/no_chat.svg";
 }

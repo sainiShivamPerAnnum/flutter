@@ -20,6 +20,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
 
   static const String _baseUrl = 'https://advisors.fello-dev.net/chat';
   final isAdvisor = locator<UserService>().baseUser!.isAdvisor ?? false;
+  final advisorId = locator<UserService>().baseUser!.advisorId ?? '';
 
   ChatBloc({required ChatRepository chatRepository})
       : _chatRepository = chatRepository,
@@ -195,6 +196,8 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
     try {
       _socket!.emit('join-chat', {
         'sessionId': event.sessionId,
+        'isAdvisor': isAdvisor,
+        'advisorId': advisorId,
       });
     } catch (e) {
       emit(
@@ -249,14 +252,6 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
           }
         });
       } else {
-        _socket!.on('join-chat', (data) {
-          try {
-            final message = ChatMessage.fromJson(data);
-            add(ReceiveMessage(message: message));
-          } catch (e) {
-            debugPrint('Error parsing message: $e');
-          }
-        });
         _socket!.on('advisor-response', (data) {
           try {
             final message = ChatMessage.fromJson(data);

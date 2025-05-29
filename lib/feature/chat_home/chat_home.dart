@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/feature/chat/bloc/chat_bloc.dart';
 import 'package:felloapp/feature/chat/chat_screen.dart';
 import 'package:felloapp/feature/chat_home/bloc/chat_history_bloc.dart';
+import 'package:felloapp/feature/chat_home/widgets/no_chats.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -114,54 +115,57 @@ class __ChatHomeViewState extends State<_ChatHomeView> {
                         listen: false,
                       ).add(const LoadChatHistory()),
                     ),
-                  ChatHistoryData() => Expanded(
-                      child: ListView.separated(
-                        padding: EdgeInsets.symmetric(horizontal: 20.w),
-                        itemCount: state.chatHistory.length,
-                        separatorBuilder: (context, index) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(vertical: 12.h),
-                            child: Divider(
-                              color: UiConstants.kTextColor6.withOpacity(0.1),
-                            ),
-                          );
-                        },
-                        itemBuilder: (context, index) {
-                          final data = state.chatHistory[index];
-                          return GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () {
-                              AppState.delegate!.appState.currentAction =
-                                  PageAction(
-                                page: ChatsPageConfig,
-                                state: PageState.addWidget,
-                                widget: BlocProvider(
-                                  create: (context) =>
-                                      ChatBloc(chatRepository: locator()),
-                                  child: ChatScreen(
-                                    advisorId: data.metadata.id,
-                                    advisorAvatar:
-                                        data.metadata.advisorProfilePhoto,
-                                    advisorName: data.metadata.advisorName,
-                                  ),
+                  ChatHistoryData() => state.chatHistory.isEmpty
+                      ? const NoChats()
+                      : Expanded(
+                          child: ListView.separated(
+                            padding: EdgeInsets.symmetric(horizontal: 20.w),
+                            itemCount: state.chatHistory.length,
+                            separatorBuilder: (context, index) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 12.h),
+                                child: Divider(
+                                  color:
+                                      UiConstants.kTextColor6.withOpacity(0.1),
                                 ),
                               );
                             },
-                            child: Row(
-                              children: [
-                                // Profile Picture
-                                Stack(
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 20.r,
-                                      backgroundColor: Colors.grey[300],
-                                      backgroundImage: NetworkImage(
-                                        data.metadata.advisorProfilePhoto,
+                            itemBuilder: (context, index) {
+                              final data = state.chatHistory[index];
+                              return GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () {
+                                  AppState.delegate!.appState.currentAction =
+                                      PageAction(
+                                    page: ChatsPageConfig,
+                                    state: PageState.addWidget,
+                                    widget: BlocProvider(
+                                      create: (context) =>
+                                          ChatBloc(chatRepository: locator()),
+                                      child: ChatScreen(
+                                        advisorId: data.metadata.id,
+                                        advisorAvatar:
+                                            data.metadata.advisorProfilePhoto,
+                                        advisorName: data.metadata.advisorName,
                                       ),
-                                      onBackgroundImageError:
-                                          (exception, stackTrace) {},
-                                      child:
-                                          data.metadata.advisorProfilePhoto ==
+                                    ),
+                                  );
+                                },
+                                child: Row(
+                                  children: [
+                                    // Profile Picture
+                                    Stack(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 20.r,
+                                          backgroundColor: Colors.grey[300],
+                                          backgroundImage: NetworkImage(
+                                            data.metadata.advisorProfilePhoto,
+                                          ),
+                                          onBackgroundImageError:
+                                              (exception, stackTrace) {},
+                                          child: data.metadata
+                                                      .advisorProfilePhoto ==
                                                   ''
                                               ? Icon(
                                                   Icons.person,
@@ -169,85 +173,90 @@ class __ChatHomeViewState extends State<_ChatHomeView> {
                                                   color: Colors.grey[600],
                                                 )
                                               : null,
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(width: 12.w),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                data.metadata.advisorName,
+                                                style: TextStyles
+                                                    .sourceSansM.body2
+                                                    .colour(
+                                                  UiConstants.kTextColor,
+                                                ),
+                                              ),
+                                              Text(
+                                                BaseUtil.formatOnlyDate(
+                                                  DateTime.tryParse(
+                                                        data.lastMessageTimestamp,
+                                                      ) ??
+                                                      DateTime.now(),
+                                                ),
+                                                style: TextStyles
+                                                    .sourceSansM.body4
+                                                    .colour(
+                                                  data.unreadCount > 0
+                                                      ? UiConstants.teal3
+                                                      : UiConstants.kTextColor
+                                                          .withOpacity(.5),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 4.h),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                constraints: BoxConstraints(
+                                                  maxWidth: 218.w,
+                                                ),
+                                                child: Text(
+                                                  data.lastMessage,
+                                                  style: TextStyles
+                                                      .sourceSans.body3
+                                                      .colour(
+                                                    data.unreadCount > 0
+                                                        ? UiConstants.kTextColor
+                                                        : UiConstants.kTextColor
+                                                            .withOpacity(.5),
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                              if (data.unreadCount > 0)
+                                                Container(
+                                                  width: 6.r,
+                                                  height: 6.r,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: UiConstants.teal3,
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(width: 12.w),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            data.metadata.advisorName,
-                                            style: TextStyles.sourceSansM.body2
-                                                .colour(
-                                              UiConstants.kTextColor,
-                                            ),
-                                          ),
-                                          Text(
-                                            BaseUtil.formatOnlyDate(
-                                              DateTime.tryParse(
-                                                    data.lastMessageTimestamp,
-                                                  ) ??
-                                                  DateTime.now(),
-                                            ),
-                                            style: TextStyles.sourceSansM.body4
-                                                .colour(
-                                              data.unreadCount > 0
-                                                  ? UiConstants.teal3
-                                                  : UiConstants.kTextColor
-                                                      .withOpacity(.5),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 4.h),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            constraints: BoxConstraints(
-                                              maxWidth: 218.w,
-                                            ),
-                                            child: Text(
-                                              data.lastMessage,
-                                              style: TextStyles.sourceSans.body3
-                                                  .colour(
-                                                data.unreadCount > 0
-                                                    ? UiConstants.kTextColor
-                                                    : UiConstants.kTextColor
-                                                        .withOpacity(.5),
-                                              ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                          if (data.unreadCount > 0)
-                                            Container(
-                                              width: 6.r,
-                                              height: 6.r,
-                                              decoration: const BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: UiConstants.teal3,
-                                              ),
-                                            ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    )
+                              );
+                            },
+                          ),
+                        )
                 };
               },
             ),
