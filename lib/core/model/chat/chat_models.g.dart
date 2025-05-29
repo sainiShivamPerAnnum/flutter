@@ -38,6 +38,7 @@ const _$MessageTypeEnumMap = {
   MessageType.advisor: 'advisor',
   MessageType.consultation: 'consultation',
   MessageType.handover: 'handover',
+  MessageType.user: 'user',
 };
 
 ConsultationOffer _$ConsultationOfferFromJson(Map<String, dynamic> json) =>
@@ -85,8 +86,6 @@ ChatSessionWithMessages _$ChatSessionWithMessagesFromJson(
           .map((e) => ChatMessage.fromJson(e as Map<String, dynamic>))
           .toList(),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
-      humanAdvisorId: json['humanAdvisorId'] as String?,
-      humanAdvisorName: json['humanAdvisorName'] as String?,
     );
 
 Map<String, dynamic> _$ChatSessionWithMessagesToJson(
@@ -94,7 +93,5 @@ Map<String, dynamic> _$ChatSessionWithMessagesToJson(
     <String, dynamic>{
       'session': instance.session,
       'messages': instance.messages,
-      'humanAdvisorId': instance.humanAdvisorId,
-      'humanAdvisorName': instance.humanAdvisorName,
       'updatedAt': instance.updatedAt.toIso8601String(),
     };

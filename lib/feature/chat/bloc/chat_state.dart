@@ -96,11 +96,6 @@ class ChatState extends Equatable {
   String? get sessionId => currentSession?.sessionId;
   ChatSession? get session => currentSession?.session;
 
-  /// Check if current session belongs to different user
-  bool isDifferentUser(String userId) {
-    return currentUserId != null && currentUserId != userId;
-  }
-
   /// Check if chat is ready for messaging
   bool get isReadyForMessaging =>
       loadingState == ChatLoadingState.connected &&

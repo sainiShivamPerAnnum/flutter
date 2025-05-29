@@ -16,6 +16,24 @@ class ChatRepository extends BaseRepo {
       : 'https://advisors.fello-prod.net/';
 
   static const _chat = 'chat';
+  Future<ApiResponse<ChatSession>> getSession(String sessionId) async {
+    try {
+      final response = await APIService.instance.getData(
+        '${ApiPath.chatSessionPath}/$sessionId',
+        cBaseUrl: _baseUrl,
+        apiName: '$_chat/getSession',
+      );
+
+      final responseData = response["data"];
+      return ApiResponse<ChatSession>(
+        model: ChatSession.fromJson(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      _logger.e("getOrCreateSession => ${e.toString()}");
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
 
   Future<ApiResponse<ChatSession>> getOrCreateSession(String advisorId) async {
     try {
@@ -41,26 +59,52 @@ class ChatRepository extends BaseRepo {
 
   Future<ApiResponse<List<ChatHistory>>> getUserChatHistory() async {
     try {
-      final response = await APIService.instance.getData(
-        ApiPath.chatHistoryPath,
-        cBaseUrl: _baseUrl,
-        apiName: '$_chat/getUserHistory',
-      );
+      final isAdvisor = userService.baseUser!.isAdvisor ?? false;
+      final advisorId = userService.baseUser!.advisorId ?? '';
 
-      if (response['data'] != null && response['data'] is List) {
-        final List<ChatHistory> messages = (response['data'] as List)
-            .map((json) => ChatHistory.fromJson(json))
-            .toList();
+      if (isAdvisor) {
+        final response = await APIService.instance.getData(
+          '${ApiPath.chatHistoryPath}/$advisorId',
+          cBaseUrl: _baseUrl,
+          apiName: '$_chat/getUserHistory',
+        );
 
-        return ApiResponse<List<ChatHistory>>(
-          model: messages,
+        if (response['data'] != null && response['data'] is List) {
+          final List<ChatHistory> messages = (response['data'] as List)
+              .map((json) => ChatHistory.fromJson(json))
+              .toList();
+
+          return ApiResponse<List<ChatHistory>>(
+            model: messages,
+            code: 200,
+          );
+        }
+        return const ApiResponse<List<ChatHistory>>(
+          model: [],
+          code: 200,
+        );
+      } else {
+        final response = await APIService.instance.getData(
+          ApiPath.chatHistoryPath,
+          cBaseUrl: _baseUrl,
+          apiName: '$_chat/getUserHistory',
+        );
+
+        if (response['data'] != null && response['data'] is List) {
+          final List<ChatHistory> messages = (response['data'] as List)
+              .map((json) => ChatHistory.fromJson(json))
+              .toList();
+
+          return ApiResponse<List<ChatHistory>>(
+            model: messages,
+            code: 200,
+          );
+        }
+        return const ApiResponse<List<ChatHistory>>(
+          model: [],
           code: 200,
         );
       }
-      return const ApiResponse<List<ChatHistory>>(
-        model: [],
-        code: 200,
-      );
     } catch (e) {
       _logger.e("getUserChatHistory => ${e.toString()}");
       return ApiResponse.withError(e.toString(), 400);

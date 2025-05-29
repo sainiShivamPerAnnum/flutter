@@ -157,7 +157,6 @@ class _AdvisorViewWrapperState extends State<AdvisorViewWrapper>
                     child: TabBarView(
                       controller: _tabController,
                       children: [
-                        // Chats Tab - Placeholder
                         BlocBuilder<ChatHistoryBloc, ChatHistoryState>(
                           builder: (context, state) {
                             return switch (state) {
@@ -171,14 +170,26 @@ class _AdvisorViewWrapperState extends State<AdvisorViewWrapper>
                                 ),
                               ChatHistoryData() => Padding(
                                   padding: EdgeInsets.only(top: 14.h),
-                                  child: ListView.builder(
+                                  child: ListView.separated(
                                     padding: EdgeInsets.symmetric(
                                       horizontal: 20.w,
                                     ),
+                                    separatorBuilder: (context, index) {
+                                      return Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 12.h,
+                                        ),
+                                        child: Divider(
+                                          color: UiConstants.kTextColor6
+                                              .withOpacity(0.1),
+                                        ),
+                                      );
+                                    },
                                     itemCount: state.chatHistory.length,
                                     itemBuilder: (context, index) {
                                       final data = state.chatHistory[index];
                                       return GestureDetector(
+                                        behavior: HitTestBehavior.opaque,
                                         onTap: () {
                                           AppState.delegate!.appState
                                               .currentAction = PageAction(
@@ -197,137 +208,121 @@ class _AdvisorViewWrapperState extends State<AdvisorViewWrapper>
                                                 price: data.metadata.price,
                                                 duration:
                                                     data.metadata.duration,
+                                                sessionId: data.sessionId,
                                               ),
                                             ),
                                           );
                                         },
-                                        child: Container(
-                                          margin: EdgeInsets.only(bottom: 24.h),
-                                          child: Row(
-                                            children: [
-                                              // Profile Picture
-                                              Stack(
-                                                children: [
-                                                  CircleAvatar(
-                                                    radius: 20.r,
-                                                    backgroundColor:
-                                                        Colors.grey[300],
-                                                    backgroundImage:
-                                                        NetworkImage(
-                                                      data.metadata
-                                                          .advisorProfilePhoto,
-                                                    ),
-                                                    onBackgroundImageError:
-                                                        (exception,
-                                                            stackTrace) {},
-                                                    child: data.metadata
-                                                                .advisorProfilePhoto ==
-                                                            ''
-                                                        ? Icon(
-                                                            Icons.person,
-                                                            size: 24.r,
-                                                            color: Colors
-                                                                .grey[600],
-                                                          )
-                                                        : null,
+                                        child: Row(
+                                          children: [
+                                            Stack(
+                                              children: [
+                                                CircleAvatar(
+                                                  radius: 20.r,
+                                                  backgroundColor:
+                                                      Colors.grey[300],
+                                                  backgroundImage: NetworkImage(
+                                                    data.metadata.userImage ??
+                                                        '',
                                                   ),
-                                                ],
-                                              ),
-                                              SizedBox(width: 12.w),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                          data.metadata
-                                                              .advisorName,
-                                                          style: TextStyles
-                                                              .sourceSansM.body2
-                                                              .colour(
-                                                            UiConstants
-                                                                .kTextColor,
-                                                          ),
+                                                  child: Icon(
+                                                    Icons.person,
+                                                    size: 24.r,
+                                                    color: Colors.grey[600],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(width: 12.w),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        data.metadata
+                                                                .userName ??
+                                                            '',
+                                                        style: TextStyles
+                                                            .sourceSansM.body2
+                                                            .colour(
+                                                          UiConstants
+                                                              .kTextColor,
                                                         ),
-                                                        Text(
-                                                          BaseUtil
-                                                              .formatOnlyDate(
-                                                            DateTime.tryParse(
-                                                                  data.lastMessageTimestamp,
-                                                                ) ??
-                                                                DateTime.now(),
-                                                          ),
+                                                      ),
+                                                      Text(
+                                                        BaseUtil.formatOnlyDate(
+                                                          DateTime.tryParse(
+                                                                data.lastMessageTimestamp,
+                                                              ) ??
+                                                              DateTime.now(),
+                                                        ),
+                                                        style: TextStyles
+                                                            .sourceSansM.body4
+                                                            .colour(
+                                                          data.unreadCount > 0
+                                                              ? UiConstants
+                                                                  .teal3
+                                                              : UiConstants
+                                                                  .kTextColor
+                                                                  .withOpacity(
+                                                                      .5),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(height: 4.h),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Container(
+                                                        constraints:
+                                                            BoxConstraints(
+                                                          maxWidth: 218.w,
+                                                        ),
+                                                        child: Text(
+                                                          data.lastMessage,
                                                           style: TextStyles
-                                                              .sourceSansM.body4
+                                                              .sourceSans.body3
                                                               .colour(
                                                             data.unreadCount > 0
                                                                 ? UiConstants
-                                                                    .teal3
+                                                                    .kTextColor
                                                                 : UiConstants
                                                                     .kTextColor
                                                                     .withOpacity(
                                                                         .5),
                                                           ),
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
                                                         ),
-                                                      ],
-                                                    ),
-                                                    SizedBox(height: 4.h),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
+                                                      ),
+                                                      if (data.unreadCount > 0)
                                                         Container(
-                                                          constraints:
-                                                              BoxConstraints(
-                                                            maxWidth: 218.w,
-                                                          ),
-                                                          child: Text(
-                                                            data.lastMessage,
-                                                            style: TextStyles
-                                                                .sourceSans
-                                                                .body3
-                                                                .colour(
-                                                              data.unreadCount >
-                                                                      0
-                                                                  ? UiConstants
-                                                                      .kTextColor
-                                                                  : UiConstants
-                                                                      .kTextColor
-                                                                      .withOpacity(
-                                                                          .5),
-                                                            ),
-                                                            maxLines: 1,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
+                                                          width: 6.r,
+                                                          height: 6.r,
+                                                          decoration:
+                                                              const BoxDecoration(
+                                                            shape:
+                                                                BoxShape.circle,
+                                                            color: UiConstants
+                                                                .teal3,
                                                           ),
                                                         ),
-                                                        if (data.unreadCount >
-                                                            0)
-                                                          Container(
-                                                            width: 6.r,
-                                                            height: 6.r,
-                                                            decoration:
-                                                                const BoxDecoration(
-                                                              shape: BoxShape
-                                                                  .circle,
-                                                              color: UiConstants
-                                                                  .teal3,
-                                                            ),
-                                                          ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
+                                                    ],
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       );
                                     },

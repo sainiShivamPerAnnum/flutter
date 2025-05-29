@@ -19,6 +19,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
   IO.Socket? _socket;
 
   static const String _baseUrl = 'https://advisors.fello-dev.net/chat';
+  final userId = locator<UserService>().baseUser!.uid ?? '';
   final isAdvisor = locator<UserService>().baseUser!.isAdvisor ?? false;
   final advisorId = locator<UserService>().baseUser!.advisorId ?? '';
 
@@ -31,10 +32,9 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
     on<DisconnectSocket>(_onDisconnectSocket);
     on<SendMessage>(_onSendMessage);
     on<ReceiveMessage>(_onReceiveMessage);
-    // on<ReceiveUnreadMessages>(_onReceiveUnreadMessages);
-    on<LoadChatHistory>(_onLoadChatHistory);
+    on<LoadAllMessages>(_onLoadChatHistory);
+    on<MarkMessageAsRead>(_onReadEvent);
     on<ClearChatState>(_onClearChatState);
-    on<ResetChatForNewUser>(_onResetChatForNewUser);
     on<SocketConnected>(_onSocketConnected);
     on<SocketDisconnected>(_onSocketDisconnected);
     on<SocketError>(_onSocketError);
@@ -104,65 +104,63 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
     }
   }
 
-  /// Initialize chat session and setup WebSocket connection
   Future<void> _onInitializeChat(
     InitializeChat event,
     Emitter<ChatState> emit,
   ) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      emit(
-        state.copyWith(
-          loadingState: ChatLoadingState.error,
-          error: 'User not authenticated',
-        ),
-      );
-      return;
-    }
-
     emit(
       state.copyWith(
         loadingState: ChatLoadingState.creatingSession,
         advisorId: event.advisorId,
-        currentUserId: user.uid,
+        currentUserId: userId,
       ),
     );
 
     try {
-      if (state.isDifferentUser(user.uid)) {
-        add(
-          ResetChatForNewUser(
-            newUserId: user.uid,
-            advisorId: event.advisorId,
-          ),
-        );
-        return;
+      if (event.sessionId == null) {
+        final apiResponse =
+            await _chatRepository.getOrCreateSession(event.advisorId);
+
+        if (!apiResponse.isSuccess()) {
+          emit(
+            state.copyWith(
+              loadingState: ChatLoadingState.error,
+              error: apiResponse.errorMessage,
+            ),
+          );
+          return;
+        }
+
+        final existingMessages =
+            state.sessionMessages[apiResponse.model!.sessionId] ??
+                <ChatMessage>[];
+
+        final sessionWithMessages =
+            ChatSessionWithMessages.fromSession(apiResponse.model!)
+                .copyWith(messages: existingMessages);
+
+        add(SessionReady(sessionWithMessages: sessionWithMessages));
+      } else {
+        final apiResponse = await _chatRepository.getSession(event.sessionId!);
+        if (!apiResponse.isSuccess()) {
+          emit(
+            state.copyWith(
+              loadingState: ChatLoadingState.error,
+              error: apiResponse.errorMessage,
+            ),
+          );
+          return;
+        }
+        final existingMessages =
+            state.sessionMessages[apiResponse.model!.sessionId] ??
+                <ChatMessage>[];
+
+        final sessionWithMessages =
+            ChatSessionWithMessages.fromSession(apiResponse.model!)
+                .copyWith(messages: existingMessages);
+
+        add(SessionReady(sessionWithMessages: sessionWithMessages));
       }
-
-      // Create or get session
-      final apiResponse =
-          await _chatRepository.getOrCreateSession(event.advisorId);
-
-      if (!apiResponse.isSuccess()) {
-        emit(
-          state.copyWith(
-            loadingState: ChatLoadingState.error,
-            error: apiResponse.errorMessage,
-          ),
-        );
-        return;
-      }
-
-      // Get existing messages for this session from local storage
-      final existingMessages =
-          state.sessionMessages[apiResponse.model!.sessionId] ??
-              <ChatMessage>[];
-
-      final sessionWithMessages =
-          ChatSessionWithMessages.fromSession(apiResponse.model!)
-              .copyWith(messages: existingMessages);
-
-      add(SessionReady(sessionWithMessages: sessionWithMessages));
     } catch (e) {
       emit(
         state.copyWith(
@@ -173,7 +171,6 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
     }
   }
 
-  /// Handle session ready and connect to WebSocket
   Future<void> _onSessionReady(
     SessionReady event,
     Emitter<ChatState> emit,
@@ -185,10 +182,14 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
       ),
     );
     await _connectWebSocket(event.sessionWithMessages.sessionId);
-    add(JoinChatRoom(sessionId: event.sessionWithMessages.sessionId));
+    await Future.delayed(const Duration(milliseconds: 100));
+    if (state.messages.isEmpty) {
+      add(LoadAllMessages(sessionId: event.sessionWithMessages.sessionId));
+    } else {
+      add(JoinChatRoom(sessionId: event.sessionWithMessages.sessionId));
+    }
   }
 
-  /// Join chat room and get unread messages
   Future<void> _onJoinChatRoom(
     JoinChatRoom event,
     Emitter<ChatState> emit,
@@ -198,6 +199,26 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
         'sessionId': event.sessionId,
         'isAdvisor': isAdvisor,
         'advisorId': advisorId,
+      });
+    } catch (e) {
+      emit(
+        state.copyWith(
+          loadingState: ChatLoadingState.error,
+          error: 'Failed to join chat room: $e',
+        ),
+      );
+    }
+  }
+
+  Future<void> _onReadEvent(
+    MarkMessageAsRead event,
+    Emitter<ChatState> emit,
+  ) async {
+    try {
+      _socket!.emit('read-messages', {
+        'sessionId': state.sessionId,
+        'messageId': event.messageId,
+        'isAdvisor': isAdvisor,
       });
     } catch (e) {
       emit(
@@ -237,16 +258,12 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
         debugPrint('Socket disconnected');
         add(SocketDisconnected());
       });
-      // Message received
       if (isAdvisor) {
-        //join chat for advisor
-        // chat history of advisor
-        // get all history
-
         _socket!.on('message', (data) {
           try {
             final message = ChatMessage.fromJson(data);
             add(ReceiveMessage(message: message));
+            add(MarkMessageAsRead(messageId: message.id ?? ''));
           } catch (e) {
             debugPrint('Error parsing message: $e');
           }
@@ -256,46 +273,17 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
           try {
             final message = ChatMessage.fromJson(data);
             add(ReceiveMessage(message: message));
+            add(MarkMessageAsRead(messageId: message.id ?? ''));
           } catch (e) {
             debugPrint('Error parsing message: $e');
           }
         });
       }
-
-      // Unread messages received after joining room
-      // _socket!.on('unread-messages', (data) {
-      //   try {
-      //     final List<ChatMessage> messages =
-      //         (data as List).map((json) => ChatMessage.fromJson(json)).toList();
-      //     add(ReceiveUnreadMessages(messages: messages));
-      //   } catch (e) {
-      //     debugPrint('Error parsing unread messages: $e');
-      //   }
-      // });
-
-      // Chat history for different user
-      // _socket!.on('chat-history', (data) {
-      //   try {
-      //     final List<ChatMessage> messages =
-      //         (data as List).map((json) => ChatMessage.fromJson(json)).toList();
-
-      //     // Update current session with history
-      //     if (state.currentSession != null) {
-      //       final updatedSession = state.currentSession!.copyWith(
-      //         messages: messages,
-      //       );
-      //       add(SessionReady(sessionWithMessages: updatedSession));
-      //     }
-      //   } catch (e) {
-      //     debugPrint('Error parsing chat history: $e');
-      //   }
-      // });
     } catch (e) {
       add(SocketError(error: 'Failed to connect: $e'));
     }
   }
 
-  /// Socket connected successfully
   Future<void> _onSocketConnected(
     SocketConnected event,
     Emitter<ChatState> emit,
@@ -308,7 +296,6 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
     );
   }
 
-  /// Socket disconnected
   Future<void> _onSocketDisconnected(
     SocketDisconnected event,
     Emitter<ChatState> emit,
@@ -321,7 +308,6 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
     );
   }
 
-  /// Socket error occurred
   Future<void> _onSocketError(
     SocketError event,
     Emitter<ChatState> emit,
@@ -334,7 +320,6 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
     );
   }
 
-  /// Disconnect from WebSocket
   Future<void> _onDisconnectSocket(
     DisconnectSocket event,
     Emitter<ChatState> emit,
@@ -345,7 +330,6 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
     emit(state.copyWith(isSocketConnected: false));
   }
 
-  /// Send message through WebSocket
   Future<void> _onSendMessage(
     SendMessage event,
     Emitter<ChatState> emit,
@@ -356,6 +340,8 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
 
     try {
       final user = FirebaseAuth.instance.currentUser;
+
+      //need to change this for the advisor
       final message = ChatMessage(
         id: const Uuid().v4(),
         sessionId: state.sessionId!,
@@ -367,7 +353,6 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
         messageType: event.messageType,
       );
 
-      // Optimistic update
       final updatedMessages = [...state.messages, message];
       final updatedSessionMessages =
           Map<String, List<ChatMessage>>.from(state.sessionMessages);
@@ -382,7 +367,6 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
         ),
       );
 
-      // Send through WebSocket
       if (_socket?.connected == true) {
         if (isAdvisor) {
           _socket!.emit('advisor-response', {
@@ -408,16 +392,13 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
     }
   }
 
-  /// Receive single message
   Future<void> _onReceiveMessage(
     ReceiveMessage event,
     Emitter<ChatState> emit,
   ) async {
     if (!state.hasSession) return;
-
-    // Check if message already exists
-    // final messageExists = state.messages.any((m) => m.id == event.message.id);
-    // if (messageExists) return;
+    final messageExists = state.messages.any((m) => m.id == event.message.id);
+    if (messageExists) return;
 
     final updatedMessages = [...state.messages, event.message];
     final updatedSessionMessages =
@@ -433,22 +414,20 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
     );
   }
 
-  /// Load chat history for different user
   Future<void> _onLoadChatHistory(
-    LoadChatHistory event,
+    LoadAllMessages event,
     Emitter<ChatState> emit,
   ) async {
     emit(state.copyWith(loadingState: ChatLoadingState.loadingHistory));
 
     try {
-      // Emit socket event to get user's chat history
-      if (_socket?.connected == true) {
-        // _socket!.emit('get-chat-history', {
-        //   'userId': event.userId,
-        // });
-      }
-
-      // The response will come through 'chat-history' socket event
+      // if (_socket?.connected == true) {
+      _socket!.emit('get-chat-history', {
+        'sessionId': event.sessionId,
+        'isAdvisor': isAdvisor,
+        'advisorId': advisorId,
+      });
+      // }
     } catch (e) {
       emit(
         state.copyWith(
@@ -459,31 +438,12 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
     }
   }
 
-  /// Clear chat state (for logout)
   Future<void> _onClearChatState(
     ClearChatState event,
     Emitter<ChatState> emit,
   ) async {
     add(DisconnectSocket());
     emit(state.cleared());
-  }
-
-  /// Reset chat for new user
-  Future<void> _onResetChatForNewUser(
-    ResetChatForNewUser event,
-    Emitter<ChatState> emit,
-  ) async {
-    // Disconnect current socket
-    add(DisconnectSocket());
-
-    // Clear state
-    emit(state.cleared());
-
-    // Load chat history for new user
-    add(LoadChatHistory(userId: event.newUserId));
-
-    // Initialize new session
-    add(InitializeChat(advisorId: event.advisorId));
   }
 
   @override

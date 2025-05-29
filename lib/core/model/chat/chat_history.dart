@@ -35,6 +35,8 @@ class AdvisorMetadata {
   final String duration;
   final String description;
   final List<String> expertise;
+  final String? userName;
+  final String? userImage;
 
   AdvisorMetadata({
     required this.id,
@@ -44,6 +46,8 @@ class AdvisorMetadata {
     required this.duration,
     required this.description,
     required this.expertise,
+    this.userName,
+    this.userImage,
   });
 
   factory AdvisorMetadata.fromJson(Map<String, dynamic> json) =>

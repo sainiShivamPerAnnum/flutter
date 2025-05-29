@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MessageBubble extends StatelessWidget {
+  final bool isUserAdvisor;
   final String? userId;
   final String? advisorProfilePhoto;
   final ChatMessage message;
@@ -20,6 +21,7 @@ class MessageBubble extends StatelessWidget {
   final Function(ConsultationOffer)? onBookConsultation;
 
   const MessageBubble({
+    required this.isUserAdvisor,
     required this.message,
     required this.userId,
     required this.advisorProfilePhoto,
@@ -224,11 +226,12 @@ class MessageBubble extends StatelessWidget {
   }
 
   bool _isUserMessage() {
-    return message.senderId == userId;
+    return message.messageType == MessageType.user;
   }
 
   bool _isSystemMessage() {
-    return message.messageType == MessageType.handover;
+    return message.messageType == MessageType.handover ||
+        message.messageType == MessageType.consultation;
   }
 
   bool _isAdvisor() {

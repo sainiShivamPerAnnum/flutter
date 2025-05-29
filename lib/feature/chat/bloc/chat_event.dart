@@ -11,8 +11,9 @@ abstract class ChatEvent extends Equatable {
 /// Initialize chat session and connect to WebSocket
 class InitializeChat extends ChatEvent {
   final String advisorId;
+  final String? sessionId;
 
-  const InitializeChat({required this.advisorId});
+  const InitializeChat({required this.advisorId, required this.sessionId});
 
   @override
   List<Object?> get props => [advisorId];
@@ -38,7 +39,7 @@ class SendMessage extends ChatEvent {
 
   const SendMessage({
     required this.content,
-    this.messageType = MessageType.ai, // Default to ai since it's in your enum
+    required this.messageType,
   });
 
   @override
@@ -55,24 +56,14 @@ class ReceiveMessage extends ChatEvent {
   List<Object?> get props => [message];
 }
 
-/// Receive multiple unread messages from WebSocket
-class ReceiveUnreadMessages extends ChatEvent {
-  final List<ChatMessage> messages;
-
-  const ReceiveUnreadMessages({required this.messages});
-
-  @override
-  List<Object?> get props => [messages];
-}
-
 /// Load chat history for different user session
-class LoadChatHistory extends ChatEvent {
-  final String userId;
+class LoadAllMessages extends ChatEvent {
+  final String sessionId;
 
-  const LoadChatHistory({required this.userId});
+  const LoadAllMessages({required this.sessionId});
 
   @override
-  List<Object?> get props => [userId];
+  List<Object?> get props => [sessionId];
 }
 
 /// Mark message as read
@@ -88,20 +79,6 @@ class MarkMessageAsRead extends ChatEvent {
 /// Clear chat state (for logout)
 class ClearChatState extends ChatEvent {}
 
-/// Reset chat for new user session
-class ResetChatForNewUser extends ChatEvent {
-  final String newUserId;
-  final String advisorId;
-
-  const ResetChatForNewUser({
-    required this.newUserId,
-    required this.advisorId,
-  });
-
-  @override
-  List<Object?> get props => [newUserId, advisorId];
-}
-
 // Socket connection status events
 class SocketConnected extends ChatEvent {}
 
@@ -114,16 +91,6 @@ class SocketError extends ChatEvent {
 
   @override
   List<Object?> get props => [error];
-}
-
-/// Handover completed event
-class HandoverComplete extends ChatEvent {
-  final String advisorName;
-
-  const HandoverComplete({required this.advisorName});
-
-  @override
-  List<Object?> get props => [advisorName];
 }
 
 /// Session created/retrieved event

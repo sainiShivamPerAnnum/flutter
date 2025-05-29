@@ -13,10 +13,10 @@ class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
   ChatHistoryBloc(
     this._chatRepository,
   ) : super(const LoadingChatHistory()) {
-    on<ChatHistoryEvent>(_onLoadHomeData);
+    on<LoadChatHistory>(_onLoadHomeData);
   }
   FutureOr<void> _onLoadHomeData(
-    ChatHistoryEvent event,
+    LoadChatHistory event,
     Emitter<ChatHistoryState> emitter,
   ) async {
     emitter(const LoadingChatHistory());

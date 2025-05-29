@@ -776,6 +776,7 @@ Widget _buildInfoTab(
                   advisorId: advisorID,
                   advisorAvatar: expertDetails.image,
                   advisorName: expertDetails.name,
+                  sessionId: null,
                   // price: expertDetails.,
                 ),
               ),

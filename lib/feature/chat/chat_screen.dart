@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/chat/chat_models.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/chat/bloc/chat_bloc.dart';
@@ -24,9 +25,11 @@ class ChatScreen extends StatefulWidget {
   final String? advisorAvatar;
   final String? price;
   final String? duration;
+  final String? sessionId;
 
   const ChatScreen({
     required this.advisorId,
+    required this.sessionId,
     this.advisorName,
     this.advisorAvatar,
     this.price,
@@ -41,7 +44,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final ScrollController _scrollController = ScrollController();
   bool _isNearBottom = true;
-
+  final isAdvisor = locator<UserService>().baseUser!.isAdvisor ?? false;
   final String? uid = locator<UserService>().baseUser!.uid;
 
   @override
@@ -49,7 +52,12 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _scrollController.addListener(_onScroll);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ChatBloc>().add(InitializeChat(advisorId: widget.advisorId));
+      context.read<ChatBloc>().add(
+            InitializeChat(
+              advisorId: widget.advisorId,
+              sessionId: widget.sessionId,
+            ),
+          );
     });
   }
 
@@ -84,8 +92,13 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void _handleSendMessage(String content) {
-    context.read<ChatBloc>().add(SendMessage(content: content));
+  void _handleSendMessage(String content, MessageType messagetype) {
+    context.read<ChatBloc>().add(
+          SendMessage(
+            content: content,
+            messageType: messagetype,
+          ),
+        );
     _scrollToBottom();
   }
 
@@ -184,7 +197,12 @@ class _ChatScreenState extends State<ChatScreen> {
                           advisorName:
                               state.advisorName ?? widget.advisorName ?? '',
                           onOptionSelected: (messageText) {
-                            _handleSendMessage(messageText);
+                            _handleSendMessage(
+                              messageText,
+                              isAdvisor
+                                  ? MessageType.advisor
+                                  : MessageType.user,
+                            );
                           },
                           onWithdrawalSupportTap: () {
                             AppState.delegate!
@@ -206,6 +224,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             final message = state.messages[reversedIndex];
                             return MessageBubble(
                               key: ValueKey(message.id),
+                              isUserAdvisor: isAdvisor,
                               userId: uid,
                               message: message,
                               advisorProfilePhoto: widget.advisorAvatar,
@@ -245,7 +264,10 @@ class _ChatScreenState extends State<ChatScreen> {
 
                     // Chat input
                     ChatInput(
-                      onSendMessage: _handleSendMessage,
+                      onSendMessage: (message) => _handleSendMessage(
+                        message,
+                        isAdvisor ? MessageType.advisor : MessageType.user,
+                      ),
                       isEnabled:
                           state.isReadyForMessaging && !state.isChatEnded,
                       isLoading: state.isSendingMessage,

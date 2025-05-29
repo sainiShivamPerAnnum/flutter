@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/chat/bloc/chat_bloc.dart';
 import 'package:felloapp/feature/chat/chat_screen.dart';
 import 'package:felloapp/feature/chat_home/bloc/chat_history_bloc.dart';
@@ -37,6 +38,7 @@ class _ChatHomeView extends StatefulWidget {
 }
 
 class __ChatHomeViewState extends State<_ChatHomeView> {
+  final isAdvisor = locator<UserService>().baseUser!.isAdvisor ?? false;
   @override
   Widget build(BuildContext context) {
     return BaseScaffold(
@@ -149,13 +151,13 @@ class __ChatHomeViewState extends State<_ChatHomeView> {
                                         advisorName: data.metadata.advisorName,
                                         price: data.metadata.price,
                                         duration: data.metadata.duration,
+                                        sessionId: data.sessionId,
                                       ),
                                     ),
                                   );
                                 },
                                 child: Row(
                                   children: [
-                                    // Profile Picture
                                     Stack(
                                       children: [
                                         CircleAvatar(

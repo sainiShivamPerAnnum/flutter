@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'chat_models.g.dart';
 
-enum MessageType { ai, advisor, consultation, handover }
+enum MessageType { ai, advisor, consultation, handover, user }
 
 @JsonSerializable()
 class ChatMessage {
@@ -130,16 +130,12 @@ class ChatSession {
 class ChatSessionWithMessages {
   final ChatSession session;
   final List<ChatMessage> messages;
-  final String? humanAdvisorId;
-  final String? humanAdvisorName;
   final DateTime updatedAt;
 
   ChatSessionWithMessages({
     required this.session,
     required this.messages,
     required this.updatedAt,
-    this.humanAdvisorId,
-    this.humanAdvisorName,
   });
 
   factory ChatSessionWithMessages.fromJson(Map<String, dynamic> json) =>
@@ -166,8 +162,6 @@ class ChatSessionWithMessages {
     return ChatSessionWithMessages(
       session: session ?? this.session,
       messages: messages ?? this.messages,
-      humanAdvisorId: humanAdvisorId ?? this.humanAdvisorId,
-      humanAdvisorName: humanAdvisorName ?? this.humanAdvisorName,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }

@@ -36,6 +36,8 @@ AdvisorMetadata _$AdvisorMetadataFromJson(Map<String, dynamic> json) =>
       description: json['description'] as String,
       expertise:
           (json['expertise'] as List<dynamic>).map((e) => e as String).toList(),
+      userName: json['userName'] as String?,
+      userImage: json['userImage'] as String?,
     );
 
 Map<String, dynamic> _$AdvisorMetadataToJson(AdvisorMetadata instance) =>
@@ -47,4 +49,6 @@ Map<String, dynamic> _$AdvisorMetadataToJson(AdvisorMetadata instance) =>
       'duration': instance.duration,
       'description': instance.description,
       'expertise': instance.expertise,
+      'userName': instance.userName,
+      'userImage': instance.userImage,
     };

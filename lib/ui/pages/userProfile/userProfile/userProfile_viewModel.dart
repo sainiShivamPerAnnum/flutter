@@ -45,6 +45,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter & Dart Imports
 import 'package:flutter/material.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -560,6 +561,7 @@ class UserProfileVM extends BaseViewModel {
                 _myFundsBloc.dispose();
                 _sipTransactionBloc.dispose();
                 await _baseUtil.signOut();
+                await HydratedBloc.storage.clear();
                 _txnHistoryService.signOut();
                 _analyticsService.signOut();
                 _bankAndKycService.dump();

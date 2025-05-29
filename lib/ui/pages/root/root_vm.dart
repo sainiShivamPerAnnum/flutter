@@ -45,6 +45,7 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:firebase_instance_id/firebase_instance_id.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:in_app_update/in_app_update.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
@@ -473,6 +474,7 @@ class RootViewModel extends BaseViewModel {
           }).then((flag) async {
             if (flag) {
               await BaseUtil().signOut();
+              await HydratedBloc.storage.clear();
               _tambolaService.dispose();
               locator.resetLazySingleton<AdvisorBloc>();
               locator.resetLazySingleton<ExpertBloc>();
