@@ -10,27 +10,64 @@ part 'chat_history_state.dart';
 
 class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
   final ChatRepository _chatRepository;
+  StreamSubscription<List<ChatHistory>>? _chatHistorySubscription;
+
   ChatHistoryBloc(
     this._chatRepository,
   ) : super(const LoadingChatHistory()) {
-    on<LoadChatHistory>(_onLoadHomeData);
+    on<LoadChatHistory>(_onLoadChatHistory);
+    on<UpdateChatHistory>(_onUpdateChatHistory);
+    on<StopChatHistoryStream>(_onStopChatHistoryStream);
   }
-  FutureOr<void> _onLoadHomeData(
+
+  FutureOr<void> _onLoadChatHistory(
     LoadChatHistory event,
     Emitter<ChatHistoryState> emitter,
   ) async {
     emitter(const LoadingChatHistory());
-    final data = await _chatRepository.getUserChatHistory();
-    if (data.isSuccess()) {
-      emitter(
-        ChatHistoryData(chatHistory: data.model!),
+
+    try {
+      await _chatHistorySubscription?.cancel();
+      _chatHistorySubscription =
+          _chatRepository.getUserChatHistoryStream().listen(
+        (chatHistory) {
+          add(UpdateChatHistory(chatHistory: chatHistory));
+        },
+        onError: (error) {
+          emitter(
+            ErrorChatHistory(
+              message: error.toString(),
+            ),
+          );
+        },
       );
-    } else {
+    } catch (e) {
       emitter(
         ErrorChatHistory(
-          message: data.errorMessage ?? 'Error getting chat history',
+          message: e.toString(),
         ),
       );
     }
+  }
+
+  FutureOr<void> _onUpdateChatHistory(
+    UpdateChatHistory event,
+    Emitter<ChatHistoryState> emitter,
+  ) async {
+    emitter(ChatHistoryData(chatHistory: event.chatHistory));
+  }
+
+  FutureOr<void> _onStopChatHistoryStream(
+    StopChatHistoryStream event,
+    Emitter<ChatHistoryState> emitter,
+  ) async {
+    await _chatHistorySubscription?.cancel();
+    _chatHistorySubscription = null;
+  }
+
+  @override
+  Future<void> close() {
+    _chatHistorySubscription?.cancel();
+    return super.close();
   }
 }
