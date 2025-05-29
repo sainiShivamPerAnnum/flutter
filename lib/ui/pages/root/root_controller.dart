@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/advisor/advisor_root.dart';
 import 'package:felloapp/feature/chat_home/chat_home.dart';
 import 'package:felloapp/feature/expert/expert_root.dart';
 import 'package:felloapp/feature/expert/widgets/scroll_to_index.dart';
@@ -26,7 +27,7 @@ class RootController {
   );
   static const supportNavBarItem = NavBarItemModel(
     "Chats",
-    Assets.support_bottom_nav,
+    Assets.chats_bottom_nav,
   );
   static const advisortNavBarItem = NavBarItemModel(
     "Advisor",
@@ -121,7 +122,7 @@ class RootController {
         final UserService userService = locator<UserService>();
         if (userService.baseUser?.isAdvisor ?? false) {
           navItems.putIfAbsent(
-            const ChatHome(),
+            const AdvisorPage(),
             () => RootController.advisortNavBarItem,
           );
         } else {

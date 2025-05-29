@@ -1,11 +1,16 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/chat/bloc/chat_bloc.dart';
 import 'package:felloapp/feature/chat/bloc/chat_event.dart';
 import 'package:felloapp/feature/chat/bloc/chat_state.dart';
 import 'package:felloapp/feature/chat/widgets/chat_input.dart';
 import 'package:felloapp/feature/chat/widgets/message_bubble.dart';
+import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -84,7 +89,6 @@ class _ChatScreenState extends State<ChatScreen> {
     return BaseScaffold(
       backgroundColor: UiConstants.bg,
       showBackgroundGrid: false,
-      appBar: _buildAppBar(context),
       body: BlocConsumer<ChatBloc, ChatState>(
         listener: (context, state) {
           if (state.error != null) {
@@ -106,6 +110,7 @@ class _ChatScreenState extends State<ChatScreen> {
         builder: (context, state) {
           return Column(
             children: [
+              _buildAppBar(context),
               if (!state.isSocketConnected &&
                   state.loadingState != ChatLoadingState.initial)
                 Container(
@@ -228,121 +233,185 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return PreferredSize(
-      preferredSize: Size.fromHeight(
-        66.h,
+  Widget _buildAppBar(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 10.w,
       ),
-      child: AppBar(
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                UiConstants.bg,
-                Color(0xff212B2D),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            UiConstants.bg,
+            Color(0xff212B2D),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
-        leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-            size: 16.sp,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).padding.top,
           ),
-        ),
-        title: BlocBuilder<ChatBloc, ChatState>(
-          builder: (context, state) {
-            final displayName = state.advisorName ?? widget.advisorName;
-            return Row(
-              children: [
-                Container(
-                  width: 26.w,
-                  height: 26.h,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: state.isSocketConnected
-                          ? const Color(0xFF2D7D7D)
-                          : Colors.grey.shade600,
-                      width: 2.w,
-                    ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20.r),
-                    child: widget.advisorAvatar != null
-                        ? Image.network(
-                            widget.advisorAvatar!,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return _buildDefaultAvatar();
-                            },
-                          )
-                        : _buildDefaultAvatar(),
-                  ),
+          SizedBox(
+            height: SizeConfig.padding10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                  size: 18.sp,
                 ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        displayName ?? '',
-                        style: TextStyles.sourceSansSB.body1,
-                      ),
-                      // Row(
-                      //   children: [
-                      // Container(
-                      //   width: 8.w,
-                      //   height: 8.h,
-                      //   decoration: BoxDecoration(
-                      //     shape: BoxShape.circle,
-                      //     color: state.isSocketConnected
-                      //         ? const Color(0xFF4CAF50)
-                      //         : Colors.grey.shade500,
-                      //   ),
-                      // ),
-                      // SizedBox(width: 6.w),
-                      // Text(
-                      //   state.isSocketConnected
-                      //       ? (state.isHumanMode
-                      //           ? 'Online'
-                      //           : 'AI Assistant')
-                      //       : 'Connecting...',
-                      //   style: TextStyle(
-                      //     color: Colors.white.withOpacity(0.7),
-                      //     fontSize: 12.sp,
-                      //     fontWeight: FontWeight.w400,
-                      //   ),
-                      // ),
-                      // ],
-                      // ),
-                    ],
-                  ),
+              ),
+              Expanded(
+                child: BlocBuilder<ChatBloc, ChatState>(
+                  builder: (context, state) {
+                    final displayName = state.advisorName ?? widget.advisorName;
+                    return Row(
+                      children: [
+                        Container(
+                          width: 28.w,
+                          height: 28.h,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: state.isSocketConnected
+                                  ? const Color(0xFF2D7D7D)
+                                  : Colors.grey.shade600,
+                              width: 2.w,
+                            ),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20.r),
+                            child: widget.advisorAvatar != null
+                                ? Image.network(
+                                    widget.advisorAvatar!,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return _buildDefaultAvatar();
+                                    },
+                                  )
+                                : _buildDefaultAvatar(),
+                          ),
+                        ),
+                        SizedBox(width: 10.w),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              displayName ?? '',
+                              style: TextStyles.sourceSansSB.body1,
+                            ),
+                            // Row(
+                            //   children: [
+                            // Container(
+                            //   width: 8.w,
+                            //   height: 8.h,
+                            //   decoration: BoxDecoration(
+                            //     shape: BoxShape.circle,
+                            //     color: state.isSocketConnected
+                            //         ? const Color(0xFF4CAF50)
+                            //         : Colors.grey.shade500,
+                            //   ),
+                            // ),
+                            // SizedBox(width: 6.w),
+                            // Text(
+                            //   state.isSocketConnected
+                            //       ? (state.isHumanMode
+                            //           ? 'Online'
+                            //           : 'AI Assistant')
+                            //       : 'Connecting...',
+                            //   style: TextStyle(
+                            //     color: Colors.white.withOpacity(0.7),
+                            //     fontSize: 12.sp,
+                            //     fontWeight: FontWeight.w400,
+                            //   ),
+                            // ),
+                            // ],
+                            // ),
+                          ],
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          onPressed: () {
+                            context.read<CartBloc>().add(
+                                  AddToCart(
+                                    advisor: Expert(
+                                      advisorId: widget.advisorId,
+                                      name: widget.advisorName ?? '',
+                                      experience: '',
+                                      rating: 0,
+                                      expertise: '',
+                                      qualifications: '',
+                                      rate: 0,
+                                      rateNew: '',
+                                      image: widget.advisorAvatar ?? '',
+                                      isFree: false,
+                                    ),
+                                  ),
+                                );
+                            BaseUtil.openBookAdvisorSheet(
+                              advisorId: widget.advisorId,
+                              advisorName: widget.advisorName ?? '',
+                              advisorImage: widget.advisorAvatar ?? '',
+                              isEdit: false,
+                            );
+                          },
+                          icon: Icon(
+                            Icons.call_sharp,
+                            color: Colors.white,
+                            size: 18.sp,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
-              ],
-            );
-          },
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              // Handle call action
-            },
-            icon: Icon(
-              Icons.call_sharp,
-              color: Colors.white,
-              size: 14.sp,
-            ),
+              ),
+            ],
           ),
-          SizedBox(width: 8.w),
+          SizedBox(
+            height: SizeConfig.padding10,
+          ),
         ],
       ),
     );
+
+    // PreferredSize(
+    //   preferredSize: Size.fromHeight(
+    //     66.h,
+    //   ),
+    //   child: AppBar(
+    //     elevation: 0,
+    //     flexibleSpace: Container(
+    //       decoration: const BoxDecoration(
+    //         gradient: LinearGradient(
+    //           colors: [
+    //             UiConstants.bg,
+    //             Color(0xff212B2D),
+    //           ],
+    //           begin: Alignment.topCenter,
+    //           end: Alignment.bottomCenter,
+    //         ),
+    //       ),
+    //     ),
+    //     leading:
+    //     title:
+    //           ],
+    //         );
+    //       },
+    //     ),
+    //     actions: [
+
+    //     ],
+    //   ),
+    // );
   }
 
   Widget _buildDefaultAvatar() {

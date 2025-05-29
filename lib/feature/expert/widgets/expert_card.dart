@@ -1,7 +1,13 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
+import 'package:felloapp/feature/chat/bloc/chat_bloc.dart';
+import 'package:felloapp/feature/chat/chat_screen.dart';
 import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -172,7 +178,21 @@ class ExpertCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        AppState.delegate!.appState.currentAction = PageAction(
+                          page: ChatsPageConfig,
+                          state: PageState.addWidget,
+                          widget: BlocProvider(
+                            create: (context) =>
+                                ChatBloc(chatRepository: locator()),
+                            child: ChatScreen(
+                              advisorId: expert.advisorId,
+                              advisorAvatar: expert.image,
+                              advisorName: expert.name,
+                            ),
+                          ),
+                        );
+                      },
                       child: Container(
                         padding: EdgeInsets.symmetric(
                           vertical: SizeConfig.padding6,

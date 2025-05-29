@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:felloapp/core/model/chat/chat_models.dart';
 import 'package:felloapp/core/repository/chat_repo.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
@@ -17,6 +19,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
   IO.Socket? _socket;
 
   static const String _baseUrl = 'https://advisors.fello-dev.net/chat';
+  final isAdvisor = locator<UserService>().baseUser!.isAdvisor ?? false;
 
   ChatBloc({required ChatRepository chatRepository})
       : _chatRepository = chatRepository,
@@ -232,14 +235,37 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
         add(SocketDisconnected());
       });
       // Message received
-      _socket!.on('message', (data) {
-        try {
-          final message = ChatMessage.fromJson(data);
-          add(ReceiveMessage(message: message));
-        } catch (e) {
-          debugPrint('Error parsing message: $e');
-        }
-      });
+      if (isAdvisor) {
+        //join chat for advisor
+        // chat history of advisor
+        // get all history
+
+        _socket!.on('message', (data) {
+          try {
+            final message = ChatMessage.fromJson(data);
+            add(ReceiveMessage(message: message));
+          } catch (e) {
+            debugPrint('Error parsing message: $e');
+          }
+        });
+      } else {
+        _socket!.on('join-chat', (data) {
+          try {
+            final message = ChatMessage.fromJson(data);
+            add(ReceiveMessage(message: message));
+          } catch (e) {
+            debugPrint('Error parsing message: $e');
+          }
+        });
+        _socket!.on('advisor-response', (data) {
+          try {
+            final message = ChatMessage.fromJson(data);
+            add(ReceiveMessage(message: message));
+          } catch (e) {
+            debugPrint('Error parsing message: $e');
+          }
+        });
+      }
 
       // Unread messages received after joining room
       // _socket!.on('unread-messages', (data) {
@@ -363,11 +389,19 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
 
       // Send through WebSocket
       if (_socket?.connected == true) {
-        _socket!.emit('message', {
-          'sessionId': state.sessionId,
-          'content': event.content,
-          'message': event.content,
-        });
+        if (isAdvisor) {
+          _socket!.emit('advisor-response', {
+            'sessionId': state.sessionId,
+            'content': event.content,
+            'message': event.content,
+          });
+        } else {
+          _socket!.emit('message', {
+            'sessionId': state.sessionId,
+            'content': event.content,
+            'message': event.content,
+          });
+        }
       }
     } catch (e) {
       emit(
@@ -414,9 +448,9 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
     try {
       // Emit socket event to get user's chat history
       if (_socket?.connected == true) {
-        _socket!.emit('get-chat-history', {
-          'userId': event.userId,
-        });
+        // _socket!.emit('get-chat-history', {
+        //   'userId': event.userId,
+        // });
       }
 
       // The response will come through 'chat-history' socket event

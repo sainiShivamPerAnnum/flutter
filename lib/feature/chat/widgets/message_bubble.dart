@@ -132,7 +132,7 @@ class MessageBubble extends StatelessWidget {
 
   Widget _buildUserAvatar() {
     return CircleAvatar(
-      radius: 20.r,
+      radius: 10.r,
       backgroundColor: Colors.grey[300],
       backgroundImage: NetworkImage(
         advisorProfilePhoto ?? '',
