@@ -1,5 +1,8 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/chat/chat_models.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ConsultationCard extends StatelessWidget {
   final ConsultationOffer offer;
@@ -14,258 +17,95 @@ class ConsultationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      margin: EdgeInsets.symmetric(vertical: 4.h, horizontal: 24.w),
+      padding: EdgeInsets.all(12.r),
+      constraints: BoxConstraints(
+        maxWidth: 268.w,
+      ),
+      decoration: BoxDecoration(
+        color: UiConstants.greyVarient,
+        borderRadius: BorderRadius.circular(8.r),
+        border: Border.all(
+          color: UiConstants.grey6,
+        ),
+      ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Main consultation card
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(10.r),
             decoration: BoxDecoration(
-              color: const Color(0xFF2A2A2A),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: const Color(0xFF2D7D7D).withOpacity(0.3),
-                width: 1,
+              color: UiConstants.teal4.withOpacity(0.25),
+              borderRadius: BorderRadius.all(
+                Radius.circular(8.r),
               ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF2D7D7D).withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(
-                        Icons.support_agent_rounded,
-                        color: Color(0xFF2D7D7D),
-                        size: 20,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Connect with ${offer.advisorName} to',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const Text(
-                            'kickstart your investment journey with personalised advice.',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                Text(
+                  'Book a Consultation',
+                  style: TextStyles.sourceSansSB.body3,
                 ),
-                const SizedBox(height: 16),
-
-                // Consultation details section
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1A1A1A),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: const Color(0xFF2D7D7D).withOpacity(0.2),
-                      width: 1,
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Title and price
-                      Row(
-                        children: [
-                          const Text(
-                            'Book a Consultation',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const Spacer(),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF2D7D7D),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Text(
-                              offer.price,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-
-                      // Duration
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.schedule_rounded,
-                            size: 16,
-                            color: Colors.white70,
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            offer.duration,
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-
-                      // Description
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Icon(
-                            Icons.check_circle_rounded,
-                            size: 16,
-                            color: Colors.white70,
-                          ),
-                          const SizedBox(width: 6),
-                          Expanded(
-                            child: Text(
-                              offer.description,
-                              style: const TextStyle(
-                                color: Colors.white70,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                                height: 1.3,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                // Book button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: onBook != null ? () => onBook!(offer) : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF1A1A1A),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: const Text(
-                      'Book a call',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
+                const SizedBox(height: 4),
+                Text(
+                  '${offer.price.startsWith('₹') ? offer.price : BaseUtil.formatIndianRupees(num.tryParse(offer.price) ?? 0)}/${offer.duration.contains('min') ? offer.duration : '${offer.duration} min'}',
+                  style: TextStyles.sourceSansM.body4,
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 12),
-
-          // Status messages
-          Column(
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 10.h),
+            child: const Divider(
+              color: UiConstants.grey6,
+            ),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                width: 4.r,
+                height: 4.r,
+                margin: EdgeInsets.only(top: 6.h, right: 8.w),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF4CAF50).withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: const Color(0xFF4CAF50).withOpacity(0.3),
-                    width: 1,
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(
-                      Icons.notifications_active_rounded,
-                      size: 14,
-                      color: Color(0xFF4CAF50),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      '${offer.advisorName} has been notified about the request',
-                      style: const TextStyle(
-                        color: Color(0xFF4CAF50),
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
+                  color: UiConstants.kTextColor.withOpacity(.75),
+                  shape: BoxShape.circle,
                 ),
               ),
-              const SizedBox(height: 8),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF4CAF50).withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: const Color(0xFF4CAF50).withOpacity(0.3),
-                    width: 1,
+              Expanded(
+                child: Text(
+                  offer.description,
+                  style: TextStyles.sourceSans.body4.colour(
+                    UiConstants.kTextColor.withOpacity(.75),
                   ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(
-                      Icons.person_add_rounded,
-                      size: 14,
-                      color: Color(0xFF4CAF50),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      '${offer.advisorName} has joined the chat',
-                      style: const TextStyle(
-                        color: Color(0xFF4CAF50),
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
                 ),
               ),
             ],
+          ),
+          SizedBox(
+            height: 12.h,
+          ),
+          GestureDetector(
+            onTap: onBook != null ? () => onBook!(offer) : null,
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 8.w,
+                vertical: 6.h,
+              ),
+              decoration: BoxDecoration(
+                color: UiConstants.kTextColor,
+                borderRadius: BorderRadius.circular(
+                  5.r,
+                ),
+              ),
+              child: Text(
+                'Book a call',
+                style: TextStyles.sourceSansSB.body4.colour(
+                  UiConstants.kTextColor4,
+                ),
+              ),
+            ),
           ),
         ],
       ),

@@ -22,11 +22,15 @@ class ChatScreen extends StatefulWidget {
   final String advisorId;
   final String? advisorName;
   final String? advisorAvatar;
+  final String? price;
+  final String? duration;
 
   const ChatScreen({
     required this.advisorId,
     this.advisorName,
     this.advisorAvatar,
+    this.price,
+    this.duration,
     super.key,
   });
 
@@ -207,7 +211,33 @@ class _ChatScreenState extends State<ChatScreen> {
                               advisorProfilePhoto: widget.advisorAvatar,
                               advisorName:
                                   state.advisorName ?? widget.advisorName,
-                              onBookConsultation: (c) {},
+                              price: widget.price,
+                              duration: widget.duration,
+                              advisorId: widget.advisorId,
+                              onBookConsultation: (c) {
+                                BaseUtil.openBookAdvisorSheet(
+                                  advisorId: c.id,
+                                  advisorName: c.advisorName,
+                                  advisorImage: c.advisorProfileImage,
+                                  isEdit: false,
+                                );
+                                context.read<CartBloc>().add(
+                                      AddToCart(
+                                        advisor: Expert(
+                                          advisorId: c.id,
+                                          name: c.advisorName,
+                                          experience: '',
+                                          rating: 0,
+                                          expertise: '',
+                                          qualifications: '',
+                                          rate: 0,
+                                          rateNew: '',
+                                          image: c.advisorProfileImage,
+                                          isFree: false,
+                                        ),
+                                      ),
+                                    );
+                              },
                             );
                           },
                         ),

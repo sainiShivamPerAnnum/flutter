@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/chat/chat_models.dart';
 import 'package:felloapp/feature/chat/widgets/consultation_card.dart';
@@ -12,14 +14,20 @@ class MessageBubble extends StatelessWidget {
   final String? advisorProfilePhoto;
   final ChatMessage message;
   final String? advisorName;
+  final String? advisorId;
+  final String? price;
+  final String? duration;
   final Function(ConsultationOffer)? onBookConsultation;
 
   const MessageBubble({
     required this.message,
     required this.userId,
     required this.advisorProfilePhoto,
+    required this.price,
+    required this.duration,
+    required this.advisorId,
+    required this.advisorName,
     super.key,
-    this.advisorName,
     this.onBookConsultation,
   });
 
@@ -151,50 +159,58 @@ class MessageBubble extends StatelessWidget {
   Widget _buildSystemMessage(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
-      child: Center(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-          decoration: BoxDecoration(
-            color: const Color(0xFF4CAF50).withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(
-              color: const Color(0xFF4CAF50).withOpacity(0.3),
-              width: 0.5,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                _getSystemIcon(),
-                size: 12.sp,
-                color: const Color(0xFF4CAF50),
-              ),
-              SizedBox(width: 6.w),
-              Flexible(
-                child: Text(
-                  message.content,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: const Color(0xFF4CAF50),
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Transform.rotate(
+              angle: pi,
+              child: CustomPaint(
+                size: Size(double.infinity, 3.h),
+                painter: ShrinkingLinePainter(
+                  startHeight: 4.h,
+                  endHeight: 1.h,
+                  startColor: const Color(0xFF01656B).withOpacity(0.3),
+                  endColor: const Color(0xff232326),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.w),
+            child: Container(
+              constraints: BoxConstraints(
+                maxWidth: 152.w,
+              ),
+              child: Text(
+                message.content,
+                textAlign: TextAlign.center,
+                style: TextStyles.sourceSansM.body4.colour(UiConstants.teal3),
+              ),
+            ),
+          ),
+          Expanded(
+            child: CustomPaint(
+              size: Size(double.infinity, 3.h),
+              painter: ShrinkingLinePainter(
+                startHeight: 4.h,
+                endHeight: 1.h,
+                startColor: const Color(0xFF01656B).withOpacity(0.3),
+                endColor: const Color(0xff232326),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildConsultationMessage(BuildContext context) {
     final offer = ConsultationOffer(
-      id: message.id,
-      advisorName: advisorName ?? 'Anil Singhvi',
-      price: '₹499',
-      duration: '30 mins',
+      id: advisorId ?? '',
+      advisorName: advisorName ?? '',
+      price: price ?? '',
+      duration: duration ?? '',
+      advisorProfileImage: advisorProfilePhoto ?? '',
       description: 'Get one-on-one financial advice tailored to your goals.',
     );
 
@@ -205,15 +221,6 @@ class MessageBubble extends StatelessWidget {
         onBook: onBookConsultation,
       ),
     );
-  }
-
-  IconData _getSystemIcon() {
-    switch (message.messageType) {
-      case MessageType.handover:
-        return Icons.support_agent_rounded;
-      default:
-        return Icons.info_outline_rounded;
-    }
   }
 
   bool _isUserMessage() {
@@ -228,4 +235,50 @@ class MessageBubble extends StatelessWidget {
     return message.messageType == MessageType.advisor ||
         message.handler == 'advisor';
   }
+}
+
+class ShrinkingLinePainter extends CustomPainter {
+  final double startHeight;
+  final double endHeight;
+  final Color startColor;
+  final Color endColor;
+
+  ShrinkingLinePainter({
+    required this.startHeight,
+    required this.endHeight,
+    required this.startColor,
+    required this.endColor,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..shader = LinearGradient(
+        colors: [startColor, endColor],
+        stops: const [0.0, 1.0],
+      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
+
+    // Create a path that forms a trapezoid (shrinking line)
+    final path = Path();
+
+    // Start from top-left with full height
+    path.moveTo(0, (size.height - startHeight) / 2);
+
+    // Top line - full height at start, shrinking to endHeight at end
+    path.lineTo(size.width, (size.height - endHeight) / 2);
+
+    // Right edge - from top to bottom of end height
+    path.lineTo(size.width, (size.height + endHeight) / 2);
+
+    // Bottom line - from endHeight back to full startHeight
+    path.lineTo(0, (size.height + startHeight) / 2);
+
+    // Close the path
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

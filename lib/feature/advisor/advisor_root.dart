@@ -194,6 +194,9 @@ class _AdvisorViewWrapperState extends State<AdvisorViewWrapper>
                                                     .advisorProfilePhoto,
                                                 advisorName:
                                                     data.metadata.advisorName,
+                                                price: data.metadata.price,
+                                                duration:
+                                                    data.metadata.duration,
                                               ),
                                             ),
                                           );

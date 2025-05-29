@@ -147,6 +147,8 @@ class __ChatHomeViewState extends State<_ChatHomeView> {
                                         advisorAvatar:
                                             data.metadata.advisorProfilePhoto,
                                         advisorName: data.metadata.advisorName,
+                                        price: data.metadata.price,
+                                        duration: data.metadata.duration,
                                       ),
                                     ),
                                   );

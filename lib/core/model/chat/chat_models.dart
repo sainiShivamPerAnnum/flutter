@@ -6,7 +6,7 @@ enum MessageType { ai, advisor, consultation, handover }
 
 @JsonSerializable()
 class ChatMessage {
-  final String id;
+  final String? id;
   final String sessionId;
   final String senderId; // uuid of user or advisor// if system then ai
   final String receiverId; // uuid
@@ -15,23 +15,17 @@ class ChatMessage {
   final bool read;
   final String handler; // ai or advisor
   final MessageType? messageType;
-  @JsonKey(name: '_id')
-  final String? mongoId;
-  @JsonKey(name: '__v')
-  final int? version;
 
   ChatMessage({
-    required this.id,
     required this.sessionId,
     required this.senderId,
     required this.receiverId,
     required this.message,
     required this.timestamp,
     required this.handler,
+    this.id,
     this.messageType = MessageType.ai,
     this.read = false,
-    this.mongoId,
-    this.version,
   });
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) =>
@@ -61,8 +55,6 @@ class ChatMessage {
       timestamp: timestamp ?? this.timestamp,
       read: read ?? this.read,
       handler: handler ?? this.handler,
-      mongoId: mongoId ?? this.mongoId,
-      version: version ?? this.version,
       messageType: messageType ?? this.messageType,
     );
   }
@@ -75,16 +67,18 @@ class ChatMessage {
 class ConsultationOffer {
   final String id;
   final String advisorName;
+  final String advisorProfileImage;
   final String price;
   final String duration;
   final String description;
 
   ConsultationOffer({
-    required this.id,
     required this.advisorName,
     required this.price,
     required this.duration,
     required this.description,
+    required this.id,
+    required this.advisorProfileImage,
   });
 
   factory ConsultationOffer.fromJson(Map<String, dynamic> json) =>

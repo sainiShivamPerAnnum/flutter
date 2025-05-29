@@ -189,6 +189,8 @@ class ExpertCard extends StatelessWidget {
                               advisorId: expert.advisorId,
                               advisorAvatar: expert.image,
                               advisorName: expert.name,
+                              price: expert.rateNew.split('/').first,
+                              duration: expert.rateNew.split('/').last,
                             ),
                           ),
                         );

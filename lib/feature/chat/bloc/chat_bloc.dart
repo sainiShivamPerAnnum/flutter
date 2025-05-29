@@ -416,8 +416,8 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
     if (!state.hasSession) return;
 
     // Check if message already exists
-    final messageExists = state.messages.any((m) => m.id == event.message.id);
-    if (messageExists) return;
+    // final messageExists = state.messages.any((m) => m.id == event.message.id);
+    // if (messageExists) return;
 
     final updatedMessages = [...state.messages, event.message];
     final updatedSessionMessages =

@@ -7,19 +7,17 @@ part of 'chat_models.dart';
 // **************************************************************************
 
 ChatMessage _$ChatMessageFromJson(Map<String, dynamic> json) => ChatMessage(
-      id: json['id'] as String,
       sessionId: json['sessionId'] as String,
       senderId: json['senderId'] as String,
       receiverId: json['receiverId'] as String,
       message: json['message'] as String,
       timestamp: DateTime.parse(json['timestamp'] as String),
       handler: json['handler'] as String,
+      id: json['id'] as String?,
       messageType:
           $enumDecodeNullable(_$MessageTypeEnumMap, json['messageType']) ??
               MessageType.ai,
       read: json['read'] as bool? ?? false,
-      mongoId: json['_id'] as String?,
-      version: (json['__v'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$ChatMessageToJson(ChatMessage instance) =>
@@ -33,8 +31,6 @@ Map<String, dynamic> _$ChatMessageToJson(ChatMessage instance) =>
       'read': instance.read,
       'handler': instance.handler,
       'messageType': _$MessageTypeEnumMap[instance.messageType],
-      '_id': instance.mongoId,
-      '__v': instance.version,
     };
 
 const _$MessageTypeEnumMap = {
@@ -46,17 +42,19 @@ const _$MessageTypeEnumMap = {
 
 ConsultationOffer _$ConsultationOfferFromJson(Map<String, dynamic> json) =>
     ConsultationOffer(
-      id: json['id'] as String,
       advisorName: json['advisorName'] as String,
       price: json['price'] as String,
       duration: json['duration'] as String,
       description: json['description'] as String,
+      id: json['id'] as String,
+      advisorProfileImage: json['advisorProfileImage'] as String,
     );
 
 Map<String, dynamic> _$ConsultationOfferToJson(ConsultationOffer instance) =>
     <String, dynamic>{
       'id': instance.id,
       'advisorName': instance.advisorName,
+      'advisorProfileImage': instance.advisorProfileImage,
       'price': instance.price,
       'duration': instance.duration,
       'description': instance.description,
