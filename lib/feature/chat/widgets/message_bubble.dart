@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/chat/chat_models.dart';
 import 'package:felloapp/feature/chat/widgets/consultation_card.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 
@@ -37,7 +39,6 @@ class MessageBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     final isUser = _isUserMessage();
     final isSystem = _isSystemMessage();
-
     final isAdvisor = _isAdvisor();
 
     if (message.messageType == MessageType.consultation) {
@@ -48,15 +49,26 @@ class MessageBubble extends StatelessWidget {
       return _buildSystemMessage(context);
     }
 
+    bool alignRight;
+    if (isUserAdvisor) {
+      alignRight = isAdvisor;
+    } else {
+      alignRight = isUser;
+    }
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: 4.h, horizontal: 16.w),
       child: Row(
         mainAxisAlignment:
-            isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+            alignRight ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (!isUser) ...[
-            isAdvisor ? _buildUserAvatar() : _buildAiAvatar(),
+          if (!alignRight) ...[
+            isAdvisor
+                ? _buildUserAvatar()
+                : message.messageType == MessageType.ai
+                    ? _buildAiAvatar()
+                    : _buildUserAvatar2(),
             SizedBox(width: 6.w),
           ],
           Flexible(
@@ -66,14 +78,14 @@ class MessageBubble extends StatelessWidget {
               ),
               padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
               decoration: BoxDecoration(
-                color: isUser
+                color: alignRight
                     ? UiConstants.teal4.withOpacity(.5)
                     : UiConstants.greyVarient,
                 borderRadius: BorderRadius.only(
                   topLeft:
-                      isUser ? Radius.circular(10.r) : Radius.circular(2.r),
+                      alignRight ? Radius.circular(10.r) : Radius.circular(2.r),
                   topRight:
-                      isUser ? Radius.circular(2.r) : Radius.circular(10.r),
+                      alignRight ? Radius.circular(2.r) : Radius.circular(10.r),
                   bottomLeft: Radius.circular(10.r),
                   bottomRight: Radius.circular(10.r),
                 ),
@@ -101,7 +113,7 @@ class MessageBubble extends StatelessWidget {
                               const Color(0xffA6A6AC),
                             ),
                           ),
-                          if (isUser) ...[
+                          if (alignRight) ...[
                             SizedBox(width: 4.w),
                             Icon(
                               message.isRead ? Icons.done_all : Icons.done,
@@ -136,6 +148,22 @@ class MessageBubble extends StatelessWidget {
         Icons.smart_toy_rounded,
         size: 12.sp,
         color: Colors.white,
+      ),
+    );
+  }
+
+  Widget _buildUserAvatar2() {
+    return Container(
+      width: 20.w,
+      height: 20.h,
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        color: UiConstants.greyVarient,
+      ),
+      child: AppImage(
+        Assets.cvtar1,
+        height: 12.sp,
+        width: 12.sp,
       ),
     );
   }
@@ -230,13 +258,13 @@ class MessageBubble extends StatelessWidget {
   }
 
   bool _isSystemMessage() {
-    return message.messageType == MessageType.handover ||
-        message.messageType == MessageType.consultation;
+    return message.messageType == MessageType.handover;
   }
 
   bool _isAdvisor() {
     return message.messageType == MessageType.advisor ||
-        message.handler == 'advisor';
+        message.messageType == MessageType.ai ||
+        message.messageType == MessageType.consultation;
   }
 }
 
