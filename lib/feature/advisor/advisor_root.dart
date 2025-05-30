@@ -178,19 +178,19 @@ class _AdvisorViewWrapperState extends State<AdvisorViewWrapper>
                           builder: (context, state) {
                             return switch (state) {
                               LoadingChatHistory() => const FullScreenLoader(),
-                              // ReconnectingChatHistory() => Column(
-                              //     children: [
-                              //       const CircularProgressIndicator(),
-                              //       SizedBox(height: 8.h),
-                              //       Text(
-                              //         state.message,
-                              //         style: TextStyles.sourceSans.body3.colour(
-                              //           UiConstants.kTextColor.withOpacity(.7),
-                              //         ),
-                              //         textAlign: TextAlign.center,
-                              //       ),
-                              //     ],
-                              //   ),
+                              ReconnectingChatHistory() => Column(
+                                  children: [
+                                    const FullScreenLoader(),
+                                    SizedBox(height: 8.h),
+                                    Text(
+                                      'Reconnecting... (${state.attempts}/${state.maxAttempts})',
+                                      style: TextStyles.sourceSans.body3.colour(
+                                        UiConstants.kTextColor.withOpacity(.7),
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
                               ErrorChatHistory() => NewErrorPage(
                                   onTryAgain: () =>
                                       BlocProvider.of<ChatHistoryBloc>(
@@ -226,7 +226,6 @@ class _AdvisorViewWrapperState extends State<AdvisorViewWrapper>
                             };
                           },
                         ),
-                        // Calls Tab
                         Padding(
                           padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.padding20,
@@ -270,7 +269,6 @@ class _AdvisorViewWrapperState extends State<AdvisorViewWrapper>
   }
 
   void _updateAnimatedList(List<ChatHistory> newChatHistory) {
-    // Find items to remove
     for (int i = _currentChatHistory.length - 1; i >= 0; i--) {
       final currentItem = _currentChatHistory[i];
       final exists =
@@ -329,7 +327,10 @@ class _AdvisorViewWrapperState extends State<AdvisorViewWrapper>
   }
 
   Widget _buildAnimatedChatItem(
-      ChatHistory data, Animation<double> animation, int index) {
+    ChatHistory data,
+    Animation<double> animation,
+    int index,
+  ) {
     return SlideTransition(
       position: animation.drive(
         Tween<Offset>(
@@ -367,31 +368,12 @@ class _AdvisorViewWrapperState extends State<AdvisorViewWrapper>
               },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                decoration: BoxDecoration(
-                  color: data.unreadCount > 0
-                      ? UiConstants.teal3.withOpacity(0.05)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: data.unreadCount > 0 ? 8.w : 0,
-                  vertical: data.unreadCount > 0 ? 4.h : 0,
-                ),
                 child: Row(
                   children: [
                     Stack(
                       children: [
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: data.unreadCount > 0
-                                ? Border.all(
-                                    color: UiConstants.teal3,
-                                    width: 2.w,
-                                  )
-                                : null,
-                          ),
                           child: CircleAvatar(
                             radius: 20.r,
                             backgroundColor: Colors.grey[300],

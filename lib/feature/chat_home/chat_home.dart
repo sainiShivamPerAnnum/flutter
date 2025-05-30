@@ -125,19 +125,19 @@ class __ChatHomeViewState extends State<_ChatHomeView>
               builder: (context, state) {
                 return switch (state) {
                   LoadingChatHistory() => const FullScreenLoader(),
-                  // ReconnectingChatHistory() => Column(
-                  //     children: [
-                  //       const CircularProgressIndicator(),
-                  //       SizedBox(height: 8.h),
-                  //       Text(
-                  //         state.message,
-                  //         style: TextStyles.sourceSans.body3.colour(
-                  //           UiConstants.kTextColor.withOpacity(.7),
-                  //         ),
-                  //         textAlign: TextAlign.center,
-                  //       ),
-                  //     ],
-                  //   ),
+                  ReconnectingChatHistory() => Column(
+                      children: [
+                        const FullScreenLoader(),
+                        SizedBox(height: 8.h),
+                        Text(
+                          'Reconnecting... (${state.attempts}/${state.maxAttempts})',
+                          style: TextStyles.sourceSans.body3.colour(
+                            UiConstants.kTextColor.withOpacity(.7),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
                   ErrorChatHistory() => NewErrorPage(
                       onTryAgain: () => BlocProvider.of<ChatHistoryBloc>(
                         context,

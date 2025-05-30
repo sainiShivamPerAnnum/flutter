@@ -11,27 +11,43 @@ class LoadingChatHistory extends ChatHistoryState {
   List<Object?> get props => const [];
 }
 
+class ReconnectingChatHistory extends ChatHistoryState {
+  final int attempts;
+  final int maxAttempts;
+  final List<ChatHistory>? lastKnownData;
+
+  const ReconnectingChatHistory({
+    required this.attempts,
+    required this.maxAttempts,
+    this.lastKnownData,
+  });
+
+  @override
+  List<Object?> get props => [attempts, maxAttempts, lastKnownData];
+}
+
 final class ChatHistoryData extends ChatHistoryState {
   final List<ChatHistory> chatHistory;
 
   const ChatHistoryData({
     required this.chatHistory,
   });
+
   @override
-  List<Object?> get props => [
-        chatHistory,
-      ];
+  List<Object?> get props => [chatHistory];
 }
 
 class ErrorChatHistory extends ChatHistoryState {
+  final String message;
+  final bool canRetry;
+  final List<ChatHistory>? lastKnownData;
+
   const ErrorChatHistory({
     required this.message,
+    this.canRetry = false,
+    this.lastKnownData,
   });
 
-  final String message;
-
   @override
-  List<Object?> get props => [
-        message,
-      ];
+  List<Object?> get props => [message, canRetry, lastKnownData];
 }

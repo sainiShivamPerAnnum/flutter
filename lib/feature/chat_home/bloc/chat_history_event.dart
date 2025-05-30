@@ -23,3 +23,18 @@ class UpdateChatHistory extends ChatHistoryEvent {
 class StopChatHistoryStream extends ChatHistoryEvent {
   const StopChatHistoryStream();
 }
+
+// Internal event for reconnection
+class _ReconnectChatHistory extends ChatHistoryEvent {
+  const _ReconnectChatHistory();
+}
+
+// Public event to reset reconnection attempts
+class ResetReconnectionAttempts extends ChatHistoryEvent {
+  const ResetReconnectionAttempts();
+}
+
+// New event for app resume
+class AppResumedFromBackground extends ChatHistoryEvent {
+  const AppResumedFromBackground();
+}
