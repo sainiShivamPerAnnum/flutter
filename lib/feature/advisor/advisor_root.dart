@@ -31,7 +31,7 @@ class AdvisorPage extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) =>
-              ChatHistoryBloc(locator())..add(const LoadChatHistory()),
+              locator<ChatHistoryBloc>()..add(const LoadChatHistory()),
         ),
       ],
       child: const AdvisorViewWrapper(),

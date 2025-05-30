@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/chat/chat_history.dart';
@@ -25,7 +27,7 @@ class ChatHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ChatHistoryBloc(locator())..add(const LoadChatHistory()),
+      create: (_) => locator<ChatHistoryBloc>()..add(const LoadChatHistory()),
       child: const _ChatHomeView(),
     );
   }
@@ -173,62 +175,97 @@ class __ChatHomeViewState extends State<_ChatHomeView>
   }
 
   void _updateAnimatedList(List<ChatHistory> newChatHistory) {
-    // Find items to remove
-    for (int i = _currentChatHistory.length - 1; i >= 0; i--) {
-      final currentItem = _currentChatHistory[i];
-      final exists =
-          newChatHistory.any((item) => item.sessionId == currentItem.sessionId);
+    if (_listsAreEqual(_currentChatHistory, newChatHistory)) {
+      return;
+    }
 
-      if (!exists) {
-        final removedItem = _currentChatHistory.removeAt(i);
-        _listKey.currentState?.removeItem(
-          i,
-          (context, animation) =>
-              _buildAnimatedChatItem(removedItem, animation, i),
-          duration: const Duration(milliseconds: 300),
-        );
+    if (_currentChatHistory.isEmpty) {
+      _currentChatHistory = List.from(newChatHistory);
+      return;
+    }
+
+    final removedIndices = <int>[];
+    final addedItems = <MapEntry<int, ChatHistory>>[];
+    final updatedItems = <MapEntry<int, ChatHistory>>[];
+
+    final newItemsMap = <String, int>{
+      for (int i = 0; i < newChatHistory.length; i++)
+        newChatHistory[i].sessionId: i,
+    };
+
+    for (int i = _currentChatHistory.length - 1; i >= 0; i--) {
+      if (!newItemsMap.containsKey(_currentChatHistory[i].sessionId)) {
+        removedIndices.add(i);
       }
     }
 
-    // Find items to add or update
+    for (final index in removedIndices) {
+      final removedItem = _currentChatHistory.removeAt(index);
+      _listKey.currentState?.removeItem(
+        index,
+        (context, animation) =>
+            _buildAnimatedChatItem(removedItem, animation, index),
+        duration: const Duration(milliseconds: 200),
+      );
+    }
+
     for (int i = 0; i < newChatHistory.length; i++) {
       final newItem = newChatHistory[i];
-
-      // Check if item exists in current list
       final existingIndex = _currentChatHistory.indexWhere(
         (item) => item.sessionId == newItem.sessionId,
       );
 
       if (existingIndex == -1) {
-        // New item - add it
-        _currentChatHistory.insert(i, newItem);
-        _listKey.currentState?.insertItem(
-          i,
-          duration: const Duration(milliseconds: 300),
-        );
-      } else if (existingIndex != i) {
-        // Item moved - remove from old position and add to new position
-        final movedItem = _currentChatHistory.removeAt(existingIndex);
-        _listKey.currentState?.removeItem(
-          existingIndex,
-          (context, animation) =>
-              _buildAnimatedChatItem(movedItem, animation, existingIndex),
-          duration: const Duration(milliseconds: 200),
-        );
-
-        // Add to new position after a short delay
-        Future.delayed(const Duration(milliseconds: 100), () {
-          _currentChatHistory.insert(i, newItem);
-          _listKey.currentState?.insertItem(
-            i,
-            duration: const Duration(milliseconds: 300),
-          );
-        });
+        addedItems.add(MapEntry(i, newItem));
       } else {
-        // Item exists at same position - just update the data
-        _currentChatHistory[i] = newItem;
+        final existingItem = _currentChatHistory[existingIndex];
+        if (!_itemsAreEqual(existingItem, newItem) || existingIndex != i) {
+          updatedItems.add(MapEntry(i, newItem));
+        }
       }
     }
+
+    _currentChatHistory.clear();
+    _currentChatHistory.addAll(newChatHistory);
+
+    for (final entry in addedItems) {
+      final index = entry.key;
+      Timer(const Duration(milliseconds: 100), () {
+        if (_listKey.currentState != null &&
+            index <= _currentChatHistory.length) {
+          _listKey.currentState!.insertItem(
+            index,
+            duration: const Duration(milliseconds: 300),
+          );
+        }
+      });
+    }
+
+    if (updatedItems.isNotEmpty || addedItems.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {});
+        }
+      });
+    }
+  }
+
+  bool _listsAreEqual(List<ChatHistory> list1, List<ChatHistory> list2) {
+    if (list1.length != list2.length) return false;
+
+    for (int i = 0; i < list1.length; i++) {
+      if (!_itemsAreEqual(list1[i], list2[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool _itemsAreEqual(ChatHistory item1, ChatHistory item2) {
+    return item1.sessionId == item2.sessionId &&
+        item1.lastMessage == item2.lastMessage &&
+        item1.lastMessageTimestamp == item2.lastMessageTimestamp &&
+        item1.unreadCount == item2.unreadCount;
   }
 
   Widget _buildAnimatedChatItem(

@@ -19,6 +19,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
+import 'package:felloapp/feature/chat_home/bloc/chat_history_bloc.dart';
 import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
 // import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
@@ -556,6 +557,7 @@ class UserProfileVM extends BaseViewModel {
               if (flag) {
                 _transactionBloc.dispose();
                 preloadBloc.add(const PreloadEvent.reset());
+                locator.resetLazySingleton<ChatHistoryBloc>();
                 locator.resetLazySingleton<AdvisorBloc>();
                 locator.resetLazySingleton<ExpertBloc>();
                 _myFundsBloc.dispose();

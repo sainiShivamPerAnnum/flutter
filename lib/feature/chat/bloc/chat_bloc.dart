@@ -256,7 +256,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
 
       _socket!.on('disconnect', (_) {
         debugPrint('Socket disconnected');
-        add(SocketDisconnected());
+        // add(SocketDisconnected());
       });
       if (isAdvisor) {
         _socket!.on('message', (data) {
