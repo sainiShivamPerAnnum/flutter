@@ -27,6 +27,8 @@ class ChatScreen extends StatefulWidget {
   final String? price;
   final String? duration;
   final String? sessionId;
+  final String? userName;
+  final String? userAvatar;
 
   const ChatScreen({
     required this.advisorId,
@@ -35,6 +37,8 @@ class ChatScreen extends StatefulWidget {
     this.advisorAvatar,
     this.price,
     this.duration,
+    this.userName,
+    this.userAvatar,
     super.key,
   });
 
@@ -47,6 +51,7 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _isNearBottom = true;
   final isAdvisor = locator<UserService>().baseUser!.isAdvisor ?? false;
   final String? uid = locator<UserService>().baseUser!.uid;
+  bool _hasScrolledToUnread = false;
 
   @override
   void initState() {
@@ -77,6 +82,32 @@ class _ChatScreenState extends State<ChatScreen> {
         setState(() {
           _isNearBottom = isNearBottom;
         });
+      }
+      if (isNearBottom) {
+        final state = context.read<ChatBloc>().state;
+        if (state.unreadMessageCount > 0) {
+          context.read<ChatBloc>().add(MarkAllAsRead());
+        }
+      }
+    }
+  }
+
+  void _scrollToUnreadMessages(ChatState state) {
+    if (state.firstUnreadMessageId != null && !_hasScrolledToUnread) {
+      final unreadIndex = state.messages.indexWhere(
+        (msg) => msg.id == state.firstUnreadMessageId,
+      );
+
+      if (unreadIndex != -1) {
+        final reversedIndex = state.messages.length - 1 - unreadIndex;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollController.animateTo(
+            reversedIndex * 80.0,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeOut,
+          );
+        });
+        _hasScrolledToUnread = true;
       }
     }
   }
@@ -125,11 +156,14 @@ class _ChatScreenState extends State<ChatScreen> {
           if (state.messages.isNotEmpty && _isNearBottom) {
             _scrollToBottom();
           }
+          if (state.messages.isNotEmpty && state.showUnreadBanner) {
+            _scrollToUnreadMessages(state);
+          }
         },
         builder: (context, state) {
           return Column(
             children: [
-              _buildAppBar(context),
+              _buildAppBar(context, widget.userName, widget.userAvatar),
               if (!state.isSocketConnected &&
                   state.loadingState != ChatLoadingState.initial)
                 Container(
@@ -162,7 +196,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     ],
                   ),
                 ),
-
+              if (state.showUnreadBanner && state.unreadMessageCount > 0)
+                _buildUnreadBanner(state),
               // Chat content
               Expanded(
                 child: Column(
@@ -219,41 +254,48 @@ class _ChatScreenState extends State<ChatScreen> {
                             final reversedIndex =
                                 state.messages.length - 1 - index;
                             final message = state.messages[reversedIndex];
-                            return MessageBubble(
-                              key: ValueKey(message.id),
-                              isUserAdvisor: isAdvisor,
-                              userId: uid,
-                              message: message,
-                              advisorProfilePhoto: widget.advisorAvatar,
-                              advisorName:
-                                  state.advisorName ?? widget.advisorName,
-                              price: widget.price,
-                              duration: widget.duration,
-                              advisorId: widget.advisorId,
-                              onBookConsultation: (c) {
-                                BaseUtil.openBookAdvisorSheet(
-                                  advisorId: c.id,
-                                  advisorName: c.advisorName,
-                                  advisorImage: c.advisorProfileImage,
-                                  isEdit: false,
-                                );
-                                context.read<CartBloc>().add(
-                                      AddToCart(
-                                        advisor: Expert(
-                                          advisorId: c.id,
-                                          name: c.advisorName,
-                                          experience: '',
-                                          rating: 0,
-                                          expertise: '',
-                                          qualifications: '',
-                                          rate: 0,
-                                          rateNew: '',
-                                          image: c.advisorProfileImage,
-                                          isFree: false,
-                                        ),
-                                      ),
+                            final isFirstUnread =
+                                message.id == state.firstUnreadMessageId;
+                            return Column(
+                              children: [
+                                if (isFirstUnread) _buildUnreadDivider(),
+                                MessageBubble(
+                                  key: ValueKey(message.id),
+                                  isUserAdvisor: isAdvisor,
+                                  userId: uid,
+                                  message: message,
+                                  advisorProfilePhoto: widget.advisorAvatar,
+                                  advisorName:
+                                      state.advisorName ?? widget.advisorName,
+                                  price: widget.price,
+                                  duration: widget.duration,
+                                  advisorId: widget.advisorId,
+                                  onBookConsultation: (c) {
+                                    BaseUtil.openBookAdvisorSheet(
+                                      advisorId: c.id,
+                                      advisorName: c.advisorName,
+                                      advisorImage: c.advisorProfileImage,
+                                      isEdit: false,
                                     );
-                              },
+                                    context.read<CartBloc>().add(
+                                          AddToCart(
+                                            advisor: Expert(
+                                              advisorId: c.id,
+                                              name: c.advisorName,
+                                              experience: '',
+                                              rating: 0,
+                                              expertise: '',
+                                              qualifications: '',
+                                              rate: 0,
+                                              rateNew: '',
+                                              image: c.advisorProfileImage,
+                                              isFree: false,
+                                            ),
+                                          ),
+                                        );
+                                  },
+                                ),
+                              ],
                             );
                           },
                         ),
@@ -282,6 +324,66 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  Widget _buildUnreadBanner(ChatState state) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      color: const Color(0xFF01656B).withOpacity(0.3),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.keyboard_arrow_down,
+            color: UiConstants.teal3,
+            size: 16.sp,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            '${state.unreadMessageCount} unread message${state.unreadMessageCount > 1 ? 's' : ''}',
+            style: TextStyles.sourceSans.body4.colour(
+              UiConstants.teal3,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUnreadDivider() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8.h),
+      child: Row(
+        children: [
+          Expanded(
+            child: Divider(
+              color: const Color(0xFF01656B).withOpacity(0.6),
+              thickness: 1.h,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+            decoration: BoxDecoration(
+              color: const Color(0xFF01656B).withOpacity(0.3),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              'UNREAD MESSAGES',
+              style: TextStyles.sourceSans.body6.colour(
+                UiConstants.teal3,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Divider(
+              color: const Color(0xFF01656B).withOpacity(0.6),
+              thickness: 1.h,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   String _getConnectionStatusText(ChatLoadingState loadingState) {
     switch (loadingState) {
       case ChatLoadingState.creatingSession:
@@ -297,7 +399,11 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  Widget _buildAppBar(
+    BuildContext context,
+    String? userName,
+    String? userAvatar,
+  ) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 10.w,
@@ -336,7 +442,8 @@ class _ChatScreenState extends State<ChatScreen> {
               Expanded(
                 child: BlocBuilder<ChatBloc, ChatState>(
                   builder: (context, state) {
-                    final displayName = state.advisorName ?? widget.advisorName;
+                    final displayName =
+                        userName ?? state.advisorName ?? widget.advisorName;
                     return Row(
                       children: [
                         Container(
@@ -353,15 +460,27 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20.r),
-                            child: widget.advisorAvatar != null
-                                ? Image.network(
-                                    widget.advisorAvatar!,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return _buildDefaultAvatar();
-                                    },
-                                  )
-                                : _buildDefaultAvatar(),
+                            child: userName != null
+                                ? widget.userAvatar != null
+                                    ? Image.network(
+                                        widget.userAvatar!,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return _buildDefaultAvatar();
+                                        },
+                                      )
+                                    : _buildDefaultAvatar()
+                                : widget.advisorAvatar != null
+                                    ? Image.network(
+                                        widget.advisorAvatar!,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return _buildDefaultAvatar();
+                                        },
+                                      )
+                                    : _buildDefaultAvatar(),
                           ),
                         ),
                         SizedBox(width: 10.w),
@@ -402,37 +521,38 @@ class _ChatScreenState extends State<ChatScreen> {
                           ],
                         ),
                         const Spacer(),
-                        IconButton(
-                          onPressed: () {
-                            context.read<CartBloc>().add(
-                                  AddToCart(
-                                    advisor: Expert(
-                                      advisorId: widget.advisorId,
-                                      name: widget.advisorName ?? '',
-                                      experience: '',
-                                      rating: 0,
-                                      expertise: '',
-                                      qualifications: '',
-                                      rate: 0,
-                                      rateNew: '',
-                                      image: widget.advisorAvatar ?? '',
-                                      isFree: false,
+                        if (userName == null)
+                          IconButton(
+                            onPressed: () {
+                              context.read<CartBloc>().add(
+                                    AddToCart(
+                                      advisor: Expert(
+                                        advisorId: widget.advisorId,
+                                        name: widget.advisorName ?? '',
+                                        experience: '',
+                                        rating: 0,
+                                        expertise: '',
+                                        qualifications: '',
+                                        rate: 0,
+                                        rateNew: '',
+                                        image: widget.advisorAvatar ?? '',
+                                        isFree: false,
+                                      ),
                                     ),
-                                  ),
-                                );
-                            BaseUtil.openBookAdvisorSheet(
-                              advisorId: widget.advisorId,
-                              advisorName: widget.advisorName ?? '',
-                              advisorImage: widget.advisorAvatar ?? '',
-                              isEdit: false,
-                            );
-                          },
-                          icon: Icon(
-                            Icons.call_sharp,
-                            color: Colors.white,
-                            size: 18.sp,
+                                  );
+                              BaseUtil.openBookAdvisorSheet(
+                                advisorId: widget.advisorId,
+                                advisorName: widget.advisorName ?? '',
+                                advisorImage: widget.advisorAvatar ?? '',
+                                isEdit: false,
+                              );
+                            },
+                            icon: Icon(
+                              Icons.call_sharp,
+                              color: Colors.white,
+                              size: 18.sp,
+                            ),
                           ),
-                        ),
                       ],
                     );
                   },

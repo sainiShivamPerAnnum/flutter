@@ -84,6 +84,8 @@ class SocketConnected extends ChatEvent {}
 
 class SocketDisconnected extends ChatEvent {}
 
+class MarkAllAsRead extends ChatEvent {}
+
 class SocketError extends ChatEvent {
   final String error;
 

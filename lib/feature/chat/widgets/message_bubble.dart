@@ -42,7 +42,11 @@ class MessageBubble extends StatelessWidget {
     final isAdvisor = _isAdvisor();
 
     if (message.messageType == MessageType.consultation) {
-      return _buildConsultationMessage(context);
+      return Row(
+        children: [
+          _buildConsultationMessage(context),
+        ],
+      );
     }
 
     if (isSystem) {
@@ -64,11 +68,11 @@ class MessageBubble extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!alignRight) ...[
-            isAdvisor
-                ? _buildUserAvatar()
+            isUserAdvisor
+                ? _buildUserAvatar2()
                 : message.messageType == MessageType.ai
                     ? _buildAiAvatar()
-                    : _buildUserAvatar2(),
+                    : _buildUserAvatar(),
             SizedBox(width: 6.w),
           ],
           Flexible(
@@ -245,7 +249,7 @@ class MessageBubble extends StatelessWidget {
     );
 
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
+      margin: EdgeInsets.symmetric(horizontal: 16.w),
       child: ConsultationCard(
         offer: offer,
         onBook: onBookConsultation,

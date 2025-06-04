@@ -39,6 +39,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
     on<SocketDisconnected>(_onSocketDisconnected);
     on<SocketError>(_onSocketError);
     on<SessionReady>(_onSessionReady);
+    on<MarkAllAsRead>(_onMarkAllAsRead);
   }
 
   @override
@@ -102,6 +103,19 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
       debugPrint('Error saving chat state: $e');
       return null;
     }
+  }
+
+  Future<void> _onMarkAllAsRead(
+    MarkAllAsRead event,
+    Emitter<ChatState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        unreadMessageCount: 0,
+        firstUnreadMessageId: null,
+        showUnreadBanner: false,
+      ),
+    );
   }
 
   Future<void> _onInitializeChat(
@@ -406,11 +420,17 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
         Map<String, List<ChatMessage>>.from(state.sessionMessages);
     updatedSessionMessages[state.sessionId!] = updatedMessages;
 
+    final newUnreadCount = state.unreadMessageCount + 1;
+    final firstUnreadId = state.firstUnreadMessageId ?? event.message.id;
+
     emit(
       state.copyWith(
         currentSession:
             state.currentSession!.copyWith(messages: updatedMessages),
         sessionMessages: updatedSessionMessages,
+        unreadMessageCount: newUnreadCount,
+        firstUnreadMessageId: firstUnreadId,
+        showUnreadBanner: newUnreadCount > 0,
       ),
     );
   }

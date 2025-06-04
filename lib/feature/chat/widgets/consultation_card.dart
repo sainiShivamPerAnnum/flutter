@@ -33,6 +33,7 @@ class ConsultationCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
+            width: double.infinity,
             padding: EdgeInsets.all(10.r),
             decoration: BoxDecoration(
               color: UiConstants.teal4.withOpacity(0.25),
@@ -56,7 +57,7 @@ class ConsultationCard extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.h),
+            padding: EdgeInsets.symmetric(vertical: 5.h),
             child: const Divider(
               color: UiConstants.grey6,
             ),

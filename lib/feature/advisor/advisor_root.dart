@@ -205,6 +205,9 @@ class _AdvisorViewWrapperState extends State<AdvisorViewWrapper>
                                   : Padding(
                                       padding: EdgeInsets.only(top: 14.h),
                                       child: AnimatedList(
+                                        scrollDirection: Axis.vertical,
+                                        physics:
+                                            const AlwaysScrollableScrollPhysics(),
                                         key: _listKey,
                                         padding: EdgeInsets.symmetric(
                                           horizontal: 20.w,
@@ -224,7 +227,7 @@ class _AdvisorViewWrapperState extends State<AdvisorViewWrapper>
                                           );
                                         },
                                       ),
-                                    )
+                                    ),
                             };
                           },
                         ),
@@ -398,6 +401,8 @@ class _AdvisorViewWrapperState extends State<AdvisorViewWrapper>
                       price: data.metadata.price,
                       duration: data.metadata.duration,
                       sessionId: data.sessionId,
+                      userName: data.metadata.userName,
+                      userAvatar: data.metadata.userImage,
                     ),
                   ),
                 );

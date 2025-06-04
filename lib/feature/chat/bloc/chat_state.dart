@@ -24,6 +24,9 @@ class ChatState extends Equatable {
   final String? advisorId;
   final ChatStatus chatStatus;
   final String? advisorName;
+  final int unreadMessageCount;
+  final String? firstUnreadMessageId;
+  final bool showUnreadBanner;
 
   const ChatState({
     this.loadingState = ChatLoadingState.initial,
@@ -37,6 +40,9 @@ class ChatState extends Equatable {
     this.advisorId,
     this.chatStatus = ChatStatus.ai,
     this.advisorName,
+    this.unreadMessageCount = 0,
+    this.firstUnreadMessageId,
+    this.showUnreadBanner = false,
   });
 
   ChatState copyWith({
@@ -51,6 +57,9 @@ class ChatState extends Equatable {
     String? advisorId,
     ChatStatus? chatStatus,
     String? advisorName,
+    int? unreadMessageCount,
+    String? firstUnreadMessageId,
+    bool? showUnreadBanner,
   }) {
     return ChatState(
       loadingState: loadingState ?? this.loadingState,
@@ -64,6 +73,9 @@ class ChatState extends Equatable {
       advisorId: advisorId ?? this.advisorId,
       chatStatus: chatStatus ?? this.chatStatus,
       advisorName: advisorName ?? this.advisorName,
+      unreadMessageCount: unreadMessageCount ?? this.unreadMessageCount,
+      firstUnreadMessageId: firstUnreadMessageId ?? this.firstUnreadMessageId,
+      showUnreadBanner: showUnreadBanner ?? this.showUnreadBanner,
     );
   }
 
@@ -85,9 +97,11 @@ class ChatState extends Equatable {
         advisorId,
         chatStatus,
         advisorName,
+        unreadMessageCount,
+        firstUnreadMessageId,
+        showUnreadBanner,
       ];
 
-  // Convenience getters
   List<ChatMessage> get messages => currentSession?.messages ?? [];
   bool get isAiMode => chatStatus == ChatStatus.ai;
   bool get isHumanMode => chatStatus == ChatStatus.human;
@@ -95,8 +109,8 @@ class ChatState extends Equatable {
   bool get hasSession => currentSession != null;
   String? get sessionId => currentSession?.sessionId;
   ChatSession? get session => currentSession?.session;
+  bool get hasUnreadMessages => unreadMessageCount > 0;
 
-  /// Check if chat is ready for messaging
   bool get isReadyForMessaging =>
       loadingState == ChatLoadingState.connected &&
       isSocketConnected &&
