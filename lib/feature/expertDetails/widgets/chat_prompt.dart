@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class ChatNowWidget extends StatelessWidget {
   final String? advisorName;
   final String? advisorAvatar;
+  final List<String>? iCanHelpIn;
   final VoidCallback? onChatNowTap;
 
   const ChatNowWidget({
@@ -13,6 +14,7 @@ class ChatNowWidget extends StatelessWidget {
     this.advisorName,
     this.advisorAvatar,
     this.onChatNowTap,
+    this.iCanHelpIn,
   });
 
   @override
@@ -68,19 +70,25 @@ class ChatNowWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildHelpItem('Personal finance management'),
-                SizedBox(
-                  height: 2.h,
-                ),
-                _buildHelpItem('Capital market investments'),
-                SizedBox(
-                  height: 2.h,
-                ),
-                _buildHelpItem('Achieving financial growth'),
-                SizedBox(
-                  height: 2.h,
-                ),
-                _buildHelpItem('Maximize growth, reduce stress'),
+                ...(iCanHelpIn != null && iCanHelpIn!.isNotEmpty
+                    ? iCanHelpIn!
+                        .map(
+                          (s) => [
+                            _buildHelpItem(s),
+                            SizedBox(height: 2.h),
+                          ],
+                        )
+                        .expand((element) => element)
+                        .toList()
+                    : [
+                        _buildHelpItem('Personal finance management'),
+                        SizedBox(height: 2.h),
+                        _buildHelpItem('Capital market investments'),
+                        SizedBox(height: 2.h),
+                        _buildHelpItem('Achieving financial growth'),
+                        SizedBox(height: 2.h),
+                        _buildHelpItem('Maximize growth, reduce stress'),
+                      ]),
               ],
             ),
           ),

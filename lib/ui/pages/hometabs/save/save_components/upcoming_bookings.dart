@@ -6,7 +6,7 @@ import 'package:felloapp/core/model/bookings/upcoming_booking.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/feature/expert/widgets/expert_card_v2.dart';
+import 'package:felloapp/feature/expert/widgets/expert_card.dart';
 import 'package:felloapp/feature/expert/widgets/experts_card_shimmer_v2.dart';
 import 'package:felloapp/feature/expertDetails/expert_profile.dart';
 import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
@@ -24,7 +24,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tuple/tuple.dart';
 
 class UpcomingBookingsComponent extends StatefulWidget {
-  const UpcomingBookingsComponent({Key? key}) : super(key: key);
+  const UpcomingBookingsComponent({super.key});
 
   @override
   UpcomingBookingsComponentState createState() =>
@@ -41,8 +41,7 @@ class UpcomingBookingsComponentState extends State<UpcomingBookingsComponent> {
     final analytics = locator<AnalyticsService>();
     return Padding(
       padding: EdgeInsets.only(top: 20.h, bottom: 24.h),
-      child: Selector<SaveViewModel,
-          Tuple3<List<Booking>, List<UserInterestedAdvisor>, bool>>(
+      child: Selector<SaveViewModel, Tuple3<List<Booking>, List<Expert>, bool>>(
         selector: (_, model) => Tuple3(
           model.upcomingBookings,
           model.userInterestedAdvisors,
@@ -101,7 +100,7 @@ class UpcomingBookingsComponentState extends State<UpcomingBookingsComponent> {
                     Padding(
                       padding: EdgeInsets.only(left: 20.w, top: 24.h),
                       child: SizedBox(
-                        height: 320.h,
+                        height: 250.h,
                         child: AnimatedSwitcher(
                           duration: const Duration(milliseconds: 500),
                           child: model.item3
@@ -114,7 +113,7 @@ class UpcomingBookingsComponentState extends State<UpcomingBookingsComponent> {
                                         bottom: SizeConfig.padding16,
                                         right: SizeConfig.padding18,
                                       ),
-                                      child: ExpertCardV2(
+                                      child: ExpertCard(
                                         isFree: false,
                                         expert: model.item2[index],
                                         onBookCall: () {

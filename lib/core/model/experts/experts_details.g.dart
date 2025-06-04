@@ -26,7 +26,16 @@ ExpertDetails _$ExpertDetailsFromJson(Map<String, dynamic> json) =>
           .toList(),
       ratingInfo:
           RatingInfo.fromJson(json['ratingInfo'] as Map<String, dynamic>),
+      rateNew: json['rateNew'] as String,
       isFollowed: json['isFollowed'] as bool? ?? false,
+      qualifications: (json['qualifications'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      expertiseTags: (json['expertiseTags'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       shorts: (json['shorts'] as List<dynamic>?)
               ?.map((e) => VideoData.fromJson(e as Map<String, dynamic>))
               .toList() ??

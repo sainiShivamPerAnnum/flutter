@@ -151,7 +151,7 @@ class ExpertCard extends StatelessWidget {
                             ),
                             SizedBox(width: SizeConfig.padding4),
                             Text(
-                              "32 sessions",
+                              '${expert.sessionCount} sessions',
                               style: TextStyles.sourceSansM.body4.colour(
                                 UiConstants.kTextColor,
                               ),

@@ -96,7 +96,7 @@ class __ChatHomeViewState extends State<_ChatHomeView>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Chat',
+                            'Chats',
                             style: TextStyles.sourceSansSB.body1,
                           ),
                           Text(

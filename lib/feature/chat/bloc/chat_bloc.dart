@@ -219,6 +219,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
         'sessionId': state.sessionId,
         'messageId': event.messageId,
         'isAdvisor': isAdvisor,
+        'advisorId': advisorId,
       });
     } catch (e) {
       emit(

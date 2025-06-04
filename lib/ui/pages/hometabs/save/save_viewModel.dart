@@ -91,7 +91,7 @@ class SaveViewModel extends ChangeNotifier {
   List<Booking> _upcomingBookings = [];
   List<Booking> _pastBookings = [];
   ExpertsHome? _topExperts;
-  List<UserInterestedAdvisor> _userInterestedAdvisors = [];
+  List<Expert> _userInterestedAdvisors = [];
   LiveHome? _liveData;
   bool _freeCallAvailable = false;
   List<BlogPostModelByCategory>? _blogPostsByCategory;
@@ -153,8 +153,7 @@ class SaveViewModel extends ChangeNotifier {
 
   List<Booking> get upcomingBookings => _upcomingBookings;
   List<Booking> get pastBookings => _pastBookings;
-  List<UserInterestedAdvisor> get userInterestedAdvisors =>
-      _userInterestedAdvisors;
+  List<Expert> get userInterestedAdvisors => _userInterestedAdvisors;
   ExpertsHome? get topExperts => _topExperts;
   LiveHome? get liveData => _liveData;
   List<TestimonialsModel> get testimonials => _testimonials;
@@ -212,7 +211,7 @@ class SaveViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  set userInterestedAdvisors(List<UserInterestedAdvisor> value) {
+  set userInterestedAdvisors(List<Expert> value) {
     _userInterestedAdvisors = value;
     notifyListeners();
   }

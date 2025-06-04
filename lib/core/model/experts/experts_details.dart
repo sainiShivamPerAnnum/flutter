@@ -22,6 +22,9 @@ class ExpertDetails {
   final RatingInfo ratingInfo;
   final bool isFollowed;
   final List<VideoData> shorts;
+  final List<String> qualifications;
+  final List<String>? expertiseTags;
+  final String rateNew;
 
   ExpertDetails({
     required this.name,
@@ -35,7 +38,10 @@ class ExpertDetails {
     required this.licenses,
     required this.social,
     required this.ratingInfo,
+    required this.rateNew,
     this.isFollowed = false,
+    this.qualifications = const [],
+    this.expertiseTags = const [],
     this.shorts = const [],
   });
   ExpertDetails copyWith({
@@ -52,6 +58,9 @@ class ExpertDetails {
     RatingInfo? ratingInfo,
     bool? isFollowed,
     List<VideoData>? shorts,
+    List<String>? qualifications,
+    List<String>? expertiseTags,
+    String? rateNew,
   }) {
     return ExpertDetails(
       name: name ?? this.name,
@@ -67,6 +76,9 @@ class ExpertDetails {
       ratingInfo: ratingInfo ?? this.ratingInfo,
       isFollowed: isFollowed ?? this.isFollowed,
       shorts: shorts ?? this.shorts,
+      qualifications: qualifications ?? this.qualifications,
+      expertiseTags: expertiseTags ?? this.expertiseTags,
+      rateNew: rateNew ?? this.rateNew,
     );
   }
 

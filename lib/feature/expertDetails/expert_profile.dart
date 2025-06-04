@@ -146,73 +146,73 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
           return BaseScaffold(
             showBackgroundGrid: false,
             backgroundColor: UiConstants.bg,
-            floatingActionButtonAnimator: EaseInFloatingActionButtonAnimator(),
-            floatingActionButton: GestureDetector(
-              onTap: () {
-                BaseUtil.openBookAdvisorSheet(
-                  advisorId: widget.advisorID,
-                  advisorName: state.expertDetails?.name ?? '',
-                  advisorImage: state.expertDetails?.image ?? '',
-                  isEdit: false,
-                );
-                context.read<CartBloc>().add(
-                      AddToCart(
-                        advisor: Expert(
-                          advisorId: widget.advisorID,
-                          name: state.expertDetails!.name,
-                          experience: state.expertDetails!.experience,
-                          rating: state.expertDetails!.rating,
-                          expertise: '',
-                          qualifications: '',
-                          rate: 0,
-                          rateNew: '',
-                          image: state.expertDetails!.image,
-                          isFree: false,
-                        ),
-                      ),
-                    );
-                _analyticsService.track(
-                  eventName: AnalyticsEvents.bookQuick,
-                  properties: {
-                    "Expert ID": widget.advisorID,
-                    "Expert Name": state.expertDetails?.name ?? '',
-                  },
-                );
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(5.r),
-                  ),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding12,
-                    vertical: SizeConfig.padding12,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      AppImage(
-                        Assets.book_call,
-                        height: SizeConfig.body3,
-                        color: UiConstants.kTextColor4,
-                      ),
-                      SizedBox(
-                        width: SizeConfig.padding10,
-                      ),
-                      Text(
-                        'Book a Slot',
-                        style: TextStyles.sourceSansSB.body3.colour(
-                          UiConstants.kTextColor4,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            // floatingActionButtonAnimator: EaseInFloatingActionButtonAnimator(),
+            // floatingActionButton: GestureDetector(
+            //   onTap: () {
+            //     BaseUtil.openBookAdvisorSheet(
+            //       advisorId: widget.advisorID,
+            //       advisorName: state.expertDetails?.name ?? '',
+            //       advisorImage: state.expertDetails?.image ?? '',
+            //       isEdit: false,
+            //     );
+            //     context.read<CartBloc>().add(
+            //           AddToCart(
+            //             advisor: Expert(
+            //               advisorId: widget.advisorID,
+            //               name: state.expertDetails!.name,
+            //               experience: state.expertDetails!.experience,
+            //               rating: state.expertDetails!.rating,
+            //               expertise: '',
+            //               qualifications: '',
+            //               rate: 0,
+            //               rateNew: '',
+            //               image: state.expertDetails!.image,
+            //               isFree: false,
+            //             ),
+            //           ),
+            //         );
+            //     _analyticsService.track(
+            //       eventName: AnalyticsEvents.bookQuick,
+            //       properties: {
+            //         "Expert ID": widget.advisorID,
+            //         "Expert Name": state.expertDetails?.name ?? '',
+            //       },
+            //     );
+            //   },
+            //   child: Container(
+            //     decoration: BoxDecoration(
+            //       color: Colors.white,
+            //       borderRadius: BorderRadius.all(
+            //         Radius.circular(5.r),
+            //       ),
+            //     ),
+            //     child: Padding(
+            //       padding: EdgeInsets.symmetric(
+            //         horizontal: SizeConfig.padding12,
+            //         vertical: SizeConfig.padding12,
+            //       ),
+            //       child: Row(
+            //         mainAxisSize: MainAxisSize.min,
+            //         children: [
+            //           AppImage(
+            //             Assets.book_call,
+            //             height: SizeConfig.body3,
+            //             color: UiConstants.kTextColor4,
+            //           ),
+            //           SizedBox(
+            //             width: SizeConfig.padding10,
+            //           ),
+            //           Text(
+            //             'Book a Slot',
+            //             style: TextStyles.sourceSansSB.body3.colour(
+            //               UiConstants.kTextColor4,
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
             appBar: FAppBar(
               backgroundColor: Colors.transparent,
               centerTitle: true,
@@ -348,7 +348,7 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                             height: 6.h,
                           ),
                           Text(
-                            expertDetails.experience,
+                            expertDetails.qualifications.join(', '),
                             style: TextStyles.sourceSansSB.body4.colour(
                               UiConstants.kTextColor.withOpacity(.7),
                             ),
@@ -363,8 +363,7 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                               Column(
                                 children: [
                                   Text(
-                                    expertDetails
-                                        .experience, // Display experience
+                                    expertDetails.experience,
                                     style: TextStyles.sourceSansSB.body2.colour(
                                       UiConstants.kTextColor,
                                     ),
@@ -573,13 +572,12 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                         bottom: TabBar(
                           controller: _tabController,
                           indicatorPadding: EdgeInsets.zero,
-                          indicatorSize: TabBarIndicatorSize.tab,
                           dividerColor: UiConstants.grey4,
+                          indicatorSize: TabBarIndicatorSize.tab,
                           indicatorWeight: 1.5,
                           indicatorColor: UiConstants.kTextColor,
                           labelColor: UiConstants.kTextColor,
-                          tabAlignment: TabAlignment.start,
-                          isScrollable: true,
+                          isScrollable: false,
                           unselectedLabelColor:
                               UiConstants.kTextColor.withOpacity(.6),
                           labelStyle: TextStyles.sourceSansSB.body3,
@@ -765,6 +763,8 @@ Widget _buildInfoTab(
       ),
       SliverToBoxAdapter(
         child: ChatNowWidget(
+          advisorName: expertDetails.name,
+          iCanHelpIn: expertDetails.expertiseTags,
           advisorAvatar: expertDetails.image,
           onChatNowTap: () {
             AppState.delegate!.appState.currentAction = PageAction(
@@ -777,7 +777,7 @@ Widget _buildInfoTab(
                   advisorAvatar: expertDetails.image,
                   advisorName: expertDetails.name,
                   sessionId: null,
-                  // price: expertDetails.,
+                  price: expertDetails.rateNew,
                 ),
               ),
             );
@@ -791,7 +791,7 @@ Widget _buildInfoTab(
       ),
       SliverToBoxAdapter(
         child: BookConsultationWidget(
-          price: expertDetails.name,
+          price: expertDetails.rateNew,
           onBookCallTap: () {
             final analyticsService = locator<AnalyticsService>();
             BaseUtil.openBookAdvisorSheet(
