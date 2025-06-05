@@ -40,6 +40,7 @@ ExpertDetails _$ExpertDetailsFromJson(Map<String, dynamic> json) =>
               ?.map((e) => VideoData.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      advisorProf: json['advisorProf'] as String? ?? '',
     );
 
 QuickAction _$QuickActionFromJson(Map<String, dynamic> json) => QuickAction(

@@ -791,8 +791,7 @@ Widget _buildInfoTab(
       ),
       SliverToBoxAdapter(
         child: BookConsultationWidget(
-          subtitle:
-              'Master investment strategies in ${expertDetails.expertiseTags}',
+          subtitle: expertDetails.advisorProf,
           price: expertDetails.rateNew,
           onBookCallTap: () {
             final analyticsService = locator<AnalyticsService>();

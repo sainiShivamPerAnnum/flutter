@@ -10,7 +10,6 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
-import 'package:felloapp/feature/chat/bloc/chat_bloc.dart';
 import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
 import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';

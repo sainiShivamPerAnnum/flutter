@@ -25,25 +25,26 @@ class ExpertDetails {
   final List<String> qualifications;
   final List<String>? expertiseTags;
   final String rateNew;
+  final String advisorProf;
 
-  ExpertDetails({
-    required this.name,
-    required this.image,
-    required this.description,
-    required this.isLive,
-    required this.experience,
-    required this.sessionCount,
-    required this.rating,
-    required this.QuickActions,
-    required this.licenses,
-    required this.social,
-    required this.ratingInfo,
-    required this.rateNew,
-    this.isFollowed = false,
-    this.qualifications = const [],
-    this.expertiseTags = const [],
-    this.shorts = const [],
-  });
+  ExpertDetails(
+      {required this.name,
+      required this.image,
+      required this.description,
+      required this.isLive,
+      required this.experience,
+      required this.sessionCount,
+      required this.rating,
+      required this.QuickActions,
+      required this.licenses,
+      required this.social,
+      required this.ratingInfo,
+      required this.rateNew,
+      this.isFollowed = false,
+      this.qualifications = const [],
+      this.expertiseTags = const [],
+      this.shorts = const [],
+      this.advisorProf = ''});
   ExpertDetails copyWith({
     String? name,
     String? image,
@@ -61,6 +62,7 @@ class ExpertDetails {
     List<String>? qualifications,
     List<String>? expertiseTags,
     String? rateNew,
+    String? advisorProf,
   }) {
     return ExpertDetails(
       name: name ?? this.name,
@@ -79,6 +81,7 @@ class ExpertDetails {
       qualifications: qualifications ?? this.qualifications,
       expertiseTags: expertiseTags ?? this.expertiseTags,
       rateNew: rateNew ?? this.rateNew,
+      advisorProf: advisorProf ?? this.advisorProf,
     );
   }
 
