@@ -135,6 +135,7 @@ class _ChatInputState extends State<ChatInput> {
                     SizedBox(width: 16.w),
                     Expanded(
                       child: TextField(
+                        autofocus: false,
                         controller: _controller,
                         focusNode: _focusNode,
                         enabled: widget.isEnabled && !widget.isLoading,

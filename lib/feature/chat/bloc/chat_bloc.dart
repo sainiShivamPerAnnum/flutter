@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:felloapp/core/model/chat/chat_models.dart';
 import 'package:felloapp/core/repository/chat_repo.dart';
+import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -112,7 +113,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
     emit(
       state.copyWith(
         unreadMessageCount: 0,
-        firstUnreadMessageId: null,
+        firstUnreadMessageId: 'null',
         showUnreadBanner: false,
       ),
     );
@@ -356,7 +357,6 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
     try {
       final user = FirebaseAuth.instance.currentUser;
 
-      //need to change this for the advisor
       final message = ChatMessage(
         id: const Uuid().v4(),
         sessionId: state.sessionId!,
@@ -379,6 +379,9 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
               state.currentSession!.copyWith(messages: updatedMessages),
           sessionMessages: updatedSessionMessages,
           isSendingMessage: false,
+          unreadMessageCount: 0,
+          firstUnreadMessageId: 'null',
+          showUnreadBanner: false,
         ),
       );
 
@@ -397,6 +400,9 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
           });
         }
       }
+      unawaited(
+        locator<FcmListener>().clearChatNotifications(),
+      );
     } catch (e) {
       emit(
         state.copyWith(
@@ -420,9 +426,23 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
         Map<String, List<ChatMessage>>.from(state.sessionMessages);
     updatedSessionMessages[state.sessionId!] = updatedMessages;
 
-    final newUnreadCount = state.unreadMessageCount + 1;
-    final firstUnreadId = state.firstUnreadMessageId ?? event.message.id;
+    final isFromCurrentUser = event.message.senderId == userId;
+    int newUnreadCount = state.unreadMessageCount;
+    String? firstUnreadId = state.firstUnreadMessageId;
+    bool showBanner = state.showUnreadBanner;
+    if (!isFromCurrentUser) {
+      newUnreadCount = state.unreadMessageCount + 1;
+      firstUnreadId = state.firstUnreadMessageId != 'null'
+          ? state.firstUnreadMessageId
+          : event.message.id;
+      showBanner = newUnreadCount > 0;
+    }
 
+    if (isFromCurrentUser) {
+      unawaited(
+        locator<FcmListener>().clearChatNotifications(),
+      );
+    }
     emit(
       state.copyWith(
         currentSession:
@@ -430,7 +450,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
         sessionMessages: updatedSessionMessages,
         unreadMessageCount: newUnreadCount,
         firstUnreadMessageId: firstUnreadId,
-        showUnreadBanner: newUnreadCount > 0,
+        showUnreadBanner: showBanner,
       ),
     );
   }

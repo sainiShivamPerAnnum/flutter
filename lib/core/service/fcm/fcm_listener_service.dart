@@ -17,7 +17,9 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FcmListener {
   final BaseUtil _baseUtil = locator<BaseUtil>();
@@ -30,6 +32,11 @@ class FcmListener {
   FirebaseMessaging? _fcm;
   bool isTambolaNotificationLoading = false;
 
+  final FlutterLocalNotificationsPlugin _localNotifications =
+      FlutterLocalNotificationsPlugin();
+  String? _currentChatSessionId;
+  bool _isAppInForeground = true;
+
   FcmListener(this._handler);
 
   Future<FirebaseMessaging?> setupFcm() async {
@@ -39,6 +46,7 @@ class FcmListener {
           ? logger!.d("Fcm instance created")
           : logger!.d("Fcm instance not created");
 
+      await _initializeLocalNotifications();
       String? idToken = await _fcm!.getToken();
       await _saveDeviceToken(idToken);
 
@@ -49,13 +57,20 @@ class FcmListener {
         await _saveDeviceToken(token);
       });
 
-      unawaited(_fcm!.getInitialMessage().then((message) {
-        if (message != null) {
-          logger!.d("Opened app with notification data: ${message.data}");
-          // _handler.handleMessage(message.data, MsgSource.Terminated);
-          AppState.startupNotifMessage = message.data;
-        }
-      }));
+      unawaited(
+        _fcm!.getInitialMessage().then(
+          (message) {
+            if (message != null) {
+              logger!.d("Opened app with notification data: ${message.data}");
+              if (message.data['type'] == 'chat_message') {
+                _handleChatNotificationTap(message.data);
+              } else {
+                AppState.startupNotifMessage = message.data;
+              }
+            }
+          },
+        ),
+      );
 
       final data = PreferenceHelper.getString("fcmData");
 
@@ -66,6 +81,10 @@ class FcmListener {
 
       FirebaseMessaging.onMessage.listen((message) async {
         RemoteNotification? notification = message.notification;
+        if (message.data['type'] == 'chat_message') {
+          await _handleChatMessage(message);
+          return;
+        }
         if (message.data.isNotEmpty) {
           await _handler.handleMessage(message.data, MsgSource.Foreground);
         } else if (notification != null) {
@@ -78,8 +97,11 @@ class FcmListener {
 
       FirebaseMessaging.onMessageOpenedApp.listen((message) {
         logger!.i('Opened app from background state with message: $message');
-
-        _handler.handleMessage(message.data, MsgSource.Background);
+        if (message.data['type'] == 'chat_message') {
+          _handleChatNotificationTap(message.data);
+        } else {
+          _handler.handleMessage(message.data, MsgSource.Background);
+        }
       });
 
       unawaited(_fcm!.setForegroundNotificationPresentationOptions(
@@ -91,8 +113,9 @@ class FcmListener {
 
       ///setup android notification channels
       if (Platform.isAndroid) {
-        _androidNativeSetup();
+        await _androidNativeSetup();
       }
+      WidgetsBinding.instance.addObserver(_AppLifecycleObserver(this));
     } catch (e) {
       logger!.e(e.toString());
       await _internalOpsService.logFailure(
@@ -103,6 +126,133 @@ class FcmListener {
     }
 
     return _fcm;
+  }
+
+  Future<void> _initializeLocalNotifications() async {
+    const androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const iosSettings = DarwinInitializationSettings(
+      requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false,
+    );
+
+    const settings = InitializationSettings(
+      android: androidSettings,
+      iOS: iosSettings,
+    );
+
+    await _localNotifications.initialize(
+      settings,
+      onDidReceiveNotificationResponse: (response) {
+        final sessionId = response.payload;
+        if (sessionId != null) {
+          _navigateToChat(sessionId, '');
+        }
+      },
+    );
+  }
+
+  Future<void> _handleChatMessage(RemoteMessage message) async {
+    logger!.d('Received chat message: ${message.data}');
+
+    // Check if we should suppress the notification
+    if (_shouldSuppressChatNotification(message)) {
+      logger!.d('Suppressing chat notification - user is in same chat');
+      return;
+    }
+
+    // Show local notification for chat
+    await _showChatNotification(message);
+  }
+
+  bool _shouldSuppressChatNotification(RemoteMessage message) {
+    final messageData = message.data;
+    final sessionId = messageData['sessionId'];
+    final senderId = messageData['senderId'];
+    final currentUserId = _userService.baseUser?.uid;
+
+    // Don't suppress if:
+    // 1. Message is from current user (they sent it from another device)
+    if (senderId == currentUserId) return false;
+
+    // Suppress if:
+    // 1. App is in foreground AND user is in the same chat session
+    if (_isAppInForeground && _currentChatSessionId == sessionId) return true;
+
+    return false;
+  }
+
+  Future<void> _showChatNotification(RemoteMessage message) async {
+    final notification = message.notification;
+    final data = message.data;
+
+    if (notification == null) return;
+
+    const androidDetails = AndroidNotificationDetails(
+      'chat_messages',
+      'Chat Messages',
+      channelDescription: 'New chat messages from advisors',
+      importance: Importance.high,
+      priority: Priority.high,
+      showWhen: true,
+      icon: '@mipmap/ic_launcher',
+      color: Color(0xFF01656B),
+      category: AndroidNotificationCategory.message,
+      groupKey: 'chat_messages',
+    );
+
+    const iosDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+      categoryIdentifier: 'chat_message',
+    );
+
+    const details = NotificationDetails(
+      android: androidDetails,
+      iOS: iosDetails,
+    );
+
+    await _localNotifications.show(
+      data['messageId'].hashCode, // Use message ID as notification ID
+      notification.title,
+      notification.body,
+      details,
+      payload: data['sessionId'], // Pass session ID as payload
+    );
+  }
+
+  void _handleChatNotificationTap(Map<String, dynamic> data) {
+    final sessionId = data['sessionId'];
+    final advisorId = data['advisorId'];
+    if (sessionId != null && advisorId != null) {
+      _navigateToChat(sessionId, advisorId);
+    }
+  }
+
+  void _navigateToChat(String sessionId, String advisorId) {
+    AppState.delegate?.parseRoute(
+      Uri.parse('/chat?sessionId=$sessionId&advisorId=$advisorId'),
+    );
+  }
+
+  // Call this when user enters a chat screen
+  void setCurrentChatSession(String? sessionId) {
+    _currentChatSessionId = sessionId;
+    logger!.d('Current chat session: $_currentChatSessionId');
+  }
+
+  // Call this when app comes to foreground/background
+  void setAppForegroundState(bool isInForeground) {
+    _isAppInForeground = isInForeground;
+    logger!.d('App foreground state: $_isAppInForeground');
+  }
+
+  // Call this to clear chat notifications
+  Future<void> clearChatNotifications() async {
+    // Cancel all chat notifications (you might want to be more specific)
+    await _localNotifications.cancelAll();
   }
 
   Future addSubscription(FcmTopic subId, {String suffix = ''}) async {
@@ -156,7 +306,7 @@ class FcmListener {
     await addSubscription(FcmTopic.PROMOTION);
   }
 
-  _androidNativeSetup() async {
+  Future<void> _androidNativeSetup() async {
     const MethodChannel channel =
         MethodChannel('fello.in/dev/notifications/channel/tambola');
     Map<String, String> tambolaChannelMap = {
@@ -171,6 +321,23 @@ class FcmListener {
       logger!.d('Tambola Notification channel created successfully');
     }).catchError((e) {
       logger!.d('Tambola notification channel setup failed');
+    });
+
+    // Create chat notifications channel
+    const MethodChannel chatChannel =
+        MethodChannel('fello.in/dev/notifications/channel/chat');
+    Map<String, String> chatChannelMap = {
+      "id": "chat_messages",
+      "name": "Chat Messages",
+      "description": "New chat messages from advisors",
+    };
+
+    await chatChannel
+        .invokeMethod('createNotificationChannel', chatChannelMap)
+        .then((value) {
+      logger!.d('Chat Notification channel created successfully');
+    }).catchError((e) {
+      logger!.d('Chat notification channel setup failed');
     });
   }
 
@@ -292,5 +459,27 @@ class FcmListener {
         updatedSegments,
       ),
     );
+  }
+}
+
+class _AppLifecycleObserver extends WidgetsBindingObserver {
+  final FcmListener _fcmListener;
+
+  _AppLifecycleObserver(this._fcmListener);
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        _fcmListener.setAppForegroundState(true);
+        break;
+      case AppLifecycleState.paused:
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.detached:
+        _fcmListener.setAppForegroundState(false);
+        break;
+      case AppLifecycleState.hidden:
+        break;
+    }
   }
 }

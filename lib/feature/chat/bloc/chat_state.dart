@@ -103,9 +103,6 @@ class ChatState extends Equatable {
       ];
 
   List<ChatMessage> get messages => currentSession?.messages ?? [];
-  bool get isAiMode => chatStatus == ChatStatus.ai;
-  bool get isHumanMode => chatStatus == ChatStatus.human;
-  bool get isChatEnded => chatStatus == ChatStatus.ended;
   bool get hasSession => currentSession != null;
   String? get sessionId => currentSession?.sessionId;
   ChatSession? get session => currentSession?.session;

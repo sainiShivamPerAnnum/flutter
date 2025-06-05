@@ -1,17 +1,25 @@
+import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/chat/chat_models.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
+import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/chat/bloc/chat_bloc.dart';
 import 'package:felloapp/feature/chat/bloc/chat_event.dart';
 import 'package:felloapp/feature/chat/bloc/chat_state.dart';
+import 'package:felloapp/feature/chat/widgets/animated_divider.dart';
 import 'package:felloapp/feature/chat/widgets/chat_input.dart';
+import 'package:felloapp/feature/chat/widgets/chat_shimmer.dart';
 import 'package:felloapp/feature/chat/widgets/chat_welcome.dart';
 import 'package:felloapp/feature/chat/widgets/message_bubble.dart';
 import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
+import 'package:felloapp/feature/expert/widgets/scroll_to_index.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -47,11 +55,15 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final ScrollController _scrollController = ScrollController();
+  final AutoScrollController _scrollController = AutoScrollController();
+  final FcmListener _fcmListener = locator<FcmListener>();
   bool _isNearBottom = true;
   final isAdvisor = locator<UserService>().baseUser!.isAdvisor ?? false;
   final String? uid = locator<UserService>().baseUser!.uid;
-  bool _hasScrolledToUnread = false;
+  bool _isUserScrolling = false;
+  double? _lastScrollOffset;
+  Timer? _scrollDebounceTimer;
+  String? _lastProcessedUnreadId;
 
   @override
   void initState() {
@@ -65,51 +77,60 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           );
     });
+    _fcmListener.setCurrentChatSession(widget.sessionId);
   }
 
   @override
   void dispose() {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
+    _fcmListener.setCurrentChatSession(null);
+    _scrollDebounceTimer?.cancel();
     super.dispose();
   }
 
   void _onScroll() {
     if (_scrollController.hasClients) {
-      final isNearBottom = _scrollController.offset <= 100;
-
+      final isNearBottom = _scrollController.offset <= 10;
+      _isUserScrolling = !isNearBottom;
       if (_isNearBottom != isNearBottom) {
         setState(() {
           _isNearBottom = isNearBottom;
         });
       }
       if (isNearBottom) {
-        final state = context.read<ChatBloc>().state;
-        if (state.unreadMessageCount > 0) {
-          context.read<ChatBloc>().add(MarkAllAsRead());
-        }
+        context.read<ChatBloc>().add(MarkAllAsRead());
       }
     }
   }
 
   void _scrollToUnreadMessages(ChatState state) {
-    if (state.firstUnreadMessageId != null && !_hasScrolledToUnread) {
-      final unreadIndex = state.messages.indexWhere(
-        (msg) => msg.id == state.firstUnreadMessageId,
-      );
-
-      if (unreadIndex != -1) {
-        final reversedIndex = state.messages.length - 1 - unreadIndex;
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _scrollController.animateTo(
-            reversedIndex * 80.0,
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeOut,
-          );
-        });
-        _hasScrolledToUnread = true;
-      }
+    if (state.firstUnreadMessageId == _lastProcessedUnreadId) {
+      return;
     }
+    _scrollDebounceTimer?.cancel();
+    _scrollDebounceTimer = Timer(const Duration(milliseconds: 200), () {
+      if (state.firstUnreadMessageId != null &&
+          !_isUserScrolling &&
+          _isNearBottom) {
+        final unreadIndex = state.messages.indexWhere(
+          (msg) => msg.id == state.firstUnreadMessageId,
+        );
+        if (unreadIndex != -1) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (_scrollController.hasClients) {
+              final reversedIndex = state.messages.length - 1 - unreadIndex;
+              _scrollController.scrollToIndex(
+                reversedIndex,
+                preferPosition: AutoScrollPosition.middle,
+                duration: const Duration(milliseconds: 50),
+              );
+            }
+          });
+        }
+      }
+      _lastProcessedUnreadId = state.firstUnreadMessageId;
+    });
   }
 
   void _scrollToBottom() {
@@ -153,10 +174,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             );
           }
-          if (state.messages.isNotEmpty && _isNearBottom) {
-            _scrollToBottom();
-          }
-          if (state.messages.isNotEmpty && state.showUnreadBanner) {
+          if (state.messages.isNotEmpty) {
             _scrollToUnreadMessages(state);
           }
         },
@@ -210,15 +228,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              FullScreenLoader(),
-                              SizedBox(height: 16),
-                              Text(
-                                'Setting up your chat...',
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 14,
-                                ),
-                              ),
+                              ChatShimmerLoader(),
                             ],
                           ),
                         ),
@@ -237,82 +247,111 @@ class _ChatScreenState extends State<ChatScreen> {
                             );
                           },
                           onWithdrawalSupportTap: () {
-                            AppState.delegate!
-                                .parseRoute(Uri.parse('/support'));
+                            Haptic.vibrate();
+                            AppState.delegate!.appState.currentAction =
+                                PageAction(
+                              state: PageState.addPage,
+                              page: FreshDeskHelpPageConfig,
+                            );
                           },
                         ),
                       )
                     else
                       // Messages list
                       Expanded(
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          reverse: true,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          itemCount: state.messages.length,
-                          itemBuilder: (context, index) {
-                            final reversedIndex =
-                                state.messages.length - 1 - index;
-                            final message = state.messages[reversedIndex];
-                            final isFirstUnread =
-                                message.id == state.firstUnreadMessageId;
-                            return Column(
-                              children: [
-                                if (isFirstUnread) _buildUnreadDivider(),
-                                MessageBubble(
-                                  key: ValueKey(message.id),
-                                  isUserAdvisor: isAdvisor,
-                                  userId: uid,
-                                  message: message,
-                                  advisorProfilePhoto: widget.advisorAvatar,
-                                  advisorName:
-                                      state.advisorName ?? widget.advisorName,
-                                  price: widget.price,
-                                  duration: widget.duration,
-                                  advisorId: widget.advisorId,
-                                  onBookConsultation: (c) {
-                                    BaseUtil.openBookAdvisorSheet(
-                                      advisorId: c.id,
-                                      advisorName: c.advisorName,
-                                      advisorImage: c.advisorProfileImage,
-                                      isEdit: false,
-                                    );
-                                    context.read<CartBloc>().add(
-                                          AddToCart(
-                                            advisor: Expert(
-                                              advisorId: c.id,
-                                              name: c.advisorName,
-                                              experience: '',
-                                              rating: 0,
-                                              expertise: '',
-                                              qualifications: '',
-                                              rate: 0,
-                                              rateNew: '',
-                                              image: c.advisorProfileImage,
-                                              isFree: false,
-                                            ),
-                                          ),
-                                        );
-                                  },
-                                ),
-                              ],
-                            );
+                        child: NotificationListener<ScrollNotification>(
+                          onNotification: (notification) {
+                            if (notification is ScrollUpdateNotification) {
+                              // if (_lastScrollOffset != null &&
+                              //     !_isNearBottom &&
+                              //     notification.metrics.pixels !=
+                              //         _lastScrollOffset) {
+                              //   WidgetsBinding.instance
+                              //       .addPostFrameCallback((_) {
+                              //     if (_scrollController.hasClients &&
+                              //         _lastScrollOffset != null) {
+                              //       _scrollController
+                              //           .jumpTo(_lastScrollOffset!);
+                              //     }
+                              //   });
+                              // }
+                              _lastScrollOffset = notification.metrics.pixels;
+                            }
+                            return false;
                           },
+                          child: ListView.builder(
+                            controller: _scrollController,
+                            reverse: true,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            itemCount: state.messages.length,
+                            itemBuilder: (context, index) {
+                              final reversedIndex =
+                                  state.messages.length - 1 - index;
+                              final message = state.messages[reversedIndex];
+                              final isFirstUnread =
+                                  message.id == state.firstUnreadMessageId;
+                              return AutoScrollTag(
+                                key: ValueKey(index),
+                                controller: _scrollController,
+                                index: index,
+                                child: Column(
+                                  children: [
+                                    AnimatedUnreadDivider(
+                                      isVisible: isFirstUnread &&
+                                          state.showUnreadBanner,
+                                    ),
+                                    MessageBubble(
+                                      key: ValueKey(message.id),
+                                      isUserAdvisor: isAdvisor,
+                                      userId: uid,
+                                      message: message,
+                                      advisorProfilePhoto: widget.advisorAvatar,
+                                      advisorName: state.advisorName ??
+                                          widget.advisorName,
+                                      price: widget.price,
+                                      duration: widget.duration,
+                                      advisorId: widget.advisorId,
+                                      onBookConsultation: (c) {
+                                        BaseUtil.openBookAdvisorSheet(
+                                          advisorId: c.id,
+                                          advisorName: c.advisorName,
+                                          advisorImage: c.advisorProfileImage,
+                                          isEdit: false,
+                                        );
+                                        context.read<CartBloc>().add(
+                                              AddToCart(
+                                                advisor: Expert(
+                                                  advisorId: c.id,
+                                                  name: c.advisorName,
+                                                  experience: '',
+                                                  rating: 0,
+                                                  expertise: '',
+                                                  qualifications: '',
+                                                  rate: 0,
+                                                  rateNew: '',
+                                                  image: c.advisorProfileImage,
+                                                  isFree: false,
+                                                ),
+                                              ),
+                                            );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
 
-                    // Chat input
                     ChatInput(
                       onSendMessage: (message) => _handleSendMessage(
                         message,
                         isAdvisor ? MessageType.advisor : MessageType.user,
                       ),
-                      isEnabled:
-                          state.isReadyForMessaging && !state.isChatEnded,
+                      isEnabled: state.isReadyForMessaging,
                       isLoading: state.isSendingMessage,
-                      placeholder: state.isHumanMode
-                          ? 'Message ${state.advisorName ?? widget.advisorName ?? 'advisor'}'
-                          : 'Type a message...',
+                      placeholder: 'Type a message...',
                     ),
                   ],
                 ),
@@ -325,61 +364,49 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildUnreadBanner(ChatState state) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      color: const Color(0xFF01656B).withOpacity(0.3),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.keyboard_arrow_down,
-            color: UiConstants.teal3,
-            size: 16.sp,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            '${state.unreadMessageCount} unread message${state.unreadMessageCount > 1 ? 's' : ''}',
-            style: TextStyles.sourceSans.body4.colour(
-              UiConstants.teal3,
+    return GestureDetector(
+      onTap: () async {
+        if (state.firstUnreadMessageId != null) {
+          final unreadIndex = state.messages.indexWhere(
+            (msg) => msg.id == state.firstUnreadMessageId,
+          );
+          if (unreadIndex != -1) {
+            final reversedIndex = state.messages.length - 1 - unreadIndex;
+            await _scrollController.scrollToIndex(
+              reversedIndex,
+              preferPosition: AutoScrollPosition.middle,
+              duration: const Duration(milliseconds: 500),
+            );
+          }
+        }
+        await Future.delayed(
+          const Duration(milliseconds: 500),
+          () {
+            context.read<ChatBloc>().add(MarkAllAsRead());
+          },
+        );
+      },
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        color: const Color(0xFF01656B).withOpacity(0.3),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.keyboard_arrow_down,
+              color: UiConstants.teal3,
+              size: 16.sp,
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildUnreadDivider() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.h),
-      child: Row(
-        children: [
-          Expanded(
-            child: Divider(
-              color: const Color(0xFF01656B).withOpacity(0.6),
-              thickness: 1.h,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
-            decoration: BoxDecoration(
-              color: const Color(0xFF01656B).withOpacity(0.3),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              'UNREAD MESSAGES',
-              style: TextStyles.sourceSans.body6.colour(
+            const SizedBox(width: 8),
+            Text(
+              '${state.unreadMessageCount} unread message${state.unreadMessageCount > 1 ? 's' : ''}',
+              style: TextStyles.sourceSans.body4.colour(
                 UiConstants.teal3,
               ),
             ),
-          ),
-          Expanded(
-            child: Divider(
-              color: const Color(0xFF01656B).withOpacity(0.6),
-              thickness: 1.h,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -566,36 +593,6 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
       ),
     );
-
-    // PreferredSize(
-    //   preferredSize: Size.fromHeight(
-    //     66.h,
-    //   ),
-    //   child: AppBar(
-    //     elevation: 0,
-    //     flexibleSpace: Container(
-    //       decoration: const BoxDecoration(
-    //         gradient: LinearGradient(
-    //           colors: [
-    //             UiConstants.bg,
-    //             Color(0xff212B2D),
-    //           ],
-    //           begin: Alignment.topCenter,
-    //           end: Alignment.bottomCenter,
-    //         ),
-    //       ),
-    //     ),
-    //     leading:
-    //     title:
-    //           ],
-    //         );
-    //       },
-    //     ),
-    //     actions: [
-
-    //     ],
-    //   ),
-    // );
   }
 
   Widget _buildDefaultAvatar() {

@@ -358,26 +358,27 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                             height: 18.h,
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Column(
-                                children: [
-                                  Text(
-                                    expertDetails.experience,
-                                    style: TextStyles.sourceSansSB.body2.colour(
-                                      UiConstants.kTextColor,
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      expertDetails.experience,
+                                      style:
+                                          TextStyles.sourceSansSB.body2.colour(
+                                        UiConstants.kTextColor,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    'Experience',
-                                    style: TextStyles.sourceSansSB.body6.colour(
-                                      UiConstants.kTextColor6,
+                                    Text(
+                                      'Experience',
+                                      style:
+                                          TextStyles.sourceSansSB.body6.colour(
+                                        UiConstants.kTextColor6,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                width: 28.w,
+                                  ],
+                                ),
                               ),
                               SizedBox(
                                 height: SizeConfig.padding28,
@@ -386,27 +387,25 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                                   thickness: 0.6,
                                 ),
                               ),
-                              SizedBox(
-                                width: 28.w,
-                              ),
-                              Column(
-                                children: [
-                                  Text(
-                                    expertDetails.sessionCount.toString(),
-                                    style: TextStyles.sourceSansSB.body2.colour(
-                                      UiConstants.kTextColor,
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      expertDetails.sessionCount.toString(),
+                                      style:
+                                          TextStyles.sourceSansSB.body2.colour(
+                                        UiConstants.kTextColor,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    'Sessions',
-                                    style: TextStyles.sourceSansSB.body6.colour(
-                                      UiConstants.kTextColor6,
+                                    Text(
+                                      'Sessions',
+                                      style:
+                                          TextStyles.sourceSansSB.body6.colour(
+                                        UiConstants.kTextColor6,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                width: 28.w,
+                                  ],
+                                ),
                               ),
                               SizedBox(
                                 height: SizeConfig.padding28,
@@ -415,24 +414,25 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                                   thickness: 0.6,
                                 ),
                               ),
-                              SizedBox(
-                                width: 28.w,
-                              ),
-                              Column(
-                                children: [
-                                  Text(
-                                    expertDetails.rating.toString(),
-                                    style: TextStyles.sourceSansSB.body2.colour(
-                                      UiConstants.kTextColor,
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      expertDetails.rating.toString(),
+                                      style:
+                                          TextStyles.sourceSansSB.body2.colour(
+                                        UiConstants.kTextColor,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    'Rating',
-                                    style: TextStyles.sourceSansSB.body6.colour(
-                                      UiConstants.kTextColor6,
+                                    Text(
+                                      'Rating',
+                                      style:
+                                          TextStyles.sourceSansSB.body6.colour(
+                                        UiConstants.kTextColor6,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -791,6 +791,8 @@ Widget _buildInfoTab(
       ),
       SliverToBoxAdapter(
         child: BookConsultationWidget(
+          subtitle:
+              'Master investment strategies in ${expertDetails.expertiseTags}',
           price: expertDetails.rateNew,
           onBookCallTap: () {
             final analyticsService = locator<AnalyticsService>();

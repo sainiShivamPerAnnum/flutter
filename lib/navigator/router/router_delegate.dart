@@ -14,6 +14,7 @@ import 'package:felloapp/core/repository/live_repository.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/chat/chat_screen.dart';
 import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/expert/widgets/scroll_to_index.dart';
 import 'package:felloapp/feature/expertDetails/expert_profile.dart';
@@ -1216,6 +1217,20 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
             page: SduiPageConfig,
             widget: SduiPage(
               linkToParse: pageUrl,
+            ),
+          );
+        }
+        break;
+      case "chat":
+        final sessionId = queryParams['sessionId'];
+        final advisorId = queryParams['advisorId'];
+        if (sessionId != null && advisorId != null) {
+          appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: SduiPageConfig,
+            widget: ChatScreen(
+              sessionId: sessionId,
+              advisorId: advisorId,
             ),
           );
         }
