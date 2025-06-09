@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:felloapp/core/model/chat/chat_models.dart';
 import 'package:felloapp/core/repository/chat_repo.dart';
-import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,6 +22,11 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
   final userId = locator<UserService>().baseUser!.uid ?? '';
   final isAdvisor = locator<UserService>().baseUser!.isAdvisor ?? false;
   final advisorId = locator<UserService>().baseUser!.advisorId ?? '';
+  late Timer? _reconnectTimer;
+  int _reconnectAttempts = 0;
+  static const int _maxReconnectAttempts = 5;
+  static const Duration _reconnectDelay = Duration(seconds: 2);
+  bool _isReconnecting = false;
 
   ChatBloc({required ChatRepository chatRepository})
       : _chatRepository = chatRepository,
@@ -196,7 +200,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
         loadingState: ChatLoadingState.joiningRoom,
       ),
     );
-    await _connectWebSocket(event.sessionWithMessages.sessionId);
+    await _connectWebSocket(event.sessionWithMessages.sessionId, emit);
     await Future.delayed(const Duration(milliseconds: 100));
     if (state.messages.isEmpty) {
       add(LoadAllMessages(sessionId: event.sessionWithMessages.sessionId));
@@ -246,7 +250,72 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
     }
   }
 
-  Future<void> _connectWebSocket(String sessionId) async {
+  Future<void> _attemptReconnection(Emitter<ChatState> emit) async {
+    if (_isReconnecting || _reconnectAttempts >= _maxReconnectAttempts) {
+      return;
+    }
+    _isReconnecting = true;
+    _reconnectAttempts++;
+    emit(
+      state.copyWith(
+        loadingState: ChatLoadingState.reconnecting,
+      ),
+    );
+    _reconnectTimer = Timer(_reconnectDelay, () async {
+      try {
+        if (state.hasSession) {
+          await _connectWebSocket(state.sessionId!, emit);
+          await Future.delayed(const Duration(milliseconds: 500));
+
+          if (_socket?.connected == true) {
+            debugPrint('Reconnection successful');
+            _reconnectAttempts = 0;
+            _isReconnecting = false;
+
+            emit(
+              state.copyWith(
+                loadingState: ChatLoadingState.connected,
+                isSocketConnected: true,
+              ),
+            );
+            add(JoinChatRoom(sessionId: state.sessionId!));
+          } else {
+            _isReconnecting = false;
+
+            if (_reconnectAttempts >= _maxReconnectAttempts) {
+              emit(
+                state.copyWith(
+                  loadingState: ChatLoadingState.error,
+                  error:
+                      'Failed to reconnect after $_maxReconnectAttempts attempts',
+                ),
+              );
+            } else {
+              await _attemptReconnection(emit);
+            }
+          }
+        }
+      } catch (e) {
+        debugPrint('Reconnection failed: $e');
+        _isReconnecting = false;
+        if (_reconnectAttempts >= _maxReconnectAttempts) {
+          emit(
+            state.copyWith(
+              loadingState: ChatLoadingState.error,
+              error: 'Failed to reconnect: $e',
+            ),
+          );
+        } else {
+          await _attemptReconnection(emit);
+        }
+      }
+    });
+  }
+
+  Future<void> _connectWebSocket(
+    String sessionId,
+    Emitter<ChatState> emit,
+  ) async {
     if (_socket?.connected == true) return;
 
     try {
@@ -272,7 +341,9 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
 
       _socket!.on('disconnect', (_) {
         debugPrint('Socket disconnected');
-        // add(SocketDisconnected());
+        if (!_isReconnecting && state.hasSession) {
+          _attemptReconnection(emit);
+        }
       });
       if (isAdvisor) {
         _socket!.on('message', (data) {
@@ -400,9 +471,6 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
           });
         }
       }
-      unawaited(
-        locator<FcmListener>().clearChatNotifications(),
-      );
     } catch (e) {
       emit(
         state.copyWith(
@@ -436,12 +504,6 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
           ? state.firstUnreadMessageId
           : event.message.id;
       showBanner = newUnreadCount > 0;
-    }
-
-    if (isFromCurrentUser) {
-      unawaited(
-        locator<FcmListener>().clearChatNotifications(),
-      );
     }
     emit(
       state.copyWith(

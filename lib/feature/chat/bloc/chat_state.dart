@@ -5,6 +5,7 @@ enum ChatLoadingState {
   initial,
   creatingSession,
   joiningRoom,
+  reconnecting,
   connected,
   error,
   loadingHistory

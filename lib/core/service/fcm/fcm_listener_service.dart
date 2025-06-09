@@ -20,6 +20,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+@pragma('vm:entry-point')
+Future<void> firebaseBackgroundMessageHandler(RemoteMessage message) async {
+  log("Background message received: ${message.data}");
+  // Use the static method to handle background messages
+  await FcmListener.handleBackgroundMessage(message);
+}
 
 class FcmListener {
   final BaseUtil _baseUtil = locator<BaseUtil>();
@@ -37,7 +45,173 @@ class FcmListener {
   String? _currentChatSessionId;
   bool _isAppInForeground = true;
 
+  final Map<String, List<int>> _sessionNotificationIds = {};
+  static FlutterLocalNotificationsPlugin? _backgroundLocalNotifications;
+
   FcmListener(this._handler);
+
+  static Future<void> handleBackgroundMessage(RemoteMessage message) async {
+    try {
+      // Initialize local notifications if not already done
+      if (_backgroundLocalNotifications == null) {
+        _backgroundLocalNotifications = FlutterLocalNotificationsPlugin();
+        await _initializeBackgroundNotifications();
+      }
+
+      // Handle different message types
+      if (message.data['type'] == 'chat_message') {
+        await _handleBackgroundChatMessage(message);
+      } else {
+        await _storeMessageForStartup(message);
+      }
+    } catch (e) {
+      log("Background message handler error: $e");
+    }
+  }
+
+  static Future<void> _initializeBackgroundNotifications() async {
+    const androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_fello_notif');
+    const iosSettings = DarwinInitializationSettings();
+    const settings = InitializationSettings(
+      android: androidSettings,
+      iOS: iosSettings,
+    );
+
+    await _backgroundLocalNotifications!.initialize(settings);
+  }
+
+  static Future<void> _handleBackgroundChatMessage(
+    RemoteMessage message,
+  ) async {
+    final data = message.data;
+
+    // Check if we should suppress this notification
+    if (await _shouldSuppressBackgroundNotification(message)) {
+      log('Suppressing background chat notification');
+      return;
+    }
+
+    var androidDetails = AndroidNotificationDetails(
+      'chat_messages',
+      'Chat Messages',
+      channelDescription: 'New chat messages from advisors',
+      importance: Importance.high,
+      priority: Priority.high,
+      showWhen: true,
+      color: const Color(0xFF01656B),
+      category: AndroidNotificationCategory.message,
+      groupKey: 'chat_session_${data['sessionId']}',
+      setAsGroupSummary: false,
+      fullScreenIntent: true,
+      styleInformation: BigTextStyleInformation(
+        data['body'] ?? '',
+        contentTitle: data['title'] ?? '',
+        summaryText: 'New message',
+      ),
+      actions: [
+        const AndroidNotificationAction(
+          'reply',
+          'Reply',
+          showsUserInterface: true,
+        ),
+      ],
+    );
+
+    const iosDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+      categoryIdentifier: 'chat_message',
+      threadIdentifier: 'chat_thread',
+      interruptionLevel: InterruptionLevel.timeSensitive,
+    );
+
+    var details = NotificationDetails(
+      android: androidDetails,
+      iOS: iosDetails,
+    );
+
+    final payloadData = {
+      'type': 'chat_message',
+      'sessionId': data['sessionId'],
+      'advisorId': data['advisorId'],
+      'messageId': data['messageId'],
+      'source': 'background',
+    };
+
+    final notificationId =
+        data['messageId']?.hashCode ?? DateTime.now().millisecondsSinceEpoch;
+
+    await _backgroundLocalNotifications!.show(
+      notificationId,
+      data['title'] ?? '',
+      data['body'] ?? '',
+      details,
+      payload: jsonEncode(payloadData),
+    );
+
+    // Store notification ID for session management
+    await _storeBackgroundNotificationId(data['sessionId'], notificationId);
+
+    log("Background chat notification shown for session: ${data['sessionId']}");
+  }
+
+  static Future<bool> _shouldSuppressBackgroundNotification(
+    RemoteMessage message,
+  ) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final currentSessionId = prefs.getString('current_chat_session_id');
+      final isAppInForeground = prefs.getBool('is_app_in_foreground') ?? false;
+      final messageSessionId = message.data['sessionId'];
+      final senderId = message.data['userId'];
+      final currentUserId = prefs.getString('current_user_id');
+
+      if (senderId == currentUserId) return false;
+
+      // Suppress if app is in foreground and user is in the same chat
+      if (isAppInForeground && currentSessionId == messageSessionId) {
+        return true;
+      }
+
+      return false;
+    } catch (e) {
+      log("Error checking suppression: $e");
+      return false;
+    }
+  }
+
+  static Future<void> _storeBackgroundNotificationId(
+    String? sessionId,
+    int notificationId,
+  ) async {
+    if (sessionId == null) return;
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      List<String> sessionNotifications =
+          prefs.getStringList('bg_session_notifications_$sessionId') ?? [];
+
+      sessionNotifications.add(notificationId.toString());
+      await prefs.setStringList(
+        'bg_session_notifications_$sessionId',
+        sessionNotifications,
+      );
+    } catch (e) {
+      log("Failed to store background notification ID: $e");
+    }
+  }
+
+  static Future<void> _storeMessageForStartup(RemoteMessage message) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove("fcmData");
+      await prefs.setString('fcmData', jsonEncode(message.data));
+    } catch (e) {
+      log("Failed to store message for startup: $e");
+    }
+  }
 
   Future<FirebaseMessaging?> setupFcm() async {
     _fcm = FirebaseMessaging.instance;
@@ -80,18 +254,21 @@ class FcmListener {
       }
 
       FirebaseMessaging.onMessage.listen((message) async {
-        RemoteNotification? notification = message.notification;
         if (message.data['type'] == 'chat_message') {
-          await _handleChatMessage(message);
+          await _handleForegroundChatMessage(message);
           return;
         }
         if (message.data.isNotEmpty) {
           await _handler.handleMessage(message.data, MsgSource.Foreground);
-        } else if (notification != null) {
+        } else if (message.notification != null) {
+          RemoteNotification? notification = message.notification;
           logger!.d(
-              "Handle Notification: ${notification.title} ${notification.body}, ${message.data['command']}");
+              "Handle Notification: ${notification?.title} ${notification?.body}, ${message.data['command']}");
           await _handler.handleNotification(
-              notification.title, notification.body, message.data['command']);
+            notification?.title,
+            notification?.body,
+            message.data['command'],
+          );
         }
       });
 
@@ -104,8 +281,13 @@ class FcmListener {
         }
       });
 
-      unawaited(_fcm!.setForegroundNotificationPresentationOptions(
-          alert: true, badge: true, sound: true));
+      unawaited(
+        _fcm!.setForegroundNotificationPresentationOptions(
+          alert: true,
+          badge: true,
+          sound: true,
+        ),
+      );
       unawaited(_fcm!.requestPermission());
 
       ///add subscriptions to relevant topics
@@ -116,6 +298,7 @@ class FcmListener {
         await _androidNativeSetup();
       }
       WidgetsBinding.instance.addObserver(_AppLifecycleObserver(this));
+      await _clearStaleBackgroundNotifications();
     } catch (e) {
       logger!.e(e.toString());
       await _internalOpsService.logFailure(
@@ -130,7 +313,7 @@ class FcmListener {
 
   Future<void> _initializeLocalNotifications() async {
     const androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/ic_fello_notif');
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: false,
       requestBadgePermission: false,
@@ -144,62 +327,79 @@ class FcmListener {
 
     await _localNotifications.initialize(
       settings,
-      onDidReceiveNotificationResponse: (response) {
-        final sessionId = response.payload;
-        if (sessionId != null) {
-          _navigateToChat(sessionId, '');
-        }
+      onDidReceiveNotificationResponse: (response) async {
+        await _handleNotificationTap(response);
       },
     );
   }
 
-  Future<void> _handleChatMessage(RemoteMessage message) async {
-    logger!.d('Received chat message: ${message.data}');
+  Future<void> _handleNotificationTap(NotificationResponse response) async {
+    final payloadJson = response.payload;
+    if (payloadJson != null) {
+      try {
+        final payloadData = jsonDecode(payloadJson) as Map<String, dynamic>;
+        final type = payloadData['type'] as String?;
 
-    // Check if we should suppress the notification
-    if (_shouldSuppressChatNotification(message)) {
-      logger!.d('Suppressing chat notification - user is in same chat');
+        if (type == 'chat_message') {
+          final sessionId = payloadData['sessionId'] as String?;
+          final advisorId = payloadData['advisorId'] as String?;
+          final advisorName = payloadData['senderName'] ?? '';
+          if (sessionId != null && advisorId != null) {
+            await _navigateToChat(sessionId, advisorId, advisorName);
+            await clearNotificationsForSession(sessionId);
+          }
+        } else {
+          final data = payloadData['data'] as Map<String, dynamic>? ?? {};
+          await _handler.handleMessage(data, MsgSource.Background);
+        }
+      } catch (e) {
+        logger?.e('Error parsing notification payload: $e');
+      }
+    }
+  }
+
+  Future<void> _handleForegroundChatMessage(RemoteMessage message) async {
+    logger!.d('Received foreground chat message: ${message.data}');
+
+    if (_shouldSuppressForegroundChatNotification(message)) {
+      logger!
+          .d('Suppressing foreground chat notification - user is in same chat');
       return;
     }
 
-    // Show local notification for chat
-    await _showChatNotification(message);
+    await _showForegroundChatNotification(message);
   }
 
-  bool _shouldSuppressChatNotification(RemoteMessage message) {
+  bool _shouldSuppressForegroundChatNotification(RemoteMessage message) {
     final messageData = message.data;
     final sessionId = messageData['sessionId'];
-    final senderId = messageData['senderId'];
+    final senderId = messageData['userId'];
     final currentUserId = _userService.baseUser?.uid;
 
-    // Don't suppress if:
-    // 1. Message is from current user (they sent it from another device)
+    // Don't suppress if message is from current user
     if (senderId == currentUserId) return false;
 
-    // Suppress if:
-    // 1. App is in foreground AND user is in the same chat session
-    if (_isAppInForeground && _currentChatSessionId == sessionId) return true;
+    // Suppress if user is in the same chat session
+    if (_currentChatSessionId == sessionId) return true;
 
     return false;
   }
 
-  Future<void> _showChatNotification(RemoteMessage message) async {
-    final notification = message.notification;
+  Future<void> _showForegroundChatNotification(RemoteMessage message) async {
     final data = message.data;
 
-    if (notification == null) return;
-
-    const androidDetails = AndroidNotificationDetails(
+    var androidDetails = AndroidNotificationDetails(
       'chat_messages',
       'Chat Messages',
       channelDescription: 'New chat messages from advisors',
       importance: Importance.high,
       priority: Priority.high,
       showWhen: true,
-      icon: '@mipmap/ic_launcher',
-      color: Color(0xFF01656B),
+      icon: '@mipmap/ic_fello_notif',
+      color: const Color(0xFF01656B),
       category: AndroidNotificationCategory.message,
-      groupKey: 'chat_messages',
+      groupKey: 'chat_session_${data['sessionId'] ?? ''}',
+      setAsGroupSummary: false,
     );
 
     const iosDetails = DarwinNotificationDetails(
@@ -209,50 +409,158 @@ class FcmListener {
       categoryIdentifier: 'chat_message',
     );
 
-    const details = NotificationDetails(
+    var details = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
     );
 
+    final payloadData = {
+      'type': 'chat_message',
+      'sessionId': data['sessionId'],
+      'advisorId': data['advisorId'],
+      'source': 'foreground',
+    };
+
+    final notificationId = data['messageId'].hashCode;
+    final sessionId = data['sessionId'] as String?;
+
     await _localNotifications.show(
-      data['messageId'].hashCode, // Use message ID as notification ID
-      notification.title,
-      notification.body,
+      notificationId,
+      data['title'] ?? '',
+      data['body'] ?? '',
       details,
-      payload: data['sessionId'], // Pass session ID as payload
+      payload: jsonEncode(payloadData),
     );
+
+    if (sessionId != null) {
+      _sessionNotificationIds[sessionId] ??= [];
+      _sessionNotificationIds[sessionId]!.add(notificationId);
+    }
   }
 
   void _handleChatNotificationTap(Map<String, dynamic> data) {
     final sessionId = data['sessionId'];
     final advisorId = data['advisorId'];
+    final advisorName = data['senderName'] ?? '';
     if (sessionId != null && advisorId != null) {
-      _navigateToChat(sessionId, advisorId);
+      _navigateToChat(sessionId, advisorId, advisorName);
     }
   }
 
-  void _navigateToChat(String sessionId, String advisorId) {
+  Future<void> _navigateToChat(
+    String sessionId,
+    String advisorId,
+    String advisorName,
+  ) async {
+    await Future.delayed(Duration.zero);
     AppState.delegate?.parseRoute(
-      Uri.parse('/chat?sessionId=$sessionId&advisorId=$advisorId'),
+      Uri.parse(
+        '/chat?sessionId=$sessionId&advisorId=$advisorId&advisorName=$advisorName',
+      ),
     );
   }
 
   // Call this when user enters a chat screen
-  void setCurrentChatSession(String? sessionId) {
+  Future<void> setCurrentChatSession(String? sessionId) async {
     _currentChatSessionId = sessionId;
     logger!.d('Current chat session: $_currentChatSessionId');
+    // Store in SharedPreferences for background handler
+    final prefs = await SharedPreferences.getInstance();
+    if (sessionId != null) {
+      await prefs.setString('current_chat_session_id', sessionId);
+      await clearNotificationsForSession(sessionId);
+    } else {
+      await prefs.remove('current_chat_session_id');
+    }
   }
 
-  // Call this when app comes to foreground/background
-  void setAppForegroundState(bool isInForeground) {
+  Future<void> clearNotificationsForSession(String sessionId) async {
+    // Clear foreground notifications
+    final notificationIds = _sessionNotificationIds[sessionId];
+    if (notificationIds != null && notificationIds.isNotEmpty) {
+      for (final notificationId in notificationIds) {
+        await _localNotifications.cancel(notificationId);
+      }
+      _sessionNotificationIds.remove(sessionId);
+    }
+
+    // Clear background notifications
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final backgroundNotifications =
+          prefs.getStringList('bg_session_notifications_$sessionId') ?? [];
+
+      for (final notificationIdString in backgroundNotifications) {
+        final notificationId = int.tryParse(notificationIdString);
+        if (notificationId != null) {
+          await _localNotifications.cancel(notificationId);
+        }
+      }
+
+      await prefs.remove('bg_session_notifications_$sessionId');
+    } catch (e) {
+      logger?.e('Error clearing background notifications: $e');
+    }
+  }
+
+  Future<void> _clearStaleBackgroundNotifications() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final keys = prefs.getKeys();
+      final bgSessionKeys =
+          keys.where((key) => key.startsWith('bg_session_notifications_'));
+
+      for (final key in bgSessionKeys) {
+        final notificationIds = prefs.getStringList(key) ?? [];
+        for (final notificationIdString in notificationIds) {
+          final notificationId = int.tryParse(notificationIdString);
+          if (notificationId != null) {
+            await _localNotifications.cancel(notificationId);
+          }
+        }
+        await prefs.remove(key);
+      }
+
+      logger?.d('Cleared all stale background notifications on startup');
+    } catch (e) {
+      logger?.e('Error clearing stale background notifications: $e');
+    }
+  }
+
+  Future<void> setAppForegroundState(bool isInForeground) async {
     _isAppInForeground = isInForeground;
     logger!.d('App foreground state: $_isAppInForeground');
+
+    // Store in SharedPreferences for background handler
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('is_app_in_foreground', isInForeground);
+
+      // Store current user ID for background suppression logic
+      final currentUserId = _userService.baseUser?.uid;
+      if (currentUserId != null) {
+        await prefs.setString('current_user_id', currentUserId);
+      }
+    } catch (e) {
+      logger?.e('Error storing app state: $e');
+    }
   }
 
-  // Call this to clear chat notifications
-  Future<void> clearChatNotifications() async {
-    // Cancel all chat notifications (you might want to be more specific)
+  Future<void> clearAllChatNotifications() async {
     await _localNotifications.cancelAll();
+    _sessionNotificationIds.clear();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final keys = prefs.getKeys();
+      final bgSessionKeys =
+          keys.where((key) => key.startsWith('bg_session_notifications_'));
+
+      for (final key in bgSessionKeys) {
+        await prefs.remove(key);
+      }
+    } catch (e) {
+      logger?.e('Error clearing all background notifications: $e');
+    }
   }
 
   Future addSubscription(FcmTopic subId, {String suffix = ''}) async {
@@ -323,13 +631,19 @@ class FcmListener {
       logger!.d('Tambola notification channel setup failed');
     });
 
-    // Create chat notifications channel
+    // Create enhanced chat notifications channel
     const MethodChannel chatChannel =
         MethodChannel('fello.in/dev/notifications/channel/chat');
     Map<String, String> chatChannelMap = {
       "id": "chat_messages",
       "name": "Chat Messages",
       "description": "New chat messages from advisors",
+      "importance": "4", // IMPORTANCE_HIGH
+      "priority": "1", // PRIORITY_HIGH
+      "sound": "true",
+      "vibration": "true",
+      "lights": "true",
+      "showBadge": "true",
     };
 
     await chatChannel
@@ -377,7 +691,6 @@ class FcmListener {
         await removeSubscription(FcmTopic.TAMBOLAPLAYER);
         log("subscription removed");
       }
-      //_baseUtil.toggleTambolaNotificationStatus(val);
       return true;
     } catch (e) {
       logger!.e(e.toString());
@@ -395,12 +708,6 @@ class FcmListener {
   }
 
   Future<void> refreshTopics() async {
-    /**
-     * save the day as iso8601String in cache and whenever app opens,
-     * check if user has opened on the same day or different day
-     * if(same day) and exit the method
-     * if(different day of empty) update segment and update cache too
-     */
     final String lastAppOpenTimeStamp =
         PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_APP_OPEN);
     if (lastAppOpenTimeStamp.isEmpty) {

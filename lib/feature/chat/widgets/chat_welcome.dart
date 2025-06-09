@@ -101,6 +101,7 @@ class NewChatWelcome extends StatelessWidget {
   Widget _buildOptionChip(String title, IconData icon, String messageText) {
     return GestureDetector(
       onTap: () => onOptionSelected(messageText),
+      behavior: HitTestBehavior.opaque,
       child: Container(
         width: 167.w,
         padding: EdgeInsets.symmetric(

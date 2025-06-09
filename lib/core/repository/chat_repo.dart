@@ -82,6 +82,7 @@ class ChatRepository extends BaseRepo {
             connectTimeout: const Duration(seconds: 30),
             receiveTimeout: const Duration(minutes: 10),
             sendTimeout: const Duration(seconds: 30),
+            persistentConnection: true,
           ),
         );
 

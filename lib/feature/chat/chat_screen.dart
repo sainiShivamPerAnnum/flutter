@@ -64,6 +64,8 @@ class _ChatScreenState extends State<ChatScreen> {
   double? _lastScrollOffset;
   Timer? _scrollDebounceTimer;
   String? _lastProcessedUnreadId;
+  bool _hasShownUnreadDivider = false;
+  bool _shouldShowDivider = false;
 
   @override
   void initState() {
@@ -91,7 +93,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _onScroll() {
     if (_scrollController.hasClients) {
-      final isNearBottom = _scrollController.offset <= 10;
+      final isNearBottom = _scrollController.offset <= 5;
       _isUserScrolling = !isNearBottom;
       if (_isNearBottom != isNearBottom) {
         setState(() {
@@ -99,6 +101,8 @@ class _ChatScreenState extends State<ChatScreen> {
         });
       }
       if (isNearBottom) {
+        _hasShownUnreadDivider = false;
+        _shouldShowDivider = false;
         context.read<ChatBloc>().add(MarkAllAsRead());
       }
     }
@@ -111,22 +115,29 @@ class _ChatScreenState extends State<ChatScreen> {
     _scrollDebounceTimer?.cancel();
     _scrollDebounceTimer = Timer(const Duration(milliseconds: 200), () {
       if (state.firstUnreadMessageId != null &&
-          !_isUserScrolling &&
-          _isNearBottom) {
-        final unreadIndex = state.messages.indexWhere(
-          (msg) => msg.id == state.firstUnreadMessageId,
-        );
-        if (unreadIndex != -1) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (_scrollController.hasClients) {
-              final reversedIndex = state.messages.length - 1 - unreadIndex;
-              _scrollController.scrollToIndex(
-                reversedIndex,
-                preferPosition: AutoScrollPosition.middle,
-                duration: const Duration(milliseconds: 50),
-              );
-            }
-          });
+          state.firstUnreadMessageId != 'null' &&
+          !_hasShownUnreadDivider) {
+        setState(() {
+          _shouldShowDivider = true;
+          _hasShownUnreadDivider = true;
+        });
+
+        if (!_isUserScrolling && _isNearBottom) {
+          final unreadIndex = state.messages.indexWhere(
+            (msg) => msg.id == state.firstUnreadMessageId,
+          );
+          if (unreadIndex != -1) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (_scrollController.hasClients) {
+                final reversedIndex = state.messages.length - 1 - unreadIndex;
+                _scrollController.scrollToIndex(
+                  reversedIndex,
+                  preferPosition: AutoScrollPosition.end,
+                  duration: const Duration(milliseconds: 50),
+                );
+              }
+            });
+          }
         }
       }
       _lastProcessedUnreadId = state.firstUnreadMessageId;
@@ -175,6 +186,20 @@ class _ChatScreenState extends State<ChatScreen> {
             );
           }
           if (state.messages.isNotEmpty) {
+            if (state.showUnreadBanner &&
+                state.unreadMessageCount > 0 &&
+                state.firstUnreadMessageId != null &&
+                state.firstUnreadMessageId != 'null' &&
+                !_hasShownUnreadDivider) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) {
+                  setState(() {
+                    _shouldShowDivider = true;
+                    _hasShownUnreadDivider = true;
+                  });
+                }
+              });
+            }
             _scrollToUnreadMessages(state);
           }
         },
@@ -290,6 +315,11 @@ class _ChatScreenState extends State<ChatScreen> {
                               final message = state.messages[reversedIndex];
                               final isFirstUnread =
                                   message.id == state.firstUnreadMessageId;
+
+                              final shouldShowDividerForThisMessage =
+                                  isFirstUnread &&
+                                      _shouldShowDivider &&
+                                      state.showUnreadBanner;
                               return AutoScrollTag(
                                 key: ValueKey(index),
                                 controller: _scrollController,
@@ -297,8 +327,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                 child: Column(
                                   children: [
                                     AnimatedUnreadDivider(
-                                      isVisible: isFirstUnread &&
-                                          state.showUnreadBanner,
+                                      isVisible:
+                                          shouldShowDividerForThisMessage,
                                     ),
                                     MessageBubble(
                                       key: ValueKey(message.id),
@@ -382,6 +412,10 @@ class _ChatScreenState extends State<ChatScreen> {
         await Future.delayed(
           const Duration(milliseconds: 500),
           () {
+            setState(() {
+              _hasShownUnreadDivider = false;
+              _shouldShowDivider = false;
+            });
             context.read<ChatBloc>().add(MarkAllAsRead());
           },
         );
@@ -420,6 +454,8 @@ class _ChatScreenState extends State<ChatScreen> {
       case ChatLoadingState.loadingHistory:
         return 'Loading chat history...';
       case ChatLoadingState.error:
+        return 'Reconnecting...';
+      case ChatLoadingState.reconnecting:
         return 'Reconnecting...';
       default:
         return 'Connecting...';
