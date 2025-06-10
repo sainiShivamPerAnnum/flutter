@@ -19,6 +19,7 @@ import 'package:felloapp/feature/expert/widgets/scroll_to_index.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -61,7 +62,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final isAdvisor = locator<UserService>().baseUser!.isAdvisor ?? false;
   final String? uid = locator<UserService>().baseUser!.uid;
   bool _isUserScrolling = false;
-  double? _lastScrollOffset;
+  // double? _lastScrollOffset;
   Timer? _scrollDebounceTimer;
   String? _lastProcessedUnreadId;
   bool _hasShownUnreadDivider = false;
@@ -258,6 +259,19 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                         ),
                       )
+                    else if (state.loadingState == ChatLoadingState.error)
+                      Expanded(
+                        child: NewErrorPage(
+                          onTryAgain: () {
+                            context.read<ChatBloc>().add(
+                                  InitializeChat(
+                                    advisorId: widget.advisorId,
+                                    sessionId: widget.sessionId,
+                                  ),
+                                );
+                          },
+                        ),
+                      )
                     else if (state.messages.isEmpty)
                       Expanded(
                         child: NewChatWelcome(
@@ -300,7 +314,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               //     }
                               //   });
                               // }
-                              _lastScrollOffset = notification.metrics.pixels;
+                              // _lastScrollOffset = notification.metrics.pixels;
                             }
                             return false;
                           },

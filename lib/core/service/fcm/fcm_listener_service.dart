@@ -69,6 +69,13 @@ class FcmListener {
     }
   }
 
+  int _generateUniqueMessageId(String? sessionId, Map<String, dynamic> data) {
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final senderId = data['userId'] ?? data['advisorId'] ?? '';
+    final uniqueString = '${sessionId ?? 'unknown'}_${senderId}_$timestamp';
+    return uniqueString.hashCode;
+  }
+
   static Future<void> _initializeBackgroundNotifications() async {
     const androidSettings =
         AndroidInitializationSettings('@mipmap/ic_fello_notif');
@@ -136,12 +143,14 @@ class FcmListener {
       'type': 'chat_message',
       'sessionId': data['sessionId'],
       'advisorId': data['advisorId'],
-      'messageId': data['messageId'],
       'source': 'background',
     };
 
-    final notificationId =
-        data['messageId']?.hashCode ?? DateTime.now().millisecondsSinceEpoch;
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final senderId = data['userId'] ?? data['advisorId'] ?? '';
+    final sessionId = data['sessionId'] ?? 'unknown';
+    final uniqueString = '${sessionId}_${senderId}_$timestamp';
+    final notificationId = uniqueString.hashCode;
 
     await _backgroundLocalNotifications!.show(
       notificationId,
@@ -237,7 +246,18 @@ class FcmListener {
             if (message != null) {
               logger!.d("Opened app with notification data: ${message.data}");
               if (message.data['type'] == 'chat_message') {
-                _handleChatNotificationTap(message.data);
+                final sessionId = message.data['sessionId'];
+                final advisorId = message.data['advisorId'];
+                final advisorName = message.data['senderName'] ?? '';
+                if (sessionId != null && advisorId != null) {
+                  final data = message.data as Map<String, dynamic>? ?? {};
+                  data.addAll({
+                    "deep_uri":
+                        '/chat?sessionId=$sessionId&advisorId=$advisorId&advisorName=$advisorName',
+                  });
+                  _handler.handleMessage(message.data, MsgSource.Background);
+                  clearNotificationsForSession(sessionId);
+                }
               } else {
                 AppState.startupNotifMessage = message.data;
               }
@@ -275,7 +295,18 @@ class FcmListener {
       FirebaseMessaging.onMessageOpenedApp.listen((message) {
         logger!.i('Opened app from background state with message: $message');
         if (message.data['type'] == 'chat_message') {
-          _handleChatNotificationTap(message.data);
+          final sessionId = message.data['sessionId'];
+          final advisorId = message.data['advisorId'];
+          final advisorName = message.data['senderName'] ?? '';
+          if (sessionId != null && advisorId != null) {
+            final data = message.data as Map<String, dynamic>? ?? {};
+            data.addAll({
+              "deep_uri":
+                  '/chat?sessionId=$sessionId&advisorId=$advisorId&advisorName=$advisorName',
+            });
+            _handler.handleMessage(data, MsgSource.Background);
+            clearNotificationsForSession(sessionId);
+          }
         } else {
           _handler.handleMessage(message.data, MsgSource.Background);
         }
@@ -345,7 +376,12 @@ class FcmListener {
           final advisorId = payloadData['advisorId'] as String?;
           final advisorName = payloadData['senderName'] ?? '';
           if (sessionId != null && advisorId != null) {
-            await _navigateToChat(sessionId, advisorId, advisorName);
+            final data = payloadData as Map<String, dynamic>? ?? {};
+            payloadData.addAll({
+              "deep_uri":
+                  '/chat?sessionId=$sessionId&advisorId=$advisorId&advisorName=$advisorName',
+            });
+            await _handler.handleMessage(data, MsgSource.Background);
             await clearNotificationsForSession(sessionId);
           }
         } else {
@@ -421,7 +457,7 @@ class FcmListener {
       'source': 'foreground',
     };
 
-    final notificationId = data['messageId'].hashCode;
+    final notificationId = _generateUniqueMessageId(data['sessionId'], data);
     final sessionId = data['sessionId'] as String?;
 
     await _localNotifications.show(
@@ -431,33 +467,11 @@ class FcmListener {
       details,
       payload: jsonEncode(payloadData),
     );
-
+    await _storeBackgroundNotificationId(data['sessionId'], notificationId);
     if (sessionId != null) {
       _sessionNotificationIds[sessionId] ??= [];
       _sessionNotificationIds[sessionId]!.add(notificationId);
     }
-  }
-
-  void _handleChatNotificationTap(Map<String, dynamic> data) {
-    final sessionId = data['sessionId'];
-    final advisorId = data['advisorId'];
-    final advisorName = data['senderName'] ?? '';
-    if (sessionId != null && advisorId != null) {
-      _navigateToChat(sessionId, advisorId, advisorName);
-    }
-  }
-
-  Future<void> _navigateToChat(
-    String sessionId,
-    String advisorId,
-    String advisorName,
-  ) async {
-    await Future.delayed(Duration.zero);
-    AppState.delegate?.parseRoute(
-      Uri.parse(
-        '/chat?sessionId=$sessionId&advisorId=$advisorId&advisorName=$advisorName',
-      ),
-    );
   }
 
   // Call this when user enters a chat screen
@@ -476,31 +490,41 @@ class FcmListener {
 
   Future<void> clearNotificationsForSession(String sessionId) async {
     // Clear foreground notifications
-    final notificationIds = _sessionNotificationIds[sessionId];
-    if (notificationIds != null && notificationIds.isNotEmpty) {
-      for (final notificationId in notificationIds) {
-        await _localNotifications.cancel(notificationId);
-      }
-      _sessionNotificationIds.remove(sessionId);
-    }
+    await _localNotifications.cancelAll();
+    // final notificationIds = _sessionNotificationIds[sessionId];
+    // if (notificationIds != null && notificationIds.isNotEmpty) {
+    //   for (final notificationId in notificationIds) {
+    //     await _localNotifications.cancel(notificationId);
+    //   }
+    //   _sessionNotificationIds.remove(sessionId);
+    // }
 
-    // Clear background notifications
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final backgroundNotifications =
-          prefs.getStringList('bg_session_notifications_$sessionId') ?? [];
-
-      for (final notificationIdString in backgroundNotifications) {
-        final notificationId = int.tryParse(notificationIdString);
-        if (notificationId != null) {
-          await _localNotifications.cancel(notificationId);
-        }
-      }
-
-      await prefs.remove('bg_session_notifications_$sessionId');
-    } catch (e) {
-      logger?.e('Error clearing background notifications: $e');
-    }
+    // // Clear background notifications
+    // try {
+    //   final backgroundNotifications =
+    //       PreferenceHelper.getStringList('bg_session_notifications_$sessionId');
+    //   log(
+    //     'notifications $backgroundNotifications',
+    //   );
+    //   if (backgroundNotifications.isNotEmpty) {
+    //     log('Clearing ${backgroundNotifications.length} background notifications for session $sessionId');
+    //     for (final notificationIdString in backgroundNotifications) {
+    //       final notificationId = int.tryParse(notificationIdString);
+    //       if (notificationId != null) {
+    //         await _localNotifications.cancel(notificationId);
+    //         log('Cancelled background notification ID: $notificationId');
+    //       }
+    //     }
+    //     await PreferenceHelper.remove('bg_session_notifications_$sessionId');
+    //     log(
+    //       'Removed background notification preferences for session $sessionId',
+    //     );
+    //   } else {
+    //     log('No background notifications found for session $sessionId');
+    //   }
+    // } catch (e) {
+    //   logger?.e('Error clearing background notifications: $e');
+    // }
   }
 
   Future<void> _clearStaleBackgroundNotifications() async {
@@ -696,13 +720,20 @@ class FcmListener {
       logger!.e(e.toString());
       if (_userService.baseUser!.uid != null) {
         Map<String, dynamic> errorDetails = {
-          'error_msg': 'Changing Tambola Notification Status failed'
+          'error_msg': 'Changing Tambola Notification Status failed',
         };
-        unawaited(_internalOpsService.logFailure(_userService.baseUser!.uid,
-            FailType.TambolaDrawNotificationSettingFailed, errorDetails));
+        unawaited(
+          _internalOpsService.logFailure(
+            _userService.baseUser!.uid,
+            FailType.TambolaDrawNotificationSettingFailed,
+            errorDetails,
+          ),
+        );
       }
       BaseUtil.showNegativeAlert(
-          locale.obSomeThingWentWrong, locale.obPleaseTryAgain);
+        locale.obSomeThingWentWrong,
+        locale.obPleaseTryAgain,
+      );
       return false;
     }
   }
