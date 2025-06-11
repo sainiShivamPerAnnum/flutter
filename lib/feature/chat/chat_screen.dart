@@ -14,6 +14,7 @@ import 'package:felloapp/feature/chat/widgets/chat_input.dart';
 import 'package:felloapp/feature/chat/widgets/chat_shimmer.dart';
 import 'package:felloapp/feature/chat/widgets/chat_welcome.dart';
 import 'package:felloapp/feature/chat/widgets/message_bubble.dart';
+import 'package:felloapp/feature/chat/widgets/typing_indicator.dart';
 import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
 import 'package:felloapp/feature/expert/widgets/scroll_to_index.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -244,160 +245,170 @@ class _ChatScreenState extends State<ChatScreen> {
                 _buildUnreadBanner(state),
               // Chat content
               Expanded(
-                child: Column(
-                  children: [
-                    // Loading state for initial setup
-                    if (state.loadingState == ChatLoadingState.initial ||
-                        state.loadingState == ChatLoadingState.creatingSession)
-                      const Expanded(
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ChatShimmerLoader(),
-                            ],
+                child: GestureDetector(
+                  onTap: () {
+                    FocusScope.of(context).unfocus();
+                  },
+                  child: Column(
+                    children: [
+                      // Loading state for initial setup
+                      if (state.loadingState == ChatLoadingState.initial ||
+                          state.loadingState ==
+                              ChatLoadingState.creatingSession)
+                        const Expanded(
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ChatShimmerLoader(),
+                              ],
+                            ),
                           ),
-                        ),
-                      )
-                    else if (state.loadingState == ChatLoadingState.error)
-                      Expanded(
-                        child: NewErrorPage(
-                          onTryAgain: () {
-                            context.read<ChatBloc>().add(
-                                  InitializeChat(
-                                    advisorId: widget.advisorId,
-                                    sessionId: widget.sessionId,
-                                  ),
-                                );
-                          },
-                        ),
-                      )
-                    else if (state.messages.isEmpty)
-                      Expanded(
-                        child: NewChatWelcome(
-                          advisorName:
-                              state.advisorName ?? widget.advisorName ?? '',
-                          onOptionSelected: (messageText) {
-                            _handleSendMessage(
-                              messageText,
-                              isAdvisor
-                                  ? MessageType.advisor
-                                  : MessageType.user,
-                            );
-                          },
-                          onWithdrawalSupportTap: () {
-                            Haptic.vibrate();
-                            AppState.delegate!.appState.currentAction =
-                                PageAction(
-                              state: PageState.addPage,
-                              page: FreshDeskHelpPageConfig,
-                            );
-                          },
-                        ),
-                      )
-                    else
-                      // Messages list
-                      Expanded(
-                        child: NotificationListener<ScrollNotification>(
-                          onNotification: (notification) {
-                            if (notification is ScrollUpdateNotification) {
-                              // if (_lastScrollOffset != null &&
-                              //     !_isNearBottom &&
-                              //     notification.metrics.pixels !=
-                              //         _lastScrollOffset) {
-                              //   WidgetsBinding.instance
-                              //       .addPostFrameCallback((_) {
-                              //     if (_scrollController.hasClients &&
-                              //         _lastScrollOffset != null) {
-                              //       _scrollController
-                              //           .jumpTo(_lastScrollOffset!);
-                              //     }
-                              //   });
-                              // }
-                              // _lastScrollOffset = notification.metrics.pixels;
-                            }
-                            return false;
-                          },
-                          child: ListView.builder(
-                            controller: _scrollController,
-                            reverse: true,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            itemCount: state.messages.length,
-                            itemBuilder: (context, index) {
-                              final reversedIndex =
-                                  state.messages.length - 1 - index;
-                              final message = state.messages[reversedIndex];
-                              final isFirstUnread =
-                                  message.id == state.firstUnreadMessageId;
-
-                              final shouldShowDividerForThisMessage =
-                                  isFirstUnread &&
-                                      _shouldShowDivider &&
-                                      state.showUnreadBanner;
-                              return AutoScrollTag(
-                                key: ValueKey(index),
-                                controller: _scrollController,
-                                index: index,
-                                child: Column(
-                                  children: [
-                                    AnimatedUnreadDivider(
-                                      isVisible:
-                                          shouldShowDividerForThisMessage,
-                                    ),
-                                    MessageBubble(
-                                      key: ValueKey(message.id),
-                                      isUserAdvisor: isAdvisor,
-                                      userId: uid,
-                                      message: message,
-                                      advisorProfilePhoto: widget.advisorAvatar,
-                                      advisorName: state.advisorName ??
-                                          widget.advisorName,
-                                      price: widget.price,
-                                      duration: widget.duration,
+                        )
+                      else if (state.loadingState == ChatLoadingState.error)
+                        Expanded(
+                          child: NewErrorPage(
+                            onTryAgain: () {
+                              context.read<ChatBloc>().add(
+                                    InitializeChat(
                                       advisorId: widget.advisorId,
-                                      onBookConsultation: (c) {
-                                        BaseUtil.openBookAdvisorSheet(
-                                          advisorId: c.id,
-                                          advisorName: c.advisorName,
-                                          advisorImage: c.advisorProfileImage,
-                                          isEdit: false,
-                                        );
-                                        context.read<CartBloc>().add(
-                                              AddToCart(
-                                                advisor: Expert(
-                                                  advisorId: c.id,
-                                                  name: c.advisorName,
-                                                  experience: '',
-                                                  rating: 0,
-                                                  expertise: '',
-                                                  qualifications: '',
-                                                  rate: 0,
-                                                  rateNew: '',
-                                                  image: c.advisorProfileImage,
-                                                  isFree: false,
-                                                ),
-                                              ),
-                                            );
-                                      },
+                                      sessionId: widget.sessionId,
                                     ),
-                                  ],
-                                ),
+                                  );
+                            },
+                          ),
+                        )
+                      else if (state.messages.isEmpty)
+                        Expanded(
+                          child: NewChatWelcome(
+                            advisorName:
+                                state.advisorName ?? widget.advisorName ?? '',
+                            onOptionSelected: (messageText) {
+                              _handleSendMessage(
+                                messageText,
+                                isAdvisor
+                                    ? MessageType.advisor
+                                    : MessageType.user,
+                              );
+                            },
+                            onWithdrawalSupportTap: () {
+                              Haptic.vibrate();
+                              AppState.delegate!.appState.currentAction =
+                                  PageAction(
+                                state: PageState.addPage,
+                                page: FreshDeskHelpPageConfig,
                               );
                             },
                           ),
-                        ),
-                      ),
+                        )
+                      else
+                        // Messages list
+                        Expanded(
+                          child: NotificationListener<ScrollNotification>(
+                            onNotification: (notification) {
+                              if (notification is ScrollUpdateNotification) {
+                                // if (_lastScrollOffset != null &&
+                                //     !_isNearBottom &&
+                                //     notification.metrics.pixels !=
+                                //         _lastScrollOffset) {
+                                //   WidgetsBinding.instance
+                                //       .addPostFrameCallback((_) {
+                                //     if (_scrollController.hasClients &&
+                                //         _lastScrollOffset != null) {
+                                //       _scrollController
+                                //           .jumpTo(_lastScrollOffset!);
+                                //     }
+                                //   });
+                                // }
+                                // _lastScrollOffset = notification.metrics.pixels;
+                              }
+                              return false;
+                            },
+                            child: ListView.builder(
+                              controller: _scrollController,
+                              reverse: true,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              itemCount: state.messages.length,
+                              itemBuilder: (context, index) {
+                                final reversedIndex =
+                                    state.messages.length - 1 - index;
+                                final message = state.messages[reversedIndex];
+                                final isFirstUnread =
+                                    message.id == state.firstUnreadMessageId;
 
-                    ChatInput(
-                      onSendMessage: (message) => _handleSendMessage(
-                        message,
-                        isAdvisor ? MessageType.advisor : MessageType.user,
+                                final shouldShowDividerForThisMessage =
+                                    isFirstUnread &&
+                                        _shouldShowDivider &&
+                                        state.showUnreadBanner;
+                                return AutoScrollTag(
+                                  key: ValueKey(index),
+                                  controller: _scrollController,
+                                  index: index,
+                                  child: Column(
+                                    children: [
+                                      AnimatedUnreadDivider(
+                                        isVisible:
+                                            shouldShowDividerForThisMessage,
+                                      ),
+                                      MessageBubble(
+                                        key: ValueKey(message.id),
+                                        isUserAdvisor: isAdvisor,
+                                        userId: uid,
+                                        message: message,
+                                        advisorProfilePhoto:
+                                            widget.advisorAvatar,
+                                        advisorName: state.advisorName ??
+                                            widget.advisorName,
+                                        price: widget.price,
+                                        duration: widget.duration,
+                                        advisorId: widget.advisorId,
+                                        onBookConsultation: (c) {
+                                          BaseUtil.openBookAdvisorSheet(
+                                            advisorId: c.id,
+                                            advisorName: c.advisorName,
+                                            advisorImage: c.advisorProfileImage,
+                                            isEdit: false,
+                                          );
+                                          context.read<CartBloc>().add(
+                                                AddToCart(
+                                                  advisor: Expert(
+                                                    advisorId: c.id,
+                                                    name: c.advisorName,
+                                                    experience: '',
+                                                    rating: 0,
+                                                    expertise: '',
+                                                    qualifications: '',
+                                                    rate: 0,
+                                                    rateNew: '',
+                                                    image:
+                                                        c.advisorProfileImage,
+                                                    isFree: false,
+                                                  ),
+                                                ),
+                                              );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      if (state.shouldShowTypingIndicator)
+                        const SimpleTypingIndicator(),
+
+                      ChatInput(
+                        onSendMessage: (message) => _handleSendMessage(
+                          message,
+                          isAdvisor ? MessageType.advisor : MessageType.user,
+                        ),
+                        isEnabled: state.isReadyForMessaging,
+                        isLoading: state.isSendingMessage,
+                        placeholder: 'Type a message...',
                       ),
-                      isEnabled: state.isReadyForMessaging,
-                      isLoading: state.isSendingMessage,
-                      placeholder: 'Type a message...',
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],

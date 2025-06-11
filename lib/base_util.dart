@@ -1037,7 +1037,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static String formatOnlyDate(DateTime dateTime) {
-    final DateFormat formatter = DateFormat('MM/dd');
+    final DateFormat formatter = DateFormat('dd/MM');
     return formatter.format(dateTime);
   }
 

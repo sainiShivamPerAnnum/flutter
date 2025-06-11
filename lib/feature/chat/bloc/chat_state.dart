@@ -28,6 +28,7 @@ class ChatState extends Equatable {
   final int unreadMessageCount;
   final String? firstUnreadMessageId;
   final bool showUnreadBanner;
+  final bool showTypingIndicator;
 
   const ChatState({
     this.loadingState = ChatLoadingState.initial,
@@ -44,6 +45,7 @@ class ChatState extends Equatable {
     this.unreadMessageCount = 0,
     this.firstUnreadMessageId,
     this.showUnreadBanner = false,
+    this.showTypingIndicator = false,
   });
 
   ChatState copyWith({
@@ -61,6 +63,7 @@ class ChatState extends Equatable {
     int? unreadMessageCount,
     String? firstUnreadMessageId,
     bool? showUnreadBanner,
+    bool? showTypingIndicator,
   }) {
     return ChatState(
       loadingState: loadingState ?? this.loadingState,
@@ -77,6 +80,7 @@ class ChatState extends Equatable {
       unreadMessageCount: unreadMessageCount ?? this.unreadMessageCount,
       firstUnreadMessageId: firstUnreadMessageId ?? this.firstUnreadMessageId,
       showUnreadBanner: showUnreadBanner ?? this.showUnreadBanner,
+      showTypingIndicator: showTypingIndicator ?? this.showTypingIndicator,
     );
   }
 
@@ -101,6 +105,7 @@ class ChatState extends Equatable {
         unreadMessageCount,
         firstUnreadMessageId,
         showUnreadBanner,
+        showTypingIndicator,
       ];
 
   List<ChatMessage> get messages => currentSession?.messages ?? [];
@@ -108,6 +113,36 @@ class ChatState extends Equatable {
   String? get sessionId => currentSession?.sessionId;
   ChatSession? get session => currentSession?.session;
   bool get hasUnreadMessages => unreadMessageCount > 0;
+  bool get shouldShowTypingIndicator {
+    if (messages.isEmpty) return false;
+    if (isSendingMessage) return false; // Don't show while sending
+
+    // Get last message from current user and last message from other person
+    final userMessages =
+        messages.where((msg) => msg.messageType == MessageType.user).toList();
+    final otherMessages = messages
+        .where(
+          (msg) =>
+              msg.messageType == MessageType.ai ||
+              msg.messageType == MessageType.advisor ||
+              msg.messageType == MessageType.handover,
+        )
+        .toList();
+
+    if (userMessages.isEmpty) return false;
+    final lastUserMessage = userMessages.last;
+    final lastOverallMessage = messages.last;
+    if (otherMessages.isEmpty) {
+      return lastOverallMessage.id == lastUserMessage.id;
+    }
+    final lastOtherMessage = otherMessages.last;
+    // Show typing if:
+    // 1. Last overall message is from user
+    // 2. Last other person's message was AI type
+    // 3. User message is newer than other person's message
+    return lastOverallMessage.id == lastUserMessage.id &&
+        lastOtherMessage.messageType == MessageType.ai;
+  }
 
   bool get isReadyForMessaging =>
       loadingState == ChatLoadingState.connected &&

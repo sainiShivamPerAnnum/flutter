@@ -177,13 +177,10 @@ class FcmListener {
       final senderId = message.data['userId'];
       final currentUserId = prefs.getString('current_user_id');
 
-      if (senderId == currentUserId) return false;
-
-      // Suppress if app is in foreground and user is in the same chat
       if (isAppInForeground && currentSessionId == messageSessionId) {
         return true;
       }
-
+      if (senderId == currentUserId) return false;
       return false;
     } catch (e) {
       log("Error checking suppression: $e");
@@ -277,8 +274,7 @@ class FcmListener {
         if (message.data['type'] == 'chat_message') {
           await _handleForegroundChatMessage(message);
           return;
-        }
-        if (message.data.isNotEmpty) {
+        } else if (message.data.isNotEmpty) {
           await _handler.handleMessage(message.data, MsgSource.Foreground);
         } else if (message.notification != null) {
           RemoteNotification? notification = message.notification;
@@ -411,19 +407,16 @@ class FcmListener {
     final sessionId = messageData['sessionId'];
     final senderId = messageData['userId'];
     final currentUserId = _userService.baseUser?.uid;
-
-    // Don't suppress if message is from current user
+    if (_currentChatSessionId == sessionId) {
+      return true;
+    }
     if (senderId == currentUserId) return false;
-
-    // Suppress if user is in the same chat session
-    if (_currentChatSessionId == sessionId) return true;
 
     return false;
   }
 
   Future<void> _showForegroundChatNotification(RemoteMessage message) async {
     final data = message.data;
-
     var androidDetails = AndroidNotificationDetails(
       'chat_messages',
       'Chat Messages',

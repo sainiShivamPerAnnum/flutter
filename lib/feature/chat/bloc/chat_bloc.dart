@@ -453,6 +453,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
           unreadMessageCount: 0,
           firstUnreadMessageId: 'null',
           showUnreadBanner: false,
+          showTypingIndicator: !isAdvisor,
         ),
       );
 
@@ -513,6 +514,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
         unreadMessageCount: newUnreadCount,
         firstUnreadMessageId: firstUnreadId,
         showUnreadBanner: showBanner,
+        showTypingIndicator: false,
       ),
     );
   }

@@ -67,7 +67,7 @@ class _ChatInputState extends State<ChatInput> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(16.w, 0.h, 16.w, 16.h),
+      padding: EdgeInsets.fromLTRB(16.w, 14.h, 16.w, 36.h),
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(
@@ -76,135 +76,131 @@ class _ChatInputState extends State<ChatInput> {
           ),
         ),
       ),
-      child: SafeArea(
-        child: Row(
-          children: [
-            PropertyChangeConsumer<UserService, UserServiceProperties>(
-              properties: const [
-                UserServiceProperties.myUserDpUrl,
-                UserServiceProperties.myAvatarId,
-              ],
-              builder: (context, model, properties) {
-                return Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: UiConstants.primaryColor,
-                      width: 2.r,
-                    ),
-                  ),
-                  child: CircleAvatar(
-                    key: const ValueKey(Constants.PROFILE),
-                    radius: 16.r,
-                    backgroundColor: UiConstants.kTextColor4,
-                    backgroundImage: (model!.avatarId != null &&
-                            model.avatarId == 'CUSTOM' &&
-                            model.myUserDpUrl != null &&
-                            model.myUserDpUrl!.isNotEmpty)
-                        ? CachedNetworkImageProvider(
-                            model.myUserDpUrl!,
-                          )
-                        : const AssetImage(
-                            Assets.profilePic,
-                          ) as ImageProvider<Object>?,
-                    child: model.avatarId != null && model.avatarId != 'CUSTOM'
-                        ? AppImage(
-                            "assets/vectors/userAvatars/${model.avatarId}.svg",
-                            fit: BoxFit.cover,
-                          )
-                        : const SizedBox(),
-                  ),
-                );
-              },
-            ),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: Container(
+      child: Row(
+        children: [
+          PropertyChangeConsumer<UserService, UserServiceProperties>(
+            properties: const [
+              UserServiceProperties.myUserDpUrl,
+              UserServiceProperties.myAvatarId,
+            ],
+            builder: (context, model, properties) {
+              return Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFF2A2A2A),
-                  borderRadius: BorderRadius.circular(24.r),
+                  shape: BoxShape.circle,
                   border: Border.all(
-                    color: _focusNode.hasFocus
-                        ? const Color(0xFF2D7D7D)
-                        : Colors.transparent,
-                    width: 1.w,
+                    color: UiConstants.primaryColor,
+                    width: 2.r,
                   ),
                 ),
-                child: Row(
-                  children: [
-                    SizedBox(width: 16.w),
-                    Expanded(
-                      child: TextField(
-                        autofocus: false,
-                        controller: _controller,
-                        focusNode: _focusNode,
-                        enabled: widget.isEnabled && !widget.isLoading,
-                        decoration: InputDecoration(
-                          hintText: widget.placeholder ?? 'Type a message...',
-                          hintStyle: TextStyle(
-                            color: Colors.white.withOpacity(0.5),
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 12.h,
-                          ),
-                        ),
-                        style: TextStyle(
-                          color: Colors.white,
+                child: CircleAvatar(
+                  key: const ValueKey(Constants.PROFILE),
+                  radius: 16.r,
+                  backgroundColor: UiConstants.kTextColor4,
+                  backgroundImage: (model!.avatarId != null &&
+                          model.avatarId == 'CUSTOM' &&
+                          model.myUserDpUrl != null &&
+                          model.myUserDpUrl!.isNotEmpty)
+                      ? CachedNetworkImageProvider(
+                          model.myUserDpUrl!,
+                        )
+                      : const AssetImage(
+                          Assets.profilePic,
+                        ) as ImageProvider<Object>?,
+                  child: model.avatarId != null && model.avatarId != 'CUSTOM'
+                      ? AppImage(
+                          "assets/vectors/userAvatars/${model.avatarId}.svg",
+                          fit: BoxFit.cover,
+                        )
+                      : const SizedBox(),
+                ),
+              );
+            },
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFF2A2A2A),
+                borderRadius: BorderRadius.circular(24.r),
+                border: Border.all(
+                  color: _focusNode.hasFocus
+                      ? const Color(0xFF2D7D7D)
+                      : Colors.transparent,
+                  width: 1.w,
+                ),
+              ),
+              child: Row(
+                children: [
+                  SizedBox(width: 16.w),
+                  Expanded(
+                    child: TextField(
+                      autofocus: false,
+                      controller: _controller,
+                      focusNode: _focusNode,
+                      enabled: widget.isEnabled && !widget.isLoading,
+                      decoration: InputDecoration(
+                        hintText: widget.placeholder ?? 'Type a message...',
+                        hintStyle: TextStyle(
+                          color: Colors.white.withOpacity(0.5),
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w400,
                         ),
-                        maxLines: 4,
-                        minLines: 1,
-                        textCapitalization: TextCapitalization.sentences,
-                        onSubmitted: (_) => _handleSend(),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(right: 4.w),
-                      child: IconButton(
-                        onPressed: _isComposing &&
-                                widget.isEnabled &&
-                                !widget.isLoading
-                            ? _handleSend
-                            : null,
-                        icon: widget.isLoading
-                            ? SizedBox(
-                                width: 20.w,
-                                height: 20.h,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2.w,
-                                  valueColor:
-                                      const AlwaysStoppedAnimation<Color>(
-                                    Color(0xFF2D7D7D),
-                                  ),
-                                ),
-                              )
-                            : Icon(
-                                Icons.send_rounded,
-                                color: _isComposing && widget.isEnabled
-                                    ? const Color(0xFF2D7D7D)
-                                    : Colors.white.withOpacity(0.3),
-                                size: 20.sp,
-                              ),
-                        padding: EdgeInsets.all(8.r),
-                        constraints: BoxConstraints(
-                          minWidth: 36.w,
-                          minHeight: 36.h,
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 12.h,
                         ),
                       ),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      maxLines: 4,
+                      minLines: 1,
+                      textCapitalization: TextCapitalization.sentences,
+                      onSubmitted: (_) => _handleSend(),
                     ),
-                  ],
-                ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(right: 4.w),
+                    child: IconButton(
+                      onPressed:
+                          _isComposing && widget.isEnabled && !widget.isLoading
+                              ? _handleSend
+                              : null,
+                      icon: widget.isLoading
+                          ? SizedBox(
+                              width: 20.w,
+                              height: 20.h,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.w,
+                                valueColor: const AlwaysStoppedAnimation<Color>(
+                                  Color(0xFF2D7D7D),
+                                ),
+                              ),
+                            )
+                          : Icon(
+                              Icons.send_rounded,
+                              color: _isComposing && widget.isEnabled
+                                  ? const Color(0xFF2D7D7D)
+                                  : Colors.white.withOpacity(0.3),
+                              size: 20.sp,
+                            ),
+                      padding: EdgeInsets.all(8.r),
+                      constraints: BoxConstraints(
+                        minWidth: 36.w,
+                        minHeight: 36.h,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

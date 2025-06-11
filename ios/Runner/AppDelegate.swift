@@ -5,6 +5,7 @@ import Flutter
 import Contacts
 import WebEngage
 import webengage_flutter
+import flutter_local_notifications
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -17,6 +18,9 @@ import webengage_flutter
     override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         FirebaseApp.configure()
+        FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
+        GeneratedPluginRegistrant.register(with: registry)
+        }
         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
         let paymentChannel = FlutterMethodChannel(name: "methodChannel/deviceData",
                                                   binaryMessenger: controller.binaryMessenger)
