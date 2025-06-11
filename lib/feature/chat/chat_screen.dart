@@ -268,6 +268,8 @@ class _ChatScreenState extends State<ChatScreen> {
                       else if (state.loadingState == ChatLoadingState.error)
                         Expanded(
                           child: NewErrorPage(
+                            subText:
+                                "We are trying to resolve it earliest possible. Please try to restart the application.",
                             onTryAgain: () {
                               context.read<ChatBloc>().add(
                                     InitializeChat(
@@ -395,7 +397,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                           ),
                         ),
-                      if (state.shouldShowTypingIndicator)
+                      if (state.shouldShowTypingIndicator && !isAdvisor)
                         const SimpleTypingIndicator(),
 
                       ChatInput(
