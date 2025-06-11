@@ -17,7 +17,7 @@ import 'package:felloapp/core/model/sdui/sdui_parsers/responsiveContainer/respos
 import 'package:felloapp/core/model/sdui/sdui_parsers/spacer/spacer_widget_parser.dart';
 import 'package:felloapp/core/model/sdui/sdui_parsers/timeline_widget/timeline_widget_parser.dart';
 import 'package:felloapp/core/model/sdui/sdui_parsers/transform/translate_widget_parser.dart';
-import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/fcm/background_fcm_handler.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/local_actions_state.dart';
 import 'package:felloapp/util/locator.dart';
@@ -100,7 +100,7 @@ Future<void> bootStrap(BootstrapCallBack bootStrapCallBack) async {
       }
 
       try {
-        FirebaseMessaging.onBackgroundMessage(firebaseBackgroundMessageHandler);
+        FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
       } catch (e) {
         log('Failed to bootstrap app, error: $e');
       }

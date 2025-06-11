@@ -22,13 +22,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-@pragma('vm:entry-point')
-Future<void> firebaseBackgroundMessageHandler(RemoteMessage message) async {
-  log("Background message received: ${message.data}");
-  // Use the static method to handle background messages
-  await FcmListener.handleBackgroundMessage(message);
-}
-
 class FcmListener {
   final BaseUtil _baseUtil = locator<BaseUtil>();
   final CustomLogger? logger = locator<CustomLogger>();
@@ -46,28 +39,8 @@ class FcmListener {
   bool _isAppInForeground = true;
 
   final Map<String, List<int>> _sessionNotificationIds = {};
-  static FlutterLocalNotificationsPlugin? _backgroundLocalNotifications;
 
   FcmListener(this._handler);
-
-  static Future<void> handleBackgroundMessage(RemoteMessage message) async {
-    try {
-      // Initialize local notifications if not already done
-      if (_backgroundLocalNotifications == null) {
-        _backgroundLocalNotifications = FlutterLocalNotificationsPlugin();
-        await _initializeBackgroundNotifications();
-      }
-
-      // Handle different message types
-      if (message.data['type'] == 'chat_message') {
-        await _handleBackgroundChatMessage(message);
-      } else {
-        await _storeMessageForStartup(message);
-      }
-    } catch (e) {
-      log("Background message handler error: $e");
-    }
-  }
 
   int _generateUniqueMessageId(String? sessionId, Map<String, dynamic> data) {
     final timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -76,148 +49,26 @@ class FcmListener {
     return uniqueString.hashCode;
   }
 
-  static Future<void> _initializeBackgroundNotifications() async {
-    const androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_fello_notif');
-    const iosSettings = DarwinInitializationSettings();
-    const settings = InitializationSettings(
-      android: androidSettings,
-      iOS: iosSettings,
-    );
+  // static Future<void> _storeBackgroundNotificationId(
+  //   String? sessionId,
+  //   int notificationId,
+  // ) async {
+  //   if (sessionId == null) return;
 
-    await _backgroundLocalNotifications!.initialize(settings);
-  }
+  //   try {
+  //     final prefs = await SharedPreferences.getInstance();
+  //     List<String> sessionNotifications =
+  //         prefs.getStringList('bg_session_notifications_$sessionId') ?? [];
 
-  static Future<void> _handleBackgroundChatMessage(
-    RemoteMessage message,
-  ) async {
-    final data = message.data;
-
-    // Check if we should suppress this notification
-    if (await _shouldSuppressBackgroundNotification(message)) {
-      log('Suppressing background chat notification');
-      return;
-    }
-
-    var androidDetails = AndroidNotificationDetails(
-      'chat_messages',
-      'Chat Messages',
-      channelDescription: 'New chat messages from advisors',
-      importance: Importance.high,
-      priority: Priority.high,
-      showWhen: true,
-      color: const Color(0xFF01656B),
-      category: AndroidNotificationCategory.message,
-      groupKey: 'chat_session_${data['sessionId']}',
-      setAsGroupSummary: false,
-      fullScreenIntent: true,
-      styleInformation: BigTextStyleInformation(
-        data['body'] ?? '',
-        contentTitle: data['title'] ?? '',
-        summaryText: 'New message',
-      ),
-      actions: [
-        const AndroidNotificationAction(
-          'reply',
-          'Reply',
-          showsUserInterface: true,
-        ),
-      ],
-    );
-
-    const iosDetails = DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-      categoryIdentifier: 'chat_message',
-      threadIdentifier: 'chat_thread',
-      interruptionLevel: InterruptionLevel.timeSensitive,
-    );
-
-    var details = NotificationDetails(
-      android: androidDetails,
-      iOS: iosDetails,
-    );
-
-    final payloadData = {
-      'type': 'chat_message',
-      'sessionId': data['sessionId'],
-      'advisorId': data['advisorId'],
-      'source': 'background',
-    };
-
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final senderId = data['userId'] ?? data['advisorId'] ?? '';
-    final sessionId = data['sessionId'] ?? 'unknown';
-    final uniqueString = '${sessionId}_${senderId}_$timestamp';
-    final notificationId = uniqueString.hashCode;
-
-    await _backgroundLocalNotifications!.show(
-      notificationId,
-      data['title'] ?? '',
-      data['body'] ?? '',
-      details,
-      payload: jsonEncode(payloadData),
-    );
-
-    // Store notification ID for session management
-    await _storeBackgroundNotificationId(data['sessionId'], notificationId);
-
-    log("Background chat notification shown for session: ${data['sessionId']}");
-  }
-
-  static Future<bool> _shouldSuppressBackgroundNotification(
-    RemoteMessage message,
-  ) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final currentSessionId = prefs.getString('current_chat_session_id');
-      final isAppInForeground = prefs.getBool('is_app_in_foreground') ?? false;
-      final messageSessionId = message.data['sessionId'];
-      final senderId = message.data['userId'];
-      final currentUserId = prefs.getString('current_user_id');
-
-      if (isAppInForeground && currentSessionId == messageSessionId) {
-        return true;
-      }
-      if (senderId == currentUserId) return false;
-      return false;
-    } catch (e) {
-      log("Error checking suppression: $e");
-      return false;
-    }
-  }
-
-  static Future<void> _storeBackgroundNotificationId(
-    String? sessionId,
-    int notificationId,
-  ) async {
-    if (sessionId == null) return;
-
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      List<String> sessionNotifications =
-          prefs.getStringList('bg_session_notifications_$sessionId') ?? [];
-
-      sessionNotifications.add(notificationId.toString());
-      await prefs.setStringList(
-        'bg_session_notifications_$sessionId',
-        sessionNotifications,
-      );
-    } catch (e) {
-      log("Failed to store background notification ID: $e");
-    }
-  }
-
-  static Future<void> _storeMessageForStartup(RemoteMessage message) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove("fcmData");
-      await prefs.setString('fcmData', jsonEncode(message.data));
-    } catch (e) {
-      log("Failed to store message for startup: $e");
-    }
-  }
+  //     sessionNotifications.add(notificationId.toString());
+  //     await prefs.setStringList(
+  //       'bg_session_notifications_$sessionId',
+  //       sessionNotifications,
+  //     );
+  //   } catch (e) {
+  //     log("Failed to store background notification ID: $e");
+  //   }
+  // }
 
   Future<FirebaseMessaging?> setupFcm() async {
     _fcm = FirebaseMessaging.instance;
@@ -341,17 +192,11 @@ class FcmListener {
   Future<void> _initializeLocalNotifications() async {
     const androidSettings =
         AndroidInitializationSettings('@mipmap/ic_fello_notif');
-    const iosSettings = DarwinInitializationSettings(
-      requestAlertPermission: false,
-      requestBadgePermission: false,
-      requestSoundPermission: false,
-    );
-
+    const iosSettings = DarwinInitializationSettings();
     const settings = InitializationSettings(
       android: androidSettings,
       iOS: iosSettings,
     );
-
     await _localNotifications.initialize(
       settings,
       onDidReceiveNotificationResponse: (response) async {
@@ -460,7 +305,6 @@ class FcmListener {
       details,
       payload: jsonEncode(payloadData),
     );
-    await _storeBackgroundNotificationId(data['sessionId'], notificationId);
     if (sessionId != null) {
       _sessionNotificationIds[sessionId] ??= [];
       _sessionNotificationIds[sessionId]!.add(notificationId);
