@@ -41,7 +41,9 @@ Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
     android: initializationSettingsAndroid,
     iOS: iosSettings,
   );
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+  );
 
   // Handle chat messages
   if (message.data['type'] == 'chat_message') {
@@ -58,6 +60,7 @@ Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
       priority: Priority.high,
       showWhen: true,
       color: const Color(0xFF01656B),
+      icon: '@mipmap/ic_fello_notif',
       category: AndroidNotificationCategory.message,
       groupKey: 'chat_session_${message.data['sessionId']}',
       setAsGroupSummary: false,
@@ -94,6 +97,8 @@ Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
       'sessionId': message.data['sessionId'],
       'advisorId': message.data['advisorId'],
       'source': 'background',
+      "deep_uri":
+          '/chat?sessionId=${message.data['sessionId']}&advisorId=${message.data['advisorId']}&advisorName=${message.data['senderName']}',
     };
 
     final timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -109,10 +114,19 @@ Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
       details,
       payload: jsonEncode(payloadData),
     );
+    final data = message.data as Map<String, dynamic>? ?? {};
+    data.addAll({
+      "deep_uri":
+          '/chat?sessionId=$sessionId&advisorId=${message.data['advisorId']}&advisorName=${message.data['senderName']}',
+    });
+    // await prefs.reload();
+    // await prefs.remove("fcmData");
+    // await prefs.setString('fcmData', json.encode(data));
+    return Future<void>.value();
   } else {
     await prefs.reload();
     await prefs.remove("fcmData");
     await prefs.setString('fcmData', json.encode(message.data));
+    return Future<void>.value();
   }
-  return Future<void>.value();
 }

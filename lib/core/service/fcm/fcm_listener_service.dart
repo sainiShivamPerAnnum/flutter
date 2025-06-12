@@ -42,13 +42,6 @@ class FcmListener {
 
   FcmListener(this._handler);
 
-  int _generateUniqueMessageId(String? sessionId, Map<String, dynamic> data) {
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final senderId = data['userId'] ?? data['advisorId'] ?? '';
-    final uniqueString = '${sessionId ?? 'unknown'}_${senderId}_$timestamp';
-    return uniqueString.hashCode;
-  }
-
   // static Future<void> _storeBackgroundNotificationId(
   //   String? sessionId,
   //   int notificationId,
@@ -76,8 +69,6 @@ class FcmListener {
       _fcm != null
           ? logger!.d("Fcm instance created")
           : logger!.d("Fcm instance not created");
-
-      await _initializeLocalNotifications();
       String? idToken = await _fcm!.getToken();
       await _saveDeviceToken(idToken);
 
@@ -93,22 +84,7 @@ class FcmListener {
           (message) {
             if (message != null) {
               logger!.d("Opened app with notification data: ${message.data}");
-              if (message.data['type'] == 'chat_message') {
-                final sessionId = message.data['sessionId'];
-                final advisorId = message.data['advisorId'];
-                final advisorName = message.data['senderName'] ?? '';
-                if (sessionId != null && advisorId != null) {
-                  final data = message.data as Map<String, dynamic>? ?? {};
-                  data.addAll({
-                    "deep_uri":
-                        '/chat?sessionId=$sessionId&advisorId=$advisorId&advisorName=$advisorName',
-                  });
-                  _handler.handleMessage(message.data, MsgSource.Background);
-                  clearNotificationsForSession(sessionId);
-                }
-              } else {
-                AppState.startupNotifMessage = message.data;
-              }
+              AppState.startupNotifMessage = message.data;
             }
           },
         ),
@@ -142,21 +118,9 @@ class FcmListener {
       FirebaseMessaging.onMessageOpenedApp.listen((message) {
         logger!.i('Opened app from background state with message: $message');
         if (message.data['type'] == 'chat_message') {
-          final sessionId = message.data['sessionId'];
-          final advisorId = message.data['advisorId'];
-          final advisorName = message.data['senderName'] ?? '';
-          if (sessionId != null && advisorId != null) {
-            final data = message.data as Map<String, dynamic>? ?? {};
-            data.addAll({
-              "deep_uri":
-                  '/chat?sessionId=$sessionId&advisorId=$advisorId&advisorName=$advisorName',
-            });
-            _handler.handleMessage(data, MsgSource.Background);
-            clearNotificationsForSession(sessionId);
-          }
-        } else {
-          _handler.handleMessage(message.data, MsgSource.Background);
+          clearNotificationsForSession();
         }
+        _handler.handleMessage(message.data, MsgSource.Background);
       });
 
       unawaited(
@@ -175,6 +139,31 @@ class FcmListener {
       if (Platform.isAndroid) {
         await _androidNativeSetup();
       }
+      const AndroidInitializationSettings initializationSettingsAndroid =
+          AndroidInitializationSettings('@mipmap/ic_fello_notif');
+      const iosSettings = DarwinInitializationSettings();
+      const InitializationSettings initializationSettings =
+          InitializationSettings(
+        android: initializationSettingsAndroid,
+        iOS: iosSettings,
+      );
+      await _localNotifications.initialize(
+        initializationSettings,
+        onDidReceiveNotificationResponse: (response) async {
+          if (response.payload != null && response.payload!.isNotEmpty) {
+            try {
+              final data = jsonDecode(response.payload!);
+              if (data['type'] == 'chat_message') {
+                await clearNotificationsForSession();
+                await PreferenceHelper.remove("fcmData");
+              }
+              await _handler.handleMessage(data, MsgSource.Background);
+            } catch (e) {
+              log('Error parsing local notification payload: $e');
+            }
+          }
+        },
+      );
       WidgetsBinding.instance.addObserver(_AppLifecycleObserver(this));
       await _clearStaleBackgroundNotifications();
     } catch (e) {
@@ -187,52 +176,6 @@ class FcmListener {
     }
 
     return _fcm;
-  }
-
-  Future<void> _initializeLocalNotifications() async {
-    const androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_fello_notif');
-    const iosSettings = DarwinInitializationSettings();
-    const settings = InitializationSettings(
-      android: androidSettings,
-      iOS: iosSettings,
-    );
-    await _localNotifications.initialize(
-      settings,
-      onDidReceiveNotificationResponse: (response) async {
-        await _handleNotificationTap(response);
-      },
-    );
-  }
-
-  Future<void> _handleNotificationTap(NotificationResponse response) async {
-    final payloadJson = response.payload;
-    if (payloadJson != null) {
-      try {
-        final payloadData = jsonDecode(payloadJson) as Map<String, dynamic>;
-        final type = payloadData['type'] as String?;
-
-        if (type == 'chat_message') {
-          final sessionId = payloadData['sessionId'] as String?;
-          final advisorId = payloadData['advisorId'] as String?;
-          final advisorName = payloadData['senderName'] ?? '';
-          if (sessionId != null && advisorId != null) {
-            final data = payloadData as Map<String, dynamic>? ?? {};
-            payloadData.addAll({
-              "deep_uri":
-                  '/chat?sessionId=$sessionId&advisorId=$advisorId&advisorName=$advisorName',
-            });
-            await _handler.handleMessage(data, MsgSource.Background);
-            await clearNotificationsForSession(sessionId);
-          }
-        } else {
-          final data = payloadData['data'] as Map<String, dynamic>? ?? {};
-          await _handler.handleMessage(data, MsgSource.Background);
-        }
-      } catch (e) {
-        logger?.e('Error parsing notification payload: $e');
-      }
-    }
   }
 
   Future<void> _handleForegroundChatMessage(RemoteMessage message) async {
@@ -272,8 +215,20 @@ class FcmListener {
       icon: '@mipmap/ic_fello_notif',
       color: const Color(0xFF01656B),
       category: AndroidNotificationCategory.message,
-      groupKey: 'chat_session_${data['sessionId'] ?? ''}',
+      groupKey: 'chat_session_${message.data['sessionId']}',
       setAsGroupSummary: false,
+      styleInformation: BigTextStyleInformation(
+        message.data['body'] ?? '',
+        contentTitle: message.data['title'] ?? '',
+        summaryText: 'New message',
+      ),
+      actions: [
+        const AndroidNotificationAction(
+          'reply',
+          'Reply',
+          showsUserInterface: true,
+        ),
+      ],
     );
 
     const iosDetails = DarwinNotificationDetails(
@@ -281,6 +236,8 @@ class FcmListener {
       presentBadge: true,
       presentSound: true,
       categoryIdentifier: 'chat_message',
+      threadIdentifier: 'chat_thread',
+      interruptionLevel: InterruptionLevel.timeSensitive,
     );
 
     var details = NotificationDetails(
@@ -293,11 +250,15 @@ class FcmListener {
       'sessionId': data['sessionId'],
       'advisorId': data['advisorId'],
       'source': 'foreground',
+      "deep_uri":
+          '/chat?sessionId=${data["sessionId"]}&advisorId=${data['advisorId']}&advisorName=${data['senderName']}',
     };
 
-    final notificationId = _generateUniqueMessageId(data['sessionId'], data);
-    final sessionId = data['sessionId'] as String?;
-
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final senderId = message.data['userId'] ?? message.data['advisorId'] ?? '';
+    final sessionId = message.data['sessionId'] ?? 'unknown';
+    final uniqueString = '${sessionId}_${senderId}_$timestamp';
+    final notificationId = uniqueString.hashCode;
     await _localNotifications.show(
       notificationId,
       data['title'] ?? '',
@@ -319,13 +280,13 @@ class FcmListener {
     final prefs = await SharedPreferences.getInstance();
     if (sessionId != null) {
       await prefs.setString('current_chat_session_id', sessionId);
-      await clearNotificationsForSession(sessionId);
+      await clearNotificationsForSession();
     } else {
       await prefs.remove('current_chat_session_id');
     }
   }
 
-  Future<void> clearNotificationsForSession(String sessionId) async {
+  Future<void> clearNotificationsForSession() async {
     // Clear foreground notifications
     await _localNotifications.cancelAll();
     // final notificationIds = _sessionNotificationIds[sessionId];
@@ -494,7 +455,7 @@ class FcmListener {
 
     // Create enhanced chat notifications channel
     const MethodChannel chatChannel =
-        MethodChannel('fello.in/dev/notifications/channel/chat');
+        MethodChannel('fello.in/dev/notifications/channel/tambola');
     Map<String, String> chatChannelMap = {
       "id": "chat_messages",
       "name": "Chat Messages",
