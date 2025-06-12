@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:felloapp/core/model/chat/chat_models.dart';
 import 'package:felloapp/core/repository/chat_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,9 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
   final ChatRepository _chatRepository;
   IO.Socket? _socket;
 
-  static const String _baseUrl = 'https://advisors.fello-dev.net/chat';
+  static final _baseUrl = FlavorConfig.isDevelopment()
+      ? 'https://advisors.fello-dev.net/chat'
+      : 'https://advisors.fello-prod.net/chat';
   final userId = locator<UserService>().baseUser!.uid ?? '';
   final isAdvisor = locator<UserService>().baseUser!.isAdvisor ?? false;
   final advisorId = locator<UserService>().baseUser!.advisorId ?? '';

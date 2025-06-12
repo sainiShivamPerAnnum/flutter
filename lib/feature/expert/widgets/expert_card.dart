@@ -116,22 +116,35 @@ class ExpertCard extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: SizeConfig.padding18),
-                        Row(
-                          children: [
-                            AppImage(
-                              Assets.qualifications,
-                              height: SizeConfig.body4,
-                              width: SizeConfig.body4,
-                              color: UiConstants.kTextColor,
-                            ),
-                            SizedBox(width: SizeConfig.padding4),
-                            Text(
-                              expert.qualifications,
-                              style: TextStyles.sourceSansM.body4.colour(
-                                UiConstants.kTextColor,
+                        Container(
+                          constraints: BoxConstraints(
+                            maxWidth: 75.w,
+                            minWidth: 0,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              AppImage(
+                                Assets.qualifications,
+                                height: SizeConfig.body4,
+                                width: SizeConfig.body4,
+                                color: UiConstants.kTextColor,
                               ),
-                            ),
-                          ],
+                              SizedBox(width: SizeConfig.padding4),
+                              Flexible(
+                                child: Text(
+                                  expert.qualifications,
+                                  style: TextStyles.sourceSansM.body4
+                                      .colour(
+                                        UiConstants.kTextColor,
+                                      )
+                                      .copyWith(
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(width: SizeConfig.padding18),
                         SizedBox(

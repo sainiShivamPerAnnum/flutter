@@ -104,7 +104,7 @@ class UpcomingBookingsComponentState extends State<UpcomingBookingsComponent> {
                         Padding(
                           padding: EdgeInsets.only(left: 20.w, top: 24.h),
                           child: SizedBox(
-                            height: 250.h,
+                            height: 220.h,
                             child: AnimatedSwitcher(
                               duration: const Duration(milliseconds: 500),
                               child: model.item3
