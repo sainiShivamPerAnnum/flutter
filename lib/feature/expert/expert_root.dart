@@ -411,7 +411,7 @@ class __ExpertHomeState extends State<_ExpertHome>
                                                         _chipsScrollController,
                                                     child: SizedBox(
                                                       width: 2 *
-                                                              (120.w *
+                                                              (100.w *
                                                                   ((expertsData
                                                                               .list
                                                                               .length /

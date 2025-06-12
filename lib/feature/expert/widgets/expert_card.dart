@@ -1,5 +1,7 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/experts/experts_home.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/chat/bloc/chat_bloc.dart';
 import 'package:felloapp/feature/chat/chat_screen.dart';
 import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
@@ -208,6 +210,13 @@ class ExpertCard extends StatelessWidget {
                             ),
                           ),
                         );
+                        locator<AnalyticsService>().track(
+                          eventName: AnalyticsEvents.chatNow,
+                          properties: {
+                            "Expert ID": expert.advisorId,
+                            "Expert name": expert.name,
+                          },
+                        );
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
@@ -287,7 +296,7 @@ class ExpertCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
-                              Icons.call_outlined,
+                              Icons.video_call_rounded,
                               color: UiConstants.kTextColor,
                               size: SizeConfig.body4,
                             ),
