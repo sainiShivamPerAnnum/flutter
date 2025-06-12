@@ -158,9 +158,9 @@ class ExpertCard extends StatelessWidget {
                         Row(
                           children: [
                             Icon(
-                              Icons.message_rounded,
+                              Icons.video_call_rounded,
                               color: UiConstants.kTextColor,
-                              size: SizeConfig.body4,
+                              size: SizeConfig.body3,
                             ),
                             SizedBox(width: SizeConfig.padding4),
                             Text(

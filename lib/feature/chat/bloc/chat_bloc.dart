@@ -135,6 +135,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
         loadingState: ChatLoadingState.creatingSession,
         advisorId: event.advisorId,
         currentUserId: userId,
+        error: null,
       ),
     );
 

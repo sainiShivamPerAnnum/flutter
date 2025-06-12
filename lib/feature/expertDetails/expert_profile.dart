@@ -418,7 +418,7 @@ class _ExpertProfilePageState extends State<_ExpertProfilePage>
                                 child: Column(
                                   children: [
                                     Text(
-                                      expertDetails.rating.toString(),
+                                      expertDetails.rating.toStringAsFixed(1),
                                       style:
                                           TextStyles.sourceSansSB.body2.colour(
                                         UiConstants.kTextColor,
