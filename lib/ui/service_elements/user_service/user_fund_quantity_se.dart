@@ -19,8 +19,8 @@ class UserFundQuantitySE extends StatelessWidget {
   });
 
   String getQuantity(Portfolio? fund) {
-    final suffix = investmentType == InvestmentType.AUGGOLD99 ? " gm" : '';
-    final prefix = investmentType == InvestmentType.AUGGOLD99 ? '' : '₹ ';
+    final suffix = investmentType == InvestmentType.AUGGOLD99 ? "" : '';
+    final prefix = investmentType == InvestmentType.AUGGOLD99 ? '₹ ' : '₹ ';
     final quantity = investmentType == InvestmentType.AUGGOLD99
         ? fund?.augmont.balance
         : fund?.flo.balance;
