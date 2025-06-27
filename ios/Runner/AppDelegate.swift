@@ -6,6 +6,8 @@ import Contacts
 import WebEngage
 import webengage_flutter
 import flutter_local_notifications
+import UserNotifications
+import FirebaseMessaging
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -183,6 +185,18 @@ import flutter_local_notifications
     
     // Called when the application sucessfuly registers for push notifications
     override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        print("✅ Push notifications registered successfully")
+        print("Device token: \(deviceToken)")
+         let tokenString = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
+    print("Device token (hex): \(tokenString)")
+     Messaging.messaging().token { token, error in
+        if let error = error {
+            print("Error fetching FCM registration token: \(error)")
+        } else if let token = token {
+            print("FCM registration token: \(token)")
+            // This is the token you send to your backend
+        }
+    }
     }
     override func applicationDidBecomeActive(_ application: UIApplication) {
         ATTrackingManager.requestTrackingAuthorization(completionHandler: {_ in })

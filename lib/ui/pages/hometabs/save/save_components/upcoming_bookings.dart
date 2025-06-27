@@ -103,82 +103,78 @@ class UpcomingBookingsComponentState extends State<UpcomingBookingsComponent> {
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 20.w, top: 24.h),
-                          child: SizedBox(
-                            height: 220.h,
-                            child: AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 500),
-                              child: model.item3
-                                  ? const ExpertCardV2Shimmer()
-                                  : cs.CarouselSlider.builder(
-                                      itemCount: model.item2.length,
-                                      itemBuilder: (context, index, realIndex) {
-                                        return Padding(
-                                          padding: EdgeInsets.only(
-                                            bottom: SizeConfig.padding16,
-                                            right: SizeConfig.padding18,
-                                          ),
-                                          child: ExpertCard(
-                                            isFree: false,
-                                            expert: model.item2[index],
-                                            onBookCall: () {
-                                              BaseUtil.openBookAdvisorSheet(
-                                                advisorId: model
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 500),
+                            child: model.item3
+                                ? const ExpertCardV2Shimmer()
+                                : cs.CarouselSlider.builder(
+                                    itemCount: model.item2.length,
+                                    itemBuilder: (context, index, realIndex) {
+                                      return Padding(
+                                        padding: EdgeInsets.only(
+                                          bottom: SizeConfig.padding16,
+                                          right: SizeConfig.padding18,
+                                        ),
+                                        child: ExpertCard(
+                                          isFree: false,
+                                          expert: model.item2[index],
+                                          onBookCall: () {
+                                            BaseUtil.openBookAdvisorSheet(
+                                              advisorId:
+                                                  model.item2[index].advisorId,
+                                              advisorImage:
+                                                  model.item2[index].image,
+                                              advisorName:
+                                                  model.item2[index].name,
+                                              isEdit: false,
+                                            );
+                                            analytics.track(
+                                              eventName:
+                                                  AnalyticsEvents.bookACall,
+                                              properties: {
+                                                "Expert ID": model
                                                     .item2[index].advisorId,
-                                                advisorImage:
-                                                    model.item2[index].image,
-                                                advisorName:
+                                                "Expert name":
                                                     model.item2[index].name,
-                                                isEdit: false,
-                                              );
-                                              analytics.track(
-                                                eventName:
-                                                    AnalyticsEvents.bookACall,
-                                                properties: {
-                                                  "Expert ID": model
-                                                      .item2[index].advisorId,
-                                                  "Expert name":
-                                                      model.item2[index].name,
-                                                },
-                                              );
-                                            },
-                                            onTap: () {
-                                              AppState.delegate!.appState
-                                                  .currentAction = PageAction(
-                                                page: ExpertDetailsPageConfig,
-                                                state: PageState.addWidget,
-                                                widget: ExpertsDetailsView(
-                                                  advisorID: model
-                                                      .item2[index].advisorId,
-                                                ),
-                                              );
-                                              analytics.track(
-                                                eventName:
-                                                    "Suggested - Experts",
-                                                properties: {
-                                                  "Expert sequence": model
-                                                      .item2[index].advisorId,
-                                                  "Expert name":
-                                                      model.item2[index].name,
-                                                },
-                                              );
-                                            },
-                                          ),
-                                        );
+                                              },
+                                            );
+                                          },
+                                          onTap: () {
+                                            AppState.delegate!.appState
+                                                .currentAction = PageAction(
+                                              page: ExpertDetailsPageConfig,
+                                              state: PageState.addWidget,
+                                              widget: ExpertsDetailsView(
+                                                advisorID: model
+                                                    .item2[index].advisorId,
+                                              ),
+                                            );
+                                            analytics.track(
+                                              eventName: "Suggested - Experts",
+                                              properties: {
+                                                "Expert sequence": model
+                                                    .item2[index].advisorId,
+                                                "Expert name":
+                                                    model.item2[index].name,
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    options: cs.CarouselOptions(
+                                      enlargeCenterPage: false,
+                                      enableInfiniteScroll: false,
+                                      viewportFraction: 1,
+                                      aspectRatio: 1.6,
+                                      initialPage: 0,
+                                      onPageChanged: (index, reason) {
+                                        setState(() {
+                                          _currentPage = index;
+                                        });
                                       },
-                                      options: cs.CarouselOptions(
-                                        height: double.infinity,
-                                        enlargeCenterPage: false,
-                                        enableInfiniteScroll: false,
-                                        viewportFraction: 1,
-                                        initialPage: 0,
-                                        onPageChanged: (index, reason) {
-                                          setState(() {
-                                            _currentPage = index;
-                                          });
-                                        },
-                                      ),
                                     ),
-                            ),
+                                  ),
                           ),
                         ),
                         if (model.item2.length > 1)
