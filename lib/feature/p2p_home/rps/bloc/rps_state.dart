@@ -13,10 +13,8 @@ class LoadingRPSDetails extends RPSState {
 
 final class RPSDataState extends RPSState {
   final RpsData? fixedData;
-  final RpsData? flexiData;
   const RPSDataState({
     required this.fixedData,
-    required this.flexiData,
   });
   RPSDataState copyWith({
     RpsData? fixedData,
@@ -24,13 +22,11 @@ final class RPSDataState extends RPSState {
   }) {
     return RPSDataState(
       fixedData: fixedData ?? this.fixedData,
-      flexiData: flexiData ?? this.flexiData,
     );
   }
 
   @override
   List<Object?> get props => [
         fixedData,
-        flexiData,
       ];
 }

@@ -19,13 +19,10 @@ class RpsDetailsBloc extends Bloc<RPSEvent, RPSState> {
   ) async {
     emitter(const LoadingRPSDetails());
     final fixedData = await _rpsRepository.getRpsData(
-      'fixed',
-    );
-    final flexiData = await _rpsRepository.getRpsData(
-      'flexi',
+      'FIXED_FLEXI',
     );
     emitter(
-      RPSDataState(fixedData: fixedData.model, flexiData: flexiData.model),
+      RPSDataState(fixedData: fixedData.model),
     );
   }
 }
