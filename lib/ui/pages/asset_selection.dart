@@ -28,7 +28,7 @@ import 'package:shimmer/shimmer.dart';
 
 class AssetSelectionPage extends StatelessWidget {
   const AssetSelectionPage({
-    this.showFlo = true,
+    this.showFlo = false,
     this.showGold = true,
     super.key,
     this.amount,

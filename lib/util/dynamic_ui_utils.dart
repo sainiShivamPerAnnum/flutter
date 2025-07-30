@@ -19,7 +19,7 @@ class DynamicUiUtils {
   static List<String> advisor = ["LV", "UC", "PC"];
 
   // static Text trendingTag=
-  static List<String> navBar = ["SV", "LV", "EP", "SP", "TM", "AD"];
+  static List<String> navBar = ["SV", "EP"];
   static List<String> playViewOrder = ['TA', 'AG', 'HTP', 'GOW', 'ST'];
   static SingleInfo helpFab =
       SingleInfo(iconUri: '', actionUri: '', title: 'Help', isCollapse: true);

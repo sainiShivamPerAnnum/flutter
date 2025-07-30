@@ -5,7 +5,6 @@ import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/p2p_home/home/widgets/percentage_chip.dart';
-import 'package:felloapp/feature/p2p_home/invest_section/ui/invest_section_view.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/ui/my_funds_section_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
@@ -40,12 +39,12 @@ class P2PHomeView extends StatelessWidget {
     final locale = locator<S>();
     final List<String> tabs = <String>[
       locale.myFundsSection,
-      locale.investSection,
+      // locale.investSection,
       locale.transactionSection,
     ];
     return DefaultTabController(
       length: tabs.length,
-      initialIndex: 1,
+      initialIndex: 0,
       child: BaseScaffold(
         appBar: const _AppBar(),
         backgroundColor: UiConstants.bg,
@@ -81,7 +80,7 @@ class P2PHomeView extends StatelessWidget {
           body: const TabBarView(
             children: [
               MyFundSection(),
-              InvestSection(),
+              // InvestSection(),
               TransactionSection(),
             ],
           ),
@@ -156,7 +155,7 @@ class _TabBar extends StatelessWidget {
         labelStyle: TextStyles.sourceSans.body2,
         labelColor: UiConstants.teal3,
         unselectedLabelColor: UiConstants.textGray70,
-         dividerColor: UiConstants.grey5,
+        dividerColor: UiConstants.grey5,
         unselectedLabelStyle: TextStyles.sourceSans.body2,
         indicatorPadding: const EdgeInsets.symmetric(horizontal: 20),
         isScrollable: false,

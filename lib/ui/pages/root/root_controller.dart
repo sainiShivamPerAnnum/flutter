@@ -3,10 +3,8 @@ import 'dart:developer';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/advisor/advisor_root.dart';
-import 'package:felloapp/feature/chat_home/chat_home.dart';
-import 'package:felloapp/feature/expert/expert_root.dart';
+import 'package:felloapp/feature/expert/new_experts_home.dart';
 import 'package:felloapp/feature/expert/widgets/scroll_to_index.dart';
-import 'package:felloapp/feature/live/live_root.dart';
 import 'package:felloapp/feature/shorts/flutter_preload_videos.dart';
 import 'package:felloapp/feature/shortsHome/shorts_v2.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -35,8 +33,8 @@ class RootController {
   );
 
   static const saveNavBarItem = NavBarItemModel(
-    "Home",
-    Assets.home_bottom_nav,
+    "Invest",
+    Assets.new_home_nav,
   );
 
   static const shortsNavBarItem = NavBarItemModel(
@@ -45,8 +43,8 @@ class RootController {
   );
 
   NavBarItemModel currentNavBarItemModel = const NavBarItemModel(
-    "Home",
-    Assets.home_bottom_nav,
+    "Invest",
+    Assets.new_home_nav,
   );
 
   Map<Widget, NavBarItemModel> navItems = {};
@@ -100,25 +98,7 @@ class RootController {
           () => RootController.saveNavBarItem,
         );
         break;
-      case "LV":
-        navItems.putIfAbsent(
-          const LiveHomeView(),
-          () => RootController.liveNavBarItem,
-        );
-        break;
       case "EP":
-        navItems.putIfAbsent(
-          const ExpertsHomeView(),
-          () => RootController.expertNavBarItem,
-        );
-        break;
-      case "SH":
-        navItems.putIfAbsent(
-          const ShortsNewPage(),
-          () => RootController.shortsNavBarItem,
-        );
-        break;
-      case "SP":
         final UserService userService = locator<UserService>();
         if (userService.baseUser?.isAdvisor ?? false) {
           navItems.putIfAbsent(
@@ -127,11 +107,11 @@ class RootController {
           );
         } else {
           navItems.putIfAbsent(
-            const ChatHome(),
-            () => RootController.supportNavBarItem,
+            const NewExpertsHome(),
+            () => RootController.expertNavBarItem,
           );
+          break;
         }
-        break;
       default:
     }
   }

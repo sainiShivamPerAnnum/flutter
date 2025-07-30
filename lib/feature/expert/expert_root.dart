@@ -30,10 +30,7 @@ class ExpertsHomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => locator<ExpertBloc>()..add(const LoadExpertsData()),
-      child: const _ExpertHome(),
-    );
+    return const _ExpertHome();
   }
 }
 
@@ -62,7 +59,6 @@ class __ExpertHomeState extends State<_ExpertHome>
 
   @override
   void dispose() {
-    RootController.autoScrollController.dispose();
     _chipsScrollController.dispose();
     _searchFocusNode.dispose();
     _controller.dispose();
@@ -99,7 +95,6 @@ class __ExpertHomeState extends State<_ExpertHome>
               case LoadingExpertsData():
                 return Column(
                   children: [
-                    _appBar(''),
                     Center(
                       child: Padding(
                         padding: EdgeInsets.only(
@@ -146,7 +141,6 @@ class __ExpertHomeState extends State<_ExpertHome>
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          _appBar(state.query),
                           SizedBox(
                             height: 150.h,
                           ),
@@ -180,7 +174,6 @@ class __ExpertHomeState extends State<_ExpertHome>
                     : state.query != ''
                         ? Column(
                             children: [
-                              _appBar(state.query),
                               Expanded(
                                 child: ListView.builder(
                                   padding:
@@ -284,9 +277,6 @@ class __ExpertHomeState extends State<_ExpertHome>
                                     ),
                                   ),
                                   slivers: [
-                                    SliverToBoxAdapter(
-                                      child: _appBar(state.query),
-                                    ),
                                     SliverPadding(
                                       padding: EdgeInsets.only(
                                         left: SizeConfig.padding20,
@@ -636,146 +626,146 @@ class __ExpertHomeState extends State<_ExpertHome>
     );
   }
 
-  Widget _appBar(String query) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 20.w,
-      ),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            UiConstants.bg,
-            Color(0xff212B2D),
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: SizeConfig.padding14,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Experts',
-                    style: TextStyles.sourceSansSB.body1,
-                  ),
-                  Text(
-                    'Book a call with an expert instantly',
-                    style: TextStyles.sourceSans.body3.colour(
-                      UiConstants.kTextColor.withOpacity(.7),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 18.h,
-          ),
-          SizedBox(
-            height: 38.h,
-            child: TextField(
-              controller: _controller,
-              focusNode: _searchFocusNode,
-              autofocus: false,
-              onSubmitted: (query) {
-                if (query.trim().length >= 3) {
-                  BlocProvider.of<ExpertBloc>(
-                    context,
-                  ).add(SearchExperts(query));
-                  _searchFocusNode.unfocus();
-                } else {
-                  BaseUtil.showNegativeAlert(
-                    'Input Error',
-                    'Please enter at least 3 characters',
-                  );
-                }
-              },
-              textAlign: TextAlign.justify,
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                hintText: "Search",
-                hintStyle: TextStyles.sourceSans.body3.colour(
-                  UiConstants.kTextColor.withOpacity(.7),
-                ),
-                filled: true,
-                fillColor: const Color(0xffD9D9D9).withOpacity(.04),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    8.r,
-                  ),
-                  borderSide: BorderSide(
-                    color: const Color(
-                      0xffCACBCC,
-                    ).withOpacity(.07),
-                  ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    8.r,
-                  ),
-                  borderSide: BorderSide(
-                    color: const Color(
-                      0xffCACBCC,
-                    ).withOpacity(.07),
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    8.r,
-                  ),
-                  borderSide: BorderSide(
-                    color: const Color(
-                      0xffCACBCC,
-                    ).withOpacity(.07),
-                  ),
-                ),
-                suffixIcon: query != ""
-                    ? IconButton(
-                        onPressed: () {
-                          _controller.clear();
-                          BlocProvider.of<ExpertBloc>(
-                            context,
-                            listen: false,
-                          ).add(
-                            const LoadExpertsData(),
-                          );
-                          _searchFocusNode.unfocus();
-                        },
-                        icon: Icon(
-                          Icons.close,
-                          color: UiConstants.kTextColor.withOpacity(
-                            .7,
-                          ),
-                        ),
-                      )
-                    : Icon(
-                        Icons.search,
-                        color: UiConstants.kTextColor.withOpacity(.7),
-                      ),
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 12.h,
-                  horizontal: 16.w,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 18.h,
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _appBar(String query) {
+  // return Container(
+  //   padding: EdgeInsets.symmetric(
+  //     horizontal: 20.w,
+  //   ),
+  //   decoration: const BoxDecoration(
+  //     gradient: LinearGradient(
+  //       colors: [
+  //         UiConstants.bg,
+  //         Color(0xff212B2D),
+  //       ],
+  //       begin: Alignment.topCenter,
+  //       end: Alignment.bottomCenter,
+  //     ),
+  //   ),
+  //   child: Column(
+  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //     crossAxisAlignment: CrossAxisAlignment.center,
+  //     children: [
+  //       SizedBox(
+  //         height: SizeConfig.padding14,
+  //       ),
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               Text(
+  //                 'Experts',
+  //                 style: TextStyles.sourceSansSB.body1,
+  //               ),
+  //               Text(
+  //                 'Book a call with an expert instantly',
+  //                 style: TextStyles.sourceSans.body3.colour(
+  //                   UiConstants.kTextColor.withOpacity(.7),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //       SizedBox(
+  //         height: 18.h,
+  //       ),
+  //       SizedBox(
+  //         height: 38.h,
+  //         child: TextField(
+  //           controller: _controller,
+  //           focusNode: _searchFocusNode,
+  //           autofocus: false,
+  //           onSubmitted: (query) {
+  //             if (query.trim().length >= 3) {
+  //               BlocProvider.of<ExpertBloc>(
+  //                 context,
+  //               ).add(SearchExperts(query));
+  //               _searchFocusNode.unfocus();
+  //             } else {
+  //               BaseUtil.showNegativeAlert(
+  //                 'Input Error',
+  //                 'Please enter at least 3 characters',
+  //               );
+  //             }
+  //           },
+  //           textAlign: TextAlign.justify,
+  //           style: const TextStyle(color: Colors.white),
+  //           decoration: InputDecoration(
+  //             hintText: "Search",
+  //             hintStyle: TextStyles.sourceSans.body3.colour(
+  //               UiConstants.kTextColor.withOpacity(.7),
+  //             ),
+  //             filled: true,
+  //             fillColor: const Color(0xffD9D9D9).withOpacity(.04),
+  //             border: OutlineInputBorder(
+  //               borderRadius: BorderRadius.circular(
+  //                 8.r,
+  //               ),
+  //               borderSide: BorderSide(
+  //                 color: const Color(
+  //                   0xffCACBCC,
+  //                 ).withOpacity(.07),
+  //               ),
+  //             ),
+  //             enabledBorder: OutlineInputBorder(
+  //               borderRadius: BorderRadius.circular(
+  //                 8.r,
+  //               ),
+  //               borderSide: BorderSide(
+  //                 color: const Color(
+  //                   0xffCACBCC,
+  //                 ).withOpacity(.07),
+  //               ),
+  //             ),
+  //             focusedBorder: OutlineInputBorder(
+  //               borderRadius: BorderRadius.circular(
+  //                 8.r,
+  //               ),
+  //               borderSide: BorderSide(
+  //                 color: const Color(
+  //                   0xffCACBCC,
+  //                 ).withOpacity(.07),
+  //               ),
+  //             ),
+  //             suffixIcon: query != ""
+  //                 ? IconButton(
+  //                     onPressed: () {
+  //                       _controller.clear();
+  //                       BlocProvider.of<ExpertBloc>(
+  //                         context,
+  //                         listen: false,
+  //                       ).add(
+  //                         const LoadExpertsData(),
+  //                       );
+  //                       _searchFocusNode.unfocus();
+  //                     },
+  //                     icon: Icon(
+  //                       Icons.close,
+  //                       color: UiConstants.kTextColor.withOpacity(
+  //                         .7,
+  //                       ),
+  //                     ),
+  //                   )
+  //                 : Icon(
+  //                     Icons.search,
+  //                     color: UiConstants.kTextColor.withOpacity(.7),
+  //                   ),
+  //             contentPadding: EdgeInsets.symmetric(
+  //               vertical: 12.h,
+  //               horizontal: 16.w,
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //       SizedBox(
+  //         height: 18.h,
+  //       ),
+  //     ],
+  //   ),
+  // );
+  // }
 
   Widget _buildInViewSection(
     String section,

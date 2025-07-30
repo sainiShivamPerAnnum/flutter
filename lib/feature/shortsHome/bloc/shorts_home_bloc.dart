@@ -109,13 +109,26 @@ class ShortsHomeBloc extends Bloc<ShortsHomeEvents, ShortsHomeState> {
     ApplyCategory event,
     Emitter<ShortsHomeState> emitter,
   ) async {
+    final currentState = state as ShortsHomeData;
     emitter(const LoadingShortsDetails());
-
     final data = await _shortsRepository.applyCategory(query: event.query);
     if (data.isSuccess()) {
+      final sortedCategories = [
+        ...currentState.shortsHome.allCategories.where(
+          (category) =>
+              category.toLowerCase().trim() == event.query.toLowerCase(),
+        ),
+        ...currentState.shortsHome.allCategories.where(
+          (category) =>
+              category.toLowerCase().trim() != event.query.toLowerCase(),
+        ),
+      ];
       emitter(
         ShortsHomeData(
-          shortsHome: ShortsHome(allCategories: [], shorts: data.model!),
+          shortsHome: ShortsHome(
+            allCategories: sortedCategories,
+            shorts: data.model!,
+          ),
           query: event.query.trim(),
         ),
       );

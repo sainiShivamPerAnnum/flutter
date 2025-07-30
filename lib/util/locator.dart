@@ -38,6 +38,7 @@ import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/cache_service.dart';
+import 'package:felloapp/core/service/experts_tab_controller.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_v2/fcm_handler_v2.dart';
@@ -265,6 +266,6 @@ Future<void> setupLocator() async {
   locator.registerFactory(FelloCoinBarViewModel.new);
   locator.registerFactory(AssetPreferenceViewModel.new);
   locator.registerLazySingleton(WebEngageAnalytics.new);
-
+  locator.registerLazySingleton(GlobalTabController.new);
   await locator.allReady();
 }

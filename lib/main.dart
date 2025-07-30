@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/experts_tab_controller.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
@@ -90,6 +91,7 @@ class MyApp extends HookWidget {
           ChangeNotifierProvider(create: (_) => locator<SubService>()),
           ChangeNotifierProvider(create: (_) => locator<BankAndPanService>()),
           ChangeNotifierProvider(create: (_) => locator<TambolaService>()),
+          ChangeNotifierProvider(create: (_) => locator<GlobalTabController>()),
           ChangeNotifierProvider(
             create: (_) => locator<AugmontTransactionService>(),
           ),

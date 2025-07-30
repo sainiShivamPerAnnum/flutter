@@ -14,7 +14,6 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -22,19 +21,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ChatHome extends StatelessWidget {
-  const ChatHome({super.key});
+  const ChatHome({
+    required this.currentChatHistory,
+    super.key,
+  });
+  final List<ChatHistory> currentChatHistory;
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => locator<ChatHistoryBloc>()..add(const LoadChatHistory()),
-      child: const _ChatHomeView(),
+    return _ChatHomeView(
+      currentChatHistory: currentChatHistory,
     );
   }
 }
 
 class _ChatHomeView extends StatefulWidget {
-  const _ChatHomeView();
+  const _ChatHomeView({required this.currentChatHistory});
+  final List<ChatHistory> currentChatHistory;
 
   @override
   State<_ChatHomeView> createState() => __ChatHomeViewState();
@@ -45,6 +48,11 @@ class __ChatHomeViewState extends State<_ChatHomeView>
   final isAdvisor = locator<UserService>().baseUser!.isAdvisor ?? false;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   List<ChatHistory> _currentChatHistory = [];
+  @override
+  void initState() {
+    _currentChatHistory = widget.currentChatHistory;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,53 +76,53 @@ class __ChatHomeViewState extends State<_ChatHomeView>
         },
         child: Column(
           children: [
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 20.w,
-              ),
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    UiConstants.bg,
-                    Color(0xff212B2D),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: SizeConfig.padding14,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Chats',
-                            style: TextStyles.sourceSansSB.body1,
-                          ),
-                          Text(
-                            'Chat with an expert instantly',
-                            style: TextStyles.sourceSans.body3.colour(
-                              UiConstants.kTextColor.withOpacity(.7),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 18.h,
-                  ),
-                ],
-              ),
-            ),
+            // Container(
+            //   padding: EdgeInsets.symmetric(
+            //     horizontal: 20.w,
+            //   ),
+            //   decoration: const BoxDecoration(
+            //     gradient: LinearGradient(
+            //       colors: [
+            //         UiConstants.bg,
+            //         Color(0xff212B2D),
+            //       ],
+            //       begin: Alignment.topCenter,
+            //       end: Alignment.bottomCenter,
+            //     ),
+            //   ),
+            //   child: Column(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     crossAxisAlignment: CrossAxisAlignment.center,
+            //     children: [
+            //       SizedBox(
+            //         height: SizeConfig.padding14,
+            //       ),
+            //       Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //         children: [
+            //           Column(
+            //             crossAxisAlignment: CrossAxisAlignment.start,
+            //             children: [
+            //               Text(
+            //                 'Chats',
+            //                 style: TextStyles.sourceSansSB.body1,
+            //               ),
+            //               Text(
+            //                 'Chat with an expert instantly',
+            //                 style: TextStyles.sourceSans.body3.colour(
+            //                   UiConstants.kTextColor.withOpacity(.7),
+            //                 ),
+            //               ),
+            //             ],
+            //           ),
+            //         ],
+            //       ),
+            //       SizedBox(
+            //         height: 18.h,
+            //       ),
+            //     ],
+            //   ),
+            // ),
             SizedBox(
               height: 14.h,
             ),

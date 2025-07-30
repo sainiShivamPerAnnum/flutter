@@ -278,6 +278,7 @@ class Assets {
       "https://d11q4cti75qmcp.cloudfront.net/imagekit/p2p_home_v2/empty_flov2.png";
 
   static const String home_bottom_nav = "assets/svg/home.svg";
+  static const String new_home_nav = "assets/svg/new_save.svg";
 
   static const String live_bottom_nav = "assets/svg/live.svg";
 

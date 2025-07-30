@@ -12,6 +12,7 @@ import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
 import 'package:felloapp/core/repository/live_repository.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/experts_tab_controller.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/chat/bloc/chat_bloc.dart';
@@ -978,8 +979,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         if (id != null) {
           await openLiveById(id);
         } else if (rootController.navItems
-            .containsValue(RootController.liveNavBarItem)) {
-          onTapItem(RootController.liveNavBarItem);
+            .containsValue(RootController.expertNavBarItem)) {
+          onTapItem(RootController.expertNavBarItem);
+          locator<GlobalTabController>().setIndex(1);
           break;
         }
         pageConfiguration = LivePageConfig;
@@ -1052,6 +1054,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
             rootController.navItems
                 .containsValue(RootController.expertNavBarItem)) {
           onTapItem(RootController.expertNavBarItem);
+          locator<GlobalTabController>().setIndex(0);
           final categoryIndex =
               RootController.expertsSections.indexOf(category);
           if (categoryIndex != -1) {
@@ -1070,6 +1073,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         } else if (rootController.navItems
             .containsValue(RootController.expertNavBarItem)) {
           onTapItem(RootController.expertNavBarItem);
+          locator<GlobalTabController>().setIndex(0);
           break;
         }
         pageConfiguration = AllExpertsPageConfig;
@@ -1089,8 +1093,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           );
           await switchCompleter.future;
           if (rootController.navItems
-              .containsValue(RootController.shortsNavBarItem)) {
-            onTapItem(RootController.shortsNavBarItem);
+              .containsValue(RootController.expertNavBarItem)) {
+            onTapItem(RootController.expertNavBarItem);
+            locator<GlobalTabController>().setIndex(1);
             AppState.delegate!.appState.currentAction = PageAction(
               page: ShortsPageConfig,
               state: PageState.addWidget,
@@ -1104,8 +1109,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
             break;
           }
         } else if (rootController.navItems
-            .containsValue(RootController.shortsNavBarItem)) {
-          onTapItem(RootController.shortsNavBarItem);
+            .containsValue(RootController.expertNavBarItem)) {
+          onTapItem(RootController.expertNavBarItem);
+          locator<GlobalTabController>().setIndex(1);
           AppState.delegate!.appState.currentAction = PageAction(
             page: ShortsPageConfig,
             state: PageState.addWidget,
@@ -1223,6 +1229,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         }
         break;
       case "chat":
+        if (rootController.navItems
+            .containsValue(RootController.expertNavBarItem)) {
+          onTapItem(RootController.expertNavBarItem);
+          locator<GlobalTabController>().setIndex(2);
+        }
         final sessionId = queryParams['sessionId'];
         final advisorId = queryParams['advisorId'];
         final advisorName = queryParams['advisorName'] ?? '';

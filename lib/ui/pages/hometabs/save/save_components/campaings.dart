@@ -43,7 +43,7 @@ class _CampaignsState extends State<Campaigns> {
                     highlightColor: Colors.grey[600]!,
                     child: Container(
                       margin: EdgeInsets.symmetric(horizontal: 20.w),
-                      height: 330.h,
+                      height: 235.h,
                       decoration: BoxDecoration(
                         color: Colors.black,
                         borderRadius: BorderRadius.circular(8.r),
@@ -57,7 +57,7 @@ class _CampaignsState extends State<Campaigns> {
                     key: const ValueKey<String>('Campaings'),
                     children: [
                       SizedBox(
-                        height: 307.h,
+                        height: 235.h,
                         child: cs.CarouselSlider.builder(
                           carouselController: _carouselController,
                           itemCount: model.item1!.length,
@@ -93,7 +93,7 @@ class _CampaignsState extends State<Campaigns> {
                             );
                           },
                           options: cs.CarouselOptions(
-                            height: 330.h,
+                            height: 235.h,
                             aspectRatio: 1,
                             enlargeCenterPage: false,
                             enableInfiniteScroll: false,
