@@ -76,6 +76,7 @@ class _CampaignsState extends State<Campaigns> {
                                       .parseRoute(Uri.parse(event.type));
                                 },
                                 child: Container(
+                                  width: 1.sw,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(
                                       8.r,

@@ -327,7 +327,7 @@ class __ExpertHomeState extends State<_ExpertHome>
                                         surfaceTintColor: UiConstants.bg,
                                         bottom: PreferredSize(
                                           preferredSize: Size.fromHeight(
-                                            172.h,
+                                            142.h,
                                           ),
                                           child: Transform.translate(
                                             offset: Offset(0, -20.h),

@@ -24,8 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:open_filex/open_filex.dart';
-
+import 'package:open_file/open_file.dart';
 import '../../../../base_util.dart';
 import '../../../../core/constants/analytics_events_constants.dart';
 import '../../../../core/service/analytics/analytics_service.dart';
@@ -530,7 +529,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                             _isInvoiceLoading = false;
                             setState(() {});
                             if (generatedPdfFilePath != null) {
-                              OpenFilex.open(generatedPdfFilePath);
+                              OpenFile.open(generatedPdfFilePath);
                             } else {
                               BaseUtil.showNegativeAlert(
                                 locale.txnInvoiceFailed,
