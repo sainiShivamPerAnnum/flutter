@@ -3,7 +3,7 @@ description: Game-based Investments
 
 publish_to: "none"
 
-version: 6.6.2+311
+version: 6.6.3+315
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -14,21 +14,20 @@ dependencies:
   app_set_id: ^1.0.0
   cached_network_image: ^3.2.3
   carousel_slider: ^5.0.0
-  cloud_firestore: ^4.15.4
+  cloud_firestore: ^5.5.0
   collection: ^1.18.0 
-  connectivity_plus: ^5.0.2
+  connectivity_plus: ^6.1.0
   device_info_plus: ^9.0.0
   encrypt: ^5.0.0
-  firebase_analytics: ^10.8.0
-  firebase_auth: ^4.17.4
-  firebase_core: ^2.25.4
-  firebase_crashlytics: ^3.4.9
-  firebase_dynamic_links: ^5.4.9
-  firebase_in_app_messaging: ^0.7.4+9
+  firebase_analytics: ^11.3.5
+  firebase_auth: ^5.3.3
+  firebase_core: ^3.8.0
+  firebase_crashlytics: ^4.1.5
+  firebase_in_app_messaging: ^0.8.0+10
   firebase_instance_id: ^1.1.0
-  firebase_messaging: ^14.7.10
-  firebase_performance: ^0.9.3+9
-  firebase_storage: ^11.6.4
+  firebase_messaging: ^15.1.5
+  firebase_performance: ^0.10.0+10
+  firebase_storage: ^12.3.6
   flutter:
     sdk: flutter
   flutter_meta_sdk: ^1.0.5
@@ -43,8 +42,8 @@ dependencies:
   google_sign_in: ^6.1.6
   image_picker: ^1.0.8
   intl: ^0.19.0
-  isar: ^3.1.0
-  isar_flutter_libs: ^3.1.0
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
   local_auth: ^2.1.2
   logger: ^2.4.0
   lottie: ^3.1.2
@@ -63,7 +62,6 @@ dependencies:
   shimmer: ^3.0.0
   sms_autofill: ^2.4.0
   syncfusion_flutter_gauges: ^27.1.58
-  truecaller_sdk: ^0.1.2
   upi_pay:
     path: packages/upi/
   url_launcher: ^6.1.8
@@ -72,7 +70,7 @@ dependencies:
   advertising_id: ^2.4.0
   flutter_hooks: ^0.20.5
   tuple: ^2.0.2
-  android_play_install_referrer: ^0.2.1
+  android_play_install_referrer: ^0.4.0
   youtube_player_iframe: ^4.0.4
   flutter_bloc: ^9.1.0
   syncfusion_flutter_charts: ^27.1.58
@@ -110,6 +108,7 @@ dependencies:
   hydrated_bloc: ^10.0.0
   socket_io_client: ^3.0.2
   flutter_local_notifications: ^18.0.1
+  app_links: ^6.3.2
 
 dev_dependencies:
   build_runner: any
@@ -121,7 +120,7 @@ dev_dependencies:
   husky: ^0.1.6
   integration_test:
     sdk: flutter
-  isar_generator: ^3.1.0
+  isar_generator: ^3.1.0+1
   json_serializable: ^6.8.0
   
 

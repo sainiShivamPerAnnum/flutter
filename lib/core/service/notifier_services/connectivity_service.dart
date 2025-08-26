@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 class ConnectivityService extends ChangeNotifier {
   ConnectivityService() {
     Connectivity().onConnectivityChanged.distinct().listen((event) {
-      log("Connectivity Service: ${event.name}");
+      log("Connectivity Service: $event");
       final result = _getStatusFromResult(event);
       if (result != connectivityStatus) {
         _connectivityStatus = result;
@@ -20,15 +20,13 @@ class ConnectivityService extends ChangeNotifier {
 
   ConnectivityStatus get connectivityStatus => _connectivityStatus;
 
-  ConnectivityStatus _getStatusFromResult(ConnectivityResult result) {
-    switch (result) {
-      case ConnectivityResult.mobile:
-      case ConnectivityResult.wifi:
-        return ConnectivityStatus.Online;
-      case ConnectivityResult.none:
-        return ConnectivityStatus.Offline;
-      default:
-        return ConnectivityStatus.Offline;
+  ConnectivityStatus _getStatusFromResult(List<ConnectivityResult> result) {
+    if (result.contains(ConnectivityResult.mobile) ||
+        result.contains(ConnectivityResult.wifi) ||
+        result.contains(ConnectivityResult.ethernet) ||
+        result.contains(ConnectivityResult.vpn)) {
+      return ConnectivityStatus.Online;
     }
+    return ConnectivityStatus.Offline;
   }
 }

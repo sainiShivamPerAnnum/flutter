@@ -41,7 +41,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sms_autofill/sms_autofill.dart';
-import 'package:truecaller_sdk/truecaller_sdk.dart';
 
 import '../../../core/model/sdui/sections/home_page_sections.dart';
 
@@ -794,49 +793,49 @@ class LoginControllerViewModel extends BaseViewModel {
     _pageNotifier!.value = _controller!.page;
   }
 
-  Future<void> initTruecaller() async {
-    TruecallerSdk.initializeSDK(
-      buttonColor: UiConstants.primaryColor.value,
-      buttonTextColor: Colors.white.value,
-      sdkOptions: TruecallerSdkScope.SDK_OPTION_WITHOUT_OTP,
-    );
-    await TruecallerSdk.isUsable.then((isUsable) {
-      isUsable ? TruecallerSdk.getProfile : print("***Not usable***");
-    });
+  // Future<void> initTruecaller() async {
+  //   TruecallerSdk.initializeSDK(
+  //     buttonColor: UiConstants.primaryColor.value,
+  //     buttonTextColor: Colors.white.value,
+  //     sdkOptions: TruecallerSdkScope.SDK_OPTION_WITHOUT_OTP,
+  //   );
+  //   await TruecallerSdk.isUsable.then((isUsable) {
+  //     isUsable ? TruecallerSdk.getProfile : print("***Not usable***");
+  //   });
 
-    streamSubscription =
-        TruecallerSdk.streamCallbackData.listen((truecallerSdkCallback) {
-      logger.i("Access Token : ${truecallerSdkCallback.accessToken}");
-      switch (truecallerSdkCallback.result) {
-        case TruecallerSdkCallbackResult.success:
-          String? phNo = truecallerSdkCallback.profile?.phoneNumber;
-          loginUsingTrueCaller = true;
-          logger.d("Truecaller no: $phNo");
+  //   streamSubscription =
+  //       TruecallerSdk.streamCallbackData.listen((truecallerSdkCallback) {
+  //     logger.i("Access Token : ${truecallerSdkCallback.accessToken}");
+  //     switch (truecallerSdkCallback.result) {
+  //       case TruecallerSdkCallbackResult.success:
+  //         String? phNo = truecallerSdkCallback.profile?.phoneNumber;
+  //         loginUsingTrueCaller = true;
+  //         logger.d("Truecaller no: $phNo");
 
-          _analyticsService.track(
-            eventName: AnalyticsEvents.truecallerVerified,
-          );
-          AppState.isOnboardingInProgress = true;
-          _authenticateTrucallerUser(phNo);
-          break;
+  //         _analyticsService.track(
+  //           eventName: AnalyticsEvents.truecallerVerified,
+  //         );
+  //         AppState.isOnboardingInProgress = true;
+  //         _authenticateTrucallerUser(phNo);
+  //         break;
 
-        case TruecallerSdkCallbackResult.exception:
-          int? errorCode = truecallerSdkCallback.error?.code;
-          logger.e("$errorCode");
-          break;
-        case TruecallerSdkCallbackResult.failure:
-          int? errorCode = truecallerSdkCallback.error?.code;
-          logger.e("$errorCode");
-          break;
+  //       case TruecallerSdkCallbackResult.exception:
+  //         int? errorCode = truecallerSdkCallback.error?.code;
+  //         logger.e("$errorCode");
+  //         break;
+  //       case TruecallerSdkCallbackResult.failure:
+  //         int? errorCode = truecallerSdkCallback.error?.code;
+  //         logger.e("$errorCode");
+  //         break;
 
-        case TruecallerSdkCallbackResult.verification:
-          print("Verification Required!!");
-          break;
-        default:
-          print("Invalid result");
-      }
-    });
-  }
+  //       case TruecallerSdkCallbackResult.verification:
+  //         print("Verification Required!!");
+  //         break;
+  //       default:
+  //         print("Invalid result");
+  //     }
+  //   });
+  // }
 
   Future<void> _authenticateTrucallerUser(String? phno) async {
     //Make api call to get custom token

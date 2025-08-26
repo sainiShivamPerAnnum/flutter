@@ -35,22 +35,25 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 34
+    namespace "in.fello.felloapp"
+    compileSdkVersion 35
 
-    sourceSets {
+     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-
     compileOptions{
+         coreLibraryDesugaringEnabled true
          sourceCompatibility JavaVersion.VERSION_1_8
          targetCompatibility JavaVersion.VERSION_1_8
     }
-
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 
     defaultConfig {
         applicationId "in.fello.felloapp"
-        minSdkVersion 22
-        targetSdkVersion 34
+        minSdkVersion 23
+        targetSdkVersion 35
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -145,12 +148,12 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.browser:browser:1.4.0'
-    implementation 'com.google.firebase:firebase-messaging-ktx:23.1.1'
-    implementation "com.truecaller.android.sdk:truecaller-sdk:2.7.0"
-    implementation 'com.appsflyer:af-android-sdk:6.9.3'
+    implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation "com.android.installreferrer:installreferrer:2.2"
-    implementation 'com.google.android.gms:play-services-ads-identifier:17.0.1'
+    implementation 'androidx.browser:browser:1.4.0'
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
+    implementation "com.truecaller.android.sdk:truecaller-sdk:2.7.0"
 }

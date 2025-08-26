@@ -10,7 +10,6 @@ import 'package:felloapp/feature/chat_home/bloc/chat_history_bloc.dart';
 import 'package:felloapp/feature/chat_home/widgets/no_chats.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/error_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
@@ -56,10 +55,8 @@ class __ChatHomeViewState extends State<_ChatHomeView>
 
   @override
   Widget build(BuildContext context) {
-    return BaseScaffold(
-      showBackgroundGrid: false,
-      backgroundColor: UiConstants.bg,
-      body: RefreshIndicator(
+    return SafeArea(
+      child: RefreshIndicator(
         triggerMode: RefreshIndicatorTriggerMode.onEdge,
         color: UiConstants.primaryColor,
         backgroundColor: Colors.black,
@@ -296,7 +293,7 @@ class __ChatHomeViewState extends State<_ChatHomeView>
         child: Column(
           children: [
             GestureDetector(
-              behavior: HitTestBehavior.opaque,
+              behavior: HitTestBehavior.translucent,
               onTap: () {
                 AppState.delegate!.appState.currentAction = PageAction(
                   page: ChatsPageConfig,
