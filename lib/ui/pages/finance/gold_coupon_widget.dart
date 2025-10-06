@@ -28,7 +28,7 @@ class GoldCouponWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (_coupons.isEmpty) return const SizedBox.shrink();
+    // if (_coupons.isEmpty) return const SizedBox.shrink();
     final locale = locator<S>();
     return Container(
       padding:
@@ -61,11 +61,12 @@ class GoldCouponWidget extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding25,
           ),
-          CouponViewV2(
-            model: _coupons[0],
-            goldBuymodel: model,
-            onTap: onTap,
-          ),
+          if (_coupons.isNotEmpty)
+            CouponViewV2(
+              model: _coupons.first,
+              goldBuymodel: model,
+              onTap: onTap,
+            ),
         ],
       ),
     );
@@ -93,8 +94,8 @@ class CouponViewV2 extends StatelessWidget {
             model: goldBuymodel.focusCoupon!,
             desc: goldBuymodel.focusCoupon!.description!,
             goldBuymodel: goldBuymodel,
-            disabledDesc: goldBuymodel.focusCoupon!.disabledDescription!,
-            ticketMultiplier: goldBuymodel.focusCoupon!.ticketMultiplier!,
+            disabledDesc: goldBuymodel.focusCoupon!.disabledDescription ?? '',
+            ticketMultiplier: goldBuymodel.focusCoupon!.ticketMultiplier ?? 0,
             icon: goldBuymodel.focusCoupon!.icon,
             isDisabled: goldBuymodel.focusCoupon!.couponSubType != null &&
                 goldBuymodel.focusCoupon!.couponSubType == 'SUPER_FELLO' &&
@@ -229,16 +230,17 @@ class GoldCouponPage extends StatelessWidget {
                   SizedBox(
                     height: SizeConfig.padding24,
                   ),
-                  Text(
-                    locale.moreCoupons,
-                    style: TextStyles.rajdhaniSB.body2,
-                  ),
+                  if (model.couponList != null && model.couponList!.isNotEmpty)
+                    Text(
+                      locale.moreCoupons,
+                      style: TextStyles.rajdhaniSB.body2,
+                    ),
                   Expanded(
                     child: ListView(
                       shrinkWrap: true,
                       physics: const BouncingScrollPhysics(),
                       children: List.generate(
-                        model.couponList!.length,
+                        model.couponList?.length ?? 0,
                         (i) => model.couponList![i].code == null ||
                                 model.couponList![i].description == null
                             ? const SizedBox.shrink()
@@ -258,10 +260,12 @@ class GoldCouponPage extends StatelessWidget {
                                                   .baseUser!
                                                   .superFelloLevel !=
                                               SuperFelloLevel.SUPER_FELLO,
-                                  disabledDesc:
-                                      model.couponList![i].disabledDescription!,
+                                  disabledDesc: model
+                                          .couponList![i].disabledDescription ??
+                                      '',
                                   ticketMultiplier:
-                                      model.couponList![i].ticketMultiplier!,
+                                      model.couponList![i].ticketMultiplier ??
+                                          0,
                                   icon: model.couponList![i].icon,
                                   goldBuymodel: model,
                                   onTap: (coupon) => model.applyCoupon(
@@ -410,28 +414,30 @@ class IndividualCouponView extends StatelessWidget {
                   ? UiConstants.kFAQsAnswerColor
                   : UiConstants.peach2),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
-              child: CustomPaint(
-                painter: DashedLinePainter(),
-                size: const Size(double.infinity, 1),
+            if (ticketMultiplier != 0)
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
+                child: CustomPaint(
+                  painter: DashedLinePainter(),
+                  size: const Size(double.infinity, 1),
+                ),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(locale.getTicketMutiplier(ticketMultiplier),
-                    style: TextStyles.sourceSansSB.body3.colour(
-                      model.minPurchase! <=
-                                  int.parse(
-                                    goldBuymodel.goldAmountController!.text,
-                                  ) &&
-                              !isDisabled
-                          ? UiConstants.teal2
-                          : UiConstants.textGray70,
-                    ))
-              ],
-            ),
+            if (ticketMultiplier != 0)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(locale.getTicketMutiplier(ticketMultiplier),
+                      style: TextStyles.sourceSansSB.body3.colour(
+                        model.minPurchase! <=
+                                    int.parse(
+                                      goldBuymodel.goldAmountController!.text,
+                                    ) &&
+                                !isDisabled
+                            ? UiConstants.teal2
+                            : UiConstants.textGray70,
+                      ))
+                ],
+              ),
           ],
         ),
       ),

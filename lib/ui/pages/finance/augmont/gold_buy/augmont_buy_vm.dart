@@ -679,7 +679,7 @@ class GoldBuyViewModel extends BaseViewModel
     int? minTransaction = -1;
     int counter = 0;
     isSpecialCoupon = true;
-    for (final CouponModel c in couponList!) {
+    for (final CouponModel c in couponList ?? []) {
       if (c.code == couponCode) {
         order = counter;
         isSpecialCoupon = false;
@@ -722,7 +722,7 @@ class GoldBuyViewModel extends BaseViewModel
 
         appliedCoupon = response.model;
 
-        focusCoupon = couponList!.firstWhereOrNull(
+        focusCoupon = couponList?.firstWhereOrNull(
             (element) => element.code! == response.model!.code);
 
         BaseUtil.showPositiveAlert(
@@ -749,24 +749,32 @@ class GoldBuyViewModel extends BaseViewModel
   }
 
   void checkForSpecialCoupon(EligibleCouponResponseModel model) {
-    if (couponList!.firstWhere((coupon) => coupon.code == model.code,
-            orElse: CouponModel.none) ==
-        CouponModel.none()) {
+    // Check if coupon already exists in the list
+    bool couponExists =
+        couponList?.any((coupon) => coupon.code == model.code) ?? false;
+
+    if (!couponExists) {
+      // Initialize couponList if it's null
+      couponList ??= [];
+
       showCoupons = false;
       couponList!.insert(
-          0,
-          CouponModel(
-              code: model.code,
-              createdOn: TimestampModel.currentTimeStamp(),
-              description: model.desc,
-              expiresOn: TimestampModel.currentTimeStamp(),
-              highlight: '',
-              maxUse: 0,
-              minPurchase: model.minAmountRequired?.toInt(),
-              priority: 0,
-              id: ''));
+        0,
+        CouponModel(
+          code: model.code,
+          createdOn: TimestampModel.currentTimeStamp(),
+          description: model.desc,
+          expiresOn: TimestampModel.currentTimeStamp(),
+          highlight: '',
+          maxUse: 0,
+          minPurchase: model.minAmountRequired?.toInt(),
+          priority: 0,
+          id: '',
+        ),
+      );
       addSpecialCoupon = true;
       showCoupons = true;
+      notifyListeners(); // Add this to update UI
     }
   }
 }

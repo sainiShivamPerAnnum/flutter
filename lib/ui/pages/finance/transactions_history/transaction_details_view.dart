@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -8,6 +9,7 @@ import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
+import 'package:felloapp/core/service/pdf_opener.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -24,7 +26,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:open_file/open_file.dart';
 import '../../../../base_util.dart';
 import '../../../../core/constants/analytics_events_constants.dart';
 import '../../../../core/service/analytics/analytics_service.dart';
@@ -525,11 +526,12 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                         unawaited(
                           augmontProvider!
                               .generatePurchaseInvoicePdf(trnId, null)
-                              .then((generatedPdfFilePath) {
+                              .then((generatedPdfFilePath) async {
                             _isInvoiceLoading = false;
                             setState(() {});
                             if (generatedPdfFilePath != null) {
-                              OpenFile.open(generatedPdfFilePath);
+                              await PdfOpener.openPdf(
+                                  File(generatedPdfFilePath));
                             } else {
                               BaseUtil.showNegativeAlert(
                                 locale.txnInvoiceFailed,

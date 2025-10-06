@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:felloapp/core/model/invoice_model.dart';
 import 'package:felloapp/core/service/pdf_api.dart';
+import 'package:felloapp/util/extensions/string_extension.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 // import 'package:flutter/material.dart' as mt show NetworkImage;
@@ -263,7 +264,9 @@ class PdfInvoiceApi {
           SizedBox(height: 2 * PdfPageFormat.mm),
           Divider(),
           SizedBox(height: 2 * PdfPageFormat.mm),
-          Text("TRANSACTREE ENTERPRISES PRIVATE LIMITED"),
+          Text(
+            "Expertree Technologies Private Limited".capitalize(),
+          ),
           SizedBox(height: 1 * PdfPageFormat.mm),
           Text("https://fello.in/"),
           SizedBox(height: PdfPageFormat.cm / 2)

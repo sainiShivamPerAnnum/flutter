@@ -146,14 +146,14 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
             SizedBox(
               height: SizeConfig.padding24,
             ),
-            if (widget.model.showCoupons)
-              GoldCouponWidget(
-                widget.model.couponList,
-                widget.model,
-                onTap: (coupon) {
-                  widget.model.applyCoupon(coupon.code, false);
-                },
-              ),
+            // if (widget.model.showCoupons)
+            GoldCouponWidget(
+              widget.model.couponList,
+              widget.model,
+              onTap: (coupon) {
+                widget.model.applyCoupon(coupon.code, false);
+              },
+            ),
             const Spacer(),
             widget.augTxnService.isGoldBuyInProgress
                 ? Container(

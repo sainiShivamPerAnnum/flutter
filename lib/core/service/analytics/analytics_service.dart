@@ -62,6 +62,7 @@ class AnalyticsService extends BaseAnalyticsService {
     bool amplitude = false,
     bool superSend = false,
     bool smartlook = false,
+    bool posthog = false,
   }) {
     try {
       if (FirebaseAuth.instance.currentUser != null) {

@@ -24,13 +24,38 @@ import FirebaseMessaging
         GeneratedPluginRegistrant.register(with: registry)
         }
         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
+        let pdfChannel = FlutterMethodChannel(name: "pdf_opener",
+                                            binaryMessenger: controller.binaryMessenger)
         let paymentChannel = FlutterMethodChannel(name: "methodChannel/deviceData",
                                                   binaryMessenger: controller.binaryMessenger)
 
 
         let contactChannel = FlutterMethodChannel(name: "methodChannel/contact", binaryMessenger: controller.binaryMessenger)
 
-       
+        pdfChannel.setMethodCallHandler{
+            (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
+            
+            switch call.method {
+            case "openPdf":
+                guard let args = call.arguments as? Dictionary<String, Any>,
+                      let filePath = args["filePath"] as? String else {
+                    result(FlutterError(code: "INVALID_ARGUMENT", message: "File path is required", details: nil))
+                    return
+                }
+                self.openPdf(filePath: filePath, result: result)
+                
+            case "sharePdf":
+                guard let args = call.arguments as? Dictionary<String, Any>,
+                      let filePath = args["filePath"] as? String else {
+                    result(FlutterError(code: "INVALID_ARGUMENT", message: "File path is required", details: nil))
+                    return
+                }
+                self.sharePdf(filePath: filePath, result: result, controller: controller)
+                
+            default:
+                result(FlutterMethodNotImplemented)
+            }
+        }
         paymentChannel.setMethodCallHandler{(call: FlutterMethodCall, result: @escaping
                                              FlutterResult) -> Void in
 //            self.resultMyFlutter = result
@@ -123,6 +148,85 @@ import FirebaseMessaging
             }
         } else {
             result(FlutterError.init(code: "bad args", message: nil, details: nil))
+        }
+    }
+    private func openPdf(filePath: String, result: @escaping FlutterResult) {
+        let fileURL = URL(fileURLWithPath: filePath)
+        
+        // Check if file exists
+        guard FileManager.default.fileExists(atPath: filePath) else {
+            print("PDF file does not exist at path: \(filePath)")
+            result(false)
+            return
+        }
+        
+        DispatchQueue.main.async {
+            if UIApplication.shared.canOpenURL(fileURL) {
+                UIApplication.shared.open(fileURL, options: [:]) { success in
+                    result(success)
+                }
+            } else {
+                // Fallback: try to open with document interaction controller
+                self.openWithDocumentInteractionController(fileURL: fileURL, result: result)
+            }
+        }
+    }
+    
+    private func openWithDocumentInteractionController(fileURL: URL, result: @escaping FlutterResult) {
+        let documentController = UIDocumentInteractionController(url: fileURL)
+        
+        guard let rootViewController = UIApplication.shared.windows.first?.rootViewController else {
+            result(false)
+            return
+        }
+        
+        if documentController.presentPreview(animated: true) {
+            result(true)
+        } else if documentController.presentOpenInMenu(from: rootViewController.view.bounds, 
+                                                      in: rootViewController.view, 
+                                                      animated: true) {
+            result(true)
+        } else {
+            result(false)
+        }
+    }
+    
+    private func sharePdf(filePath: String, result: @escaping FlutterResult, controller: FlutterViewController) {
+        let fileURL = URL(fileURLWithPath: filePath)
+        
+        // Check if file exists
+        guard FileManager.default.fileExists(atPath: filePath) else {
+            print("PDF file does not exist at path: \(filePath)")
+            result(false)
+            return
+        }
+        
+        DispatchQueue.main.async {
+            let activityController = UIActivityViewController(
+                activityItems: [fileURL],
+                applicationActivities: nil
+            )
+            
+            // For iPad - set popover presentation
+            if let popover = activityController.popoverPresentationController {
+                popover.sourceView = controller.view
+                popover.sourceRect = CGRect(x: controller.view.bounds.midX, 
+                                          y: controller.view.bounds.midY, 
+                                          width: 0, 
+                                          height: 0)
+                popover.permittedArrowDirections = []
+            }
+            
+            activityController.completionWithItemsHandler = { _, completed, _, error in
+                if let error = error {
+                    print("Error sharing PDF: \(error.localizedDescription)")
+                    result(false)
+                } else {
+                    result(completed)
+                }
+            }
+            
+            controller.present(activityController, animated: true)
         }
     }
     

@@ -36,8 +36,8 @@ import android.os.Build
 import android.provider.ContactsContract
 import live.hms.hmssdk_flutter.Constants
 import live.hms.hmssdk_flutter.methods.HMSPipAction
-//import android.content.res.Configuration
-
+import androidx.core.content.FileProvider
+import java.io.File
 
 class MainActivity : FlutterFragmentActivity() {
     private val CHANNEL = "fello.in/dev/notifications/channel/tambola"
@@ -46,6 +46,7 @@ class MainActivity : FlutterFragmentActivity() {
     private val getUpiApps = "getUpiApps"
     private val intiateTransaction = "initiateTransaction"
     private val CONTACTCHANNEL = "methodChannel/contact"
+    private val PDF_CHANNEL = "pdf_opener"
     private var res: MethodChannel.Result? = null
     private val successRequestCode = 101
     private lateinit var paymentMethodChannel: MethodChannel
@@ -65,24 +66,36 @@ class MainActivity : FlutterFragmentActivity() {
             HMSPipAction.autoEnterPipMode(this)
         }
     }
-    //override fun onPictureInPictureModeChanged(
-    //isInPictureInPictureMode: Boolean,
-    //newConfig: Configuration
-    //) {
-    //    super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
-    //    if (isInPictureInPictureMode) {
-    //        if (HMSPipAction.pipResult != null) {
-    //            HMSPipAction.pipResult?.success(true)
-    //            HMSPipAction.pipResult = null
-    //        }
-    //    } else {
-    //        Log.i("PIP Mode", "Exited PIP Mode")
-    //    }
-    //}
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         context = applicationContext
-//        flutterEngine.plugins.add(MyPlugin())
         GeneratedPluginRegistrant.registerWith(flutterEngine)
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, PDF_CHANNEL).setMethodCallHandler { call, result ->
+            when (call.method) {
+                "openPdf" -> {
+                    val filePath = call.argument<String>("filePath")
+                    if (filePath != null) {
+                        val opened = openPdf(filePath)
+                        result.success(opened)
+                    } else {
+                        result.error("INVALID_ARGUMENT", "File path is null", null)
+                    }
+                }
+                "sharePdf" -> {
+                    val filePath = call.argument<String>("filePath")
+                    if (filePath != null) {
+                        val shared = sharePdf(filePath)
+                        result.success(shared)
+                    } else {
+                        result.error("INVALID_ARGUMENT", "File path is null", null)
+                    }
+                }
+                else -> {
+                    result.notImplemented()
+                }
+            }
+        }
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
             // Note: this method is invoked on the main thread.
@@ -185,6 +198,80 @@ class MainActivity : FlutterFragmentActivity() {
             }
         }
     }
+private fun openPdf(filePath: String): Boolean {
+    return try {
+        val file = File(filePath)
+        Log.d("MainActivity", "Attempting to open PDF at: $filePath")
+        Log.d("MainActivity", "File exists: ${file.exists()}")
+        Log.d("MainActivity", "App package: ${applicationContext.packageName}")
+        
+        if (!file.exists()) {
+            Log.e("MainActivity", "PDF file does not exist: $filePath")
+            return false
+        }
+
+        val uri: Uri = FileProvider.getUriForFile(
+            this,
+             "in.fello.felloapp.fileprovider",
+            file
+        )
+        Log.d("MainActivity", "Generated URI: $uri")
+
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(uri, "application/pdf")
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+        }
+
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
+            true
+        } else {
+            Log.w("MainActivity", "No PDF viewer found, trying generic intent")
+            val genericIntent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(uri, "*/*")
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+            }
+            val chooser = Intent.createChooser(genericIntent, "Open PDF")
+            chooser.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(chooser)
+            true
+        }
+    } catch (e: Exception) {
+        Log.e("MainActivity", "Error opening PDF: ${e.message}", e)
+        false
+    }
+}
+
+private fun sharePdf(filePath: String): Boolean {
+    return try {
+        val file = File(filePath)
+        if (!file.exists()) {
+            Log.e("MainActivity", "PDF file does not exist: $filePath")
+            return false
+        }
+
+        val uri: Uri = FileProvider.getUriForFile(
+            this,
+             "in.fello.felloapp.fileprovider",
+            file
+        )
+
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "application/pdf"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            putExtra(Intent.EXTRA_SUBJECT, "Statement PDF")
+            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        }
+
+        val chooser = Intent.createChooser(intent, "Share PDF")
+        chooser.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(chooser)
+        true
+    } catch (e: Exception) {
+        Log.e("MainActivity", "Error sharing PDF: ${e.message}", e)
+        false
+    }
+}
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -206,7 +293,6 @@ class MainActivity : FlutterFragmentActivity() {
             }
         }
     }
-
 
     fun getPhonePeVersionCode(context: Context?): Long {
         // val PHONEPE_PACKAGE_NAME_UAT = "com.phonepe.app.preprod"
@@ -299,13 +385,10 @@ class MainActivity : FlutterFragmentActivity() {
             isAlreadyReturend = true
             res?.success(re);
         }
-
     }
-
 
     @SuppressLint("SuspiciousIndentation")
     private fun startTransation(app: String, deepLink: String) {
-
         try {
             val uri = Uri.parse(deepLink)
             val deepLinkIntent = Intent(Intent.ACTION_VIEW, uri)
@@ -316,22 +399,15 @@ class MainActivity : FlutterFragmentActivity() {
             } else
                 this.startActivityForResult(deepLinkIntent, successRequestCode)
 
-
         } catch (e: Exception) {
             Log.d("Something went Wrong:", "$e")
             e.printStackTrace()
         }
     }
 
-
     private fun getupiApps() {
-
         val packageManager = context.packageManager
         val mainIntent = Intent(Intent.ACTION_VIEW)
-        // mainIntent.addCategory(Intent.CATEGORY_DEFAULT)
-        // mainIntent.addCategory(Intent.CATEGORY_BROWSABLE)
-        // mainIntent.action = Intent.ACTION_VIEW
-        // val uri1 = Uri.parse("upi://pay")
         mainIntent.data = Uri.parse("upi://pay")
         var list = mutableListOf<Map<String, String>>()
 
@@ -339,7 +415,6 @@ class MainActivity : FlutterFragmentActivity() {
             val activities =
                 packageManager.queryIntentActivities(mainIntent, PackageManager.MATCH_DEFAULT_ONLY)
             Log.d(activities.toString(), "UPI Apps Present")
-            // Convert the activities into a response that can be transferred over the channel.
 
             for (it in activities) {
                 val packageName = it.activityInfo.packageName
@@ -363,7 +438,6 @@ class MainActivity : FlutterFragmentActivity() {
                 )
             }
 
-
             Log.d(list.size.toString(), "List")
             returnResult(list as Object)
 
@@ -372,7 +446,6 @@ class MainActivity : FlutterFragmentActivity() {
             res?.error("400", "exception", ex.message)
         }
     }
-
 
     override fun onStart() {
         super.onStart()
@@ -404,7 +477,6 @@ class MainActivity : FlutterFragmentActivity() {
         }
         return completed
     }
-
 
     private fun encodeToBase64(image: Bitmap): String? {
         val byteArrayOS = ByteArrayOutputStream()
@@ -444,7 +516,6 @@ class MainActivity : FlutterFragmentActivity() {
         }
     }
 }
-
 
 private class MethodResultWrapper internal constructor(private val methodResult: MethodChannel.Result) :
     MethodChannel.Result {
