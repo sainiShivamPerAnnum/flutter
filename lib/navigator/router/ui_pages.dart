@@ -135,8 +135,13 @@ const String liveShortsViewPath = "/live-shorts-internal";
 const String viewAllVideosViewPath = "/events";
 const String rewardsHistoryViewPath = "/rewards-history";
 const String rpsLearnMoreViewPath = "/rps-learnMore";
+const String FdViewPath = '/fd/home';
+const String FdCalculatorViewPath = '/fd/calculator';
+const String FdDetailsViewPath = '/fd/details';
 const String shortsNotificationViewPath = "/shorts-notification";
 const String savedShortsViewPath = "/shorts-saved";
+const String customSDUIViewPath = "/sdui";
+const String chatDetailsViewPath = "/chat";
 
 enum Pages {
   Splash,
@@ -269,8 +274,13 @@ enum Pages {
   AllEvents,
   RewardsHistory,
   RPSLearnMore,
+  FdHomeView,
+  FdCalculatorView,
+  FdDetailsView,
   ShortsNotification,
   SavedShorts,
+  Sdui,
+  Chat,
 }
 
 class PageConfiguration {
@@ -1075,16 +1085,46 @@ PageConfiguration RpsLearnMorePageConfig = PageConfiguration(
   name: "RPS Learn More",
 );
 
+PageConfiguration FdHomePageConfig = PageConfiguration(
+  key: 'FdViewPath',
+  path: FdViewPath,
+  uiPage: Pages.FdHomeView,
+  name: 'Fd Home View Path',
+);
+PageConfiguration FdCalulatorPageConfig = PageConfiguration(
+  key: 'FdCalculatorViewPath',
+  path: FdCalculatorViewPath,
+  uiPage: Pages.FdCalculatorView,
+  name: 'Fd Calculator View Path',
+);
+PageConfiguration FdDetailsPageConfig = PageConfiguration(
+  key: 'FdDetailsViewPath',
+  path: FdDetailsViewPath,
+  uiPage: Pages.FdDetailsView,
+  name: 'Fd Details View Path',
+);
 PageConfiguration ShortsNotificationPageConfig = PageConfiguration(
-  key: 'ShortsNotificationPageConfig',
+  key: 'shortsNotificationViewPath',
   path: shortsNotificationViewPath,
   uiPage: Pages.ShortsNotification,
   name: "Shorts Notification",
 );
 
 PageConfiguration SavedShortsPageConfig = PageConfiguration(
-  key: 'SavedShortsPageConfig',
+  key: 'savedShortsViewPath',
   path: savedShortsViewPath,
   uiPage: Pages.SavedShorts,
   name: "Saved Shorts",
+);
+PageConfiguration SduiPageConfig = PageConfiguration(
+  key: 'customSDUIViewPath',
+  path: customSDUIViewPath,
+  uiPage: Pages.Sdui,
+  name: "Sdui",
+);
+PageConfiguration ChatsPageConfig = PageConfiguration(
+  key: 'chatDetailsViewPath',
+  path: chatDetailsViewPath,
+  uiPage: Pages.Chat,
+  name: "Chat Screen",
 );

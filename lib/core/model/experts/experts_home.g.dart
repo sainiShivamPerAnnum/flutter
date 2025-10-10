@@ -17,8 +17,7 @@ ExpertsHome _$ExpertsHomeFromJson(Map<String, dynamic> json) => ExpertsHome(
       ),
       isAnyFreeCallAvailable: json['isAnyFreeCallAvailable'] as bool? ?? false,
       userInterestedAdvisors: (json['userInterestedAdvisors'] as List<dynamic>?)
-              ?.map((e) =>
-                  UserInterestedAdvisor.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => Expert.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
     );
@@ -34,6 +33,7 @@ Expert _$ExpertFromJson(Map<String, dynamic> json) => Expert(
       image: json['image'] as String,
       isFree: json['isFree'] as bool,
       advisorId: json['advisorId'] as String,
+      sessionCount: (json['sessionCount'] as num?)?.toInt() ?? 0,
       licenses: (json['licenses'] as List<dynamic>?)
               ?.map((e) => License.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -67,4 +67,5 @@ UserInterestedAdvisor _$UserInterestedAdvisorFromJson(
               ?.map((e) => e as String)
               .toList() ??
           const [],
+      sessionCount: (json['sessionCount'] as num?)?.toInt() ?? 0,
     );

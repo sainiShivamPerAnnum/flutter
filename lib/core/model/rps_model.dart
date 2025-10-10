@@ -12,6 +12,8 @@ class RpsData {
   final List<Rps> rps;
   final String createdAt;
   final String updatedAt;
+  final num balance;
+  final num totalPayout;
 
   RpsData({
     required this.uid,
@@ -22,6 +24,8 @@ class RpsData {
     required this.rps,
     required this.createdAt,
     required this.updatedAt,
+    required this.balance,
+    required this.totalPayout,
   });
 
   factory RpsData.fromJson(Map<String, dynamic> json) =>

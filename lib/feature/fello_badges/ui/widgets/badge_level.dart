@@ -36,7 +36,7 @@ class _BadgeLevelState extends State<BadgeLevel> {
     const Color(0xFF394B71),
     UiConstants.kAutoSaveOnboardingTextColor,
   ];
-  late final carousel.CarouselController _carouselController;
+  late final carousel.CarouselSliderController _carouselController;
 
   int _getIndex() {
     if (widget.currentLevel < 1) {
@@ -49,7 +49,7 @@ class _BadgeLevelState extends State<BadgeLevel> {
   @override
   void initState() {
     super.initState();
-    _carouselController = carousel.CarouselController();
+    _carouselController = carousel.CarouselSliderController();
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
         Future.delayed(

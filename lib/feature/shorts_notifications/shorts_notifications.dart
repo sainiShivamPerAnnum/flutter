@@ -170,62 +170,11 @@ class _ShortsNotification extends StatelessWidget {
                                     PageAction(
                                   page: ShortsPageConfig,
                                   state: PageState.addWidget,
-                                  widget: BaseScaffold(
-                                    showBackgroundGrid: false,
-                                    backgroundColor: UiConstants.bg,
-                                    appBar: FAppBar(
-                                      backgroundColor: Colors.transparent,
-                                      centerTitle: true,
-                                      titleWidget: Text(
-                                        'Notifications',
-                                        style: TextStyles.rajdhaniSB.body1,
-                                      ),
-                                      leading: BackButton(
-                                        color: Colors.white,
-                                        onPressed: () {
-                                          AppState.backButtonDispatcher!
-                                              .didPopRoute();
-                                        },
-                                      ),
-                                      showAvatar: false,
-                                      showCoinBar: false,
-                                      action: BlocBuilder<PreloadBloc,
-                                          PreloadState>(
-                                        builder: (context, preloadState) {
-                                          return Padding(
-                                            padding:
-                                                EdgeInsets.only(right: 10.w),
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                BlocProvider.of<PreloadBloc>(
-                                                  context,
-                                                  listen: false,
-                                                ).add(
-                                                  const PreloadEvent
-                                                      .toggleVolume(),
-                                                );
-                                              },
-                                              behavior: HitTestBehavior.opaque,
-                                              child: SizedBox(
-                                                height: 24.r,
-                                                width: 24.r,
-                                                child: Icon(
-                                                  !preloadState.muted
-                                                      ? Icons.volume_up_rounded
-                                                      : Icons
-                                                          .volume_off_rounded,
-                                                  size: 21.r,
-                                                  color: UiConstants.kTextColor,
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    body: const ShortsVideoPage(
-                                      categories: [],
-                                    ),
+                                  widget: ShortsVideoPage(
+                                    categories: const [],
+                                    showAppBar: true,
+                                    title: notification.subtitle,
+                                    showBottomNavigation: false,
                                   ),
                                 );
                               },

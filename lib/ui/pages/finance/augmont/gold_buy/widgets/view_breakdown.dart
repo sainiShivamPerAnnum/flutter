@@ -947,46 +947,7 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                           ),
                         ],
                       ),
-                      body: widget.model.showHappyHour
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Happy Hour Tickets",
-                                      style: TextStyles.sourceSans.body2.colour(
-                                        UiConstants.kBlogTitleColor,
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                    Text(
-                                      "${widget.model.happyHourTickets}",
-                                      style: TextStyles.sourceSans.body2.colour(
-                                        UiConstants.kBlogTitleColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: SizeConfig.padding24,
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Lifetime Tickets",
-                                      style: TextStyles.sourceSans.body2,
-                                    ),
-                                    const Spacer(),
-                                    Text(
-                                      "${widget.model.numberOfTambolaTickets}",
-                                      style: TextStyles.sourceSans.body2,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )
-                          : null,
+                      body: null,
                     ),
                     if (widget.model.appliedCoupon != null) ...[
                       SizedBox(

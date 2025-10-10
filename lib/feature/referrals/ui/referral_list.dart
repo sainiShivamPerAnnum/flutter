@@ -12,6 +12,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/debouncer.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -313,7 +314,8 @@ class _ReferralListViewState extends State<ReferralListView> {
                       return null;
                     },
                     decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(vertical: 13),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: SizeConfig.padding10),
                       hintText: "Search by name",
                       hintStyle: TextStyles.sourceSans.body3
                           .colour(Colors.white.withOpacity(0.3)),

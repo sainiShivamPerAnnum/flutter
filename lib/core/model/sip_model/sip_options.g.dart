@@ -7,7 +7,7 @@ part of 'sip_options.dart';
 // **************************************************************************
 
 SipOptions _$SipOptionsFromJson(Map<String, dynamic> json) => SipOptions(
-      order: json['order'] as int? ?? 0,
-      value: json['value'] as int? ?? 0,
+      order: (json['order'] as num?)?.toInt() ?? 0,
+      value: (json['value'] as num?)?.toInt() ?? 0,
       best: json['best'] as bool? ?? false,
     );

@@ -27,7 +27,7 @@ class BaseAnalytics {
 
   static logProfilePictureAdded() {
     _analytics!.logEvent(
-        name: 'has_profile_pic', parameters: <String, dynamic>{'option': true});
+        name: 'has_profile_pic', parameters: <String, Object>{'option': true});
   }
 
   static FirebaseAnalytics? get analytics => _analytics;

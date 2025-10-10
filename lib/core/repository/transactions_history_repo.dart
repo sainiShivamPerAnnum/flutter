@@ -3,6 +3,7 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/sip_transaction_model.dart';
+import 'package:felloapp/core/model/statement_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/transaction_response_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
@@ -21,6 +22,9 @@ class TransactionHistoryRepository extends BaseRepo {
   final _subsBaseUrl = FlavorConfig.isDevelopment()
       ? 'https://2je5zoqtuc.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://2z48o79cm5.execute-api.ap-south-1.amazonaws.com/prod';
+  final String _statementUrl = FlavorConfig.isDevelopment()
+      ? "https://lczsbr3cjl.execute-api.ap-south-1.amazonaws.com/dev"
+      : "https://sdypt3fcnh.execute-api.ap-south-1.amazonaws.com/prod";
 
   Future<ApiResponse<TransactionResponse>> getUserTransactions({
     int limit = 30,
@@ -83,6 +87,29 @@ class TransactionHistoryRepository extends BaseRepo {
       final MySIPFunds txnResponse = MySIPFunds.fromJson(response);
 
       return ApiResponse<MySIPFunds>(model: txnResponse, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<List<Transaction>>> getStatement() async {
+    try {
+      final String? uid = userService.baseUser!.uid;
+      final response = await APIService.instance.getData(
+        '/statement/lb/$uid',
+        cBaseUrl: _statementUrl,
+        apiName: '$_transactions/getStatement',
+      );
+      final responseData = response["data"];
+      final List<Transaction> txnResponse = (responseData as List)
+          .map(
+            (item) => Transaction.fromJson(
+              item,
+            ),
+          )
+          .toList();
+      return ApiResponse<List<Transaction>>(model: txnResponse, code: 200);
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 400);

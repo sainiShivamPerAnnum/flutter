@@ -6,8 +6,16 @@ class LocalActionsState {
 
   static Future cleanupCache() async {
     final allKeys = PreferenceHelper.getKeys();
-    final timestampKeys =
-        allKeys.where((key) => key.endsWith('_timestamp')).toList();
+    final relevantKeywords = ['liked', 'saved', 'follow'];
+    final timestampKeys = allKeys
+        .where(
+          (key) =>
+              key.endsWith('_timestamp') &&
+              relevantKeywords.any(
+                (keyword) => key.contains(keyword),
+              ),
+        )
+        .toList();
 
     for (final String timestampKey in timestampKeys) {
       final timestamp = PreferenceHelper.getInt(timestampKey);

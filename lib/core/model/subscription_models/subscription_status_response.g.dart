@@ -38,7 +38,7 @@ SubscriptionStatusData _$SubscriptionStatusDataFromJson(
       startDate: json['startDate'] as String? ?? '',
       createdOn: json['createdOn'] as String? ?? '',
       assetType: json['assetType'] as String? ?? '',
-      tt: json['tt'] as int? ?? 0,
+      tt: (json['tt'] as num?)?.toInt() ?? 0,
       gts: json['gts'] as List<dynamic>? ?? const [],
     );
 

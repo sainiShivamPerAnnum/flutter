@@ -101,7 +101,6 @@ class VideoWidget extends StatefulWidget {
 
 class VideoWidgetState extends State<VideoWidget>
     with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _commentController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -109,10 +108,6 @@ class VideoWidgetState extends State<VideoWidget>
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToEnd();
     });
@@ -120,20 +115,13 @@ class VideoWidgetState extends State<VideoWidget>
 
   @override
   void dispose() {
-    _animationController.dispose();
     _commentController.dispose();
     _scrollController.dispose();
     _focusNode.dispose();
     super.dispose();
   }
 
-  void _toggleExpansion() {
-    if (_animationController.isCompleted) {
-      _animationController.reverse();
-    } else {
-      _animationController.forward();
-    }
-  }
+  void _toggleExpansion() {}
 
   void _scrollToEnd() {
     if (_scrollController.hasClients) {
@@ -212,6 +200,7 @@ class VideoWidgetState extends State<VideoWidget>
               Positioned(
                 bottom: 30.h,
                 left: 10.w,
+                right: 0.w,
                 child: Visibility(
                   visible: !widget.isKeyBoardOpen,
                   replacement: const SizedBox.shrink(),
@@ -235,23 +224,25 @@ class VideoWidgetState extends State<VideoWidget>
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        locator<AnalyticsService>().track(
-                                          eventName: AnalyticsEvents
-                                              .shortsProfileClick,
-                                          properties: {
-                                            "expert name": widget.userName,
-                                          },
-                                        );
-                                        AppState.backButtonDispatcher!
-                                            .didPopRoute();
-                                        AppState.delegate!.appState
-                                            .currentAction = PageAction(
-                                          page: ExpertDetailsPageConfig,
-                                          state: PageState.addWidget,
-                                          widget: ExpertsDetailsView(
-                                            advisorID: widget.advisorId,
-                                          ),
-                                        );
+                                        if (widget.userName != '') {
+                                          locator<AnalyticsService>().track(
+                                            eventName: AnalyticsEvents
+                                                .shortsProfileClick,
+                                            properties: {
+                                              "expert name": widget.userName,
+                                            },
+                                          );
+                                          AppState.backButtonDispatcher!
+                                              .didPopRoute();
+                                          AppState.delegate!.appState
+                                              .currentAction = PageAction(
+                                            page: ExpertDetailsPageConfig,
+                                            state: PageState.addWidget,
+                                            widget: ExpertsDetailsView(
+                                              advisorID: widget.advisorId,
+                                            ),
+                                          );
+                                        }
                                       },
                                       child: Row(
                                         crossAxisAlignment:
@@ -412,23 +403,27 @@ class VideoWidgetState extends State<VideoWidget>
                 ),
               ),
             ),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              height: widget.commentsVisibility ? .40.sh : 0,
-              transform: Matrix4.translationValues(
-                0,
-                widget.commentsVisibility ? 0 : 50,
-                0,
-              ),
-              decoration: BoxDecoration(
-                color: const Color(0xff232326),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20.r),
-                  topRight: Radius.circular(20.r),
+            GestureDetector(
+              onTap: () {},
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                height: widget.commentsVisibility ? .40.sh : 0,
+                transform: Matrix4.translationValues(
+                  0,
+                  widget.commentsVisibility ? 0 : 50,
+                  0,
                 ),
+                decoration: BoxDecoration(
+                  color: const Color(0xff232326),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20.r),
+                    topRight: Radius.circular(20.r),
+                  ),
+                ),
+                child:
+                    _buildComments(_scrollController, widget.onCommentToggle),
               ),
-              child: _buildComments(_scrollController, widget.onCommentToggle),
             ),
           ],
         ),

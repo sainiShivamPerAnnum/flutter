@@ -7,10 +7,12 @@ import 'package:flutter/material.dart';
 class NewErrorPage extends StatelessWidget {
   final VoidCallback? onTryAgain;
   final VoidCallback? onPressed;
+  final String? subText;
 
   const NewErrorPage({
     this.onTryAgain,
     this.onPressed,
+    this.subText,
     super.key,
   });
 
@@ -35,7 +37,8 @@ class NewErrorPage extends StatelessWidget {
             height: SizeConfig.padding12,
           ),
           Text(
-            'Our team is trying to resolve it earliest possible. Please try again later.',
+            subText ??
+                'Our team is trying to resolve it earliest possible. Please try again later.',
             style: TextStyles.sourceSans.body3.colour(
               UiConstants.textGray70,
             ),

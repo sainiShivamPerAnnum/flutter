@@ -15,15 +15,13 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
-import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
+import 'package:felloapp/feature/chat_home/bloc/chat_history_bloc.dart';
 import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
 import 'package:felloapp/feature/p2p_home/transactions_section/bloc/sip_transaction_bloc.dart';
@@ -39,8 +37,6 @@ import 'package:felloapp/ui/elements/bottom_nav_bar/quick_save_modal_sheet.dart'
 import 'package:felloapp/ui/modalsheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
-import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
-import 'package:felloapp/ui/service_elements/last_week/last_week_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -50,6 +46,7 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:firebase_instance_id/firebase_instance_id.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:in_app_update/in_app_update.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
@@ -60,13 +57,11 @@ class RootViewModel extends BaseViewModel {
   final FcmListener _fcmListener = locator<FcmListener>();
   final FcmHandler _fcmHandler = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
-  final UserCoinService _userCoinService = locator<UserCoinService>();
   final CustomLogger _logger = locator<CustomLogger>();
   final UserRepository _userRepo = locator<UserRepository>();
   final TambolaService _tambolaService = locator<TambolaService>();
   final ScratchCardService _gtService = locator<ScratchCardService>();
   final BankAndPanService _bankAndKycService = locator<BankAndPanService>();
-  final PowerPlayService _powerPlayService = locator<PowerPlayService>();
   final TransactionBloc _transactionBloc = locator<TransactionBloc>();
   final PreloadBloc preloadBloc = locator<PreloadBloc>();
   final MyFundsBloc _myFundsBloc = locator<MyFundsBloc>();
@@ -89,8 +84,6 @@ class RootViewModel extends BaseViewModel {
 
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final ReferralService _referralService = locator<ReferralService>();
-  final MarketingEventHandlerService _marketingService =
-      locator<MarketingEventHandlerService>();
   final RootController _rootController = locator<RootController>();
 
   Future<void> onInit() async {
@@ -112,7 +105,6 @@ class RootViewModel extends BaseViewModel {
         _checkForAppUpdates();
         if (!await verifyUserBootupDetails()) return;
         // await showLastWeekOverview();
-        showMarketingCampings();
         await Future.wait([
           _referralService.verifyReferral(),
           _referralService.initDynamicLinks(),
@@ -155,20 +147,6 @@ class RootViewModel extends BaseViewModel {
       }).catchError((e) {
         _logger.e(e.toString());
       });
-    }
-  }
-
-  void showMarketingCampings() {
-    final isComplete = PreferenceHelper.getBool(
-      PreferenceHelper.isUserOnboardingComplete,
-      def: false,
-    );
-
-    if (AppState.isRootAvailableForIncomingTaskExecution && isComplete) {
-      Future.delayed(
-        const Duration(seconds: 2),
-        _marketingService.getCampaigns,
-      );
     }
   }
 
@@ -497,13 +475,14 @@ class RootViewModel extends BaseViewModel {
           }).then((flag) async {
             if (flag) {
               await BaseUtil().signOut();
+              await HydratedBloc.storage.clear();
               _tambolaService.dispose();
+              locator.resetLazySingleton<ChatHistoryBloc>();
               locator.resetLazySingleton<AdvisorBloc>();
               locator.resetLazySingleton<ExpertBloc>();
               _analyticsService.signOut();
               _bankAndKycService.dump();
               _subscriptionService.dispose();
-              _powerPlayService.dump();
               _transactionBloc.dispose();
               preloadBloc.add(const PreloadEvent.reset());
               _myFundsBloc.dispose();
@@ -630,20 +609,6 @@ class RootViewModel extends BaseViewModel {
               (AppState.screenStack.last != ScreenItem.dialog ||
                   AppState.screenStack.last != ScreenItem.modalsheet)) {
             AppState.isRootAvailableForIncomingTaskExecution = false;
-            unawaited(BaseUtil.openModalBottomSheet(
-              addToScreenStack: true,
-              backgroundColor: UiConstants.gameCardColor,
-              content: LastWeekUi(
-                model: response.model!.data!,
-                fromRoot: true,
-                callCampaign: true,
-                lastWeekViewModel: locator<LastWeekViewModel>(),
-              ),
-              hapticVibrate: true,
-              isScrollControlled: true,
-              isBarrierDismissible: false,
-            ));
-
             fetchCampaign = false;
           } else {
             await PreferenceHelper.setInt(PreferenceHelper.LAST_WEEK_NUMBER, 0);

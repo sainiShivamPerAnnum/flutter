@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -65,7 +64,6 @@ class _FelloButtonState extends State<FelloButton> {
     ConnectivityStatus connectivityStatus =
         Provider.of<ConnectivityService>(context, listen: true)
             .connectivityStatus;
-    final JourneyService _journeyService = locator<JourneyService>();
     if (connectivityStatus == ConnectivityStatus.Offline) {
       return widget.offlineButtonUI != null
           ? InkWell(

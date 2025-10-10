@@ -1,13 +1,10 @@
 import "dart:math" as math;
 
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/ui/pages/finance/amount_chip.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -119,33 +116,6 @@ class EnterAmountView extends StatelessWidget {
                         ),
                       );
                     }),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      model.showHappyHourSubtitle(),
-                      style: TextStyles.sourceSans.body3.copyWith(
-                        color: UiConstants.grey1,
-                        height: 1,
-                      ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.padding6,
-                    ),
-                    if (model.showInfoIcon)
-                      GestureDetector(
-                        onTap: () => locator<BaseUtil>().showHappyHourDialog(
-                            locator<HappyHourCampign>(),
-                            isComingFromSave: true),
-                        child: const Icon(
-                          Icons.info_outline,
-                          size: 14,
-                          color: UiConstants.grey1,
-                        ),
-                      ),
-                  ],
-                ),
                 if (model.showMaxCapText)
                   Padding(
                     padding:

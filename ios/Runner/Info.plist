@@ -46,6 +46,15 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleURLName</key>
+			<string>fello.in</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>https</string>
+				<string>fello</string>
+			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
@@ -105,13 +114,24 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<key>CleverTapAccountID</key>
-	<string>$(CleverTapAccountID)</string>
-	<key>CleverTapRegion</key>
-	<string>in1</string>
-	<key>CleverTapToken</key>
-	<string>$(CleverTapToken)</string>
 	<key>FacebookAdvertiserIDCollectionEnabled</key>
+	<true/>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>PDF Document</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adobe.pdf</string>
+			</array>
+		</dict>
+	</array>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+	<key>UISupportsDocumentBrowser</key>
 	<true/>
 	<key>FacebookAppID</key>
 	<string>251100614291797</string>
@@ -133,10 +153,11 @@
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+		<string>upi</string>
 		<string>phonepe</string>
-		<string>tez</string>
-		<string>paytm</string>
 		<string>gpay</string>
+		<string>paytm</string>
+		<string>tez</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

@@ -8,7 +8,7 @@ part of 'all_subscription_model.dart';
 
 Subscriptions _$SubscriptionsFromJson(Map<String, dynamic> json) =>
     Subscriptions(
-      length: json['length'] as int? ?? 0,
+      length: (json['length'] as num?)?.toInt() ?? 0,
       isActive: json['isActive'] as bool? ?? false,
       subs: (json['subs'] as List<dynamic>?)
               ?.map(

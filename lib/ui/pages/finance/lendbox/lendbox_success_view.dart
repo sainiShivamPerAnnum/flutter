@@ -4,7 +4,6 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/transaction_type_enum.dart';
 import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
-import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -64,10 +63,7 @@ class _LendboxSuccessViewState extends State<LendboxSuccessView> {
     if (hasSuperFelloInStack) {
       return 'Go back to Super Fello';
     }
-
-    return PowerPlayService.powerPlayDepositFlow
-        ? "Make another prediction"
-        : locale.obDone;
+    return locale.obDone;
   }
 
   Future<void> _onPressed(bool hasSuperFelloInStack) async {

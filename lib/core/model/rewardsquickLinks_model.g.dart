@@ -15,7 +15,7 @@ RewardsQuickLinksModel _$RewardsQuickLinksModelFromJson(
       rewardType:
           $enumDecodeNullable(_$RewardsTypeEnumMap, json['rewardType']) ??
               RewardsType.ticket,
-      rewardCount: json['rewardCount'] as int? ?? 0,
+      rewardCount: (json['rewardCount'] as num?)?.toInt() ?? 0,
       imageUrl: json['imageUrl'] as String? ?? '',
       cta: (json['cta'] as List<dynamic>?)
               ?.map((e) => RewardsCta.fromJson(e as Map<String, dynamic>))

@@ -59,8 +59,9 @@ class RSAEncryption {
       return {
         "encv": ENCRYPT_VERSION,
         "iv": iv,
+        "padding": "OAEP",
         "key": encK,
-        "data": encrypted
+        "data": encrypted,
       };
     } catch (e) {
       _logger.e('Encryption Failed: $e');
@@ -74,6 +75,7 @@ class RSAEncryption {
           await _parseWithRootBundle<RSAPublicKey>(PUBLIC_KEY_FILE_PATH);
       rsaEncrypter = Encrypter(RSA(
         publicKey: publicKey,
+        encoding: RSAEncoding.OAEP,
       ));
       return true;
     } catch (e) {

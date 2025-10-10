@@ -70,6 +70,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     AddToCart event,
     Emitter<CartState> emitter,
   ) async {
+    await Future.delayed(
+      const Duration(seconds: 1),
+    );
     DateTime? startTime;
     DateTime? endTime;
     if (event.selectedDate != null &&

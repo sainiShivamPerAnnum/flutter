@@ -27,7 +27,7 @@ ShortsThemeData _$ShortsThemeDataFromJson(Map<String, dynamic> json) =>
           .map((e) => e as String)
           .toList(),
       page: json['page'] as num,
-      totalPages: json['totalPages'] as int,
+      totalPages: (json['totalPages'] as num).toInt(),
       isNotificationOn: json['isNotificationOn'] as bool? ?? false,
       isNotificationAllowed: json['isNotificationAllowed'] as bool? ?? false,
     );
@@ -40,7 +40,7 @@ SavedShorts _$SavedShortsFromJson(Map<String, dynamic> json) => SavedShorts(
       themeName: json['themeName'] as String,
       total: json['total'] as num,
       page: json['page'] as num,
-      totalPages: json['totalPages'] as int,
+      totalPages: (json['totalPages'] as num).toInt(),
       isNotificationOn: json['isNotificationOn'] as bool? ?? false,
       isNotificationAllowed: json['isNotificationAllowed'] as bool? ?? false,
     );

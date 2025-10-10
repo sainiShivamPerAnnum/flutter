@@ -1,5 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart' as cs;
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'package:tuple/tuple.dart';
 
 class Campaigns extends StatefulWidget {
@@ -21,7 +21,8 @@ class Campaigns extends StatefulWidget {
 }
 
 class _CampaignsState extends State<Campaigns> {
-  final CarouselController _carouselController = CarouselController();
+  final cs.CarouselSliderController _carouselController =
+      cs.CarouselSliderController();
   int _currentPage = 0;
 
   @override
@@ -42,7 +43,7 @@ class _CampaignsState extends State<Campaigns> {
                     highlightColor: Colors.grey[600]!,
                     child: Container(
                       margin: EdgeInsets.symmetric(horizontal: 20.w),
-                      height: 330.h,
+                      height: 235.h,
                       decoration: BoxDecoration(
                         color: Colors.black,
                         borderRadius: BorderRadius.circular(8.r),
@@ -56,8 +57,8 @@ class _CampaignsState extends State<Campaigns> {
                     key: const ValueKey<String>('Campaings'),
                     children: [
                       SizedBox(
-                        height: 307.h,
-                        child: CarouselSlider.builder(
+                        height: 235.h,
+                        child: cs.CarouselSlider.builder(
                           carouselController: _carouselController,
                           itemCount: model.item1!.length,
                           itemBuilder: (context, index, realIndex) {
@@ -75,23 +76,25 @@ class _CampaignsState extends State<Campaigns> {
                                       .parseRoute(Uri.parse(event.type));
                                 },
                                 child: Container(
+                                  width: 1.sw,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(
                                       8.r,
                                     ),
-                                    image: DecorationImage(
-                                      image: CachedNetworkImageProvider(
-                                        event.bgImage,
-                                      ),
-                                      fit: BoxFit.cover,
-                                    ),
+                                  ),
+                                  child: FadeInImage.memoryNetwork(
+                                    fadeInDuration:
+                                        const Duration(milliseconds: 300),
+                                    placeholder: kTransparentImage,
+                                    image: event.bgImage,
+                                    fit: BoxFit.fill,
                                   ),
                                 ),
                               ),
                             );
                           },
-                          options: CarouselOptions(
-                            height: 330.h,
+                          options: cs.CarouselOptions(
+                            height: 235.h,
                             aspectRatio: 1,
                             enlargeCenterPage: false,
                             enableInfiniteScroll: false,

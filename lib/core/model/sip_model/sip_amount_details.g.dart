@@ -8,8 +8,9 @@ part of 'sip_amount_details.dart';
 
 SipAmountDetails _$SipAmountDetailsFromJson(Map<String, dynamic> json) =>
     SipAmountDetails(
-      minamount: json['minamount'] as int? ?? 0,
-      numberOfPeriodsPerYear: json['numberOfPeriodsPerYear'] as int? ?? 1,
+      minamount: (json['minamount'] as num?)?.toInt() ?? 0,
+      numberOfPeriodsPerYear:
+          (json['numberOfPeriodsPerYear'] as num?)?.toInt() ?? 1,
       options: (json['options'] as List<dynamic>?)
               ?.map((e) => SipOptions.fromJson(e as Map<String, dynamic>))
               .toList() ??

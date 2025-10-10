@@ -2,13 +2,10 @@ import 'package:app_install_date/app_install_date_imp.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/core/service/analytics/branch_analytics.dart';
-import 'package:felloapp/core/service/analytics/clever_tap_analytics.dart';
 import 'package:felloapp/core/service/analytics/facebook_analytics.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
-import 'package:felloapp/core/service/analytics/singular_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/constants.dart';
@@ -18,13 +15,8 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AnalyticsService extends BaseAnalyticsService {
-  static const appFlierKey = 'fyD5pxiiDw5DrwynP52oT9';
-
   final MixpanelAnalytics _mixpanel = locator<MixpanelAnalytics>();
   final FacebookAnalytics _facebook = locator<FacebookAnalytics>();
-  final AppFlyerAnalytics _appFlyer = locator<AppFlyerAnalytics>();
-  final SingularAnalytics _singular = locator<SingularAnalytics>();
-  final CleverTapAnalytics _cleverTap = locator<CleverTapAnalytics>();
   final WebEngageAnalytics _webengage = locator<WebEngageAnalytics>();
   final BranchAnalytics _branch = locator<BranchAnalytics>();
   final CustomLogger _logger = locator<CustomLogger>();
@@ -32,9 +24,6 @@ class AnalyticsService extends BaseAnalyticsService {
   @override
   Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
     await _mixpanel.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
-    _appFlyer.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
-    _singular.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
-    _cleverTap.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     _webengage.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     _facebook.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     _branch.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
@@ -53,9 +42,6 @@ class AnalyticsService extends BaseAnalyticsService {
   void signOut() {
     _mixpanel.signOut();
     _webengage.signOut();
-    _appFlyer.signOut();
-    _singular.signOut();
-    _cleverTap.signOut();
     _facebook.signOut();
     _branch.signOut();
   }
@@ -67,11 +53,16 @@ class AnalyticsService extends BaseAnalyticsService {
     bool mixpanel = true,
     bool webEngage = true,
     bool facebook = true,
-    bool appFlyer = true,
-    bool singular = true,
-    bool cleverTap = true,
+    bool appFlyer = false,
+    bool singular = false,
+    bool cleverTap = false,
     bool apxor = false,
     bool branch = true,
+    bool moengage = false,
+    bool amplitude = false,
+    bool superSend = false,
+    bool smartlook = false,
+    bool posthog = false,
   }) {
     try {
       if (FirebaseAuth.instance.currentUser != null) {
@@ -85,15 +76,6 @@ class AnalyticsService extends BaseAnalyticsService {
       _logger.d(eventName);
       if (mixpanel) {
         _mixpanel.track(eventName: eventName, properties: properties);
-      }
-      if (appFlyer) {
-        _appFlyer.track(eventName: eventName, properties: properties);
-      }
-      if (singular) {
-        _singular.track(eventName: eventName, properties: properties);
-      }
-      if (cleverTap) {
-        _cleverTap.track(eventName: eventName, properties: properties);
       }
       if (webEngage) {
         _webengage.track(eventName: eventName, properties: properties);
@@ -113,7 +95,6 @@ class AnalyticsService extends BaseAnalyticsService {
   @override
   void trackScreen({String? screen, Map<String, dynamic>? properties}) {
     _mixpanel.track(eventName: screen, properties: properties);
-    _cleverTap.track(eventName: screen, properties: properties);
     _webengage.trackScreen(screen: screen, properties: properties);
     _branch.trackScreen(screen: screen, properties: properties);
   }
@@ -121,7 +102,6 @@ class AnalyticsService extends BaseAnalyticsService {
   @override
   void updateUserProperty({required String key, value}) {
     _mixpanel.updateUserProperty(key: key, value: value);
-    _cleverTap.updateUserProperty(key: key, value: value);
     _webengage.updateUserProperty(key: key, value: value);
     _branch.updateUserProperty(key: key, value: value);
     _facebook.updateUserProperty(key: key, value: value);
@@ -182,6 +162,5 @@ class AnalyticsService extends BaseAnalyticsService {
 
   void trackUninstall(String token) {
     //only singular does this
-    _singular.connectFcm(token);
   }
 }

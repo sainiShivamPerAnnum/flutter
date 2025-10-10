@@ -9,11 +9,7 @@
 		<string>applinks:fello.page.link</string>
 		<string>applinks:fello.in/app/referral</string>
 		<string>applinks:fello.in/download</string>
-		<string>applinks:fello.onelink.me</string>
-	</array>
-	<key>com.apple.security.application-groups</key>
-	<array>
-		<string>group.in.fello.felloappiOS.NewCTNotificationGroup</string>
+		<string>applinks:fello.in</string>
 	</array>
 </dict>
 </plist>

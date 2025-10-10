@@ -1,6 +1,5 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -9,7 +8,6 @@ import 'package:felloapp/util/locator.dart';
 import 'base_repo.dart';
 
 class AnalyticsRepository extends BaseRepo {
-  final Api _api = locator<Api>();
   final ApiPath _apiPaths = locator<ApiPath>();
   // final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final _baseUrl = FlavorConfig.isDevelopment()

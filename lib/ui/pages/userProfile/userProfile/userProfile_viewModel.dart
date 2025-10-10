@@ -9,19 +9,17 @@ import 'package:felloapp/core/enums/username_response_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
-import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
-import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
+import 'package:felloapp/feature/chat_home/bloc/chat_history_bloc.dart';
 import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
 // import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
@@ -48,6 +46,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter & Dart Imports
 import 'package:flutter/material.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -85,8 +84,6 @@ class UserProfileVM extends BaseViewModel {
   final TambolaService _tambolaService = locator<TambolaService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final TransactionBloc _transactionBloc = locator<TransactionBloc>();
-  // final ExpertBloc _expertBloc = locator<ExpertBloc>();
-  // final AdvisorBloc _advisorBloc = locator<AdvisorBloc>();
   final MyFundsBloc _myFundsBloc = locator<MyFundsBloc>();
   final SIPTransactionBloc _sipTransactionBloc = locator<SIPTransactionBloc>();
   final S _locale = locator<S>();
@@ -96,11 +93,8 @@ class UserProfileVM extends BaseViewModel {
   final BankAndPanService _bankAndKycService = locator<BankAndPanService>();
   final DBModel? dbProvider = locator<DBModel>();
   final ScratchCardService _gtService = locator<ScratchCardService>();
-  final PowerPlayService _powerPlayService = locator<PowerPlayService>();
   final PreloadBloc preloadBloc = locator<PreloadBloc>();
 
-  final MarketingEventHandlerService _marketingService =
-      locator<MarketingEventHandlerService>();
   final TambolaRepo _tambolaRepo = locator<TambolaRepo>();
   bool isUsernameUpdated = false;
   double? picSize;
@@ -563,19 +557,18 @@ class UserProfileVM extends BaseViewModel {
               if (flag) {
                 _transactionBloc.dispose();
                 preloadBloc.add(const PreloadEvent.reset());
+                locator.resetLazySingleton<ChatHistoryBloc>();
                 locator.resetLazySingleton<AdvisorBloc>();
                 locator.resetLazySingleton<ExpertBloc>();
                 _myFundsBloc.dispose();
                 _sipTransactionBloc.dispose();
                 await _baseUtil.signOut();
-                _marketingService.dump();
+                await HydratedBloc.storage.clear();
                 _txnHistoryService.signOut();
                 _analyticsService.signOut();
                 _bankAndKycService.dump();
-                _powerPlayService.dump();
                 _gtService.dump();
                 _tambolaRepo.dump();
-                locator<JourneyRepository>().dump();
                 _appstate.dump();
                 locator<SubService>().dump();
                 _tambolaService.dump();

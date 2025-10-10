@@ -9,7 +9,6 @@ import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 import 'package:felloapp/feature/shorts/video_page.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/extensions/string_extension.dart';
@@ -94,59 +93,12 @@ class ExpertCardV2 extends StatelessWidget {
                                   PageAction(
                                 page: ProfileShortsPageConfig,
                                 state: PageState.addWidget,
-                                widget: BaseScaffold(
-                                  showBackgroundGrid: false,
-                                  backgroundColor: UiConstants.bg,
-                                  appBar: FAppBar(
-                                    backgroundColor: Colors.transparent,
-                                    centerTitle: true,
-                                    titleWidget: Text(
-                                      'Introduction',
-                                      style: TextStyles.rajdhaniSB.body1,
-                                    ),
-                                    leading: BackButton(
-                                      color: Colors.white,
-                                      onPressed: () {
-                                        AppState.backButtonDispatcher!
-                                            .didPopRoute();
-                                      },
-                                    ),
-                                    showAvatar: false,
-                                    showCoinBar: false,
-                                    action:
-                                        BlocBuilder<PreloadBloc, PreloadState>(
-                                      builder: (context, preloadState) {
-                                        return Padding(
-                                          padding: EdgeInsets.only(right: 10.w),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              BlocProvider.of<PreloadBloc>(
-                                                context,
-                                                listen: false,
-                                              ).add(
-                                                const PreloadEvent
-                                                    .toggleVolume(),
-                                              );
-                                            },
-                                            behavior: HitTestBehavior.opaque,
-                                            child: SizedBox(
-                                              height: 24.r,
-                                              width: 24.r,
-                                              child: Icon(
-                                                !preloadState.muted
-                                                    ? Icons.volume_up_rounded
-                                                    : Icons.volume_off_rounded,
-                                                size: 21.r,
-                                                color: UiConstants.kTextColor,
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  body: const ShortsVideoPage(
+                                widget: const BaseScaffold(
+                                  body: ShortsVideoPage(
                                     categories: [],
+                                    showAppBar: true,
+                                    title: 'Introduction',
+                                    showBottomNavigation: false,
                                   ),
                                 ),
                               );
@@ -506,8 +458,7 @@ class StoryIndicatorPainter extends CustomPainter {
 class ExpertTagsComponent extends StatelessWidget {
   final List<String> expertiseTags;
 
-  const ExpertTagsComponent({required this.expertiseTags, Key? key})
-      : super(key: key);
+  const ExpertTagsComponent({required this.expertiseTags, super.key});
 
   @override
   Widget build(BuildContext context) {

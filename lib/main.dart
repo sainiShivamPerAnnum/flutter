@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/experts_tab_controller.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
@@ -20,7 +21,6 @@ import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/route_parser.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -42,7 +42,7 @@ import 'feature/p2p_home/transactions_section/bloc/transaction_bloc.dart';
 import 'feature/sip/cubit/autosave_cubit.dart';
 
 class MyApp extends HookWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +91,7 @@ class MyApp extends HookWidget {
           ChangeNotifierProvider(create: (_) => locator<SubService>()),
           ChangeNotifierProvider(create: (_) => locator<BankAndPanService>()),
           ChangeNotifierProvider(create: (_) => locator<TambolaService>()),
+          ChangeNotifierProvider(create: (_) => locator<GlobalTabController>()),
           ChangeNotifierProvider(
             create: (_) => locator<AugmontTransactionService>(),
           ),
@@ -99,9 +100,6 @@ class MyApp extends HookWidget {
           ),
           ChangeNotifierProvider(
             create: (_) => locator<ScratchCardService>(),
-          ),
-          ChangeNotifierProvider(
-            create: (_) => locator<CardActionsNotifier>(),
           ),
         ],
         child: PropertyChangeProvider<UserService, UserServiceProperties>(

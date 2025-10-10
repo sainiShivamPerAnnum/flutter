@@ -5,7 +5,6 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -23,8 +22,6 @@ import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/modalsheets/autosave_confirm_exit_modalsheet.dart';
 import 'package:felloapp/ui/modalsheets/autosave_survey_modalsheet.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_components/gold_pro_buy_exit_modalsheet.dart';
-import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
-import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -41,15 +38,18 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate? _routerDelegate;
   final CustomLogger? logger = locator<CustomLogger>();
   final UserService _userService = locator<UserService>();
-  final WebGameViewModel _webGameViewModel = locator<WebGameViewModel>();
   final AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   FelloBackButtonDispatcher(this._routerDelegate) : super();
 
-  Future<bool> _confirmExit(String title, String description,
-      Function confirmAction, bool isInLandScape) {
+  Future<bool> _confirmExit(
+    String title,
+    String description,
+    Function confirmAction,
+    bool isInLandScape,
+  ) {
     BaseUtil.openDialog(
       addToScreenStack: true,
       isBarrierDismissible: false,
@@ -79,6 +79,21 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     AppToasts.flushbar?.dismiss();
     if (AppState.screenStack.last == ScreenItem.loader) {
       return Future.value(true);
+    }
+    if (AppState.isFdInProgress &&
+        (AppState.delegate!.currentConfiguration?.path ?? '') ==
+            '/webViewScreenPath' &&
+        AppState.screenStack.last != ScreenItem.dialog) {
+      return _confirmExit(
+        "FD in progress",
+        "Are you sure you want to leave?",
+        () {
+          didPopRoute();
+          AppState.isFdInProgress = false;
+          didPopRoute();
+        },
+        false,
+      );
     }
     if (AppState.isInLiveStream &&
         AppState.screenStack.last != ScreenItem.dialog &&
@@ -127,6 +142,8 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           categories: [],
           theme: preloadState.theme,
           themeName: preloadState.themeName,
+          initialTheme: preloadState.initialTheme,
+          initialThemeName: preloadState.initialThemeName,
           allThemeNames: [],
           allThemes: [],
           index: 0,
@@ -282,66 +299,6 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       BaseUtil().showConfirmExit();
       AppState.isOnboardingInProgress = false;
       return Future.value(true);
-    }
-    //If the cricket game is in progress
-    else if (AppState.isWebGameLInProgress) {
-      return _confirmExit(
-        "Exit Game",
-        "Are you sure you want to leave?",
-        () {
-          logger!.d("Closing landscape mode game view");
-          AppState.isWebGameLInProgress = false;
-          didPopRoute();
-          didPopRoute();
-          _webGameViewModel.handleGameSessionEnd();
-        },
-        true,
-      );
-    } else if (AppState.isWebGamePInProgress) {
-      return _confirmExit(
-        "Exit Game",
-        "Are you sure you want to leave?",
-        () {
-          AppState.isWebGamePInProgress = false;
-          didPopRoute();
-          didPopRoute();
-          _webGameViewModel.handleGameSessionEnd(
-              duration: const Duration(milliseconds: 500));
-        },
-        false,
-      );
-    } else if (AppState.isQuizInProgress) {
-      return _confirmExit(
-        "Exit Quiz",
-        "Are you sure you want to leave?",
-        () async {
-          AppState.isQuizInProgress = false;
-
-          final superFelloIndex = AppState.delegate!.pages.indexWhere(
-            (element) => element.name == FelloBadgeHomeViewPageConfig.path,
-          );
-
-          if (superFelloIndex != -1) {
-            while (AppState.delegate!.pages.last.name !=
-                FelloBadgeHomeViewPageConfig.path) {
-              await didPopRoute();
-            }
-
-            await didPopRoute();
-
-            await Future.delayed(const Duration(milliseconds: 100));
-
-            AppState.delegate!.appState.currentAction = PageAction(
-              state: PageState.addPage,
-              page: FelloBadgeHomeViewPageConfig,
-            );
-          } else {
-            await didPopRoute();
-            await didPopRoute();
-          }
-        },
-        false,
-      );
     } else if (AppState.isUpdateScreen) {
       AppState.isUpdateScreen = false;
       return _routerDelegate!.popRoute();
@@ -363,13 +320,11 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
             .onChange(locator<RootController>().navItems.values.toList()[0]);
         return Future.value(true);
       } else if (AppState.delegate!.appState.rootIndex ==
-              locator<RootController>()
-                  .navItems
-                  .values
-                  .toList()
-                  .indexWhere((element) => element.title == "Save") &&
-          locator<CardActionsNotifier>().isVerticalView) {
-        locator<CardActionsNotifier>().isVerticalView = false;
+          locator<RootController>()
+              .navItems
+              .values
+              .toList()
+              .indexWhere((element) => element.title == "Save")) {
         return Future.value(true);
       }
     }

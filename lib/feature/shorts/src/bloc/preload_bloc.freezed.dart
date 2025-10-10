@@ -35,6 +35,8 @@ mixin _$PreloadEvent {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -76,6 +78,7 @@ mixin _$PreloadEvent {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -117,6 +120,7 @@ mixin _$PreloadEvent {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -252,6 +256,8 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -296,6 +302,7 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -340,6 +347,7 @@ class _$InitializeLiveStreamImpl implements _InitializeLiveStream {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -439,6 +447,8 @@ class _$DisposeLiveStreamControllerImpl
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -483,6 +493,7 @@ class _$DisposeLiveStreamControllerImpl
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -527,6 +538,7 @@ class _$DisposeLiveStreamControllerImpl
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -620,6 +632,8 @@ class _$DisposeMainStreamControllerImpl
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -664,6 +678,7 @@ class _$DisposeMainStreamControllerImpl
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -708,6 +723,7 @@ class _$DisposeMainStreamControllerImpl
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -797,6 +813,8 @@ class _$ToggleVolumeImpl implements _ToggleVolume {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -841,6 +859,7 @@ class _$ToggleVolumeImpl implements _ToggleVolume {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -885,6 +904,7 @@ class _$ToggleVolumeImpl implements _ToggleVolume {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -973,6 +993,8 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -1017,6 +1039,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -1061,6 +1084,7 @@ class _$GetVideosFromApiImpl implements _GetVideosFromApi {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -1198,6 +1222,8 @@ class _$GetCategoryVideosImpl implements _GetCategoryVideos {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -1242,6 +1268,7 @@ class _$GetCategoryVideosImpl implements _GetCategoryVideos {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -1286,6 +1313,7 @@ class _$GetCategoryVideosImpl implements _GetCategoryVideos {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -1431,6 +1459,8 @@ class _$GetThemeVideosImpl implements _GetThemeVideos {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -1475,6 +1505,7 @@ class _$GetThemeVideosImpl implements _GetThemeVideos {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -1519,6 +1550,7 @@ class _$GetThemeVideosImpl implements _GetThemeVideos {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -1617,6 +1649,8 @@ class _$SetLoadingImpl implements _SetLoading {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -1661,6 +1695,7 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -1705,6 +1740,7 @@ class _$SetLoadingImpl implements _SetLoading {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -1836,6 +1872,8 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -1880,6 +1918,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -1924,6 +1963,7 @@ class _$UpdateUrlsImpl implements _UpdateUrls {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -2046,6 +2086,8 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -2090,6 +2132,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -2134,6 +2177,7 @@ class _$OnVideoIndexChangedImpl implements _OnVideoIndexChanged {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -2255,6 +2299,8 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -2299,6 +2345,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -2343,6 +2390,7 @@ class _$PauseVideoAtIndexImpl implements _PauseVideoAtIndex {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -2463,6 +2511,8 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -2507,6 +2557,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -2551,6 +2602,7 @@ class _$PlayVideoAtIndexImpl implements _PlayVideoAtIndex {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -2597,6 +2649,8 @@ abstract class _$$UpdateThemesImplCopyWith<$Res> {
   @useResult
   $Res call(
       {String theme,
+      String initialTheme,
+      String initialThemeName,
       List<String> categories,
       int index,
       List<String> allThemes,
@@ -2617,6 +2671,8 @@ class __$$UpdateThemesImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? theme = null,
+    Object? initialTheme = null,
+    Object? initialThemeName = null,
     Object? categories = null,
     Object? index = null,
     Object? allThemes = null,
@@ -2628,6 +2684,14 @@ class __$$UpdateThemesImplCopyWithImpl<$Res>
       theme: null == theme
           ? _value.theme
           : theme // ignore: cast_nullable_to_non_nullable
+              as String,
+      initialTheme: null == initialTheme
+          ? _value.initialTheme
+          : initialTheme // ignore: cast_nullable_to_non_nullable
+              as String,
+      initialThemeName: null == initialThemeName
+          ? _value.initialThemeName
+          : initialThemeName // ignore: cast_nullable_to_non_nullable
               as String,
       categories: null == categories
           ? _value._categories
@@ -2662,6 +2726,8 @@ class __$$UpdateThemesImplCopyWithImpl<$Res>
 class _$UpdateThemesImpl implements _UpdateThemes {
   const _$UpdateThemesImpl(
       {required this.theme,
+      required this.initialTheme,
+      required this.initialThemeName,
       required final List<String> categories,
       required this.index,
       required final List<String> allThemes,
@@ -2674,6 +2740,10 @@ class _$UpdateThemesImpl implements _UpdateThemes {
 
   @override
   final String theme;
+  @override
+  final String initialTheme;
+  @override
+  final String initialThemeName;
   final List<String> _categories;
   @override
   List<String> get categories {
@@ -2707,7 +2777,7 @@ class _$UpdateThemesImpl implements _UpdateThemes {
 
   @override
   String toString() {
-    return 'PreloadEvent.updateThemes(theme: $theme, categories: $categories, index: $index, allThemes: $allThemes, allThemeNames: $allThemeNames, themeName: $themeName, completer: $completer)';
+    return 'PreloadEvent.updateThemes(theme: $theme, initialTheme: $initialTheme, initialThemeName: $initialThemeName, categories: $categories, index: $index, allThemes: $allThemes, allThemeNames: $allThemeNames, themeName: $themeName, completer: $completer)';
   }
 
   @override
@@ -2716,6 +2786,10 @@ class _$UpdateThemesImpl implements _UpdateThemes {
         (other.runtimeType == runtimeType &&
             other is _$UpdateThemesImpl &&
             (identical(other.theme, theme) || other.theme == theme) &&
+            (identical(other.initialTheme, initialTheme) ||
+                other.initialTheme == initialTheme) &&
+            (identical(other.initialThemeName, initialThemeName) ||
+                other.initialThemeName == initialThemeName) &&
             const DeepCollectionEquality()
                 .equals(other._categories, _categories) &&
             (identical(other.index, index) || other.index == index) &&
@@ -2733,6 +2807,8 @@ class _$UpdateThemesImpl implements _UpdateThemes {
   int get hashCode => Object.hash(
       runtimeType,
       theme,
+      initialTheme,
+      initialThemeName,
       const DeepCollectionEquality().hash(_categories),
       index,
       const DeepCollectionEquality().hash(_allThemes),
@@ -2766,6 +2842,8 @@ class _$UpdateThemesImpl implements _UpdateThemes {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -2810,6 +2888,7 @@ class _$UpdateThemesImpl implements _UpdateThemes {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -2854,6 +2933,7 @@ class _$UpdateThemesImpl implements _UpdateThemes {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -2886,6 +2966,8 @@ class _$UpdateThemesImpl implements _UpdateThemes {
 abstract class _UpdateThemes implements PreloadEvent {
   const factory _UpdateThemes(
       {required final String theme,
+      required final String initialTheme,
+      required final String initialThemeName,
       required final List<String> categories,
       required final int index,
       required final List<String> allThemes,
@@ -2894,6 +2976,8 @@ abstract class _UpdateThemes implements PreloadEvent {
       final Completer<void>? completer}) = _$UpdateThemesImpl;
 
   String get theme;
+  String get initialTheme;
+  String get initialThemeName;
   List<String> get categories;
   int get index;
   List<String> get allThemes;
@@ -3007,6 +3091,8 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -3051,6 +3137,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -3095,6 +3182,7 @@ class _$UpdateConstantsImpl implements _UpdateConstants {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -3227,6 +3315,8 @@ class _$AddCommentImpl implements _AddComment {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -3271,6 +3361,7 @@ class _$AddCommentImpl implements _AddComment {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -3315,6 +3406,7 @@ class _$AddCommentImpl implements _AddComment {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -3354,6 +3446,232 @@ abstract class _AddComment implements PreloadEvent {
   @JsonKey(ignore: true)
   _$$AddCommentImplCopyWith<_$AddCommentImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$UpdateThemeTransitionsImplCopyWith<$Res> {
+  factory _$$UpdateThemeTransitionsImplCopyWith(
+          _$UpdateThemeTransitionsImpl value,
+          $Res Function(_$UpdateThemeTransitionsImpl) then) =
+      __$$UpdateThemeTransitionsImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<ThemeTransition> themeTransitions});
+}
+
+/// @nodoc
+class __$$UpdateThemeTransitionsImplCopyWithImpl<$Res>
+    extends _$PreloadEventCopyWithImpl<$Res, _$UpdateThemeTransitionsImpl>
+    implements _$$UpdateThemeTransitionsImplCopyWith<$Res> {
+  __$$UpdateThemeTransitionsImplCopyWithImpl(
+      _$UpdateThemeTransitionsImpl _value,
+      $Res Function(_$UpdateThemeTransitionsImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? themeTransitions = null,
+  }) {
+    return _then(_$UpdateThemeTransitionsImpl(
+      themeTransitions: null == themeTransitions
+          ? _value._themeTransitions
+          : themeTransitions // ignore: cast_nullable_to_non_nullable
+              as List<ThemeTransition>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$UpdateThemeTransitionsImpl implements UpdateThemeTransitions {
+  const _$UpdateThemeTransitionsImpl(
+      {required final List<ThemeTransition> themeTransitions})
+      : _themeTransitions = themeTransitions;
+
+  final List<ThemeTransition> _themeTransitions;
+  @override
+  List<ThemeTransition> get themeTransitions {
+    if (_themeTransitions is EqualUnmodifiableListView)
+      return _themeTransitions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_themeTransitions);
+  }
+
+  @override
+  String toString() {
+    return 'PreloadEvent.updateThemeTransitions(themeTransitions: $themeTransitions)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UpdateThemeTransitionsImpl &&
+            const DeepCollectionEquality()
+                .equals(other._themeTransitions, _themeTransitions));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_themeTransitions));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UpdateThemeTransitionsImplCopyWith<_$UpdateThemeTransitionsImpl>
+      get copyWith => __$$UpdateThemeTransitionsImplCopyWithImpl<
+          _$UpdateThemeTransitionsImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_InitializeLiveStream value) initializeLiveStream,
+    required TResult Function(_DisposeLiveStreamController value)
+        disposeLiveStreamController,
+    required TResult Function(_DisposeMainStreamController value)
+        disposeMainStreamController,
+    required TResult Function(_ToggleVolume value) toggleVolume,
+    required TResult Function(_GetVideosFromApi value) getVideosFromApi,
+    required TResult Function(_GetCategoryVideos value) getCategoryVideos,
+    required TResult Function(_GetThemeVideos value) getThemeVideos,
+    required TResult Function(_SetLoading value) setLoading,
+    required TResult Function(_UpdateUrls value) updateUrls,
+    required TResult Function(_OnVideoIndexChanged value) onVideoIndexChanged,
+    required TResult Function(_PauseVideoAtIndex value) pauseVideoAtIndex,
+    required TResult Function(_PlayVideoAtIndex value) playVideoAtIndex,
+    required TResult Function(_UpdateThemes value) updateThemes,
+    required TResult Function(_UpdateConstants value) updateConstants,
+    required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
+    required TResult Function(_UpdateViewCount value) updateViewCount,
+    required TResult Function(_UpdateSeen value) updateSeen,
+    required TResult Function(_Reset value) reset,
+    required TResult Function(_ErrorPage value) onError,
+    required TResult Function(_LikeVideo value) likeVideo,
+    required TResult Function(_FollowAdvisor value) followAdvisor,
+    required TResult Function(_SaveVideo value) saveVideo,
+    required TResult Function(_AddInteraction value) addInteraction,
+    required TResult Function(_ToggleComments value) toggleComments,
+    required TResult Function(_AddCommentToState value) addCommentToState,
+    required TResult Function(_SwitchToMainReels value) switchToMainReels,
+    required TResult Function(_SwitchToProfileReels value) switchToProfileReels,
+    required TResult Function(_InitializeAtIndex value) initializeAtIndex,
+    required TResult Function(_InitializeFromDynamicLink value)
+        initializeFromDynamicLink,
+    required TResult Function(_UpdateKeyboardState value) updateKeyboardState,
+    required TResult Function(_DisposeProfileControllers value)
+        disposeProfileControllers,
+    required TResult Function(_GenerateDynamicLink value) generateDynamicLink,
+    required TResult Function(_UpdateLoading value) updateLoading,
+  }) {
+    return updateThemeTransitions(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult? Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult? Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult? Function(_ToggleVolume value)? toggleVolume,
+    TResult? Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult? Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult? Function(_GetThemeVideos value)? getThemeVideos,
+    TResult? Function(_SetLoading value)? setLoading,
+    TResult? Function(_UpdateUrls value)? updateUrls,
+    TResult? Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult? Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult? Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult? Function(_UpdateThemes value)? updateThemes,
+    TResult? Function(_UpdateConstants value)? updateConstants,
+    TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
+    TResult? Function(_UpdateViewCount value)? updateViewCount,
+    TResult? Function(_UpdateSeen value)? updateSeen,
+    TResult? Function(_Reset value)? reset,
+    TResult? Function(_ErrorPage value)? onError,
+    TResult? Function(_LikeVideo value)? likeVideo,
+    TResult? Function(_FollowAdvisor value)? followAdvisor,
+    TResult? Function(_SaveVideo value)? saveVideo,
+    TResult? Function(_AddInteraction value)? addInteraction,
+    TResult? Function(_ToggleComments value)? toggleComments,
+    TResult? Function(_AddCommentToState value)? addCommentToState,
+    TResult? Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult? Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult? Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult? Function(_InitializeFromDynamicLink value)?
+        initializeFromDynamicLink,
+    TResult? Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult? Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+    TResult? Function(_GenerateDynamicLink value)? generateDynamicLink,
+    TResult? Function(_UpdateLoading value)? updateLoading,
+  }) {
+    return updateThemeTransitions?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitializeLiveStream value)? initializeLiveStream,
+    TResult Function(_DisposeLiveStreamController value)?
+        disposeLiveStreamController,
+    TResult Function(_DisposeMainStreamController value)?
+        disposeMainStreamController,
+    TResult Function(_ToggleVolume value)? toggleVolume,
+    TResult Function(_GetVideosFromApi value)? getVideosFromApi,
+    TResult Function(_GetCategoryVideos value)? getCategoryVideos,
+    TResult Function(_GetThemeVideos value)? getThemeVideos,
+    TResult Function(_SetLoading value)? setLoading,
+    TResult Function(_UpdateUrls value)? updateUrls,
+    TResult Function(_OnVideoIndexChanged value)? onVideoIndexChanged,
+    TResult Function(_PauseVideoAtIndex value)? pauseVideoAtIndex,
+    TResult Function(_PlayVideoAtIndex value)? playVideoAtIndex,
+    TResult Function(_UpdateThemes value)? updateThemes,
+    TResult Function(_UpdateConstants value)? updateConstants,
+    TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
+    TResult Function(_UpdateViewCount value)? updateViewCount,
+    TResult Function(_UpdateSeen value)? updateSeen,
+    TResult Function(_Reset value)? reset,
+    TResult Function(_ErrorPage value)? onError,
+    TResult Function(_LikeVideo value)? likeVideo,
+    TResult Function(_FollowAdvisor value)? followAdvisor,
+    TResult Function(_SaveVideo value)? saveVideo,
+    TResult Function(_AddInteraction value)? addInteraction,
+    TResult Function(_ToggleComments value)? toggleComments,
+    TResult Function(_AddCommentToState value)? addCommentToState,
+    TResult Function(_SwitchToMainReels value)? switchToMainReels,
+    TResult Function(_SwitchToProfileReels value)? switchToProfileReels,
+    TResult Function(_InitializeAtIndex value)? initializeAtIndex,
+    TResult Function(_InitializeFromDynamicLink value)?
+        initializeFromDynamicLink,
+    TResult Function(_UpdateKeyboardState value)? updateKeyboardState,
+    TResult Function(_DisposeProfileControllers value)?
+        disposeProfileControllers,
+    TResult Function(_GenerateDynamicLink value)? generateDynamicLink,
+    TResult Function(_UpdateLoading value)? updateLoading,
+    required TResult orElse(),
+  }) {
+    if (updateThemeTransitions != null) {
+      return updateThemeTransitions(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class UpdateThemeTransitions implements PreloadEvent {
+  const factory UpdateThemeTransitions(
+          {required final List<ThemeTransition> themeTransitions}) =
+      _$UpdateThemeTransitionsImpl;
+
+  List<ThemeTransition> get themeTransitions;
+  @JsonKey(ignore: true)
+  _$$UpdateThemeTransitionsImplCopyWith<_$UpdateThemeTransitionsImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -3447,6 +3765,8 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -3491,6 +3811,7 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -3535,6 +3856,7 @@ class _$UpdateViewCountImpl implements _UpdateViewCount {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -3657,6 +3979,8 @@ class _$UpdateSeenImpl implements _UpdateSeen {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -3701,6 +4025,7 @@ class _$UpdateSeenImpl implements _UpdateSeen {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -3745,6 +4070,7 @@ class _$UpdateSeenImpl implements _UpdateSeen {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -3838,6 +4164,8 @@ class _$ResetImpl implements _Reset {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -3882,6 +4210,7 @@ class _$ResetImpl implements _Reset {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -3926,6 +4255,7 @@ class _$ResetImpl implements _Reset {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -4014,6 +4344,8 @@ class _$ErrorPageImpl implements _ErrorPage {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -4058,6 +4390,7 @@ class _$ErrorPageImpl implements _ErrorPage {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -4102,6 +4435,7 @@ class _$ErrorPageImpl implements _ErrorPage {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -4224,6 +4558,8 @@ class _$LikeVideoImpl implements _LikeVideo {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -4268,6 +4604,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -4312,6 +4649,7 @@ class _$LikeVideoImpl implements _LikeVideo {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -4445,6 +4783,8 @@ class _$FollowAdvisorImpl implements _FollowAdvisor {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -4489,6 +4829,7 @@ class _$FollowAdvisorImpl implements _FollowAdvisor {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -4533,6 +4874,7 @@ class _$FollowAdvisorImpl implements _FollowAdvisor {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -4685,6 +5027,8 @@ class _$SaveVideoImpl implements _SaveVideo {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -4729,6 +5073,7 @@ class _$SaveVideoImpl implements _SaveVideo {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -4773,6 +5118,7 @@ class _$SaveVideoImpl implements _SaveVideo {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -4935,6 +5281,8 @@ class _$AddInteractionImpl implements _AddInteraction {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -4979,6 +5327,7 @@ class _$AddInteractionImpl implements _AddInteraction {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -5023,6 +5372,7 @@ class _$AddInteractionImpl implements _AddInteraction {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -5123,6 +5473,8 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -5167,6 +5519,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -5211,6 +5564,7 @@ class _$ToggleCommentsImpl implements _ToggleComments {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -5342,6 +5696,8 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -5386,6 +5742,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -5430,6 +5787,7 @@ class _$AddCommentToStateImpl implements _AddCommentToState {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -5526,6 +5884,8 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -5570,6 +5930,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -5614,6 +5975,7 @@ class _$SwitchToMainReelsImpl implements _SwitchToMainReels {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -5731,6 +6093,8 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -5775,6 +6139,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -5819,6 +6184,7 @@ class _$SwitchToProfileReelsImpl implements _SwitchToProfileReels {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -5949,6 +6315,8 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -5993,6 +6361,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -6037,6 +6406,7 @@ class _$InitializeAtIndexImpl implements _InitializeAtIndex {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -6172,6 +6542,8 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -6216,6 +6588,7 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -6260,6 +6633,7 @@ class _$InitializeFromDynamicLinkImpl implements _InitializeFromDynamicLink {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -6383,6 +6757,8 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -6427,6 +6803,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -6471,6 +6848,7 @@ class _$UpdateKeyboardStateImpl implements _UpdateKeyboardState {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -6568,6 +6946,8 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -6612,6 +6992,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -6656,6 +7037,7 @@ class _$DisposeProfileControllersImpl implements _DisposeProfileControllers {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -6771,6 +7153,8 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -6815,6 +7199,7 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -6859,6 +7244,7 @@ class _$GenerateDynamicLinkImpl implements _GenerateDynamicLink {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -6980,6 +7366,8 @@ class _$UpdateLoadingImpl implements _UpdateLoading {
     required TResult Function(_UpdateThemes value) updateThemes,
     required TResult Function(_UpdateConstants value) updateConstants,
     required TResult Function(_AddComment value) addComment,
+    required TResult Function(UpdateThemeTransitions value)
+        updateThemeTransitions,
     required TResult Function(_UpdateViewCount value) updateViewCount,
     required TResult Function(_UpdateSeen value) updateSeen,
     required TResult Function(_Reset value) reset,
@@ -7024,6 +7412,7 @@ class _$UpdateLoadingImpl implements _UpdateLoading {
     TResult? Function(_UpdateThemes value)? updateThemes,
     TResult? Function(_UpdateConstants value)? updateConstants,
     TResult? Function(_AddComment value)? addComment,
+    TResult? Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult? Function(_UpdateViewCount value)? updateViewCount,
     TResult? Function(_UpdateSeen value)? updateSeen,
     TResult? Function(_Reset value)? reset,
@@ -7068,6 +7457,7 @@ class _$UpdateLoadingImpl implements _UpdateLoading {
     TResult Function(_UpdateThemes value)? updateThemes,
     TResult Function(_UpdateConstants value)? updateConstants,
     TResult Function(_AddComment value)? addComment,
+    TResult Function(UpdateThemeTransitions value)? updateThemeTransitions,
     TResult Function(_UpdateViewCount value)? updateViewCount,
     TResult Function(_UpdateSeen value)? updateSeen,
     TResult Function(_Reset value)? reset,
@@ -7138,6 +7528,10 @@ mixin _$PreloadState {
   String get themeName => throw _privateConstructorUsedError;
   List<String> get allThemes => throw _privateConstructorUsedError;
   List<String> get allThemeNames => throw _privateConstructorUsedError;
+  List<ThemeTransition> get themeTransitionIndices =>
+      throw _privateConstructorUsedError;
+  String get initialTheme => throw _privateConstructorUsedError;
+  String get initialThemeName => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
   VideoPlayerController? get liveStreamController =>
       throw _privateConstructorUsedError;
@@ -7197,6 +7591,9 @@ abstract class $PreloadStateCopyWith<$Res> {
       String themeName,
       List<String> allThemes,
       List<String> allThemeNames,
+      List<ThemeTransition> themeTransitionIndices,
+      String initialTheme,
+      String initialThemeName,
       String? errorMessage,
       VideoPlayerController? liveStreamController,
       PageController? livePageController});
@@ -7240,6 +7637,9 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
     Object? themeName = null,
     Object? allThemes = null,
     Object? allThemeNames = null,
+    Object? themeTransitionIndices = null,
+    Object? initialTheme = null,
+    Object? initialThemeName = null,
     Object? errorMessage = freezed,
     Object? liveStreamController = freezed,
     Object? livePageController = freezed,
@@ -7345,6 +7745,18 @@ class _$PreloadStateCopyWithImpl<$Res, $Val extends PreloadState>
           ? _value.allThemeNames
           : allThemeNames // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      themeTransitionIndices: null == themeTransitionIndices
+          ? _value.themeTransitionIndices
+          : themeTransitionIndices // ignore: cast_nullable_to_non_nullable
+              as List<ThemeTransition>,
+      initialTheme: null == initialTheme
+          ? _value.initialTheme
+          : initialTheme // ignore: cast_nullable_to_non_nullable
+              as String,
+      initialThemeName: null == initialThemeName
+          ? _value.initialThemeName
+          : initialThemeName // ignore: cast_nullable_to_non_nullable
+              as String,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -7395,6 +7807,9 @@ abstract class _$$PreloadStateImplCopyWith<$Res>
       String themeName,
       List<String> allThemes,
       List<String> allThemeNames,
+      List<ThemeTransition> themeTransitionIndices,
+      String initialTheme,
+      String initialThemeName,
       String? errorMessage,
       VideoPlayerController? liveStreamController,
       PageController? livePageController});
@@ -7436,6 +7851,9 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
     Object? themeName = null,
     Object? allThemes = null,
     Object? allThemeNames = null,
+    Object? themeTransitionIndices = null,
+    Object? initialTheme = null,
+    Object? initialThemeName = null,
     Object? errorMessage = freezed,
     Object? liveStreamController = freezed,
     Object? livePageController = freezed,
@@ -7541,6 +7959,18 @@ class __$$PreloadStateImplCopyWithImpl<$Res>
           ? _value.allThemeNames
           : allThemeNames // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      themeTransitionIndices: null == themeTransitionIndices
+          ? _value.themeTransitionIndices
+          : themeTransitionIndices // ignore: cast_nullable_to_non_nullable
+              as List<ThemeTransition>,
+      initialTheme: null == initialTheme
+          ? _value.initialTheme
+          : initialTheme // ignore: cast_nullable_to_non_nullable
+              as String,
+      initialThemeName: null == initialThemeName
+          ? _value.initialThemeName
+          : initialThemeName // ignore: cast_nullable_to_non_nullable
+              as String,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -7586,6 +8016,9 @@ class _$PreloadStateImpl extends _PreloadState {
       required this.themeName,
       required this.allThemes,
       required this.allThemeNames,
+      required this.themeTransitionIndices,
+      required this.initialTheme,
+      required this.initialThemeName,
       this.errorMessage,
       this.liveStreamController,
       this.livePageController})
@@ -7642,6 +8075,12 @@ class _$PreloadStateImpl extends _PreloadState {
   @override
   final List<String> allThemeNames;
   @override
+  final List<ThemeTransition> themeTransitionIndices;
+  @override
+  final String initialTheme;
+  @override
+  final String initialThemeName;
+  @override
   final String? errorMessage;
   @override
   final VideoPlayerController? liveStreamController;
@@ -7650,7 +8089,7 @@ class _$PreloadStateImpl extends _PreloadState {
 
   @override
   String toString() {
-    return 'PreloadState(initialVideo: $initialVideo, mainVideos: $mainVideos, profileVideos: $profileVideos, liveVideo: $liveVideo, controllers: $controllers, mainPageController: $mainPageController, link: $link, shareLinkInProgress: $shareLinkInProgress, isShareAlreadyClicked: $isShareAlreadyClicked, profileControllers: $profileControllers, profilePageController: $profilePageController, focusedIndex: $focusedIndex, profileVideoIndex: $profileVideoIndex, isLoading: $isLoading, videoComments: $videoComments, currentContext: $currentContext, keyboardVisible: $keyboardVisible, showComments: $showComments, muted: $muted, currentCategoryIndex: $currentCategoryIndex, categories: $categories, theme: $theme, themeName: $themeName, allThemes: $allThemes, allThemeNames: $allThemeNames, errorMessage: $errorMessage, liveStreamController: $liveStreamController, livePageController: $livePageController)';
+    return 'PreloadState(initialVideo: $initialVideo, mainVideos: $mainVideos, profileVideos: $profileVideos, liveVideo: $liveVideo, controllers: $controllers, mainPageController: $mainPageController, link: $link, shareLinkInProgress: $shareLinkInProgress, isShareAlreadyClicked: $isShareAlreadyClicked, profileControllers: $profileControllers, profilePageController: $profilePageController, focusedIndex: $focusedIndex, profileVideoIndex: $profileVideoIndex, isLoading: $isLoading, videoComments: $videoComments, currentContext: $currentContext, keyboardVisible: $keyboardVisible, showComments: $showComments, muted: $muted, currentCategoryIndex: $currentCategoryIndex, categories: $categories, theme: $theme, themeName: $themeName, allThemes: $allThemes, allThemeNames: $allThemeNames, themeTransitionIndices: $themeTransitionIndices, initialTheme: $initialTheme, initialThemeName: $initialThemeName, errorMessage: $errorMessage, liveStreamController: $liveStreamController, livePageController: $livePageController)';
   }
 
   @override
@@ -7703,6 +8142,12 @@ class _$PreloadStateImpl extends _PreloadState {
             const DeepCollectionEquality().equals(other.allThemes, allThemes) &&
             const DeepCollectionEquality()
                 .equals(other.allThemeNames, allThemeNames) &&
+            const DeepCollectionEquality()
+                .equals(other.themeTransitionIndices, themeTransitionIndices) &&
+            (identical(other.initialTheme, initialTheme) ||
+                other.initialTheme == initialTheme) &&
+            (identical(other.initialThemeName, initialThemeName) ||
+                other.initialThemeName == initialThemeName) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage) &&
             (identical(other.liveStreamController, liveStreamController) ||
@@ -7739,6 +8184,9 @@ class _$PreloadStateImpl extends _PreloadState {
         themeName,
         const DeepCollectionEquality().hash(allThemes),
         const DeepCollectionEquality().hash(allThemeNames),
+        const DeepCollectionEquality().hash(themeTransitionIndices),
+        initialTheme,
+        initialThemeName,
         errorMessage,
         liveStreamController,
         livePageController
@@ -7806,6 +8254,9 @@ abstract class _PreloadState extends PreloadState {
       required final String themeName,
       required final List<String> allThemes,
       required final List<String> allThemeNames,
+      required final List<ThemeTransition> themeTransitionIndices,
+      required final String initialTheme,
+      required final String initialThemeName,
       final String? errorMessage,
       final VideoPlayerController? liveStreamController,
       final PageController? livePageController}) = _$PreloadStateImpl;
@@ -7861,6 +8312,12 @@ abstract class _PreloadState extends PreloadState {
   List<String> get allThemes;
   @override
   List<String> get allThemeNames;
+  @override
+  List<ThemeTransition> get themeTransitionIndices;
+  @override
+  String get initialTheme;
+  @override
+  String get initialThemeName;
   @override
   String? get errorMessage;
   @override

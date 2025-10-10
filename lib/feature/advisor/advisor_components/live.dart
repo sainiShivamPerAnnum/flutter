@@ -110,7 +110,7 @@ class _LiveState extends State<Live> {
 }
 
 class LiveFello extends StatelessWidget {
-  LiveFello({Key? key}) : super(key: key);
+  LiveFello({super.key});
   final String userName = (locator<UserService>().baseUser!.kycName != null &&
               locator<UserService>().baseUser!.kycName!.isNotEmpty
           ? locator<UserService>().baseUser!.kycName
@@ -132,39 +132,30 @@ class LiveFello extends StatelessWidget {
                       style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
                   )
-                : SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    physics: data.length > 1
-                        ? const AlwaysScrollableScrollPhysics()
-                        : const NeverScrollableScrollPhysics(),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        for (int i = 0; i < data.length; i++)
-                          Padding(
-                            padding: EdgeInsets.only(right: SizeConfig.padding8)
-                                .copyWith(bottom: 8),
-                            child: UpcomingLiveCardWidget(
-                              maxWidth: data.length == 1
-                                  ? SizeConfig.padding350
-                                  : null,
-                              id: data[i].id,
-                              status: data[i].status,
-                              title: data[i].topic ?? '',
-                              subTitle: data[i].description ?? '',
-                              author: userName,
-                              category: data[i].categories.isEmpty
-                                  ? ''
-                                  : data[i].categories[0],
-                              bgImage: data[i].coverImage ?? '',
-                              liveCount: data[i].totalLiveCount,
-                              duration: data[i].duration,
-                              timeSlot: data[i].eventTimeSlot,
-                              broadcasterCode: data[i].broadcasterCode,
-                            ),
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      for (int i = 0; i < data.length; i++)
+                        Padding(
+                          padding: EdgeInsets.only(bottom: SizeConfig.padding8),
+                          child: UpcomingLiveCardWidget(
+                            maxWidth: SizeConfig.padding350,
+                            id: data[i].id,
+                            status: data[i].status,
+                            title: data[i].topic ?? '',
+                            subTitle: data[i].description ?? '',
+                            author: userName,
+                            category: data[i].categories.isEmpty
+                                ? ''
+                                : data[i].categories[0],
+                            bgImage: data[i].coverImage ?? '',
+                            liveCount: data[i].totalLiveCount,
+                            duration: data[i].duration,
+                            timeSlot: data[i].eventTimeSlot,
+                            broadcasterCode: data[i].broadcasterCode,
                           ),
-                      ],
-                    ),
+                        ),
+                    ],
                   ),
           );
         } else {

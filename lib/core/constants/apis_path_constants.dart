@@ -9,12 +9,8 @@ class ApiPath {
   //Augmont Ops
   String get kGetGoldRates => "/gold/rates";
 
-  static String get happyHour => "/happy-hours/active";
-
   //User Ops Apis
   String get kAddNewUser => "/v2/new";
-
-  String get kUpdateUserAppflyer => "/appflyer";
 
   static const String kAddBankAccount = "/bank";
 
@@ -176,7 +172,7 @@ class ApiPath {
   //Journey
   static const kJourney = "/journey";
 
-  static String journeyStats(String? uid) => "/user/$uid/journey/stats";
+//   static String journeyStats(String? uid) => "/user/$uid/journey/stats";
 
   static String kSkipMilestone(String? uid) => "/user/$uid/skip/milestone";
 
@@ -266,6 +262,11 @@ class ApiPath {
 
   static const String badgesLeaderBoard = "/super-fello/leaderboard";
   static const String rpsPath = "/withdrawal/rps";
+  static const String fdHome = "/fd/templates";
+  static const String myFds = "/fd/portfolio";
+  static const String fdTransactions = "/fd/transactions";
+  static const String fdCalculation = "/fd/calculate";
+  static const String fdRedirection = "/fd/redirection";
 
   static const shortsHome = "videos/shorts/homepage";
   static const shortsCategory = "videos/search-category-shorts";
@@ -273,4 +274,7 @@ class ApiPath {
   static const followTheme = "user-notify/follow-theme";
   static const unfollowTheme = "user-notify/unfollow-theme";
   static const getSaved = "videos/saved/grouped-by-theme";
+
+  static const String chatSessionPath = 'chats/sessions';
+  static const String chatHistoryPath = 'chats/user-chats';
 }

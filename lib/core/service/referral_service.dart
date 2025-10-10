@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:app_links/app_links.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
@@ -26,7 +27,6 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/redeem_sucessfull_screen.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -36,7 +36,6 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -53,7 +52,8 @@ class ReferralService extends ChangeNotifier {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
   // ignore: cancel_subscriptions, unused_field
-  StreamSubscription<PendingDynamicLinkData>? _dynamicLinkSubscription;
+  late AppLinks _appLinks;
+  StreamSubscription<Uri>? _linkSubscription;
   final S locale = locator<S>();
   final GlobalKey imageKey = GlobalKey();
   num? _minWithdrawPrize;
@@ -236,14 +236,13 @@ class ReferralService extends ChangeNotifier {
 
   Future<dynamic> _verifyFirebaseManualReferral() async {
     try {
-      PendingDynamicLinkData? dynamicLinkData =
-          await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(
-              '${FlavorConfig.instance!.values.dynamicLinkPrefix}/app/referral/${BaseUtil.manualReferralCode}'));
-      Uri? deepLink = dynamicLinkData?.link;
-      _logger.d(deepLink.toString());
-      if (deepLink != null) {
-        return _processDynamicLink(_userService.baseUser!.uid, deepLink);
-      }
+      // Replace Firebase Dynamic Links logic with direct URL construction
+      String referralUrl =
+          '${FlavorConfig.instance!.values.dynamicLinkPrefix}/app/referral/${BaseUtil.manualReferralCode}';
+      Uri deepLink = Uri.parse(referralUrl);
+
+      _logger.d('Processing manual referral: ${deepLink.toString()}');
+      return _processDynamicLink(_userService.baseUser!.uid, deepLink);
     } catch (e) {
       _logger.e(e.toString());
     }
@@ -273,18 +272,28 @@ class ReferralService extends ChangeNotifier {
   }
 
   Future<void> initDynamicLinks() async {
-    await FirebaseDynamicLinks.instance.getInitialLink().then(_processDeepLink);
-    _dynamicLinkSubscription = FirebaseDynamicLinks.instance.onLink.listen(
-      _processDeepLink,
+    _appLinks = AppLinks();
+    try {
+      final Uri? initialLink = await _appLinks.getInitialLink();
+      if (initialLink != null) {
+        await _processDeepLink(initialLink);
+      }
+    } catch (e) {
+      _logger.e('Failed to get initial link: $e');
+    }
+    _linkSubscription = _appLinks.uriLinkStream.listen(
+      (Uri uri) async {
+        await _processDeepLink(uri);
+      },
+      onError: (err) {
+        _logger.e('App link error: $err');
+      },
     );
   }
 
-  Future<void> _processDeepLink(PendingDynamicLinkData? data) async {
-    final Uri? deepLink = data?.link;
-    if (deepLink != null) {
-      _logger.d('Received deep link. Process the referral');
-      await _processDynamicLink(_userService.baseUser!.uid, deepLink);
-    }
+  Future<void> _processDeepLink(Uri deepLink) async {
+    _logger.d('Received deep link: ${deepLink.toString()}');
+    await _processDynamicLink(_userService.baseUser!.uid, deepLink);
   }
 
   Future<void> _processDynamicLink(String? userId, Uri deepLink) async {
@@ -356,28 +365,6 @@ class ReferralService extends ChangeNotifier {
     _refUnlockAmt = BaseUtil.toInt(_refUnlock);
     _minWithdrawPrizeAmt = BaseUtil.toInt(_minWithdrawPrize);
     appShareMessage = AppConfig.getValue(AppConfigKey.appShareMessage);
-  }
-
-  dynamic getRedeemAsset(double walletBalnce) {
-    if (walletBalnce == 0) {
-      return Assets.prizeClaimAssets[0];
-    } else if (walletBalnce <= 10) {
-      return Assets.prizeClaimAssets[1];
-    } else if (walletBalnce > 10 && walletBalnce <= 20) {
-      return Assets.prizeClaimAssets[2];
-    } else if (walletBalnce > 20 && walletBalnce <= 30) {
-      return Assets.prizeClaimAssets[3];
-    } else if (walletBalnce > 30 && walletBalnce <= 40) {
-      return Assets.prizeClaimAssets[4];
-    } else if (walletBalnce > 40 && walletBalnce <= 50) {
-      return Assets.prizeClaimAssets[5];
-    } else if (walletBalnce > 50 && walletBalnce <= 100) {
-      return Assets.prizeClaimAssets[6];
-    } else if (walletBalnce > 100 && walletBalnce <= minWithdrawPrizeAmt! - 1) {
-      return Assets.prizeClaimAssets[7];
-    } else if (walletBalnce >= minWithdrawPrizeAmt!) {
-      return Assets.prizeClaimAssets[8];
-    }
   }
 
   showConfirmDialog(PrizeClaimChoice choice) {

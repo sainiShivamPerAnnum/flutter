@@ -1,7 +1,6 @@
 import 'package:felloapp/boot_strap.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/util/flavor_config.dart';
-// import 'package:device_preview/device_preview.dart';
 
 Future<void> main() async {
   FlavorConfig.configureQa();
