@@ -1,4 +1,5 @@
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
+import 'package:felloapp/core/service/experts_tab_controller.dart';
 import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/bottom_nav_bar/cart_actions.dart';
@@ -21,16 +22,16 @@ class BottomNavBar extends StatelessWidget {
     RootController rootController = locator<RootController>();
     final navItemsLength = rootController.navItems.values.length;
 
-    return Consumer<AppState>(
-      builder: (ctx, superModel, child) => BlocBuilder<CartBloc, CartState>(
+    return Consumer2<AppState, GlobalTabController>(
+      builder: (ctx, superModel, tabModel, child) =>
+          BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
           return Container(
             constraints: BoxConstraints(
               maxHeight: state is CartItemAdded &&
                       (rootController.currentNavBarItemModel ==
-                              RootController.saveNavBarItem ||
-                          rootController.currentNavBarItemModel ==
-                              RootController.expertNavBarItem)
+                              RootController.expertNavBarItem &&
+                          tabModel.currentIndex == 0)
                   ? SizeConfig.navBarHeight + 73.h
                   : SizeConfig.navBarHeight,
             ),
@@ -100,9 +101,8 @@ class BottomNavBar extends StatelessWidget {
                 ),
                 if (state is CartItemAdded &&
                     (rootController.currentNavBarItemModel ==
-                            RootController.saveNavBarItem ||
-                        rootController.currentNavBarItemModel ==
-                            RootController.expertNavBarItem))
+                            RootController.expertNavBarItem &&
+                        tabModel.currentIndex == 0))
                   Positioned(
                     bottom: SizeConfig.navBarHeight + 10.h,
                     left: 20.w,

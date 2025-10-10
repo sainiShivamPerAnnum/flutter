@@ -17,7 +17,10 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FcmListener {
   final BaseUtil _baseUtil = locator<BaseUtil>();
@@ -30,7 +33,35 @@ class FcmListener {
   FirebaseMessaging? _fcm;
   bool isTambolaNotificationLoading = false;
 
+  final FlutterLocalNotificationsPlugin _localNotifications =
+      FlutterLocalNotificationsPlugin();
+  String? _currentChatSessionId;
+  bool _isAppInForeground = true;
+
+  final Map<String, List<int>> _sessionNotificationIds = {};
+
   FcmListener(this._handler);
+
+  // static Future<void> _storeBackgroundNotificationId(
+  //   String? sessionId,
+  //   int notificationId,
+  // ) async {
+  //   if (sessionId == null) return;
+
+  //   try {
+  //     final prefs = await SharedPreferences.getInstance();
+  //     List<String> sessionNotifications =
+  //         prefs.getStringList('bg_session_notifications_$sessionId') ?? [];
+
+  //     sessionNotifications.add(notificationId.toString());
+  //     await prefs.setStringList(
+  //       'bg_session_notifications_$sessionId',
+  //       sessionNotifications,
+  //     );
+  //   } catch (e) {
+  //     log("Failed to store background notification ID: $e");
+  //   }
+  // }
 
   Future<FirebaseMessaging?> setupFcm() async {
     _fcm = FirebaseMessaging.instance;
@@ -38,7 +69,6 @@ class FcmListener {
       _fcm != null
           ? logger!.d("Fcm instance created")
           : logger!.d("Fcm instance not created");
-
       String? idToken = await _fcm!.getToken();
       await _saveDeviceToken(idToken);
 
@@ -49,13 +79,16 @@ class FcmListener {
         await _saveDeviceToken(token);
       });
 
-      unawaited(_fcm!.getInitialMessage().then((message) {
-        if (message != null) {
-          logger!.d("Opened app with notification data: ${message.data}");
-          // _handler.handleMessage(message.data, MsgSource.Terminated);
-          AppState.startupNotifMessage = message.data;
-        }
-      }));
+      unawaited(
+        _fcm!.getInitialMessage().then(
+          (message) {
+            if (message != null) {
+              logger!.d("Opened app with notification data: ${message.data}");
+              AppState.startupNotifMessage = message.data;
+            }
+          },
+        ),
+      );
 
       final data = PreferenceHelper.getString("fcmData");
 
@@ -65,25 +98,38 @@ class FcmListener {
       }
 
       FirebaseMessaging.onMessage.listen((message) async {
-        RemoteNotification? notification = message.notification;
-        if (message.data.isNotEmpty) {
+        if (message.data['type'] == 'chat_message') {
+          await _handleForegroundChatMessage(message);
+          return;
+        } else if (message.data.isNotEmpty) {
           await _handler.handleMessage(message.data, MsgSource.Foreground);
-        } else if (notification != null) {
+        } else if (message.notification != null) {
+          RemoteNotification? notification = message.notification;
           logger!.d(
-              "Handle Notification: ${notification.title} ${notification.body}, ${message.data['command']}");
+              "Handle Notification: ${notification?.title} ${notification?.body}, ${message.data['command']}");
           await _handler.handleNotification(
-              notification.title, notification.body, message.data['command']);
+            notification?.title,
+            notification?.body,
+            message.data['command'],
+          );
         }
       });
 
       FirebaseMessaging.onMessageOpenedApp.listen((message) {
         logger!.i('Opened app from background state with message: $message');
-
+        if (message.data['type'] == 'chat_message') {
+          clearNotificationsForSession();
+        }
         _handler.handleMessage(message.data, MsgSource.Background);
       });
 
-      unawaited(_fcm!.setForegroundNotificationPresentationOptions(
-          alert: true, badge: true, sound: true));
+      unawaited(
+        _fcm!.setForegroundNotificationPresentationOptions(
+          alert: true,
+          badge: true,
+          sound: true,
+        ),
+      );
       unawaited(_fcm!.requestPermission());
 
       ///add subscriptions to relevant topics
@@ -91,8 +137,35 @@ class FcmListener {
 
       ///setup android notification channels
       if (Platform.isAndroid) {
-        _androidNativeSetup();
+        await _androidNativeSetup();
       }
+      const AndroidInitializationSettings initializationSettingsAndroid =
+          AndroidInitializationSettings('@mipmap/ic_fello_notif');
+      const iosSettings = DarwinInitializationSettings();
+      const InitializationSettings initializationSettings =
+          InitializationSettings(
+        android: initializationSettingsAndroid,
+        iOS: iosSettings,
+      );
+      await _localNotifications.initialize(
+        initializationSettings,
+        onDidReceiveNotificationResponse: (response) async {
+          if (response.payload != null && response.payload!.isNotEmpty) {
+            try {
+              final data = jsonDecode(response.payload!);
+              if (data['type'] == 'chat_message') {
+                await clearNotificationsForSession();
+                await PreferenceHelper.remove("fcmData");
+              }
+              await _handler.handleMessage(data, MsgSource.Background);
+            } catch (e) {
+              log('Error parsing local notification payload: $e');
+            }
+          }
+        },
+      );
+      WidgetsBinding.instance.addObserver(_AppLifecycleObserver(this));
+      await _clearStaleBackgroundNotifications();
     } catch (e) {
       logger!.e(e.toString());
       await _internalOpsService.logFailure(
@@ -103,6 +176,213 @@ class FcmListener {
     }
 
     return _fcm;
+  }
+
+  Future<void> _handleForegroundChatMessage(RemoteMessage message) async {
+    logger!.d('Received foreground chat message: ${message.data}');
+
+    if (_shouldSuppressForegroundChatNotification(message)) {
+      logger!
+          .d('Suppressing foreground chat notification - user is in same chat');
+      return;
+    }
+
+    await _showForegroundChatNotification(message);
+  }
+
+  bool _shouldSuppressForegroundChatNotification(RemoteMessage message) {
+    final messageData = message.data;
+    final sessionId = messageData['sessionId'];
+    final senderId = messageData['userId'];
+    final currentUserId = _userService.baseUser?.uid;
+    if (_currentChatSessionId == sessionId) {
+      return true;
+    }
+    if (senderId == currentUserId) return false;
+
+    return false;
+  }
+
+  Future<void> _showForegroundChatNotification(RemoteMessage message) async {
+    final data = message.data;
+    var androidDetails = AndroidNotificationDetails(
+      'chat_messages',
+      'Chat Messages',
+      channelDescription: 'New chat messages from advisors',
+      importance: Importance.high,
+      priority: Priority.high,
+      showWhen: true,
+      icon: '@mipmap/ic_fello_notif',
+      color: const Color(0xFF01656B),
+      category: AndroidNotificationCategory.message,
+      groupKey: 'chat_session_${message.data['sessionId']}',
+      setAsGroupSummary: false,
+      styleInformation: BigTextStyleInformation(
+        message.data['body'] ?? '',
+        contentTitle: message.data['title'] ?? '',
+        summaryText: 'New message',
+      ),
+      actions: [
+        const AndroidNotificationAction(
+          'reply',
+          'Reply',
+          showsUserInterface: true,
+        ),
+      ],
+    );
+
+    const iosDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+      categoryIdentifier: 'chat_message',
+      threadIdentifier: 'chat_thread',
+      interruptionLevel: InterruptionLevel.timeSensitive,
+    );
+
+    var details = NotificationDetails(
+      android: androidDetails,
+      iOS: iosDetails,
+    );
+
+    final payloadData = {
+      'type': 'chat_message',
+      'sessionId': data['sessionId'],
+      'advisorId': data['advisorId'],
+      'source': 'foreground',
+      "deep_uri":
+          '/chat?sessionId=${data["sessionId"]}&advisorId=${data['advisorId']}&advisorName=${data['senderName']}',
+    };
+
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final senderId = message.data['userId'] ?? message.data['advisorId'] ?? '';
+    final sessionId = message.data['sessionId'] ?? 'unknown';
+    final uniqueString = '${sessionId}_${senderId}_$timestamp';
+    final notificationId = uniqueString.hashCode;
+    await _localNotifications.show(
+      notificationId,
+      data['title'] ?? '',
+      data['body'] ?? '',
+      details,
+      payload: jsonEncode(payloadData),
+    );
+    if (sessionId != null) {
+      _sessionNotificationIds[sessionId] ??= [];
+      _sessionNotificationIds[sessionId]!.add(notificationId);
+    }
+  }
+
+  // Call this when user enters a chat screen
+  Future<void> setCurrentChatSession(String? sessionId) async {
+    _currentChatSessionId = sessionId;
+    logger!.d('Current chat session: $_currentChatSessionId');
+    // Store in SharedPreferences for background handler
+    final prefs = await SharedPreferences.getInstance();
+    if (sessionId != null) {
+      await prefs.setString('current_chat_session_id', sessionId);
+      await clearNotificationsForSession();
+    } else {
+      await prefs.remove('current_chat_session_id');
+    }
+  }
+
+  Future<void> clearNotificationsForSession() async {
+    // Clear foreground notifications
+    await _localNotifications.cancelAll();
+    // final notificationIds = _sessionNotificationIds[sessionId];
+    // if (notificationIds != null && notificationIds.isNotEmpty) {
+    //   for (final notificationId in notificationIds) {
+    //     await _localNotifications.cancel(notificationId);
+    //   }
+    //   _sessionNotificationIds.remove(sessionId);
+    // }
+
+    // // Clear background notifications
+    // try {
+    //   final backgroundNotifications =
+    //       PreferenceHelper.getStringList('bg_session_notifications_$sessionId');
+    //   log(
+    //     'notifications $backgroundNotifications',
+    //   );
+    //   if (backgroundNotifications.isNotEmpty) {
+    //     log('Clearing ${backgroundNotifications.length} background notifications for session $sessionId');
+    //     for (final notificationIdString in backgroundNotifications) {
+    //       final notificationId = int.tryParse(notificationIdString);
+    //       if (notificationId != null) {
+    //         await _localNotifications.cancel(notificationId);
+    //         log('Cancelled background notification ID: $notificationId');
+    //       }
+    //     }
+    //     await PreferenceHelper.remove('bg_session_notifications_$sessionId');
+    //     log(
+    //       'Removed background notification preferences for session $sessionId',
+    //     );
+    //   } else {
+    //     log('No background notifications found for session $sessionId');
+    //   }
+    // } catch (e) {
+    //   logger?.e('Error clearing background notifications: $e');
+    // }
+  }
+
+  Future<void> _clearStaleBackgroundNotifications() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final keys = prefs.getKeys();
+      final bgSessionKeys =
+          keys.where((key) => key.startsWith('bg_session_notifications_'));
+
+      for (final key in bgSessionKeys) {
+        final notificationIds = prefs.getStringList(key) ?? [];
+        for (final notificationIdString in notificationIds) {
+          final notificationId = int.tryParse(notificationIdString);
+          if (notificationId != null) {
+            await _localNotifications.cancel(notificationId);
+          }
+        }
+        await prefs.remove(key);
+      }
+
+      logger?.d('Cleared all stale background notifications on startup');
+    } catch (e) {
+      logger?.e('Error clearing stale background notifications: $e');
+    }
+  }
+
+  Future<void> setAppForegroundState(bool isInForeground) async {
+    _isAppInForeground = isInForeground;
+    logger!.d('App foreground state: $_isAppInForeground');
+
+    // Store in SharedPreferences for background handler
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('is_app_in_foreground', isInForeground);
+
+      // Store current user ID for background suppression logic
+      final currentUserId = _userService.baseUser?.uid;
+      if (currentUserId != null) {
+        await prefs.setString('current_user_id', currentUserId);
+      }
+    } catch (e) {
+      logger?.e('Error storing app state: $e');
+    }
+  }
+
+  Future<void> clearAllChatNotifications() async {
+    await _localNotifications.cancelAll();
+    _sessionNotificationIds.clear();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final keys = prefs.getKeys();
+      final bgSessionKeys =
+          keys.where((key) => key.startsWith('bg_session_notifications_'));
+
+      for (final key in bgSessionKeys) {
+        await prefs.remove(key);
+      }
+    } catch (e) {
+      logger?.e('Error clearing all background notifications: $e');
+    }
   }
 
   Future addSubscription(FcmTopic subId, {String suffix = ''}) async {
@@ -156,7 +436,7 @@ class FcmListener {
     await addSubscription(FcmTopic.PROMOTION);
   }
 
-  _androidNativeSetup() async {
+  Future<void> _androidNativeSetup() async {
     const MethodChannel channel =
         MethodChannel('fello.in/dev/notifications/channel/tambola');
     Map<String, String> tambolaChannelMap = {
@@ -171,6 +451,29 @@ class FcmListener {
       logger!.d('Tambola Notification channel created successfully');
     }).catchError((e) {
       logger!.d('Tambola notification channel setup failed');
+    });
+
+    // Create enhanced chat notifications channel
+    const MethodChannel chatChannel =
+        MethodChannel('fello.in/dev/notifications/channel/tambola');
+    Map<String, String> chatChannelMap = {
+      "id": "chat_messages",
+      "name": "Chat Messages",
+      "description": "New chat messages from advisors",
+      "importance": "4", // IMPORTANCE_HIGH
+      "priority": "1", // PRIORITY_HIGH
+      "sound": "true",
+      "vibration": "true",
+      "lights": "true",
+      "showBadge": "true",
+    };
+
+    await chatChannel
+        .invokeMethod('createNotificationChannel', chatChannelMap)
+        .then((value) {
+      logger!.d('Chat Notification channel created successfully');
+    }).catchError((e) {
+      logger!.d('Chat notification channel setup failed');
     });
   }
 
@@ -210,30 +513,30 @@ class FcmListener {
         await removeSubscription(FcmTopic.TAMBOLAPLAYER);
         log("subscription removed");
       }
-      //_baseUtil.toggleTambolaNotificationStatus(val);
       return true;
     } catch (e) {
       logger!.e(e.toString());
       if (_userService.baseUser!.uid != null) {
         Map<String, dynamic> errorDetails = {
-          'error_msg': 'Changing Tambola Notification Status failed'
+          'error_msg': 'Changing Tambola Notification Status failed',
         };
-        unawaited(_internalOpsService.logFailure(_userService.baseUser!.uid,
-            FailType.TambolaDrawNotificationSettingFailed, errorDetails));
+        unawaited(
+          _internalOpsService.logFailure(
+            _userService.baseUser!.uid,
+            FailType.TambolaDrawNotificationSettingFailed,
+            errorDetails,
+          ),
+        );
       }
       BaseUtil.showNegativeAlert(
-          locale.obSomeThingWentWrong, locale.obPleaseTryAgain);
+        locale.obSomeThingWentWrong,
+        locale.obPleaseTryAgain,
+      );
       return false;
     }
   }
 
   Future<void> refreshTopics() async {
-    /**
-     * save the day as iso8601String in cache and whenever app opens,
-     * check if user has opened on the same day or different day
-     * if(same day) and exit the method
-     * if(different day of empty) update segment and update cache too
-     */
     final String lastAppOpenTimeStamp =
         PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_APP_OPEN);
     if (lastAppOpenTimeStamp.isEmpty) {
@@ -292,5 +595,27 @@ class FcmListener {
         updatedSegments,
       ),
     );
+  }
+}
+
+class _AppLifecycleObserver extends WidgetsBindingObserver {
+  final FcmListener _fcmListener;
+
+  _AppLifecycleObserver(this._fcmListener);
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        _fcmListener.setAppForegroundState(true);
+        break;
+      case AppLifecycleState.paused:
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.detached:
+        _fcmListener.setAppForegroundState(false);
+        break;
+      case AppLifecycleState.hidden:
+        break;
+    }
   }
 }

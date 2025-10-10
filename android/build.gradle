@@ -1,30 +1,47 @@
 buildscript {
-    ext.kotlin_version = '1.7.20'
+    ext.kotlin_version = '2.1.0'
     repositories {
         google()
         mavenCentral()
+        maven { url "https://maven.google.com" }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0"
-        classpath 'com.google.gms:google-services:4.3.14'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
+        classpath 'com.android.tools.build:gradle:8.2.1'
+        classpath 'com.google.gms:google-services:4.4.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
+        classpath 'com.google.firebase:perf-plugin:1.4.2'
     }
 }
 
 allprojects {
     repositories {
         google()
-        maven {
-           url "https://repo.apxor.com/artifactory/list/libs-release-android/"
-        }
+        mavenCentral()
     }
 }
 
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            project.android {
+                if (namespace == null) {
+                    namespace project.group
+                }
+                if (project.name == "hmssdk_flutter"){
+                    compileOptions {
+                        sourceCompatibility JavaVersion.VERSION_21
+                        targetCompatibility JavaVersion.VERSION_21
+                    }
+                }
+            }
+        }
+    }
 }
 subprojects {
     project.evaluationDependsOn(':app')

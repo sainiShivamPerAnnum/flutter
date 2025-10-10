@@ -17,27 +17,12 @@ class ShareCard extends StatelessWidget {
     this.prizeAmount,
   });
 
-  getImage() {
-    switch (claimChoice) {
-      case PrizeClaimChoice.AMZ_VOUCHER:
-        return Assets.amazonGiftVoucher;
-        break;
-      case PrizeClaimChoice.GOLD_CREDIT:
-        return Assets.augmontShare;
-        break;
-      default:
-        return Assets.felloRewards;
-    }
-  }
-
   getTitle() {
     switch (claimChoice) {
       case PrizeClaimChoice.AMZ_VOUCHER:
         return "You've won an Amazon Gift Voucher\n worth";
-        break;
       case PrizeClaimChoice.GOLD_CREDIT:
         return "I've won ₹${prizeAmount!.toInt()} as\nDigital Gold on Fello!";
-        break;
       default:
         return "You've won Fello Rewards\n worth";
     }

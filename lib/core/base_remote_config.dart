@@ -5,10 +5,8 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class BaseRemoteConfig {
-  static late FirebaseRemoteConfig remoteConfig;
   static final UserService _userService = locator<UserService>();
   static final InternalOpsService _internalOpsService =
       locator<InternalOpsService>();
@@ -373,18 +371,7 @@ class BaseRemoteConfig {
   static Future<bool> init() async {
     final CustomLogger logger = locator<CustomLogger>();
     logger.i('initializing remote config');
-    remoteConfig = FirebaseRemoteConfig.instance;
     try {
-      // await remoteConfig.activateFetched();
-      //TODO remoteConfig lazy?
-
-      await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: const Duration(milliseconds: 30000),
-        minimumFetchInterval: const Duration(seconds: 6),
-      ));
-      await remoteConfig.setDefaults(DEFAULTS);
-      //RemoteConfigValue(null, ValueSource.valueStatic);
-      await remoteConfig.fetchAndActivate();
       return true;
     } catch (exception) {
       print(
@@ -546,26 +533,4 @@ class BaseRemoteConfig {
   static String get RZP_PROD_MID => _RZP_PROD_MID.keys.first;
 
   static String get RZP_DEV_MID => _RZP_DEV_MID.keys.first;
-
-  static bool get AUTOSAVE_ACTIVE =>
-      remoteConfig.getBool(_AUTOSAVE_ACTIVE.keys.first);
-
-  static bool get USE_NEW_URL_FOR_USEROPS =>
-      remoteConfig.getBool(_USE_NEW_URL_FOR_USEROPS.keys.first);
-
-  static String get APP_REFERRAL_MESSAGE =>
-      remoteConfig.getString(_APP_REFERRAL_MESSAGE.keys.first);
-
-  static bool get PAYMENT_BRIEF_VIEW =>
-      remoteConfig.getBool(_PAYMENT_BRIEF_VIEW.keys.first);
-
-  static bool get SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW =>
-      remoteConfig.getBool(_SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW.keys.first);
-
-  static double get GOLD_PRO_INTEREST =>
-      remoteConfig.getDouble(_GOLD_PRO_INTEREST.keys.first);
-
-  static int get invalidationBefore {
-    return remoteConfig.getInt(_CACHE_INVALIDATION.keys.first);
-  }
 }

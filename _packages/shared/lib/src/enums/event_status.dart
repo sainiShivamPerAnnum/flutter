@@ -1,4 +1,0 @@
-enum EventStatus {
-  success,
-  failure,
-}

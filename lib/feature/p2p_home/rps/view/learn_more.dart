@@ -51,7 +51,7 @@ class LearmMoreOnRPS extends StatelessWidget {
                   width: SizeConfig.padding35,
                 ),
                 Text(
-                  'Understand how repayment schedule works',
+                  'Understand more about repayment history',
                   style: TextStyles.sourceSans.body3,
                 ),
               ],

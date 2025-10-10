@@ -34,6 +34,8 @@ class PreloadEvent with _$PreloadEvent {
   const factory PreloadEvent.playVideoAtIndex(int index) = _PlayVideoAtIndex;
   const factory PreloadEvent.updateThemes({
     required String theme,
+    required String initialTheme,
+    required String initialThemeName,
     required List<String> categories,
     required int index,
     required List<String> allThemes,
@@ -51,6 +53,10 @@ class PreloadEvent with _$PreloadEvent {
     required String videoId,
     required String comment,
   }) = _AddComment;
+
+  const factory PreloadEvent.updateThemeTransitions({
+    required List<ThemeTransition> themeTransitions,
+  }) = UpdateThemeTransitions;
 
   const factory PreloadEvent.updateViewCount({
     required String videoId,

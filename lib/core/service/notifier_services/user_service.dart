@@ -4,35 +4,29 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
-import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
+import 'package:felloapp/core/model/fixedDeposit/my_fds.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/quick_save_model.dart';
-import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
-import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
-import 'package:felloapp/core/service/feature_flag_service/feature_flag_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
-import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/referral_alert_dailog.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
@@ -64,14 +58,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final CustomLogger _logger = locator<CustomLogger>();
   final UserRepository _userRepo = locator<UserRepository>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
-  final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final GetterRepository _gettersRepo = locator<GetterRepository>();
   final AppState _appState = locator<AppState>();
   final RootController _rootController = locator<RootController>();
-  final GetterRepository _getterRepo = locator<GetterRepository>();
   // Depends on app config so late would be required in order to lazy evaluation
   // of expression.
-  late final _featureEvaluator = locator<FeatureFlagService>();
   Portfolio _userPortfolio = const Portfolio();
 
   Portfolio get userPortfolio => _userPortfolio;
@@ -99,11 +90,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String? _email;
 
   UserFundWallet? _userFundWallet;
-  UserJourneyStatsModel? _userJourneyStats;
   UserBootUpDetailsModel? userBootUp;
   DynamicUI? pageConfigs;
   QuickSaveModel? quickSaveModel;
   AlertModel? referralAlertDialog;
+  SummaryModel? _userFdSummary;
 
   bool? _isEmailVerified;
   bool? _isSimpleKycVerified;
@@ -125,6 +116,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String? get myUserDpUrl => _myUserDpUrl;
 
   String? get myUserName => _myUserName;
+
+  SummaryModel? get userFdSummary => _userFdSummary;
+
+  set userFdSummary(SummaryModel? value) {
+    _userFdSummary = value;
+    notifyListeners();
+  }
 
   String? get name =>
       (_kycName != null && _kycName!.isNotEmpty) ? _kycName : _name;
@@ -169,8 +167,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   List<dynamic> get userSegments => _userSegments;
 
   UserFundWallet? get userFundWallet => _userFundWallet;
-
-  UserJourneyStatsModel? get userJourneyStats => _userJourneyStats;
 
   set firebaseUser(User? firebaseUser) => _firebaseUser = firebaseUser;
 
@@ -237,23 +233,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   set userFundWallet(UserFundWallet? wallet) {
     if ((_userFundWallet?.netWorth ?? 0) != (wallet?.netWorth ?? 0)) {
       updatePortFolio();
+      updateFd();
     }
     _userFundWallet = wallet;
     notifyListeners(UserServiceProperties.myUserFund);
     _logger.d("Wallet updated in userservice, property listeners notified");
-  }
-
-  set userJourneyStats(UserJourneyStatsModel? stats) {
-    if (stats?.prizeSubtype != _userJourneyStats?.prizeSubtype) {
-      ScratchCardService.previousPrizeSubtype =
-          _userJourneyStats?.prizeSubtype ?? '';
-    }
-    _userJourneyStats = stats;
-    notifyListeners(UserServiceProperties.myJourneyStats);
-    _logger
-        .d("Journey Stats updated in userservice, property listeners notified");
-    _logger.d(
-        "Previous PrizeSubtype : ${ScratchCardService.previousPrizeSubtype}  Current PrizeSubtype: ${_userJourneyStats?.prizeSubtype} ");
   }
 
   set augGoldPrinciple(double principle) {
@@ -293,6 +277,15 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       userPortfolio = res.model!;
     } else {
       userPortfolio = const Portfolio();
+    }
+  }
+
+  Future<void> updateFd() async {
+    final res = await _userRepo.myFds();
+    if (res.isSuccess()) {
+      userFdSummary = res.model!.summary;
+    } else {
+      userFdSummary = SummaryModel();
     }
   }
 
@@ -423,60 +416,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         spinComplete = lastSpin.day == DateTime.now().day &&
             lastSpin.month == DateTime.now().month;
       }
-
-      bool firstLaunch = true;
-      final lastOpenIso =
-          PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_APP_OPEN);
-      if (lastOpenIso.isNotEmpty) {
-        final lastOpenTime = TimestampModel.fromIsoString(lastOpenIso).toDate();
-        firstLaunch = !(lastOpenTime.day == DateTime.now().day &&
-            lastOpenTime.month == DateTime.now().month);
-      }
-
-      final dateTime = DateTime.now();
-      locator<FeatureFlagService>().updateAttributes(attributes: {
-        'day': dateTime.day.toString(),
-        'mobile': _baseUser?.mobile ?? '',
-        'time': dateTime.hour,
-        'segments': _baseUser?.segments ?? [],
-        // To featureflag service that sip has been setup in past or not.
-        'subsStatus': (_baseUser?.doesHaveSubscriptionTransaction ?? false)
-            ? "ACTIVE"
-            : "IDLE",
-        'spinCompleted': spinComplete,
-        'firstLaunch': firstLaunch,
-      });
-
-      final variant = _featureEvaluator.evaluateFeature(
-        'newUserVariant',
-        defaultValue: 'a',
-      );
-
-      // Cache stories if user is new user else not.
-      final response = await _getterRepo.getPageData(
-        variant: variant,
-        shouldCacheStories: _baseUser?.segments.contains('NEW_USER') ?? false,
-      );
-
-      final pageData = response.model;
-      if (pageData != null) {
-        if (locator.isRegistered<PageData>()) {
-          locator.unregister<PageData>();
-        }
-        locator.registerSingleton<PageData>(pageData);
-      }
-
       if (baseUser != null) {
-        unawaited(getUserJourneyStats());
+        // unawaited(getUserJourneyStats());
         final res = await _gettersRepo.getPageConfigs();
-        final quickSaveRes = await _gettersRepo.getQuickSave();
         if (res.isSuccess()) {
           setPageConfigs(res.model!);
           _appState.setCurrentTabIndex = 0;
-        }
-
-        if (quickSaveRes.isSuccess()) {
-          quickSaveModel = quickSaveRes.model;
         }
       }
 
@@ -502,11 +447,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       await CacheService.invalidateAll();
       await FirebaseAuth.instance.signOut();
       await CacheManager.clearCacheMemory();
-      _journeyRepo.dump();
       // await _apiCacheManager!.clearCacheMemory();
       _logger.d("UserService signout called");
       _userFundWallet = null;
       _userPortfolio = const Portfolio();
+      _userFdSummary = null;
       _firebaseUser = null;
       _baseUser = null;
       _myUserDpUrl = null;
@@ -630,22 +575,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         print('Failed to update Home Screen widget: $e');
       }
     }
-  }
-
-  Future<bool> getUserJourneyStats() async {
-    // NOTE: CACHE REQUIRED, FOR CALLED FROM JOURUNY SERVICE AGAIN
-    if (baseUser != null) {
-      ApiResponse<UserJourneyStatsModel> res =
-          await _journeyRepo.getUserJourneyStats();
-      if (res.isSuccess()) {
-        userJourneyStats = res.model;
-        return true;
-      } else {
-        _logger.e("Error fetching User journey stats data");
-        return false;
-      }
-    }
-    return false;
   }
 
   void _compileUserWallet() {
@@ -898,25 +827,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
               PageAction(state: PageState.replaceAll, page: RootPageConfig);
         }
       } else {
-        final ffService = locator<FeatureFlagService>();
-
-        final variant = ffService.evaluateFeature(
-          FeatureFlagService.newUserVariant,
-          defaultValue: 'a',
-        );
-
-        ffService.updateAttributes(
-          attributes: {
-            'newUserVariant': variant,
-            'hasCompletedOnboarding': _hasCompletedOnboarding,
-          },
-        );
-
-        final entryScreen = ffService.evaluateFeature(
-          FeatureFlagService.entryScreen,
-          defaultValue: '/save',
-        );
-
         AppState.delegate!.appState.currentAction = PageAction(
           state: PageState.replaceAll,
           page: RootPageConfig,

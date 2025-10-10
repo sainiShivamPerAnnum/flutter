@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
@@ -12,7 +11,6 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 // import 'package:flutter_share_me/flutter_share_me.dart';
@@ -23,7 +21,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +32,6 @@ class ReferralDetailsViewModel extends BaseViewModel {
   // final FcmListener _fcmListener = locator<FcmListener>();
   // final UserService _userService = locator<UserService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
-  final AppFlyerAnalytics _appFlyer = locator<AppFlyerAnalytics>();
 
   // final UserRepository _userRepo = locator<UserRepository>();
   final ReferralRepo _refRepo = locator<ReferralRepo>();
@@ -256,34 +252,8 @@ class ReferralDetailsViewModel extends BaseViewModel {
     // }
   }
 
-  Future<String?> generateLink() async {
-    if (_refUrl != "") return _refUrl;
-
-    String? url;
-    try {
-      final link = await _appFlyer.inviteLink();
-      if (link['status'] == 'success') {
-        url = link['payload']['userInviteUrl'];
-        url ??= link['payload']['userInviteURL'];
-      }
-      _logger.d('appflyer invite link as $url');
-    } catch (e) {
-      _logger.e(e);
-    }
-    return url;
-  }
-
   Future getProfileDpWithUid(String uid) async {
     return _dbModel.getUserDP(uid);
-  }
-
-  String getUserMembershipDate(Timestamp? tmp) {
-    if (tmp != null) {
-      DateTime dt = tmp.toDate();
-      return DateFormat("dd MMM, yyyy").format(dt);
-    } else {
-      return '\'Unavailable\'';
-    }
   }
 
   bool bonusUnlockedReferalPresent(List<ReferralDetail> list) {

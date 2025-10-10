@@ -1,7 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -12,7 +11,6 @@ class AnalyticsProperties {
   //Required depedencies
   static final UserService _userService = locator<UserService>();
   static final UserCoinService _userCoinService = locator<UserCoinService>();
-  static final JourneyService _journeyService = locator<JourneyService>();
   static final TxnHistoryService _txnHistoryService =
       locator<TxnHistoryService>();
   static final BaseUtil _baseUtil = locator<BaseUtil>();
@@ -88,22 +86,6 @@ class AnalyticsProperties {
     return _userService.baseUser!.isSimpleKycVerified ?? false;
   }
 
-  static int getCurrentLevel() {
-    return _userService?.userJourneyStats?.level ?? -1;
-  }
-
-  static int getCurrentMilestone() {
-    return _userService?.userJourneyStats?.mlIndex ?? -1;
-  }
-
-  static int getMileStonesCompleted() {
-    if ((_userService?.userJourneyStats?.mlIndex ?? 0) > 1) {
-      return _userService.userJourneyStats!.mlIndex! - 1;
-    } else {
-      return 0;
-    }
-  }
-
   static int getTokens() {
     return _userCoinService?.flcBalance ?? 0;
   }
@@ -111,29 +93,6 @@ class AnalyticsProperties {
   static double getUserCurrentWinnings() {
     double currentWinning = _userService.userFundWallet?.unclaimedBalance ?? 0;
     return currentWinning;
-  }
-
-  static String getJouneryCapsuleText() {
-    return _journeyService
-            .currentMilestoneList[_userService.userJourneyStats!.mlIndex! - 1]
-            .tooltip ??
-        "null";
-  }
-
-  static String getJourneyMileStoneText() {
-    return _journeyService
-            .currentMilestoneList[_userService.userJourneyStats!.mlIndex! - 1]
-            .steps[0]
-            .title ??
-        "null";
-  }
-
-  static String getJourneyMileStoneSubText() {
-    return _journeyService
-            .currentMilestoneList[_userService.userJourneyStats!.mlIndex! - 1]
-            .steps[0]
-            .subtitle ??
-        "null";
   }
 
   static String getTimeLeftForTambolaDraw() {
@@ -161,9 +120,6 @@ class AnalyticsProperties {
       "Grams of Gold owned": getGoldQuantityInGrams(),
       "Amount Invested in Flo": getFelloFloAmount(),
       "KYC Verified": isKYCVerified(),
-      "Level": getCurrentLevel(),
-      "MileStones Completed": getMileStonesCompleted(),
-      "Current Milestone": getCurrentMilestone(),
       "Token Balance": getTokens(),
     };
 

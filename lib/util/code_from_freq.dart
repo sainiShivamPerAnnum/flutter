@@ -47,13 +47,10 @@ class CodeFromFreq {
     switch (freq) {
       case "daily":
         return getPastDayCode();
-        break;
       case "weekly":
         return getPastWeekCode();
-        break;
       case "monthly":
         return getPastMonthCode();
-        break;
     }
   }
 

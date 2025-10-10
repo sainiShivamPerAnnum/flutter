@@ -15,7 +15,7 @@ AdvisorEvents _$AdvisorEventsFromJson(Map<String, dynamic> json) =>
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       eventTimeSlot: json['eventTimeSlot'] as String?,
-      duration: json['duration'] as int?,
+      duration: (json['duration'] as num?)?.toInt(),
       broadcasterCode: json['broadcasterCode'] as String?,
       description: json['description'] as String?,
       topic: json['topic'] as String?,
@@ -26,8 +26,8 @@ AdvisorEvents _$AdvisorEventsFromJson(Map<String, dynamic> json) =>
               ?.map((e) => e as String)
               .toList() ??
           const [],
-      totalLiveCount: json['totalLiveCount'] as int? ?? 0,
-      currentLiveCount: json['currentLiveCount'] as int? ?? 0,
+      totalLiveCount: (json['totalLiveCount'] as num?)?.toInt() ?? 0,
+      currentLiveCount: (json['currentLiveCount'] as num?)?.toInt() ?? 0,
       advisorName: json['advisorName'] as String? ?? '',
       coverImage: json['coverImage'] as String?,
       advisorImg: json['advisorImg'] as String? ?? '',

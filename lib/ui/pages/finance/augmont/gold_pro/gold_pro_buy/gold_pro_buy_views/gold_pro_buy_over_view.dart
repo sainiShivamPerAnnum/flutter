@@ -178,7 +178,10 @@ class GoldProBuyOverView extends StatelessWidget {
       children: [
         AppBar(
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white.withOpacity(0.4),
+            ),
             onPressed: () {
               if (txnService.isGoldBuyInProgress) return;
               Haptic.vibrate();
@@ -186,7 +189,7 @@ class GoldProBuyOverView extends StatelessWidget {
             },
           ),
           backgroundColor: Colors.transparent,
-                surfaceTintColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
           elevation: 0,
           centerTitle: true,
           title: Row(

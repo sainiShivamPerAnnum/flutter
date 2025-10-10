@@ -8,6 +8,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/shorts/src/core/analytics_manager.dart';
 import 'package:felloapp/feature/shorts/src/core/interaction_enum.dart';
+import 'package:felloapp/feature/shorts/src/service/theme_data.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/local_actions_state.dart';
@@ -58,6 +59,8 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
           state.copyWith(
             categories: e.categories,
             theme: e.theme,
+            initialTheme: e.initialTheme,
+            initialThemeName: e.initialThemeName,
             currentCategoryIndex: e.index,
             allThemes: e.allThemes,
             themeName: e.themeName,
@@ -471,16 +474,47 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         add(PreloadEvent.updateLoading(isLoading: !state.isLoading));
       },
       onVideoIndexChanged: (e) async {
-        final bool shouldFetch =
-            (e.index + VideoPreloadConstants.kPreloadLimit) %
-                        VideoPreloadConstants.kNextLimit ==
-                    0 &&
-                state.currentVideos.length ==
-                    e.index + VideoPreloadConstants.kPreloadLimit &&
-                state.currentContext == ReelContext.main;
+        final bool shouldFetch = (state.currentVideos.length - e.index <=
+                VideoPreloadConstants.kPreloadLimit) &&
+            state.currentContext == ReelContext.main;
         _analyticsService.track(
           eventName: AnalyticsEvents.shortsVerticalSwipe,
         );
+        if (state.currentContext == ReelContext.main &&
+            state.themeTransitionIndices.isNotEmpty) {
+          String? themeForCurrentIndex;
+          String? themeNameForCurrentIndex;
+          ThemeTransition? currentTransition;
+          for (int i = 0; i < state.themeTransitionIndices.length; i++) {
+            if (e.index >= state.themeTransitionIndices[i].index) {
+              currentTransition = state.themeTransitionIndices[i];
+            } else {
+              break;
+            }
+          }
+          if (currentTransition != null) {
+            themeForCurrentIndex = currentTransition.theme;
+            themeNameForCurrentIndex = currentTransition.themeName;
+          } else {
+            themeForCurrentIndex = state.initialTheme;
+            themeNameForCurrentIndex = state.initialThemeName;
+          }
+          if (themeForCurrentIndex != state.theme) {
+            add(
+              PreloadEvent.updateThemes(
+                categories: state.categories,
+                theme: themeForCurrentIndex,
+                initialTheme: state.initialTheme,
+                initialThemeName: state.initialThemeName,
+                index: state.currentCategoryIndex,
+                allThemes: state.allThemes,
+                allThemeNames: state.allThemeNames,
+                themeName: themeNameForCurrentIndex,
+              ),
+            );
+          }
+        }
+
         if (shouldFetch) {
           final response = state.currentCategoryIndex == 0
               ? await repository.getVideosByTheme(
@@ -517,26 +551,37 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
                     );
               List<VideoData> nextThemeVideos =
                   nextResponse.model?.videos ?? [];
+              final themeTransitionIndex =
+                  state.currentVideos.length + videosToAdd.length;
+              final updatedThemeTransitions = List<ThemeTransition>.from(
+                state.themeTransitionIndices,
+              );
+              updatedThemeTransitions.add(
+                ThemeTransition(
+                  index: themeTransitionIndex,
+                  theme: nextTheme,
+                  themeName: nextThemeName,
+                ),
+              );
+              updatedThemeTransitions
+                  .sort((a, b) => a.index.compareTo(b.index));
+              add(
+                PreloadEvent.updateThemeTransitions(
+                  themeTransitions: updatedThemeTransitions,
+                ),
+              );
+
               videosToAdd.addAll(
                 nextThemeVideos
                     .where((video) => video.id != state.initialVideo?.id)
                     .toList(),
-              );
-              add(
-                PreloadEvent.updateThemes(
-                  categories: state.categories,
-                  theme: nextTheme,
-                  index: state.currentCategoryIndex,
-                  allThemes: state.allThemes,
-                  allThemeNames: state.allThemeNames,
-                  themeName: nextThemeName,
-                ),
               );
             }
           }
 
           add(PreloadEvent.updateUrls(videosToAdd));
         }
+
         final index = state.currentContext == ReelContext.main
             ? state.focusedIndex
             : state.profileVideoIndex;
@@ -550,6 +595,13 @@ class PreloadBloc extends Bloc<PreloadEvent, PreloadState> {
         } else {
           emit(state.copyWith(profileVideoIndex: e.index));
         }
+      },
+      updateThemeTransitions: (e) async {
+        emit(
+          state.copyWith(
+            themeTransitionIndices: e.themeTransitions,
+          ),
+        );
       },
       updateUrls: (e) async {
         if (state.currentContext == ReelContext.main) {

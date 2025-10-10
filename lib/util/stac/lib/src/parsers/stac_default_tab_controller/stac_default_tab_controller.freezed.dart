@@ -1,0 +1,249 @@
+// coverage:ignore-file
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
+
+part of 'stac_default_tab_controller.dart';
+
+// **************************************************************************
+// FreezedGenerator
+// **************************************************************************
+
+T _$identity<T>(T value) => value;
+
+final _privateConstructorUsedError = UnsupportedError(
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+
+StacDefaultTabController _$StacDefaultTabControllerFromJson(
+    Map<String, dynamic> json) {
+  return _StacDefaultTabController.fromJson(json);
+}
+
+/// @nodoc
+mixin _$StacDefaultTabController {
+  int get length => throw _privateConstructorUsedError;
+  int get initialIndex => throw _privateConstructorUsedError;
+  Map<String, dynamic> get child => throw _privateConstructorUsedError;
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacDefaultTabController value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacDefaultTabController value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacDefaultTabController value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $StacDefaultTabControllerCopyWith<StacDefaultTabController> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $StacDefaultTabControllerCopyWith<$Res> {
+  factory $StacDefaultTabControllerCopyWith(StacDefaultTabController value,
+          $Res Function(StacDefaultTabController) then) =
+      _$StacDefaultTabControllerCopyWithImpl<$Res, StacDefaultTabController>;
+  @useResult
+  $Res call({int length, int initialIndex, Map<String, dynamic> child});
+}
+
+/// @nodoc
+class _$StacDefaultTabControllerCopyWithImpl<$Res,
+        $Val extends StacDefaultTabController>
+    implements $StacDefaultTabControllerCopyWith<$Res> {
+  _$StacDefaultTabControllerCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? length = null,
+    Object? initialIndex = null,
+    Object? child = null,
+  }) {
+    return _then(_value.copyWith(
+      length: null == length
+          ? _value.length
+          : length // ignore: cast_nullable_to_non_nullable
+              as int,
+      initialIndex: null == initialIndex
+          ? _value.initialIndex
+          : initialIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+      child: null == child
+          ? _value.child
+          : child // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$StacDefaultTabControllerImplCopyWith<$Res>
+    implements $StacDefaultTabControllerCopyWith<$Res> {
+  factory _$$StacDefaultTabControllerImplCopyWith(
+          _$StacDefaultTabControllerImpl value,
+          $Res Function(_$StacDefaultTabControllerImpl) then) =
+      __$$StacDefaultTabControllerImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({int length, int initialIndex, Map<String, dynamic> child});
+}
+
+/// @nodoc
+class __$$StacDefaultTabControllerImplCopyWithImpl<$Res>
+    extends _$StacDefaultTabControllerCopyWithImpl<$Res,
+        _$StacDefaultTabControllerImpl>
+    implements _$$StacDefaultTabControllerImplCopyWith<$Res> {
+  __$$StacDefaultTabControllerImplCopyWithImpl(
+      _$StacDefaultTabControllerImpl _value,
+      $Res Function(_$StacDefaultTabControllerImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? length = null,
+    Object? initialIndex = null,
+    Object? child = null,
+  }) {
+    return _then(_$StacDefaultTabControllerImpl(
+      length: null == length
+          ? _value.length
+          : length // ignore: cast_nullable_to_non_nullable
+              as int,
+      initialIndex: null == initialIndex
+          ? _value.initialIndex
+          : initialIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+      child: null == child
+          ? _value._child
+          : child // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$StacDefaultTabControllerImpl implements _StacDefaultTabController {
+  const _$StacDefaultTabControllerImpl(
+      {required this.length,
+      this.initialIndex = 0,
+      required final Map<String, dynamic> child})
+      : _child = child;
+
+  factory _$StacDefaultTabControllerImpl.fromJson(Map<String, dynamic> json) =>
+      _$$StacDefaultTabControllerImplFromJson(json);
+
+  @override
+  final int length;
+  @override
+  @JsonKey()
+  final int initialIndex;
+  final Map<String, dynamic> _child;
+  @override
+  Map<String, dynamic> get child {
+    if (_child is EqualUnmodifiableMapView) return _child;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_child);
+  }
+
+  @override
+  String toString() {
+    return 'StacDefaultTabController(length: $length, initialIndex: $initialIndex, child: $child)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$StacDefaultTabControllerImpl &&
+            (identical(other.length, length) || other.length == length) &&
+            (identical(other.initialIndex, initialIndex) ||
+                other.initialIndex == initialIndex) &&
+            const DeepCollectionEquality().equals(other._child, _child));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, length, initialIndex,
+      const DeepCollectionEquality().hash(_child));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$StacDefaultTabControllerImplCopyWith<_$StacDefaultTabControllerImpl>
+      get copyWith => __$$StacDefaultTabControllerImplCopyWithImpl<
+          _$StacDefaultTabControllerImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_StacDefaultTabController value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_StacDefaultTabController value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_StacDefaultTabController value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$StacDefaultTabControllerImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _StacDefaultTabController implements StacDefaultTabController {
+  const factory _StacDefaultTabController(
+          {required final int length,
+          final int initialIndex,
+          required final Map<String, dynamic> child}) =
+      _$StacDefaultTabControllerImpl;
+
+  factory _StacDefaultTabController.fromJson(Map<String, dynamic> json) =
+      _$StacDefaultTabControllerImpl.fromJson;
+
+  @override
+  int get length;
+  @override
+  int get initialIndex;
+  @override
+  Map<String, dynamic> get child;
+  @override
+  @JsonKey(ignore: true)
+  _$$StacDefaultTabControllerImplCopyWith<_$StacDefaultTabControllerImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}

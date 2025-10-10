@@ -16,7 +16,6 @@ import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/elements/video_player/app_video_player.dart';
@@ -91,6 +90,8 @@ class _AssetSectionViewState extends State<AssetSectionView> {
 
   FaqsType _getFaqTypeFromAsset(InvestmentType type) {
     switch (type) {
+      case InvestmentType.fixedDeposit:
+        return FaqsType.fd;
       case InvestmentType.AUGGOLD99:
         return FaqsType.gold;
       case InvestmentType.GOLDPRO:
@@ -288,6 +289,9 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                     investmentType: InvestmentType.AUGGOLD99,
                                   ),
                                 if (!isNewUser) ...[
+                                  SizedBox(
+                                    height: SizeConfig.padding24,
+                                  ),
                                   CircularSlider(
                                     isNewUser: isNewUser,
                                     type: widget.type,

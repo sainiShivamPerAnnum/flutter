@@ -6,7 +6,6 @@ import 'dart:math';
 
 //Pub Imports
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -14,9 +13,6 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/model/feed_card_model.dart';
-import 'package:felloapp/core/model/happy_hour_campign.dart';
-import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_leader_model.dart';
 import 'package:felloapp/core/model/settings_items_model.dart';
@@ -29,26 +25,21 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/expert/booking_sheet.dart';
+import 'package:felloapp/feature/fixedDeposit/fd_main_view.dart';
 import 'package:felloapp/feature/referrals/ui/referral_rating_sheet.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/modalsheets/confirm_exit_modal.dart';
-import 'package:felloapp/ui/modalsheets/happy_hour_modal.dart';
 import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
-import 'package:felloapp/ui/pages/games/web/web_home/web_game_modal_sheet.dart';
-import 'package:felloapp/ui/pages/support/bug_report/ui/found_bug.dart';
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -87,7 +78,6 @@ class BaseUtil extends ChangeNotifier {
   int? _ticketCount;
   User? firebaseUser;
   FirebaseAnalytics? baseAnalytics;
-  List<FeedCard>? feedCards;
   String? userRegdPan;
   List<SettingsListItemModel>? settingsItemList;
 
@@ -101,7 +91,6 @@ class BaseUtil extends ChangeNotifier {
   AugmontRates? augmontGoldRates;
 
   ///KYC global object
-  List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
   String? myUserDpUrl;
   List<UserTransaction>? userMiniTxnList;
@@ -114,7 +103,6 @@ class BaseUtil extends ChangeNotifier {
   UserTransaction? firstAugmontTransaction;
 
   /// Objects for Transaction list Pagination
-  DocumentSnapshot? lastTransactionListDocument;
   bool hasMoreTransactionListDocuments = true;
 
   DateTime? _userCreationTimestamp;
@@ -303,21 +291,6 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  static dynamic openGameModalSheet(String game) {
-    AppState.screenStack.add(ScreenItem.modalsheet);
-    return openModalBottomSheet(
-      isScrollControlled: true,
-      enableDrag: true,
-      isBarrierDismissible: true,
-      addToScreenStack: false,
-      content: WebGameModalSheet(
-        game: game,
-      ),
-      backgroundColor: UiConstants.gameCardColor,
-      hapticVibrate: true,
-    );
-  }
-
   void openRechargeModalSheet({
     required InvestmentType investmentType,
     int? amt,
@@ -383,6 +356,14 @@ class BaseUtil extends ChangeNotifier {
           entryPoint: entryPoint,
           quickCheckout: quickCheckout,
         ),
+      );
+      return;
+    }
+    if (investmentType == InvestmentType.fixedDeposit) {
+      AppState.delegate!.appState.currentAction = PageAction(
+        page: FdHomePageConfig,
+        widget: const FdMainView(),
+        state: PageState.addWidget,
       );
       return;
     }
@@ -497,8 +478,6 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future<void> updateUser() async {
-    unawaited(locator<MarketingEventHandlerService>().getHappyHourCampaign());
-
     if (_userService.userSegments.contains("NEW_USER")) {
       await CacheService.invalidateByKey(CacheKeys.USER);
       await _userService.setBaseUser();
@@ -850,7 +829,6 @@ class BaseUtil extends ChangeNotifier {
       _ticketCount = null;
       firebaseUser = null;
       baseAnalytics = null;
-      feedCards = null;
       // _dailyPickCount = null;
       userRegdPan = null;
       // weeklyDigits = null;
@@ -861,7 +839,6 @@ class BaseUtil extends ChangeNotifier {
 
       _augmontDetail = null;
       augmontGoldRates = null;
-      prizeLeaders = [];
       referralLeaders = [];
       myUserDpUrl = null;
       userMiniTxnList = null;
@@ -870,7 +847,6 @@ class BaseUtil extends ChangeNotifier {
       packageInfo = null;
       freshchatKeys = null;
       _userCreationTimestamp = null;
-      lastTransactionListDocument = null;
       hasMoreTransactionListDocuments = true;
       isOtpResendCount = 0;
       isUpiInfoMissing = true;
@@ -898,6 +874,11 @@ class BaseUtil extends ChangeNotifier {
       return false;
     }
     return true;
+  }
+
+  static String formatAmount(String amount) {
+    String cleanAmount = amount.replaceAll(RegExp(r'[^\d.]'), '');
+    return cleanAmount;
   }
 
   static int getRandomRewardAmount(index) {
@@ -1055,6 +1036,11 @@ class BaseUtil extends ChangeNotifier {
     return formatter.format(dateTime);
   }
 
+  static String formatOnlyDate(DateTime dateTime) {
+    final DateFormat formatter = DateFormat('dd/MM');
+    return formatter.format(dateTime);
+  }
+
   static Future<bool> isFirstTimeThisWeek() async {
     /// Get the current week number
     final currentWeekNumber =
@@ -1116,20 +1102,6 @@ class BaseUtil extends ChangeNotifier {
     Duration difference = endDate.difference(now);
     int remaining = difference.inDays;
     return remaining;
-  }
-
-  void showFoundBugSheet() {
-    Haptic.vibrate();
-
-    BaseUtil.openModalBottomSheet(
-      addToScreenStack: true,
-      enableDrag: false,
-      hapticVibrate: true,
-      isBarrierDismissible: true,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      content: const FoundBug(),
-    );
   }
 
   int getTicketCountForTransaction(double investment) =>
@@ -1302,50 +1274,5 @@ class BaseUtil extends ChangeNotifier {
   set isUpiInfoMissing(bool? value) {
     _isUpiInfoMissing = value;
     notifyListeners();
-  }
-
-  Future showHappyHourDialog(
-    HappyHourCampign model, {
-    bool isComingFromSave = false,
-  }) async {
-    return openModalBottomSheet(
-      backgroundColor: Colors.transparent,
-      addToScreenStack: true,
-      hapticVibrate: true,
-      content: HappyHourModel(
-        model: model,
-        isComingFromSave: isComingFromSave,
-      ),
-      isBarrierDismissible: true,
-    );
-  }
-}
-
-class CompleteProfileDialog extends StatelessWidget {
-  final String? title, subtitle;
-
-  const CompleteProfileDialog({super.key, this.title, this.subtitle});
-
-  @override
-  Widget build(BuildContext context) {
-    S locale = S.of(context);
-    return WillPopScope(
-      onWillPop: () async {
-        await AppState.backButtonDispatcher!.didPopRoute();
-        return Future.value(true);
-      },
-      child: MoreInfoDialog(
-        title: title ?? locale.obCompleteProfile,
-        text: subtitle ?? locale.obCompleteProfileSubTitle,
-        imagePath: Assets.completeProfile,
-        btnText: locale.btnComplete.toUpperCase(),
-        onPressed: () {
-          while (AppState.screenStack.length > 1) {
-            AppState.backButtonDispatcher!.didPopRoute();
-          }
-          AppState.delegate!.appState.setCurrentTabIndex = 0;
-        },
-      ),
-    );
   }
 }

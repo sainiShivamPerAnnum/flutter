@@ -22,6 +22,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -422,14 +423,15 @@ class SubService extends ChangeNotifier {
           }
 
           // debug assertion to avoid this in production.
-          assert(() {
-            if (element.upiApplication.appName == "PhonePe Simulator" &&
-                AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
-                    .contains('E')) {
-              appMetaList.add(element);
-            }
-            return true;
-          }());
+          // assert(() {
+          if (element.upiApplication.appName == "PhonePe Simulator" &&
+              AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+                  .contains('E') &&
+              FlavorConfig.isDevelopment()) {
+            appMetaList.add(element);
+          }
+          // return true;
+          // }());
 
           if (element.upiApplication.appName == "PhonePe Preprod" &&
               AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)

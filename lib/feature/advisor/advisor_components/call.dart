@@ -184,7 +184,7 @@ Widget callContainer(
               width: SizeConfig.padding28,
               height: SizeConfig.padding28,
               child: Image.asset(
-                Assets.user,
+                Assets.cvtar5,
                 fit: BoxFit.cover,
               ),
             ),

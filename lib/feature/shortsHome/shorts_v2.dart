@@ -1,13 +1,9 @@
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/savedShorts/saved_shorts.dart';
 import 'package:felloapp/feature/shorts/src/service/video_data.dart';
 import 'package:felloapp/feature/shortsHome/bloc/pagination_bloc.dart';
 import 'package:felloapp/feature/shortsHome/bloc/shorts_home_bloc.dart';
 import 'package:felloapp/feature/shortsHome/widgets/shorts_card.dart';
-import 'package:felloapp/feature/shorts_notifications/shorts_notifications.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
@@ -29,11 +25,7 @@ class ShortsNewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          ShortsHomeBloc(locator(), locator())..add(const LoadHomeData()),
-      child: _ShortsScreen(key: shortsScreenKey),
-    );
+    return _ShortsScreen(key: shortsScreenKey);
   }
 }
 
@@ -94,162 +86,6 @@ class _ShortsScreenState extends State<_ShortsScreen> {
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [UiConstants.bg, Color(0xff212B2D)],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(height: 12.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Shorts',
-                              style: TextStyles.sourceSansSB.body1,
-                            ),
-                            Text(
-                              'Learn investing with quick and insightful shorts',
-                              style: TextStyles.sourceSans.body3.colour(
-                                UiConstants.kTextColor.withOpacity(.7),
-                              ),
-                            ),
-                          ],
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            _searchFocusNode.unfocus();
-                            AppState.delegate!.appState.currentAction =
-                                PageAction(
-                              page: ShortsNotificationPageConfig,
-                              state: PageState.addWidget,
-                              widget: const ShortsNotificationPage(),
-                            );
-                            locator<AnalyticsService>().track(
-                              eventName: AnalyticsEvents.shortsNotication,
-                            );
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: UiConstants.grey5,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(
-                                  SizeConfig.roundness12,
-                                ),
-                              ),
-                            ),
-                            padding: EdgeInsets.all(SizeConfig.padding10),
-                            child: const Icon(
-                              Icons.notifications_rounded,
-                              color: UiConstants.kTextColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 18.h,
-                    ),
-                    BlocBuilder<ShortsHomeBloc, ShortsHomeState>(
-                      builder: (context, state) {
-                        if (state is ShortsHomeData) {
-                          _controller.text = state.query;
-                          return SizedBox(
-                            height: 38.h,
-                            child: TextField(
-                              controller: _controller,
-                              focusNode: _searchFocusNode,
-                              autofocus: false,
-                              onSubmitted: (query) {
-                                if (query.trim().length >= 3) {
-                                  BlocProvider.of<ShortsHomeBloc>(context)
-                                      .add(SearchShorts(query));
-                                  _searchFocusNode.unfocus();
-                                } else {
-                                  BaseUtil.showNegativeAlert(
-                                    'Input Error',
-                                    'Please enter at least 3 characters',
-                                  );
-                                }
-                              },
-                              textAlign: TextAlign.justify,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                hintText: "Search",
-                                hintStyle: TextStyles.sourceSans.body3.colour(
-                                  UiConstants.kTextColor.withOpacity(.7),
-                                ),
-                                filled: true,
-                                fillColor:
-                                    const Color(0xffD9D9D9).withOpacity(.04),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8.r),
-                                  borderSide: BorderSide(
-                                    color: const Color(0xffCACBCC)
-                                        .withOpacity(.07),
-                                  ),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8.r),
-                                  borderSide: BorderSide(
-                                    color: const Color(0xffCACBCC)
-                                        .withOpacity(.07),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8.r),
-                                  borderSide: BorderSide(
-                                    color: const Color(0xffCACBCC)
-                                        .withOpacity(.07),
-                                  ),
-                                ),
-                                suffixIcon: state.query != ""
-                                    ? IconButton(
-                                        onPressed: () {
-                                          _controller.clear();
-                                          BlocProvider.of<ShortsHomeBloc>(
-                                            context,
-                                            listen: false,
-                                          ).add(const LoadHomeData());
-                                          _searchFocusNode.unfocus();
-                                        },
-                                        icon: Icon(
-                                          Icons.close,
-                                          color: UiConstants.kTextColor
-                                              .withOpacity(.7),
-                                        ),
-                                      )
-                                    : Icon(
-                                        Icons.search,
-                                        color: UiConstants.kTextColor
-                                            .withOpacity(.7),
-                                      ),
-                                contentPadding: EdgeInsets.symmetric(
-                                  vertical: 12.h,
-                                  horizontal: 16.w,
-                                ),
-                              ),
-                            ),
-                          );
-                        } else {
-                          return const SizedBox.shrink();
-                        }
-                      },
-                    ),
-                    SizedBox(
-                      height: 18.h,
-                    ),
-                  ],
-                ),
-              ),
               BlocBuilder<ShortsHomeBloc, ShortsHomeState>(
                 builder: (context, state) {
                   return switch (state) {
@@ -283,12 +119,22 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                                 GestureDetector(
                                                   onTap: () {
                                                     _searchFocusNode.unfocus();
-                                                    BlocProvider.of<
-                                                        ShortsHomeBloc>(
-                                                      context,
-                                                    ).add(
-                                                      ApplyCategory(theme),
-                                                    );
+                                                    if (state.query == theme) {
+                                                      BlocProvider.of<
+                                                          ShortsHomeBloc>(
+                                                        context,
+                                                        listen: false,
+                                                      ).add(
+                                                        const LoadHomeData(),
+                                                      );
+                                                    } else {
+                                                      BlocProvider.of<
+                                                          ShortsHomeBloc>(
+                                                        context,
+                                                      ).add(
+                                                        ApplyCategory(theme),
+                                                      );
+                                                    }
                                                   },
                                                   child: Container(
                                                     decoration: BoxDecoration(
@@ -297,14 +143,22 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                                       ).withOpacity(.1),
                                                       borderRadius:
                                                           BorderRadius.all(
-                                                        Radius.circular(
-                                                          6.r,
-                                                        ),
+                                                        Radius.circular(6.r),
                                                       ),
                                                       border: Border.all(
-                                                        color: const Color(
-                                                          0xffCACBCC,
-                                                        ).withOpacity(.07),
+                                                        color: state.query ==
+                                                                theme
+                                                            ? UiConstants
+                                                                .primaryColor
+                                                            : const Color(
+                                                                0xffCACBCC,
+                                                              ).withOpacity(
+                                                                .07,
+                                                              ),
+                                                        width:
+                                                            state.query == theme
+                                                                ? 1.0
+                                                                : .5,
                                                       ),
                                                     ),
                                                     padding:
@@ -312,10 +166,45 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                                       horizontal: 16.w,
                                                       vertical: 8.h,
                                                     ),
-                                                    child: Text(
-                                                      theme,
-                                                      style: TextStyles
-                                                          .sourceSansM.body4,
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Text(
+                                                          theme,
+                                                          style: TextStyles
+                                                              .sourceSansM.body4
+                                                              .copyWith(
+                                                            color: state.query ==
+                                                                    theme
+                                                                ? UiConstants
+                                                                    .primaryColor
+                                                                : null,
+                                                          ),
+                                                        ),
+                                                        if (state.query ==
+                                                            theme) ...[
+                                                          SizedBox(width: 8.w),
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              _searchFocusNode
+                                                                  .unfocus();
+                                                              BlocProvider.of<
+                                                                  ShortsHomeBloc>(
+                                                                context,
+                                                                listen: false,
+                                                              ).add(
+                                                                  const LoadHomeData());
+                                                            },
+                                                            child: Icon(
+                                                              Icons.close,
+                                                              size: 16.r,
+                                                              color: UiConstants
+                                                                  .primaryColor,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ],
                                                     ),
                                                   ),
                                                 ),
@@ -337,16 +226,12 @@ class _ShortsScreenState extends State<_ShortsScreen> {
                                       );
                                     },
                                     child: Container(
-                                      margin: EdgeInsets.only(
-                                        left: 12.w,
-                                      ),
+                                      margin: EdgeInsets.only(left: 12.w),
                                       decoration: BoxDecoration(
                                         color: const Color(0xffD9D9D9)
                                             .withOpacity(.1),
                                         borderRadius: BorderRadius.all(
-                                          Radius.circular(
-                                            6.r,
-                                          ),
+                                          Radius.circular(6.r),
                                         ),
                                         border: Border.all(
                                           color: const Color(0xffCACBCC)

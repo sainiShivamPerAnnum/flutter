@@ -2,7 +2,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-// import 'package:apxor_flutter/observer.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -11,11 +10,13 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
-import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/live_repository.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/experts_tab_controller.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/chat/bloc/chat_bloc.dart';
+import 'package:felloapp/feature/chat/chat_screen.dart';
 import 'package:felloapp/feature/expert/bloc/expert_bloc.dart';
 import 'package:felloapp/feature/expert/widgets/scroll_to_index.dart';
 import 'package:felloapp/feature/expertDetails/expert_profile.dart';
@@ -24,18 +25,20 @@ import 'package:felloapp/feature/hms_room_kit/lib/hms_room_kit.dart';
 import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/feature/p2p_home/rps/view/view_rps.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
+import 'package:felloapp/feature/sdui/sdui_page.dart';
 import 'package:felloapp/feature/shorts/src/bloc/preload_bloc.dart';
 import 'package:felloapp/feature/shorts/video_page.dart';
+import 'package:felloapp/feature/shorts_notifications/shorts_notifications.dart';
 import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_select_assset.dart';
+import 'package:felloapp/feature/support-new/support_new.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
-import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/pages/asset_prefs/asset_prefs.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_view.dart';
@@ -43,9 +46,7 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_transactions/gold_pro_txns_view.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/my_account_view.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/stories/stories_page.dart';
@@ -54,42 +55,28 @@ import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding_main/onboarding_main_view.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
-import 'package:felloapp/ui/pages/power_play/how_it_works/how_it_works_view.dart';
-import 'package:felloapp/ui/pages/power_play/leaderboard/widgets/prize_distribution_sheet.dart';
-import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_home_view.dart';
-import 'package:felloapp/ui/pages/power_play/season_leaderboard/season_leaderboard_view.dart';
-import 'package:felloapp/ui/pages/power_play/welcome_page/power_play_welcome_page.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/earn_more_returns_view.dart';
 import 'package:felloapp/ui/pages/static/web_view.dart';
 import 'package:felloapp/ui/pages/support/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/support/referral_policy_page.dart';
-import 'package:felloapp/ui/pages/support/support.dart';
 import 'package:felloapp/ui/pages/userProfile/bank_details/bank_details_view.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/pages/userProfile/settings/settings_view.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_view.dart';
-import 'package:felloapp/ui/pages/userProfile/verify_email.dart';
-import 'package:felloapp/ui/service_elements/quiz/quiz_web_view.dart';
-import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
-import 'package:felloapp/util/styles/styles.dart';
 //Flutter Imports
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/enums/app_config_keys.dart';
 import '../../core/model/app_config_model.dart';
@@ -305,12 +292,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.RefPolicy:
           _addPageData(const ReferralPolicy(), RefPolicyPageConfig);
           break;
-        case Pages.VerifyEmail:
-          _addPageData(const VerifyEmail(), VerifyEmailPageConfig);
-          break;
-        case Pages.Support:
-          _addPageData(const SupportPage(), SupportPageConfig);
-          break;
         case Pages.Notifications:
           _addPageData(const NotificationsPage(), NotificationsConfig);
           break;
@@ -334,9 +315,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
             ScratchCardsViewPageConfig,
           );
           break;
-        case Pages.JourneyView:
-          _addPageData(const JourneyView(), JourneyViewPageConfig);
-          break;
         case Pages.OnBoardingView:
           _addPageData(const OnBoardingView(), OnBoardingViewPageConfig);
           break;
@@ -350,28 +328,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.FlexiBalaceView:
           _addPageData(const RpsView(), FlexiBalancePageConfig);
           break;
-        case Pages.PowerPlayHome:
-          _addPageData(const PowerPlayHome(), PowerPlayHomeConfig);
-          break;
-
-        case Pages.PowerPlayHowItWorks:
-          _addPageData(const HowItWorks(), pageConfig);
-          break;
-        case Pages.PowerPlaySeasonLeaderboard:
-          _addPageData(
-            const SeasonLeaderboard(),
-            PowerPlaySeasonLeaderboardDetailsConfig,
-          );
-          break;
-
-        case Pages.PowerPlayFTUX:
-          _addPageData(const PowerPlayWelcomePage(), pageConfig);
-          break;
         case Pages.EarnMoreReturnsView:
           _addPageData(const EarnMoreReturns(), EarnMoreReturnsViewPageConfig);
-          break;
-        case Pages.PlayView:
-          _addPageData(const Play(), TransactionDetailsPageConfig);
           break;
         case Pages.GoldProDetailsView:
           _addPageData(
@@ -387,9 +345,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.GoldProTxnsView:
           _addPageData(const GoldProTxnsView(), GoldProTxnsViewPageConfig);
-          break;
-        case Pages.QuizWebView:
-          _addPageData(const QuizWebView(), QuizWebViewConfig);
           break;
         case Pages.TicketsIntroViewPath:
           _addPageData(const TicketsIntroView(), TicketsIntroViewPageConfig);
@@ -437,6 +392,18 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(
             const P2PHomePage(),
             P2PHomePageConfig,
+          );
+          break;
+        case Pages.ShortsNotification:
+          _addPageData(
+            const ShortsNotificationPage(),
+            ShortsNotificationPageConfig,
+          );
+          break;
+        case Pages.Support:
+          _addPageData(
+            const SupportNewPage(),
+            SupportPageConfig,
           );
           break;
         default:
@@ -779,6 +746,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.AllShorts:
         AllShortsPageConfig.currentPageAction = action;
         break;
+      case Pages.Sdui:
+        SduiPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -872,10 +842,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         final segment = uri.pathSegments[i];
         if (segment.startsWith('d-', 0)) {
           dialogCheck(segment.split('-').last);
-        } else if (segment.startsWith('GM_')) {
-          openWebGame(
-            segment,
-          );
         } else if (segment.startsWith('c-', 0)) {
           appState.scrollHome(num.tryParse(segment.split('-').last) as int);
         } else {
@@ -930,10 +896,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     switch (screenKey) {
       case 'super-fello':
         pageConfiguration = FelloBadgeHomeViewPageConfig;
-
-      case 'journey':
-        pageConfiguration = JourneyViewPageConfig;
-        break;
       case 'save':
         onTapItem(RootController.saveNavBarItem);
 
@@ -971,12 +933,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           page: P2PHomePageConfig,
           widget: const P2PHomePage(),
         );
-        break;
-
-      case 'quickTour':
-        // Future.delayed(const Duration(seconds: 2),
-        //     SpotLightController.instance.startQuickTour);
-
         break;
 
       case 'kycVerify':
@@ -1023,8 +979,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         if (id != null) {
           await openLiveById(id);
         } else if (rootController.navItems
-            .containsValue(RootController.liveNavBarItem)) {
-          onTapItem(RootController.liveNavBarItem);
+            .containsValue(RootController.expertNavBarItem)) {
+          onTapItem(RootController.expertNavBarItem);
+          locator<GlobalTabController>().setIndex(1);
           break;
         }
         pageConfiguration = LivePageConfig;
@@ -1097,6 +1054,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
             rootController.navItems
                 .containsValue(RootController.expertNavBarItem)) {
           onTapItem(RootController.expertNavBarItem);
+          locator<GlobalTabController>().setIndex(0);
           final categoryIndex =
               RootController.expertsSections.indexOf(category);
           if (categoryIndex != -1) {
@@ -1115,6 +1073,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         } else if (rootController.navItems
             .containsValue(RootController.expertNavBarItem)) {
           onTapItem(RootController.expertNavBarItem);
+          locator<GlobalTabController>().setIndex(0);
           break;
         }
         pageConfiguration = AllExpertsPageConfig;
@@ -1134,135 +1093,33 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           );
           await switchCompleter.future;
           if (rootController.navItems
-              .containsValue(RootController.shortsNavBarItem)) {
-            onTapItem(RootController.shortsNavBarItem);
+              .containsValue(RootController.expertNavBarItem)) {
+            onTapItem(RootController.expertNavBarItem);
+            locator<GlobalTabController>().setIndex(1);
             AppState.delegate!.appState.currentAction = PageAction(
               page: ShortsPageConfig,
               state: PageState.addWidget,
-              widget: BaseScaffold(
-                showBackgroundGrid: false,
-                backgroundColor: UiConstants.bg,
-                appBar: FAppBar(
-                  backgroundColor: Colors.transparent,
-                  centerTitle: true,
-                  leadingPadding: false,
-                  titleWidget: Expanded(
-                    child: MarqueeText(
-                      infoList: const [
-                        'Share',
-                      ],
-                      showBullet: false,
-                      style: TextStyles.rajdhaniSB.body1,
-                    ),
-                  ),
-                  leading: BackButton(
-                    color: Colors.white,
-                    onPressed: () {
-                      AppState.backButtonDispatcher!.didPopRoute();
-                    },
-                  ),
-                  showAvatar: false,
-                  showCoinBar: false,
-                  action: BlocBuilder<PreloadBloc, PreloadState>(
-                    builder: (context, preloadState) {
-                      return Padding(
-                        padding: EdgeInsets.only(right: 10.w),
-                        child: GestureDetector(
-                          onTap: () {
-                            BlocProvider.of<PreloadBloc>(
-                              context,
-                              listen: false,
-                            ).add(
-                              const PreloadEvent.toggleVolume(),
-                            );
-                          },
-                          behavior: HitTestBehavior.opaque,
-                          child: SizedBox(
-                            height: 24.r,
-                            width: 24.r,
-                            child: Icon(
-                              !preloadState.muted
-                                  ? Icons.volume_up_rounded
-                                  : Icons.volume_off_rounded,
-                              size: 21.r,
-                              color: UiConstants.kTextColor,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                body: const ShortsVideoPage(
-                  categories: [],
-                ),
+              widget: const ShortsVideoPage(
+                categories: [],
+                showAppBar: true,
+                title: 'Share',
+                showBottomNavigation: false,
               ),
             );
             break;
           }
         } else if (rootController.navItems
-            .containsValue(RootController.shortsNavBarItem)) {
-          onTapItem(RootController.shortsNavBarItem);
+            .containsValue(RootController.expertNavBarItem)) {
+          onTapItem(RootController.expertNavBarItem);
+          locator<GlobalTabController>().setIndex(1);
           AppState.delegate!.appState.currentAction = PageAction(
             page: ShortsPageConfig,
             state: PageState.addWidget,
-            widget: BaseScaffold(
-              showBackgroundGrid: false,
-              backgroundColor: UiConstants.bg,
-              appBar: FAppBar(
-                backgroundColor: Colors.transparent,
-                centerTitle: true,
-                leadingPadding: false,
-                titleWidget: Expanded(
-                  child: MarqueeText(
-                    infoList: const [
-                      'Share',
-                    ],
-                    showBullet: false,
-                    style: TextStyles.rajdhaniSB.body1,
-                  ),
-                ),
-                leading: BackButton(
-                  color: Colors.white,
-                  onPressed: () {
-                    AppState.backButtonDispatcher!.didPopRoute();
-                  },
-                ),
-                showAvatar: false,
-                showCoinBar: false,
-                action: BlocBuilder<PreloadBloc, PreloadState>(
-                  builder: (context, preloadState) {
-                    return Padding(
-                      padding: EdgeInsets.only(right: 10.w),
-                      child: GestureDetector(
-                        onTap: () {
-                          BlocProvider.of<PreloadBloc>(
-                            context,
-                            listen: false,
-                          ).add(
-                            const PreloadEvent.toggleVolume(),
-                          );
-                        },
-                        behavior: HitTestBehavior.opaque,
-                        child: SizedBox(
-                          height: 24.r,
-                          width: 24.r,
-                          child: Icon(
-                            !preloadState.muted
-                                ? Icons.volume_up_rounded
-                                : Icons.volume_off_rounded,
-                            size: 21.r,
-                            color: UiConstants.kTextColor,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              body: const ShortsVideoPage(
-                categories: [],
-              ),
+            widget: const ShortsVideoPage(
+              categories: [],
+              showAppBar: true,
+              title: 'Share',
+              showBottomNavigation: false,
             ),
           );
           break;
@@ -1296,27 +1153,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = BlockedUserPageConfig;
         break;
       // BACKWARD COMPATIBILITY --START
-      case 'footballHome':
-        openWebGame(Constants.GAME_TYPE_FOOTBALL);
-        break;
-      case 'candyFiestaHome':
-        openWebGame(Constants.GAME_TYPE_CANDYFIESTA);
-        break;
-      case 'cricketHome':
-        openWebGame(Constants.GAME_TYPE_CRICKET);
-        break;
-      case 'poolHome':
-        openWebGame(Constants.GAME_TYPE_POOLCLUB);
-        break;
-      case 'bowlingHome':
-        openWebGame(Constants.GAME_TYPE_BOWLING);
-        break;
-      case 'bottleFlipHome':
-        openWebGame(Constants.GAME_TYPE_BOTTLEFLIP);
-        break;
       // BACKWARD COMPATIBILITY --END
       case 'pop':
-        AppState.backButtonDispatcher!.didPopRoute();
+        await AppState.backButtonDispatcher!.didPopRoute();
         break;
       case 'rps':
         pageConfiguration = FlexiBalancePageConfig;
@@ -1343,9 +1182,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'powerPlayHome':
         pageConfiguration = PowerPlayHomeConfig;
         break;
-      case 'powerPlayPrizes':
-        openPowerPlayModalSheet();
-        break;
       case "earnMoreReturns":
         pageConfiguration = EarnMoreReturnsViewPageConfig;
         break;
@@ -1369,6 +1205,52 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case "shortsNotification":
         pageConfiguration = ShortsNotificationPageConfig;
+        break;
+      case "support":
+        pageConfiguration = SupportPageConfig;
+        break;
+      case "fixedDeposit":
+        BaseUtil().openRechargeModalSheet(
+          investmentType: InvestmentType.fixedDeposit,
+          queryParams: queryParams,
+          fullPager: true,
+        );
+        break;
+      case "sdui":
+        final pageUrl = queryParams['pageUrl'];
+        if (pageUrl != null) {
+          appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: SduiPageConfig,
+            widget: SduiPage(
+              linkToParse: pageUrl,
+            ),
+          );
+        }
+        break;
+      case "chat":
+        if (rootController.navItems
+            .containsValue(RootController.expertNavBarItem)) {
+          onTapItem(RootController.expertNavBarItem);
+          locator<GlobalTabController>().setIndex(2);
+        }
+        final sessionId = queryParams['sessionId'];
+        final advisorId = queryParams['advisorId'];
+        final advisorName = queryParams['advisorName'] ?? '';
+        if (sessionId != null && advisorId != null) {
+          appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: SduiPageConfig,
+            widget: BlocProvider(
+              create: (context) => ChatBloc(chatRepository: locator()),
+              child: ChatScreen(
+                sessionId: sessionId,
+                advisorId: advisorId,
+                advisorName: advisorName,
+              ),
+            ),
+          );
+        }
         break;
     }
     if (pageConfiguration != null) {
@@ -1415,32 +1297,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
     appState.setCurrentTabIndex =
         rootController.navItems.values.toList().indexOf(item);
-  }
-
-  void openWebGame(String game) {
-    bool isLocked = false;
-    double netWorth = locator<UserService>().userPortfolio.augmont.principle +
-        (locator<UserService>().userPortfolio.flo.principle);
-    for (final i in locator<GameRepo>().gameTier.data) {
-      for (final j in i!.games) {
-        if (j!.gameCode == game) {
-          isLocked = netWorth < i.minInvestmentToUnlock;
-          break;
-        }
-      }
-    }
-
-    if (isLocked) {
-      BaseUtil.showNegativeAlert(
-        'Game is locked for you',
-        'Save more in Gold or Flo to unlock the game and complete the milestone',
-      );
-      appState.onItemTapped(
-        DynamicUiUtils.navBar.indexWhere((element) => element == 'PL'),
-      );
-    } else {
-      BaseUtil.openGameModalSheet(game);
-    }
   }
 
   List<Story> _getStories() {
@@ -1560,21 +1416,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         );
       }
     }
-  }
-
-  void openPowerPlayModalSheet() {
-    BaseUtil.openModalBottomSheet(
-      isBarrierDismissible: true,
-      addToScreenStack: true,
-      backgroundColor: UiConstants.kGoldProBgColor,
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(SizeConfig.roundness32),
-        topRight: Radius.circular(SizeConfig.roundness32),
-      ),
-      isScrollControlled: true,
-      hapticVibrate: true,
-      content: const PrizeDistributionSheet(),
-    );
   }
 
   bool checkForRatingDialog() {

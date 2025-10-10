@@ -57,7 +57,7 @@ class GoldSellLoadingView extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
               child: Text(
-                'Your withdrawal is currently being processed and may take up to 1 business day to complete.',
+                'Your withdrawal is currently being processed by our partner and may take upto 48 hours to complete (excluding public holidays, bank holidays and weekends).',
                 style:
                     TextStyles.sourceSans.body2.colour(UiConstants.kTextColor2),
                 textAlign: TextAlign.center,
@@ -131,8 +131,10 @@ class GoldSellLoadingView extends StatelessWidget {
       isBarrierDismissible: false,
       content: const PendingDialog(
         title: "We're still processing!",
-        subtitle: "Your withdrawal will be processed in ",
-        duration: '1 business day.',
+        subtitle:
+            "Your withdrawal is currently being processed by our partner and may take upto ",
+        duration:
+            '48 hours excluding public holidays, bank holidays and weekends.',
       ),
     );
   }

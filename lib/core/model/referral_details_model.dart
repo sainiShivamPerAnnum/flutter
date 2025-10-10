@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/helper_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/util/logger.dart';
@@ -70,8 +69,6 @@ class ReferralDetail {
   bool get isRefereeBonusUnlocked => _isRefereeBonusUnlocked!;
 
   bool get isUserBonusUnlocked => _isUserBonusUnlocked!;
-
-  Timestamp get timestamp => _timestamp!;
 
   String get userName => _userName!;
 

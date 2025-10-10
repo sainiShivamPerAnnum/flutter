@@ -433,7 +433,7 @@ mixin AutoScrollControllerMixin on ScrollController
     double topOffset = MediaQuery.of(
           AppState.delegate!.navigatorKey.currentContext!,
         ).padding.top +
-        173.h;
+        133.h;
     if (preferPosition != null) {
       double targetOffset = _directionalOffsetToRevealInViewport(
               index, _positionToAlignment(preferPosition)) -

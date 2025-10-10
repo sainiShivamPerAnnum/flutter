@@ -22,7 +22,6 @@ import 'package:felloapp/ui/dialogs/user_avatars_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/pages/static/profile_image.dart';
 import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart';
-import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -140,16 +139,6 @@ class MyAccountVM extends BaseViewModel {
     }
     _logger.d("Fello Facts Length: ${fellofacts!.length}");
     isFelloFactsLoading = false;
-  }
-
-  Future<void> showLastWeekSummary() async {
-    AppState.delegate!.appState.currentAction = PageAction(
-      state: PageState.addWidget,
-      page: LastWeekOverviewConfig,
-      widget: const LastWeekOverView(
-        callCampaign: false,
-      ),
-    );
   }
 
   void showRatingSheet() {

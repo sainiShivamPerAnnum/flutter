@@ -8,7 +8,6 @@ import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
-import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
@@ -16,7 +15,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/pages/finance/amount_input_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/view_breakdown.dart';
-import 'package:felloapp/ui/pages/finance/banner_widget.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/flo_coupon.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
@@ -114,8 +112,6 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
 
   @override
   Widget build(BuildContext context) {
-    final banner = widget.model.assetOptionsModel!.data.banner;
-
     final locale = S.of(context);
     final AnalyticsService analyticsService = locator<AnalyticsService>();
 
@@ -173,16 +169,6 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                           }
                         },
                       ),
-                      if (banner != null) ...[
-                        SizedBox(height: SizeConfig.padding32),
-                        BannerWidget(
-                          model: banner,
-                          happyHourCampign:
-                              locator.isRegistered<HappyHourCampign>()
-                                  ? locator()
-                                  : null,
-                        ),
-                      ],
                       if (widget.model.animationController != null)
                         AnimatedBuilder(
                           animation: widget.model.animationController!,

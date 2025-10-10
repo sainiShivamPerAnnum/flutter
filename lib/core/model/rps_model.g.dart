@@ -10,13 +10,15 @@ RpsData _$RpsDataFromJson(Map<String, dynamic> json) => RpsData(
       uid: json['uid'] as String,
       principleAmount: (json['principleAmount'] as num).toDouble(),
       fundType: json['fundType'] as String,
-      tenure: json['tenure'] as int,
+      tenure: (json['tenure'] as num).toInt(),
       accuredInterest: (json['accuredInterest'] as num).toDouble(),
       rps: (json['rps'] as List<dynamic>)
           .map((e) => Rps.fromJson(e as Map<String, dynamic>))
           .toList(),
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
+      balance: json['balance'] as num,
+      totalPayout: json['totalPayout'] as num,
     );
 
 Map<String, dynamic> _$RpsDataToJson(RpsData instance) => <String, dynamic>{
@@ -28,6 +30,8 @@ Map<String, dynamic> _$RpsDataToJson(RpsData instance) => <String, dynamic>{
       'rps': instance.rps,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
+      'balance': instance.balance,
+      'totalPayout': instance.totalPayout,
     };
 
 Rps _$RpsFromJson(Map<String, dynamic> json) => Rps(

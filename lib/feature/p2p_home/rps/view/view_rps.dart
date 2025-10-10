@@ -9,7 +9,8 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:super_tooltip/super_tooltip.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 class RpsView extends StatelessWidget {
   const RpsView({
@@ -35,355 +36,460 @@ class RpsDetails extends StatefulWidget {
 }
 
 class _RpsDetailsState extends State<RpsDetails> {
+  final formatter = NumberFormat.currency(
+    locale: 'en_IN',
+    symbol: '₹',
+    decimalDigits: 2,
+  );
   String rpsDisclaimer = AppConfigV2.instance.rpsDisclaimer;
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: BaseScaffold(
-        showBackgroundGrid: false,
-        backgroundColor: UiConstants.bg,
-        appBar: AppBar(
-          backgroundColor: UiConstants.kTambolaMidTextColor,
-          surfaceTintColor: UiConstants.kTambolaMidTextColor,
-          centerTitle: false,
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return BaseScaffold(
+      showBackgroundGrid: false,
+      backgroundColor: UiConstants.bg,
+      body: Column(
+        children: [
+          Column(
             children: [
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      AppState.backButtonDispatcher!.didPopRoute();
-                    },
-                    child: Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                      size: SizeConfig.padding20,
-                    ),
+              SizedBox(height: MediaQuery.of(context).padding.top),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [UiConstants.bg, Color(0xff212B2D)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
-                  SizedBox(
-                    width: SizeConfig.padding18,
-                  ),
-                  Column(
-                    children: [
-                      Text(
-                        'Repayment schedule',
-                        style: TextStyles.sourceSansSB.body1,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    width: SizeConfig.padding35,
-                  ),
-                  Text(
-                    'Get to know the timeline of your repayments.',
-                    style: TextStyles.sourceSans.body3,
-                  ),
-                ],
-              ),
-            ],
-          ),
-          leading: const SizedBox.shrink(),
-          leadingWidth: 0,
-          bottom: TabBar(
-            indicatorPadding: EdgeInsets.zero,
-            indicatorSize: TabBarIndicatorSize.tab,
-            dividerColor: UiConstants.grey4,
-            indicatorWeight: 1.5,
-            indicatorColor: UiConstants.kTextColor,
-            labelColor: UiConstants.kTextColor,
-            isScrollable: false,
-            unselectedLabelColor: UiConstants.kTextColor.withOpacity(.6),
-            labelStyle: TextStyles.sourceSansSB.body3,
-            unselectedLabelStyle: TextStyles.sourceSansSB.body3,
-            onTap: (value) {
-              setState(() {});
-            },
-            tabs: const [
-              Tab(text: "Fixed Plan RPS"),
-              Tab(text: "Flexi Plan RPS"),
-            ],
-          ),
-        ),
-        body: BlocBuilder<RpsDetailsBloc, RPSState>(
-          builder: (context, state) {
-            if (state is LoadingRPSDetails) {
-              return const Center(
-                child: FullScreenLoader(),
-              );
-            } else if (state is RPSDataState) {
-              final fixedRpsDetails = state.fixedData?.rps ?? [];
-              final flexiRpsDetails = state.flexiData?.rps ?? [];
-              return BaseScaffold(
-                showBackgroundGrid: false,
-                backgroundColor: UiConstants.bg,
-                body: SingleChildScrollView(
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding16)
-                            .copyWith(
-                      top: SizeConfig.padding32,
-                    ),
-                    child: Column(
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(height: 6.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Container(
-                          clipBehavior: Clip.hardEdge,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 1,
+                        BackButton(
+                          style: const ButtonStyle(
+                            padding: WidgetStatePropertyAll(
+                              EdgeInsets.zero,
                             ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(SizeConfig.roundness16),
+                          ),
+                          color: UiConstants.kTextColor,
+                          onPressed: () {
+                            AppState.backButtonDispatcher!.didPopRoute();
+                          },
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Repayment history',
+                              style: TextStyles.sourceSansSB.body1,
                             ),
-                            color: UiConstants.bg,
-                          ),
-                          child: Builder(
-                            builder: (context) {
-                              final isFixedTab =
-                                  DefaultTabController.of(context).index == 0;
-                              final rpsData = isFixedTab
-                                  ? fixedRpsDetails
-                                  : flexiRpsDetails;
-                              return Table(
-                                border: TableBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(SizeConfig.roundness16),
-                                  ),
-                                  top: const BorderSide(
-                                    color: UiConstants.grey6,
-                                    width: .6,
-                                    style: BorderStyle.solid,
-                                  ),
-                                  bottom: const BorderSide(
-                                    color: UiConstants.grey6,
-                                    width: .6,
-                                    style: BorderStyle.solid,
-                                  ),
-                                  left: const BorderSide(
-                                    color: UiConstants.grey6,
-                                    width: .6,
-                                    style: BorderStyle.solid,
-                                  ),
-                                  right: const BorderSide(
-                                    color: UiConstants.grey6,
-                                    width: .6,
-                                    style: BorderStyle.solid,
-                                  ),
-                                  horizontalInside: const BorderSide(
-                                    color: UiConstants.grey6,
-                                    width: .6,
-                                    style: BorderStyle.solid,
-                                  ),
-                                ),
-                                children: [
-                                  TableRow(
-                                    decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(65, 65, 65, 69),
-                                    ),
-                                    children: [
-                                      Center(
-                                        child: Padding(
-                                          padding: EdgeInsets.all(
-                                              SizeConfig.padding8),
-                                          child: Text(
-                                            "Month",
-                                            style: TextStyles.sourceSans.body4,
-                                          ),
-                                        ),
-                                      ),
-                                      Center(
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            vertical: SizeConfig.padding8,
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                "Expected Principal",
-                                                style:
-                                                    TextStyles.sourceSans.body4,
-                                              ),
-                                              SizedBox(
-                                                width: SizeConfig.padding6,
-                                              ),
-                                              SuperTooltip(
-                                                hideTooltipOnTap: true,
-                                                backgroundColor:
-                                                    UiConstants.kTextColor4,
-                                                popupDirection:
-                                                    TooltipDirection.up,
-                                                content: Padding(
-                                                  padding: EdgeInsets.all(
-                                                      SizeConfig.padding8),
-                                                  child: const Text(
-                                                    'Accrued Interest will be paid along with principal amount',
-                                                    softWrap: true,
-                                                    style: TextStyle(
-                                                      color: UiConstants
-                                                          .kTextColor,
-                                                    ),
-                                                  ),
-                                                ),
-                                                child: Icon(
-                                                  Icons.info_outline,
-                                                  size: SizeConfig.padding14,
-                                                  color: UiConstants.greyBg,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Center(
-                                        child: Padding(
-                                          padding: EdgeInsets.all(
-                                              SizeConfig.padding8),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                "Paid",
-                                                style:
-                                                    TextStyles.sourceSans.body4,
-                                              ),
-                                              SizedBox(
-                                                width: SizeConfig.padding6,
-                                              ),
-                                              SuperTooltip(
-                                                hideTooltipOnTap: true,
-                                                backgroundColor:
-                                                    UiConstants.kTextColor4,
-                                                popupDirection:
-                                                    TooltipDirection.up,
-                                                content: Padding(
-                                                  padding: EdgeInsets.all(
-                                                    SizeConfig.padding8,
-                                                  ),
-                                                  child: const Text(
-                                                    'Principal + Accrued interest',
-                                                    softWrap: true,
-                                                    style: TextStyle(
-                                                      color: UiConstants
-                                                          .kTextColor,
-                                                    ),
-                                                  ),
-                                                ),
-                                                child: Icon(
-                                                  Icons.info_outline,
-                                                  size: SizeConfig.padding14,
-                                                  color: UiConstants.greyBg,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  if (rpsData.isEmpty)
-                                    TableRow(
-                                      children: [
-                                        const SizedBox.shrink(),
-                                        Center(
-                                          child: Padding(
-                                            padding: EdgeInsets.all(
-                                              SizeConfig.padding8,
-                                            ),
-                                            child: Text(
-                                              'No data found',
-                                              style:
-                                                  TextStyles.sourceSans.body4,
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox.shrink(),
-                                      ],
-                                    ),
-                                  ...rpsData.map(
-                                    (rps) => TableRow(
-                                      children: [
-                                        Center(
-                                          child: Padding(
-                                            padding: EdgeInsets.all(
-                                              SizeConfig.padding8,
-                                            ),
-                                            child: Text(
-                                              rps.timeline,
-                                              style:
-                                                  TextStyles.sourceSans.body4,
-                                            ),
-                                          ),
-                                        ),
-                                        Center(
-                                          child: Padding(
-                                            padding: EdgeInsets.all(
-                                              SizeConfig.padding8,
-                                            ),
-                                            child: Text(
-                                              BaseUtil.formatIndianRupees(
-                                                rps.scheduledAmount,
-                                              ),
-                                              style:
-                                                  TextStyles.sourceSans.body4,
-                                            ),
-                                          ),
-                                        ),
-                                        Center(
-                                          child: Padding(
-                                            padding: EdgeInsets.all(
-                                              SizeConfig.padding8,
-                                            ),
-                                            child: Text(
-                                              BaseUtil.formatIndianRupees(
-                                                rps.paidAmount,
-                                              ),
-                                              style:
-                                                  TextStyles.sourceSans.body4,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding20,
-                        ),
-                        Text(
-                          'Disclaimer:\n\n$rpsDisclaimer',
-                          style: TextStyles.sourceSansM.body4.colour(
-                            UiConstants.kTextColor6,
-                          ),
+                            Text(
+                              'Get to know the timeline of your repayments.',
+                              style: TextStyles.sourceSans.body3,
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ),
+                    SizedBox(height: 18.h),
+                  ],
                 ),
-              );
-            } else {
-              return NewErrorPage(
-                onTryAgain: () {
-                  BlocProvider.of<RpsDetailsBloc>(
-                    context,
-                    listen: false,
-                  ).add(const LoadRpsDetails());
+              ),
+            ],
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+              child: BlocBuilder<RpsDetailsBloc, RPSState>(
+                builder: (context, state) {
+                  if (state is LoadingRPSDetails) {
+                    return const Center(
+                      child: FullScreenLoader(),
+                    );
+                  } else if (state is RPSDataState) {
+                    final fixedRpsDetails = state.fixedData?.rps ?? [];
+                    return SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 22.h,
+                          ),
+                          Container(
+                            width: 1.sw,
+                            padding: EdgeInsets.symmetric(
+                              vertical: 20.h,
+                              horizontal: 12.w,
+                            ),
+                            decoration: BoxDecoration(
+                              color: UiConstants.greyVarient,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(
+                                  10.r,
+                                ),
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Deposit as of 31st Aug’ 24',
+                                  style: TextStyles.sourceSansM.body3.colour(
+                                    UiConstants.kTextColor.withOpacity(.5),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 4.h,
+                                ),
+                                Text(
+                                  BaseUtil.formatIndianRupees(
+                                    state.fixedData?.balance ?? 0,
+                                  ),
+                                  style: TextStyles.sourceSansSB.title4,
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 22.h,
+                          ),
+                          Container(
+                            clipBehavior: Clip.hardEdge,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10.r),
+                              ),
+                              border: Border(
+                                top: BorderSide(
+                                  color: UiConstants.grey6,
+                                  width: 1.w,
+                                  style: BorderStyle.solid,
+                                ),
+                                bottom: BorderSide(
+                                  color: UiConstants.grey6,
+                                  width: 1.w,
+                                  style: BorderStyle.solid,
+                                ),
+                                left: BorderSide(
+                                  color: UiConstants.grey6,
+                                  width: 1.w,
+                                  style: BorderStyle.solid,
+                                ),
+                                right: BorderSide(
+                                  color: UiConstants.grey6,
+                                  width: 1.w,
+                                  style: BorderStyle.solid,
+                                ),
+                              ),
+                            ),
+                            child: Builder(
+                              builder: (context) {
+                                final rpsData = fixedRpsDetails;
+                                return Table(
+                                  border: TableBorder(
+                                    horizontalInside: BorderSide(
+                                      color: UiConstants.grey6,
+                                      width: .6.w,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  children: [
+                                    TableRow(
+                                      decoration: const BoxDecoration(
+                                        color: Color.fromRGBO(65, 65, 65, 69),
+                                      ),
+                                      children: [
+                                        Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(
+                                              SizeConfig.padding8,
+                                            ),
+                                            child: Text(
+                                              "Date",
+                                              style:
+                                                  TextStyles.sourceSans.body4,
+                                            ),
+                                          ),
+                                        ),
+                                        Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: SizeConfig.padding8,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  "Txn. Type",
+                                                  style: TextStyles
+                                                      .sourceSans.body4,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(
+                                              SizeConfig.padding8,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  "Amount",
+                                                  style: TextStyles
+                                                      .sourceSans.body4,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    if (rpsData.isEmpty)
+                                      TableRow(
+                                        children: [
+                                          const SizedBox.shrink(),
+                                          Center(
+                                            child: Padding(
+                                              padding: EdgeInsets.all(
+                                                SizeConfig.padding8,
+                                              ),
+                                              child: Text(
+                                                'No data found',
+                                                style:
+                                                    TextStyles.sourceSans.body4,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox.shrink(),
+                                        ],
+                                      ),
+                                    ...rpsData
+                                        .where((e) => e.paidAmount != 0)
+                                        .map(
+                                          (rps) => TableRow(
+                                            children: [
+                                              Center(
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(
+                                                    SizeConfig.padding8,
+                                                  ),
+                                                  child: Text(
+                                                    rps.timeline,
+                                                    style: TextStyles
+                                                        .sourceSans.body4,
+                                                  ),
+                                                ),
+                                              ),
+                                              Center(
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(
+                                                    SizeConfig.padding8,
+                                                  ),
+                                                  child: Container(
+                                                    margin: EdgeInsets.only(
+                                                      top: SizeConfig.padding2,
+                                                    ),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                      horizontal:
+                                                          SizeConfig.padding4,
+                                                      vertical:
+                                                          SizeConfig.padding4,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color: UiConstants.teal4
+                                                          .withOpacity(.3),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                        18.r,
+                                                      ),
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 4.w,
+                                                        ),
+                                                        Text(
+                                                          'Repayment',
+                                                          style: TextStyles
+                                                              .sourceSansM.body6
+                                                              .colour(
+                                                            UiConstants.teal3,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 4.w,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    // SuperTooltip(
+                                                    //   hideTooltipOnTap: true,
+                                                    //   backgroundColor:
+                                                    //       UiConstants.kTextColor4,
+                                                    //   popupDirection:
+                                                    //       TooltipDirection.up,
+                                                    //   content: Padding(
+                                                    //     padding: EdgeInsets.all(
+                                                    //       SizeConfig.padding8,
+                                                    //     ),
+                                                    //     child: const Text(
+                                                    //       'Accrued Interest will be paid along with principal amount',
+                                                    //       softWrap: true,
+                                                    //       style: TextStyle(
+                                                    //         color: UiConstants
+                                                    //             .kTextColor,
+                                                    //       ),
+                                                    //     ),
+                                                    //   ),
+                                                    //   child: Row(
+                                                    //     mainAxisSize:
+                                                    //         MainAxisSize.min,
+                                                    //     mainAxisAlignment:
+                                                    //         MainAxisAlignment
+                                                    //             .center,
+                                                    //     children: [
+                                                    //       SizedBox(
+                                                    //         width: 4.w,
+                                                    //       ),
+                                                    //       Text(
+                                                    //         'Repayment',
+                                                    //         style: TextStyles
+                                                    //             .sourceSansM.body6
+                                                    //             .colour(
+                                                    //           UiConstants.teal3,
+                                                    //         ),
+                                                    //       ),
+                                                    //       SizedBox(
+                                                    //         width: 4.w,
+                                                    //       ),
+                                                    //       Icon(
+                                                    //         Icons.info_outline,
+                                                    //         size: SizeConfig
+                                                    //             .padding10,
+                                                    //         color:
+                                                    //             UiConstants.teal3,
+                                                    //       ),
+                                                    //       SizedBox(
+                                                    //         width: 4.w,
+                                                    //       ),
+                                                    //     ],
+                                                    //   ),
+                                                    // ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Center(
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(
+                                                    SizeConfig.padding8,
+                                                  ),
+                                                  child: Text(
+                                                    rps.paidAmount == 0
+                                                        ? 'NA'
+                                                        : formatter.format(
+                                                            rps.paidAmount,
+                                                          ),
+                                                    style: TextStyles
+                                                        .sourceSans.body4,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                    TableRow(
+                                      children: [
+                                        Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(
+                                              SizeConfig.padding8,
+                                            ),
+                                            child: Text(
+                                              'Total',
+                                              style:
+                                                  TextStyles.sourceSansSB.body3,
+                                            ),
+                                          ),
+                                        ),
+                                        Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(
+                                              SizeConfig.padding8,
+                                            ),
+                                            child: Container(
+                                              margin: EdgeInsets.only(
+                                                top: SizeConfig.padding2,
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: SizeConfig.padding4,
+                                                vertical: SizeConfig.padding4,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(
+                                              SizeConfig.padding8,
+                                            ),
+                                            child: Text(
+                                              formatter.format(
+                                                state.fixedData?.totalPayout ??
+                                                    0,
+                                              ),
+                                              style:
+                                                  TextStyles.sourceSansSB.body3,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding20,
+                          ),
+                          Text(
+                            'Disclaimer:\n\n$rpsDisclaimer',
+                            style: TextStyles.sourceSansM.body4.colour(
+                              UiConstants.kTextColor6,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 32.h,
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return NewErrorPage(
+                      onTryAgain: () {
+                        BlocProvider.of<RpsDetailsBloc>(
+                          context,
+                          listen: false,
+                        ).add(const LoadRpsDetails());
+                      },
+                    );
+                  }
                 },
-              );
-            }
-          },
-        ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

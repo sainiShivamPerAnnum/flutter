@@ -25,29 +25,23 @@ import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/p2p_home/home/ui/p2p_home_view.dart';
 import 'package:felloapp/feature/shorts/src/core/analytics_manager.dart';
 import 'package:felloapp/feature/shorts/src/service/shorts_repo.dart';
-import 'package:felloapp/feature/tambola/src/ui/widgets/tambola_mini_info_card.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/finance/blogs/all_blogs_view.dart';
 import 'package:felloapp/ui/pages/hometabs/home/cards_new.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/experts.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/first_free_call.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/footer.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/instant_save_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/live.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/past_bookings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/quick_links.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/quiz_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/testimonials.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/upcoming_bookings.dart';
-import 'package:felloapp/ui/pages/power_play/root_card.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -97,7 +91,7 @@ class SaveViewModel extends ChangeNotifier {
   List<Booking> _upcomingBookings = [];
   List<Booking> _pastBookings = [];
   ExpertsHome? _topExperts;
-  List<UserInterestedAdvisor> _userInterestedAdvisors = [];
+  List<Expert> _userInterestedAdvisors = [];
   LiveHome? _liveData;
   bool _freeCallAvailable = false;
   List<BlogPostModelByCategory>? _blogPostsByCategory;
@@ -150,19 +144,8 @@ class SaveViewModel extends ChangeNotifier {
 
   final String fetchBlogUrl =
       'https://felloblog815893968.wpcomstaging.com/wp-json/wp/v2/blog/';
-
-  List<String> boxAssetsGold = [
-    "assets/svg/single_gold_bar_asset.svg",
-    Assets.singleCoinAsset,
-    Assets.goldSecure,
-  ];
   List<String> boxTitllesGold = [];
   List<String> boxTitllesFlo = [];
-  List<String> boxAssetsFlo = [
-    Assets.star,
-    Assets.singleCoinAsset,
-    Assets.flatIsland,
-  ];
 
   List<EventModel>? get ongoingEvents => _ongoingEvents;
 
@@ -170,8 +153,7 @@ class SaveViewModel extends ChangeNotifier {
 
   List<Booking> get upcomingBookings => _upcomingBookings;
   List<Booking> get pastBookings => _pastBookings;
-  List<UserInterestedAdvisor> get userInterestedAdvisors =>
-      _userInterestedAdvisors;
+  List<Expert> get userInterestedAdvisors => _userInterestedAdvisors;
   ExpertsHome? get topExperts => _topExperts;
   LiveHome? get liveData => _liveData;
   List<TestimonialsModel> get testimonials => _testimonials;
@@ -229,7 +211,7 @@ class SaveViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  set userInterestedAdvisors(List<UserInterestedAdvisor> value) {
+  set userInterestedAdvisors(List<Expert> value) {
     _userInterestedAdvisors = value;
     notifyListeners();
   }
@@ -284,21 +266,21 @@ class SaveViewModel extends ChangeNotifier {
   Future<void> init() async {
     // _baseUtil.fetchUserAugmontDetail();
     // baseProvider = BaseUtil();
+    await getCampaignEvents();
     await _userService.getUserFundWalletData();
-    await _userCoinService.getUserCoinBalance();
     await getUpcomingBooking();
-    await getPastBooking();
     await getTopExperts();
     await getLiveData();
-    await getCampaignEvents();
-    await locator<SubService>().init();
+    await _userCoinService.getUserCoinBalance();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _sellService.init();
-      getSaveViewBlogs();
       getTestimonials();
+      getSaveViewBlogs();
+      locator<SubService>().init();
+      _sellService.init();
       final repository = locator<ShortsRepo>();
       AnalyticsRetryManager.pushQueuedEvents(repository);
+      getPastBooking();
     });
   }
 
@@ -333,9 +315,6 @@ class SaveViewModel extends ChangeNotifier {
         case "QL":
           saveViewItems.add(const QuickLinks());
           break;
-        case "TM":
-          saveViewItems.add(const TambolaMiniInfoCard());
-          break;
         case "LV":
           saveViewItems.add(
             const TopLive(),
@@ -348,18 +327,6 @@ class SaveViewModel extends ChangeNotifier {
           break;
         case "SN":
           saveViewItems.add(const Testimonials());
-          break;
-        case "PP":
-          saveViewItems.add(const PowerPlayCard());
-          break;
-        case "AST":
-          saveViewItems.add(const MiniAssetsGroupSection());
-          break;
-        case "QZ":
-          saveViewItems.add(const QuizSection());
-          break;
-        case "INST_SAVE":
-          saveViewItems.add(const InstantSaveCard());
           break;
         case 'NAS':
           saveViewItems.add(const AutosaveCard());

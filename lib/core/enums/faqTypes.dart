@@ -10,6 +10,7 @@ enum FaqsType {
   gold,
   goldPro,
   flo,
+  fd,
   journey,
   onboarding,
   powerPlay,

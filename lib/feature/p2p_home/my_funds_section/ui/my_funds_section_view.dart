@@ -2,18 +2,15 @@ import 'package:felloapp/core/model/sip_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/bloc/my_funds_section_bloc.dart';
 import 'package:felloapp/feature/p2p_home/my_funds_section/ui/widgets/sip_transaction_card.dart';
+import 'package:felloapp/feature/p2p_home/my_funds_section/ui/widgets/statment_card.dart';
 import 'package:felloapp/feature/p2p_home/ui/shared/error_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/bloc_pagination/bloc_pagination.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../core/service/notifier_services/user_service.dart';
-import '../../home/widgets/no_transaction_widget.dart';
 import 'widgets/widgets.dart';
 
 class MyFundSection extends StatefulWidget {
@@ -57,20 +54,6 @@ class _MyFundSectionState extends State<MyFundSection> {
               ),
             );
           }
-          if (fundsBloc.state.entries.isEmpty &&
-              locator<UserService>()
-                      .userPortfolio
-                      .flo
-                      .flexi
-                      .balance
-                      .toDouble() ==
-                  0) {
-            return Padding(
-              padding: EdgeInsets.only(top: SizeConfig.padding82),
-              child: NoTransactions(),
-            );
-          }
-
           return Stack(
             alignment: Alignment.bottomCenter,
             children: [
@@ -84,10 +67,22 @@ class _MyFundSectionState extends State<MyFundSection> {
                   SliverPadding(
                     padding: EdgeInsets.symmetric(
                       horizontal: SizeConfig.pageHorizontalMargins,
-                      vertical: SizeConfig.padding16,
+                    ).copyWith(
+                      top: SizeConfig.padding16,
                     ),
                     sliver: SliverToBoxAdapter(
                       child: WalletBalanceCard(
+                        fundBloc: fundsBloc,
+                      ),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.pageHorizontalMargins,
+                      vertical: SizeConfig.padding16,
+                    ),
+                    sliver: SliverToBoxAdapter(
+                      child: StatementCard(
                         fundBloc: fundsBloc,
                       ),
                     ),
@@ -149,7 +144,7 @@ class _MyFundSectionState extends State<MyFundSection> {
                     child: SizedBox(
                       height: 120,
                     ),
-                  )
+                  ),
                 ],
               ),
               // if (fundsBloc.state.entries.isNotEmpty) const Footer(),

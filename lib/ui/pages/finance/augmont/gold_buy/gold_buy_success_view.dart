@@ -8,7 +8,6 @@ import 'package:felloapp/core/model/subscription_models/all_subscription_model.d
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
-import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -52,10 +51,7 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView> {
     if (hasSuperFelloInStack) {
       return 'Go back to Super Fello';
     }
-
-    return PowerPlayService.powerPlayDepositFlow
-        ? "Make another prediction"
-        : locale.obDone;
+    return locale.obDone;
   }
 
   Future<void> _onPressed(bool hasSuperFelloInStack) async {

@@ -28,7 +28,6 @@ class BaseUser {
   String? advisorId;
   UserPreferences userPreferences;
   TimestampModel createdOn;
-  String? appFlyerId;
   String? avatarId;
   bool? isOldUser;
   String? subsStatus;
@@ -65,7 +64,6 @@ class BaseUser {
   static const String fldCreatedOn = "mCreatedOn";
   static const String fldKycName = "mKycName";
   static const String fldStateId = "stateId";
-  static const String fldAppFlyerId = "mAppFlyerId";
   static const String fldAvatarId = "mAvatarId";
   static const String fldIsOldUser = "isOldUser";
   static const String fldReferralCode = "referralCode";
@@ -106,7 +104,6 @@ class BaseUser {
     this.isBlocked,
     this.userPreferences,
     this.createdOn,
-    this.appFlyerId,
     this.avatarId,
     this.isOldUser,
     this.segments, {
@@ -144,7 +141,6 @@ class BaseUser {
           UserPreferences({}),
           TimestampModel.currentTimeStamp(),
           '',
-          '',
           false,
           [],
         );
@@ -172,7 +168,6 @@ class BaseUser {
           data[fldIsBlocked] ?? false,
           UserPreferences(data[fldUserPrefs]),
           TimestampModel.fromMap(data[fldCreatedOn]),
-          data[fldAppFlyerId] ?? '',
           data[fldAvatarId] ?? '',
           data[fldIsOldUser] ?? false,
           data['mSegments'] ?? [],
@@ -195,7 +190,7 @@ class BaseUser {
 
   @override
   String toString() {
-    return 'BaseUser(uid: $uid, mobile: $mobile, name: $name, email: $email, dob: $dob, gender: $gender, username: $username, verifiedName: $verifiedName, client_token: $client_token, isInvested: $isInvested, isIciciOnboarded: $isIciciOnboarded, isAugmontOnboarded: $isAugmontOnboarded, isSimpleKycVerified: $isSimpleKycVerified, isBlocked: $isBlocked, isKycVerified: $isKycVerified, kycName: $kycName, pendingTxnId: $pendingTxnId, isIciciEnabled: $isIciciEnabled, isAugmontEnabled: $isAugmontEnabled, isEmailVerified: $isEmailVerified, userPreferences: ${userPreferences.toString()}, createdOn: $createdOn, appFlyerId: $appFlyerId, avatarId: $avatarId)';
+    return 'BaseUser(uid: $uid, mobile: $mobile, name: $name, email: $email, dob: $dob, gender: $gender, username: $username, verifiedName: $verifiedName, client_token: $client_token, isInvested: $isInvested, isIciciOnboarded: $isIciciOnboarded, isAugmontOnboarded: $isAugmontOnboarded, isSimpleKycVerified: $isSimpleKycVerified, isBlocked: $isBlocked, isKycVerified: $isKycVerified, kycName: $kycName, pendingTxnId: $pendingTxnId, isIciciEnabled: $isIciciEnabled, isAugmontEnabled: $isAugmontEnabled, isEmailVerified: $isEmailVerified, userPreferences: ${userPreferences.toString()}, createdOn: $createdOn, avatarId: $avatarId)';
   }
 }
 

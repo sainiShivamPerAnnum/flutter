@@ -20,8 +20,8 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
 Subs _$SubsFromJson(Map<String, dynamic> json) => Subs(
       id: json['id'] as String,
       fundType: json['fundType'] as String,
-      sipamount: json['sipamount'] as int,
-      investedamount: json['investedamount'] as int,
+      sipamount: (json['sipamount'] as num).toInt(),
+      investedamount: (json['investedamount'] as num).toInt(),
       status: json['status'] as String,
       frequency: json['frequency'] as String,
       startDate: json['startDate'] as String,

@@ -8,6 +8,7 @@ class ExpandableWidget extends StatefulWidget {
   final Color backgroundColor;
   final Color textColor;
   final void Function() onExpansionChanged;
+  final double? width;
 
   const ExpandableWidget({
     required this.title,
@@ -16,6 +17,7 @@ class ExpandableWidget extends StatefulWidget {
     required this.onExpansionChanged,
     this.backgroundColor = Colors.black87,
     this.textColor = Colors.white,
+    this.width,
     super.key,
   });
 
@@ -29,7 +31,7 @@ class ExpandableWidgetState extends State<ExpandableWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 0.75.sw,
+      width: widget.width ?? 0.75.sw,
       decoration: BoxDecoration(
         color: widget.backgroundColor,
         borderRadius: BorderRadius.circular(4.r),

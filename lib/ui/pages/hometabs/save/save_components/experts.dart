@@ -18,7 +18,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:tuple/tuple.dart';
 
 class Experts extends StatefulWidget {
-  const Experts({Key? key}) : super(key: key);
+  const Experts({super.key});
 
   @override
   ExpertsState createState() => ExpertsState();
@@ -144,8 +144,7 @@ class ExpertsState extends State<Experts> {
 class TopExperts extends StatelessWidget {
   final List<Expert> topExperts;
   final bool isFree;
-  const TopExperts({required this.topExperts, required this.isFree, Key? key})
-      : super(key: key);
+  const TopExperts({required this.topExperts, required this.isFree, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +196,7 @@ class TopExperts extends StatelessWidget {
 }
 
 class ShimmerCardComponent extends StatelessWidget {
-  const ShimmerCardComponent({Key? key}) : super(key: key);
+  const ShimmerCardComponent({super.key});
 
   @override
   Widget build(BuildContext context) {

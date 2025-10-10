@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/shared/recording_disabled_mixin.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -26,8 +25,7 @@ class NetBankingWebView extends StatefulWidget {
   State<NetBankingWebView> createState() => _NetBankingWebViewState();
 }
 
-class _NetBankingWebViewState extends State<NetBankingWebView>
-    with RecordingDisableMixin<NetBankingWebView> {
+class _NetBankingWebViewState extends State<NetBankingWebView> {
   WebViewController? controller;
 
   @override
@@ -62,7 +60,7 @@ class _NetBankingWebViewState extends State<NetBankingWebView>
     return Scaffold(
       appBar: AppBar(
         backgroundColor: UiConstants.kBackgroundColor,
-        surfaceTintColor:UiConstants.kBackgroundColor,
+        surfaceTintColor: UiConstants.kBackgroundColor,
         actions: [
           TimerWidget(
             onTimerFinish: _onTimerCompleted,

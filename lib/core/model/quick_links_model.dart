@@ -17,6 +17,7 @@ class QuickLinksModel {
   final Color color;
   final String description;
   final String? tag;
+  final Map<String, dynamic> meta;
 
   const QuickLinksModel({
     required this.name,
@@ -24,6 +25,7 @@ class QuickLinksModel {
     required this.deeplink,
     required this.color,
     required this.description,
+    required this.meta,
     this.tag,
   });
 
@@ -34,6 +36,7 @@ class QuickLinksModel {
       deeplink: map['deeplink'] as String,
       color: (map['color'] as String).toColor()!,
       description: map['description'] ?? '' as String?,
+      meta: map['meta'] ?? {},
       tag: map['tag'] as String?,
     );
   }

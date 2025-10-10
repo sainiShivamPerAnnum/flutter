@@ -1,6 +1,5 @@
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/hometabs/home/cards_new.dart';
@@ -14,7 +13,6 @@ import 'package:felloapp/ui/pages/hometabs/my_account/my_account_vm.dart';
 import 'package:felloapp/ui/pages/static/dev_rel.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -30,9 +28,6 @@ class MyAccount extends StatelessWidget {
       onModelReady: (model) => model.init(),
       onModelDispose: (model) => model.clear(),
       builder: (ctx, model, child) {
-        final isNewUser = locator<UserService>().userSegments.contains(
-              Constants.NEW_USER,
-            );
         return Builder(
           builder: (context) {
             if (model.state == ViewState.Busy) {
@@ -94,6 +89,10 @@ class MyAccount extends StatelessWidget {
                     title: 'Rate Us',
                     uri: "",
                     onTap: () => model.showRatingSheet(),
+                  ),
+                  const AccountInfoTiles(
+                    title: 'Support',
+                    uri: "/support",
                   ),
                   //Scratch Cards count and navigation
                   const ScratchCardsInfoStrip(),
