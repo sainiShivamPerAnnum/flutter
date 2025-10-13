@@ -198,13 +198,18 @@ class MainActivity : FlutterFragmentActivity() {
             }
         }
     }
+
+private fun getFileProviderAuthority(): String {
+    return "${applicationContext.packageName}.fileprovider"
+}
+
 private fun openPdf(filePath: String): Boolean {
     return try {
         val file = File(filePath)
         Log.d("MainActivity", "Attempting to open PDF at: $filePath")
         Log.d("MainActivity", "File exists: ${file.exists()}")
         Log.d("MainActivity", "App package: ${applicationContext.packageName}")
-        
+
         if (!file.exists()) {
             Log.e("MainActivity", "PDF file does not exist: $filePath")
             return false
@@ -212,9 +217,10 @@ private fun openPdf(filePath: String): Boolean {
 
         val uri: Uri = FileProvider.getUriForFile(
             this,
-             "in.fello.felloapp.fileprovider",
+            getFileProviderAuthority(),
             file
         )
+
         Log.d("MainActivity", "Generated URI: $uri")
 
         val intent = Intent(Intent.ACTION_VIEW).apply {
@@ -252,7 +258,7 @@ private fun sharePdf(filePath: String): Boolean {
 
         val uri: Uri = FileProvider.getUriForFile(
             this,
-             "in.fello.felloapp.fileprovider",
+            getFileProviderAuthority(),
             file
         )
 
@@ -272,6 +278,8 @@ private fun sharePdf(filePath: String): Boolean {
         false
     }
 }
+
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

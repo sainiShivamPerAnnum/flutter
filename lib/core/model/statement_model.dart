@@ -31,57 +31,57 @@ class StatementInfo {
 }
 
 class Transaction {
-  final String investment;
-  final String dated;
-  final String description;
-  final String txnId;
-  final double amount;
-  final double principal;
-  final double interest;
-  final String txnType;
-  final String? partnerRefId;
-  final String utr;
+  final String userId;
+  final double initiatedAmount;
+  final String initiatedStatus;
+  final String initiatedDate;
+  final double paidAmount;
+  final String bankStatus;
+  final String paymentDate;
+  final String utrNo;
+  final String createdAt;
+  final String updatedAt;
 
   const Transaction({
-    required this.investment,
-    required this.dated,
-    required this.description,
-    required this.txnId,
-    required this.amount,
-    required this.principal,
-    required this.interest,
-    required this.txnType,
-    this.partnerRefId,
-    this.utr = 'null',
+    required this.userId,
+    required this.initiatedAmount,
+    required this.initiatedStatus,
+    required this.initiatedDate,
+    required this.paidAmount,
+    required this.bankStatus,
+    required this.paymentDate,
+    required this.utrNo,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
-      investment: json['investment'] ?? '',
-      dated: json['dated'] ?? '',
-      description: json['description'] ?? '',
-      txnId: json['txnId'] ?? '',
-      amount: (json['amount'] ?? 0).toDouble(),
-      principal: (json['principal'] ?? 0).toDouble(),
-      interest: (json['interest'] ?? 0).toDouble(),
-      txnType: json['txnType'] ?? '',
-      partnerRefId: json['partnerRefId'],
-      utr: json['utr'] ?? 'null',
+      userId: json['investment'] ?? '',
+      initiatedAmount: (json['initiatedAmount'] ?? 0).toDouble(),
+      initiatedStatus: json['initiatedStatus'] ?? '',
+      initiatedDate: json['txnId'] ?? '',
+      paidAmount: (json['paidAmount'] ?? 0).toDouble(),
+      paymentDate: json['paymentDate'] ?? '',
+      bankStatus: json['bankStatus'] ?? '',
+      utrNo: json['utrNo'] ?? 'null',
+      createdAt: json['createdAt'] ?? '',
+      updatedAt: json['updatedAt'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'investment': investment,
-      'dated': dated,
-      'description': description,
-      'txnId': txnId,
-      'amount': amount,
-      'principal': principal,
-      'interest': interest,
-      'txnType': txnType,
-      'partnerRefId': partnerRefId,
-      'utr': utr,
+      'userId': userId,
+      'initiatedAmount': initiatedAmount,
+      'initiatedStatus': initiatedStatus,
+      'initiatedDate': initiatedDate,
+      'paidAmount': paidAmount,
+      'paymentDate': paymentDate,
+      'bankStatus': bankStatus,
+      'utrNo': utrNo,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 }

@@ -42,23 +42,19 @@ class _StatementCardState extends State<StatementCard> {
 
       // Calculate from and to dates based on transactions
       String fromDate = "01/01/2024"; // Default fallback
-      String toDate = "31/12/2024"; // Default fallback
+      String toDate = "31/12/2024";   // Default fallback
 
       if (transactions.isNotEmpty) {
-        // Sort transactions by date to get first and last
-        final sortedTransactions = List<Transaction>.from(transactions);
-        sortedTransactions.sort((a, b) {
-          // Parse dates and compare
-          final dateA = _parseTransactionDate(a.dated);
-          final dateB = _parseTransactionDate(b.dated);
-          return dateA.compareTo(dateB);
-        });
+        final sortedTransactions = List<Transaction>.from(transactions)
+          ..sort((a, b) {
+            final dateA = _parseTransactionDate(a.paymentDate);
+            final dateB = _parseTransactionDate(b.paymentDate);
+            return dateA.compareTo(dateB);
+          });
 
-        // Get first and last transaction dates
-        final firstDate = _parseTransactionDate(sortedTransactions.first.dated);
-        final lastDate = DateTime.now();
+        final firstDate = _parseTransactionDate(sortedTransactions.first.paymentDate);
+        final lastDate = _parseTransactionDate(sortedTransactions.last.paymentDate);
 
-        // Format dates as dd/MM/yyyy
         final dateFormatter = DateFormat('dd/MM/yyyy');
         fromDate = dateFormatter.format(firstDate);
         toDate = dateFormatter.format(lastDate);

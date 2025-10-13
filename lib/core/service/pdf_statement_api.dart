@@ -6,6 +6,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/extensions/string_extension.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 
@@ -28,6 +29,7 @@ extension StatementExtension on Statement {
 class PdfStatementApi {
   static const int firstPageTransactionLimit = 10;
   static const int subsequentPageTransactionLimit = 20;
+
 
   static Future<File> generate(Statement statement) async {
     final pdf = Document();
@@ -456,11 +458,15 @@ class PdfStatementApi {
                       children: [
                         TableRow(
                           children: [
-                            Container(
+                           Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 10),
+                                horizontal: 8, 
+                                vertical: 10,
+                              ),
                               child: Text(
-                                transaction.dated,
+                                DateFormat('dd/MM/yyyy')
+                                    .format(DateFormat('yyyy-MM-dd')
+                                    .parse(transaction.paymentDate)),
                                 style: const TextStyle(
                                   fontSize: 9,
                                   color: PdfColors.grey800,
@@ -469,9 +475,10 @@ class PdfStatementApi {
                             ),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 10),
+                                  horizontal: 8, vertical: 10,),
                               child: Text(
-                                transaction.description,
+                                transaction.bankStatus == "Paid" ?
+                                   "Withdrawal": transaction.bankStatus,
                                 style: const TextStyle(
                                   fontSize: 9,
                                   color: PdfColors.grey800,
@@ -480,9 +487,9 @@ class PdfStatementApi {
                             ),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 10),
+                                  horizontal: 8, vertical: 10,),
                               child: Text(
-                                transaction.utr,
+                                transaction.utrNo,
                                 style: const TextStyle(
                                   fontSize: 9,
                                   color: PdfColors.grey800,
@@ -491,9 +498,9 @@ class PdfStatementApi {
                             ),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 10),
+                                  horizontal: 8, vertical: 10,),
                               child: Text(
-                                'Rs. ${transaction.amount}',
+                                'Rs. ${transaction.paidAmount}',
                                 style: const TextStyle(
                                   fontSize: 9,
                                   color: PdfColors.grey800,
@@ -515,114 +522,114 @@ class PdfStatementApi {
     );
   }
 
-  static Widget buildSummary(Statement statement) {
-    final totalCredits = statement.transactions
-        .where((t) => t.txnType.toUpperCase() == 'CREDIT')
-        .map((t) => t.amount)
-        .fold(0.0, (sum, amount) => sum + amount);
+  // static Widget buildSummary(Statement statement) {
+  //   final totalCredits = statement.transactions
+  //       .where((t) => t.txnType.toUpperCase() == 'CREDIT')
+  //       .map((t) => t.paidAmount)
+  //       .fold(0.0, (sum, paidAmount) => sum + paidAmount);
 
-    final totalDebits = statement.transactions
-        .where((t) => t.txnType.toUpperCase() == 'DEBIT')
-        .map((t) => t.amount)
-        .fold(0.0, (sum, amount) => sum + amount);
+  //   final totalDebits = statement.transactions
+  //       .where((t) => t.txnType.toUpperCase() == 'DEBIT')
+  //       .map((t) => t.paidAmount)
+  //       .fold(0.0, (sum, paidAmount) => sum + paidAmount);
 
-    final balance =
-        totalDebits > totalCredits ? 0.0 : totalCredits - totalDebits;
+  //   final balance =
+  //       totalDebits > totalCredits ? 0.0 : totalCredits - totalDebits;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 2 * PdfPageFormat.cm),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Summary',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: PdfColors.grey800,
-            ),
-          ),
-          SizedBox(height: PdfPageFormat.cm * 0.5),
-          Row(
-            children: [
-              Expanded(
-                flex: 2,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: PdfColors.grey300),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Table(
-                    border: TableBorder.all(
-                      color: PdfColors.grey200,
-                      width: 0.5,
-                    ),
-                    columnWidths: const {
-                      0: FlexColumnWidth(2),
-                      1: FlexColumnWidth(1),
-                    },
-                    children: [
-                      _buildSummaryTableRow(
-                        'Total Deposits',
-                        'Rs. ${totalCredits.toStringAsFixed(2)}',
-                      ),
-                      _buildSummaryTableRow(
-                        'Total Withdrawals',
-                        'Rs. ${totalDebits.toStringAsFixed(2)}',
-                      ),
-                      _buildSummaryTableRow(
-                        'Balance',
-                        'Rs. ${balance.toStringAsFixed(2)}',
-                        isTotal: true,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(flex: 1, child: Container()),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+  //   return Container(
+  //     margin: const EdgeInsets.symmetric(horizontal: 2 * PdfPageFormat.cm),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Text(
+  //           'Summary',
+  //           style: TextStyle(
+  //             fontSize: 18,
+  //             fontWeight: FontWeight.bold,
+  //             color: PdfColors.grey800,
+  //           ),
+  //         ),
+  //         SizedBox(height: PdfPageFormat.cm * 0.5),
+  //         Row(
+  //           children: [
+  //             Expanded(
+  //               flex: 2,
+  //               child: Container(
+  //                 decoration: BoxDecoration(
+  //                   border: Border.all(color: PdfColors.grey300),
+  //                   borderRadius: BorderRadius.circular(4),
+  //                 ),
+  //                 child: Table(
+  //                   border: TableBorder.all(
+  //                     color: PdfColors.grey200,
+  //                     width: 0.5,
+  //                   ),
+  //                   columnWidths: const {
+  //                     0: FlexColumnWidth(2),
+  //                     1: FlexColumnWidth(1),
+  //                   },
+  //                   children: [
+  //                     _buildSummaryTableRow(
+  //                       'Total Deposits',
+  //                       'Rs. ${totalCredits.toStringAsFixed(2)}',
+  //                     ),
+  //                     _buildSummaryTableRow(
+  //                       'Total Withdrawals',
+  //                       'Rs. ${totalDebits.toStringAsFixed(2)}',
+  //                     ),
+  //                     _buildSummaryTableRow(
+  //                       'Balance',
+  //                       'Rs. ${balance.toStringAsFixed(2)}',
+  //                       isTotal: true,
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //             Expanded(flex: 1, child: Container()),
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  static TableRow _buildSummaryTableRow(
-    String title,
-    String value, {
-    bool isTotal = false,
-  }) {
-    return TableRow(
-      decoration: BoxDecoration(
-        color: isTotal ? PdfColors.grey200 : PdfColors.white,
-      ),
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          child: Text(
-            title,
-            style: TextStyle(
-              fontSize: isTotal ? 12 : 11,
-              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-              color: PdfColors.grey700,
-            ),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          child: Text(
-            value,
-            textAlign: TextAlign.right,
-            style: TextStyle(
-              fontSize: isTotal ? 12 : 11,
-              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-              color: isTotal ? PdfColors.grey900 : PdfColors.grey800,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  // static TableRow _buildSummaryTableRow(
+  //   String title,
+  //   String value, {
+  //   bool isTotal = false,
+  // }) {
+  //   return TableRow(
+  //     decoration: BoxDecoration(
+  //       color: isTotal ? PdfColors.grey200 : PdfColors.white,
+  //     ),
+  //     children: [
+  //       Container(
+  //         padding: const EdgeInsets.all(8),
+  //         child: Text(
+  //           title,
+  //           style: TextStyle(
+  //             fontSize: isTotal ? 12 : 11,
+  //             fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+  //             color: PdfColors.grey700,
+  //           ),
+  //         ),
+  //       ),
+  //       Container(
+  //         padding: const EdgeInsets.all(8),
+  //         child: Text(
+  //           value,
+  //           textAlign: TextAlign.right,
+  //           style: TextStyle(
+  //             fontSize: isTotal ? 12 : 11,
+  //             fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+  //             color: isTotal ? PdfColors.grey900 : PdfColors.grey800,
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   static Widget buildFooter(Statement statement) => Container(
         width: double.infinity,
@@ -657,7 +664,7 @@ class PdfStatementApi {
             SizedBox(height: 4),
             Text(
               "https://fello.in/",
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 10,
                 color: PdfColors.grey600,
               ),
