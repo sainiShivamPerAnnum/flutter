@@ -143,12 +143,12 @@
 	<string>fello_facebook_events</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<string>0</string>
-	<key>FirebaseDynamicLinksCustomDomains</key>
+	<!-- <key>FirebaseDynamicLinksCustomDomains</key>
 	<array>
 		<string>https://fello.in/download/app</string>
 		<string>https://fello.in/app/referral</string>
 		<string>https://fello.in/claim/goldenticket</string>
-	</array>
+	</array> -->
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
