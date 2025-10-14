@@ -228,11 +228,10 @@ class PdfStatementApi {
     final firstDate = DateFormat('dd/MM/yyyy')
       .format(DateFormat('yyyy-MM-dd').parse(info.fromDate));
 
-    final lastDate = DateFormat('dd/MM/yyyy')
-      .format(DateFormat('yyyy-MM-dd').parse(info.toDate));
+    final tillDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
     
     final data = <String>[
-      '${firstDate} to ${lastDate}',
+      '$firstDate to $tillDate',
       info.generatedDate,
     ];
 

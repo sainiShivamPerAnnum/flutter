@@ -19,13 +19,11 @@ class Statement {
 class StatementInfo {
   final String accountNumber;
   final String fromDate;
-  final String toDate;
   final String generatedDate;
 
   const StatementInfo({
     required this.accountNumber,
     required this.fromDate,
-    required this.toDate,
     required this.generatedDate,
   });
 }

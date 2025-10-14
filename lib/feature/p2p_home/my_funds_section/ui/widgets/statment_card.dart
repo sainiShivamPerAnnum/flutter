@@ -42,7 +42,6 @@ class _StatementCardState extends State<StatementCard> {
 
       // Calculate from and to dates based on transactions
       String fromDate = "01/01/2024"; // Default fallback
-      String toDate = "31/12/2024";   // Default fallback
 
       if (transactions.isNotEmpty) {
         final sortedTransactions = List<Transaction>.from(transactions)
@@ -52,14 +51,12 @@ class _StatementCardState extends State<StatementCard> {
             return dateA.compareTo(dateB);
           });
         fromDate = sortedTransactions.first.paymentDate;
-        toDate = sortedTransactions.last.paymentDate;
       }
 
       final statement = Statement(
         info: StatementInfo(
           accountNumber: widget.accountNumber,
           fromDate: fromDate,
-          toDate: toDate,
           generatedDate: DateFormat('dd/MM/yyyy').format(DateTime.now()),
         ),
         transactions: transactions,
