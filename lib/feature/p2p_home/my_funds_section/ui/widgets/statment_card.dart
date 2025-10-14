@@ -51,13 +51,8 @@ class _StatementCardState extends State<StatementCard> {
             final dateB = _parseTransactionDate(b.paymentDate);
             return dateA.compareTo(dateB);
           });
-
-        final firstDate = _parseTransactionDate(sortedTransactions.first.paymentDate);
-        final lastDate = _parseTransactionDate(sortedTransactions.last.paymentDate);
-
-        final dateFormatter = DateFormat('dd/MM/yyyy');
-        fromDate = dateFormatter.format(firstDate);
-        toDate = dateFormatter.format(lastDate);
+        fromDate = sortedTransactions.first.paymentDate;
+        toDate = sortedTransactions.last.paymentDate;
       }
 
       final statement = Statement(

@@ -225,8 +225,14 @@ class PdfStatementApi {
       'Statement Period:',
       'Generated On:',
     ];
+    final firstDate = DateFormat('dd/MM/yyyy')
+      .format(DateFormat('yyyy-MM-dd').parse(info.fromDate));
+
+    final lastDate = DateFormat('dd/MM/yyyy')
+      .format(DateFormat('yyyy-MM-dd').parse(info.toDate));
+    
     final data = <String>[
-      '${info.fromDate} to ${info.toDate}',
+      '${firstDate} to ${lastDate}',
       info.generatedDate,
     ];
 
