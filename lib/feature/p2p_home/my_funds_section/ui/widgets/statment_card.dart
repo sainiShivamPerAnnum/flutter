@@ -41,7 +41,7 @@ class _StatementCardState extends State<StatementCard> {
       final transactions = await _getTransactions();
 
       // Calculate from and to dates based on transactions
-      String fromDate = "01/01/2024"; // Default fallback
+      String fromDate = "2024-01-01T00:00:00.000Z"; // Default fallback
 
       if (transactions.isNotEmpty) {
         final sortedTransactions = List<Transaction>.from(transactions)
@@ -56,7 +56,7 @@ class _StatementCardState extends State<StatementCard> {
       final statement = Statement(
         info: StatementInfo(
           accountNumber: widget.accountNumber,
-          fromDate: fromDate,
+          fromDate: DateFormat('dd/MM/yyyy').format(DateFormat('yyyy-MM-dd').parse(fromDate)),
           generatedDate: DateFormat('dd/MM/yyyy').format(DateTime.now()),
         ),
         transactions: transactions,

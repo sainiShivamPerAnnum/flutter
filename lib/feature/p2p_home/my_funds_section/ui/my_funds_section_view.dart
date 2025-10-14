@@ -23,21 +23,41 @@ class MyFundSection extends StatefulWidget {
 }
 
 class _MyFundSectionState extends State<MyFundSection> {
+  late final ScrollController _scrollController;
+
   @override
   void initState() {
     super.initState();
     final fundsBloc = context.read<MyFundsBloc>();
     fundsBloc.fetchFirstPage();
+
+    _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      final state = fundsBloc.state;
+
+      // Trigger next page when user scrolls near bottom and not already fetching
+      if (_scrollController.position.pixels >=
+              _scrollController.position.maxScrollExtent - 200 &&
+          !state.status.isFetchingInitialPage &&
+          !state.status.isFetchingSuccessive) {
+        fundsBloc.fetchNextPage();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final fundsBloc = context.read<MyFundsBloc>();
     final DateTime now = DateTime.now();
+
     return RefreshIndicator.adaptive(
-      onRefresh: () async {
-        fundsBloc.reset();
-      },
+      onRefresh: () async => fundsBloc.reset(),
       child: BlocBuilder<MyFundsBloc, PaginationState<dynamic, int, Object>>(
         builder: (context, state) {
           if (state.status.isFailedToLoadInitial) {
@@ -48,16 +68,16 @@ class _MyFundSectionState extends State<MyFundSection> {
             return Center(
               child: SizedBox.square(
                 dimension: SizeConfig.padding200,
-                child: const AppImage(
-                  Assets.fullScreenLoaderLottie,
-                ),
+                child: const AppImage(Assets.fullScreenLoaderLottie),
               ),
             );
           }
+
           return Stack(
             alignment: Alignment.bottomCenter,
             children: [
               CustomScrollView(
+                controller: _scrollController,
                 slivers: [
                   SliverOverlapInjector(
                     handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
@@ -67,13 +87,9 @@ class _MyFundSectionState extends State<MyFundSection> {
                   SliverPadding(
                     padding: EdgeInsets.symmetric(
                       horizontal: SizeConfig.pageHorizontalMargins,
-                    ).copyWith(
-                      top: SizeConfig.padding16,
-                    ),
+                    ).copyWith(top: SizeConfig.padding16),
                     sliver: SliverToBoxAdapter(
-                      child: WalletBalanceCard(
-                        fundBloc: fundsBloc,
-                      ),
+                      child: WalletBalanceCard(fundBloc: fundsBloc),
                     ),
                   ),
                   SliverPadding(
@@ -82,9 +98,7 @@ class _MyFundSectionState extends State<MyFundSection> {
                       vertical: SizeConfig.padding16,
                     ),
                     sliver: SliverToBoxAdapter(
-                      child: StatementCard(
-                        fundBloc: fundsBloc,
-                      ),
+                      child: StatementCard(fundBloc: fundsBloc),
                     ),
                   ),
                   SliverPadding(
@@ -95,56 +109,40 @@ class _MyFundSectionState extends State<MyFundSection> {
                     ),
                     sliver: SliverList.separated(
                       itemBuilder: (context, index) {
-                        if (state.entries.length - 1 == index &&
-                            !state.status.isFetchingInitialPage &&
-                            !state.status.isFetchingSuccessive) {
-                          fundsBloc.fetchNextPage();
-                        }
-                        if (fundsBloc.state.entries[index] is UserTransaction &&
-                            (fundsBloc.state.entries[index] as UserTransaction)
-                                    .lbMap
-                                    .maturityAt !=
-                                null &&
-                            now.compareTo(
-                                  DateTime.fromMillisecondsSinceEpoch(
-                                    (fundsBloc.state.entries[index]
-                                            as UserTransaction)
-                                        .lbMap
-                                        .maturityAt!
-                                        .millisecondsSinceEpoch,
-                                  ),
-                                ) <
-                                0) {
+                        final entry = fundsBloc.state.entries[index];
+
+                        if (entry is UserTransaction &&
+                            entry.lbMap.maturityAt != null &&
+                            now.isBefore(entry.lbMap.maturityAt! as DateTime)) {
                           return TransactionCard(
-                            transaction: fundsBloc.state.entries[index],
+                            transaction: entry,
                             fundBloc: fundsBloc,
                           );
                         }
-                        if (fundsBloc.state.entries[index] is Subs) {
-                          return SIPTransactionCard(
-                            transaction: fundsBloc.state.entries[index],
-                          );
+
+                        if (entry is Subs) {
+                          return SIPTransactionCard(transaction: entry);
                         }
+
                         return const SizedBox.shrink();
                       },
+                      separatorBuilder: (_, __) => SizedBox(
+                        height: SizeConfig.padding16
+                        ),
                       itemCount: fundsBloc.state.entries.length,
-                      separatorBuilder: (context, index) => SizedBox(
-                        height: SizeConfig.padding16,
-                      ),
                     ),
                   ),
                   if (state.status.isFetchingSuccessive)
                     const SliverToBoxAdapter(
-                      child: CupertinoActivityIndicator(
-                        radius: 15,
-                        color: Colors.white24,
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: CupertinoActivityIndicator(
+                          radius: 15, 
+                          color: Colors.white24,
+                        ),
                       ),
                     ),
-                  const SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: 120,
-                    ),
-                  ),
+                  const SliverToBoxAdapter(child: SizedBox(height: 120)),
                 ],
               ),
               // if (fundsBloc.state.entries.isNotEmpty) const Footer(),
