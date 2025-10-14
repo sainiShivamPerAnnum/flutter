@@ -156,7 +156,7 @@ class AppConfigV2Data {
     this.socialLinks = const [],
     this.socialVideos = const [],
     this.rpsDisclaimer =
-        'This repayment schedule is estimated based on past performance of the loans mapped to you. Past performance is not a guarantee of future returns. Actual repayment amount received will depend on repayments made by the borrowers.',
+        'This repayment schedule is estimated based on past performance of the loans mapped to you. Past performance is not a guarantee of future returns. Actual repayment amount received will depend on repayments made by the borrowers which can be checked in the Statement of account.',
     this.rpsLearnMore = const [],
     this.onboarding = const [
       Onboarding(

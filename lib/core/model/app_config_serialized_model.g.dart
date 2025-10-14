@@ -89,7 +89,7 @@ AppConfigV2Data _$AppConfigV2DataFromJson(Map<String, dynamic> json) =>
               .toList() ??
           const [],
       rpsDisclaimer: json['rpsDisclaimer'] as String? ??
-          'This repayment schedule is estimated based on past performance of the loans mapped to you. Past performance is not a guarantee of future returns. Actual repayment amount received will depend on repayments made by the borrowers.',
+          'This repayment schedule is estimated based on past performance of the loans mapped to you. Past performance is not a guarantee of future returns. Actual repayment amount received will depend on repayments made by the borrowers which can be checked in the Statement of account.',
       rpsLearnMore: (json['rpsLearnMore'] as List<dynamic>?)
               ?.map((e) => Map<String, String>.from(e as Map))
               .toList() ??
