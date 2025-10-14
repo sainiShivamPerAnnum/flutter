@@ -47,7 +47,7 @@ class QuoteModel {
   static const _digitalGoldQuotes = [
     QuoteModel._(
       icon: "https://d11q4cti75qmcp.cloudfront.net/imagekit/Quotes/graph.png",
-      quote: "Gold grew by 11% in the last year",
+      quote: "Gold grew by 65% in the last year",
     ),
     QuoteModel._(
       icon: "https://d11q4cti75qmcp.cloudfront.net/imagekit/Quotes/star.png",
