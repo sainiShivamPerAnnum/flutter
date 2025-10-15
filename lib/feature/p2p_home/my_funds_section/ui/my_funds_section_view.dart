@@ -8,7 +8,7 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/bloc_pagination/bloc_pagination.dart';
 import 'package:felloapp/util/styles/styles.dart';
-import 'package:flutter/cupertino.dart';
+// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'widgets/widgets.dart';
@@ -22,8 +22,11 @@ class MyFundSection extends StatefulWidget {
   State<MyFundSection> createState() => _MyFundSectionState();
 }
 
-class _MyFundSectionState extends State<MyFundSection> {
-  late final ScrollController _scrollController;
+class _MyFundSectionState extends State<MyFundSection>  with AutomaticKeepAliveClientMixin {
+  // late final ScrollController _scrollController;
+
+  @override
+  bool get wantKeepAlive => true; 
 
   @override
   void initState() {
@@ -31,28 +34,29 @@ class _MyFundSectionState extends State<MyFundSection> {
     final fundsBloc = context.read<MyFundsBloc>();
     fundsBloc.fetchFirstPage();
 
-    _scrollController = ScrollController();
-    _scrollController.addListener(() {
-      final state = fundsBloc.state;
+    // _scrollController = ScrollController();
+    // _scrollController.addListener(() {
+      // final state = fundsBloc.state;
 
       // Trigger next page when user scrolls near bottom and not already fetching
-      if (_scrollController.position.pixels >=
-              _scrollController.position.maxScrollExtent - 200 &&
-          !state.status.isFetchingInitialPage &&
-          !state.status.isFetchingSuccessive) {
-        fundsBloc.fetchNextPage();
-      }
-    });
+      // if (_scrollController.position.pixels >=
+      //         _scrollController.position.maxScrollExtent - 200 &&
+      //     !state.status.isFetchingInitialPage &&
+      //     !state.status.isFetchingSuccessive) {
+      //   fundsBloc.fetchNextPage();
+      // }
+    // });
   }
 
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _scrollController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); 
     final fundsBloc = context.read<MyFundsBloc>();
     final DateTime now = DateTime.now();
 
@@ -77,7 +81,6 @@ class _MyFundSectionState extends State<MyFundSection> {
             alignment: Alignment.bottomCenter,
             children: [
               CustomScrollView(
-                controller: _scrollController,
                 slivers: [
                   SliverOverlapInjector(
                     handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
@@ -132,17 +135,17 @@ class _MyFundSectionState extends State<MyFundSection> {
                       itemCount: fundsBloc.state.entries.length,
                     ),
                   ),
-                  if (state.status.isFetchingSuccessive)
-                    const SliverToBoxAdapter(
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: CupertinoActivityIndicator(
-                          radius: 15, 
-                          color: Colors.white24,
-                        ),
-                      ),
-                    ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 60)),
+                  // if (state.status.isFetchingSuccessive)
+                  //   const SliverToBoxAdapter(
+                  //     child: Padding(
+                  //       padding: EdgeInsets.all(16.0),
+                  //       child: CupertinoActivityIndicator(
+                  //         radius: 15, 
+                  //         color: Colors.white24,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // const SliverToBoxAdapter(child: SizedBox(height: 60)),
                 ],
               ),
               // if (fundsBloc.state.entries.isNotEmpty) const Footer(),
