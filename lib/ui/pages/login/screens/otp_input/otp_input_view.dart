@@ -165,7 +165,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                   ),
                   SizedBox(height: SizeConfig.padding14),
                   PinInputTextField(
-                    key: ValueKey("otpTextField"),
+                    key: const ValueKey("otpTextField"),
                     //key: K.otpTextFieldKey,
                     enabled: model.otpFieldEnabled,
                     controller: model.pinEditingController,

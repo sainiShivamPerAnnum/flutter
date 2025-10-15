@@ -117,7 +117,7 @@ class UserRepository extends BaseRepo {
         final user = BaseUser.fromMap(res['data'], id!);
         return ApiResponse<BaseUser>(model: user, code: 200);
       } else {
-        return ApiResponse<BaseUser>(model: null, code: 200);
+        return const ApiResponse<BaseUser>(model: null, code: 200);
       }
     } catch (e) {
       logger.d(e.toString());
@@ -145,7 +145,7 @@ class UserRepository extends BaseRepo {
       );
 
       logger.d("reached");
-      return ApiResponse(code: 200);
+      return const ApiResponse(code: 200);
     } catch (e) {
       logger.d(e);
       await locator<InternalOpsService>().logFailure(
@@ -153,7 +153,7 @@ class UserRepository extends BaseRepo {
         FailType.SendOtpFailed,
         {'message': "Send otp failed"},
       );
-      return ApiResponse.withError("send OTP failed", 400);
+      return const ApiResponse.withError("send OTP failed", 400);
     }
   }
 
@@ -171,9 +171,19 @@ class UserRepository extends BaseRepo {
         apiName: '$_userOps/verifyOTP',
       );
 
-      return ApiResponse(code: 200, model: res['data']['token']);
+        // Check if the server returned an error in the response
+      if (res['statusCode'] != "200") {
+        return ApiResponse.withError(res['message'], 400);
+      }
+      final token = res['data']?['token'];
+      if (token == null) {
+        return const ApiResponse.withError("No token returned", 400);
+      }
+
+      return ApiResponse(code: 200, model: token);
+      // return ApiResponse(code: 200, model: res['data']['token']);
     } on UnauthorizedException catch (_) {
-      return ApiResponse.withError("Invalid Otp", 400);
+      return const ApiResponse.withError("Invalid Otp", 400);
     } catch (e) {
       logger.d("verifyOtp error $e");
       unawaited(locator<InternalOpsService>().logFailure(

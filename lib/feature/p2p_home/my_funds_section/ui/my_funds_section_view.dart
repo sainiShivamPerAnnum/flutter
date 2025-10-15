@@ -142,7 +142,7 @@ class _MyFundSectionState extends State<MyFundSection> {
                         ),
                       ),
                     ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 120)),
+                  const SliverToBoxAdapter(child: SizedBox(height: 60)),
                 ],
               ),
               // if (fundsBloc.state.entries.isNotEmpty) const Footer(),
