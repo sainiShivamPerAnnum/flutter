@@ -83,7 +83,7 @@ class ScratchCardRepository extends BaseRepo {
       return ApiResponse<PrizesModel>(model: prizesModel, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch ticket", 400);
+      return const ApiResponse.withError("Unable to fetch ticket", 400);
     }
   }
 

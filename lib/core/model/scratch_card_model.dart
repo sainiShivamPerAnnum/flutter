@@ -33,7 +33,8 @@ class ScratchCard {
       this.rewardArr,
       this.redeemedTimestamp,
       this.version,
-      this.tag});
+      this.tag
+    });
 
   factory ScratchCard.none() => ScratchCard.fromJson({}, '');
 

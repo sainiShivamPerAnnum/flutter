@@ -77,10 +77,10 @@ class MyAccount extends StatelessWidget {
                     title: locale.bankAccDetails,
                     uri: "/bankDetails",
                   ),
-                  const AccountInfoTiles(
-                    title: "Tickets",
-                    uri: "/tambolaHome",
-                  ),
+                  // const AccountInfoTiles(
+                  //   title: "Tickets",
+                  //   uri: "/tambolaHome",
+                  // ),
                   const AccountInfoTiles(
                     title: 'Manage SIP',
                     uri: "/autosave",

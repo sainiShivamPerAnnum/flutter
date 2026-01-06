@@ -9,7 +9,6 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
-import 'package:felloapp/ui/elements/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:felloapp/ui/elements/dev_rel/flavor_banners.dart';
 import 'package:felloapp/ui/keys/keys.dart';
 import 'package:felloapp/ui/pages/hometabs/home/balance_page.dart';
@@ -84,13 +83,13 @@ class _RootState extends State<Root> {
                 );
               },
             ),
-            const Align(
-              alignment: Alignment.bottomCenter,
-              child: Material(
-                color: Colors.transparent,
-                child: BottomNavBar(),
-              ),
-            ),
+            // const Align(
+            //   alignment: Alignment.bottomCenter,
+            //   child: Material(
+            //     color: Colors.transparent,
+            //     child: BottomNavBar(),
+            //   ),
+            // ),
             const CircularAnim(),
             // Positioned.fill(
             //   child: Container(

@@ -68,7 +68,7 @@ class QuickLinks extends StatelessWidget {
                           AppState.delegate!.parseRoute(
                             Uri.parse(quickLinks[index].deeplink),
                           );
-                        }
+                        } 
                         locator<AnalyticsService>().track(
                           eventName: AnalyticsEvents.iconTrayTapped,
                           properties: {'icon': quickLinks[index].name},
@@ -81,6 +81,7 @@ class QuickLinks extends StatelessWidget {
                         description: quickLinks[index].description,
                         meta: quickLinks[index].meta,
                         color: quickLinks[index].color,
+                        link: quickLinks[index].deeplink,
                       ),
                     ),
                     if (index < quickLinks.length - 1) SizedBox(height: 16.h),
@@ -102,6 +103,7 @@ class _InvestmentCard extends StatelessWidget {
   final String? tag;
   final Map meta;
   final Color color;
+  final String link;
 
   const _InvestmentCard({
     required this.title,
@@ -109,6 +111,7 @@ class _InvestmentCard extends StatelessWidget {
     required this.description,
     required this.meta,
     required this.color,
+    required this.link,
     this.tag,
   });
 
@@ -176,13 +179,40 @@ class _InvestmentCard extends StatelessWidget {
                               SizedBox(
                                 width: 2.w,
                               ),
+                            if (link != '')
                               Icon(
                                 Icons.chevron_right,
                                 color: Colors.white.withOpacity(.5),
                                 size: 20.sp,
                               ),
+
+                          if(link == '' && tag != null)
+                           Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: UiConstants.primaryColor.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: UiConstants.primaryColor.withOpacity(0.2),
+                                  blurRadius: 8,
+                                  spreadRadius: 1,
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              tag!,
+                              style: GoogleFonts.sourceSans3(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 10.sp,
+                                ),
+                              ),
+                              ),
                             ],
                           ),
+                    
                           if (description == 'livevalue')
                             BaseView<GoldBuyViewModel>(
                               onModelReady: (model) {
@@ -233,26 +263,26 @@ class _InvestmentCard extends StatelessWidget {
                   ),
               ],
             ),
-            if (tag != null)
-              Positioned(
-                top: 0,
-                child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: const Color(0xff14A085),
-                    borderRadius: BorderRadius.circular(16.r),
-                  ),
-                  child: Text(
-                    tag!,
-                    style: GoogleFonts.sourceSans3(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 8.sp,
-                    ),
-                  ),
-                ),
-              ),
+            // if (tag != null)
+            //   Positioned(
+            //     top: 0,
+            //     child: Container(
+            //       padding:
+            //           EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+            //       decoration: BoxDecoration(
+            //         color: const Color(0xff14A085),
+            //         borderRadius: BorderRadius.circular(16.r),
+            //       ),
+            //       child: Text(
+            //         tag!,
+            //         style: GoogleFonts.sourceSans3(
+            //           color: Colors.white,
+            //           fontWeight: FontWeight.w500,
+            //           fontSize: 8.sp,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
           ],
         ),
       ),

@@ -5,6 +5,7 @@ import 'package:lottie/lottie.dart';
 enum _ImageType {
   normal,
   svg,
+  png,
   lottie;
 }
 
@@ -33,6 +34,7 @@ class AppImage extends StatelessWidget {
   _ImageType get _getImageType {
     _ImageType appImageType = _ImageType.normal;
     if (image.endsWith('.svg')) appImageType = _ImageType.svg;
+    if (image.endsWith('.png')) appImageType = _ImageType.png;
     if (image.endsWith('.json')) appImageType = _ImageType.lottie;
     return appImageType;
   }
@@ -90,6 +92,28 @@ class AppImage extends StatelessWidget {
               height: height,
               width: width,
               color: color,
+            );
+        }
+
+      case _ImageType.png:
+        switch (sourceType) {
+          case _ImageSourceType.local:
+            return Image.asset(
+              image,
+              fit: fit ?? BoxFit.contain,
+              height: height,
+              width: width,
+              color: color,
+            );
+
+          case _ImageSourceType.network:
+            return Image.network(
+              image,
+              fit: fit ?? BoxFit.contain,
+              height: height,
+              width: width,
+              color: color,
+              errorBuilder: (_, __, ___) => const SizedBox(),
             );
         }
 

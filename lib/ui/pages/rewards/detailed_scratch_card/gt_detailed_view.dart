@@ -252,31 +252,31 @@ class GTDetailedView extends StatelessWidget {
                   SizedBox(
                     height: SizeConfig.padding14,
                   ),
-                  GestureDetector(
-                    onTap: _onTapViewAllBadges,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'View All Badges',
-                          style: TextStyles.sourceSans.body3.colour(
-                            Colors.white.withOpacity(0.6),
-                          ),
-                        ),
-                        SizedBox(
-                          width: SizeConfig.padding4,
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          size: SizeConfig.padding12,
-                          color: Colors.white.withOpacity(0.6),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding4,
-                  ),
+                  // GestureDetector(
+                  //   onTap: _onTapViewAllBadges,
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: [
+                  //       Text(
+                  //         'View All Badges',
+                  //         style: TextStyles.sourceSans.body3.colour(
+                  //           Colors.white.withOpacity(0.6),
+                  //         ),
+                  //       ),
+                  //       SizedBox(
+                  //         width: SizeConfig.padding4,
+                  //       ),
+                  //       Icon(
+                  //         Icons.arrow_forward_ios,
+                  //         size: SizeConfig.padding12,
+                  //         color: Colors.white.withOpacity(0.6),
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   height: SizeConfig.padding4,
+                  // ),
                 ],
               ),
             )

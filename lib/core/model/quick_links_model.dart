@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 enum ImageType {
   svg,
   lottie,
+  png,
 }
 
 class QuickLinksModel {
