@@ -23,7 +23,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:scratcher/scratcher.dart';
 
@@ -217,36 +216,36 @@ class GTDetailedView extends StatelessWidget {
                         color: Colors.white,
                         // child:
                       ),
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Text(
-                              'You earned a badge',
-                              style: TextStyles.sourceSans.body3
-                                  .colour(Colors.white.withOpacity(0.6)),
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(
-                              height: SizeConfig.padding8,
-                            ),
-                            SvgPicture.network(
-                                ScratchCardConstants.getBadges(ticket.tag!),
-                                // fit: BoxFit.fitHeight,
-                                height: SizeConfig.padding60,
-                                width: SizeConfig.padding60),
-                            SizedBox(
-                              height: SizeConfig.padding4,
-                            ),
-                            Text(
-                              ticket.tag ?? 'Fello Badge',
-                              // 'Tambola Titan',
-                              style: TextStyles.sourceSansSB.body2
-                                  .colour(Colors.white),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
+                      // Expanded(
+                      //   child: Column(
+                      //     children: [
+                      //       Text(
+                      //         'You earned a badge',
+                      //         style: TextStyles.sourceSans.body3
+                      //             .colour(Colors.white.withOpacity(0.6)),
+                      //         textAlign: TextAlign.center,
+                      //       ),
+                      //       SizedBox(
+                      //         height: SizeConfig.padding8,
+                      //       ),
+                      //       SvgPicture.network(
+                      //           ScratchCardConstants.getBadges(ticket.tag!),
+                      //           // fit: BoxFit.fitHeight,
+                      //           height: SizeConfig.padding60,
+                      //           width: SizeConfig.padding60),
+                      //       SizedBox(
+                      //         height: SizeConfig.padding4,
+                      //       ),
+                      //       Text(
+                      //         ticket.tag ?? 'Fello Badge',
+                      //         // 'Tambola Titan',
+                      //         style: TextStyles.sourceSansSB.body2
+                      //             .colour(Colors.white),
+                      //         textAlign: TextAlign.center,
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                   SizedBox(

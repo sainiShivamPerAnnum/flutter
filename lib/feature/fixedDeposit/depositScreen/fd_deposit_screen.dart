@@ -710,7 +710,11 @@ class __FDDepositViewState extends State<_FDDepositView> {
                       return AnimatedSwitcher(
                         duration: const Duration(milliseconds: 300),
                         child: state is FdCalculationResult
-                            ? Row(
+                            ? Column(
+                              key: const ValueKey('calculationResult'),
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                             Row(
                                 key: const ValueKey('calculationResult'),
                                 children: [
                                   Text(
@@ -734,7 +738,72 @@ class __FDDepositViewState extends State<_FDDepositView> {
                                       UiConstants.kTextColor.withOpacity(.6),
                                     ),
                                   ),
+                                 
                                 ],
+                             ),
+                            SizedBox(height: SizeConfig.padding16),
+                            GestureDetector(
+                              onTap: () {
+                                if ((double.tryParse(
+                                    _amountController.text.replaceAll(',', ''),
+                                        ) ??
+                                        0) <
+                                    getMinimumInvestmentAmount()) {
+                                  _amountController.text =
+                                      getMinimumInvestmentAmount().toString();
+                                }
+                                context.read<FDCalculatorBloc>().add(
+                                      OnProceed(
+                                        issuerId: widget.fdData.id,
+                                        blostemId: widget.fdData.blostemId,
+                                        investmentAmount: double.tryParse(
+                                          _amountController.text.replaceAll(',', ''),
+                                            ) ??
+                                            0,
+                                        minAmount: getMinimumInvestmentAmount(),
+                                      ),
+                                    );
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  height: SizeConfig.padding48,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                        SizeConfig.roundness5,
+                                      ),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: SizeConfig.padding12,
+                                      vertical: SizeConfig.padding8,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        BlocBuilder<FDCalculatorBloc,
+                                            FixedDepositCalculatorState>(
+                                          builder: (context, state) {
+                                            if (state is ProccedingToDeposit) {
+                                              return const CupertinoActivityIndicator();
+                                            } else {
+                                              return Text(
+                                                'Invest now',
+                                                style: TextStyles.sourceSansSB.body3.colour(
+                                                  UiConstants.kTextColor4,
+                                                ),
+                                              );
+                                            }
+                                          },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
                               )
                             : state is FCalculatorError
                                 ? Padding(
@@ -775,68 +844,6 @@ class __FDDepositViewState extends State<_FDDepositView> {
                                   ),
                       );
                     },
-                  ),
-                  SizedBox(height: SizeConfig.padding16),
-                  GestureDetector(
-                    onTap: () {
-                      if ((double.tryParse(
-                                _amountController.text.replaceAll(',', ''),
-                              ) ??
-                              0) <
-                          getMinimumInvestmentAmount()) {
-                        _amountController.text =
-                            getMinimumInvestmentAmount().toString();
-                      }
-                      context.read<FDCalculatorBloc>().add(
-                            OnProceed(
-                              issuerId: widget.fdData.id,
-                              blostemId: widget.fdData.blostemId,
-                              investmentAmount: double.tryParse(
-                                    _amountController.text.replaceAll(',', ''),
-                                  ) ??
-                                  0,
-                              minAmount: getMinimumInvestmentAmount(),
-                            ),
-                          );
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      height: SizeConfig.padding48,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            SizeConfig.roundness5,
-                          ),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding12,
-                          vertical: SizeConfig.padding8,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            BlocBuilder<FDCalculatorBloc,
-                                FixedDepositCalculatorState>(
-                              builder: (context, state) {
-                                if (state is ProccedingToDeposit) {
-                                  return const CupertinoActivityIndicator();
-                                } else {
-                                  return Text(
-                                    'Invest now',
-                                    style: TextStyles.sourceSansSB.body3.colour(
-                                      UiConstants.kTextColor4,
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                   ),
                 ],
               ),

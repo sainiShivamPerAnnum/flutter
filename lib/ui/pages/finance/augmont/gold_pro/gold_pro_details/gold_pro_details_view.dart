@@ -16,7 +16,6 @@ import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.da
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_hero_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_rate_graph.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/youtube_player_view.dart';
 import 'package:felloapp/util/assets.dart';

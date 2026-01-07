@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class LineGradientChart extends StatefulWidget {
-  const LineGradientChart({Key? key, this.isPro = false}) : super(key: key);
+  const LineGradientChart({super.key, this.isPro = false});
 
   final bool isPro;
   @override
@@ -53,18 +53,20 @@ class _LineGradientChartState extends State<LineGradientChart> {
 
   int _selectedIndex = 0;
 
-  get selectedIndex => _selectedIndex;
+int get selectedIndex => _selectedIndex;
 
-  set selectedIndex(value) {
-    _selectedIndex = value;
-    Future.delayed(const Duration(milliseconds: 100)).then((value) {
-      chartData = ogChartData!.sublist(
-          (ogChartData!.length - (12 * (selectedIndex + 1))).toInt(),
-          ogChartData!.length);
-    });
+set selectedIndex(int value) {
+  _selectedIndex = value;
 
-    Haptic.vibrate();
-  }
+  Future.delayed(const Duration(milliseconds: 100)).then((_) {
+    int startIndex = ogChartData!.length - (12 * (selectedIndex + 1));
+    if (startIndex < 0) startIndex = 0;
+
+    chartData = ogChartData!.sublist(startIndex, ogChartData!.length);
+  });
+
+  Haptic.vibrate();
+}
 
   @override
   void initState() {
@@ -230,14 +232,33 @@ class _LineGradientChartState extends State<LineGradientChart> {
                   );
                 },
               ),
-              AbsorbPointer(
-                child: SizedBox(
+                SizedBox(
                   height: SizeConfig.screenWidth! * 0.6,
                   child: SfCartesianChart(
                     margin: EdgeInsets.zero,
                     borderWidth: 0,
                     borderColor: Colors.transparent,
                     plotAreaBorderWidth: 0,
+                    trackballBehavior: TrackballBehavior(
+                      enable: true,
+                      activationMode: ActivationMode.longPress,
+                      tooltipDisplayMode: TrackballDisplayMode.nearestPoint,
+                      lineType: TrackballLineType.vertical,
+                      lineColor: Colors.white24.withOpacity(0.1),
+                      lineWidth: 1,
+                      tooltipSettings: const InteractiveTooltip(
+                        enable: true,
+                        format: 'Day: {point.x}\nPrice: ₹{point.y}',
+                        color: Colors.black12,
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
+                      ),
+                      markerSettings: const TrackballMarkerSettings(
+                        markerVisibility: TrackballVisibilityMode.hidden,
+                      ),
+                    ),
                     primaryXAxis: NumericAxis(
                       minimum: chartData!.first.day.toDouble(),
                       maximum: chartData!.last.day.toDouble(),
@@ -261,7 +282,7 @@ class _LineGradientChartState extends State<LineGradientChart> {
                         splineType: SplineType.natural,
                         animationDuration: 0,
                         animationDelay: 0,
-                        enableTooltip: true,
+                        enableTooltip: false,
                         gradient: LinearGradient(
                             colors: widget.isPro
                                 ? [
@@ -289,11 +310,11 @@ class _LineGradientChartState extends State<LineGradientChart> {
                         xValueMapper: (data, _) => data.day,
                         yValueMapper: (data, _) => data.price,
                         splineType: SplineType.natural,
-                      )
+                      ),
                     ],
                   ),
                 ),
-              ),
+            
               Transform.translate(
                 offset: Offset(0, -SizeConfig.padding12),
                 child: Container(

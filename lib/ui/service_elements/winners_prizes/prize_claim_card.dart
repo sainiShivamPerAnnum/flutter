@@ -1,4 +1,3 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -60,8 +59,8 @@ class RewardRedeemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isEnabled =
-        (m?.userFundWallet?.unclaimedBalance.toInt() ?? 0) >= minWithdrawPrize;
+    // bool isEnabled =
+    //     (m?.userFundWallet?.unclaimedBalance.toInt() ?? 0) >= minWithdrawPrize;
     return Column(
       children: [
         Container(
@@ -102,35 +101,36 @@ class RewardRedeemWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                  GestureDetector(
-                    onTap: isEnabled
-                        ? () {
-                            AppState.delegate!.parseRoute(Uri.parse("experts"));
-                          }
-                        : () => BaseUtil.showNegativeAlert(
-                            "Not enough winnings",
-                            "Winnings can only be redeemed after reaching ${minWithdrawPrize} coins"),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding8,
-                        vertical: SizeConfig.padding6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isEnabled
-                            ? UiConstants.kTextColor
-                            : UiConstants.kTextColor.withOpacity(.4),
-                        borderRadius: BorderRadius.circular(
-                          SizeConfig.roundness5,
-                        ),
-                      ),
-                      child: Text(
-                        'Redeem Now',
-                        style: TextStyles.sourceSansSB.body4.colour(
-                          UiConstants.kTextColor4,
-                        ),
-                      ),
-                    ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: isEnabled
+                  //       ? () {
+                  //           AppState.delegate!.parseRoute(Uri.parse("experts"));
+                  //         }
+                  //       : () => BaseUtil.showNegativeAlert(
+                  //           "Not enough winnings",
+                  //           "Winnings can only be redeemed after reaching ${minWithdrawPrize} coins"),
+                  //   child: 
+                  //   Container(
+                  //     padding: EdgeInsets.symmetric(
+                  //       horizontal: SizeConfig.padding8,
+                  //       vertical: SizeConfig.padding6,
+                  //     ),
+                  //     decoration: BoxDecoration(
+                  //       color: isEnabled
+                  //           ? UiConstants.kTextColor
+                  //           : UiConstants.kTextColor.withOpacity(.4),
+                  //       borderRadius: BorderRadius.circular(
+                  //         SizeConfig.roundness5,
+                  //       ),
+                  //     ),
+                  //     child: Text(
+                  //       'Redeem Now',
+                  //       style: TextStyles.sourceSansSB.body4.colour(
+                  //         UiConstants.kTextColor4,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
               SizedBox(height: SizeConfig.padding10),

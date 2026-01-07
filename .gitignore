@@ -127,7 +127,6 @@ build/ios/
 packages/**/pubspec.lock
 
 # Web related
-lib/generated_plugin_registrant.dart
 
 # Exceptions to the above rules.
 !**/ios/**/default.mode1v3

@@ -427,11 +427,11 @@ class GoldProEligibleModalSheet extends StatelessWidget {
                     ),
                     // SizedBox(height: SizeConfig.padding14),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
-                          flex: 4,
+                          flex: 5,
                           child: MaterialButton(
                             height: SizeConfig.padding44,
                             shape: RoundedRectangleBorder(
@@ -468,7 +468,7 @@ class GoldProEligibleModalSheet extends StatelessWidget {
                         ),
                         SizedBox(width: SizeConfig.padding12),
                         Expanded(
-                          flex: 6,
+                          flex: 5,
                           child: Stack(
                             children: [
                               MaterialButton(

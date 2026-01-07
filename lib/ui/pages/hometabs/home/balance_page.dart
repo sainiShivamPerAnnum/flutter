@@ -473,7 +473,7 @@ class FelloBalanceScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  InkWell(
+                  if (title != "Fello Rewards") InkWell(
                     onTap: onButtonPressed,
                     child: Container(
                       width: SizeConfig.padding100,
@@ -491,7 +491,7 @@ class FelloBalanceScreen extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        title == "Fello Rewards" ? "Redeem" : "Invest",
+                        "Invest",
                         style: TextStyles.sourceSansSB.body4
                             .colour(UiConstants.kTextColor4),
                         textAlign: TextAlign.center,
