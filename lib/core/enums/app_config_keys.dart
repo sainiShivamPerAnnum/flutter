@@ -38,7 +38,7 @@ enum AppConfigKey {
   goldProInterest,
   goldProInvestmentChips,
   features,
-  quickActionsV3,
+  quickActionsV4,
   canChangePostMaturityPreference,
   enableJourney,
   enabled_psp_apps_booking,
@@ -51,8 +51,8 @@ extension AppConfigKeys on String {
         return AppConfigKey.enableJourney;
       case 'features':
         return AppConfigKey.features;
-      case 'quickActionsV3':
-        return AppConfigKey.quickActionsV3;
+      case 'quickActionsV4':
+        return AppConfigKey.quickActionsV4;
       case 'loginAssetUrl':
         return AppConfigKey.loginAssetUrl;
       case 'invalidateBefore':

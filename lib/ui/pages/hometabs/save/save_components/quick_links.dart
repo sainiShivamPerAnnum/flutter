@@ -26,7 +26,7 @@ class QuickLinks extends StatelessWidget {
     List<QuickLinksModel> quickLinks = [];
     try {
       quickLinks = QuickLinksModel.fromJsonList(
-        AppConfig.getValue(AppConfigKey.quickActionsV3),
+        AppConfig.getValue(AppConfigKey.quickActionsV4),
       );
     } catch (e) {
       return const SizedBox.shrink();
