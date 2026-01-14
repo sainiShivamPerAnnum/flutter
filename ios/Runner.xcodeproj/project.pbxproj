@@ -485,7 +485,7 @@
 				CleverTapToken = "ca4-b4b";
 				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_BITCODE = NO;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				FLUTTER_TARGET = lib/main_prod.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -781,7 +781,7 @@
 				CleverTapToken = "TEST-ca4-b4c";
 				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_BITCODE = NO;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				FLUTTER_TARGET = lib/main_qa.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -885,8 +885,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_BITCODE = NO;
-				"EXCLUDED_ARCHS[sdk=iphoneos*]" = "armv7 i386";
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				FLUTTER_BUILD_DIR = build/ios;
 				FLUTTER_TARGET = lib/main_dev.dart;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -986,7 +985,7 @@
 				CleverTapToken = "TEST-ca4-b4c";
 				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_BITCODE = NO;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				FLUTTER_TARGET = lib/main_dev.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1082,7 +1081,7 @@
 				CleverTapToken = "TEST-ca4-b4c";
 				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_BITCODE = NO;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				FLUTTER_TARGET = lib/main_dev.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1239,7 +1238,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_BITCODE = NO;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				FLUTTER_BUILD_DIR = build/ios;
 				FLUTTER_TARGET = lib/main_prod.dart;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1285,7 +1284,7 @@
 				DEVELOPMENT_TEAM = F8N75H3868;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphoneos*]" = "armv7 1386";
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				FLUTTER_TARGET = lib/main_prod.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

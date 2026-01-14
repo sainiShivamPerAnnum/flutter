@@ -131,6 +131,10 @@
 			</array>
 		</dict>
 	</array>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_http._tcp</string>
+	</array>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>UISupportsDocumentBrowser</key>

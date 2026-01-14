@@ -53,6 +53,7 @@ post_install do |installer|
         ## dart: PermissionGroup.bluetooth
         'PERMISSION_BLUETOOTH=1',
       ]
+      config.build_settings['SWIFT_VERSION'] = '5.9'
     end
     flutter_additional_ios_build_settings(target)
   end

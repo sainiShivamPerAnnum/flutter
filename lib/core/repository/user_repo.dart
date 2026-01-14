@@ -145,7 +145,7 @@ class UserRepository extends BaseRepo {
       );
 
       logger.d("reached");
-      return ApiResponse(code: 200);
+      return const ApiResponse(code: 200);
     } catch (e) {
       logger.d(e);
       await locator<InternalOpsService>().logFailure(
@@ -170,10 +170,9 @@ class UserRepository extends BaseRepo {
         cBaseUrl: AppEnvironment.instance.userOps,
         apiName: '$_userOps/verifyOTP',
       );
-
       return ApiResponse(code: 200, model: res['data']['token']);
     } on UnauthorizedException catch (_) {
-      return ApiResponse.withError("Invalid Otp", 400);
+      return const ApiResponse.withError("Invalid Otp", 400);
     } catch (e) {
       logger.d("verifyOtp error $e");
       unawaited(locator<InternalOpsService>().logFailure(

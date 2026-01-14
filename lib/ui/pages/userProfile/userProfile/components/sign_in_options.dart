@@ -43,6 +43,7 @@ class _SignInOptionsState extends State<SignInOptions> {
             padding: EdgeInsets.all(
               SizeConfig.blockSizeHorizontal * 5,
             ),
+            width: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -56,10 +57,8 @@ class _SignInOptionsState extends State<SignInOptions> {
                     width: 24,
                   ),
                   trailing: isGoogleSigningInProgress
-                      ? Container(
-                          child: const CircularProgressIndicator(
+                      ? const CircularProgressIndicator(
                             strokeWidth: 0.5,
-                          ),
                         )
                       : const SizedBox(),
                   title: Text(
@@ -92,7 +91,7 @@ class _SignInOptionsState extends State<SignInOptions> {
                 )
               ],
             ),
-            width: double.infinity,
+           
           ),
         ],
       ),
