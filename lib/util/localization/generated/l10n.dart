@@ -1513,6 +1513,16 @@ class S {
     );
   }
 
+  // Digital Silver
+   String get digitalSilverMailTitle {
+    return Intl.message(
+      'Digital Silver',
+      name: 'digitalSilverMailTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Current Amount`
   String get currentValue {
     return Intl.message(
@@ -1542,6 +1552,7 @@ class S {
       args: [],
     );
   }
+
 
   /// `With every withdrawal, some tokens and tambola tickets will be deducted.`
   String get sellCardSubTitle1 {

@@ -143,6 +143,9 @@ const String savedShortsViewPath = "/shorts-saved";
 const String customSDUIViewPath = "/sdui";
 const String chatDetailsViewPath = "/chat";
 
+// Silver
+const String silverDetailsPath = "/silverViewDetails";
+
 enum Pages {
   Splash,
   Login,
@@ -281,6 +284,7 @@ enum Pages {
   SavedShorts,
   Sdui,
   Chat,
+  SilverDetailView,
 }
 
 class PageConfiguration {
@@ -310,17 +314,20 @@ PageConfiguration SplashPageConfig = PageConfiguration(
   uiPage: Pages.Splash,
   name: 'Splash Screen',
 );
+
 PageConfiguration AssetViewPageConfig = PageConfiguration(
-    key: 'AssetView',
-    path: AssetViewPath,
-    uiPage: Pages.AssetViewSection,
-    name: 'AssetViewScreen');
+  key: 'AssetView',
+  path: AssetViewPath,
+  uiPage: Pages.AssetViewSection,
+  name: 'AssetViewScreen',
+);
 
 PageConfiguration TransactionDetailsPageConfig = PageConfiguration(
-    key: 'TransactionDetailsPage',
-    path: TransactionDetailsPath,
-    uiPage: Pages.TransactionDetailsPage,
-    name: 'TransactionDetails Screen');
+  key: 'TransactionDetailsPage',
+  path: TransactionDetailsPath,
+  uiPage: Pages.TransactionDetailsPage,
+  name: 'TransactionDetails Screen',
+);
 
 PageConfiguration NotificationsConfig = PageConfiguration(
   key: 'Notifications',
@@ -608,25 +615,25 @@ PageConfiguration BlockedUserPageConfig = PageConfiguration(
     key: 'blockedUser',
     path: BlockedUserPath,
     uiPage: Pages.BlockedUser,
-    name: 'Blocked User Page');
+    name: 'Blocked User Page',);
 
 PageConfiguration FreshDeskHelpPageConfig = PageConfiguration(
     key: 'freshDeskHelp',
     path: FreshdeskHelpPath,
     uiPage: Pages.FreshDeskHelp,
-    name: 'FreshDesk Help');
+    name: 'FreshDesk Help',);
 
 PageConfiguration ScratchCardViewPageConfig = PageConfiguration(
     key: 'ScratchCardView',
     path: ScratchCardViewPath,
     uiPage: Pages.ScratchCardView,
-    name: 'Scratch Card Highlighted');
+    name: 'Scratch Card Highlighted',);
 
 PageConfiguration ScratchCardsViewPageConfig = PageConfiguration(
     key: 'ScratchCardsView',
     path: ScratchCardsViewPath,
     uiPage: Pages.ScratchCardsView,
-    name: 'Golden Tickets Screen');
+    name: 'Golden Tickets Screen',);
 
 PageConfiguration GoldenMilestonesViewPageConfig = PageConfiguration(
   key: 'GoldenMilestonesView',
@@ -682,7 +689,7 @@ PageConfiguration JourneyViewPageConfig = PageConfiguration(
     key: 'JourneyView',
     path: JourneyViewPath,
     uiPage: Pages.JourneyView,
-    name: "Journey Screen");
+    name: "Journey Screen",);
 
 PageConfiguration OnBoardingViewPageConfig = PageConfiguration(
   key: 'OnBoardingView',
@@ -693,13 +700,13 @@ PageConfiguration CompleteProfileViewPageConfig = PageConfiguration(
     key: 'CompleteProfileView',
     path: CompleteProfilePath,
     uiPage: Pages.CompleteProfileView,
-    name: "Level2 Screen");
+    name: "Level2 Screen",);
 
 PageConfiguration BlogPostWebViewConfig = PageConfiguration(
     key: 'BlogPostWeb',
     path: BlogPostWebViewPath,
     uiPage: Pages.BlogPostWebView,
-    name: "Journey Screen");
+    name: "Journey Screen",);
 
 PageConfiguration CampaignViewPageConfig = PageConfiguration(
   key: 'CampaignView',
@@ -764,173 +771,173 @@ PageConfiguration UserUpiDetailsViewPageConfig = PageConfiguration(
     key: 'UserUpiDetailsView',
     path: UserUPIDetailsViewPath,
     uiPage: Pages.UserUpiDetailsView,
-    name: "User Upi details Screen");
+    name: "User Upi details Screen",);
 
 PageConfiguration InfoStoriesViewPageConfig = PageConfiguration(
     key: 'InfoStoresView',
     path: InfoStoriesViewPath,
     uiPage: Pages.InfoStoriesView,
-    name: "Info Stories details Screen");
+    name: "Info Stories details Screen",);
 
 PageConfiguration WebViewPageConfig = PageConfiguration(
     key: 'WebView',
     path: WebViewScreenPath,
     uiPage: Pages.WebView,
-    name: "Web browser Screen");
+    name: "Web browser Screen",);
 
 PageConfiguration SettingsViewPageConfig = PageConfiguration(
     key: 'SettingsView',
     path: SettingsScreenPath,
     uiPage: Pages.SettingsView,
-    name: "Settings Screen");
+    name: "Settings Screen",);
 
 //POWER PLAY
 PageConfiguration PowerPlayHomeConfig = PageConfiguration(
     key: 'PowerPlayPath',
     path: PowerPlayPath,
     uiPage: Pages.PowerPlayHome,
-    name: "PowerPlay Home Screen");
+    name: "PowerPlay Home Screen",);
 
 PageConfiguration PowerPlayLeaderBoardConfig = PageConfiguration(
     key: 'PowerPlayLeaderBoardPath',
     path: PowerPlayLeaderBoardPath,
     uiPage: Pages.PowerPlayLeaderBoard,
-    name: "PowerPlay LeaderBoard Screen");
+    name: "PowerPlay LeaderBoard Screen",);
 
 PageConfiguration PowerPlayHowItWorksConfig = PageConfiguration(
     key: 'PowerPlayHowItWorksPath',
     path: PowerPlayHowItWorksPath,
     uiPage: Pages.PowerPlayHowItWorks,
-    name: "PowerPlay HowItWorks Screen");
+    name: "PowerPlay HowItWorks Screen",);
 
 PageConfiguration FppCompletedMatchDetailsConfig = PageConfiguration(
     key: 'FppCompletedMatchDetailsPath',
     path: FppCompletedMatchDetailsPath,
     uiPage: Pages.FppCompletedMatchDetails,
-    name: "PowerPlay Completed Match Details Screen");
+    name: "PowerPlay Completed Match Details Screen",);
 
 PageConfiguration PowerPlayFTUXPageConfig = PageConfiguration(
     key: 'powerPlayFTUXPath',
     path: PowerPlayFTUXPath,
     uiPage: Pages.PowerPlayFTUX,
-    name: "PowerPlay Welcome Screen");
+    name: "PowerPlay Welcome Screen",);
 
 PageConfiguration PowerPlaySeasonLeaderboardDetailsConfig = PageConfiguration(
     key: 'PowerPlaySeasonLeaderboardDetailsPath',
     path: PowerPlaySeasonLeaderboardPath,
     uiPage: Pages.PowerPlaySeasonLeaderboard,
-    name: "PowerPlay Season Leaderboard Screen");
+    name: "PowerPlay Season Leaderboard Screen",);
 
 PageConfiguration LastWeekOverviewConfig = PageConfiguration(
     key: 'LastWeekOverviewPath',
     path: LastWeekOverviewPath,
     uiPage: Pages.LastWeekOverview,
-    name: "Last Week Overview Screen");
+    name: "Last Week Overview Screen",);
 
 PageConfiguration AccountsViewConfig = PageConfiguration(
     key: 'AccountsViewPath',
     path: AccountsPath,
     uiPage: Pages.AccountsView,
-    name: "Accounts View Screen");
+    name: "Accounts View Screen",);
 
 PageConfiguration PlayViewConfig = PageConfiguration(
     key: 'PlayViewConfig',
     path: PlayViewPath,
     uiPage: Pages.PlayView,
-    name: "Play View Screen");
+    name: "Play View Screen",);
 
 PageConfiguration YoutubePlayerViewConfig = PageConfiguration(
     key: 'YoutubePlayerPath',
     path: YoutubePlayerViewPath,
     uiPage: Pages.YoutubePlayerView,
-    name: "Youtube Player View Screen");
+    name: "Youtube Player View Screen",);
 
 PageConfiguration EarnMoreReturnsViewPageConfig = PageConfiguration(
     key: 'EarnMoreReturnsViewPath',
     path: EarnMoreReturnsViewPath,
     uiPage: Pages.EarnMoreReturnsView,
-    name: "Earn more rewards view screen");
+    name: "Earn more rewards view screen",);
 
 PageConfiguration LendboxBuyViewConfig = PageConfiguration(
     key: 'LendboxBuyViewPath',
     path: LendboxBuyViewPath,
     uiPage: Pages.LendboxBuyView,
-    name: "Lendbox Buy View Screen");
+    name: "Lendbox Buy View Screen",);
 PageConfiguration LendboxCouponViewConfig = PageConfiguration(
     key: 'LendboxCouponViewPath',
     path: LendboxCouponViewPath,
     uiPage: Pages.LendboxCouponView,
-    name: "Lendbox Coupon Screen");
+    name: "Lendbox Coupon Screen",);
 PageConfiguration GoldCouponViewConfig = PageConfiguration(
     key: 'GoldCouponViewPath',
     path: GoldCouponViewPath,
     uiPage: Pages.GoldCouponView,
-    name: "Gold Coupon Screen");
+    name: "Gold Coupon Screen",);
 
 PageConfiguration AssetSelectionViewConfig = PageConfiguration(
     key: 'AssetSelectionViewPath',
     path: AssetSelectionViewPath,
     uiPage: Pages.AssetSelectionView,
-    name: "Asset Selection View Screen");
+    name: "Asset Selection View Screen",);
 
 PageConfiguration QuizWebViewConfig = PageConfiguration(
     key: 'QuizWebViewPath',
     path: QuizWebViewPath,
     uiPage: Pages.QuizWebView,
-    name: "Quiz Web View Screen");
+    name: "Quiz Web View Screen",);
 
 PageConfiguration BalloonLottieScreenViewConfig = PageConfiguration(
     key: 'BalloonLottieScreenViewPath',
     path: BalloonLottieScreenPath,
     uiPage: Pages.BalloonLottieScreen,
-    name: "Balloon Lottie Screen View Screen");
+    name: "Balloon Lottie Screen View Screen",);
 
 PageConfiguration GoldProDetailsViewPageConfig = PageConfiguration(
     key: 'GoldProDetailsViewPath',
     path: GoldProDetailsPath,
     uiPage: Pages.GoldProDetailsView,
-    name: "Gold X Details View Screen");
+    name: "Gold X Details View Screen",);
 
 PageConfiguration GoldProBuyViewPageConfig = PageConfiguration(
     key: 'GoldProBuyViewPath',
     path: GoldProBuyViewPath,
     uiPage: Pages.GoldProBuyView,
-    name: "Gold X Buy View Screen");
+    name: "Gold X Buy View Screen",);
 
 PageConfiguration GoldProSellViewPageConfig = PageConfiguration(
     key: 'GoldProSellViewPath',
     path: GoldProSellViewPath,
     uiPage: Pages.GoldProSellView,
-    name: "Gold X Sell View Screen");
+    name: "Gold X Sell View Screen",);
 
 PageConfiguration GoldProTxnsViewPageConfig = PageConfiguration(
     key: 'GoldProTxnsViewPath',
     path: GoldProTxnsViewPath,
     uiPage: Pages.GoldProTxnsView,
-    name: "Gold X Txns View Screen");
+    name: "Gold X Txns View Screen",);
 
 PageConfiguration GoldProTxnsDetailsViewPageConfig = PageConfiguration(
     key: 'GoldProTxnsDetailsViewPath',
     path: GoldProTxnsDetailsViewPath,
     uiPage: Pages.GoldProTxnsDetailsView,
-    name: "Gold X Txns Details View Screen");
+    name: "Gold X Txns Details View Screen",);
 
 PageConfiguration TicketsIntroViewPageConfig = PageConfiguration(
     key: 'TicketsIntroViewPath',
     path: TicketsIntroViewPath,
     uiPage: Pages.TicketsIntroViewPath,
-    name: "Tickets Intro View Screen");
+    name: "Tickets Intro View Screen",);
 
 PageConfiguration TicketsTutorialViewPageConfig = PageConfiguration(
     key: 'TicketsTutorialViewPath',
     path: TicketsTutorialViewPath,
     uiPage: Pages.TicketsTutorialViewPath,
-    name: "Tickets Tutorial View Screen");
+    name: "Tickets Tutorial View Screen",);
 PageConfiguration MaturityWithdrawalSuccessViewPageConfig = PageConfiguration(
     key: 'MaturityWithdrawalSuccessViewPath',
     path: MaturityWithdrawalSuccessViewPath,
     uiPage: Pages.MaturityWithdrawalSuccessView,
-    name: "Maturity Withdrawal Success View Screen");
+    name: "Maturity Withdrawal Success View Screen",);
 
 PageConfiguration FelloBadgeHomeViewPageConfig = PageConfiguration(
   key: 'FelloBadgeHomeViewPath',
@@ -1127,4 +1134,11 @@ PageConfiguration ChatsPageConfig = PageConfiguration(
   path: chatDetailsViewPath,
   uiPage: Pages.Chat,
   name: "Chat Screen",
+);
+
+PageConfiguration SilverDetailsPageConfig = PageConfiguration(
+  key: 'SilverDetails',
+  path: silverDetailsPath,
+  uiPage: Pages.SilverDetailView,
+  name: 'Silver Details Screen',
 );

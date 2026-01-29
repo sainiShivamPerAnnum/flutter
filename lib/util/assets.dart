@@ -332,4 +332,12 @@ class Assets {
   static const String safe = "assets/svg/safe.svg";
   static const String noChats = "assets/svg/no_chat.svg";
   static const String statementHeader = "assets/images/header.jpg";
+
+  //silver
+  static const String silverAsset = "assets/images/silver_bar.svg";
+  static const String sebiLogo = "images/sebi.png";
+  static const String rbiLogo = "images/rbi.png";
+  static const String iciciLogo = "images/icici.png";
+  // static const String augmontLogo = "assets/svg/augmont.svg";
+
 }

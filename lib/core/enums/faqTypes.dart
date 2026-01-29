@@ -18,5 +18,6 @@ enum FaqsType {
   referrals,
   digitalGold,
   superFello,
-  felloFlo;
+  felloFlo,
+  silver,
 }

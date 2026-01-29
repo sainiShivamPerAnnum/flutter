@@ -68,7 +68,14 @@ class QuickLinks extends StatelessWidget {
                           AppState.delegate!.parseRoute(
                             Uri.parse(quickLinks[index].deeplink),
                           );
-                        } 
+                        }
+                        // need to remove
+                        if(quickLinks[index].deeplink == ''){
+                          Haptic.vibrate();
+                          AppState.delegate!.parseRoute(
+                            Uri.parse("silverDetails"),
+                          );
+                        }
                         locator<AnalyticsService>().track(
                           eventName: AnalyticsEvents.iconTrayTapped,
                           properties: {'icon': quickLinks[index].name},

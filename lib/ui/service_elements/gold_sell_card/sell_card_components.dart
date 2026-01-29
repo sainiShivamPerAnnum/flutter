@@ -7,17 +7,27 @@ import 'package:flutter/material.dart';
 
 class SellText extends StatelessWidget {
   final InvestmentType investmentType;
-
-  const SellText({required this.investmentType, Key? key}) : super(key: key);
+  const SellText({required this.investmentType, super.key});
 
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    final title = investmentType == InvestmentType.AUGGOLD99
-        ? "Sell Digital Gold"
-        : locale.sellCardTitle2;
-    const subTitle =
-        'With every withdrawal, some tokens and tickets will be deducted.';
+     late final String title;
+
+    switch (investmentType) {
+      case InvestmentType.AUGGOLD99:
+        title = locale.digitalGoldMailTitle;
+        break;
+      case InvestmentType.AUGSILVD999:
+        title = locale.digitalSilverMailTitle;
+        break;
+      case InvestmentType.LENDBOXP2P:
+        title = locale.sellCardTitle2;
+        break;
+      default:
+        title = locale.sellCardTitle2;
+    }
+
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,12 +38,13 @@ class SellText extends StatelessWidget {
               Colors.white,
             ),
           ),
-          SizedBox(height: SizeConfig.padding6),
-          Text(
-            subTitle,
-            // maxLines: 2,
-            style: TextStyles.sourceSans.body4.colour(const Color(0xffc5cacd)),
-          ),
+          if (investmentType == InvestmentType.LENDBOXP2P) ...[
+            SizedBox(height: SizeConfig.padding6),
+            Text(
+              'With every withdrawal, some tokens and tickets will be deducted.',
+              style: TextStyles.sourceSans.body4.colour(const Color(0xffc5cacd)),
+            ),
+          ],
         ],
       ),
     );
@@ -49,12 +60,11 @@ class SellButton extends StatelessWidget {
       {required this.onTap,
       required this.isActive,
       required this.text,
-      Key? key})
-      : super(key: key);
+      super.key,
+    });
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
     return isActive
         ? GestureDetector(
             onTap: isActive ? onTap as void Function()? : () {},
@@ -81,7 +91,7 @@ class SellButton extends StatelessWidget {
 }
 
 class AugmontDownCard extends StatelessWidget {
-  const AugmontDownCard({Key? key}) : super(key: key);
+  const AugmontDownCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +99,8 @@ class AugmontDownCard extends StatelessWidget {
   }
 }
 
-class ongoingCard extends StatelessWidget {
-  const ongoingCard({Key? key}) : super(key: key);
+class OngoingCard extends StatelessWidget {
+  const OngoingCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +109,7 @@ class ongoingCard extends StatelessWidget {
 }
 
 class GoldLockedInCard extends StatelessWidget {
-  const GoldLockedInCard({Key? key}) : super(key: key);
+  const GoldLockedInCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -114,12 +124,12 @@ class SellActionButton extends StatelessWidget {
   final Function()? onTap;
 
   const SellActionButton({
-    Key? key,
+    super.key,
     this.title,
     this.iconData,
     this.onTap,
     this.isCenter = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -170,11 +180,11 @@ class SellCardInfoStrips extends StatelessWidget {
 
   const SellCardInfoStrips({
     required this.content,
-    Key? key,
+    super.key,
     this.leadingIcon,
     this.textColor,
     this.backgroundColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -5,12 +5,15 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_v2/fcm_handler_v2.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
+import 'package:felloapp/feature/fixedDeposit/fd_main_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -124,6 +127,13 @@ class FcmHandler extends ChangeNotifier {
           break;
         case FcmCommands.COMMAND_SHOW_DIALOG:
           _fcmHandlerDataPayloads.showDialog(title, body);
+          break;
+        case FcmCommands.COMMAND_ROUTE_TO_FD:
+          AppState.delegate!.appState.currentAction = PageAction(
+            page: FdHomePageConfig,
+            widget: const FdMainView(),
+            state: PageState.addWidget,
+          );
           break;
         case FcmCommands.COMMAND_USER_PRIZE_WIN_2:
           await _fcmHandlerDataPayloads.userPrizeWinPrompt();

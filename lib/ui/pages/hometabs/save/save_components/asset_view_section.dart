@@ -96,6 +96,8 @@ class _AssetSectionViewState extends State<AssetSectionView> {
         return FaqsType.gold;
       case InvestmentType.GOLDPRO:
         return FaqsType.goldPro;
+      case InvestmentType.AUGSILVD999:
+        return FaqsType.silver;
       case InvestmentType.LENDBOXP2P:
         return FaqsType.flo;
     }
@@ -736,8 +738,8 @@ class _BuildOwnAsset extends StatelessWidget {
   const _BuildOwnAsset({
     required this.type,
     required this.userService,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
   final InvestmentType type;
   final UserService userService;
 

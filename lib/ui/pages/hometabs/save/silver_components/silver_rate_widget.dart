@@ -9,14 +9,15 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../../../../architecture/base_view.dart';
-class GoldRateWidget extends StatefulWidget {
-  const GoldRateWidget({super.key});
+
+class SilverRateWidget extends StatefulWidget {
+  const SilverRateWidget({super.key});
 
   @override
-  State<GoldRateWidget> createState() => GoldRateWidgetState();
+  State<SilverRateWidget> createState() => SilverRateWidgetState();
 }
 
-class GoldRateWidgetState extends State<GoldRateWidget> {
+class SilverRateWidgetState extends State<SilverRateWidget> {
   bool switchValue =
       PreferenceHelper.getBool(PreferenceHelper.GOLD_PRICE_SUBSCRIBE);
 
@@ -33,8 +34,8 @@ class GoldRateWidgetState extends State<GoldRateWidget> {
 
     if (switchValue) {
       BaseUtil.showPositiveAlert(
-          'We will notify you when the gold prices change!',
-          'Keep saving in Gold with Fello!');
+          'We will notify you when the silver prices change!',
+          'Keep saving in Silver with Fello!',);
     }
   }
 
@@ -97,7 +98,7 @@ class GoldRateWidgetState extends State<GoldRateWidget> {
               Row(
                 children: [
                   Text(
-                    "Get notified about gold price changes",
+                    "Get notified about silver price changes",
                     style: TextStyles.sourceSans.body4
                         .colour(const Color(0xffA9C6D6)),
                   ),

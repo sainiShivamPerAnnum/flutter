@@ -18,4 +18,5 @@ class FcmCommands {
   static const COMMAND_WITHDRAWAL_RESPONSE = "withdrawalResponse";
   static const COMMAND_IPL_WIN_RESPONSE = "iplPowerPlayWinResponse";
   static const COMMAND_GOLDEN_TICKET_WIN = "goldenTicketWin";
+  static const COMMAND_ROUTE_TO_FD = 'fd_notification';
 }

@@ -49,6 +49,7 @@ import 'package:felloapp/ui/pages/finance/transactions_history/transactions_hist
 import 'package:felloapp/ui/pages/hometabs/my_account/my_account_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
+import 'package:felloapp/ui/pages/hometabs/save/silver_components/silver_section_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/stories/stories_page.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
@@ -749,6 +750,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.Sdui:
         SduiPageConfig.currentPageAction = action;
         break;
+      case Pages.FdHomeView:
+        FdHomePageConfig.currentPageAction = action;
+        break;
+      case Pages.SilverDetailView:
+        SilverDetailsPageConfig.currentPageAction = action;
       default:
         break;
     }
@@ -898,18 +904,28 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = FelloBadgeHomeViewPageConfig;
       case 'save':
         onTapItem(RootController.saveNavBarItem);
-
         break;
       case 'play':
         pageConfiguration = PlayViewConfig;
         break;
-
       case 'profile':
         pageConfiguration = UserProfileDetailsConfig;
         break;
       case "accounts":
         pageConfiguration = AccountsViewConfig;
         break;
+      // case "silverDetails":
+      //   pageConfiguration = SilverDetailsPageConfig;
+      //   break;
+
+      case "silverDetails":
+        appState.currentAction = PageAction(
+          state: PageState.addWidget,
+          page: SaveAssetsViewConfig,
+          widget: const SilverSectionView(),
+        );
+        break;
+
       case "goldDetails":
         appState.currentAction = PageAction(
           state: PageState.addWidget,
@@ -1209,6 +1225,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case "support":
         pageConfiguration = SupportPageConfig;
         break;
+      case "fixedDeposits":
+        pageConfiguration = FdHomePageConfig;
       case "fixedDeposit":
         BaseUtil().openRechargeModalSheet(
           investmentType: InvestmentType.fixedDeposit,
