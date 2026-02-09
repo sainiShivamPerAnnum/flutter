@@ -50,7 +50,8 @@ class TransactionsHistory extends StatelessWidget {
             elevation: 0,
             leading: const FelloAppBarBackButton(),
             title: Text(
-              (investmentType == InvestmentType.AUGGOLD99 ? "Gold " : "Flo ") +
+              (investmentType == InvestmentType.AUGGOLD99 ? "Gold " :
+                 investmentType == InvestmentType.SILVER ? "Silver " : "Flo ") +
                   locale.txnHistory,
               style: TextStyles.rajdhaniSB.title5,
             ),

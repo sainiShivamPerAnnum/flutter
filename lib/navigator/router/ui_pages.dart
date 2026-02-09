@@ -92,6 +92,7 @@ const String PowerPlaySeasonLeaderboardPath = "powerplaySeasonLeaderboardPath";
 const String LendboxBuyViewPath = "/LendboxBuyViewPath";
 const String LendboxCouponViewPath = "/LendboxCouponViewPath";
 const String GoldCouponViewPath = "/GoldCouponViewPath";
+const String SilverCouponViewPath = "/SilverCouponViewPath";
 const String AssetSelectionViewPath = "/assetSelectionViewPath";
 const String QuizWebViewPath = "/quizWebViewPath";
 const String BalloonLottieScreenPath = "/bolloonLottieScreenPath";
@@ -285,6 +286,7 @@ enum Pages {
   Sdui,
   Chat,
   SilverDetailView,
+  SilverCouponView,
 }
 
 class PageConfiguration {
@@ -873,6 +875,12 @@ PageConfiguration GoldCouponViewConfig = PageConfiguration(
     path: GoldCouponViewPath,
     uiPage: Pages.GoldCouponView,
     name: "Gold Coupon Screen",);
+
+PageConfiguration SilverCouponViewConfig = PageConfiguration(
+    key: 'SilverCouponViewPath',
+    path: SilverCouponViewPath,
+    uiPage: Pages.SilverCouponView,
+    name: "Silver Coupon Screen",);
 
 PageConfiguration AssetSelectionViewConfig = PageConfiguration(
     key: 'AssetSelectionViewPath',

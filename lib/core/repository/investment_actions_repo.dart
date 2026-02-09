@@ -31,7 +31,7 @@ class InvestmentActionsRepository extends BaseRepo {
     } catch (e) {
       _logger.e(e);
       return ApiResponse.withError(
-          e.toString() ?? "Unable to fetch rates", 400);
+          e.toString(), 400,);
     }
   }
 
@@ -41,7 +41,6 @@ class InvestmentActionsRepository extends BaseRepo {
     String? userUid,
     Map<String, dynamic>? sellGoldMap,
   }) async {
-    String? message = "";
     Map<String, dynamic> _body = {
       "uid": userUid,
       "amount": amount,
@@ -65,11 +64,29 @@ class InvestmentActionsRepository extends BaseRepo {
         apiName: 'monoPayment/withdrawal',
       );
       _logger.d("Response from withdrawal: $response");
-      message = response["message"];
-      return ApiResponse(model: true, code: 200);
+      return const ApiResponse(model: true, code: 200);
     } catch (e) {
       _logger.e(e);
       return ApiResponse.withError(e.toString(), 400);
     }
   }
+
+    Future<ApiResponse<Map<String, dynamic>>> getSilverRates() async {
+    _logger.d("GET_SILVER_RATES::API_CALLED");
+
+    try {
+      final response = await APIService.instance.getData(
+        _apiPaths.kGetSilverRates,
+        cBaseUrl: _baseUrl,
+        apiName: "$_banking/silverRates",
+      );
+
+      return ApiResponse(model: response['data'], code: 200);
+    } catch (e) {
+      _logger.e(e);
+      return ApiResponse.withError(
+          e.toString(), 400,);
+    }
+  }
+
 }

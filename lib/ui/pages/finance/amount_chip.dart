@@ -108,11 +108,14 @@ class AmountChipV2 extends StatelessWidget {
           if (isBest)
             Container(
               padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding8,
-                vertical: SizeConfig.padding2,
+                horizontal: SizeConfig.padding10,
+                vertical: SizeConfig.padding1,
               ),
               decoration: const BoxDecoration(
-                color: UiConstants.teal4,
+                color: Color.fromARGB(255, 1, 107, 102),
+                 borderRadius: BorderRadius.vertical(
+                top: Radius.circular(2),
+              ),
               ),
               child: Text(
                 locale.best,

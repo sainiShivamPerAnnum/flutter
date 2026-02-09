@@ -8,6 +8,7 @@ class ApiPath {
 
   //Augmont Ops
   String get kGetGoldRates => "/gold/rates";
+  String get kGetSilverRates => "/silver/rates";
 
   //User Ops Apis
   String get kAddNewUser => "/v2/new";
@@ -233,6 +234,7 @@ class ApiPath {
   static String incentives = "/app/incentives";
 
   static String subscribeGoldPriceAlert = "/gold-price-alert/subscribe";
+  static String subscribeSilverPriceAlert = "/silver-price-alert/subscribe";
 
   static String augmontReport(String txnId) => "/aug/$txnId/txn";
 
@@ -277,4 +279,8 @@ class ApiPath {
 
   static const String chatSessionPath = 'chats/sessions';
   static const String chatHistoryPath = 'chats/user-chats';
+
+  // silver
+  static String get silverRatesGraph => "/silver-rates/graph";
+
 }

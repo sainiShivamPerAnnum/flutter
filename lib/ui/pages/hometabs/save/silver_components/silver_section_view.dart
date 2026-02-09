@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:collection/collection.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -11,16 +13,16 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/elements/video_player/app_video_player.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_rate_graph.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/save/silver_components/silver_comparison_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/silver_components/silver_hero_card.dart';
+import 'package:felloapp/ui/pages/hometabs/save/silver_components/silver_rate_graph.dart';
 import 'package:felloapp/ui/pages/hometabs/save/silver_components/silver_rate_widget.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/extensions/investment_returns_extension.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -32,6 +34,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import '../../../../../core/enums/faqTypes.dart';
 
@@ -123,7 +126,7 @@ class _SilverSectionViewState extends State<SilverSectionView> {
                   color: UiConstants.primaryColor,
                   backgroundColor: Colors.black,
                   onRefresh: () async => await state.refreshTransactions(
-                    InvestmentType.AUGSILVD999,
+                    InvestmentType.SILVER,
                   ),
                   child: Scaffold(
                     backgroundColor: UiConstants.kBackgroundColor,
@@ -204,7 +207,8 @@ class _SilverSectionViewState extends State<SilverSectionView> {
                                 else
                                   const SilverInfoWidget(),
                                 const SilverRateWidget(),
-                                if (!hasSavedInAug) const LineGradientChart(),
+                                if (!hasSavedInAug) const LineSilverGradientChart(),
+                                // const LineSilverGradientChart(),  // remove after testing
                                 if (balance == 0)
                                   SizedBox(
                                     height: SizeConfig.padding14,
@@ -214,9 +218,9 @@ class _SilverSectionViewState extends State<SilverSectionView> {
                                 ),
                                 if (!isNewUser) ...[
                                   const MiniTransactionCard(
-                                    investmentType: InvestmentType.AUGSILVD999,
+                                    investmentType: InvestmentType.SILVER,
                                   ),
-                                  if (balance != 0 ) ...[
+                                  if (balance != 0) ...[
                                     Align(
                                       alignment: Alignment.centerLeft,
                                       child: Padding(
@@ -233,7 +237,7 @@ class _SilverSectionViewState extends State<SilverSectionView> {
                                       height: SizeConfig.padding12,
                                     ),
                                     const SellCardView(
-                                    investmentType: InvestmentType.AUGSILVD999,
+                                    investmentType: InvestmentType.SILVER,
                                     ),
                                     SizedBox(
                                       height: SizeConfig.padding10,
@@ -246,9 +250,9 @@ class _SilverSectionViewState extends State<SilverSectionView> {
                                   ),
                                   CircularSlider(
                                     isNewUser: isNewUser,
-                                    type: InvestmentType.AUGSILVD999,
+                                    type: InvestmentType.SILVER,
                                     interest:8,
-                                  )
+                                  ),
                                 ],
                                 SizedBox(
                                   height: SizeConfig.padding24,
@@ -276,9 +280,9 @@ class _SilverSectionViewState extends State<SilverSectionView> {
                                   ),
                                   CircularSlider(
                                     isNewUser: isNewUser,
-                                    type: InvestmentType.AUGSILVD999,
+                                    type: InvestmentType.SILVER,
                                     interest: 8,
-                                  )
+                                  ),
                                 ],
                                 SizedBox(
                                   height: SizeConfig.padding40,
@@ -291,7 +295,12 @@ class _SilverSectionViewState extends State<SilverSectionView> {
                                   backgroundColor: Color.fromARGB(255, 3, 85, 132),
                                 ),
                                 SizedBox( height: SizeConfig.padding42,),
-                                _buildComplianceSection(),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding20,
+                                  ),
+                                  child: _buildComplianceSection(),
+                                ),
                                 SizedBox(
                                   height: SizeConfig.screenHeight! * 0.15,
                                 ),
@@ -343,7 +352,7 @@ class _SilverSectionViewState extends State<SilverSectionView> {
                                   height: SizeConfig.padding4,
                                 ),
                                 const AssetBottomButtons(
-                                  type: InvestmentType.AUGSILVD999,),
+                                  type: InvestmentType.SILVER,),
                                 SizedBox(
                                   height: SizeConfig.padding10,
                                 ),
@@ -365,7 +374,7 @@ class _SilverSectionViewState extends State<SilverSectionView> {
                                     EdgeInsets.only(right: SizeConfig.padding8),
                                 child: FaqPill(
                                   type: _getFaqTypeFromAsset(
-                                    InvestmentType.AUGSILVD999),
+                                    InvestmentType.SILVER),
                                 ),
                               ),
                               if (widget.showSkip)
@@ -693,4 +702,254 @@ class _WhySection extends StatelessWidget {
 
     return children;
   }
+}
+
+class CircularSlider extends StatefulWidget {
+  const CircularSlider({
+    required this.type,
+    required this.isNewUser,
+    required this.interest,
+    super.key,
+  });
+  final InvestmentType type;
+  final bool isNewUser;
+  final num interest;
+
+  @override
+  State<CircularSlider> createState() => CircularSliderState();
+}
+
+class CircularSliderState extends State<CircularSlider> {
+  double _volumeValue = 10000;
+  bool isEventSent = false;
+
+  void onVolumeChanged(double value) {
+    if (!isEventSent) {
+      locator<AnalyticsService>().track(
+        eventName: "Return Calculator Used",
+        properties: {"new user": widget.isNewUser},
+      );
+      isEventSent = true;
+    }
+    setState(() {
+      _volumeValue = value;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.loose,
+      alignment: Alignment.bottomCenter,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(bottom: SizeConfig.padding40),
+          child: CustomPaint(
+            painter: CirclePainter(),
+            child: SfRadialGauge(
+              axes: <RadialAxis>[
+                RadialAxis(
+                  minimum: 100,
+                  maximum: 50000,
+                  startAngle: 270,
+                  endAngle: 270,
+                  showLabels: false,
+                  showTicks: false,
+                  radiusFactor: 0.6,
+                  axisLineStyle: AxisLineStyle(
+                    cornerStyle: CornerStyle.bothFlat,
+                    color: const Color(0xffD9D9D9).withOpacity(0.5),
+                    thickness: 6,
+                  ),
+                  pointers: <GaugePointer>[
+                    RangePointer(
+                      value: _volumeValue,
+                      cornerStyle: CornerStyle.bothCurve,
+                      enableAnimation: true,
+                      width: 12,
+                      sizeUnit: GaugeSizeUnit.logicalPixel,
+                      color: const ui.Color.fromARGB(255, 72, 125, 158),
+                    ),
+                    MarkerPointer(
+                      value: _volumeValue,
+                      enableAnimation: true,
+                      enableDragging: true,
+                      onValueChanged: onVolumeChanged,
+                      markerHeight: 24,
+                      markerWidth: 24,
+                      markerType: MarkerType.circle,
+                      color: Colors.white,
+                      borderWidth: 0,
+                      borderColor: Colors.white,
+                    )
+                  ],
+                  annotations: [
+                    GaugeAnnotation(
+                      widget: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Save Today",
+                            style: TextStyles.sourceSans.body2.colour(
+                              const Color(0xffA9C6D6),
+                            ),
+                          ),
+                          Text(
+                            "₹${_volumeValue.round()}",
+                            style: TextStyles.rajdhaniB.title2,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+        Positioned(
+          top: -5,
+          child: Column(
+            children: [
+              Text(
+                "Return Calculator",
+                style: TextStyles.rajdhaniSB.title3,
+              ),
+              Text(
+                widget.type == InvestmentType.LENDBOXP2P
+                    ? widget.interest == 12
+                        ? "(Based on 12% returns*)"
+                        : "(Based on 10% returns*)"
+                    : "(Based on last years' returns)",
+                style:
+                    TextStyles.sourceSans.body3.colour(const Color(0xffA9C6D6)),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding:
+              EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth! * 0.1),
+          child: Column(
+            children: [
+              Text(
+                "To see it grow into",
+                style:
+                    TextStyles.sourceSans.body0.colour(const Color(0xffA9C6D6)),
+              ),
+              SizedBox(
+                height: SizeConfig.padding16 + SizeConfig.padding2,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "₹${6.getReturns(widget.type, _volumeValue, widget.interest, 0)}",
+                          style: TextStyles.rajdhaniSB.body1,
+                        ),
+                        Text(
+                          "6 mo",
+                          style: TextStyles.sourceSans.body3.colour(
+                            UiConstants.kTextColor2,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "₹${12.getReturns(widget.type, _volumeValue, widget.interest, 0)}",
+                          style: TextStyles.rajdhaniSB.body1,
+                        ),
+                        Text(
+                          "1 Y",
+                          style: TextStyles.sourceSans.body3.colour(
+                            UiConstants.kTextColor2,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "₹${3.calculateCompoundInterest(
+                            widget.type,
+                            _volumeValue,
+                            widget.interest,
+                          )}",
+                          style: TextStyles.rajdhaniSB.body1,
+                        ),
+                        Text(
+                          "3 Y",
+                          style: TextStyles.sourceSans.body3.colour(
+                            UiConstants.kTextColor2,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "₹${5.calculateCompoundInterest(widget.type, _volumeValue, widget.interest)}",
+                          style: TextStyles.rajdhaniSB.body1,
+                        ),
+                        Text(
+                          "5 Y",
+                          style: TextStyles.sourceSans.body3.colour(
+                            UiConstants.kTextColor2,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CirclePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (var i = 0; i < 2; i++) {
+      canvas.drawCircle(
+        Offset(size.width / 2, size.height / 2),
+        size.width * (0.41 - (0.06 * i)),
+        Paint()
+          ..color = const Color(0xffD9D9D9).withOpacity(0.1)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1
+          ..shader = ui.Gradient.linear(
+            Offset(size.width, size.height),
+            Offset(0, size.height),
+            [const Color(0xffD9D9D9), const Color(0xffD9D9D9).withOpacity(0)],
+          ),
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(CirclePainter painter) => false;
 }

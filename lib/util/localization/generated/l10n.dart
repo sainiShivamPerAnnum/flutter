@@ -1188,6 +1188,16 @@ class S {
     );
   }
 
+/// `Digital Silver`
+  String get digitalSilverText {
+    return Intl.message(
+      'Digital Silver',
+      name: 'digitalSilverText',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Choose your asset`
   String get chooseYourAsset {
     return Intl.message(
@@ -1403,6 +1413,15 @@ class S {
     return Intl.message(
       '99.9% pure | 24K Gold | 100% secure',
       name: 'digitalGoldSubTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get digitalSilverSubTitle {
+    return Intl.message(
+      '99.9% Pure Silver | Secure Vault Storage | 100% secure',
+      name: 'digitalSilverSubTitle',
       desc: '',
       args: [],
     );
@@ -6242,6 +6261,26 @@ class S {
     return Intl.message(
       'Please wait while the Gold rates load',
       name: 'loadingGoldRates1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loading Silver Rates`
+  String get loadingSilverRates {
+    return Intl.message(
+      'Loading Silver Rates',
+      name: 'loadingSilverRates',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please wait while the Silver rates load`
+  String get loadingSilverRates1 {
+    return Intl.message(
+      'Please wait while the Silver rates load',
+      name: 'loadingSilverRates1',
       desc: '',
       args: [],
     );

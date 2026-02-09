@@ -20,7 +20,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 
 extension InvestmentTypeX on InvestmentType {
   bool get isGold => this == InvestmentType.AUGGOLD99;
-  bool get isSilver => this == InvestmentType.AUGSILVD999;
+  bool get isSilver => this == InvestmentType.SILVER;
   bool get isFlo => this == InvestmentType.LENDBOXP2P;
 
   /// Action button text

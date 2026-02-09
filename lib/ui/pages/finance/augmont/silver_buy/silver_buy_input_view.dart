@@ -1,0 +1,187 @@
+import 'dart:async';
+
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/payments/silver_transaction_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
+import 'package:felloapp/ui/pages/finance/augmont/silver_buy/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/finance/augmont/silver_buy/silver_coupon_widget.dart';
+import 'package:felloapp/ui/pages/finance/augmont/silver_buy/widgets/buy_app_bar.dart';
+import 'package:felloapp/ui/pages/finance/augmont/silver_buy/widgets/buy_nav_bar.dart';
+import 'package:felloapp/ui/pages/finance/augmont/silver_buy/widgets/enter_amount_view.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:flutter/material.dart';
+
+import 'widgets/view_breakdown.dart';
+
+class SilverBuyInputView extends StatefulWidget {
+  final bool? skipMl;
+  final int? amount;
+  final AugmontSilverTransactionService augTxnService;
+  final SilverBuyViewModel model;
+
+  const SilverBuyInputView({
+    required this.model,
+    required this.augTxnService,
+    super.key,
+    this.skipMl,
+    this.amount,
+  });
+
+  @override
+  State<SilverBuyInputView> createState() => _SilverBuyInputViewState();
+}
+
+class _SilverBuyInputViewState extends State<SilverBuyInputView> {
+  @override
+  void initState() {
+    super.initState();
+    locator<BackButtonActions>().isTransactionCancelled = true;
+    AppState.type = InvestmentType.SILVER;
+
+    AppState.amt = widget.model.silverBuyAmount?.toDouble();
+    AppState.onTap = () async {
+      unawaited(AppState.backButtonDispatcher!.didPopRoute());
+
+      locator<AnalyticsService>().track(
+        eventName: AnalyticsEvents.saveInitiate,
+        properties: {
+          "investmentType": InvestmentType.SILVER.name,
+        },
+      );
+      if (widget.model.isIntentFlow) {
+        unawaited(
+          BaseUtil.openModalBottomSheet(
+            isBarrierDismissible: true,
+            backgroundColor: const Color(0xff1A1A1A),
+            addToScreenStack: true,
+            isScrollControlled: true,
+            content: SilverBreakdownView(
+              model: widget.model,
+              showBreakDown:
+                  AppConfig.getValue(AppConfigKey.payment_brief_view),
+            ),
+          ),
+        );
+      } else {
+        if (!widget.augTxnService.isSilverBuyInProgress) {
+          await widget.model.initiateBuy();
+        }
+      }
+    };
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final AnalyticsService analyticsService = locator<AnalyticsService>();
+    return Stack(
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            SizedBox(height: SizeConfig.fToolBarHeight / 2),
+            RechargeModalSheetAppBar(
+              txnService: widget.augTxnService,
+              trackCloseTapped: () {
+                analyticsService.track(
+                  eventName: AnalyticsEvents.savePageClosed,
+                  properties: {
+                    "Amount entered": widget.model.silverAmountController!.text,
+                    "Grams of silver": widget.model.silverAmountInGrams,
+                    "Asset": 'Silver',
+                    "Coupon Applied": widget.model.appliedCoupon != null
+                        ? widget.model.appliedCoupon!.code
+                        : "Not Applied",
+                  },
+                );
+                if (locator<BackButtonActions>().isTransactionCancelled) {
+                  if (!AppState.isRepeated) {
+                    locator<BackButtonActions>()
+                        .showWantToCloseTransactionBottomSheet(
+                            num.tryParse(
+                                  widget.model.silverAmountController?.text ??
+                                      "0",
+                                )?.round() ??
+                                0,
+                            InvestmentType.SILVER, () {
+                      widget.model.initiateBuy();
+                      AppState.backButtonDispatcher!.didPopRoute();
+                    });
+                    AppState.isRepeated = true;
+                  } else {
+                    AppState.backButtonDispatcher!.didPopRoute();
+                  }
+                  return;
+                } else {
+                  AppState.backButtonDispatcher!.didPopRoute();
+                }
+              },
+            ),
+            if (widget.model.animationController != null)
+              EnterAmountView(
+                model: widget.model,
+                txnService: widget.augTxnService,
+              ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+            Container(
+              height: 1,
+              margin: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins,
+              ),
+              color: UiConstants.kModalSheetSecondaryBackgroundColor
+                  .withOpacity(0.2),
+            ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+            // if (widget.model.showCoupons)
+            SilverCouponWidget(
+              widget.model.couponList,
+              widget.model,
+              onTap: (coupon) {
+                widget.model.applyCoupon(coupon.code, false);
+              },
+            ),
+            const Spacer(),
+            widget.augTxnService.isSilverBuyInProgress
+                ? Container(
+                    height: SizeConfig.screenWidth! * 0.1556,
+                    alignment: Alignment.center,
+                    width: SizeConfig.screenWidth! * 0.7,
+                    child: const LinearProgressIndicator(
+                      color: UiConstants.primaryColor,
+                      backgroundColor: UiConstants.kDarkBackgroundColor,
+                    ),
+                  )
+                : widget.model.silverRates == null
+                    ? const SizedBox()
+                    : BuyNavBar(
+                        model: widget.model,
+                        onTap: () async {
+                          if (!widget.augTxnService.isSilverBuyInProgress) {
+                            FocusScope.of(context).unfocus();
+                            await widget.model.initiateBuy();
+                          }
+                        },
+                      ),
+          ],
+        ),
+        CustomKeyboardSubmitButton(
+          onSubmit: () => widget.model.buyFieldNode.unfocus(),
+        ),
+      ],
+    );
+  }
+}

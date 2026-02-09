@@ -1,21 +1,18 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
+import 'package:felloapp/core/model/aug_silver_rates_model.dart';
 import 'package:felloapp/core/model/deposit_response_model.dart';
-import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/repository/report_repo.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/augmont_invoice_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+// import 'package:felloapp/core/service/payments/silver_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
@@ -31,25 +28,30 @@ import 'package:flutter/material.dart';
 class AugmontService extends ChangeNotifier {
   final Log log = const Log('AugmontService');
   final CustomLogger _logger = locator<CustomLogger>();
-  final ApiPath _apiPaths = locator<ApiPath>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
 
   final InvestmentActionsRepository _investmentActionsRepository =
       locator<InvestmentActionsRepository>();
 
   final DBModel _dbModel = locator<DBModel>();
-  final BaseUtil _baseProvider = locator<BaseUtil>();
   final UserService _userService = locator<UserService>();
-  final UserCoinService _userCoinService = locator<UserCoinService>();
   final AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
-  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
+  
+  // final AugmontSilverTransactionService _augSilverTxnService =
+  //  locator<AugmontSilverTransactionService>();
+
   S locale = locator<S>();
-  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   List<String> _sellingReasons = [];
   String _selectedReasonForSelling = '';
 
-  ValueChanged<UserTransaction>? _augmontTxnProcessListener;
+  // ValueChanged<UserTransaction>? _augmontTxnProcessListener;
+  // final BaseUtil _baseProvider = locator<BaseUtil>();
+  // final ApiPath _apiPaths = locator<ApiPath>();
+  // final UserCoinService _userCoinService = locator<UserCoinService>();
+  // final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
+  // final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  
   // final String defaultBaseUri =
   //     'https://jg628sk4s2.execute-api.ap-south-1.amazonaws.com/prod';
   // String? _baseUri;
@@ -91,6 +93,18 @@ class AugmontService extends ChangeNotifier {
       return null;
     } else {
       return AugmontRates.fromMap(response.model!);
+    }
+  }
+
+  Future<AugmontSilverRates?> getSilverRates() async {
+    if (!isInit()) await _init();
+    ApiResponse<Map<String, dynamic>> response =
+        await _investmentActionsRepository.getSilverRates();
+    if (response.code == 400) {
+      _logger.e(response.errorMessage);
+      return null;
+    } else {
+      return AugmontSilverRates.fromMap(response.model!);
     }
   }
 
@@ -171,20 +185,20 @@ class AugmontService extends ChangeNotifier {
     }
   }
 
-  completeTransaction() {
-    // _baseProvider.currentAugmontTxn = null;
-    _augmontTxnProcessListener = null;
+  // completeTransaction() {
+  //   // _baseProvider.currentAugmontTxn = null;
+  //   _augmontTxnProcessListener = null;
 
-    _baseProvider.userMiniTxnList = null;
-    _baseProvider.hasMoreTransactionListDocuments = true;
-  }
+  //   _baseProvider.userMiniTxnList = null;
+  //   _baseProvider.hasMoreTransactionListDocuments = true;
+  // }
 
   double getTaxOnAmount(double amount, double taxRate) {
     return BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
   }
 
   double getGoldQuantityFromTaxedAmount(double amount, double rate) {
-    return BaseUtil.digitPrecision((amount / rate), 4, false);
+    return BaseUtil.digitPrecision(amount / rate, 4, false);
   }
 
   double getGoldQuantityFromSellAmount(double amount, double rate) {

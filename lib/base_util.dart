@@ -37,6 +37,7 @@ import 'package:felloapp/ui/modalsheets/confirm_exit_modal.dart';
 import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_view.dart';
+import 'package:felloapp/ui/pages/finance/augmont/silver_buy/silver_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
@@ -387,6 +388,43 @@ class BaseUtil extends ChangeNotifier {
       );
       return;
     }
+
+    if (fullPager && investmentType == InvestmentType.SILVER) {
+      AppState.delegate!.appState.currentAction = PageAction(
+        page: AssetSelectionViewConfig,
+        state: PageState.addWidget,
+        widget: GoldBuyView(
+          amount: parsedAmount ?? amt,
+          initialCoupon: coupon,
+          gms: parsedGrams ?? gms,
+          skipMl: isSkipMl ?? false,
+          entryPoint: entryPoint,
+          quickCheckout: quickCheckout,
+        ),
+      );
+      return;
+    }
+
+    if (investmentType == InvestmentType.SILVER) {
+      BaseUtil.openModalBottomSheet(
+        addToScreenStack: true,
+        enableDrag: false,
+        hapticVibrate: true,
+        isBarrierDismissible: false,
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        content: SilverBuyView(
+          amount: parsedAmount ?? amt,
+          initialCoupon: coupon,
+          gms: parsedGrams ?? gms,
+          skipMl: isSkipMl ?? false,
+          entryPoint: entryPoint,
+          quickCheckout: quickCheckout,
+        ),
+      );
+      return;
+    }
+    
   }
 
   static void openFloBuySheet({

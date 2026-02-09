@@ -1,0 +1,220 @@
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+class CurrentPriceWidget extends StatefulWidget {
+  // final AugmontGoldBuyViewModel model;
+  // CurrentPriceWidget({this.model});
+  final Function? fetchSilverRates;
+  final double? silverprice;
+  final bool? isFetching;
+  final bool mini;
+
+  const CurrentPriceWidget({super.key, 
+    this.fetchSilverRates,
+    this.silverprice,
+    this.isFetching,
+    this.mini = false,
+  });
+
+  @override
+  _CurrentPriceWidgetState createState() => _CurrentPriceWidgetState();
+}
+
+class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
+    with SingleTickerProviderStateMixin {
+  late Animation<Duration> animation;
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    controller =
+        AnimationController(vsync: this, duration: const Duration(minutes: 3));
+    animation =
+        Tween<Duration>(begin: const Duration(minutes: 3), end: Duration.zero)
+            .animate(controller)
+          ..addListener(() {
+            setState(() {});
+          })
+          ..addStatusListener(
+            (status) {
+              print(status.toString());
+              if (status == AnimationStatus.completed) {
+                widget.fetchSilverRates!();
+                controller.reset();
+                controller.forward();
+              } else if (status == AnimationStatus.dismissed) {
+                controller.forward();
+              }
+            },
+          );
+
+    controller.forward();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    animation.removeListener(() {});
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    S locale = S.of(context);
+    return widget.mini
+        ? Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              widget.isFetching!
+                  ? SpinKitThreeBounce(
+                      size: SizeConfig.body2,
+                      color: UiConstants.primaryColor,
+                    )
+                  : // SizedBox(height: SizeConfig.padding4),
+                  Text(" ₹${widget.silverprice!.toStringAsFixed(2)}/gm",
+                      style: TextStyles.sourceSans.body4.colour(
+                          UiConstants.kModalSheetMutedTextBackgroundColor)),
+              Text(
+                " (${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}s)",
+                style: TextStyles.body4
+                    .colour(UiConstants.kModalSheetMutedTextBackgroundColor),
+              ),
+            ],
+          )
+        : Container(
+            height: SizeConfig.screenWidth! * 0.246,
+            width: SizeConfig.screenWidth,
+            decoration: BoxDecoration(
+              color: UiConstants.primaryColor.withOpacity(0.1),
+              border: Border.all(width: 1, color: UiConstants.primaryColor),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding24,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      locale.currentPrice,
+                      style: TextStyles.body1.colour(UiConstants.primaryColor),
+                    ),
+                    const Spacer(),
+                    widget.isFetching!
+                        ? SpinKitThreeBounce(
+                            size: SizeConfig.body2,
+                            color: UiConstants.primaryColor,
+                          )
+                        : Text(
+                            "₹ ${widget.silverprice!.toStringAsFixed(1)}/gm",
+                            style: TextStyles.body1
+                                .colour(UiConstants.primaryColor)
+                                .bold,
+                          )
+                  ],
+                ),
+                SizedBox(
+                  height: SizeConfig.padding8,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      locale.validFor,
+                      style: TextStyles.body4
+                          .colour(UiConstants.primaryColor)
+                          .light,
+                    ),
+                    Text(
+                      '${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}',
+                      style: TextStyles.body4
+                          .colour(UiConstants.primaryColor)
+                          .bold,
+                    )
+                  ],
+                )
+              ],
+            ),
+          );
+  }
+}
+
+class NewCurrentSilverPriceWidget extends StatefulWidget {
+  const NewCurrentSilverPriceWidget({
+    this.fetchSilverRates,
+    this.silverprice,
+    this.isFetching,
+    this.mini = false,
+    this.textColor,
+    Key? key,
+  }) : super(key: key);
+  final Function? fetchSilverRates;
+  final double? silverprice;
+  final bool? isFetching;
+  final bool mini;
+  final Color? textColor;
+
+  @override
+  State<NewCurrentSilverPriceWidget> createState() =>
+      _NewCurrentSilverPriceWidgetState();
+}
+
+class _NewCurrentSilverPriceWidgetState extends 
+State<NewCurrentSilverPriceWidget>
+    with SingleTickerProviderStateMixin {
+  late Animation<Duration> animation;
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    controller =
+        AnimationController(vsync: this, duration: const Duration(minutes: 3));
+    animation =
+        Tween<Duration>(begin: const Duration(minutes: 3), end: Duration.zero)
+            .animate(controller)
+          ..addListener(() {
+            setState(() {});
+          })
+          ..addStatusListener(
+            (status) {
+              print(status.toString());
+              if (status == AnimationStatus.completed) {
+                widget.fetchSilverRates!();
+                controller.reset();
+                controller.forward();
+              } else if (status == AnimationStatus.dismissed) {
+                controller.forward();
+              }
+            },
+          );
+
+    controller.forward();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    animation.removeListener(() {});
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.mini
+        ? Text(
+            " (${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}s)",
+            style: TextStyles.sourceSans.body4.colour(
+              widget.textColor ?? UiConstants.grey1,
+            ),
+          )
+        : Container();
+  }
+}

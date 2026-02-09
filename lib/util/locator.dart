@@ -55,6 +55,7 @@ import 'package:felloapp/core/service/payments/augmont_transaction_service.dart'
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
+import 'package:felloapp/core/service/payments/silver_transaction_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/advisor/bloc/advisor_bloc.dart';
@@ -79,6 +80,7 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_details_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_vm.dart';
+import 'package:felloapp/ui/pages/finance/augmont/silver_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_vm.dart';
@@ -139,6 +141,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(BankAndPanService.new);
   locator.registerLazySingleton(ReferralService.new);
   locator.registerLazySingleton(BackButtonActions.new);
+  
   //Model Services
   locator.registerLazySingleton(BaseUtil.new);
   locator.registerLazySingleton(AppState.new);
@@ -146,6 +149,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(UserService.new);
   locator.registerLazySingleton(UserCoinService.new);
   locator.registerLazySingleton(AugmontTransactionService.new);
+  locator.registerLazySingleton(AugmontSilverTransactionService.new);
   locator.registerLazySingleton(LendboxTransactionService.new);
   locator.registerLazySingleton(TxnHistoryService.new);
   locator.registerLazySingleton(TambolaService.new);
@@ -241,6 +245,9 @@ Future<void> setupLocator() async {
   locator.registerFactory(BankDetailsViewModel.new);
   locator.registerFactory(GoldBuyViewModel.new);
   locator.registerFactory(GoldSellViewModel.new);
+  locator.registerFactory(SilverBuyViewModel.new);
+  // locator.registerFactory(SilverSellViewModel.new);
+
   // locator.registerFactory(TambolaHomeViewModel.new);
   locator.registerFactory(TambolaHomeTicketsViewModel.new);
   locator.registerFactory(TambolaHomeDetailsViewModel.new);

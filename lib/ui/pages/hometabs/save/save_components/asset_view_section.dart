@@ -96,7 +96,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
         return FaqsType.gold;
       case InvestmentType.GOLDPRO:
         return FaqsType.goldPro;
-      case InvestmentType.AUGSILVD999:
+      case InvestmentType.SILVER:
         return FaqsType.silver;
       case InvestmentType.LENDBOXP2P:
         return FaqsType.flo;

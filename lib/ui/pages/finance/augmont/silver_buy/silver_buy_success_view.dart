@@ -1,20 +1,12 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/core/service/payments/silver_transaction_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
-import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/ui/pages/finance/transaction_faqs.dart';
-import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
@@ -28,23 +20,21 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-class GoldBuySuccessView extends StatefulWidget {
-  const GoldBuySuccessView({super.key});
+class SilverBuySuccessView extends StatefulWidget {
+  const SilverBuySuccessView({super.key});
 
   @override
-  State<GoldBuySuccessView> createState() => _GoldBuySuccessViewState();
+  State<SilverBuySuccessView> createState() => _SilverBuySuccessViewState();
 }
 
-class _GoldBuySuccessViewState extends State<GoldBuySuccessView> {
-  final AugmontTransactionService _augTxnService =
-      locator<AugmontTransactionService>();
+class _SilverBuySuccessViewState extends State<SilverBuySuccessView> {
+  final AugmontSilverTransactionService _augTxnService =
+      locator<AugmontSilverTransactionService>();
 
   @override
   void initState() {
     super.initState();
     AppState.blockNavigation();
-    locator<TambolaService>().getBestTambolaTickets(forced: true);
-    Future.delayed(const Duration(seconds: 3), showGoldProNudgeIfEligible);
   }
 
   String _getButtonLabel(S locale, bool hasSuperFelloInStack) {
@@ -321,7 +311,7 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView> {
                   ),
                 ),
                 const TransactionFAQSection(
-                  faqsType: FaqsType.digitalGold,
+                  faqsType: FaqsType.silver,
                 ),
                 const AutopaySetupWidget(),
                 SizedBox(
@@ -354,191 +344,6 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView> {
     );
   }
 
-  void showGoldProNudgeIfEligible() {
-    if ((locator<UserService>().userFundWallet?.augGoldQuantity ?? 0) >
-            AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0]
-                .toDouble() &&
-        locator<UserService>().userFundWallet!.wAugFdQty == 0) {
-      BaseUtil.openModalBottomSheet(
-        isBarrierDismissible: true,
-        addToScreenStack: true,
-        hapticVibrate: true,
-        content: const GoldProEligibleModalSheet(),
-      );
-    }
-  }
-}
-
-class GoldProEligibleModalSheet extends StatelessWidget {
-  const GoldProEligibleModalSheet({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      child: Transform.scale(
-        scale: 1.02,
-        child: Container(
-          height: SizeConfig.screenWidth! * 0.8,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: UiConstants.KGoldProPrimaryDark,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(SizeConfig.roundness24),
-              topRight: Radius.circular(SizeConfig.roundness24),
-            ),
-            color: UiConstants.kGoldProBgColor,
-          ),
-          child: Stack(
-            children: [
-              const Opacity(
-                opacity: 0.5,
-                child: GoldShimmerWidget(size: ShimmerSizeEnum.large),
-              ),
-              Container(
-                width: SizeConfig.screenWidth,
-                margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(height: SizeConfig.padding8),
-                    Text(
-                      "You are eligible for",
-                      style: TextStyles.rajdhaniM.body2.colour(Colors.white),
-                    ),
-                    SizedBox(height: SizeConfig.padding8),
-                    Text(
-                      "${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Returns every year with Gold Pro",
-                      style: TextStyles.rajdhaniM.title3
-                          .colour(UiConstants.kGoldProPrimary),
-                      textAlign: TextAlign.center,
-                    ),
-                    // SizedBox(height: SizeConfig.padding14),
-                    Expanded(
-                      child: Transform.scale(
-                        scale: 1.6,
-                        child: SvgPicture.asset(
-                          Assets.goldAsset,
-                        ),
-                      ),
-                    ),
-                    // SizedBox(height: SizeConfig.padding14),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          flex: 5,
-                          child: MaterialButton(
-                            height: SizeConfig.padding44,
-                            shape: RoundedRectangleBorder(
-                              side: const BorderSide(
-                                  width: 1.5, color: Colors.white),
-                              borderRadius:
-                                  BorderRadius.circular(SizeConfig.roundness5),
-                            ),
-                            child: Text(
-                              "KNOW MORE",
-                              style: TextStyles.rajdhaniB.body1
-                                  .colour(Colors.white),
-                            ),
-                            onPressed: () {
-                              AppState.isRepeated = true;
-                              AppState.unblockNavigation();
-                              AppState.backButtonDispatcher!.didPopRoute();
-                              AppState.backButtonDispatcher!.didPopRoute();
-                              AppState.delegate!
-                                  .parseRoute(Uri.parse('goldProDetails'));
-                              locator<AnalyticsService>().track(
-                                eventName: AnalyticsEvents
-                                    .paymentSuccessGoldProUpsellCardTapped,
-                                properties: {
-                                  'cta tapped': "KNOW MORE",
-                                  'current Gold Balance': locator<UserService>()
-                                          .userFundWallet
-                                          ?.augGoldQuantity ??
-                                      0
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                        SizedBox(width: SizeConfig.padding12),
-                        Expanded(
-                          flex: 5,
-                          child: Stack(
-                            children: [
-                              MaterialButton(
-                                minWidth: SizeConfig.padding156,
-                                color: Colors.white,
-                                height: SizeConfig.padding44,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness5),
-                                ),
-                                child: Text(
-                                  "SWITCH TO GOLD PRO",
-                                  style: TextStyles.rajdhaniB.body1
-                                      .colour(Colors.black),
-                                ),
-                                onPressed: () {
-                                  AppState.isRepeated = true;
-                                  AppState.unblockNavigation();
-                                  AppState.backButtonDispatcher!.didPopRoute();
-                                  AppState.backButtonDispatcher!.didPopRoute();
-                                  BaseUtil().openGoldProBuyView(
-                                      location: "Payment Success Upsell");
-                                  locator<AnalyticsService>().track(
-                                    eventName: AnalyticsEvents
-                                        .paymentSuccessGoldProUpsellCardTapped,
-                                    properties: {
-                                      'cta tapped': "SWITCH TO GOLD PRO",
-                                      'current Gold Balance':
-                                          locator<UserService>()
-                                                  .userFundWallet
-                                                  ?.augGoldQuantity ??
-                                              0
-                                    },
-                                  );
-                                },
-                              ),
-                              Transform.translate(
-                                offset: Offset(0, -SizeConfig.padding12),
-                                child: Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Container(
-                                    margin: EdgeInsets.only(
-                                      left: SizeConfig.padding16,
-                                    ),
-                                    width: SizeConfig.screenWidth! * 0.39,
-                                    child: AvailabilityOfferWidget(
-                                        color: UiConstants.kBlogTitleColor,
-                                        text:
-                                            "*${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Returns*"),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      onWillPop: () async {
-        AppState.removeOverlay();
-        return Future.value(true);
-      },
-    );
-  }
 }
 
 class WinningChips extends StatelessWidget {
@@ -649,7 +454,7 @@ class WinningChips extends StatelessWidget {
 }
 
 class AutopaySetupWidget extends StatelessWidget {
-  const AutopaySetupWidget({Key? key}) : super(key: key);
+  const AutopaySetupWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

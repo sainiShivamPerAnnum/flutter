@@ -32,4 +32,26 @@ class ClientCommsRepo extends BaseRepo {
       logger.e(e.toString());
     }
   }
+
+   Future<void> subscribeSilverPriceAlert(int flag) async {
+    try {
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
+
+      var map = {
+        "flag": flag.toString(),
+      };
+
+      await APIService.instance.postData(
+        ApiPath.subscribeSilverPriceAlert,
+        cBaseUrl: _baseUrl,
+        queryParams: map,
+        headers: {'fcmToken': fcmToken ?? ""},
+        apiName: '$_clientComm/subscribeSilverAlerts',
+      );
+
+      // logger.d(response);
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
 }

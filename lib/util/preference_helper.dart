@@ -32,6 +32,7 @@ class PreferenceHelper {
   static const APP_RATING_SUBMITTED = 'app_rating_submitted';
   static const NEW_INSTALL_POPUP = "new_install_popup";
   static const GOLD_PRICE_SUBSCRIBE = "gold_price_subscribe";
+  static const SILVER_PRICE_SUBSCRIBE = "silver_price_subscribe";
   static const CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID =
       "referralPersistentNotificationId";
   static const CACHE_TICKETS_LAST_SPIN_TIMESTAMP =

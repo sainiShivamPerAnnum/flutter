@@ -9,6 +9,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
+import 'package:felloapp/core/service/payments/silver_transaction_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/expert/bloc/cart_bloc.dart';
@@ -94,6 +95,9 @@ class MyApp extends HookWidget {
           ChangeNotifierProvider(create: (_) => locator<GlobalTabController>()),
           ChangeNotifierProvider(
             create: (_) => locator<AugmontTransactionService>(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => locator<AugmontSilverTransactionService>(),
           ),
           ChangeNotifierProvider(
             create: (_) => locator<LendboxTransactionService>(),

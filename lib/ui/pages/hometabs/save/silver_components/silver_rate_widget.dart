@@ -1,6 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/repository/clientComms_repo.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/finance/augmont/silver_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/util/locator.dart';
@@ -19,7 +19,7 @@ class SilverRateWidget extends StatefulWidget {
 
 class SilverRateWidgetState extends State<SilverRateWidget> {
   bool switchValue =
-      PreferenceHelper.getBool(PreferenceHelper.GOLD_PRICE_SUBSCRIBE);
+      PreferenceHelper.getBool(PreferenceHelper.SILVER_PRICE_SUBSCRIBE);
 
   final _repo = locator<ClientCommsRepo>();
 
@@ -28,9 +28,9 @@ class SilverRateWidgetState extends State<SilverRateWidget> {
       switchValue = newValue;
     });
 
-    _repo.subscribeGoldPriceAlert(switchValue ? 1 : 0);
+    _repo.subscribeSilverPriceAlert(switchValue ? 1 : 0);
 
-    PreferenceHelper.setBool(PreferenceHelper.GOLD_PRICE_SUBSCRIBE, newValue);
+    PreferenceHelper.setBool(PreferenceHelper.SILVER_PRICE_SUBSCRIBE, newValue);
 
     if (switchValue) {
       BaseUtil.showPositiveAlert(
@@ -41,8 +41,8 @@ class SilverRateWidgetState extends State<SilverRateWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseView<GoldBuyViewModel>(onModelReady: (model) {
-      model.fetchGoldRates();
+    return BaseView<SilverBuyViewModel>(onModelReady: (model) {
+      model.fetchSilverRates();
     }, builder: (ctx, model, child) {
       return Container(
           width: SizeConfig.screenWidth,
@@ -71,22 +71,22 @@ class SilverRateWidgetState extends State<SilverRateWidget> {
                   const Spacer(),
                   Row(
                     children: [
-                      model.isGoldRateFetching
+                      model.isSilverRateFetching
                           ? SpinKitThreeBounce(
                               size: SizeConfig.body2,
                               color: Colors.white,
                             )
                           : Text(
-                              "₹ ${(model.goldRates != null ? model.goldRates!.goldBuyPrice : 0.0)?.toStringAsFixed(2)}/gm",
+                              "₹ ${(model.silverRates != null ? model.silverRates!.silverBuyPrice : 0.0)?.toStringAsFixed(2)}/gm",
                               style: TextStyles.sourceSansSB.body1
                                   .colour(Colors.white),
                             ),
                       NewCurrentGoldPriceWidget(
-                        fetchGoldRates: model.fetchGoldRates,
-                        goldprice: model.goldRates != null
-                            ? model.goldRates!.goldBuyPrice
+                        fetchGoldRates: model.fetchSilverRates,
+                        goldprice: model.silverRates != null
+                            ? model.silverRates!.silverBuyPrice
                             : 0.0,
-                        isFetching: model.isGoldRateFetching,
+                        isFetching: model.isSilverRateFetching,
                         mini: true,
                         textColor: Colors.white,
                       ),
@@ -109,7 +109,7 @@ class SilverRateWidgetState extends State<SilverRateWidget> {
                   AppSwitch(
                     onToggle: handleToggle,
                     value: switchValue,
-                    isLoading: model.isGoldRateFetching,
+                    isLoading: model.isSilverRateFetching,
                     height: SizeConfig.padding28,
                     width: SizeConfig.padding46,
                     toggleSize: SizeConfig.padding20,

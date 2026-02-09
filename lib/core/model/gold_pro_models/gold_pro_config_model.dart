@@ -68,13 +68,13 @@ class InterestBreakDown {
         json['fixed'] != null ? Fixed.fromJson(json['fixed']) : Fixed.base();
     extra =
         json['extra'] != null ? Fixed.fromJson(json['extra']) : Fixed.base();
-    subText = json['subText'] ?? "100K + Users are enjoying 4.5% Extra Gold";
+    subText = json['subText'] ?? "100K + Users are enjoying 3.5% Extra Gold";
   }
 
   InterestBreakDown.base() {
     fixed = Fixed.base();
     extra = Fixed.base();
-    subText = "100K + Users are enjoying 4.5% Extra Gold";
+    subText = "100K + Users are enjoying 3.5% Extra Gold";
   }
 }
 

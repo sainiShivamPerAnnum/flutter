@@ -23,6 +23,7 @@ import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_rate_graph.dart';
+import 'package:felloapp/ui/pages/hometabs/save/silver_components/silver_rate_graph.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -44,6 +45,7 @@ class GetterRepository extends BaseRepo {
       : 'https://d11q4cti75qmcp.cloudfront.net/';
 
   Map? goldChartData;
+  Map? silverChartData;
 
   Future<ApiResponse> getStatisticsByFreqGameTypeAndCode({
     String? type,
@@ -141,7 +143,7 @@ class GetterRepository extends BaseRepo {
         ),
       );
     } catch (e) {
-      return ApiResponse.withError('Something went wrong', 400);
+      return const ApiResponse.withError('Something went wrong', 400);
     }
   }
 
@@ -201,7 +203,7 @@ class GetterRepository extends BaseRepo {
       );
     } catch (e) {
       log(e.toString());
-      return ApiResponse.withError('Something went wrong', 400);
+      return const ApiResponse.withError('Something went wrong', 400);
     }
   }
 
@@ -222,7 +224,7 @@ class GetterRepository extends BaseRepo {
       return ApiResponse(model: winnerModel, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch statistics", 400);
+      return const ApiResponse.withError("Unable to fetch statistics", 400);
     }
   }
 
@@ -256,7 +258,7 @@ class GetterRepository extends BaseRepo {
           model: [augChips, lbChips, subComboModelData, minMaxInfo], code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch statistics", 400);
+      return const ApiResponse.withError("Unable to fetch statistics", 400);
     }
   }
 
@@ -282,7 +284,7 @@ class GetterRepository extends BaseRepo {
     } catch (e) {
       logger.e(e.toString());
       print("Test123 ${e.toString()}");
-      return ApiResponse.withError("Unable to fetch promos", 400);
+      return const ApiResponse.withError("Unable to fetch promos", 400);
     }
   }
 
@@ -335,7 +337,7 @@ class GetterRepository extends BaseRepo {
       );
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch stories", 400);
+      return const ApiResponse.withError("Unable to fetch stories", 400);
     }
   }
 
@@ -351,7 +353,7 @@ class GetterRepository extends BaseRepo {
           model: response["data"]["earnMoreRewards"], code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch stories", 400);
+      return const ApiResponse.withError("Unable to fetch stories", 400);
     }
   }
 
@@ -368,7 +370,7 @@ class GetterRepository extends BaseRepo {
           code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch stories", 400);
+      return const ApiResponse.withError("Unable to fetch stories", 400);
     }
   }
 
@@ -412,7 +414,7 @@ class GetterRepository extends BaseRepo {
       );
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch stories", 400);
+      return const ApiResponse.withError("Unable to fetch stories", 400);
     }
   }
 
@@ -435,7 +437,7 @@ class GetterRepository extends BaseRepo {
       });
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch stories", 400);
+      return const ApiResponse.withError("Unable to fetch stories", 400);
     }
   }
 
@@ -458,7 +460,7 @@ class GetterRepository extends BaseRepo {
       });
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch stories", 400);
+      return const ApiResponse.withError("Unable to fetch stories", 400);
     }
   }
 
@@ -482,10 +484,64 @@ class GetterRepository extends BaseRepo {
     } catch (e) {
       logger.e(e.toString());
 
-      return ApiResponse.withError(
+      return const ApiResponse.withError(
         "Failed to fetch instant save card config",
         400,
       );
     }
   }
+
+  Future<ApiResponse<Map>> getSilverRatesGraphItems() async {
+    try {
+      if (silverChartData != null) {
+        return ApiResponse(model: silverChartData, code: 200);
+      }
+
+      return await _cacheService.cachedApi(
+        CacheKeys.SILVER_RATES,
+        TTL.ONE_WEEK,
+        () => APIService.instance.getData(
+          ApiPath.silverRatesGraph,
+          cBaseUrl: _baseUrl,
+          apiName: '$_getters/silverRateGraph',
+        ),
+        (response) {
+          final List rates = response["data"]["rates"];
+
+          final List<SilverChartData> chartData = [];
+
+          for (int i = 0; i < rates.length; i++) {
+            final double price = double.tryParse(rates[i]["rate"] ?? "0") ?? 0.0;
+            final double fixedPrice =
+                double.parse(price.toStringAsFixed(2));
+
+            chartData.add(
+              SilverChartData(
+                day: i,
+                price: fixedPrice,
+              ),
+            );
+          }
+
+          List<String> returnsList = [];
+          final Map returnsMap = response["data"]["returns"];
+
+          returnsMap.forEach(
+            (key, value) => returnsList.add(value),
+          );
+
+          final responseMap = {};
+          responseMap["chartDataList"] = chartData;
+          responseMap["returnsList"] = returnsList;
+          log("Silver Rate Data $responseMap");
+          silverChartData = responseMap;
+          return ApiResponse(model: silverChartData, code: 200);
+        },
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return const ApiResponse.withError("Unable to fetch stories", 400);
+    }
+  }
+
 }

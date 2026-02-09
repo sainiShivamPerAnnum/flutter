@@ -18,7 +18,7 @@ class SellText extends StatelessWidget {
       case InvestmentType.AUGGOLD99:
         title = locale.digitalGoldMailTitle;
         break;
-      case InvestmentType.AUGSILVD999:
+      case InvestmentType.SILVER:
         title = locale.digitalSilverMailTitle;
         break;
       case InvestmentType.LENDBOXP2P:

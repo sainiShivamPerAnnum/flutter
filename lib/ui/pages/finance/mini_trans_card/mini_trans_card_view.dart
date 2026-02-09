@@ -22,8 +22,7 @@ import 'package:provider/provider.dart';
 class MiniTransactionCard extends StatelessWidget {
   final InvestmentType investmentType;
 
-  const MiniTransactionCard({required this.investmentType, Key? key})
-      : super(key: key);
+  const MiniTransactionCard({required this.investmentType, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +44,9 @@ class MiniTransactionCard extends StatelessWidget {
                         (e) =>
                             e.subType == investmentType.name ||
                             e.subType ==
-                                UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD_FD,
+                                UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD_FD || 
+                            e.subType == 
+                                UserTransaction.TRAN_SUBTYPE_AUGMONT_SILVER,
                       )
                       .toList()
                   : [];

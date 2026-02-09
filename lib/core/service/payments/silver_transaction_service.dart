@@ -6,8 +6,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
-import 'package:felloapp/core/model/aug_gold_rates_model.dart';
-import 'package:felloapp/core/model/gold_pro_models/gold_pro_scheme_model.dart';
+import 'package:felloapp/core/model/aug_silver_rates_model.dart';
 import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
@@ -33,10 +32,9 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/services.dart';
 import 'package:upi_pay/upi_pay.dart';
-
 import 'transaction_service_mixin.dart';
 
-class AugmontTransactionService extends BaseTransactionService
+class AugmontSilverTransactionService extends BaseTransactionService
     with TransactionPredictionDefaultMixing {
   @override
   PaytmRepository get paytmRepo => _paytmRepo;
@@ -48,42 +46,34 @@ class AugmontTransactionService extends BaseTransactionService
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   final RazorpayService _razorpayService = locator<RazorpayService>();
+
   double? currentTxnGms = 0.0;
+  bool _isSilverBuyInProgress = false;
+  bool _isSilverSellInProgress = false;
+
   DepositFcmResponseModel? depositFcmResponseModel;
-  bool _isGoldBuyInProgress = false;
-  bool _isGoldSellInProgress = false;
-
-  GoldProSchemeModel? _goldProScheme;
-  GoldProSchemeModel? get goldProScheme => _goldProScheme;
-
-  set goldProScheme(GoldProSchemeModel? value) {
-    _goldProScheme = value;
-    notifyListeners();
-  }
-
-  TransactionState get currentTxnState => currentTransactionState;
   TransactionResponseModel? transactionResponseModel;
+  TransactionState get currentTxnState => currentTransactionState;
 
+  late SilverPurchaseDetails currentSilverPurchaseDetails;
+  bool get isSilverBuyInProgress => _isSilverBuyInProgress;
 
-  late GoldPurchaseDetails currentGoldPurchaseDetails;
-  bool get isGoldBuyInProgress => _isGoldBuyInProgress;
-
-  set isGoldBuyInProgress(bool value) {
-    _isGoldBuyInProgress = value;
+  set isSilverBuyInProgress(bool value) {
+    _isSilverBuyInProgress = value;
     notifyListeners();
   }
 
-  bool get isGoldSellInProgress => _isGoldSellInProgress;
-  set isGoldSellInProgress(bool value) {
-    _isGoldSellInProgress = value;
+  bool get isSilverSellInProgress => _isSilverSellInProgress;
+  set isSilverSellInProgress(bool value) {
+    _isSilverSellInProgress = value;
     notifyListeners();
   }
 
-  Future<void> initiateAugmontTransaction({
-    required GoldPurchaseDetails details,
+  Future<void> initiateAugmontSilverTransaction({
+    required SilverPurchaseDetails details,
   }) async {
-    currentGoldPurchaseDetails = details;
-    currentTxnAmount = details.goldBuyAmount;
+    currentSilverPurchaseDetails = details;
+    currentTxnAmount = details.silverBuyAmount;
 
     if ((currentTxnAmount ?? 0) >= Constants.mandatoryNetBankingThreshold) {
       return await processNBTransaction();
@@ -98,47 +88,39 @@ class AugmontTransactionService extends BaseTransactionService
     }
   }
 
-
   //6 -- UPI
   @override
   Future<void> processUpiTransaction() async {
-    isGoldBuyInProgress = true;
+    isSilverBuyInProgress = true;
     AppState.blockNavigation();
 
-    final amount = currentGoldPurchaseDetails.goldBuyAmount!;
-    final augmontRates = currentGoldPurchaseDetails.goldRates!;
+    final amount = currentSilverPurchaseDetails.silverBuyAmount!;
+    final augmontRates = currentSilverPurchaseDetails.silverRates!;
     double netTax = augmontRates.cgstPercent! + augmontRates.sgstPercent!;
-    currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
-
-    Map<String, dynamic>? augProMap = {};
-    if (currentGoldPurchaseDetails.isPro) {
-      augProMap["schemeId"] = goldProScheme!.id;
-      augProMap["leaseQty"] = currentGoldPurchaseDetails.leaseQty;
-    }
+    currentTxnGms = currentSilverPurchaseDetails.silverInGrams;
 
     final augMap = {
       "aBlockId": augmontRates.blockId.toString(),
-      "aLockPrice": augmontRates.goldBuyPrice,
+      "aLockPrice": augmontRates.silverBuyPrice,
       "aPaymode": 'RZP',
-      "aGoldInTxn": _getGoldQuantityFromTaxedAmount(
+      "aSilverInTxn": _getSilverQuantityFromTaxedAmount(
           BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax)),
-          augmontRates.goldBuyPrice!),
-      "aTaxedGoldBalance":
-          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax))
+          augmontRates.silverBuyPrice!,),
+      "aTaxedSilverBalance":
+          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax)),
     };
-    currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
+    currentTxnGms = currentSilverPurchaseDetails.silverInGrams;
     final txnResponse = await _paytmRepo.createTransaction(
       amount,
       augMap,
       {},
-      currentGoldPurchaseDetails.couponCode,
-      currentGoldPurchaseDetails.skipMl,
+      currentSilverPurchaseDetails.couponCode,
+      currentSilverPurchaseDetails.skipMl,
       '',
-      InvestmentType.AUGGOLD99,
-      currentGoldPurchaseDetails.upiChoice!.upiApplication.appName
+      InvestmentType.SILVER,
+      currentSilverPurchaseDetails.upiChoice!.upiApplication.appName
           .formatUpiAppName(),
-      currentGoldPurchaseDetails.isAutoLeaseChecked,
-      augProMap,
+      currentSilverPurchaseDetails.isAutoLeaseChecked,
     );
     if (txnResponse.isSuccess()) {
       currentTxnOrderId = txnResponse.model!.data!.txnId;
@@ -150,7 +132,7 @@ class AugmontTransactionService extends BaseTransactionService
               await BaseUtil.launchUrl(txnResponse.model!.data!.intent!);
           if (!res) {
             isIOSTxnInProgress = false;
-            isGoldBuyInProgress = false;
+            isSilverBuyInProgress = false;
             currentTransactionState = TransactionState.idle;
             AppState.unblockNavigation();
           }
@@ -158,12 +140,12 @@ class AugmontTransactionService extends BaseTransactionService
           const platform = MethodChannel("methodChannel/upiIntent");
           final result = await platform.invokeMethod('initiatePsp', {
             'redirectUrl': txnResponse.model!.data!.intent,
-            'packageName': currentGoldPurchaseDetails.upiChoice!.packageName
+            'packageName': currentSilverPurchaseDetails.upiChoice!.packageName
           });
           _logger.d("Result from initiatePsp: $result");
 
           if (result.toString().toLowerCase().contains('failure')) {
-            isGoldBuyInProgress = false;
+            isSilverBuyInProgress = false;
             currentTransactionState = TransactionState.idle;
 
             AppState.unblockNavigation();
@@ -171,7 +153,7 @@ class AugmontTransactionService extends BaseTransactionService
             return BaseUtil.showNegativeAlert(
                 "Transaction Cancelled", locale.tryLater);
           }
-          isGoldBuyInProgress = false;
+          isSilverBuyInProgress = false;
           currentTransactionState = TransactionState.ongoing;
           checkTransactionStatus();
         }
@@ -182,13 +164,13 @@ class AugmontTransactionService extends BaseTransactionService
         locator<BackButtonActions>().isTransactionCancelled = false;
 
         if (Platform.isAndroid) {
-          isGoldBuyInProgress = false;
+          isSilverBuyInProgress = false;
           currentTransactionState = TransactionState.ongoing;
           checkTransactionStatus();
         }
       }
     } else {
-      isGoldBuyInProgress = false;
+      isSilverBuyInProgress = false;
       currentTransactionState = TransactionState.idle;
 
       AppState.unblockNavigation();
@@ -202,45 +184,40 @@ class AugmontTransactionService extends BaseTransactionService
 
   @override
   Future<void> processNBTransaction() async {
-    isGoldBuyInProgress = true;
+    isSilverBuyInProgress = true;
     AppState.blockNavigation();
 
-    final amount = currentGoldPurchaseDetails.goldBuyAmount!;
-    final augmontRates = currentGoldPurchaseDetails.goldRates!;
+    final amount = currentSilverPurchaseDetails.silverBuyAmount!;
+    final augmontRates = currentSilverPurchaseDetails.silverRates!;
     double netTax = augmontRates.cgstPercent! + augmontRates.sgstPercent!;
-    currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
+    currentTxnGms = currentSilverPurchaseDetails.silverInGrams;
 
-    Map<String, dynamic>? augProMap = {};
-    if (currentGoldPurchaseDetails.isPro) {
-      augProMap["schemeId"] = goldProScheme!.id;
-      augProMap["leaseQty"] = currentGoldPurchaseDetails.leaseQty;
-    }
-
+    
     final augMap = {
       "aBlockId": augmontRates.blockId.toString(),
-      "aLockPrice": augmontRates.goldBuyPrice,
+      "aLockPrice": augmontRates.silverBuyPrice,
       "aPaymode": "NET_BANKING",
-      "aGoldInTxn": _getGoldQuantityFromTaxedAmount(
+      "aSilverInTxn": _getSilverQuantityFromTaxedAmount(
           BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax)),
-          augmontRates.goldBuyPrice!),
-      "aTaxedGoldBalance":
+          augmontRates.silverBuyPrice!),
+      "aTaxedSilverBalance":
           BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax))
     };
 
-    currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
+    currentTxnGms = currentSilverPurchaseDetails.silverInGrams;
 
     final txnResponse = await _paytmRepo.createTransaction(
       amount,
       augMap,
       null, //lb map.
-      currentGoldPurchaseDetails.couponCode,
-      currentGoldPurchaseDetails.skipMl,
+      currentSilverPurchaseDetails.couponCode,
+      currentSilverPurchaseDetails.skipMl,
       '',
       InvestmentType.AUGGOLD99,
       null, //app use
 
-      currentGoldPurchaseDetails.isAutoLeaseChecked,
-      augProMap,
+      currentSilverPurchaseDetails.isAutoLeaseChecked,
+      {},
       'NET_BANKING', // pay-mode
     );
 
@@ -266,7 +243,7 @@ class AugmontTransactionService extends BaseTransactionService
 
       locator<BackButtonActions>().isTransactionCancelled = false;
     } else {
-      isGoldBuyInProgress = false;
+      isSilverBuyInProgress = false;
       currentTransactionState = TransactionState.idle;
 
       AppState.unblockNavigation();
@@ -282,66 +259,55 @@ class AugmontTransactionService extends BaseTransactionService
     isNetBankingInProgress = false;
     AppState.unblockNavigation();
     if (shouldPop) await AppState.backButtonDispatcher?.didPopRoute();
-    isGoldBuyInProgress = false;
+    isSilverBuyInProgress = false;
     currentTransactionState = TransactionState.ongoing;
     checkTransactionStatus();
     await Future.delayed(
-        const Duration(milliseconds: 200)); // to avoid frequent set state.
+        const Duration(milliseconds: 200),); // to avoid frequent set state.
     notifyListeners();
   }
 
   // RAZORPAY
   @override
   Future<void> processRazorpayTransaction() async {
-    isGoldBuyInProgress = true;
+    isSilverBuyInProgress = true;
     AppState.blockNavigation();
-    final amount = currentGoldPurchaseDetails.goldBuyAmount!;
-    final augmontRates = currentGoldPurchaseDetails.goldRates!;
+    final amount = currentSilverPurchaseDetails.silverBuyAmount!;
+    final augmontRates = currentSilverPurchaseDetails.silverRates!;
     double netTax = augmontRates.cgstPercent! + augmontRates.sgstPercent!;
-    currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
-    if (currentGoldPurchaseDetails.isPro && goldProScheme == null) {
-      isGoldBuyInProgress = false;
-      AppState.unblockNavigation();
-      BaseUtil.showNegativeAlert("Gold Scheme not available right now",
-          "Please try again after sometime");
-      return;
-    }
-    Map<String, dynamic>? augProMap = {};
-    if (currentGoldPurchaseDetails.isPro) {
-      augProMap["schemeId"] = goldProScheme!.id;
-      augProMap["leaseQty"] = currentGoldPurchaseDetails.leaseQty;
-    }
+    currentTxnGms = currentSilverPurchaseDetails.silverInGrams;
+   
 
     final augMap = {
       "aBlockId": augmontRates.blockId.toString(),
-      "aLockPrice": augmontRates.goldBuyPrice,
+      "aLockPrice": augmontRates.silverBuyPrice,
       "aPaymode": 'RZP',
-      "aGoldInTxn": _getGoldQuantityFromTaxedAmount(
+      "aSilverInTxn": _getSilverQuantityFromTaxedAmount(
           BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax)),
-          augmontRates.goldBuyPrice!),
-      "aTaxedGoldBalance":
+          augmontRates.silverBuyPrice!,
+        ),
+      "aTaxedSilverBalance":
           BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax))
     };
-    currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
+    currentTxnGms = currentSilverPurchaseDetails.silverInGrams;
 
     await _razorpayService.initiateRazorpayTxn(
-      amount: currentGoldPurchaseDetails.goldBuyAmount,
+      amount: currentSilverPurchaseDetails.silverBuyAmount,
       augMap: augMap,
       lbMap: {},
-      couponCode: currentGoldPurchaseDetails.couponCode,
+      couponCode: currentSilverPurchaseDetails.couponCode,
       email: _userService.baseUser!.email,
       mobile: _userService.baseUser!.mobile,
-      skipMl: currentGoldPurchaseDetails.skipMl,
-      investmentType: InvestmentType.AUGGOLD99,
-      goldProMap: augProMap,
+      skipMl: currentSilverPurchaseDetails.skipMl,
+      investmentType: InvestmentType.SILVER,
     );
 
-    isGoldBuyInProgress = false;
+    isSilverBuyInProgress = false;
   }
 
   @override
   Future<void> transactionResponseUpdate(
-      {List<String>? gtIds, double? amount}) async {
+      {List<String>? gtIds, double? amount,}) async {
     _logger.d("Polling response processing");
     try {
       //add this to augmontBuyVM
@@ -369,40 +335,6 @@ class AugmontTransactionService extends BaseTransactionService
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
-            if (currentGoldPurchaseDetails.isPro) {
-              if (txnStatus.data!.fd!.status ==
-                  Constants.GOLD_PRO_TXN_STATUS_ACTIVE) {
-                await locator<BaseUtil>().updateUser();
-                unawaited(_userService.getUserFundWalletData());
-                unawaited(_userService.updatePortFolio());
-                unawaited(
-                    _txnHistoryService.getGoldProTransactions(forced: true));
-                transactionResponseModel = value.model;
-                currentTxnTambolaTicketsCount = value.model!.data!.tickets!;
-                currentTxnScratchCardCount =
-                    value.model?.data?.gtIds?.length ?? 0;
-                if (value.model!.data != null &&
-                    value.model!.data!.goldInTxnBought != null &&
-                    value.model!.data!.goldInTxnBought! > 0) {
-                  currentTxnGms = value.model!.data!.goldInTxnBought;
-                }
-                unawaited(transactionResponseUpdate(
-                    gtIds: transactionResponseModel?.data?.gtIds ?? []));
-                AppState.unblockNavigation();
-              } else if (txnStatus.data!.fd!.status ==
-                  Constants.GOLD_PRO_TXN_STATUS_FAILED) {
-                AppState.unblockNavigation();
-                unawaited(transactionResponseUpdate(
-                    gtIds: transactionResponseModel?.data?.gtIds ?? []));
-                AppState.isGoldProBuyInProgress = false;
-                unawaited(
-                  AppState.backButtonDispatcher!.didPopRoute().then(
-                        (value) => showTransactionPendingDialog(
-                            transactionResponseModel?.data?.txnDisplayMsg),
-                      ),
-                );
-              }
-            } else {
               await locator<BaseUtil>().updateUser();
               unawaited(_userService.getUserFundWalletData());
               unawaited(_userService.updatePortFolio());
@@ -411,14 +343,13 @@ class AugmontTransactionService extends BaseTransactionService
               currentTxnScratchCardCount =
                   value.model?.data?.gtIds?.length ?? 0;
               if (value.model!.data != null &&
-                  value.model!.data!.goldInTxnBought != null &&
+                  value.model!.data!.goldInTxnBought != null && //todo changes new transaction model for silver
                   value.model!.data!.goldInTxnBought! > 0) {
                 currentTxnGms = value.model!.data!.goldInTxnBought;
               }
               unawaited(transactionResponseUpdate(
                   gtIds: transactionResponseModel?.data?.gtIds ?? []));
-            }
-            final upiChoice = currentGoldPurchaseDetails.upiChoice;
+            final upiChoice = currentSilverPurchaseDetails.upiChoice;
             if (upiChoice != null) {
               await PreferenceHelper.insertUsedPaymentIntent(
                 upiChoice.upiApplication.appName,
@@ -431,7 +362,7 @@ class AugmontTransactionService extends BaseTransactionService
           break;
         case Constants.TXN_STATUS_RESPONSE_FAILURE:
           AppState.unblockNavigation();
-          isGoldBuyInProgress = false;
+          isSilverBuyInProgress = false;
           currentTransactionState = TransactionState.idle;
           BaseUtil.showNegativeAlert(
             'Transaction failed',
@@ -442,8 +373,8 @@ class AugmontTransactionService extends BaseTransactionService
     }
   }
 
-  double _getGoldQuantityFromTaxedAmount(double amount, double rate) {
-    return BaseUtil.digitPrecision((amount / rate), 4, false);
+  double _getSilverQuantityFromTaxedAmount(double amount, double rate) {
+    return BaseUtil.digitPrecision(amount / rate, 4, false);
   }
 
   double _getTaxOnAmount(double amount, double taxRate) {
@@ -473,27 +404,26 @@ class AugmontTransactionService extends BaseTransactionService
   }
 }
 
-class GoldPurchaseDetails {
-  double? goldBuyAmount;
-  AugmontRates? goldRates;
+
+class SilverPurchaseDetails {
+  double? silverBuyAmount;
+  AugmontSilverRates? silverRates;
   String couponCode;
   bool skipMl;
-  double goldInGrams;
+  double silverInGrams;
   ApplicationMeta? upiChoice;
   double? leaseQty;
-  bool isPro;
   bool isIntentFlow;
   bool isAutoLeaseChecked;
 
-  GoldPurchaseDetails({
-    required this.goldBuyAmount,
-    required this.goldRates,
+  SilverPurchaseDetails({
+    required this.silverBuyAmount,
+    required this.silverRates,
     required this.couponCode,
     required this.skipMl,
-    required this.goldInGrams,
+    required this.silverInGrams,
     this.upiChoice,
     this.leaseQty,
-    this.isPro = false,
     this.isIntentFlow = false,
     this.isAutoLeaseChecked = true,
   });

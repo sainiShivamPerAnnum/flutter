@@ -1,35 +1,36 @@
 import 'package:felloapp/util/logger.dart';
 
-class AugmontRates {
-  static Log log = const Log('AugmontRates');
+class AugmontSilverRates {
+  static Log log = const Log('AugmontSilverRates');
   String? _blockId;
-  double? _goldBuyPrice;
-  double? _goldSellPrice;
-  double? _goldBuyGst;
+  double? _silverBuyPrice;
+  double? _silverSellPrice;
+  double? _silverBuyGst;
   double? _cgstPercent;
   double? _sgstPercent;
   double? _igstPercent;
 
-  AugmontRates(
+  AugmontSilverRates(
       this._blockId,
-      this._goldBuyPrice,
-      this._goldSellPrice,
-      this._goldBuyGst,
+      this._silverBuyPrice,
+      this._silverSellPrice,
+      this._silverBuyGst,
       this._cgstPercent,
       this._sgstPercent,
-      this._igstPercent);
+      this._igstPercent,
+    );
 
-  AugmontRates.fromMap(Map<String, dynamic> data)
+  AugmontSilverRates.fromMap(Map<String, dynamic> data)
       : this(
             data['blockId'] ?? '',
-            getDouble(data['rates']['gBuy']),
-            getDouble(data['rates']['gSell']),
-            getDouble(data['rates']['gBuyGst']),
+            getDouble(data['rates']['sBuy']),
+            getDouble(data['rates']['sSell']),
+            getDouble(data['rates']['sBuyGst']),
             getDouble(data['taxes'][0]['taxPerc']),
             getDouble(data['taxes'][1]['taxPerc']),
             getDouble(data['taxes'][2]['taxPerc']));
 
-  AugmontRates.base() : this('', 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  AugmontSilverRates.base() : this('', 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 
   static double getDouble(dynamic s) {
     if (s == null) {
@@ -40,10 +41,10 @@ class AugmontRates {
   }
 
   String? get blockId => _blockId;
+  double? get goldSellPrice => _silverSellPrice;
+  double? get silverBuyPrice => _silverBuyPrice;
+  double? get silverBuyGst => _silverBuyGst;
   double? get sgstPercent => _sgstPercent;
   double? get cgstPercent => _cgstPercent;
   double? get igstPercent => _igstPercent;
-  double? get goldBuyGst => _goldBuyGst;
-  double? get goldSellPrice => _goldSellPrice;
-  double? get goldBuyPrice => _goldBuyPrice;
 }
