@@ -28,12 +28,15 @@ class GoldProHero extends StatelessWidget {
           );
         } else if (goldQuantity <= 0) {
           return NewGoldProHero(model: model);
-        } else if (goldQuantity <=
+        } 
+        else if (goldQuantity <=
             AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0]
                 .toDouble()) {
           return ProgressGoldProHero(model: model);
-        } else {
-          return EligibleGoldProHero(model: model);
+        } 
+        else {
+          // return EligibleGoldProHero(model: model);
+          return const SizedBox();
         }
       },
     );

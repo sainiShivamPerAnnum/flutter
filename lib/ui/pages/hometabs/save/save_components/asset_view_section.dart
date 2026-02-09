@@ -284,8 +284,8 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                     ),
                                   ],
                                 ],
-                                if (widget.type == InvestmentType.AUGGOLD99)
-                                  const GoldProCard(),
+                                // if (widget.type == InvestmentType.AUGGOLD99)
+                                //   const GoldProCard(),
                                 if (!isNewUser)
                                   const AutosaveCard(
                                     investmentType: InvestmentType.AUGGOLD99,
@@ -576,51 +576,51 @@ class AssetBottomButtons extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: SizeConfig.padding12),
-                Expanded(
-                  flex: 6,
-                  child: Stack(
-                    children: [
-                      MaterialButton(
-                        key: const ValueKey('saveinGoldProButton'),
-                        minWidth: SizeConfig.padding156,
-                        color: Colors.white,
-                        height: SizeConfig.padding44,
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness5),
-                        ),
-                        child: Text(
-                          "SAVE IN GOLD PRO",
-                          style:
-                              TextStyles.rajdhaniB.body1.colour(Colors.black),
-                        ),
-                        onPressed: () {
-                          Haptic.vibrate();
-                          AppState.delegate!.parseRoute(
-                            Uri.parse('goldProDetails'),
-                          );
-                        },
-                      ),
-                      Transform.translate(
-                        offset: Offset(0, -SizeConfig.padding12),
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            margin: EdgeInsets.only(
-                              left: SizeConfig.padding20,
-                            ),
-                            width: SizeConfig.screenWidth! * 0.39,
-                            child: AvailabilityOfferWidget(
-                              color: UiConstants.kBlogTitleColor,
-                              text:
-                                  "*${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Returns*",
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+                // Expanded(
+                //   flex: 6,
+                //   child: Stack(
+                //     children: [
+                //       MaterialButton(
+                //         key: const ValueKey('saveinGoldProButton'),
+                //         minWidth: SizeConfig.padding156,
+                //         color: Colors.white,
+                //         height: SizeConfig.padding44,
+                //         shape: RoundedRectangleBorder(
+                //           borderRadius:
+                //               BorderRadius.circular(SizeConfig.roundness5),
+                //         ),
+                //         child: Text(
+                //           "SAVE IN GOLD PRO",
+                //           style:
+                //               TextStyles.rajdhaniB.body1.colour(Colors.black),
+                //         ),
+                //         onPressed: () {
+                //           Haptic.vibrate();
+                //           AppState.delegate!.parseRoute(
+                //             Uri.parse('goldProDetails'),
+                //           );
+                //         },
+                //       ),
+                //       Transform.translate(
+                //         offset: Offset(0, -SizeConfig.padding12),
+                //         child: Align(
+                //           alignment: Alignment.bottomCenter,
+                //           child: Container(
+                //             margin: EdgeInsets.only(
+                //               left: SizeConfig.padding20,
+                //             ),
+                //             width: SizeConfig.screenWidth! * 0.39,
+                //             child: AvailabilityOfferWidget(
+                //               color: UiConstants.kBlogTitleColor,
+                //               text:
+                //                   "*${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Returns*",
+                //             ),
+                //           ),
+                //         ),
+                //       )
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           )

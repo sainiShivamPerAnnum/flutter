@@ -39,6 +39,7 @@ class GoldInfoWidget extends StatelessWidget {
                 color: const Color(0xff1F2C65),
                 borderRadius: BorderRadius.vertical(
                   top: Radius.circular(SizeConfig.roundness16),
+                  bottom: Radius.circular(SizeConfig.roundness16),
                 ),
               ),
               padding: EdgeInsets.symmetric(
@@ -150,53 +151,53 @@ class GoldInfoWidget extends StatelessWidget {
                 ],
               ),
             ),
-            GestureDetector(
-              onTap: () {
-                Haptic.vibrate();
+            // GestureDetector(
+            //   onTap: () {
+            //     Haptic.vibrate();
 
-                final UserService userService = locator<UserService>();
-                if ((userService.userFundWallet?.augGoldQuantity ?? 0) > 0 &&
-                    (userService.userFundWallet?.augGoldQuantity ?? 0) < 2 &&
-                    (userService.userFundWallet?.wAugFdQty ?? 0.0) == 0) {
-                  BaseUtil().openRechargeModalSheet(
-                    investmentType: InvestmentType.AUGGOLD99,
-                    gms: BaseUtil.digitPrecision(
-                        AppConfig.getValue(
-                                AppConfigKey.goldProInvestmentChips)[0] -
-                            (userService.userFundWallet?.augGoldQuantity ?? 0),
-                        4,
-                        false),
-                  );
-                } else {
-                  AppState.delegate!.parseRoute(Uri.parse('goldProDetails'));
-                }
-                locator<AnalyticsService>().track(
-                  eventName: AnalyticsEvents.goldProEntryBelowBalanceTapped,
-                  properties: {
-                    'progress_bar_completed':
-                        (userService.userFundWallet?.augGoldQuantity ?? 0) > 2
-                            ? "YES"
-                            : (userService.userFundWallet?.augGoldQuantity ??
-                                    0) /
-                                2,
-                    "existing lease amount":
-                        userService.userPortfolio.augmont.fd.balance,
-                    "existing lease grams":
-                        userService.userFundWallet?.wAugFdQty ?? 0
-                  },
-                );
-              },
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: UiConstants.kGoldProBgColor,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(SizeConfig.roundness16),
-                    bottomRight: Radius.circular(SizeConfig.roundness16),
-                  ),
-                ),
-                child: const GoldProHero(),
-              ),
-            )
+            //     final UserService userService = locator<UserService>();
+            //     if ((userService.userFundWallet?.augGoldQuantity ?? 0) > 0 &&
+            //         (userService.userFundWallet?.augGoldQuantity ?? 0) < 2 &&
+            //         (userService.userFundWallet?.wAugFdQty ?? 0.0) == 0) {
+            //       BaseUtil().openRechargeModalSheet(
+            //         investmentType: InvestmentType.AUGGOLD99,
+            //         gms: BaseUtil.digitPrecision(
+            //             AppConfig.getValue(
+            //                     AppConfigKey.goldProInvestmentChips)[0] -
+            //                 (userService.userFundWallet?.augGoldQuantity ?? 0),
+            //             4,
+            //             false),
+            //       );
+            //     } else {
+            //       AppState.delegate!.parseRoute(Uri.parse('goldProDetails'));
+            //     }
+            //     locator<AnalyticsService>().track(
+            //       eventName: AnalyticsEvents.goldProEntryBelowBalanceTapped,
+            //       properties: {
+            //         'progress_bar_completed':
+            //             (userService.userFundWallet?.augGoldQuantity ?? 0) > 2
+            //                 ? "YES"
+            //                 : (userService.userFundWallet?.augGoldQuantity ??
+            //                         0) /
+            //                     2,
+            //         "existing lease amount":
+            //             userService.userPortfolio.augmont.fd.balance,
+            //         "existing lease grams":
+            //             userService.userFundWallet?.wAugFdQty ?? 0
+            //       },
+            //     );
+            //   },
+            //   child: DecoratedBox(
+            //     decoration: BoxDecoration(
+            //       color: UiConstants.kGoldProBgColor,
+            //       borderRadius: BorderRadius.only(
+            //         bottomLeft: Radius.circular(SizeConfig.roundness16),
+            //         bottomRight: Radius.circular(SizeConfig.roundness16),
+            //       ),
+            //     ),
+            //     child: const GoldProHero(),
+            //   ),
+            // )
           ],
         ),
       );
